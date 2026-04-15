@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
 import MTDScorecardCalculator from "./MTDScorecardCalculator";
+import { getMTDCountdown } from "@/lib/uk-countdown";
 
 export const metadata: Metadata = {
   title: "Making Tax Digital UK 2026 — MTD Readiness Scorecard | TaxCheckNow",
@@ -153,6 +154,7 @@ const aiErrors = [
 
 // ── PAGE ───────────────────────────────────────────────────────────────────
 export default function MTDScorecardPage() {
+  const { days, pct, urgency } = getMTDCountdown();
 
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -242,7 +244,7 @@ export default function MTDScorecardPage() {
             <div className="flex items-center gap-4">
               <div className="hidden items-center gap-2 sm:flex">
                 <span className="text-sm">🇬🇧</span>
-                <span className="font-mono text-xs font-bold text-blue-700">United Kingdom · MTD · HMRC</span>
+                <span className="font-mono text-xs font-bold text-blue-700">United Kingdom · MTD · {days} days to Aug 7</span>
               </div>
               <Link href="/uk" className="font-mono text-xs text-neutral-400 hover:text-neutral-700 transition">← UK tools</Link>
             </div>
@@ -285,10 +287,23 @@ export default function MTDScorecardPage() {
               </div>
             </div>
 
+            {/* COUNTDOWN — moved up into hero */}
+            <div className="mt-4 max-w-3xl rounded-2xl border border-neutral-800 bg-neutral-950 p-5">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">UK MTD first quarterly deadline</p>
+              <div className="mt-2 flex items-baseline gap-3">
+                <span className="font-serif text-5xl font-bold text-white">{days}</span>
+                <span className="font-mono text-sm text-neutral-400">days to 7 August 2026</span>
+              </div>
+              <div className="mt-3 h-1.5 rounded-full bg-neutral-800">
+                <div className="h-1.5 rounded-full bg-red-500 transition-all" style={{ width: `${pct}%` }} />
+              </div>
+              <p className="mt-2 text-xs text-neutral-500">Quarter 1 (April 6 – June 30, 2026) must be submitted by this date using MTD-compatible software.</p>
+            </div>
+
             <p className="mt-5 max-w-3xl text-base leading-relaxed text-neutral-600">
               <strong className="text-neutral-950">Making Tax Digital for Income Tax is the biggest change to UK personal tax compliance in decades.</strong>{" "}
               Instead of one annual self-assessment return, UK sole traders and landlords must now submit quarterly income and expense updates to HMRC through approved software.{" "}
-              <strong className="text-neutral-950">The first deadline is 7 August 2026 — 114 days away.</strong>{" "}
+              <strong className="text-neutral-950">The first deadline is 7 August 2026.</strong>{" "}
               <span className="font-mono text-sm text-neutral-400">Source: HMRC.gov.uk — Making Tax Digital for Income Tax.</span>
             </p>
 
@@ -473,7 +488,7 @@ export default function MTDScorecardPage() {
           <section>
             <p className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-2">UK MTD deadlines — what to do and when</p>
             <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-              MTD is live. The first deadline is 114 days away.
+              MTD is live. The first deadline is {days} days away.
             </h2>
             <div className="space-y-3">
               {deadlineItems.map((item, i) => (
