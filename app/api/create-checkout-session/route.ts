@@ -17,7 +17,13 @@ function getPriceId(tier: number, productKey: string): string | undefined {
   const key = productKey.toLowerCase();
 
   // ── UK ──────────────────────────────────────────────
-  // UK-01 — HMRC Nudge Letter Defender
+  // UK-01 — MTD-50 Scorecard
+  if (key.includes("mtd_scorecard") || key.includes("uk_mtd")) {
+    if (tier === 27) return process.env.STRIPE_UK_MTD_27;
+    if (tier === 67) return process.env.STRIPE_UK_MTD_67;
+  }
+
+  // UK — HMRC Nudge Letter Defender (placeholder)
   if (key.includes("hmrc_nudge") || key.includes("uk_nudge")) {
     if (tier === 67) return process.env.STRIPE_UK_NUDGE_67;
     if (tier === 147) return process.env.STRIPE_UK_NUDGE_147;
@@ -51,6 +57,9 @@ function getSuccessPath(productKey: string, tier: number): string {
   const variant = tier === 147 ? "execute" : "prepare";
 
   // UK
+  if (key.includes("mtd_scorecard") || key.includes("uk_mtd")) {
+    return `/uk/check/mtd-scorecard/success/${variant}`;
+  }
   if (key.includes("hmrc_nudge") || key.includes("uk_nudge")) {
     return `/uk/check/hmrc-nudge-letter/success/${variant}`;
   }
@@ -90,7 +99,7 @@ export async function POST(req: Request) {
 
     const normalizedTier = Number(tier);
 
-    if (![67, 147].includes(normalizedTier)) {
+    if (![27, 47, 67, 97, 147, 197, 397].includes(normalizedTier)) {
       return NextResponse.json(
         { error: "Invalid tier. Expected 67 or 147." },
         { status: 400 }
