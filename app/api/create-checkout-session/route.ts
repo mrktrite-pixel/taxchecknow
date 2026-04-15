@@ -23,6 +23,12 @@ function getPriceId(tier: number, productKey: string): string | undefined {
     if (tier === 67) return process.env.STRIPE_UK_MTD_67;
   }
 
+  // UK-02 — 60% Allowance Sniper
+  if (key.includes("allowance_sniper") || key.includes("uk_sniper")) {
+    if (tier === 47) return process.env.STRIPE_UK_SNIPER_47;
+    if (tier === 97) return process.env.STRIPE_UK_SNIPER_97;
+  }
+
   // UK — HMRC Nudge Letter Defender (placeholder)
   if (key.includes("hmrc_nudge") || key.includes("uk_nudge")) {
     if (tier === 67) return process.env.STRIPE_UK_NUDGE_67;
@@ -59,6 +65,9 @@ function getSuccessPath(productKey: string, tier: number): string {
   // UK
   if (key.includes("mtd_scorecard") || key.includes("uk_mtd")) {
     return `/uk/check/mtd-scorecard/success/${variant}`;
+  }
+  if (key.includes("allowance_sniper") || key.includes("uk_sniper")) {
+    return `/uk/check/allowance-sniper/success/${variant}`;
   }
   if (key.includes("hmrc_nudge") || key.includes("uk_nudge")) {
     return `/uk/check/hmrc-nudge-letter/success/${variant}`;
