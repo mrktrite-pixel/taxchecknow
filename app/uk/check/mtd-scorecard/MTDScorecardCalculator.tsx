@@ -292,11 +292,13 @@ export default function MTDScorecardCalculator() {
             Select your approximate annual <strong>qualifying income (gross turnover before expenses)</strong> from
             self-employment and UK property rental only.
           </p>
-          <div className="mb-3 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-blue-700">Quick rule</p>
-            <p className="text-xs text-blue-900 mt-0.5">
-              MTD applies if qualifying income exceeds <strong>£50,000</strong> in 2026.
-              Use <strong>gross turnover</strong> — not profit.
+          <div className="mb-3 rounded-xl border-2 border-neutral-950 bg-neutral-950 px-4 py-3">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">The rule — HMRC confirmed</p>
+            <p className="text-sm font-bold text-white">
+              MTD applies if your qualifying income exceeds <span className="text-yellow-300">£50,000</span> in 2026.
+            </p>
+            <p className="text-xs text-neutral-300 mt-1">
+              Use <strong className="text-white">gross turnover before expenses</strong> — not profit. PAYE wages excluded.
             </p>
           </div>
           <div className="space-y-2">
@@ -304,18 +306,26 @@ export default function MTDScorecardCalculator() {
               const selected = selectedBracket === i;
               return (
                 <button key={b.label} onClick={() => handleBracketSelect(i)}
-                  className={`flex w-full items-center justify-between rounded-xl border px-5 py-3.5 text-left transition ${selected ? "border-neutral-950 bg-neutral-950 text-white" : "border-neutral-200 bg-neutral-50 hover:border-neutral-400 hover:bg-white text-neutral-900"}`}>
-                  <span className="text-sm font-semibold">{b.label}</span>
-                  {selected && <span className="font-mono text-xs text-neutral-300">Selected ✓</span>}
+                  className={`flex w-full items-center justify-between rounded-xl border-2 px-5 py-4 text-left font-semibold transition-all ${
+                    selected
+                      ? "border-neutral-950 bg-neutral-950 text-white shadow-lg scale-[1.01]"
+                      : "border-neutral-800 bg-white text-neutral-900 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white hover:shadow-md"
+                  }`}>
+                  <span className="text-sm font-bold">{b.label}</span>
+                  <span className={`font-mono text-xs ${selected ? "text-neutral-300" : "text-neutral-400"}`}>
+                    {selected ? "Selected ✓" : "tap to check →"}
+                  </span>
                 </button>
               );
             })}
           </div>
-          <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-amber-700">Turnover not profit</p>
-            <p className="text-xs text-amber-900 mt-0.5">
-              HMRC uses <strong>gross turnover before expenses</strong>.
-              £55,000 turnover + £10,000 profit = <strong>£55,000 qualifying income</strong> — in scope.
+          <div className="mt-3 rounded-xl border-2 border-amber-500 bg-amber-50 px-4 py-3">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-amber-800 mb-1">⚠️ Turnover not profit</p>
+            <p className="text-xs font-semibold text-amber-900">
+              HMRC uses <strong>gross turnover before expenses</strong> — not profit.
+            </p>
+            <p className="text-xs text-amber-800 mt-0.5">
+              Example: £55,000 turnover + £10,000 profit = <strong>£55,000 qualifying income — IN SCOPE</strong>
             </p>
           </div>
           <p className="mt-2 text-center text-xs text-neutral-400">

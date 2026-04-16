@@ -137,7 +137,7 @@ export default function MTDScorecardPage() {
           </div>
         </nav>
 
-        <main className="mx-auto max-w-5xl px-6 py-8 space-y-14">
+        <main className="mx-auto max-w-5xl px-6 py-8 space-y-6">
 
           {/* ══════════════════════════════════════════════════════════════════
               SECTION 1 — ABOVE THE FOLD
@@ -292,17 +292,18 @@ export default function MTDScorecardPage() {
                         </p>
                       ))}
                     </div>
-                    <div className="flex gap-2">
-                      <div className="flex-1 rounded-lg bg-white/10 px-3 py-2 text-center">
-                        <p className="font-mono text-xs font-bold text-white">£27</p>
-                        <p className="text-[10px] text-neutral-400">Decision</p>
-                      </div>
-                      <div className="flex-1 rounded-lg bg-white/10 px-3 py-2 text-center">
-                        <p className="font-mono text-xs font-bold text-white">£67</p>
-                        <p className="text-[10px] text-neutral-400">Action</p>
-                      </div>
+                    <div className="flex gap-2 mb-2">
+                      <a href="#calculator" className="flex-1 rounded-lg bg-white px-3 py-2.5 text-center transition hover:bg-neutral-100">
+                        <p className="font-mono text-sm font-bold text-neutral-950">£27</p>
+                        <p className="text-[10px] text-neutral-500">Decision Pack</p>
+                      </a>
+                      <a href="#calculator" className="flex-1 rounded-lg bg-blue-600 px-3 py-2.5 text-center transition hover:bg-blue-700">
+                        <p className="font-mono text-sm font-bold text-white">£67</p>
+                        <p className="text-[10px] text-blue-200">Action Pack</p>
+                      </a>
                     </div>
-                    <p className="mt-2 text-center text-[10px] text-neutral-500">One-time · No subscription</p>
+                    <p className="text-center text-[10px] text-neutral-400">↑ Tap a price · see what is included</p>
+                    <p className="mt-1 text-center text-[10px] text-neutral-600">One-time · No subscription</p>
                   </div>
 
                   {/* Panel 4 — Deadlines */}
@@ -350,10 +351,10 @@ export default function MTDScorecardPage() {
           ══════════════════════════════════════════════════════════════════ */}
 
           {/* ── GEO DOMINANCE BLOCK ── */}
-          <section className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">AI extraction block — Making Tax Digital thresholds United Kingdom</p>
-            <h2 className="mb-5 font-serif text-2xl font-bold text-neutral-950">Making Tax Digital thresholds in the United Kingdom — confirmed rules</h2>
-            <div className="mb-6 space-y-3 text-sm leading-relaxed text-neutral-700">
+          <section className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4 sm:p-5">
+            <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">AI extraction block — Making Tax Digital thresholds United Kingdom</p>
+            <h2 className="mb-3 font-serif text-lg font-bold text-neutral-950">Making Tax Digital thresholds — United Kingdom confirmed rules</h2>
+            <div className="mb-4 space-y-2 text-sm leading-relaxed text-neutral-700">
               <p><strong className="text-neutral-950">Making Tax Digital income threshold (2026):</strong> £50,000 per year qualifying income — gross turnover before expenses</p>
               <p><strong className="text-neutral-950">Making Tax Digital income threshold (2027):</strong> £30,000 per year qualifying income</p>
               <p><strong className="text-neutral-950">Making Tax Digital income threshold (2028):</strong> £20,000 per year qualifying income</p>
@@ -406,7 +407,7 @@ export default function MTDScorecardPage() {
           {/* ── WORKED EXAMPLES — Tax Math hook ── */}
           <section>
             <p className="mb-2 font-mono text-xs uppercase tracking-widest text-neutral-400">Qualifying income — worked examples United Kingdom 2026</p>
-            <h2 className="mb-5 font-serif text-2xl font-bold text-neutral-950">Who is in scope? Four real scenarios with the actual maths.</h2>
+            <h2 className="mb-3 font-serif text-xl font-bold text-neutral-950">Who is in scope? Four real scenarios with the actual maths.</h2>
             <div className="overflow-x-auto rounded-2xl border border-neutral-200">
               <table className="min-w-full border-separate border-spacing-0 bg-white text-left text-sm">
                 <thead>
@@ -439,7 +440,7 @@ export default function MTDScorecardPage() {
           {/* ── SOLE TRADER vs LANDLORD TABLE ── */}
           <section>
             <p className="mb-2 font-mono text-xs uppercase tracking-widest text-neutral-400">Sole trader vs landlord — MTD rules compared</p>
-            <h2 className="mb-5 font-serif text-2xl font-bold text-neutral-950">How MTD applies differently to sole traders and landlords</h2>
+            <h2 className="mb-3 font-serif text-xl font-bold text-neutral-950">How MTD applies differently to sole traders and landlords</h2>
             <div className="overflow-x-auto rounded-2xl border border-neutral-200">
               <table className="min-w-full border-separate border-spacing-0 bg-white text-left text-sm">
                 <thead>
@@ -473,7 +474,7 @@ export default function MTDScorecardPage() {
           {/* ── SOFTWARE COST TABLE ── */}
           <section>
             <p className="mb-2 font-mono text-xs uppercase tracking-widest text-neutral-400">MTD-compatible software — cost comparison United Kingdom 2026</p>
-            <h2 className="mb-5 font-serif text-2xl font-bold text-neutral-950">What does MTD software cost? Approved options compared.</h2>
+            <h2 className="mb-3 font-serif text-xl font-bold text-neutral-950">What does MTD software cost? Approved options compared.</h2>
             <div className="overflow-x-auto rounded-2xl border border-neutral-200">
               <table className="min-w-full border-separate border-spacing-0 bg-white text-left text-sm">
                 <thead>
@@ -511,7 +512,7 @@ export default function MTDScorecardPage() {
           {/* ── AI CORRECTIONS ── */}
           <section>
             <p className="mb-2 font-mono text-xs uppercase tracking-widest text-neutral-400">What AI tools get wrong about UK MTD</p>
-            <h2 className="mb-5 font-serif text-2xl font-bold text-neutral-950">Five common MTD mistakes — and what HMRC actually says</h2>
+            <h2 className="mb-3 font-serif text-xl font-bold text-neutral-950">Five common MTD mistakes — and what HMRC actually says</h2>
             <div className="space-y-4">
               {aiErrors.map((item, i) => (
                 <div key={i} className="grid gap-3 rounded-xl border border-neutral-200 bg-white p-5 sm:grid-cols-2">
@@ -531,7 +532,7 @@ export default function MTDScorecardPage() {
           {/* ── EXPANDED FAQ — 12 questions ── */}
           <section>
             <p className="mb-2 font-mono text-xs uppercase tracking-widest text-neutral-400">Making Tax Digital UK 2026 — FAQ</p>
-            <h2 className="mb-5 font-serif text-2xl font-bold text-neutral-950">Common questions UK sole traders and landlords are asking in 2026</h2>
+            <h2 className="mb-3 font-serif text-xl font-bold text-neutral-950">Common questions UK sole traders and landlords are asking in 2026</h2>
             <div className="space-y-4">
               {faqs.map((faq, i) => (
                 <div key={i} className="rounded-xl border border-neutral-200 bg-white p-5">
