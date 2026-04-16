@@ -101,7 +101,7 @@ export default function MTDScorecardPage() {
       { "@type": "HowToStep", position: 1, name: "Select your income bracket", text: "Choose your approximate annual qualifying income from self-employment and UK property rental. PAYE wages do not count. Use gross turnover before expenses." },
       { "@type": "HowToStep", position: 2, name: "Get your MTD status instantly", text: "Instant result: REQUIRED, UPCOMING, or NOT CURRENTLY REQUIRED based on the confirmed HMRC 2026 threshold of £50,000." },
       { "@type": "HowToStep", position: 3, name: "Check your readiness", text: "If in scope, answer three questions about software, records and registration to get your readiness score." },
-      { "@type": "HowToStep", position: 4, name: "Get your compliance plan", text: "Your biggest gap and first action are identified. Decision Pack £27 or Action Pack £67 available." },
+      { "@type": "HowToStep", position: 4, name: "Get your compliance plan", text: "Your biggest gap and first action are identified. Compliance Assessment £67 or Action Plan £127 available." },
     ],
   };
   const breadcrumbJsonLd = {
@@ -273,13 +273,13 @@ export default function MTDScorecardPage() {
                     <div className="flex gap-2 mb-2">
                       <a href="#calculator"
                         className="flex-1 rounded-lg bg-white px-3 py-2.5 text-center transition hover:bg-neutral-100">
-                        <p className="font-mono text-sm font-bold text-neutral-950">£27</p>
-                        <p className="text-[10px] text-neutral-500">Decision Pack</p>
+                        <p className="font-mono text-sm font-bold text-neutral-950">£67</p>
+                        <p className="text-[10px] text-neutral-500">Compliance Assessment</p>
                       </a>
                       <a href="#calculator"
                         className="flex-1 rounded-lg bg-blue-600 px-3 py-2.5 text-center transition hover:bg-blue-700">
-                        <p className="font-mono text-sm font-bold text-white">£67</p>
-                        <p className="text-[10px] text-blue-200">Action Pack</p>
+                        <p className="font-mono text-sm font-bold text-white">£127</p>
+                        <p className="text-[10px] text-blue-200">Action Plan</p>
                       </a>
                     </div>
                     <p className="text-center text-[10px] text-neutral-400">
