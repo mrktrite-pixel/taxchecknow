@@ -17,7 +17,7 @@ const INCOME_BRACKETS = [
 type SoftwareStatus   = "yes_mtd" | "yes_not_mtd" | "spreadsheet" | "paper" | "nothing";
 type RecordsStatus    = "digital_good" | "digital_basic" | "mixed" | "paper";
 type RegistrationStatus = "registered" | "started" | "not_started" | "dont_know";
-type PackTier = 27 | 67;
+type PackTier = 67 | 127;
 
 interface ReadinessResult {
   score: number;
@@ -39,30 +39,18 @@ interface PopupAnswers {
   software_need: string;
 }
 
-const PRODUCTS: Record<PackTier, { name: string; tagline: string; bullets: string[]; cta: string }> = {
-  27: {
-    name: "MTD-50 Decision Pack",
-    tagline: "Am I in scope? What do I need to do first?",
-    bullets: [
-      "Your qualifying income scope — confirmed in writing",
-      "HMRC registration steps in plain English",
-      "MTD software shortlist — free vs paid for your situation",
-      "Quarterly deadline calendar — all 5 obligations",
-      "Accountant brief for your first meeting",
-    ],
-    cta: "Get My Decision Pack — £27 →",
-  },
+const PRODUCTS: Record<PackTier, { name: string; tagline: string; value: string; cta: string }> = {
   67: {
-    name: "MTD-50 Action Pack",
-    tagline: "I am in scope — give me the full compliance plan.",
-    bullets: [
-      "Everything in the Decision Pack",
-      "Your biggest compliance gap and how to fix it first",
-      "Software setup, digital records and registration changes",
-      "First quarterly submission checklist",
-      "Digital records template (Excel/Google Sheets)",
-    ],
-    cta: "Get My Action Pack — £67 →",
+    name: "Your MTD Compliance Assessment",
+    tagline: "What is my position and what do I need to do first?",
+    value: "A personal compliance assessment. Built around your income, your gaps, your deadline — not the average taxpayer.",
+    cta: "Get My Compliance Assessment — £67 →",
+  },
+  127: {
+    name: "Your MTD Action Plan",
+    tagline: "I am in scope. Build my full compliance plan.",
+    value: "A personal compliance assessment. Built around your income, your gaps, your deadline — not the average taxpayer.",
+    cta: "Get My Action Plan — £127 →",
   },
 };
 
@@ -163,7 +151,7 @@ export default function MTDScorecardCalculator() {
     return calcReadiness(software, records, registration);
   }, [showReadiness, bracket, software, records, registration]);
 
-  const calculatedTier: PackTier = readiness && bracket?.inScope2026 ? (readiness.score <= 50 ? 67 : 27) : 27;
+  const calculatedTier: PackTier = readiness && bracket?.inScope2026 ? (readiness.score <= 50 ? 127 : 67) : 67;
   const effectiveTier = overrideTier ?? calculatedTier;
   const selectedProduct = PRODUCTS[effectiveTier];
   const popupAnswersComplete = Object.values(popupAnswers).every(v => v !== "");
@@ -269,7 +257,7 @@ export default function MTDScorecardCalculator() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           decision_session_id: sid, tier: effectiveTier, product_key: `uk_${effectiveTier}_mtd_scorecard`,
-          success_url: `${window.location.origin}/uk/check/mtd-scorecard/success/${effectiveTier === 67 ? "execute" : "prepare"}`,
+          success_url: `${window.location.origin}/uk/check/mtd-scorecard/success/${effectiveTier === 127 ? "execute" : "prepare"}`,
           cancel_url: `${window.location.origin}/uk/check/mtd-scorecard`,
         }),
       });
@@ -392,7 +380,7 @@ export default function MTDScorecardCalculator() {
                   className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
                   Check my compliance gaps before buying →
                 </button>
-                <button onClick={() => { setOverrideTier(27); setShowPopup(true); }}
+                <button onClick={() => { setOverrideTier(67); setShowPopup(true); }}
                   className="w-full rounded-xl border border-neutral-300 bg-white py-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50">
                   I know I need this — show me what I get
                 </button>
@@ -491,8 +479,8 @@ export default function MTDScorecardCalculator() {
             <button onClick={() => setShowPopup(true)}
               className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800">
               {effectiveTier === 67
-                ? `Get My Action Pack — close my compliance gaps →`
-                : `Get My Decision Pack — what do I need to do →`}
+                ? `Get My Action Plan →`
+                : `Get My Compliance Assessment →`}
             </button>
             <p className="mt-2 text-center text-xs text-neutral-400">
               £{effectiveTier} · One-time · No subscription
@@ -535,14 +523,14 @@ export default function MTDScorecardCalculator() {
             <div className="px-6 pt-5">
               <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Choose your pack</p>
               <div className="flex gap-2 mb-4">
-                {([27, 67] as const).map(t => {
+                {([67, 127] as const).map(t => {
                   const active = effectiveTier === t;
                   return (
                     <button key={t} onClick={() => setOverrideTier(t)}
                       className={`flex-1 rounded-xl border px-3 py-2.5 text-left transition ${active ? "border-neutral-950 bg-neutral-950 text-white" : "border-neutral-200 bg-neutral-50 hover:border-neutral-300"}`}>
                       <p className={`font-mono text-sm font-bold ${active ? "text-white" : "text-neutral-800"}`}>£{t}</p>
                       <p className={`text-xs ${active ? "text-neutral-300" : "text-neutral-500"}`}>
-                        {t === 27 ? "Decision Pack" : "Action Pack"}
+                        {t === 67 ? "Compliance Assessment" : "Action Plan"}
                       </p>
                     </button>
                   );
@@ -552,23 +540,21 @@ export default function MTDScorecardCalculator() {
               {/* SWAP: What you get → Questions on Continue tap */}
               {!showQuestions ? (
                 <>
-                  {/* Compact bullet summary */}
-                  <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1.5">What you get</p>
-                    <p className="text-xs font-semibold text-neutral-900 mb-2">{selectedProduct.tagline}</p>
-                    <p className="text-xs text-neutral-600 leading-relaxed">
-                      {selectedProduct.bullets.map((b, i) => (
-                        <span key={b}><span className="text-emerald-600">✓</span> {b}{i < selectedProduct.bullets.length - 1 ? " · " : ""}</span>
-                      ))}
-                    </p>
+                  {/* Value proposition — personal not generic */}
+                  <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-4">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">What you get</p>
+                    <p className="text-sm font-bold text-neutral-950 mb-2">{selectedProduct.name}</p>
+                    <p className="text-sm leading-relaxed text-neutral-700">{selectedProduct.value}</p>
                   </div>
                   {/* Price */}
-                  <div className="mb-3 flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-2.5">
-                    <div>
-                      <p className="font-serif text-xl font-bold text-neutral-950">£{effectiveTier}</p>
+                  <div className="mb-3 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="font-serif text-2xl font-bold text-neutral-950">£{effectiveTier}</p>
                       <p className="text-xs text-neutral-400">One-time · No subscription</p>
                     </div>
-                    <p className="font-mono text-[10px] text-neutral-400 text-right">3 quick questions<br/>then Stripe</p>
+                    <p className="text-xs text-neutral-500">
+                      Not a guide to MTD. A plan for your MTD.
+                    </p>
                   </div>
                   <button onClick={() => setShowQuestions(true)}
                     className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
@@ -624,12 +610,12 @@ export default function MTDScorecardCalculator() {
         <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-neutral-200 bg-white px-4 py-3 lg:hidden shadow-lg">
           <div className="flex items-center gap-3">
             <div className="flex-1">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">MTD Decision Pack</p>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">MTD Compliance Assessment</p>
               <p className="text-sm font-bold text-neutral-950">Get compliant before 7 August</p>
             </div>
-            <button onClick={() => { setOverrideTier(27); setShowPopup(true); }}
+            <button onClick={() => { setOverrideTier(67); setShowPopup(true); }}
               className="rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-neutral-800 whitespace-nowrap">
-              From £27 →
+              From £67 →
             </button>
           </div>
         </div>
