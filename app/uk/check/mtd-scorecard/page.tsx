@@ -190,6 +190,11 @@ export default function MTDScorecardPage() {
                 Qualifying income means gross self-employment and UK property rental receipts only.
                 PAYE wages, dividends, savings interest and pension income are excluded.
               </p>
+              <p className="mt-3 text-sm leading-relaxed text-blue-900">
+                <strong>How HMRC decides:</strong> Your 2026 obligation is based on your{" "}
+                <strong>2024-25 self-assessment return</strong>. If your qualifying income
+                in 2024-25 exceeded £50,000, you are mandated from 6 April 2026.
+              </p>
               <p className="mt-2 text-xs text-blue-600">
                 Source:{" "}
                 <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-800">
@@ -220,6 +225,11 @@ export default function MTDScorecardPage() {
               <p className="mt-2 text-xs text-neutral-500">
                 Quarter 1 (6 April – 30 June 2026) must be filed by this date using HMRC-compatible software.
               </p>
+              <div className="mt-3 border-t border-neutral-800 pt-3 space-y-1">
+                <p className="text-xs text-neutral-400">If you are not ready by this date:</p>
+                <p className="text-xs text-red-400">→ You cannot submit your first quarterly return</p>
+                <p className="text-xs text-red-400">→ Your compliance record starts with a missed obligation</p>
+              </div>
             </div>
 
             {/* Two-column layout */}
@@ -285,6 +295,7 @@ export default function MTDScorecardPage() {
               <p><strong className="text-neutral-950">Making Tax Digital income threshold (2028):</strong> £20,000 per year qualifying income</p>
               <p><strong className="text-neutral-950">First UK quarterly deadline:</strong> 7 August 2026 (Quarter 1: 6 April – 30 June 2026)</p>
               <p><strong className="text-neutral-950">Qualifying income definition:</strong> Gross self-employment receipts and UK property rental receipts before expenses. PAYE employment income, dividends, savings interest and pension income are excluded.</p>
+              <p><strong className="text-neutral-950">Anchor year for 2026 mandate:</strong> HMRC uses the 2024-25 self-assessment return to determine eligibility for April 2026. Qualifying income above £50,000 in 2024-25 triggers the mandate.</p>
               <p><strong className="text-neutral-950">Grace period (2026-27 only):</strong> HMRC will not issue late quarterly submission penalty points in the first year. Late payment penalties are separate and still apply.</p>
             </div>
 

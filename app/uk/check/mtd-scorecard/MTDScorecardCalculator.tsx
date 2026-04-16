@@ -302,8 +302,9 @@ export default function MTDScorecardCalculator() {
         <p className="mb-1 font-mono text-xs uppercase tracking-widest text-neutral-400">Free UK MTD scope check</p>
         <h2 className="mb-2 font-serif text-2xl font-bold text-neutral-950">Check whether Making Tax Digital applies to you</h2>
         <p className="mb-4 text-sm text-neutral-600">
-          Select your approximate annual qualifying income from <strong>self-employment and UK property rental only</strong>.
-          PAYE wages, dividends, savings interest and pension income do not count toward this threshold.
+          Select your approximate annual <strong>qualifying income (gross turnover before expenses)</strong> from
+          self-employment and UK property rental only.
+          PAYE wages, dividends, savings interest and pension income do not count.
         </p>
 
         <div className="mb-5 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3">
@@ -326,8 +327,16 @@ export default function MTDScorecardCalculator() {
             );
           })}
         </div>
-        <p className="mt-4 text-center text-xs text-neutral-400">
-          Based on HMRC.gov.uk guidance · qualifying income = gross self-employment + UK property rental only
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-amber-700 mb-1">Important — turnover not profit</p>
+          <p className="text-xs text-amber-900">
+            HMRC uses <strong>gross turnover before expenses</strong> — not profit. A sole trader with
+            <strong> £51,000 turnover</strong> and £10,000 profit is <strong>still in scope</strong>.
+            Use your total receipts before deducting any expenses.
+          </p>
+        </div>
+        <p className="mt-2 text-center text-xs text-neutral-400">
+          Based on HMRC.gov.uk · qualifying income = gross self-employment + UK property rental receipts
         </p>
       </div>
 
@@ -355,11 +364,20 @@ export default function MTDScorecardCalculator() {
 
           {/* Soft landing — REQUIRED only */}
           {answerSummary.softLanding && (
-            <div className="mb-4 rounded-xl border border-emerald-200 bg-white px-4 py-3 text-sm text-neutral-700">
-              <strong className="text-neutral-950">HMRC soft landing (2026-27 only):</strong>{" "}
-              HMRC will not apply late quarterly submission penalty points in the first year.
-              But the filing obligation still exists, and late payment penalties are separate and still apply.
-              Use this grace period to build your compliance setup — not to delay.
+            <div className="mb-4 space-y-2">
+              <div className="rounded-xl border border-red-200 bg-white px-4 py-3 text-sm text-neutral-700">
+                <strong className="text-neutral-950">If you are not ready by 7 August 2026:</strong>
+                <ul className="mt-1.5 space-y-1 text-sm text-red-800">
+                  <li>→ You cannot submit your first quarterly return through software</li>
+                  <li>→ Your 2026-27 compliance record starts with a missed obligation</li>
+                  <li>→ Late payment penalties are NOT covered by the grace period</li>
+                </ul>
+              </div>
+              <div className="rounded-xl border border-emerald-200 bg-white px-4 py-3 text-sm text-neutral-700">
+                <strong className="text-neutral-950">HMRC soft landing (2026-27 only):</strong>{" "}
+                HMRC will not issue late quarterly submission <em>penalty points</em> in the first year.
+                Use this window to build your compliance setup — not to delay.
+              </div>
             </div>
           )}
 
@@ -466,6 +484,22 @@ export default function MTDScorecardCalculator() {
               <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-600 mb-1">First action</p>
               <p className="text-sm font-semibold text-neutral-900">{readiness.firstAction}</p>
             </div>
+            {readiness.score < 75 && (
+              <div className="border-t border-neutral-100 pt-3">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-blue-600 mb-1">If you fix this gap</p>
+                <p className="text-sm text-neutral-700">
+                  Your readiness score improves from{" "}
+                  <strong className="text-red-600">{readiness.score}/100</strong> →{" "}
+                  <strong className="text-emerald-600">
+                    {Math.min(100, readiness.score + (
+                      readiness.topGapTitle === "Software gap" ? 25 :
+                      readiness.topGapTitle === "Records gap" ? 25 :
+                      readiness.topGapTitle === "Registration gap" ? 20 : 15
+                    ))}/100
+                  </strong>
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Tier switcher */}
