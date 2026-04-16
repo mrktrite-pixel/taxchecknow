@@ -373,18 +373,12 @@ export default function MTDScorecardCalculator() {
               ) : <p className="text-sm font-semibold text-emerald-700">✓ Saved.</p>}
             </div>
 
-            {/* Two paths */}
+            {/* One path — questions required to build the product */}
             {bracket.inScope2026 && (
-              <div className="space-y-2">
-                <button onClick={() => setShowReadiness(true)}
-                  className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
-                  Check my compliance gaps before buying →
-                </button>
-                <button onClick={() => { setOverrideTier(67); setShowPopup(true); }}
-                  className="w-full rounded-xl border border-neutral-300 bg-white py-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50">
-                  I know I need this — show me what I get
-                </button>
-              </div>
+              <button onClick={() => setShowReadiness(true)}
+                className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
+                Check my compliance gaps →
+              </button>
             )}
             {bracket.inScope2027 && !bracket.inScope2026 && (
               <button onClick={() => setShowReadiness(true)}
@@ -519,23 +513,11 @@ export default function MTDScorecardCalculator() {
               )}
             </div>
 
-            {/* Tier switcher in popup */}
+            {/* Algorithm recommendation — no user choice */}
             <div className="px-6 pt-5">
-              <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Choose your pack</p>
-              <div className="flex gap-2 mb-4">
-                {([67, 127] as const).map(t => {
-                  const active = effectiveTier === t;
-                  return (
-                    <button key={t} onClick={() => setOverrideTier(t)}
-                      className={`flex-1 rounded-xl border px-3 py-2.5 text-left transition ${active ? "border-neutral-950 bg-neutral-950 text-white" : "border-neutral-200 bg-neutral-50 hover:border-neutral-300"}`}>
-                      <p className={`font-mono text-sm font-bold ${active ? "text-white" : "text-neutral-800"}`}>£{t}</p>
-                      <p className={`text-xs ${active ? "text-neutral-300" : "text-neutral-500"}`}>
-                        {t === 67 ? "Compliance Assessment" : "Action Plan"}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                Based on your compliance position
+              </p>
 
               {/* SWAP: What you get → Questions on Continue tap */}
               {!showQuestions ? (
@@ -560,6 +542,14 @@ export default function MTDScorecardCalculator() {
                     className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
                     {selectedProduct.cta}
                   </button>
+                  {effectiveTier === 127 && (
+                    <p className="text-center mt-2">
+                      <button onClick={() => setOverrideTier(67)}
+                        className="text-xs text-neutral-400 underline hover:text-neutral-600 transition">
+                        Need less detail? Compliance Assessment — £67 instead
+                      </button>
+                    </p>
+                  )}
                 </>
               ) : (
                 /* SWAP: questions replace the bullets — same height */
