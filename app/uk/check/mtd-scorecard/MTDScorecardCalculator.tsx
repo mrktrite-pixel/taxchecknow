@@ -204,6 +204,19 @@ export default function MTDScorecardCalculator() {
     if (selectedBracket !== null && resultRef.current) setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   }, [selectedBracket]);
 
+  // Pulse brackets when sidebar price link tapped
+  useEffect(() => {
+    function handleSidebarClick() {
+      const el = document.getElementById("calculator");
+      if (el) {
+        el.classList.add("ring-2", "ring-neutral-950", "ring-offset-2", "rounded-2xl");
+        setTimeout(() => el.classList.remove("ring-2", "ring-neutral-950", "ring-offset-2", "rounded-2xl"), 1500);
+      }
+    }
+    document.addEventListener("sidebar-price-tap", handleSidebarClick);
+    return () => document.removeEventListener("sidebar-price-tap", handleSidebarClick);
+  }, []);
+
   useEffect(() => {
     if (showReadiness && readinessRef.current) setTimeout(() => readinessRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   }, [showReadiness]);
@@ -547,39 +560,39 @@ export default function MTDScorecardCalculator() {
                 })}
               </div>
 
-              {/* What you get */}
-              <div className="mb-4 rounded-xl border border-neutral-200 bg-neutral-50 p-4">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">What you get</p>
-                <p className="text-sm font-semibold text-neutral-900 mb-3">{selectedProduct.tagline}</p>
-                <ul className="space-y-1.5">
-                  {selectedProduct.bullets.map(b => (
-                    <li key={b} className="flex items-start gap-2 text-sm text-neutral-700">
-                      <span className="mt-0.5 text-emerald-500 shrink-0">✓</span>{b}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Price + personalisation note */}
-              <div className="mb-4 flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                <div>
-                  <p className="font-serif text-2xl font-bold text-neutral-950">£{effectiveTier}</p>
-                  <p className="text-xs text-neutral-400">One-time · No subscription</p>
-                </div>
-                <p className="text-xs text-neutral-500 text-right max-w-[160px]">
-                  3 quick questions after payment personalise your documents
-                </p>
-              </div>
-
-              {/* Questions before checkout */}
+              {/* SWAP: What you get → Questions on Continue tap */}
               {!showQuestions ? (
-                <button onClick={() => setShowQuestions(true)}
-                  className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800">
-                  {selectedProduct.cta}
-                </button>
+                <>
+                  {/* Compact bullet summary */}
+                  <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1.5">What you get</p>
+                    <p className="text-xs font-semibold text-neutral-900 mb-2">{selectedProduct.tagline}</p>
+                    <p className="text-xs text-neutral-600 leading-relaxed">
+                      {selectedProduct.bullets.map((b, i) => (
+                        <span key={b}><span className="text-emerald-600">✓</span> {b}{i < selectedProduct.bullets.length - 1 ? " · " : ""}</span>
+                      ))}
+                    </p>
+                  </div>
+                  {/* Price */}
+                  <div className="mb-3 flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-2.5">
+                    <div>
+                      <p className="font-serif text-xl font-bold text-neutral-950">£{effectiveTier}</p>
+                      <p className="text-xs text-neutral-400">One-time · No subscription</p>
+                    </div>
+                    <p className="font-mono text-[10px] text-neutral-400 text-right">3 quick questions<br/>then Stripe</p>
+                  </div>
+                  <button onClick={() => setShowQuestions(true)}
+                    className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
+                    {selectedProduct.cta}
+                  </button>
+                </>
               ) : (
-                <div ref={questionsRef} className="space-y-3">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">3 quick questions</p>
+                /* SWAP: questions replace the bullets — same height */
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">3 quick questions then pay</p>
+                    <p className="font-serif text-lg font-bold text-neutral-950">£{effectiveTier}</p>
+                  </div>
                   {[
                     { label: "Your main income source", key: "income_source", options: [["sole_trader", "Sole trader"], ["landlord", "UK landlord"], ["both", "Both"]] },
                     { label: "When do you need to be ready?", key: "timing", options: [["asap", "As soon as possible"], ["before_august", "Before 7 August 2026"], ["before_2027", "Before April 2027"]] },
@@ -596,8 +609,8 @@ export default function MTDScorecardCalculator() {
                     </div>
                   ))}
                   <button onClick={handleCheckout} disabled={!popupAnswersComplete || checkoutLoading}
-                    className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed">
-                    {checkoutLoading ? "Redirecting to checkout…" : `Continue to Payment — £${effectiveTier} →`}
+                    className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                    {checkoutLoading ? "Redirecting…" : `Pay £${effectiveTier} →`}
                   </button>
                   {error && <p className="text-sm font-medium text-red-700">{error}</p>}
                 </div>

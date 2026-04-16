@@ -137,6 +137,15 @@ export default function MTDScorecardPage() {
           </div>
         </nav>
 
+        {/* Mobile sticky deadline bar — always visible as user scrolls */}
+        <div className="sticky top-[57px] z-40 flex items-center justify-between border-b border-red-900 bg-red-700 px-4 py-2 lg:hidden">
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs font-bold text-white">🔴 {days} days</span>
+            <span className="text-xs text-red-200">to first MTD deadline</span>
+          </div>
+          <span className="font-mono text-xs font-bold text-white">7 August 2026</span>
+        </div>
+
         <main className="mx-auto max-w-5xl px-6 py-8 space-y-6">
 
           {/* ══════════════════════════════════════════════════════════════════
@@ -293,16 +302,22 @@ export default function MTDScorecardPage() {
                       ))}
                     </div>
                     <div className="flex gap-2 mb-2">
-                      <a href="#calculator" className="flex-1 rounded-lg bg-white px-3 py-2.5 text-center transition hover:bg-neutral-100">
+                      <a href="#calculator"
+                        onClick={() => document.dispatchEvent(new CustomEvent("sidebar-price-tap"))}
+                        className="flex-1 rounded-lg bg-white px-3 py-2.5 text-center transition hover:bg-neutral-100 cursor-pointer">
                         <p className="font-mono text-sm font-bold text-neutral-950">£27</p>
                         <p className="text-[10px] text-neutral-500">Decision Pack</p>
                       </a>
-                      <a href="#calculator" className="flex-1 rounded-lg bg-blue-600 px-3 py-2.5 text-center transition hover:bg-blue-700">
+                      <a href="#calculator"
+                        onClick={() => document.dispatchEvent(new CustomEvent("sidebar-price-tap"))}
+                        className="flex-1 rounded-lg bg-blue-600 px-3 py-2.5 text-center transition hover:bg-blue-700 cursor-pointer">
                         <p className="font-mono text-sm font-bold text-white">£67</p>
                         <p className="text-[10px] text-blue-200">Action Pack</p>
                       </a>
                     </div>
-                    <p className="text-center text-[10px] text-neutral-400">↑ Tap a price · see what is included</p>
+                    <p className="text-center text-[10px] text-neutral-400">
+                      ↑ Select your income bracket to continue
+                    </p>
                     <p className="mt-1 text-center text-[10px] text-neutral-600">One-time · No subscription</p>
                   </div>
 
