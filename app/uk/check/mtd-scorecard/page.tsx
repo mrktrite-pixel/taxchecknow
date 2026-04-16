@@ -171,11 +171,8 @@ export default function MTDScorecardPage() {
               Making Tax Digital UK 2026: do you need to comply?
             </h1>
 
-            {/* ── TWO-COLUMN ABOVE-FOLD ── */}
-            <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-
-              {/* LEFT: Answer block + mistakes */}
-              <div className="space-y-3">
+            {/* ── ABOVE-FOLD: Answer + Mistakes (full width on all screens) ── */}
+            <div className="space-y-3 mb-4">
 
                 {/* Answer block — AI citation target */}
                 <div className="rounded-xl border border-blue-200 bg-blue-50 px-5 py-4">
@@ -210,34 +207,6 @@ export default function MTDScorecardPage() {
                 </div>
               </div>
 
-              {/* RIGHT: Countdown as compact Tax Math table */}
-              <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4">
-                <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">First quarterly deadline</p>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="font-serif text-4xl font-bold text-white">{days}</span>
-                  <span className="font-mono text-xs text-neutral-400">days<br/>7 Aug 2026</span>
-                </div>
-                <div className="mb-3 h-1 rounded-full bg-neutral-800">
-                  <div className="h-1 rounded-full bg-red-500" style={{ width: `${pct}%` }} />
-                </div>
-                {/* Tax Math rows */}
-                <div className="space-y-1.5 border-t border-neutral-800 pt-3">
-                  {[
-                    { label: "Old system", value: "1 filing/year" },
-                    { label: "New system", value: "5 filings/year" },
-                    { label: "Q1 penalty threshold", value: "4 missed = £200" },
-                    { label: "Grace period", value: "2026-27 only" },
-                    { label: "Late payment", value: "Not waived" },
-                  ].map(row => (
-                    <div key={row.label} className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] text-neutral-500">{row.label}</span>
-                      <span className="font-mono text-[10px] font-bold text-neutral-300">{row.value}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-2 text-[10px] text-neutral-500">Source: HMRC · ICAEW TAXguide 01/25</p>
-              </div>
-            </div>
 
             {/* ── CALCULATOR + SIDEBAR — above fold on most laptops ── */}
             <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_280px]">
@@ -336,6 +305,41 @@ export default function MTDScorecardPage() {
                 </div>
               </div>
             </div>
+            {/* ── COUNTDOWN — desktop visible, mobile hidden (red bar handles mobile) ── */}
+            <div className="hidden lg:block mt-4 rounded-xl border border-neutral-800 bg-neutral-950 p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">First quarterly deadline — United Kingdom</p>
+                  <div className="mt-1 flex items-baseline gap-2">
+                    <span className="font-serif text-4xl font-bold text-white">{days}</span>
+                    <span className="font-mono text-xs text-neutral-400">days to 7 August 2026</span>
+                  </div>
+                </div>
+                <div className="hidden sm:block">
+                  <div className="space-y-1">
+                    {[
+                      { label: "Old system", value: "1 filing/year" },
+                      { label: "New system", value: "5 filings/year" },
+                      { label: "Penalty threshold", value: "4 missed = £200" },
+                      { label: "Grace period", value: "2026-27 only" },
+                    ].map(row => (
+                      <div key={row.label} className="flex items-center gap-4 justify-between">
+                        <span className="font-mono text-[10px] text-neutral-500">{row.label}</span>
+                        <span className="font-mono text-[10px] font-bold text-neutral-300">{row.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-2 h-1 rounded-full bg-neutral-800">
+                <div className="h-1 rounded-full bg-red-500" style={{ width: `${pct}%` }} />
+              </div>
+              <div className="mt-2 space-y-0.5 border-t border-neutral-800 pt-2">
+                <p className="text-xs text-red-400">If you are not ready by this date: you cannot submit your first quarterly return and late payment penalties still apply.</p>
+              </div>
+              <p className="mt-1 text-[10px] text-neutral-500">Source: HMRC · ICAEW TAXguide 01/25 · Last verified: April 2026</p>
+            </div>
+
           </section>
 
           {/* ══════════════════════════════════════════════════════════════════
