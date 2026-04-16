@@ -303,20 +303,18 @@ export default function MTDScorecardPage() {
                     </div>
                     <div className="flex gap-2 mb-2">
                       <a href="#calculator"
-                        onClick={() => document.dispatchEvent(new CustomEvent("sidebar-price-tap"))}
-                        className="flex-1 rounded-lg bg-white px-3 py-2.5 text-center transition hover:bg-neutral-100 cursor-pointer">
+                        className="flex-1 rounded-lg bg-white px-3 py-2.5 text-center transition hover:bg-neutral-100">
                         <p className="font-mono text-sm font-bold text-neutral-950">£27</p>
                         <p className="text-[10px] text-neutral-500">Decision Pack</p>
                       </a>
                       <a href="#calculator"
-                        onClick={() => document.dispatchEvent(new CustomEvent("sidebar-price-tap"))}
-                        className="flex-1 rounded-lg bg-blue-600 px-3 py-2.5 text-center transition hover:bg-blue-700 cursor-pointer">
+                        className="flex-1 rounded-lg bg-blue-600 px-3 py-2.5 text-center transition hover:bg-blue-700">
                         <p className="font-mono text-sm font-bold text-white">£67</p>
                         <p className="text-[10px] text-blue-200">Action Pack</p>
                       </a>
                     </div>
                     <p className="text-center text-[10px] text-neutral-400">
-                      ↑ Select your income bracket to continue
+                      ↑ Select your income bracket above to continue
                     </p>
                     <p className="mt-1 text-center text-[10px] text-neutral-600">One-time · No subscription</p>
                   </div>

@@ -204,18 +204,7 @@ export default function MTDScorecardCalculator() {
     if (selectedBracket !== null && resultRef.current) setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   }, [selectedBracket]);
 
-  // Pulse brackets when sidebar price link tapped
-  useEffect(() => {
-    function handleSidebarClick() {
-      const el = document.getElementById("calculator");
-      if (el) {
-        el.classList.add("ring-2", "ring-neutral-950", "ring-offset-2", "rounded-2xl");
-        setTimeout(() => el.classList.remove("ring-2", "ring-neutral-950", "ring-offset-2", "rounded-2xl"), 1500);
-      }
-    }
-    document.addEventListener("sidebar-price-tap", handleSidebarClick);
-    return () => document.removeEventListener("sidebar-price-tap", handleSidebarClick);
-  }, []);
+
 
   useEffect(() => {
     if (showReadiness && readinessRef.current) setTimeout(() => readinessRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
