@@ -77,10 +77,10 @@ function calcReadiness(software: SoftwareStatus, records: RecordsStatus, registr
   let bandLabel: string;
   let bandColour: ReadinessResult["bandColour"];
 
-  if (score <= 25)      { band = "not_ready"; bandLabel = "Not ready — urgent action needed";     bandColour = "red"; }
-  else if (score <= 50) { band = "partial";   bandLabel = "Partially ready — significant gaps";   bandColour = "amber"; }
-  else if (score <= 75) { band = "mostly";    bandLabel = "Mostly ready — a few things to fix";   bandColour = "blue"; }
-  else                  { band = "ready";     bandLabel = "Ready — confirm with your accountant"; bandColour = "emerald"; }
+  if (score <= 25)      { band = "not_ready"; bandLabel = "Significant gaps — action needed now";     bandColour = "red"; }
+  else if (score <= 50) { band = "partial";   bandLabel = "Partial compliance — gaps to close";   bandColour = "amber"; }
+  else if (score <= 75) { band = "mostly";    bandLabel = "Nearly compliant — final steps needed";   bandColour = "blue"; }
+  else                  { band = "ready";     bandLabel = "Compliance in place — confirm the details"; bandColour = "emerald"; }
 
   let topGapTitle = "";
   let topGap = "";
@@ -388,7 +388,7 @@ export default function MTDScorecardCalculator() {
               <div className="space-y-2">
                 <button onClick={() => setShowReadiness(true)}
                   className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
-                  Check my readiness before buying →
+                  Check my compliance gaps before buying →
                 </button>
                 <button onClick={() => { setOverrideTier(27); setShowPopup(true); }}
                   className="w-full rounded-xl border border-neutral-300 bg-white py-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50">
@@ -399,7 +399,7 @@ export default function MTDScorecardCalculator() {
             {bracket.inScope2027 && !bracket.inScope2026 && (
               <button onClick={() => setShowReadiness(true)}
                 className="w-full rounded-xl border border-neutral-950 bg-white py-3.5 text-sm font-bold text-neutral-950 transition hover:bg-neutral-50">
-                Get my 2027 readiness score →
+                Check my 2027 compliance gaps →
               </button>
             )}
           </div>
@@ -408,9 +408,9 @@ export default function MTDScorecardCalculator() {
         {/* ── STEP 3: READINESS QUESTIONS (3 only) ── */}
         {showReadiness && bracket && (bracket.inScope2026 || bracket.inScope2027) && (
           <div ref={readinessRef} className="scroll-mt-4 rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6">
-            <p className="mb-1 font-mono text-xs uppercase tracking-widest text-neutral-400">Readiness assessment — 3 quick questions</p>
-            <h2 className="mb-1 font-serif text-xl font-bold text-neutral-950">How prepared are you for MTD?</h2>
-            <p className="mb-5 text-sm text-neutral-500">Your score appears instantly as you answer.</p>
+            <p className="mb-1 font-mono text-xs uppercase tracking-widest text-neutral-400">Compliance gap check — 3 quick questions</p>
+            <h2 className="mb-1 font-serif text-xl font-bold text-neutral-950">Where are the gaps in your MTD compliance setup?</h2>
+            <p className="mb-5 text-sm text-neutral-500">Your compliance gaps appear instantly as you answer.</p>
             <div className="space-y-5">
               <div>
                 <p className="mb-2 text-sm font-semibold text-neutral-800">1. Do you have MTD-compatible accounting software?</p>
@@ -450,11 +450,11 @@ export default function MTDScorecardCalculator() {
           </div>
         )}
 
-        {/* ── STEP 4: READINESS SCORE + GAP + POPUP TRIGGER ── */}
+        {/* ── STEP 4: COMPLIANCE POSITION + GAPS + POPUP TRIGGER ── */}
         {showReadiness && readiness && (
           <div className={`rounded-2xl border p-5 sm:p-6 ${readinessPanel}`}>
             <div className="mb-2 flex items-center gap-3">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">Your readiness score</p>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">Your compliance position</p>
               <span className={`rounded-full px-2 py-0.5 font-mono text-sm font-bold ${readinessBadge}`}>{readiness.score}/100</span>
             </div>
             <h3 className="mb-4 font-serif text-xl font-bold text-neutral-950">{readiness.bandLabel}</h3>
@@ -471,9 +471,9 @@ export default function MTDScorecardCalculator() {
               </div>
               {readiness.score < 75 && (
                 <div className="border-t border-neutral-100 pt-3">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-blue-600 mb-1">If you fix this gap</p>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-blue-600 mb-1">Closing this gap</p>
                   <p className="text-sm text-neutral-700">
-                    Score improves from{" "}
+                    Compliance position improves from{" "}
                     <strong className="text-red-600">{readiness.score}/100</strong> →{" "}
                     <strong className="text-emerald-600">{readiness.projectedScore}/100</strong>
                   </p>
@@ -489,8 +489,8 @@ export default function MTDScorecardCalculator() {
             <button onClick={() => setShowPopup(true)}
               className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800">
               {effectiveTier === 67
-                ? `Get My Action Pack — close these gaps before 7 August →`
-                : `Get My Decision Pack — your personalised MTD plan →`}
+                ? `Get My Action Pack — close my compliance gaps →`
+                : `Get My Decision Pack — what do I need to do →`}
             </button>
             <p className="mt-2 text-center text-xs text-neutral-400">
               £{effectiveTier} · One-time · No subscription
@@ -522,7 +522,7 @@ export default function MTDScorecardCalculator() {
               {readiness && (
                 <div className="mt-3 rounded-lg bg-white/10 px-3 py-2">
                   <p className="text-xs text-neutral-300">
-                    Your readiness score: <strong className="text-white">{readiness.score}/100</strong> ·{" "}
+                    Your compliance position: <strong className="text-white">{readiness.score}/100</strong> ·{" "}
                     Biggest gap: <strong className="text-red-300">{readiness.topGapTitle}</strong>
                   </p>
                 </div>

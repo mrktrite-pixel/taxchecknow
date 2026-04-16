@@ -306,25 +306,6 @@ export default function MTDScorecardPage() {
                     <p className="mt-1 text-center text-[10px] text-neutral-600">One-time · No subscription</p>
                   </div>
 
-                  {/* Panel 4 — Deadlines */}
-                  <div className="rounded-xl border border-neutral-200 bg-white p-4">
-                    <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Quarterly deadlines 2026-27</p>
-                    <div className="space-y-1.5">
-                      {[
-                        { q: "Q1 Apr–Jun", date: "7 Aug 2026", urgent: true },
-                        { q: "Q2 Jul–Sep", date: "7 Nov 2026", urgent: false },
-                        { q: "Q3 Oct–Dec", date: "7 Feb 2027", urgent: false },
-                        { q: "Q4 Jan–Mar", date: "7 May 2027", urgent: false },
-                        { q: "Final declaration", date: "31 Jan 2028", urgent: false },
-                      ].map(row => (
-                        <div key={row.q} className={`flex items-center justify-between rounded-lg px-2 py-1.5 ${row.urgent ? "bg-red-50" : "bg-neutral-50"}`}>
-                          <span className="text-xs text-neutral-600">{row.q}</span>
-                          <span className={`font-mono text-xs font-bold ${row.urgent ? "text-red-700" : "text-neutral-500"}`}>{row.date}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
                   {/* Sources */}
                   <div className="rounded-xl border border-blue-100 bg-blue-50 p-3">
                     <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-blue-600">Primary sources</p>
