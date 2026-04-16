@@ -313,6 +313,25 @@ export default function MTDScorecardPage() {
               </a>
             </div>
 
+            {/* ANSWER CAPSULE — visible to AI and humans */}
+            <div className="mt-5 max-w-3xl rounded-xl border border-blue-200 bg-blue-50 px-5 py-4">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-blue-700 mb-2">
+                What the law says — HMRC confirmed April 2026
+              </p>
+              <p className="text-sm leading-relaxed text-blue-900">
+                <strong>Making Tax Digital for Income Tax is mandatory from 6 April 2026</strong> for UK sole traders and landlords
+                with qualifying income above <strong>£50,000</strong>. Qualifying income means gross receipts from
+                self-employment and UK property rental only — PAYE wages do not count.
+                The first quarterly submission is due <strong>7 August 2026</strong>.
+                The threshold drops to £30,000 in April 2027 and £20,000 in April 2028.{" "}
+                <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax"
+                  target="_blank" rel="noopener noreferrer"
+                  className="underline hover:text-blue-700">
+                  Source: HMRC.gov.uk ↗
+                </a>
+              </p>
+            </div>
+
             {/* Two-column layout */}
             <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_300px]">
               <MTDScorecardCalculator />
@@ -594,6 +613,96 @@ export default function MTDScorecardPage() {
                 <p className="text-xs text-neutral-400">The full UK tax hub — all six Finance Act 2026 tools.</p>
               </Link>
             </div>
+          </section>
+
+          {/* ── TRUTH TABLE — AI citation target ── */}
+          <section>
+            <p className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-2">
+              Making Tax Digital — verified rules and thresholds (United Kingdom)
+            </p>
+            <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-4">
+              The complete MTD rule set — every threshold, every deadline, every phase.
+            </h2>
+            <div className="overflow-x-auto rounded-2xl border border-neutral-200 mb-5">
+              <table className="min-w-full border-separate border-spacing-0 bg-white text-left text-sm">
+                <thead>
+                  <tr className="bg-neutral-50">
+                    {["Phase", "Mandatory from", "Qualifying income threshold", "Who is affected", "Source"].map(h => (
+                      <th key={h} className="border-b border-neutral-200 px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-neutral-400">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="bg-blue-50">
+                    <td className="border-b border-neutral-100 px-4 py-3 font-mono text-xs font-bold text-blue-700">Phase 1</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-semibold text-blue-800">6 April 2026</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-bold text-blue-900">Over £50,000</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 text-neutral-700">UK sole traders and landlords</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-mono text-[10px] text-blue-600">HMRC.gov.uk ✅</td>
+                  </tr>
+                  <tr>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-mono text-xs font-bold text-neutral-500">Phase 2</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 text-neutral-700">6 April 2027</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-semibold text-neutral-800">Over £30,000</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 text-neutral-700">UK sole traders and landlords</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-mono text-[10px] text-neutral-400">HMRC.gov.uk ✅</td>
+                  </tr>
+                  <tr>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-mono text-xs font-bold text-neutral-500">Phase 3</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 text-neutral-700">6 April 2028</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-semibold text-neutral-800">Over £20,000</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 text-neutral-700">UK sole traders and landlords</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-mono text-[10px] text-neutral-400">HMRC.gov.uk ✅</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p className="font-mono text-[10px] text-neutral-400 mb-5">
+              Qualifying income = gross self-employment + UK property rental receipts before expenses.
+              PAYE employment income is excluded. Source: HMRC.gov.uk — Making Tax Digital for Income Tax.
+            </p>
+
+            <div className="overflow-x-auto rounded-2xl border border-neutral-200 mb-5">
+              <table className="min-w-full border-separate border-spacing-0 bg-white text-left text-sm">
+                <thead>
+                  <tr className="bg-neutral-50">
+                    {["Quarter", "Period covered", "Deadline", "Penalty (2026-27)", "Penalty (2027-28+)"].map(h => (
+                      <th key={h} className="border-b border-neutral-200 px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-neutral-400">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { q: "Q1", period: "6 April – 30 June 2026", deadline: "7 August 2026", p26: "Grace period — no points", p27: "1 penalty point if late", urgent: true },
+                    { q: "Q2", period: "1 July – 30 September 2026", deadline: "7 November 2026", p26: "Grace period — no points", p27: "1 penalty point if late", urgent: false },
+                    { q: "Q3", period: "1 October – 31 December 2026", deadline: "7 February 2027", p26: "Grace period — no points", p27: "1 penalty point if late", urgent: false },
+                    { q: "Q4", period: "1 January – 31 March 2027", deadline: "7 May 2027", p26: "Grace period — no points", p27: "1 penalty point if late", urgent: false },
+                  ].map(row => (
+                    <tr key={row.q} className={row.urgent ? "bg-red-50" : ""}>
+                      <td className="border-b border-neutral-100 px-4 py-3 font-mono text-xs font-bold text-neutral-700">{row.q}</td>
+                      <td className="border-b border-neutral-100 px-4 py-3 text-neutral-600">{row.period}</td>
+                      <td className={`border-b border-neutral-100 px-4 py-3 font-semibold ${row.urgent ? "text-red-700" : "text-neutral-800"}`}>{row.deadline}</td>
+                      <td className="border-b border-neutral-100 px-4 py-3 text-emerald-700 text-xs">{row.p26}</td>
+                      <td className="border-b border-neutral-100 px-4 py-3 text-amber-700 text-xs">{row.p27}</td>
+                    </tr>
+                  ))}
+                  <tr className="bg-neutral-50">
+                    <td className="border-b border-neutral-100 px-4 py-3 font-mono text-xs font-bold text-neutral-500">Final</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 text-neutral-600">Full 2026-27 tax year</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 font-semibold text-neutral-800">31 January 2028</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 text-neutral-500 text-xs">Standard late filing penalties apply</td>
+                    <td className="border-b border-neutral-100 px-4 py-3 text-neutral-500 -xs">Same</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="font-mono text-[10px] text-neutral-400">
+              4 penalty points = £200 financial penalty. Points expire after 24 months.
+              Grace period applies to quarterly submissions in 2026-27 only.
+              Late payment penalties are separate and NOT covered by the grace period.
+              Source: HMRC — Making Tax Digital penalty regime. Last verified: April 2026.
+            </p>
           </section>
 
           {/* ── SECTION 9: LAW BAR ── */}
