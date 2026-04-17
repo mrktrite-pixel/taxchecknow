@@ -148,7 +148,15 @@ export default function MTDScorecardCalculator() {
   const bracket = selectedBracket !== null ? INCOME_BRACKETS[selectedBracket] : null;
   const readiness = useMemo(() => {
     if (!showReadiness || !bracket) return null;
-    return calcReadiness(software, records, registration);
+    const result = calcReadiness(software, records, registration);
+    // Save answers for success page personalisation
+    if (result) {
+      sessionStorage.setItem("mtd_score", String(result.score));
+      sessionStorage.setItem("mtd_software", software || "");
+      sessionStorage.setItem("mtd_records", records || "");
+      sessionStorage.setItem("mtd_registration", registration || "");
+    }
+    return result;
   }, [showReadiness, bracket, software, records, registration]);
 
   const calculatedTier: PackTier = readiness && bracket?.inScope2026 ? (readiness.score <= 50 ? 127 : 67) : 67;
@@ -216,6 +224,8 @@ export default function MTDScorecardCalculator() {
     setShowQuestions(false);
     setOverrideTier(null);
     setError("");
+    // Save bracket for success page personalisation
+    sessionStorage.setItem("mtd_bracket", INCOME_BRACKETS[index].label);
     try {
       const b = INCOME_BRACKETS[index];
       const res = await fetch("/api/decision-sessions", {
@@ -248,7 +258,11 @@ export default function MTDScorecardCalculator() {
       if (sid) {
         fetch("/api/decision-sessions", {
           method: "PATCH", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+          // Save income source for success page
+      if (popupAnswers.income_source) {
+        sessionStorage.setItem("mtd_income_source", popupAnswers.income_source);
+      }
+      body: JSON.stringify({
             id: sid, tier_intended: effectiveTier,
             product_key: `uk_${effectiveTier}_mtd_scorecard`,
             questionnaire_payload: popupAnswers, email: email || undefined,
@@ -371,7 +385,8 @@ export default function MTDScorecardCalculator() {
 
             {/* Email save */}
             <div className="mb-4 rounded-xl border border-neutral-200 bg-white p-3">
-              <p className="mb-1.5 text-xs text-neutral-500">Save your result to show your accountant.</p>
+              <p className="mb-1 text-sm font-semibold text-neutral-800">Save your result to show your accountant.</p>
+              <p className="mb-2 text-xs text-neutral-500">Get a copy of your compliance position by email — free.</p>
               {!emailSent ? (
                 <div className="flex gap-2">
                   <input type="email" placeholder="Your email" value={email} onChange={e => setEmail(e.target.value)}
