@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { generateAllowanceSniperCalendar, downloadICS } from "@/lib/generate-ics";
 
 const FILES_67 = [
   { num: "01", name: "Your ANI Position Assessment",      desc: "Your exact adjusted net income and trap status.", url: "/files/uk/allowance-sniper-01" },
