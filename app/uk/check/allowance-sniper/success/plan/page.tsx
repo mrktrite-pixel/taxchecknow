@@ -309,7 +309,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
     setTimeout(() => setCopied(false), 3000);
   }
 
-  const greeting = firstName !== "there" ? firstName : "You";
+  const greeting = firstName !== "there" ? firstName : "your";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -346,7 +346,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                 Payment confirmed · Action Plan · £147
               </p>
               <h1 className="mt-1 font-serif text-2xl font-bold text-neutral-950">
-                {greeting}, your Allowance Sniper Action Plan
+                {greeting !== "your" ? `${greeting}, your` : "Your"} Allowance Sniper Action Plan
               </h1>
               <p className="mt-1 text-sm text-emerald-800">
                 Not a guide to the 60% trap. A plan to escape it — built around your numbers.
@@ -426,7 +426,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
               </div>
               <p className="text-xs text-red-700">
                 Full calculation with net payment breakdown in{" "}
-                <a href="/files/uk/allowance-sniper/allowance-sniper-02"
+                <a href="/files/uk/allowance-sniper/allowance-sniper-02" target="_blank" rel="noopener noreferrer"
                   className="font-semibold underline hover:text-red-900 transition">File 02 →</a>
               </p>
             </div>
@@ -484,7 +484,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
               <h2 className="mb-2 font-serif text-xl font-bold text-neutral-950">{assessment.sipprec}</h2>
               <p className="mb-3 text-sm leading-relaxed text-neutral-600">{assessment.sippWhy}</p>
               <div className="mb-4 grid gap-2 sm:grid-cols-3">
-                <a href="https://www.vanguard.co.uk/professional/product/sipp"
+                <a href="https://www.vanguardinvestor.co.uk/what-we-offer/sipp"
                   target="_blank" rel="noopener noreferrer"
                   className="rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-center text-sm font-semibold text-neutral-700 transition hover:bg-neutral-950 hover:text-white">
                   Vanguard SIPP ↗
@@ -505,7 +505,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                 <p className="text-sm leading-relaxed text-amber-900">{assessment.bonusTip}</p>
                 <p className="mt-1 text-xs text-amber-700">
                   Full bonus timing strategy in{" "}
-                  <a href="/files/uk/allowance-sniper/allowance-sniper-07"
+                  <a href="/files/uk/allowance-sniper/allowance-sniper-07" target="_blank" rel="noopener noreferrer"
                     className="font-semibold underline hover:text-amber-900 transition">File 07 →</a>
                 </p>
               </div>
@@ -549,7 +549,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                   </p>
                   <p className="mt-0.5 text-xs text-blue-600">
                     Full accountant brief in{" "}
-                    <a href="/files/uk/allowance-sniper/allowance-sniper-05"
+                    <a href="/files/uk/allowance-sniper/allowance-sniper-05" target="_blank" rel="noopener noreferrer"
                       className="font-semibold underline">File 05 →</a>
                     {" "}— print and take to your next meeting
                   </p>
@@ -618,7 +618,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                 Start here. End here.
               </p>
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
-                {greeting}, tick off action 1 above. Open File 02 for the exact numbers.
+                {greeting !== "your" ? `${greeting}, tick` : "Tick"} off action 1 above. Open File 02 for the exact numbers.
                 Forward File 05 to your accountant.
                 Make the SIPP contribution before 5 April 2027.
                 Then open File 06 — the trap recurs every year until 2031.

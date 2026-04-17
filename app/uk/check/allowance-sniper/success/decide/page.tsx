@@ -216,7 +216,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
     setTimeout(() => setCopied(false), 3000);
   }
 
-  const greeting = firstName !== "there" ? firstName : "You";
+  const greeting = firstName !== "there" ? firstName : "your";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -252,7 +252,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                 Payment confirmed · Decision Pack · £67
               </p>
               <h1 className="mt-1 font-serif text-2xl font-bold text-neutral-950">
-                {greeting}, your Allowance Sniper Assessment
+                {greeting !== "your" ? `${greeting}, your` : "Your"} Allowance Sniper Assessment
               </h1>
               <p className="mt-1 text-sm text-emerald-800">
                 A personal assessment built around your ANI, your gaps, your deadline — not the average taxpayer.
@@ -323,7 +323,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                 Net payment = gross × 80%. SIPP provider claims 20% basic rate relief automatically.
                 Claim the additional 20% higher-rate relief via self-assessment by 31 January 2028.
                 Full calculation in{" "}
-                <a href="/files/uk/allowance-sniper/allowance-sniper-02"
+                <a href="/files/uk/allowance-sniper/allowance-sniper-02" target="_blank" rel="noopener noreferrer"
                   className="text-neutral-400 underline hover:text-white transition">
                   File 02 →
                 </a>
@@ -338,7 +338,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
               <h2 className="mb-2 font-serif text-xl font-bold text-neutral-950">{assessment.sipprec}</h2>
               <p className="mb-3 text-sm leading-relaxed text-neutral-600">{assessment.sippWhy}</p>
               <div className="grid gap-2 sm:grid-cols-3">
-                <a href="https://www.vanguard.co.uk/professional/product/sipp"
+                <a href="https://www.vanguardinvestor.co.uk/what-we-offer/sipp"
                   target="_blank" rel="noopener noreferrer"
                   className="rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-center text-sm font-semibold text-neutral-700 transition hover:bg-neutral-950 hover:text-white">
                   Vanguard SIPP ↗
@@ -356,7 +356,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
               </div>
               <p className="mt-2 text-xs text-neutral-400">
                 Full comparison — SIPP vs salary sacrifice — in{" "}
-                <a href="/files/uk/allowance-sniper/allowance-sniper-03"
+                <a href="/files/uk/allowance-sniper/allowance-sniper-03" target="_blank" rel="noopener noreferrer"
                   className="underline hover:text-neutral-700 transition">File 03 →</a>
               </p>
             </div>
@@ -370,7 +370,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                   </p>
                   <p className="mt-0.5 text-xs text-blue-600">
                     Ask these before 5 April 2027 — full brief in{" "}
-                    <a href="/files/uk/allowance-sniper/allowance-sniper-05"
+                    <a href="/files/uk/allowance-sniper/allowance-sniper-05" target="_blank" rel="noopener noreferrer"
                       className="font-semibold underline">File 05 →</a>
                   </p>
                 </div>
@@ -460,7 +460,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                 Start here. End here.
               </p>
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
-                {greeting}, open File 02 — it shows your exact SIPP contribution and what it will cost you net.
+                {greeting !== "your" ? `${greeting}, open` : "Open"} File 02 — it shows your exact SIPP contribution and what it will cost you net.
                 Then open File 05 and forward it to your accountant.
                 Make the contribution before 5 April 2027.
               </p>
