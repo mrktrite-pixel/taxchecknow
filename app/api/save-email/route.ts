@@ -22,23 +22,25 @@ export async function POST(req: Request) {
 
     // Update decision session email if session_id provided
     if (session_id && !session_id.startsWith("fallback_")) {
-      await supabase
-        .from("decision_sessions")
-        .update({ email })
-        .eq("id", session_id)
-        .catch(() => {});
+      try {
+        await supabase
+          .from("decision_sessions")
+          .update({ email })
+          .eq("id", session_id);
+      } catch { /* non-fatal */ }
     }
 
     // Also insert into a simple email captures log
-    await supabase
-      .from("email_log")
-      .insert({
-        recipient_email: email,
-        email_type: "capture",
-        subject: `Email capture — ${source}`,
-        status: "captured",
-      })
-      .catch(() => {});
+    try {
+      await supabase
+        .from("email_log")
+        .insert({
+          recipient_email: email,
+          email_type: "capture",
+          subject: `Email capture — ${source}`,
+          status: "captured",
+        });
+    } catch { /* non-fatal */ }
 
     return NextResponse.json({ success: true });
   } catch (err) {
