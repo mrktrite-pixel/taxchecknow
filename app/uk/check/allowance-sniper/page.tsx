@@ -416,7 +416,7 @@ export default function AllowanceSniperPage() {
             TaxCheckNow
           </Link>
           <div className="flex items-center gap-4 text-sm">
-            <span className="hidden md:inline text-neutral-600">
+            <span className="hidden md:flex items-center gap-1 text-neutral-600">
               <span className="font-bold text-red-600">{countdown}</span> days
               to {DEADLINE_DATE}
             </span>
@@ -653,7 +653,7 @@ export default function AllowanceSniperPage() {
           </div>
 
           {/* 4 stat boxes */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
             <div className="border border-neutral-800 rounded-lg p-4">
               <p className="text-xs text-neutral-400 uppercase tracking-wide mb-2">
                 Expected top rate
