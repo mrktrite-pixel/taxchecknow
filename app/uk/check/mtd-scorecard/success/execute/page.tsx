@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { generateMTDCalendar, downloadICS } from "@/lib/generate-ics";
 
-const DRIVE_FOLDER = "https://drive.google.com/drive/folders/1mMvsfqWe41CRbzB5GJgWBeRHz2YfJwiV?usp=sharing";
-
 const ALL_FILES = [
   { num: "01", name: "Your MTD Scope Assessment",          desc: "Your exact compliance position confirmed in writing.", url: "/files/uk/01-scope-assessment" },
   { num: "02", name: "Your Software Recommendation",       desc: "One specific recommendation for your situation.", url: "/files/uk/02-software-recommendation" },
@@ -407,7 +405,7 @@ Respond ONLY with a JSON object, no markdown:
                           Go to HMRC →
                         </a>
                       )}
-                      <a href={DRIVE_FOLDER} target="_blank" rel="noopener noreferrer"
+                      <a href={`/files/uk/${({"06":"06-gap-closure-plan","07":"07-first-submission-checklist","08":"08-digital-records-template","09":"09-digital-links-audit","10":"10-hmrc-registration-walkthrough","01":"01-scope-assessment","02":"02-software-recommendation","03":"03-registration-steps","04":"04-deadline-calendar","05":"05-accountant-brief"})[action.fileRef.replace("File ","")] || "01-scope-assessment"}`} target="_blank" rel="noopener noreferrer"
                         className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 font-mono text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition">
                         {action.fileRef} — {action.fileLabel} →
                       </a>
@@ -453,7 +451,7 @@ Respond ONLY with a JSON object, no markdown:
                   </div>
                 ))}
               </div>
-              <a href={DRIVE_FOLDER} target="_blank" rel="noopener noreferrer"
+              <a href="/files/uk/09-digital-links-audit" target="_blank" rel="noopener noreferrer"
                 className="no-print inline-block rounded-lg border border-amber-300 bg-white px-4 py-2 font-mono text-xs font-bold text-amber-800 hover:bg-amber-100 transition">
                 File 09 — Full Digital Links Audit →
               </a>
@@ -500,7 +498,7 @@ Respond ONLY with a JSON object, no markdown:
                 ))}
               </div>
               <div className="flex gap-3 no-print">
-                <a href={DRIVE_FOLDER} target="_blank" rel="noopener noreferrer"
+                <a href="/files/uk/05-accountant-brief" target="_blank" rel="noopener noreferrer"
                   className="rounded-lg border border-blue-200 bg-white px-4 py-2 font-mono text-xs font-bold text-blue-700 hover:bg-blue-50 transition">
                   File 05 — Print accountant brief →
                 </a>
@@ -525,9 +523,9 @@ Respond ONLY with a JSON object, no markdown:
                   </div>
                 ))}
               </div>
-              <a href={DRIVE_FOLDER} target="_blank" rel="noopener noreferrer"
+              <a href="/files/uk/06-gap-closure-plan" target="_blank" rel="noopener noreferrer"
                 className="no-print block w-full rounded-xl bg-neutral-950 py-3.5 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                📁 Open all 10 files in Google Drive →
+                Open File 06 — Start With Your Gap Closure Plan →
               </a>
             </div>
 
@@ -543,7 +541,7 @@ Respond ONLY with a JSON object, no markdown:
                   className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   Register with HMRC →
                 </a>
-                <a href={DRIVE_FOLDER} target="_blank" rel="noopener noreferrer"
+                <a href="/files/uk/06-gap-closure-plan" target="_blank" rel="noopener noreferrer"
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   Open File 06 →
                 </a>
