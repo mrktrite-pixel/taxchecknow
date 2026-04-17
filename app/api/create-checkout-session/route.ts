@@ -9,48 +9,55 @@ function getStripe() {
   return new Stripe(key, { apiVersion: "2026-03-25.dahlia" });
 }
 
-// ── PRICE ID MAP ────────────────────────────────────────────────────────────
+// ── PRICE ID MAP ─────────────────────────────────────────────────────────────
 // Maps product_key → Stripe price ID environment variable
-// Add each new gate here as it is built
+// Pattern: uk_[tier]_[product_slug]
+// Add env vars to Vercel when each product goes live
+// Never add env vars in advance — only when product is built and tested
+
 function getPriceId(productKey: string): string | undefined {
   const key = productKey.toLowerCase();
 
-  // ── UK GATES ──────────────────────────────────────────────────────────────
-
-  // UK-01 MTD-50 Scorecard
-  if (key === "uk_67_mtd_scorecard") return process.env.STRIPE_UK_MTD_67;
+  // ── UK-01 MTD Mandate Auditor ─────────────────────────────────────────────
+  // URL: taxchecknow.com/uk/check/mtd-scorecard
+  // Prices: £67 / £127
+  if (key === "uk_67_mtd_scorecard")  return process.env.STRIPE_UK_MTD_67;
   if (key === "uk_127_mtd_scorecard") return process.env.STRIPE_UK_MTD_127;
 
-  // UK-02 60% Allowance Sniper (add when built)
-  if (key === "uk_47_allowance_sniper") return process.env.STRIPE_UK_ALLOWANCE_47;
-  if (key === "uk_97_allowance_sniper") return process.env.STRIPE_UK_ALLOWANCE_97;
+  // ── UK-02 60% Allowance Sniper ────────────────────────────────────────────
+  // URL: taxchecknow.com/uk/check/allowance-sniper
+  // Prices: £67 / £147
+  if (key === "uk_67_allowance_sniper")  return process.env.STRIPE_UK_ALLOWANCE_67;
+  if (key === "uk_147_allowance_sniper") return process.env.STRIPE_UK_ALLOWANCE_147;
 
-  // UK-03 Dividend Trap (add when built)
-  if (key === "uk_47_dividend_trap") return process.env.STRIPE_UK_DIVIDEND_47;
-  if (key === "uk_97_dividend_trap") return process.env.STRIPE_UK_DIVIDEND_97;
+  // ── UK-03 Digital Link Forensic Auditor ───────────────────────────────────
+  // URL: taxchecknow.com/uk/check/digital-link-auditor
+  // Prices: £67 / £127
+  if (key === "uk_67_digital_link_auditor")  return process.env.STRIPE_UK_DLA_67;
+  if (key === "uk_127_digital_link_auditor") return process.env.STRIPE_UK_DLA_127;
 
-  // UK-04 Crypto Predictor (add when built)
-  if (key === "uk_47_crypto_predictor") return process.env.STRIPE_UK_CRYPTO_47;
-  if (key === "uk_97_crypto_predictor") return process.env.STRIPE_UK_CRYPTO_97;
+  // ── UK-04 Side-Hustle MTD Checker ─────────────────────────────────────────
+  // URL: taxchecknow.com/uk/check/side-hustle-checker
+  // Prices: £47 / £97
+  if (key === "uk_47_side_hustle_checker") return process.env.STRIPE_UK_SH_47;
+  if (key === "uk_97_side_hustle_checker") return process.env.STRIPE_UK_SH_97;
 
-  // UK-05 FHL Recovery (add when built)
-  if (key === "uk_47_fhl_recovery") return process.env.STRIPE_UK_FHL_47;
-  if (key === "uk_97_fhl_recovery") return process.env.STRIPE_UK_FHL_97;
-
-  // UK-06 IHT Buster (add when built)
-  if (key === "uk_197_iht_buster") return process.env.STRIPE_UK_IHT_197;
-  if (key === "uk_397_iht_buster") return process.env.STRIPE_UK_IHT_397;
+  // ── UK-05 Dividend Trap Calculator ────────────────────────────────────────
+  // URL: taxchecknow.com/uk/check/dividend-trap
+  // Prices: £47 / £97
+  if (key === "uk_47_dividend_trap") return process.env.STRIPE_UK_DIV_47;
+  if (key === "uk_97_dividend_trap") return process.env.STRIPE_UK_DIV_97;
 
   // ── NZ GATES (add when built) ─────────────────────────────────────────────
-  // if (key === "nz_47_...") return process.env.STRIPE_NZ_...;
+  // if (key === "nz_67_...") return process.env.STRIPE_NZ_...;
 
   // ── CA GATES (add when built) ─────────────────────────────────────────────
-  // if (key === "ca_47_...") return process.env.STRIPE_CA_...;
+  // if (key === "ca_67_...") return process.env.STRIPE_CA_...;
 
   return undefined;
 }
 
-// ── VALID TIERS ─────────────────────────────────────────────────────────────
+// ── VALID TIERS ───────────────────────────────────────────────────────────────
 const VALID_TIERS = [47, 67, 97, 127, 147, 197, 397] as const;
 type ValidTier = typeof VALID_TIERS[number];
 
@@ -73,7 +80,7 @@ export async function POST(req: Request) {
 
     console.log("[checkout] incoming:", { decision_session_id, tier, product_key });
 
-    // ── VALIDATION ─────────────────────────────────────────────────────────
+    // ── VALIDATION ────────────────────────────────────────────────────────────
     if (!decision_session_id || !tier || !product_key) {
       return NextResponse.json(
         { error: "Missing required fields: decision_session_id, tier and product_key are required." },
@@ -82,7 +89,6 @@ export async function POST(req: Request) {
     }
 
     const normalizedTier = Number(tier);
-
     if (!isValidTier(normalizedTier)) {
       return NextResponse.json(
         { error: `Invalid tier: ${normalizedTier}. Expected one of: ${VALID_TIERS.join(", ")}` },
@@ -90,7 +96,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // ── PRICE ID LOOKUP ─────────────────────────────────────────────────────
+    // ── PRICE ID LOOKUP ───────────────────────────────────────────────────────
     const priceId = getPriceId(product_key);
 
     if (!priceId) {
@@ -98,31 +104,30 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error: `No Stripe price configured for: ${product_key}`,
-          hint: `Add STRIPE_UK_MTD_${normalizedTier} (or relevant variable) to Vercel environment variables`,
+          hint: `Add the matching STRIPE_UK_... environment variable to Vercel for this product and tier`,
         },
         { status: 500 }
       );
     }
 
-    // ── BUILD URLS ──────────────────────────────────────────────────────────
+    // ── BUILD URLS ────────────────────────────────────────────────────────────
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
 
     const resolvedSuccessUrl = success_url
       ? `${success_url}?payment=success&tier=${normalizedTier}&session_id={CHECKOUT_SESSION_ID}`
       : `${baseUrl}?payment=success&tier=${normalizedTier}&session_id={CHECKOUT_SESSION_ID}`;
 
-    const resolvedCancelUrl = cancel_url || `${baseUrl}/uk/check/mtd-scorecard`;
+    const resolvedCancelUrl = cancel_url || `${baseUrl}/uk`;
 
     console.log("[checkout] creating session:", { priceId, product_key, resolvedSuccessUrl });
 
-    // ── CREATE STRIPE SESSION ───────────────────────────────────────────────
+    // ── CREATE STRIPE SESSION ─────────────────────────────────────────────────
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: resolvedSuccessUrl,
       cancel_url: resolvedCancelUrl,
-      // Currency is set by the Stripe price — GBP for UK products
       metadata: {
         decision_session_id: String(decision_session_id),
         tier: String(normalizedTier),
