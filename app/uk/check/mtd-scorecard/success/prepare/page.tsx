@@ -5,11 +5,11 @@ import Link from "next/link";
 import { generateMTDCalendar, downloadICS } from "@/lib/generate-ics";
 
 const FEATURED_FILES = [
-  { num: "01", name: "Your MTD Scope Assessment",        desc: "Your exact compliance position — confirmed in writing.", url: "/files/uk/01-scope-assessment" },
-  { num: "02", name: "Your Software Recommendation",     desc: "The right MTD software for your specific situation.", url: "/files/uk/02-software-recommendation" },
-  { num: "03", name: "Your HMRC Registration Steps",     desc: "Step-by-step registration walkthrough.", url: "/files/uk/03-registration-steps" },
-  { num: "04", name: "Your Deadline Calendar",           desc: "Every filing date for 2026-27 — add them now.", url: "/files/uk/04-deadline-calendar" },
-  { num: "05", name: "Your Accountant Brief",            desc: "Print and take to your next meeting.", url: "/files/uk/05-accountant-brief" },
+  { num: "01", name: "Your MTD Scope Assessment",        desc: "Your exact compliance position — confirmed in writing.", url: "/files/uk/mtd/01-scope-assessment" },
+  { num: "02", name: "Your Software Recommendation",     desc: "The right MTD software for your specific situation.", url: "/files/uk/mtd/02-software-recommendation" },
+  { num: "03", name: "Your HMRC Registration Steps",     desc: "Step-by-step registration walkthrough.", url: "/files/uk/mtd/03-registration-steps" },
+  { num: "04", name: "Your Deadline Calendar",           desc: "Every filing date for 2026-27 — add them now.", url: "/files/uk/mtd/04-deadline-calendar" },
+  { num: "05", name: "Your Accountant Brief",            desc: "Print and take to your next meeting.", url: "/files/uk/mtd/05-accountant-brief" },
 ];
 
 interface Assessment {
@@ -292,7 +292,7 @@ Write a personal MTD compliance assessment. Respond ONLY with JSON, no markdown:
               </div>
               <p className="text-xs text-blue-600">
                 Full accountant brief in File 05 — print and take it to your meeting.
-                <a href="/files/uk/05-accountant-brief" target="_blank" rel="noopener noreferrer"
+                <a href="/files/uk/mtd/05-accountant-brief" target="_blank" rel="noopener noreferrer"
                   className="no-print ml-1 underline font-semibold">Open File 05 →</a>
               </p>
             </div>
@@ -348,7 +348,7 @@ Write a personal MTD compliance assessment. Respond ONLY with JSON, no markdown:
                   </div>
                 ))}
               </div>
-              <a href="/files/uk/01-scope-assessment" target="_blank" rel="noopener noreferrer"
+              <a href="/files/uk/mtd/01-scope-assessment" target="_blank" rel="noopener noreferrer"
                 className="no-print block w-full rounded-xl bg-neutral-950 py-3.5 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                 Open File 01 — Start Here →
               </a>

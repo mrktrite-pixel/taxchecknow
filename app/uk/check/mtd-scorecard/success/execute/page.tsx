@@ -5,16 +5,16 @@ import Link from "next/link";
 import { generateMTDCalendar, downloadICS } from "@/lib/generate-ics";
 
 const ALL_FILES = [
-  { num: "01", name: "Your MTD Scope Assessment",          desc: "Your exact compliance position confirmed in writing.", url: "/files/uk/01-scope-assessment" },
-  { num: "02", name: "Your Software Recommendation",       desc: "One specific recommendation for your situation.", url: "/files/uk/02-software-recommendation" },
-  { num: "03", name: "Your HMRC Registration Steps",       desc: "Step-by-step walkthrough — GOV.UK process.", url: "/files/uk/03-registration-steps" },
-  { num: "04", name: "Your Deadline Calendar",             desc: "Every filing date for 2026-27.", url: "/files/uk/04-deadline-calendar" },
-  { num: "05", name: "Your Accountant Brief",              desc: "Print and take to your next meeting.", url: "/files/uk/05-accountant-brief" },
-  { num: "06", name: "Your Gap Closure Plan",              desc: "What to fix, in what order, by when.", url: "/files/uk/06-gap-closure-plan" },
-  { num: "07", name: "Your First Submission Checklist",    desc: "Every step before you submit Q1 on 7 August.", url: "/files/uk/07-first-submission-checklist" },
-  { num: "08", name: "Your Digital Records Template",      desc: "Pre-built template — start using today.", url: "/files/uk/08-digital-records-template" },
-  { num: "09", name: "Your Digital Links Audit",           desc: "Audit your records chain against HMRC rules.", url: "/files/uk/09-digital-links-audit" },
-  { num: "10", name: "Your HMRC Registration Walkthrough", desc: "Screen-by-screen registration guide.", url: "/files/uk/10-hmrc-registration-walkthrough" },
+  { num: "01", name: "Your MTD Scope Assessment",          desc: "Your exact compliance position confirmed in writing.", url: "/files/uk/mtd/01-scope-assessment" },
+  { num: "02", name: "Your Software Recommendation",       desc: "One specific recommendation for your situation.", url: "/files/uk/mtd/02-software-recommendation" },
+  { num: "03", name: "Your HMRC Registration Steps",       desc: "Step-by-step walkthrough — GOV.UK process.", url: "/files/uk/mtd/03-registration-steps" },
+  { num: "04", name: "Your Deadline Calendar",             desc: "Every filing date for 2026-27.", url: "/files/uk/mtd/04-deadline-calendar" },
+  { num: "05", name: "Your Accountant Brief",              desc: "Print and take to your next meeting.", url: "/files/uk/mtd/05-accountant-brief" },
+  { num: "06", name: "Your Gap Closure Plan",              desc: "What to fix, in what order, by when.", url: "/files/uk/mtd/06-gap-closure-plan" },
+  { num: "07", name: "Your First Submission Checklist",    desc: "Every step before you submit Q1 on 7 August.", url: "/files/uk/mtd/07-first-submission-checklist" },
+  { num: "08", name: "Your Digital Records Template",      desc: "Pre-built template — start using today.", url: "/files/uk/mtd/08-digital-records-template" },
+  { num: "09", name: "Your Digital Links Audit",           desc: "Audit your records chain against HMRC rules.", url: "/files/uk/mtd/09-digital-links-audit" },
+  { num: "10", name: "Your HMRC Registration Walkthrough", desc: "Screen-by-screen registration guide.", url: "/files/uk/mtd/10-hmrc-registration-walkthrough" },
 ];
 
 interface Action {
@@ -451,7 +451,7 @@ Respond ONLY with a JSON object, no markdown:
                   </div>
                 ))}
               </div>
-              <a href="/files/uk/09-digital-links-audit" target="_blank" rel="noopener noreferrer"
+              <a href="/files/uk/mtd/09-digital-links-audit" target="_blank" rel="noopener noreferrer"
                 className="no-print inline-block rounded-lg border border-amber-300 bg-white px-4 py-2 font-mono text-xs font-bold text-amber-800 hover:bg-amber-100 transition">
                 File 09 — Full Digital Links Audit →
               </a>
@@ -498,7 +498,7 @@ Respond ONLY with a JSON object, no markdown:
                 ))}
               </div>
               <div className="flex gap-3 no-print">
-                <a href="/files/uk/05-accountant-brief" target="_blank" rel="noopener noreferrer"
+                <a href="/files/uk/mtd/05-accountant-brief" target="_blank" rel="noopener noreferrer"
                   className="rounded-lg border border-blue-200 bg-white px-4 py-2 font-mono text-xs font-bold text-blue-700 hover:bg-blue-50 transition">
                   File 05 — Print accountant brief →
                 </a>
@@ -523,7 +523,7 @@ Respond ONLY with a JSON object, no markdown:
                   </div>
                 ))}
               </div>
-              <a href="/files/uk/06-gap-closure-plan" target="_blank" rel="noopener noreferrer"
+              <a href="/files/uk/mtd/06-gap-closure-plan" target="_blank" rel="noopener noreferrer"
                 className="no-print block w-full rounded-xl bg-neutral-950 py-3.5 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                 Open File 06 — Start With Your Gap Closure Plan →
               </a>
@@ -541,7 +541,7 @@ Respond ONLY with a JSON object, no markdown:
                   className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   Register with HMRC →
                 </a>
-                <a href="/files/uk/06-gap-closure-plan" target="_blank" rel="noopener noreferrer"
+                <a href="/files/uk/mtd/06-gap-closure-plan" target="_blank" rel="noopener noreferrer"
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   Open File 06 →
                 </a>
