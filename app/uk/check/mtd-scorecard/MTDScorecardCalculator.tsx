@@ -256,13 +256,13 @@ export default function MTDScorecardCalculator() {
     setCheckoutLoading(true); setError("");
     try {
       if (sid) {
+        // Save income source for success page personalisation
+        if (popupAnswers.income_source) {
+          sessionStorage.setItem("mtd_income_source", popupAnswers.income_source);
+        }
         fetch("/api/decision-sessions", {
           method: "PATCH", headers: { "Content-Type": "application/json" },
-          // Save income source for success page
-      if (popupAnswers.income_source) {
-        sessionStorage.setItem("mtd_income_source", popupAnswers.income_source);
-      }
-      body: JSON.stringify({
+          body: JSON.stringify({
             id: sid, tier_intended: effectiveTier,
             product_key: `uk_${effectiveTier}_mtd_scorecard`,
             questionnaire_payload: popupAnswers, email: email || undefined,
