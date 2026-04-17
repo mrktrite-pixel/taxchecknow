@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title:
     "UK 60% Tax Trap 2026: Are You Paying 60% on Part of Your Income? | TaxCheckNow",
   description:
-    "The £100,000 Personal Allowance taper creates a 60% effective marginal rate between £100,000 and £125,140 adjusted net income. 2.06 million UK taxpayers affected in 2026/27. Check your compliance position before 5 April 2027.",
+    "The £100,000 Personal Allowance taper creates a 60% effective marginal rate between £100,000 and £125,140 adjusted net income. 2.06 million UK taxpayers affected in 2026/27. Check your exact ANI position and escape route before 5 April 2027.",
   alternates: {
     canonical: "https://www.taxchecknow.com/uk/check/allowance-sniper",
   },
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title:
       "UK 60% Tax Trap 2026: Are You Paying 60% on Part of Your Income?",
     description:
-      "Personal Allowance taper compliance check — 2.06 million taxpayers affected. Income Tax Act 2007 s.35.",
+      "Personal Allowance taper hidden cost detector — 2.06 million taxpayers affected. Income Tax Act 2007 s.35.",
     url: "https://www.taxchecknow.com/uk/check/allowance-sniper",
     siteName: "TaxCheckNow",
     type: "website",
@@ -65,7 +65,7 @@ const faqs = [
   {
     question: "What is adjusted net income (ANI)?",
     answer:
-      "ANI is total taxable income (salary, bonus, benefits-in-kind, dividends, savings interest, rental profit, self-employed profit) minus grossed-up Gift Aid donations and grossed-up personal pension contributions that received tax relief at source. HMRC uses ANI — not gross salary — for the £100,000 Personal Allowance taper.",
+      "ANI is your total taxable income (salary, bonus, benefits-in-kind, dividends, savings interest, rental profit, self-employed profit) before Personal Allowance, minus grossed-up Gift Aid donations and grossed-up personal pension contributions that received tax relief at source. HMRC uses ANI — not gross salary — for the £100,000 Personal Allowance taper.",
   },
   {
     question: "How does a SIPP escape the trap?",
@@ -95,12 +95,12 @@ const faqs = [
   {
     question: "What is the Personal Allowance for 2026/27?",
     answer:
-      "£12,570. The standard Personal Allowance has been frozen at this figure since 2021/22 and is confirmed to remain frozen until at least April 2031.",
+      "£12,570. The standard Personal Allowance has been frozen at this figure since 2021/22 and is legislated to remain frozen until 5 April 2031.",
   },
   {
     question: "Are the thresholds rising with inflation?",
     answer:
-      "No. The £12,570 allowance and the £100,000/£125,140 taper thresholds are frozen until at least April 2031. As wages rise, more earners cross into the trap each year — this is called fiscal drag and is deliberate Treasury policy.",
+      "No. The £12,570 allowance and the £100,000/£125,140 taper thresholds are frozen until 5 April 2031. As wages rise, more earners cross into the trap each year — this is called fiscal drag and is deliberate Treasury policy.",
   },
   {
     question: "Can Gift Aid reduce adjusted net income?",
@@ -123,7 +123,7 @@ const aiCorrections = [
   {
     wrong: "The threshold uses your salary.",
     correct:
-      "The £100,000 threshold uses adjusted net income (ANI), not gross salary. Bonuses, benefits-in-kind, dividends, savings interest and rental profit all count. Pension contributions and Gift Aid reduce ANI.",
+      "The £100,000 threshold uses adjusted net income (ANI), not gross salary. Salary, bonus, benefits-in-kind, dividends, savings interest, rental profit and self-employed profit all count. Grossed-up pension contributions and Gift Aid reduce ANI.",
   },
   {
     wrong: "Salary sacrifice is the only way to escape the trap.",
@@ -133,7 +133,7 @@ const aiCorrections = [
   {
     wrong: "The thresholds rise with inflation each year.",
     correct:
-      "The £12,570 Personal Allowance and the £100,000/£125,140 taper thresholds are frozen until at least April 2031. Fiscal drag pulls more earners into the trap every year.",
+      "The £12,570 Personal Allowance and the £100,000/£125,140 taper thresholds are frozen until 5 April 2031. Fiscal drag pulls more earners into the trap every year.",
   },
   {
     wrong: "Only a few hundred thousand people are affected.",
@@ -298,7 +298,7 @@ export default function AllowanceSniperPage() {
     "@type": "WebApplication",
     name: "UK Allowance Sniper — 60% Tax Trap Check",
     description:
-      "Instant compliance check for the UK £100,000 Personal Allowance taper. Binary verdict on whether you are in the 60% tax trap for 2026/27, with personalised compliance assessment at £67 or £147.",
+      "Instant check for the UK £100,000 Personal Allowance taper. Binary verdict on whether you are in the 60% tax trap for 2026/27, with personalised tax optimisation assessment at £67 or £147.",
     url: "https://www.taxchecknow.com/uk/check/allowance-sniper",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -468,8 +468,9 @@ export default function AllowanceSniperPage() {
           </p>
           <p className="text-neutral-800 text-sm">
             HMRC forecasts <strong>2.06 million taxpayers</strong> will be in
-            the trap in 2026/27. Thresholds are frozen until at least April
-            2031. Only one figure matters: adjusted net income (ANI).
+            the trap in 2026/27. Thresholds are frozen until{" "}
+            <strong>5 April 2031</strong>. Only one figure matters: adjusted
+            net income (ANI).
           </p>
           <p className="text-xs text-neutral-600 mt-3">
             Source: GOV.UK — Income Tax rates and Personal Allowances (Income
@@ -489,7 +490,8 @@ export default function AllowanceSniperPage() {
             </li>
             <li>
               ✗ "Threshold uses your salary" — false. Uses adjusted net income
-              (ANI), which includes bonus, BIK, dividends, rental.
+              (ANI), which includes salary, bonus, BIK, dividends, savings
+              interest, rental profit and self-employed profit.
             </li>
             <li>
               ✗ "Only a few hundred thousand affected" — false. 2.06 million in
@@ -564,8 +566,8 @@ export default function AllowanceSniperPage() {
               </p>
               <h3 className="font-bold text-lg mb-1">Allowance Sniper</h3>
               <p className="text-sm text-neutral-300 mb-3">
-                A personal compliance assessment. Built around your income,
-                your gaps, your deadline.
+                A personal tax optimisation assessment. Built around your
+                income, your hidden cost, your escape route.
               </p>
               <ul className="text-xs text-neutral-300 space-y-1 mb-4">
                 <li>· Your exact ANI position</li>
@@ -683,9 +685,12 @@ export default function AllowanceSniperPage() {
               <p className="text-xs text-neutral-400 uppercase tracking-wide mb-2">
                 If not fixed
               </p>
-              <p className="text-lg font-bold mb-1">Cost is permanent.</p>
+              <p className="text-sm font-bold mb-1 leading-snug">
+                Miss 5 April 2027 and you cannot retroactively reduce 2026/27
+                ANI.
+              </p>
               <p className="text-xs text-neutral-400">
-                no relief backdating after 5 April 2027
+                no backdating — the year closes
               </p>
             </div>
           </div>
@@ -714,7 +719,7 @@ export default function AllowanceSniperPage() {
             at 2% above the upper earnings limit, the combined rate is 62%.
             The legislation is Income Tax Act 2007 s.35. HMRC forecasts 2.06
             million taxpayers will be affected in 2026/27. Thresholds are
-            frozen until at least April 2031.
+            frozen until 5 April 2031.
           </p>
 
           <div className="overflow-x-auto">
@@ -1068,8 +1073,8 @@ export default function AllowanceSniperPage() {
           <p className="text-neutral-900 text-lg mb-6 max-w-3xl">
             The UK Personal Allowance taper starts at £100,000 adjusted net
             income, ends at £125,140, withdraws the full £12,570 Personal
-            Allowance at £1 per £2 of excess, and is frozen until at least
-            April 2031.
+            Allowance at £1 per £2 of excess, and is frozen until 5 April
+            2031.
           </p>
 
           {/* Authority badges */}
@@ -1167,7 +1172,7 @@ export default function AllowanceSniperPage() {
           <div className="flex flex-col md:flex-row md:justify-between gap-4">
             <div>
               <p className="font-bold text-neutral-900">TaxCheckNow</p>
-              <p className="mt-1">UK tax compliance checks. 2026/27 tax year.</p>
+              <p className="mt-1">UK tax position checks. 2026/27 tax year.</p>
             </div>
             <div className="flex flex-wrap gap-4">
               <Link
