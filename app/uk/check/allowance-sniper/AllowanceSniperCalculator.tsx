@@ -9,7 +9,7 @@ const DAYS_TO_YEAR_END = Math.max(
 );
 
 const BRACKETS = [
-  { label: "Under £90,000",          value: 85_000,  status: "clear"      as const },
+  { label: "Under £90,000",          value: 85_000,  status: "clear"       as const },
   { label: "£90,000 – £100,000",     value: 95_000,  status: "approaching" as const },
   { label: "£100,000 – £110,000",    value: 105_000, status: "trap"        as const },
   { label: "£110,000 – £125,140",    value: 117_000, status: "deep_trap"   as const },
@@ -17,14 +17,23 @@ const BRACKETS = [
   { label: "Over £150,000",          value: 160_000, status: "above_trap"  as const },
 ] as const;
 
+// ── PENSION BUTTON GROUP (replaces slider) ────────────────────────────────
+const PENSION_OPTIONS = [
+  { label: "£0",    value: 0 },
+  { label: "£5k",   value: 5_000 },
+  { label: "£10k",  value: 10_000 },
+  { label: "£20k",  value: 20_000 },
+  { label: "£30k+", value: 30_000 },
+];
+
 type PackTier = 67 | 147;
 
 interface Answers {
-  contribution_timing:    string;
+  contribution_timing:     string;
   salary_sacrifice_access: string;
-  bonus_expected:         string;
-  main_goal:              string;
-  accountant_status:      string;
+  bonus_expected:          string;
+  main_goal:               string;
+  accountant_status:       string;
 }
 
 const PRODUCTS: Record<PackTier, {
@@ -128,11 +137,11 @@ export default function AllowanceSniperCalculator() {
     contribution_timing: "", salary_sacrifice_access: "",
     bonus_expected: "", main_goal: "", accountant_status: "",
   });
-  const [overrideTier,       setOverrideTier]       = useState<PackTier | null>(null);
-  const [showPopup,          setShowPopup]          = useState(false);
-  const [popupStep,          setPopupStep]          = useState<"intro" | "questions">("intro");
-  const [checkoutLoading,    setCheckoutLoading]    = useState(false);
-  const [error,              setError]              = useState("");
+  const [overrideTier,    setOverrideTier]    = useState<PackTier | null>(null);
+  const [showPopup,       setShowPopup]       = useState(false);
+  const [popupStep,       setPopupStep]       = useState<"intro" | "questions">("intro");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [error,           setError]           = useState("");
 
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -140,17 +149,16 @@ export default function AllowanceSniperCalculator() {
 
   const model = useMemo(() => {
     if (grossIncome === null) return null;
-    const adjustedNetIncome   = Math.max(0, grossIncome - existingPension);
-    const personalAllowance   = personalAllowanceFromANI(adjustedNetIncome);
-    const trapSlice           = trapSliceFromANI(adjustedNetIncome);
-    const hiddenExtraTax      = trapSlice * 0.2;
-    const contributionNeeded  = Math.max(0, adjustedNetIncome - 100_000);
+    const adjustedNetIncome        = Math.max(0, grossIncome - existingPension);
+    const personalAllowance        = personalAllowanceFromANI(adjustedNetIncome);
+    const trapSlice                = trapSliceFromANI(adjustedNetIncome);
+    const hiddenExtraTax           = trapSlice * 0.2;
+    const contributionNeeded       = Math.max(0, adjustedNetIncome - 100_000);
     const reliefAtSourceNetPayment = contributionNeeded * 0.8;
-    const extraRelief         = contributionNeeded * 0.2;
-    const netCostAfterRelief  = Math.max(0, reliefAtSourceNetPayment - extraRelief);
-    const status              = statusFromANI(adjustedNetIncome);
-    const childcareTrap       = hasChildrenUnder12 && adjustedNetIncome > 100_000;
-
+    const extraRelief              = contributionNeeded * 0.2;
+    const netCostAfterRelief       = Math.max(0, reliefAtSourceNetPayment - extraRelief);
+    const status                   = statusFromANI(adjustedNetIncome);
+    const childcareTrap            = hasChildrenUnder12 && adjustedNetIncome > 100_000;
     return {
       grossIncome, adjustedNetIncome, personalAllowance,
       trapSlice, hiddenExtraTax, contributionNeeded,
@@ -159,7 +167,6 @@ export default function AllowanceSniperCalculator() {
     };
   }, [grossIncome, existingPension, hasChildrenUnder12]);
 
-  // Algorithm decides tier — no user override in popup
   const calculatedTier: PackTier = model
     ? recommendedTier(model.hiddenExtraTax, model.childcareTrap)
     : 67;
@@ -180,20 +187,24 @@ export default function AllowanceSniperCalculator() {
     setShowQuestions(false);
     setOverrideTier(null);
     setError("");
-    // Save for success page
     sessionStorage.setItem("sniper_bracket", BRACKETS[index].label);
-    sessionStorage.setItem("sniper_status", BRACKETS[index].status);
+    sessionStorage.setItem("sniper_status",  BRACKETS[index].status);
     try {
       const selected = BRACKETS[index];
       const response = await fetch("/api/decision-sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          product_slug: "allowance-sniper",
-          source_path: "/uk/check/allowance-sniper",
-          country_code: "UK", currency_code: "GBP", site: "taxchecknow",
-          inputs: { gross_income_bracket: selected.label, gross_income_value: selected.value },
-          output: { initial_status: selected.status },
+          product_slug:  "allowance-sniper",
+          source_path:   "/uk/check/allowance-sniper",
+          country_code:  "UK",
+          currency_code: "GBP",
+          site:          "taxchecknow",
+          inputs: {
+            gross_income_bracket: selected.label,
+            gross_income_value:   selected.value,
+          },
+          output:          { initial_status: selected.status },
           recommended_tier: 67,
         }),
       });
@@ -208,65 +219,73 @@ export default function AllowanceSniperCalculator() {
   async function handleSaveEmail() {
     if (!email) return;
     fetch("/api/save-email", {
-      method: "POST",
+      method:  "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: "allowance_sniper_result", country_code: "UK", site: "taxchecknow",
-        session_id: sessionId || localStorage.getItem("allowance_sniper_session_id") || "" }),
+      body: JSON.stringify({
+        email,
+        source:       "allowance_sniper_result",
+        country_code: "UK",
+        site:         "taxchecknow",
+        session_id:   sessionId || localStorage.getItem("allowance_sniper_session_id") || "",
+      }),
     }).catch(() => {});
     setEmailSent(true);
   }
 
   async function handleContinueToPayment() {
     if (!answersComplete || checkoutLoading || !model) return;
-    // Save answers for success page
-    sessionStorage.setItem("sniper_pension",    String(existingPension));
-    sessionStorage.setItem("sniper_childcare",  String(hasChildrenUnder12));
-    sessionStorage.setItem("sniper_answers",    JSON.stringify(answers));
-    sessionStorage.setItem("sniper_hidden_tax", String(model.hiddenExtraTax));
-    sessionStorage.setItem("sniper_contribution_needed", String(model.contributionNeeded));
-    sessionStorage.setItem("sniper_net_cost",   String(model.netCostAfterRelief));
-    sessionStorage.setItem("sniper_ani",        String(model.adjustedNetIncome));
 
-    const sid = sessionId || localStorage.getItem("allowance_sniper_session_id");
-    // Fallback SID — never block checkout
+    sessionStorage.setItem("sniper_pension",               String(existingPension));
+    sessionStorage.setItem("sniper_childcare",             String(hasChildrenUnder12));
+    sessionStorage.setItem("sniper_answers",               JSON.stringify(answers));
+    sessionStorage.setItem("sniper_hidden_tax",            String(model.hiddenExtraTax));
+    sessionStorage.setItem("sniper_contribution_needed",   String(model.contributionNeeded));
+    sessionStorage.setItem("sniper_net_cost",              String(model.netCostAfterRelief));
+    sessionStorage.setItem("sniper_ani",                   String(model.adjustedNetIncome));
+
+    const sid          = sessionId || localStorage.getItem("allowance_sniper_session_id");
     const effectiveSid = sid || `fallback_${Date.now()}`;
 
     setCheckoutLoading(true);
     setError("");
+
     try {
       if (sid) {
         fetch("/api/decision-sessions", {
-          method: "PATCH",
+          method:  "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            id: sid, tier_intended: effectiveTier,
-            product_key: `uk_${effectiveTier}_allowance_sniper`,
+            id:                   sid,
+            tier_intended:        effectiveTier,
+            product_key:          `uk_${effectiveTier}_allowance_sniper`,
             questionnaire_payload: answers,
-            email: email || undefined,
+            email:                email || undefined,
             calculation_payload: {
-              gross_income: model.grossIncome,
-              adjusted_net_income: model.adjustedNetIncome,
+              gross_income:                model.grossIncome,
+              adjusted_net_income:         model.adjustedNetIncome,
               personal_allowance_remaining: model.personalAllowance,
-              hidden_extra_tax: model.hiddenExtraTax,
-              contribution_needed: model.contributionNeeded,
-              net_cost_after_relief: model.netCostAfterRelief,
-              childcare_trap: model.childcareTrap,
-              status: model.status.key,
+              hidden_extra_tax:            model.hiddenExtraTax,
+              contribution_needed:         model.contributionNeeded,
+              net_cost_after_relief:       model.netCostAfterRelief,
+              childcare_trap:              model.childcareTrap,
+              status:                      model.status.key,
             },
           }),
         }).catch(() => {});
       }
+
       const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
+        method:  "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           decision_session_id: effectiveSid,
-          tier: effectiveTier,
-          product_key: `uk_${effectiveTier}_allowance_sniper`,
-          success_url: `${window.location.origin}/uk/check/allowance-sniper/success/${effectiveTier === 147 ? "plan" : "decide"}`,
-          cancel_url: `${window.location.origin}/uk/check/allowance-sniper`,
+          tier:                effectiveTier,
+          product_key:         `uk_${effectiveTier}_allowance_sniper`,
+          success_url:         `${window.location.origin}/uk/check/allowance-sniper/success/${effectiveTier === 147 ? "plan" : "decide"}`,
+          cancel_url:          `${window.location.origin}/uk/check/allowance-sniper`,
         }),
       });
+
       const data = await response.json();
       if (!response.ok || !data.url) throw new Error(data.error || "Checkout failed.");
       window.location.href = data.url;
@@ -282,13 +301,18 @@ export default function AllowanceSniperCalculator() {
   return (
     <>
       <div id="calculator" className="scroll-mt-8 space-y-5">
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
 
+        {/* ── BRACKET SELECTOR ── */}
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
           <div className="mb-4 rounded-xl border-2 border-neutral-900 bg-neutral-950 px-4 py-4">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">The rule — HMRC confirmed</p>
+            <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+              The rule — HMRC confirmed
+            </p>
             <p className="mt-1 text-sm leading-relaxed text-white">
-              The 60% trap begins at <strong className="text-amber-300">£100,000 adjusted net income</strong>.
-              Personal allowance tapers to zero at <strong className="text-amber-300">£125,140</strong>.
+              The 60% trap begins at{" "}
+              <strong className="text-amber-300">£100,000 adjusted net income</strong>.
+              Personal allowance tapers to zero at{" "}
+              <strong className="text-amber-300">£125,140</strong>.
             </p>
           </div>
 
@@ -296,14 +320,17 @@ export default function AllowanceSniperCalculator() {
             What is your gross annual income from all sources?
           </p>
           <p className="mb-4 text-sm text-neutral-600">
-            Tap your bracket. The tool calculates your real trigger: <strong>adjusted net income</strong>.
+            Tap your bracket. The tool calculates your real trigger:{" "}
+            <strong>adjusted net income</strong>.
           </p>
 
           <div className="space-y-2">
             {BRACKETS.map((item, index) => {
               const selected = selectedBracket === index;
               return (
-                <button key={item.label} onClick={() => handleBracketSelect(index)}
+                <button
+                  key={item.label}
+                  onClick={() => handleBracketSelect(index)}
                   className={`flex w-full items-center justify-between rounded-xl border-2 px-5 py-4 text-left transition ${
                     selected
                       ? "scale-[1.01] border-neutral-950 bg-neutral-950 text-white"
@@ -319,7 +346,9 @@ export default function AllowanceSniperCalculator() {
           </div>
 
           <div className="mt-4 rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-3">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-amber-700">⚠️ key clarification</p>
+            <p className="font-mono text-[10px] uppercase tracking-widest text-amber-700">
+              ⚠️ key clarification
+            </p>
             <p className="mt-1 text-xs leading-relaxed text-amber-900">
               A <strong>£10,000 SIPP contribution</strong> can pull ANI from{" "}
               <strong>£110,000</strong> back to <strong>£100,000</strong> — outside the trap entirely.
@@ -327,22 +356,30 @@ export default function AllowanceSniperCalculator() {
           </div>
         </div>
 
+        {/* ── RESULT PANEL ── */}
         {model && (
           <div ref={resultRef} className={`rounded-2xl border p-6 sm:p-8 ${model.status.panelClass}`}>
             <p className={`mb-1 font-mono text-sm font-bold uppercase tracking-widest ${model.status.badgeClass}`}>
               {model.status.label}
             </p>
-            <h3 className="mb-3 font-serif text-2xl font-bold text-neutral-950">{model.status.headline}</h3>
+            <h3 className="mb-3 font-serif text-2xl font-bold text-neutral-950">
+              {model.status.headline}
+            </h3>
 
+            {/* Stat boxes */}
             <div className="mb-4 grid gap-3 sm:grid-cols-3">
               {[
-                { label: "ANI",          value: pounds(model.adjustedNetIncome) },
-                { label: "PA remaining", value: pounds(model.personalAllowance) },
-                { label: "Hidden cost",  value: pounds(model.hiddenExtraTax), red: true },
+                { label: "ANI",           value: pounds(model.adjustedNetIncome), red: false },
+                { label: "PA remaining",  value: pounds(model.personalAllowance), red: false },
+                { label: "Hidden cost",   value: pounds(model.hiddenExtraTax),    red: true  },
               ].map(item => (
                 <div key={item.label} className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">{item.label}</p>
-                  <p className={`font-serif text-lg font-bold ${item.red ? "text-red-700" : "text-neutral-950"}`}>{item.value}</p>
+                  <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                    {item.label}
+                  </p>
+                  <p className={`font-serif text-lg font-bold ${item.red ? "text-red-700" : "text-neutral-950"}`}>
+                    {item.value}
+                  </p>
                 </div>
               ))}
             </div>
@@ -353,49 +390,87 @@ export default function AllowanceSniperCalculator() {
               This is the hidden cost most taxpayers never see on the payslip.
             </div>
 
+            {/* ── OPTIMISATION INPUTS ── */}
             <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-              <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+              <p className="mb-4 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                 Two quick optimisation checks
               </p>
 
-              <div className="grid gap-5 lg:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-neutral-800">
-                    Existing pension contributions this tax year (gross)
-                  </label>
-                  <input type="range" min={0} max={60000} step={500} value={existingPension}
-                    onChange={e => setExistingPension(Number(e.target.value))}
-                    className="w-full" />
-                  <div className="mt-2 flex items-center justify-between text-xs text-neutral-500">
-                    <span>£0</span>
-                    <span className="font-semibold text-neutral-900">{pounds(existingPension)}</span>
-                    <span>£60,000</span>
-                  </div>
+              {/* ── INPUT 1: PENSION — BUTTON GROUP (no slider) ── */}
+              <div className="mb-5">
+                <p className="mb-2 text-sm font-semibold text-neutral-800">
+                  Existing pension contributions this tax year (gross)
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {PENSION_OPTIONS.map(opt => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setExistingPension(opt.value)}
+                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
+                        existingPension === opt.value
+                          ? "border-neutral-950 bg-neutral-950 text-white"
+                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                      }`}>
+                      {opt.label}
+                    </button>
+                  ))}
                 </div>
+                {existingPension === 30_000 && (
+                  <p className="mt-2 text-xs text-neutral-500">
+                    Using £30,000 — adjust in File 02 for your exact figure
+                  </p>
+                )}
+                {existingPension > 0 && (
+                  <p className="mt-2 text-xs text-neutral-500">
+                    ANI reduced by {pounds(existingPension)} →{" "}
+                    <strong className="text-neutral-800">{pounds(model.adjustedNetIncome)}</strong>
+                  </p>
+                )}
+              </div>
 
-                <div className="flex items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-4">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">Children under 12?</p>
-                    <p className="text-xs text-neutral-500">Triggers childcare trap warning.</p>
-                  </div>
-                  <button type="button" onClick={() => setHasChildrenUnder12(prev => !prev)}
-                    className={`rounded-full px-4 py-2 text-xs font-bold transition ${
-                      hasChildrenUnder12 ? "bg-neutral-950 text-white" : "border border-neutral-200 bg-white text-neutral-700"
-                    }`}>
-                    {hasChildrenUnder12 ? "Yes" : "No"}
-                  </button>
+              {/* ── INPUT 2: CHILDREN — TWO-BUTTON TOGGLE (no toggle switch) ── */}
+              <div className="mb-5">
+                <p className="mb-1 text-sm font-semibold text-neutral-800">
+                  Children under 12?
+                </p>
+                <p className="mb-2 text-xs text-neutral-500">
+                  Triggers childcare trap warning if ANI stays above £100,000
+                </p>
+                <div className="flex gap-2">
+                  {[
+                    { label: "No",  value: false },
+                    { label: "Yes", value: true  },
+                  ].map(opt => (
+                    <button
+                      key={String(opt.value)}
+                      type="button"
+                      onClick={() => setHasChildrenUnder12(opt.value)}
+                      className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
+                        hasChildrenUnder12 === opt.value
+                          ? "border-neutral-950 bg-neutral-950 text-white"
+                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                      }`}>
+                      {opt.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {/* ── OUTPUT STATS ── */}
+              <div className="grid gap-3 sm:grid-cols-3">
                 {[
-                  { label: "Gross SIPP needed",   value: pounds(model.contributionNeeded) },
-                  { label: "Net payment",          value: pounds(model.reliefAtSourceNetPayment) },
-                  { label: "Net cost after relief",value: pounds(model.netCostAfterRelief), green: true },
+                  { label: "Gross SIPP needed",    value: pounds(model.contributionNeeded),        green: false },
+                  { label: "Net payment",           value: pounds(model.reliefAtSourceNetPayment),  green: false },
+                  { label: "Net cost after relief", value: pounds(model.netCostAfterRelief),        green: true  },
                 ].map(item => (
                   <div key={item.label} className="rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
-                    <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">{item.label}</p>
-                    <p className={`font-serif text-lg font-bold ${item.green ? "text-emerald-700" : "text-neutral-950"}`}>{item.value}</p>
+                    <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                      {item.label}
+                    </p>
+                    <p className={`font-serif text-lg font-bold ${item.green ? "text-emerald-700" : "text-neutral-950"}`}>
+                      {item.value}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -410,30 +485,43 @@ export default function AllowanceSniperCalculator() {
               {model.childcareTrap && (
                 <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900">
                   <strong>Childcare trap alert:</strong> if ANI stays above{" "}
-                  <strong>£100,000</strong>, childcare support may also be affected.
+                  <strong>£100,000</strong>, childcare support may also be affected —
+                  potentially adding £5,000+ to the real cost of staying in the trap.
                 </div>
               )}
             </div>
 
-            {/* Email save */}
+            {/* ── EMAIL SAVE ── */}
             <div className="mt-4 rounded-xl border border-neutral-200 bg-white p-4">
-              <p className="mb-1 text-sm font-semibold text-neutral-800">Save your result to show your accountant.</p>
-              <p className="mb-2 text-xs text-neutral-500">Get a copy of your ANI position by email — free.</p>
+              <p className="mb-1 text-sm font-semibold text-neutral-800">
+                Save your result to show your accountant.
+              </p>
+              <p className="mb-2 text-xs text-neutral-500">
+                Get a copy of your ANI position by email — free.
+              </p>
               {!emailSent ? (
                 <div className="flex gap-2">
-                  <input type="email" placeholder="Your email" value={email}
+                  <input
+                    type="email"
+                    placeholder="Your email"
+                    value={email}
                     onChange={e => setEmail(e.target.value)}
-                    className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm outline-none focus:border-neutral-400" />
-                  <button onClick={handleSaveEmail}
-                    className="rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">
+                    className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm outline-none focus:border-neutral-400"
+                  />
+                  <button
+                    onClick={handleSaveEmail}
+                    className="rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50">
                     Save
                   </button>
                 </div>
-              ) : <p className="text-sm font-semibold text-emerald-700">✓ Saved.</p>}
+              ) : (
+                <p className="text-sm font-semibold text-emerald-700">✓ Saved.</p>
+              )}
             </div>
 
-            {/* Single CTA — algorithm decided tier */}
-            <button onClick={() => { setShowQuestions(true); setShowPopup(true); setPopupStep("intro"); }}
+            {/* ── CTA ── */}
+            <button
+              onClick={() => { setShowQuestions(true); setShowPopup(true); setPopupStep("intro"); }}
               className="mt-4 w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800">
               Check my exact escape route →
             </button>
@@ -445,12 +533,11 @@ export default function AllowanceSniperCalculator() {
         )}
       </div>
 
-      {/* ── POPUP ─────────────────────────────────────────────────────────── */}
+      {/* ── POPUP ── */}
       {showPopup && model && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4">
           <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
 
-            {/* Header */}
             <div className="bg-neutral-950 px-5 py-4 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -462,8 +549,11 @@ export default function AllowanceSniperCalculator() {
                     {DAYS_TO_YEAR_END} days to 5 April 2027
                   </p>
                 </div>
-                <button onClick={() => setShowPopup(false)}
-                  className="text-sm text-neutral-400 transition hover:text-white">✕</button>
+                <button
+                  onClick={() => setShowPopup(false)}
+                  className="text-sm text-neutral-400 transition hover:text-white">
+                  ✕
+                </button>
               </div>
             </div>
 
@@ -471,30 +561,35 @@ export default function AllowanceSniperCalculator() {
               {popupStep === "intro" ? (
                 <>
                   <div className="mb-4 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-4">
-                    <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">What you get</p>
-                    <p className="text-sm font-bold text-neutral-950 mb-2">{selectedProduct.name}</p>
+                    <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                      What you get
+                    </p>
+                    <p className="mb-2 text-sm font-bold text-neutral-950">{selectedProduct.name}</p>
                     <p className="text-sm leading-relaxed text-neutral-700">{selectedProduct.value}</p>
                   </div>
                   <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                    <div className="flex items-center justify-between mb-1">
+                    <div className="mb-1 flex items-center justify-between">
                       <p className="font-serif text-2xl font-bold text-neutral-950">£{effectiveTier}</p>
                       <p className="text-xs text-neutral-400">One-time · No subscription</p>
                     </div>
                     <p className="text-xs text-neutral-500">Not a guide to ANI. A plan for your ANI.</p>
                   </div>
-                  <button onClick={() => setPopupStep("questions")}
+                  <button
+                    onClick={() => setPopupStep("questions")}
                     className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
                     {selectedProduct.cta}
                   </button>
                   {effectiveTier === 147 && (
-                    <p className="text-center mt-2">
-                      <button onClick={() => setOverrideTier(67)}
-                        className="text-xs text-neutral-400 underline hover:text-neutral-600 transition">
+                    <p className="mt-2 text-center">
+                      <button
+                        onClick={() => setOverrideTier(67)}
+                        className="text-xs text-neutral-400 underline transition hover:text-neutral-600">
                         Need less detail? Assessment — £67 instead
                       </button>
                     </p>
                   )}
-                  <button onClick={() => setShowPopup(false)}
+                  <button
+                    onClick={() => setShowPopup(false)}
                     className="mt-3 w-full text-sm text-neutral-500 underline">
                     Not now — keep reading
                   </button>
@@ -502,9 +597,12 @@ export default function AllowanceSniperCalculator() {
               ) : (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">5 quick questions then pay</p>
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                      5 quick questions then pay
+                    </p>
                     <p className="font-serif text-lg font-bold text-neutral-950">£{effectiveTier}</p>
                   </div>
+
                   {[
                     { key: "contribution_timing", label: "When would you act?", options: [
                       ["before_april", "Before 5 April 2027"],
@@ -524,34 +622,42 @@ export default function AllowanceSniperCalculator() {
                       ["unknown",   "Not sure"],
                     ]},
                     { key: "main_goal", label: "Main goal?", options: [
-                      ["escape_trap",      "Get below £100,000 ANI"],
-                      ["restore_allowance","Restore personal allowance"],
-                      ["childcare",        "Protect childcare eligibility"],
-                      ["plan_next_year",   "Plan next year better"],
+                      ["escape_trap",       "Get below £100,000 ANI"],
+                      ["restore_allowance", "Restore personal allowance"],
+                      ["childcare",         "Protect childcare eligibility"],
+                      ["plan_next_year",    "Plan next year better"],
                     ]},
                     { key: "accountant_status", label: "Accountant status?", options: [
-                      ["already_discussed","Already discussed"],
-                      ["need_to_raise",    "Need to raise it"],
-                      ["no_accountant",    "No accountant currently"],
+                      ["already_discussed", "Already discussed"],
+                      ["need_to_raise",     "Need to raise it"],
+                      ["no_accountant",     "No accountant currently"],
                     ]},
                   ].map(field => (
                     <div key={field.key}>
-                      <label className="mb-1 block text-xs font-semibold text-neutral-700">{field.label}</label>
-                      <select value={answers[field.key as keyof Answers]}
+                      <label className="mb-1 block text-xs font-semibold text-neutral-700">
+                        {field.label}
+                      </label>
+                      <select
+                        value={answers[field.key as keyof Answers]}
                         onChange={e => setAnswers(prev => ({ ...prev, [field.key]: e.target.value }))}
-                        className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:border-neutral-400">
+                        className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-neutral-400">
                         <option value="">Select…</option>
-                        {field.options.map(([val, label]) => <option key={val} value={val}>{label}</option>)}
+                        {field.options.map(([val, label]) => (
+                          <option key={val} value={val}>{label}</option>
+                        ))}
                       </select>
                     </div>
                   ))}
-                  <button onClick={handleContinueToPayment}
+
+                  <button
+                    onClick={handleContinueToPayment}
                     disabled={!answersComplete || checkoutLoading}
-                    className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                    className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50">
                     {checkoutLoading ? "Redirecting…" : `Pay £${effectiveTier} →`}
                   </button>
                   {error && <p className="text-sm font-medium text-red-700">{error}</p>}
-                  <button onClick={() => setShowPopup(false)}
+                  <button
+                    onClick={() => setShowPopup(false)}
                     className="w-full text-sm text-neutral-500 underline">
                     Not now — keep reading
                   </button>
@@ -562,7 +668,7 @@ export default function AllowanceSniperCalculator() {
         </div>
       )}
 
-      {/* ── MOBILE STICKY BAR ────────────────────────────────────────────── */}
+      {/* ── MOBILE STICKY BAR ── */}
       {mobileStickyVisible && (
         <div className="fixed bottom-0 left-0 right-0 z-[90] border-t border-neutral-200 bg-white px-4 py-3 shadow-[0_-6px_20px_rgba(0,0,0,0.08)] lg:hidden">
           <div className="flex items-center justify-between gap-3">
@@ -570,7 +676,8 @@ export default function AllowanceSniperCalculator() {
               <p className="truncate text-sm font-semibold text-neutral-900">{selectedProduct.name}</p>
               <p className="truncate text-xs text-neutral-500">From £67</p>
             </div>
-            <button onClick={() => { setShowQuestions(true); setShowPopup(true); setPopupStep("intro"); }}
+            <button
+              onClick={() => { setShowQuestions(true); setShowPopup(true); setPopupStep("intro"); }}
               className="rounded-xl bg-neutral-950 px-4 py-3 text-sm font-bold text-white">
               From £67 →
             </button>
