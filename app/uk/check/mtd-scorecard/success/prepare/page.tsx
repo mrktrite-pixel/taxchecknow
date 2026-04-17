@@ -7,11 +7,11 @@ import { generateMTDCalendar, downloadICS } from "@/lib/generate-ics";
 const DRIVE_FOLDER = "https://drive.google.com/drive/folders/1sfRA2cl-5UkwkaLLeGBvAlpMKtGTlYFd?usp=sharing";
 
 const FEATURED_FILES = [
-  { num: "01", name: "Your MTD Scope Assessment", desc: "Your exact compliance position — confirmed in writing." },
-  { num: "02", name: "Your Software Recommendation", desc: "The right MTD software for your specific situation." },
-  { num: "03", name: "Your HMRC Registration Steps", desc: "Step-by-step registration walkthrough." },
-  { num: "04", name: "Your Deadline Calendar", desc: "Every filing date for 2026-27." },
-  { num: "05", name: "Your Accountant Brief", desc: "Hand this to your accountant before your next meeting." },
+  { num: "01", name: "Your MTD Scope Assessment",        desc: "Your exact compliance position — confirmed in writing.", url: "/files/uk/01-scope-assessment" },
+  { num: "02", name: "Your Software Recommendation",     desc: "The right MTD software for your specific situation.", url: "/files/uk/02-software-recommendation" },
+  { num: "03", name: "Your HMRC Registration Steps",     desc: "Step-by-step registration walkthrough.", url: "/files/uk/03-registration-steps" },
+  { num: "04", name: "Your Deadline Calendar",           desc: "Every filing date for 2026-27 — add them now.", url: "/files/uk/04-deadline-calendar" },
+  { num: "05", name: "Your Accountant Brief",            desc: "Print and take to your next meeting.", url: "/files/uk/05-accountant-brief" },
 ];
 
 interface Assessment {
@@ -159,7 +159,17 @@ Write a personal MTD compliance assessment. Respond ONLY with JSON, no markdown:
         @media print {
           .no-print { display: none !important; }
           .print-break { page-break-before: always; }
-          body { font-size: 12px; }
+          body { font-size: 12px; color: #000; }
+          a[href]:after {
+            content: " (" attr(href) ")";
+            font-size: 9px;
+            color: #555;
+            word-break: break-all;
+          }
+          a[href^="#"]:after,
+          a[href^="javascript"]:after { content: ""; }
+          .rounded-2xl, .rounded-xl { border-radius: 8px !important; }
+          .space-y-5 > * { margin-bottom: 12px !important; }
         }
       `}</style>
 
@@ -333,7 +343,7 @@ Write a personal MTD compliance assessment. Respond ONLY with JSON, no markdown:
                       <p className="text-sm font-semibold text-neutral-950">{f.num} — {f.name}</p>
                       <p className="text-xs text-neutral-500">{f.desc}</p>
                     </div>
-                    <a href={DRIVE_FOLDER} target="_blank" rel="noopener noreferrer"
+                    <a href={f.url} target="_blank" rel="noopener noreferrer"
                       className="no-print ml-4 shrink-0 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 font-mono text-xs font-bold text-neutral-700 hover:bg-neutral-950 hover:text-white transition">
                       Open →
                     </a>

@@ -7,16 +7,16 @@ import { generateMTDCalendar, downloadICS } from "@/lib/generate-ics";
 const DRIVE_FOLDER = "https://drive.google.com/drive/folders/1mMvsfqWe41CRbzB5GJgWBeRHz2YfJwiV?usp=sharing";
 
 const ALL_FILES = [
-  { num: "01", name: "Your MTD Scope Assessment",          desc: "Your exact compliance position confirmed in writing." },
-  { num: "02", name: "Your Software Recommendation",       desc: "One specific recommendation for your situation." },
-  { num: "03", name: "Your HMRC Registration Steps",       desc: "Step-by-step walkthrough — GOV.UK process." },
-  { num: "04", name: "Your Deadline Calendar",             desc: "Every filing date for 2026-27." },
-  { num: "05", name: "Your Accountant Brief",              desc: "Print and take to your next meeting." },
-  { num: "06", name: "Your Gap Closure Plan",              desc: "What to fix, in what order, by when." },
-  { num: "07", name: "Your First Submission Checklist",    desc: "Every step before you submit Q1 on 7 August." },
-  { num: "08", name: "Your Digital Records Template",      desc: "Pre-built template — start using today." },
-  { num: "09", name: "Your Digital Links Audit",           desc: "Audit your records chain against HMRC rules." },
-  { num: "10", name: "Your HMRC Registration Walkthrough", desc: "Screen-by-screen registration guide." },
+  { num: "01", name: "Your MTD Scope Assessment",          desc: "Your exact compliance position confirmed in writing.", url: "/files/uk/01-scope-assessment" },
+  { num: "02", name: "Your Software Recommendation",       desc: "One specific recommendation for your situation.", url: "/files/uk/02-software-recommendation" },
+  { num: "03", name: "Your HMRC Registration Steps",       desc: "Step-by-step walkthrough — GOV.UK process.", url: "/files/uk/03-registration-steps" },
+  { num: "04", name: "Your Deadline Calendar",             desc: "Every filing date for 2026-27.", url: "/files/uk/04-deadline-calendar" },
+  { num: "05", name: "Your Accountant Brief",              desc: "Print and take to your next meeting.", url: "/files/uk/05-accountant-brief" },
+  { num: "06", name: "Your Gap Closure Plan",              desc: "What to fix, in what order, by when.", url: "/files/uk/06-gap-closure-plan" },
+  { num: "07", name: "Your First Submission Checklist",    desc: "Every step before you submit Q1 on 7 August.", url: "/files/uk/07-first-submission-checklist" },
+  { num: "08", name: "Your Digital Records Template",      desc: "Pre-built template — start using today.", url: "/files/uk/08-digital-records-template" },
+  { num: "09", name: "Your Digital Links Audit",           desc: "Audit your records chain against HMRC rules.", url: "/files/uk/09-digital-links-audit" },
+  { num: "10", name: "Your HMRC Registration Walkthrough", desc: "Screen-by-screen registration guide.", url: "/files/uk/10-hmrc-registration-walkthrough" },
 ];
 
 interface Action {
@@ -276,7 +276,17 @@ Respond ONLY with a JSON object, no markdown:
       <style>{`
         @media print {
           .no-print { display: none !important; }
-          body { font-size: 12px; }
+          body { font-size: 12px; color: #000; }
+          a[href]:after {
+            content: " (" attr(href) ")";
+            font-size: 9px;
+            color: #555;
+            word-break: break-all;
+          }
+          a[href^="#"]:after,
+          a[href^="javascript"]:after { content: ""; }
+          .rounded-2xl, .rounded-xl { border-radius: 8px !important; }
+          .space-y-5 > * { margin-bottom: 12px !important; }
         }
       `}</style>
 
@@ -508,7 +518,7 @@ Respond ONLY with a JSON object, no markdown:
                       <p className="text-sm font-semibold text-neutral-950">{f.num} — {f.name}</p>
                       <p className="text-xs text-neutral-500">{f.desc}</p>
                     </div>
-                    <a href={DRIVE_FOLDER} target="_blank" rel="noopener noreferrer"
+                    <a href={f.url} target="_blank" rel="noopener noreferrer"
                       className="no-print ml-4 shrink-0 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 font-mono text-xs font-bold text-neutral-700 hover:bg-neutral-950 hover:text-white transition">
                       Open →
                     </a>

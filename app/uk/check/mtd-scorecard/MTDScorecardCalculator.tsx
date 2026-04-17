@@ -245,7 +245,19 @@ export default function MTDScorecardCalculator() {
 
   async function handleSaveEmail() {
     if (!email) return;
-    await fetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, source: "mtd_scorecard", country_code: "UK", site: "taxchecknow" }) }).catch(() => {});
+    // Save to Supabase via decision-sessions email field
+    // Non-blocking — never prevents user flow
+    fetch("/api/save-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        source: "mtd_scorecard_result",
+        country_code: "UK",
+        site: "taxchecknow",
+        session_id: sessionId || localStorage.getItem("mtd_session_id") || "",
+      }),
+    }).catch(() => {});
     setEmailSent(true);
   }
 
