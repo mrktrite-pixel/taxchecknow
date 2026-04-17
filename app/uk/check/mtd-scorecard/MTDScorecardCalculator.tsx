@@ -242,21 +242,29 @@ export default function MTDScorecardCalculator() {
   async function handleCheckout() {
     if (checkoutLoading) return;
     const sid = sessionId || localStorage.getItem("mtd_session_id");
-    if (!sid) { setError("Session expired. Run the calculator again."); return; }
+    const effectiveSid = sid || `fallback_${Date.now()}`;
     setCheckoutLoading(true); setError("");
     try {
-      await fetch("/api/decision-sessions", {
-        method: "PATCH", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: sid, tier_intended: effectiveTier, product_key: `uk_${effectiveTier}_mtd_scorecard`,
-          questionnaire_payload: popupAnswers, email: email || undefined,
-          readiness_payload: readiness ? { score: readiness.score, band: readiness.band, top_gap_title: readiness.topGapTitle } : undefined,
-        }),
-      });
+      if (sid) {
+        fetch("/api/decision-sessions", {
+          method: "PATCH", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: sid, tier_intended: effectiveTier,
+            product_key: `uk_${effectiveTier}_mtd_scorecard`,
+            questionnaire_payload: popupAnswers, email: email || undefined,
+            readiness_payload: readiness ? {
+              score: readiness.score, band: readiness.band,
+              top_gap_title: readiness.topGapTitle
+            } : undefined,
+          }),
+        }).catch(() => {});
+      }
       const res = await fetch("/api/create-checkout-session", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          decision_session_id: sid, tier: effectiveTier, product_key: `uk_${effectiveTier}_mtd_scorecard`,
+          decision_session_id: effectiveSid,
+          tier: effectiveTier,
+          product_key: `uk_${effectiveTier}_mtd_scorecard`,
           success_url: `${window.location.origin}/uk/check/mtd-scorecard/success/${effectiveTier === 127 ? "execute" : "prepare"}`,
           cancel_url: `${window.location.origin}/uk/check/mtd-scorecard`,
         }),
