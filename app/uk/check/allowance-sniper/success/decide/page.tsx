@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const FILES_67 = [
-  { num: "01", name: "Your ANI Position Assessment",      desc: "Your exact adjusted net income and trap status.", url: "/files/uk/allowance-sniper-01" },
-  { num: "02", name: "Your SIPP Escape Calculation",      desc: "The exact gross contribution needed — and the net cost.", url: "/files/uk/allowance-sniper-02" },
-  { num: "03", name: "SIPP vs Salary Sacrifice Guide",    desc: "Which route works for your situation.", url: "/files/uk/allowance-sniper-03" },
-  { num: "04", name: "Gift Aid Alternative",              desc: "How Gift Aid can also reduce ANI.", url: "/files/uk/allowance-sniper-04" },
-  { num: "05", name: "Your Accountant Brief",             desc: "Print and take to your next meeting.", url: "/files/uk/allowance-sniper-05" },
+  { num: "01", name: "Your ANI Position Assessment",      desc: "Your exact adjusted net income and trap status.", url: "/files/uk/allowance-sniper/allowance-sniper-01" },
+  { num: "02", name: "Your SIPP Escape Calculation",      desc: "The exact gross contribution needed — and the net cost.", url: "/files/uk/allowance-sniper/allowance-sniper-02" },
+  { num: "03", name: "SIPP vs Salary Sacrifice Guide",    desc: "Which route works for your situation.", url: "/files/uk/allowance-sniper/allowance-sniper-03" },
+  { num: "04", name: "Gift Aid Alternative",              desc: "How Gift Aid can also reduce ANI.", url: "/files/uk/allowance-sniper/allowance-sniper-04" },
+  { num: "05", name: "Your Accountant Brief",             desc: "Print and take to your next meeting.", url: "/files/uk/allowance-sniper/allowance-sniper-05" },
 ];
 
 interface Assessment {

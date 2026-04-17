@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const ALL_FILES = [
-  { num: "01", name: "Your ANI Position Assessment",         desc: "Exact ANI, personal allowance remaining, hidden tax cost.", url: "/files/uk/allowance-sniper-01" },
-  { num: "02", name: "Your SIPP Escape Calculation",         desc: "Exact gross contribution and net cost after relief.", url: "/files/uk/allowance-sniper-02" },
-  { num: "03", name: "SIPP vs Salary Sacrifice Guide",       desc: "Which route works for your employer and situation.", url: "/files/uk/allowance-sniper-03" },
-  { num: "04", name: "Gift Aid Alternative",                 desc: "How Gift Aid reduces ANI alongside or instead of SIPP.", url: "/files/uk/allowance-sniper-04" },
-  { num: "05", name: "Your Accountant Brief",                desc: "Print and take to your next meeting.", url: "/files/uk/allowance-sniper-05" },
-  { num: "06", name: "Year-by-Year Contribution Schedule",   desc: "Multi-year plan as frozen thresholds affect more people.", url: "/files/uk/allowance-sniper-06" },
-  { num: "07", name: "Bonus Timing Guide",                   desc: "When to take bonuses to minimise the trap exposure.", url: "/files/uk/allowance-sniper-07" },
-  { num: "08", name: "Implementation Checklist",             desc: "Every step before 5 April 2027.", url: "/files/uk/allowance-sniper-08" },
+  { num: "01", name: "Your ANI Position Assessment",         desc: "Exact ANI, personal allowance remaining, hidden tax cost.", url: "/files/uk/allowance-sniper/allowance-sniper-01" },
+  { num: "02", name: "Your SIPP Escape Calculation",         desc: "Exact gross contribution and net cost after relief.", url: "/files/uk/allowance-sniper/allowance-sniper-02" },
+  { num: "03", name: "SIPP vs Salary Sacrifice Guide",       desc: "Which route works for your employer and situation.", url: "/files/uk/allowance-sniper/allowance-sniper-03" },
+  { num: "04", name: "Gift Aid Alternative",                 desc: "How Gift Aid reduces ANI alongside or instead of SIPP.", url: "/files/uk/allowance-sniper/allowance-sniper-04" },
+  { num: "05", name: "Your Accountant Brief",                desc: "Print and take to your next meeting.", url: "/files/uk/allowance-sniper/allowance-sniper-05" },
+  { num: "06", name: "Year-by-Year Contribution Schedule",   desc: "Multi-year plan as frozen thresholds affect more people.", url: "/files/uk/allowance-sniper/allowance-sniper-06" },
+  { num: "07", name: "Bonus Timing Guide",                   desc: "When to take bonuses to minimise the trap exposure.", url: "/files/uk/allowance-sniper/allowance-sniper-07" },
+  { num: "08", name: "Implementation Checklist",             desc: "Every step before 5 April 2027.", url: "/files/uk/allowance-sniper/allowance-sniper-08" },
 ];
 
 interface Assessment {
@@ -361,7 +361,7 @@ Respond ONLY with JSON, no markdown:
                   </div>
                 ))}
               </div>
-              <a href="/files/uk/allowance-sniper-05" target="_blank" rel="noopener noreferrer"
+              <a href="/files/uk/allowance-sniper/allowance-sniper-05" target="_blank" rel="noopener noreferrer"
                 className="no-print text-xs font-bold text-blue-700 underline">File 05 — Print accountant brief →</a>
             </div>
 
