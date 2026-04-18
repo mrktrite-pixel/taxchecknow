@@ -36,7 +36,7 @@ const DAYS_TO_END    = Math.max(0, Math.floor(
 
 const BRACKETS = ${JSON.stringify(config.brackets, null, 2)} as const;
 
-type BracketStatus = typeof BRACKETS[number]["status"];
+type BracketStatus = "clear" | "approaching" | "trap" | "deep_trap" | "above_trap" | "pass" | "fail" | "risk" | "in_scope" | "out_of_scope";
 type PackTier      = ${config.tier1.price} | ${config.tier2.price};
 
 // ── PRODUCTS ──────────────────────────────────────────────────────────────────

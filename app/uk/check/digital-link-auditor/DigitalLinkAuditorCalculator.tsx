@@ -42,7 +42,7 @@ const BRACKETS = [
   }
 ] as const;
 
-type BracketStatus = typeof BRACKETS[number]["status"];
+type BracketStatus = "clear" | "approaching" | "trap" | "deep_trap" | "above_trap" | "pass" | "fail" | "risk" | "in_scope" | "out_of_scope";
 type PackTier      = 67 | 147;
 
 // ── PRODUCTS ──────────────────────────────────────────────────────────────────
