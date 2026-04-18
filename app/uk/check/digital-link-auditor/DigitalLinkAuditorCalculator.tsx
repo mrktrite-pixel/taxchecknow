@@ -186,10 +186,7 @@ export default function DigitalLinkAuditorCalculator() {
   const selectedProduct = PRODUCTS[effectiveTier];
   const answersComplete = Object.values(answers).every(Boolean);
 
-  const mobileStickyVisible = selectedBracket !== null &&
-    (bracketStatus === "trap" || bracketStatus === "deep_trap" ||
-     bracketStatus === "approaching" || bracketStatus === "in_scope" ||
-     bracketStatus === "fail" || bracketStatus === "risk");
+  const mobileStickyVisible = selectedBracket !== null;
 
   useEffect(() => {
     if (selectedBracket !== null && resultRef.current) {
