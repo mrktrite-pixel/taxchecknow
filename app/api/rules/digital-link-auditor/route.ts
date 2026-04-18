@@ -39,27 +39,27 @@ export async function GET() {
     "formula": "Compliant workflow = source record → [digital link only] → filing software → HMRC. Any manual step = broken chain.",
     "thresholds": [
         {
-            "label": "Single MTD software only — records and submission in one tool",
+            "label": "I use one MTD software — records and submission in the same tool",
             "value": 1,
             "status": "clear"
         },
         {
-            "label": "Spreadsheet + verified bridging software",
+            "label": "I use a spreadsheet + bridging software (tested and verified)",
             "value": 2,
             "status": "approaching"
         },
         {
-            "label": "Spreadsheet + copy/paste into filing software",
+            "label": "I copy numbers from my spreadsheet into my filing software",
             "value": 3,
             "status": "fail"
         },
         {
-            "label": "Manual re-keying between tools",
+            "label": "I type figures from one system into another manually",
             "value": 4,
             "status": "fail"
         },
         {
-            "label": "Not sure how my data moves between tools",
+            "label": "I am not sure how my data gets from my records to HMRC",
             "value": 5,
             "status": "risk"
         }
@@ -67,28 +67,28 @@ export async function GET() {
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "You can use Excel for MTD — it is fine",
-            "correct": "Excel can be part of a compliant workflow, but if multiple products are used the chain must stay digital throughout. Copy/paste between them is not a digital link in HMRC's published doctrine."
+            "ai_says": "ChatGPT says: You can use Excel for MTD — it is fine",
+            "correct": "Reality: Excel can be part of a compliant workflow only if it is connected by a verified digital link. Copy/paste from Excel into filing software breaks the digital chain. HMRC can penalise this even if your numbers are correct."
         },
         {
             "error_id": 2,
-            "ai_says": "If the totals are right, the method does not matter",
-            "correct": "HMRC's digital-link requirement is about how data moves between products — not only the final numbers. A correct submission via a broken chain can still attract an inaccuracy penalty."
+            "ai_says": "ChatGPT says: If the totals are right, the method does not matter to HMRC",
+            "correct": "Reality: HMRC's digital-link requirement is specifically about how data moves — not the final numbers. A 100% accurate submission via a broken digital chain is still non-compliant and can attract an inaccuracy penalty."
         },
         {
             "error_id": 3,
-            "ai_says": "Any bridging software automatically makes you compliant",
-            "correct": "Bridging software can be compliant but the specific workflow still needs verifying. The bridge must preserve the digital chain — an incorrectly configured bridge can still break it."
+            "ai_says": "ChatGPT says: Any bridging software makes your workflow compliant",
+            "correct": "Reality: Bridging software can create a compliant digital link — but only if it is correctly configured and tested. An untested or misconfigured bridge can still break the chain."
         },
         {
             "error_id": 4,
-            "ai_says": "Copy/paste is a digital link",
-            "correct": "HMRC explicitly states in VAT Notice 700/22 that copy/paste is not a digital link. This doctrine applies to MTD for Income Tax where multiple products are used in the workflow."
+            "ai_says": "ChatGPT says: Copy/paste is acceptable as a digital link for MTD",
+            "correct": "Reality: HMRC explicitly states in VAT Notice 700/22 that copy/paste is not a digital link. This doctrine is the clearest HMRC articulation of the rule and applies to MTD for Income Tax workflows."
         },
         {
             "error_id": 5,
-            "ai_says": "You only need one quarterly number to submit to HMRC",
-            "correct": "MTD for Income Tax requires digital records kept in compatible software and a compliant digital chain from source record to HMRC submission — not just a quarterly total entered manually."
+            "ai_says": "ChatGPT says: You just need to get the quarterly total into HMRC somehow",
+            "correct": "Reality: MTD requires a compliant digital chain from the source record all the way to HMRC submission — not just the final number. Every transfer of data in the chain must be digital."
         }
     ],
     "faq": [
@@ -194,7 +194,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/digital-link-auditor",
     "api_endpoint": "/api/rules/digital-link-auditor",
-    "generated_at": "2026-04-18T12:56:16.016Z"
+    "generated_at": "2026-04-18T13:06:13.755Z"
 };
 
   return NextResponse.json(rules, {

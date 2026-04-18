@@ -235,6 +235,13 @@ export interface ProductConfig {
     body:  string;   // 1-2 sentences with the key threshold
   };
 
+  // ── CHAIN VISUAL (optional — shown between answer block and mistakes) ─────
+  chainVisual?: {
+    broken: string;    // "Spreadsheet → [copy/paste ❌] → Software → HMRC ❌"
+    fixed:  string;    // "Spreadsheet → [digital link ✔] → Bridge → HMRC ✔"
+    label?: string;    // "The difference — visual"
+  };
+
   calculatorClarification: {
     label: string;   // "⚠️ key clarification"
     body:  string;   // 1-2 sentences

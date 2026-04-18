@@ -215,6 +215,22 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
           <p className="mt-3 text-xs text-neutral-600">${config.answerSource}</p>
         </div>
 
+        {/* CHAIN VISUAL — if present in config */}
+        ${config.chainVisual ? `
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            ${config.chainVisual.label ?? "The digital link — what HMRC requires"}
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ ${config.chainVisual.broken}
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ ${config.chainVisual.fixed}
+            </div>
+          </div>
+        </div>` : ""}
+
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">

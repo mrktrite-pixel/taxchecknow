@@ -74,9 +74,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   answerHeadline: "The answer — HMRC confirmed April 2026",
   answerBody: [
-    "From 6 April 2026, UK sole traders and landlords in MTD for Income Tax must keep digital records in compatible software and submit through HMRC-compatible software. If you use more than one software product, HMRC requires digital links between them.",
-    "HMRC's published digital-link doctrine says copy and paste is not a digital link. This is most explicitly stated in VAT Notice 700/22 and applies to the MTD IT framework where multiple products are used in the record-to-submission chain.",
-    "This tool audits your workflow — not your tax liability. You can have perfectly correct numbers and still have a non-compliant digital chain. That is the gap most people miss.",
+    "From 6 April 2026, UK sole traders and landlords in MTD for Income Tax must keep digital records in compatible software and submit through HMRC-compatible software. If you use more than one software product, HMRC requires digital links between them — at every step of the chain.",
+    "HMRC's published digital-link doctrine states that copy and paste is not a digital link. HMRC can audit your workflow independently of your tax figures. You can be penalised even if every number you submitted is completely correct — the compliance failure is in how data moved, not what it said.",
+    "This tool audits your workflow — not your tax liability. Most taxpayers who fail the digital links test believe they are compliant. The gap between what you think your workflow does and what HMRC requires is exactly where this product operates.",
   ],
   answerSource: "Source: GOV.UK — Making Tax Digital for Income Tax · VAT Notice 700/22 · Finance (No.2) Act 2024",
 
@@ -91,11 +91,11 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // This calculator audits workflow not income
   // Single question to classify the workflow type
   brackets: [
-    { label: "Single MTD software only — records and submission in one tool",  value: 1, status: "clear"      },
-    { label: "Spreadsheet + verified bridging software",                        value: 2, status: "approaching" },
-    { label: "Spreadsheet + copy/paste into filing software",                   value: 3, status: "fail"        },
-    { label: "Manual re-keying between tools",                                  value: 4, status: "fail"        },
-    { label: "Not sure how my data moves between tools",                        value: 5, status: "risk"        },
+    { label: "I use one MTD software — records and submission in the same tool", value: 1, status: "clear"      },
+    { label: "I use a spreadsheet + bridging software (tested and verified)",    value: 2, status: "approaching" },
+    { label: "I copy numbers from my spreadsheet into my filing software",       value: 3, status: "fail"        },
+    { label: "I type figures from one system into another manually",             value: 4, status: "fail"        },
+    { label: "I am not sure how my data gets from my records to HMRC",          value: 5, status: "risk"        },
   ],
 
   calculatorInputs: [
@@ -152,12 +152,18 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   calculatorRuleBox: {
     label: "The rule — HMRC confirmed",
-    body:  "Where more than one software product is used in your MTD workflow, HMRC requires digital links between them. Copy/paste is not a digital link in HMRC's published doctrine.",
+    body:  "Digital links are required when more than one software product is used. Copy and paste is NOT a digital link. HMRC's digital link doctrine applies to every step in your MTD workflow — not just the final submission.",
+  },
+
+  chainVisual: {
+    label:  "The digital link chain — what HMRC requires",
+    broken: "Spreadsheet → [copy/paste ❌] → Filing software → HMRC  — NON-COMPLIANT",
+    fixed:  "Spreadsheet → [digital link ✔] → Bridge software → HMRC  — COMPLIANT",
   },
 
   calculatorClarification: {
     label: "⚠️ key clarification",
-    body:  "You can have perfectly correct tax figures and still have a non-compliant digital chain. HMRC's compliance check is about how data moves — not only what the final numbers are.",
+    body:  "Most taxpayers who fail the digital links test believe they are compliant. If your current workflow involves any copy/paste or manual re-keying, it would likely fail an HMRC digital link audit — even if every figure you submitted is correct.",
   },
 
   // ── COUNTDOWN BOX ─────────────────────────────────────────────────────────────
@@ -216,24 +222,24 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // ── AI CORRECTIONS ────────────────────────────────────────────────────────────
   aiCorrections: [
     {
-      wrong:   "You can use Excel for MTD — it is fine",
-      correct: "Excel can be part of a compliant workflow, but if multiple products are used the chain must stay digital throughout. Copy/paste between them is not a digital link in HMRC's published doctrine.",
+      wrong:   "ChatGPT says: You can use Excel for MTD — it is fine",
+      correct: "Reality: Excel can be part of a compliant workflow only if it is connected by a verified digital link. Copy/paste from Excel into filing software breaks the digital chain. HMRC can penalise this even if your numbers are correct.",
     },
     {
-      wrong:   "If the totals are right, the method does not matter",
-      correct: "HMRC's digital-link requirement is about how data moves between products — not only the final numbers. A correct submission via a broken chain can still attract an inaccuracy penalty.",
+      wrong:   "ChatGPT says: If the totals are right, the method does not matter to HMRC",
+      correct: "Reality: HMRC's digital-link requirement is specifically about how data moves — not the final numbers. A 100% accurate submission via a broken digital chain is still non-compliant and can attract an inaccuracy penalty.",
     },
     {
-      wrong:   "Any bridging software automatically makes you compliant",
-      correct: "Bridging software can be compliant but the specific workflow still needs verifying. The bridge must preserve the digital chain — an incorrectly configured bridge can still break it.",
+      wrong:   "ChatGPT says: Any bridging software makes your workflow compliant",
+      correct: "Reality: Bridging software can create a compliant digital link — but only if it is correctly configured and tested. An untested or misconfigured bridge can still break the chain.",
     },
     {
-      wrong:   "Copy/paste is a digital link",
-      correct: "HMRC explicitly states in VAT Notice 700/22 that copy/paste is not a digital link. This doctrine applies to MTD for Income Tax where multiple products are used in the workflow.",
+      wrong:   "ChatGPT says: Copy/paste is acceptable as a digital link for MTD",
+      correct: "Reality: HMRC explicitly states in VAT Notice 700/22 that copy/paste is not a digital link. This doctrine is the clearest HMRC articulation of the rule and applies to MTD for Income Tax workflows.",
     },
     {
-      wrong:   "You only need one quarterly number to submit to HMRC",
-      correct: "MTD for Income Tax requires digital records kept in compatible software and a compliant digital chain from source record to HMRC submission — not just a quarterly total entered manually.",
+      wrong:   "ChatGPT says: You just need to get the quarterly total into HMRC somehow",
+      correct: "Reality: MTD requires a compliant digital chain from the source record all the way to HMRC submission — not just the final number. Every transfer of data in the chain must be digital.",
     },
   ],
 

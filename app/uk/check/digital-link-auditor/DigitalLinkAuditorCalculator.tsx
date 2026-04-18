@@ -16,27 +16,27 @@ const DAYS_TO_END    = Math.max(0, Math.floor(
 
 const BRACKETS = [
   {
-    "label": "Single MTD software only — records and submission in one tool",
+    "label": "I use one MTD software — records and submission in the same tool",
     "value": 1,
     "status": "clear"
   },
   {
-    "label": "Spreadsheet + verified bridging software",
+    "label": "I use a spreadsheet + bridging software (tested and verified)",
     "value": 2,
     "status": "approaching"
   },
   {
-    "label": "Spreadsheet + copy/paste into filing software",
+    "label": "I copy numbers from my spreadsheet into my filing software",
     "value": 3,
     "status": "fail"
   },
   {
-    "label": "Manual re-keying between tools",
+    "label": "I type figures from one system into another manually",
     "value": 4,
     "status": "fail"
   },
   {
-    "label": "Not sure how my data moves between tools",
+    "label": "I am not sure how my data gets from my records to HMRC",
     "value": 5,
     "status": "risk"
   }
@@ -306,7 +306,7 @@ export default function DigitalLinkAuditorCalculator() {
               The rule — HMRC confirmed
             </p>
             <p className="mt-1 text-sm leading-relaxed text-white">
-              Where more than one software product is used in your MTD workflow, HMRC requires digital links between them. Copy/paste is not a digital link in HMRC's published doctrine.
+              Digital links are required when more than one software product is used. Copy and paste is NOT a digital link. HMRC's digital link doctrine applies to every step in your MTD workflow — not just the final submission.
             </p>
           </div>
 
@@ -345,7 +345,7 @@ export default function DigitalLinkAuditorCalculator() {
               ⚠️ key clarification
             </p>
             <p className="mt-1 text-xs leading-relaxed text-amber-900">
-              You can have perfectly correct tax figures and still have a non-compliant digital chain. HMRC's compliance check is about how data moves — not only what the final numbers are.
+              Most taxpayers who fail the digital links test believe they are compliant. If your current workflow involves any copy/paste or manual re-keying, it would likely fail an HMRC digital link audit — even if every figure you submitted is correct.
             </p>
           </div>
         </div>
