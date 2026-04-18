@@ -43,9 +43,18 @@ async function cole(productId: string) {
   // ── STEP 1: Load config ───────────────────────────────────────────────────
   let config: ProductConfig;
   try {
-    const configPath = path.join(CONFIG_DIR, `${productId}.ts`);
+    // Accept short form (uk-03) or full form (uk-03-digital-link-auditor)
+    let configPath = path.join(CONFIG_DIR, `${productId}.ts`);
     if (!fs.existsSync(configPath)) {
-      throw new Error(`Config not found: ${configPath}`);
+      // Try to find a config that starts with the given id
+      const allConfigs = fs.readdirSync(CONFIG_DIR).filter(f => f.endsWith(".ts"));
+      const match = allConfigs.find(f => f.startsWith(productId));
+      if (match) {
+        configPath = path.join(CONFIG_DIR, match);
+        console.log(`   → Resolved to: ${match}`);
+      } else {
+        throw new Error(`Config not found: ${configPath}\n   Available configs: ${allConfigs.join(", ")}`);
+      }
     }
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const mod = require(configPath);
