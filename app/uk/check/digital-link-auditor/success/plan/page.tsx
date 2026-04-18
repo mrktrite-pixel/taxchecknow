@@ -170,18 +170,18 @@ For array fields use actual arrays. For action items use objects with title, dea
   function buildFallback(name: string): Assessment {
     const displayName = name !== "your" ? name : "Your";
     const result: Record<string, unknown> = {};
-    result["status"] = "status" === "accountantQuestions" ? [] : "status — pending assessment for " + displayName;
-    result["workflowVerdict"] = "workflowVerdict" === "accountantQuestions" ? [] : "workflowVerdict — pending assessment for " + displayName;
-    result["biggestGap"] = "biggestGap" === "accountantQuestions" ? [] : "biggestGap — pending assessment for " + displayName;
-    result["mainRisk"] = "mainRisk" === "accountantQuestions" ? [] : "mainRisk — pending assessment for " + displayName;
-    result["gap2"] = "gap2" === "accountantQuestions" ? [] : "gap2 — pending assessment for " + displayName;
-    result["gap3"] = "gap3" === "accountantQuestions" ? [] : "gap3 — pending assessment for " + displayName;
-    result["actions"] = "actions" === "accountantQuestions" ? [] : "actions — pending assessment for " + displayName;
-    result["bridgeRec"] = "bridgeRec" === "accountantQuestions" ? [] : "bridgeRec — pending assessment for " + displayName;
-    result["bridgeWhy"] = "bridgeWhy" === "accountantQuestions" ? [] : "bridgeWhy — pending assessment for " + displayName;
-    result["weekPlan"] = "weekPlan" === "accountantQuestions" ? [] : "weekPlan — pending assessment for " + displayName;
-    result["evidenceChecklist"] = "evidenceChecklist" === "accountantQuestions" ? [] : "evidenceChecklist — pending assessment for " + displayName;
-    result["accountantQuestions"] = "accountantQuestions" === "accountantQuestions" ? [] : "accountantQuestions — pending assessment for " + displayName;
+    result["status"] = "status — building for " + displayName;
+    result["workflowVerdict"] = "workflowVerdict — building for " + displayName;
+    result["biggestGap"] = "biggestGap — building for " + displayName;
+    result["mainRisk"] = "mainRisk — building for " + displayName;
+    result["gap2"] = "gap2 — building for " + displayName;
+    result["gap3"] = "gap3 — building for " + displayName;
+    result["actions"] = [];
+    result["bridgeRec"] = "bridgeRec — building for " + displayName;
+    result["bridgeWhy"] = "bridgeWhy — building for " + displayName;
+    result["weekPlan"] = [];
+    result["evidenceChecklist"] = "evidenceChecklist — building for " + displayName;
+    result["accountantQuestions"] = [];
     return result as Assessment;
   }
 

@@ -141,13 +141,13 @@ For array fields use actual arrays. For action items use objects with title, dea
   function buildFallback(name: string): Assessment {
     const displayName = name !== "your" ? name : "Your";
     const result: Record<string, unknown> = {};
-    result["status"] = "status" === "accountantQuestions" ? [] : "status — pending assessment for " + displayName;
-    result["workflowVerdict"] = "workflowVerdict" === "accountantQuestions" ? [] : "workflowVerdict — pending assessment for " + displayName;
-    result["biggestGap"] = "biggestGap" === "accountantQuestions" ? [] : "biggestGap — pending assessment for " + displayName;
-    result["mainRisk"] = "mainRisk" === "accountantQuestions" ? [] : "mainRisk — pending assessment for " + displayName;
-    result["firstAction"] = "firstAction" === "accountantQuestions" ? [] : "firstAction — pending assessment for " + displayName;
-    result["bridgeRec"] = "bridgeRec" === "accountantQuestions" ? [] : "bridgeRec — pending assessment for " + displayName;
-    result["accountantQuestions"] = "accountantQuestions" === "accountantQuestions" ? [] : "accountantQuestions — pending assessment for " + displayName;
+    result["status"] = "status — building for " + displayName;
+    result["workflowVerdict"] = "workflowVerdict — building for " + displayName;
+    result["biggestGap"] = "biggestGap — building for " + displayName;
+    result["mainRisk"] = "mainRisk — building for " + displayName;
+    result["firstAction"] = "firstAction — building for " + displayName;
+    result["bridgeRec"] = "bridgeRec — building for " + displayName;
+    result["accountantQuestions"] = [];
     return result as Assessment;
   }
 

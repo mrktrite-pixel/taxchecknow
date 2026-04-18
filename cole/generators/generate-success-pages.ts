@@ -183,7 +183,11 @@ For array fields use actual arrays. For action items use objects with title, dea
   function buildFallback(name: string): Assessment {
     const displayName = name !== "your" ? name : "Your";
     const result: Record<string, unknown> = {};
-    ${assessFields.map(f => `result["${f}"] = "${f}" === "accountantQuestions" ? [] : "${f} — pending assessment for " + displayName;`).join("\n    ")}
+    ${assessFields.map(f =>
+      f === "accountantQuestions" || f === "actions" || f === "weekPlan"
+        ? `result["${f}"] = [];`
+        : `result["${f}"] = "${f} — building for " + displayName;`
+    ).join("\n    ")}
     return result as Assessment;
   }
 
