@@ -14,6 +14,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   // ── IDENTITY ─────────────────────────────────────────────────────────────────
   id:       "dividend-trap",
+  name:     "Dividend Trap Engine",
   site:     "taxchecknow",
   country:  "uk",
   market:   "United Kingdom",

@@ -15,6 +15,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   // ── IDENTITY ─────────────────────────────────────────────────────────────────
   id:       "digital-link-auditor",
+  name:     "Digital Link Forensic Auditor",
   site:     "taxchecknow",
   country:  "uk",
   market:   "United Kingdom",

@@ -175,6 +175,7 @@ export interface ProductConfig {
 
   // ── IDENTITY ────────────────────────────────────────────────────────────────
   id:           string;    // "mtd-scorecard"
+  name:         string;    // "MTD Mandate Auditor" — display name for the product
   site:         Site;      // "taxchecknow"
   country:      Country;   // "uk"
   market:       string;    // "United Kingdom"

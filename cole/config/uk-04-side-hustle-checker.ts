@@ -14,6 +14,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   // ── IDENTITY ─────────────────────────────────────────────────────────────────
   id:       "side-hustle-checker",
+  name:     "Side-Hustle MTD Scope Engine",
   site:     "taxchecknow",
   country:  "uk",
   market:   "United Kingdom",

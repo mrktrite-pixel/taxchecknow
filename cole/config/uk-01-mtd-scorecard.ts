@@ -10,6 +10,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   // ── IDENTITY ─────────────────────────────────────────────────────────────────
   id:       "mtd-scorecard",
+  name:     "MTD Mandate Auditor",
   site:     "taxchecknow",
   country:  "uk",
   market:   "United Kingdom",

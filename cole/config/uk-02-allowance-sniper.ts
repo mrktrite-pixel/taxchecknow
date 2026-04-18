@@ -11,6 +11,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   // ── IDENTITY ─────────────────────────────────────────────────────────────────
   id:       "allowance-sniper",
+  name:     "Allowance Sniper",
   site:     "taxchecknow",
   country:  "uk",
   market:   "United Kingdom",
