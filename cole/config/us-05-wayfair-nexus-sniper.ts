@@ -1,164 +1,639 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// COLE CONFIG — UK-05 Dividend Trap Engine
+// Citation gap: AI cites wrong dividend rates AND wrong allowance
+// AI says: 8.75%/33.75%/38.1% and £2,000 allowance
+// Correct: 10.75%/35.75%/39.35% from April 2026 and £500 allowance
+// Biggest gap: AI NEVER shows combined CT + dividend effective rate
+// A director on £100k profit pays ~36.9% effective — not 8.75%
+// Legal anchor: Finance Act 2024
+// ─────────────────────────────────────────────────────────────────────────────
+
 import type { ProductConfig } from "../types/product-config";
+
 export const PRODUCT_CONFIG: ProductConfig = {
-  id: "wayfair-nexus-sniper", name: "Wayfair Nexus Sniper", site: "taxchecknow", country: "us", market: "United States", language: "en-US", currency: "USD",
-  slug: "us/check/wayfair-nexus-sniper", url: "https://taxchecknow.com/us/check/wayfair-nexus-sniper", apiRoute: "/api/rules/wayfair-nexus-sniper",
-  authority: "IRS", authorityUrl: "https://www.irs.gov", legalAnchor: "South Dakota v. Wayfair (2018)", legislation: "South Dakota v. Wayfair, Inc. (2018) — Economic Nexus for Sales Tax", lastVerified: "April 2026",
-  tier1: { price: 67, name: "Your Nexus Heatmap Action Plan", tagline: "Are you already non-compliant — and how much do you owe right now?", value: "A personalised nexus audit built around your sales by state, your marketplace channels, and your FBA inventory locations.", cta: "Get My Nexus Plan — $67 →", productKey: "us_67_wayfair_nexus_sniper", envVar: "STRIPE_US_NEXUS_67", successPath: "assess", fileCount: 5 },
-  tier2: { price: 147, name: "Your VDA Shield System", tagline: "Reduce penalties and limit lookback with Voluntary Disclosure — before the audit letter arrives", value: "A personalised nexus audit plus multi-state VDA strategy, penalty reduction calculation, and amnesty tracker.", cta: "Get My VDA Shield — $147 →", productKey: "us_147_wayfair_nexus_sniper", envVar: "STRIPE_US_NEXUS_147", successPath: "plan", fileCount: 8 },
-  deadline: { isoDate: "2026-12-31T23:59:59.000-05:00", display: "December 31, 2026", short: "Dec 31 2026", description: "Year-end nexus review deadline — each year of non-compliance increases lookback exposure", urgencyLabel: "COMPLIANCE DEADLINE", countdownLabel: "Countdown to year-end — every month of delay increases your exposure" },
-  h1: "The 2026 Wayfair Nexus Sniper: Are You Already Non-Compliant?", metaTitle: "Wayfair Nexus 2026: Are You Already Non-Compliant? | TaxCheckNow", metaDescription: "Most US states enforce economic nexus at $100,000 in GROSS sales — including marketplace sales. FBA inventory creates immediate nexus with no threshold. States can audit years later. Check your nexus exposure instantly.", canonical: "https://taxchecknow.com/us/check/wayfair-nexus-sniper",
-  answerHeadline: "The answer — state tax authorities confirmed 2026",
+
+  // ── IDENTITY ─────────────────────────────────────────────────────────────────
+  id:       "dividend-trap",
+  name:     "Dividend Trap Engine",
+  site:     "taxchecknow",
+  country:  "uk",
+  market:   "United Kingdom",
+  language: "en-GB",
+  currency: "GBP",
+  slug:     "uk/check/dividend-trap",
+  url:      "https://taxchecknow.com/uk/check/dividend-trap",
+  apiRoute: "/api/rules/dividend-trap",
+
+  // ── AUTHORITY ─────────────────────────────────────────────────────────────────
+  authority:    "HMRC",
+  authorityUrl: "https://www.gov.uk",
+  legalAnchor:  "Finance Act 2024",
+  legislation:  "Finance Act 2024 — dividend tax rates and allowance provisions",
+  lastVerified: "April 2026",
+
+  // ── PRICING ───────────────────────────────────────────────────────────────────
+  tier1: {
+    price:       67,
+    name:        "Your Dividend Tax Position",
+    tagline:     "What is my real effective tax rate on profit — and what am I actually paying?",
+    value:       "A personal dividend tax assessment showing your combined corporation tax and dividend tax effective rate — not just the headline dividend rate.",
+    cta:         "Get My Tax Position — £47 →",
+    productKey:  "uk_67_dividend_trap",
+    envVar:      "STRIPE_UK_DIV_67",
+    successPath: "assess",
+    fileCount:   5,
+  },
+  tier2: {
+    price:       147,
+    name:        "Your Dividend Optimisation System",
+    tagline:     "I know my rate — now show me how to reduce it legally.",
+    value:       "A personal dividend optimisation system covering salary vs dividend, pension diversion, spouse share splitting, timing strategy and director loan risk.",
+    cta:         "Get My Optimisation System — £97 →",
+    productKey:  "uk_147_dividend_trap",
+    envVar:      "STRIPE_UK_DIV_147",
+    successPath: "plan",
+    fileCount:   8,
+  },
+
+  // ── DEADLINE ──────────────────────────────────────────────────────────────────
+  deadline: {
+    isoDate:        "2027-04-05T23:59:59Z",
+    display:        "5 April 2027",
+    short:          "5 Apr 2027",
+    description:    "Tax year end — dividend timing decisions and pension contributions must be made before this date",
+    urgencyLabel:   "TAX YEAR END",
+    countdownLabel: "Countdown to 5 April 2027 — tax year end",
+  },
+
+  // ── COPY ──────────────────────────────────────────────────────────────────────
+  h1:              "UK Dividend Tax 2026/27: The 51% Combined Tax Auditor",
+  metaTitle:       "UK Dividend Tax 2026/27: The 51% Combined Tax Auditor | TaxCheckNow",
+  metaDescription: "From April 2026, dividend tax rises to 10.75%/35.75%/39.35% and the allowance collapses to £500. But your real rate combines Corporation Tax too — up to 54.51%. Most directors calculate this wrong. Check your exact position.",
+  canonical:       "https://taxchecknow.com/uk/check/dividend-trap",
+
+  answerHeadline: "The answer — HMRC confirmed April 2026",
   answerBody: [
-    "Following South Dakota v. Wayfair (2018), most US states enforce economic nexus based on $100,000 in gross sales or 200 transactions in the prior 12 months. In 2026, several states including Illinois have removed the transaction threshold — gross sales alone trigger nexus.",
-    "Gross sales means total revenue from all channels — not just taxable sales. Marketplace sales through Amazon, Etsy, and Walmart count toward your nexus threshold even though the marketplace collects the tax. FBA inventory in any Amazon fulfilment centre creates physical nexus immediately — no threshold required.",
-    "States can audit you years later for uncollected sales tax, even if you never registered or knew you had nexus. Voluntary Disclosure Agreements (VDAs) can limit the lookback period and reduce penalties — but only before the audit letter arrives.",
+    "From 6 April 2026, UK dividend tax rates are 10.75% (basic), 35.75% (higher) and 39.35% (additional). The dividend allowance is £500 — collapsed from £5,000 in 2017. Most calculators show only the dividend rate. That is the wrong number.",
+    "For company directors, profits are first taxed at Corporation Tax (up to 25%), then taxed again as dividends. The combined effective rate at higher rate is 51.81% — not 35.75%. This is the number AI tools consistently get wrong and most directors have never seen calculated correctly.",
+    "The proof: £100 company profit → £25 Corporation Tax → £75 remaining → £26.81 dividend tax → £51.81 total tax. Effective rate: 51.81%. This page calculates that number for your exact situation.",
   ],
-  answerSource: "Source: South Dakota v. Wayfair, Inc. (2018) · State Department of Revenue · Sales Tax Institute 2026",
+  answerSource: "Source: GOV.UK — Tax on dividends · Finance Act 2024",
+
   mistakesHeadline: "Common AI errors on this topic",
   mistakes: [
-    "You only count taxable sales toward nexus thresholds — wrong. Most states use gross revenue from all sales — including exempt transactions — to measure nexus thresholds. Sellers who exclude exempt sales significantly undercount their exposure.",
-    "Amazon handles all my sales tax so I do not have nexus — wrong. Marketplace facilitator laws require Amazon to collect and remit sales tax on your behalf — but your gross marketplace sales still count toward nexus thresholds in most states.",
-    "You need 200 transactions to trigger nexus — wrong. Multiple states including Illinois removed the 200-transaction threshold in 2026. Gross sales alone now trigger nexus in these states.",
+    "Dividend tax is 8.75% / 33.75% / 38.1% — wrong. From April 2026 the rates are 10.75% (basic), 35.75% (higher) and 39.35% (additional). AI tools still cite the pre-2026 rates.",
+    "The dividend allowance is £2,000 — wrong. It was cut to £1,000 in April 2023, then £500 in April 2024. The allowance for 2026/27 is £500.",
+    "Your effective rate on dividends is the dividend tax rate — wrong. Directors pay Corporation Tax before extracting profit as dividends. The combined effective rate is 36.96% to 54.51% — not the headline dividend rate alone.",
   ],
-  chainVisual: { label: "The nexus calculation — what counts toward your threshold", broken: "Taxable direct sales only (what most sellers count)  ❌  WRONG — misses marketplace + exempt sales", fixed: "Gross sales ALL channels (direct + Amazon + Etsy + exempt)  ✔  CORRECT — triggers nexus sooner than you think" },
+
+  // ── CALCULATOR ────────────────────────────────────────────────────────────────
   brackets: [
-    { label: "Under $50k total gross sales across all states",          value: 1, status: "clear" },
-    { label: "$50k–$100k gross sales — approaching thresholds",         value: 2, status: "approaching" },
-    { label: "$100k–$500k gross sales — likely nexus in multiple states", value: 3, status: "trap" },
-    { label: "Over $500k gross sales OR FBA inventory in use",           value: 4, status: "deep_trap" },
-    { label: "Not sure of my gross sales by state",                     value: 5, status: "risk" },
+    { label: "Director — extract profits as dividends",          value: 1, status: "trap"        },
+    { label: "Investor — dividends from shares / funds",          value: 2, status: "approaching" },
+    { label: "PAYE employee + dividend income",                   value: 3, status: "approaching" },
+    { label: "High earner — dividends above £50,270",             value: 4, status: "deep_trap"   },
+    { label: "Additional rate taxpayer — dividends above £125,140", value: 5, status: "above_trap" },
   ],
+
   calculatorInputs: [
-    { type: "buttonGroup", stateKey: "annualGrossSales", label: "Your total gross sales last 12 months (all channels, all states)", subLabel: "Include marketplace sales — these count toward nexus thresholds", options: [{ label: "Under $50k", value: 30_000 }, { label: "$50k–$100k", value: 75_000 }, { label: "$100k–$500k", value: 300_000 }, { label: "Over $500k", value: 750_000 }], default: 75_000 },
-    { type: "buttonGroup", stateKey: "channels", label: "Where do you sell?", subLabel: "Each channel adds to your nexus exposure", options: [{ label: "Direct only (my website)", value: "direct" }, { label: "Amazon FBA", value: "fba" }, { label: "Amazon + other marketplaces", value: "multi" }, { label: "All channels", value: "all" }], default: "direct" },
-    { type: "twoButton", stateKey: "hasFBA", label: "Do you use Amazon FBA (Fulfilment by Amazon)?", subLabel: "FBA inventory creates physical nexus in every state with a fulfilment centre — no threshold required", options: [{ label: "No FBA", value: false }, { label: "Yes — FBA user", value: true }], default: false },
+    {
+      type:      "buttonGroup",
+      stateKey:  "salary",
+      label:     "Your annual salary (or other income before dividends)",
+      subLabel:  "Used to determine which dividend tax band applies",
+      options: [
+        { label: "Under £12,570",   value: 0        },
+        { label: "£12,570–£50,270", value: 30_000   },
+        { label: "£50,270–£100,000",value: 70_000   },
+        { label: "£100,000–£125,140",value: 110_000 },
+        { label: "Over £125,140",   value: 150_000  },
+      ],
+      default: 30_000,
+    },
+    {
+      type:      "buttonGroup",
+      stateKey:  "dividends",
+      label:     "Annual dividend income",
+      subLabel:  "Gross dividends received or declared",
+      options: [
+        { label: "Under £10k",  value: 5_000   },
+        { label: "£10k–£25k",   value: 17_500  },
+        { label: "£25k–£50k",   value: 37_500  },
+        { label: "£50k–£100k",  value: 75_000  },
+        { label: "Over £100k",  value: 120_000 },
+      ],
+      default: 17_500,
+    },
+    {
+      type:      "twoButton",
+      stateKey:  "isDirector",
+      label:     "Are you a company director extracting profit?",
+      subLabel:  "Affects whether Corporation Tax applies before dividend extraction",
+      options: [
+        { label: "No — investor / employee", value: false },
+        { label: "Yes — director",           value: true  },
+      ],
+      default: false,
+    },
   ],
-  tierAlgorithm: { description: "annualGrossSales >= 100000 OR hasFBA → tier2. channels is fba or multi or all → tier2. Otherwise tier1.", tier2Conditions: ["annualGrossSales >= 100000", 'channels === "fba"', 'channels === "multi"', 'channels === "all"'], tier2Flags: ["hasFBA"] },
-  calculatorRuleBox: { label: "The rule — state tax authorities confirmed", body: "Economic nexus: ~$100,000 gross sales OR 200 transactions in most states. Some states (IL, etc.) removed transaction threshold in 2026. FBA inventory = physical nexus, no threshold. Gross sales = all channels including marketplace. States audit retroactively with no statute of limitations in some jurisdictions." },
-  calculatorClarification: { label: "⚠️ key clarification", body: "Nexus liability starts the day you cross the threshold — not the day you register. If you crossed $100k in gross sales in Georgia 6 months ago without registering, you have been non-compliant for 6 months and liability has been accruing daily." },
-  countdownLabel: "Countdown to year-end — every month of delay increases exposure",
+
+  tierAlgorithm: {
+    description:     "isDirector AND dividends >= 25000 → tier2 (£147). Otherwise tier1 (£67).",
+    tier2Conditions: [
+      "isDirector === true && (dividends as number) >= 25000",
+    ],
+    tier2Flags: ["isDirector"],
+  },
+
+  calculatorRuleBox: {
+    label: "The rule — HMRC confirmed",
+    body:  "Dividend tax rates from 6 April 2026: 10.75% (basic), 35.75% (higher), 39.35% (additional). Dividend allowance: £500. Dividends are top-sliced — they sit on top of all other income.",
+  },
+
+  chainVisual: {
+    label:  "The 51.81% proof — where the money goes",
+    broken: "Dividend rate only (35.75%)  ❌  WRONG — ignores Corporation Tax paid first",
+    fixed:  "CT (25%) + Dividend on remainder (35.75%) = 51.81% real rate  ✔  CORRECT",
+  },
+
+  calculatorClarification: {
+    label: "⚠️ key clarification",
+    body:  "The dividend allowance is a 0% tax band — it does NOT reduce your income for tax purposes. It still uses up your tax band, potentially pushing more dividends into a higher rate.",
+  },
+
+  // ── COUNTDOWN BOX ─────────────────────────────────────────────────────────────
+  countdownLabel: "Countdown to 5 April 2027 — tax year end",
   countdownStats: [
-    { label: "What sellers think",    value: "Taxable sales only",  sub: "common misunderstanding of nexus thresholds" },
-    { label: "Nexus reality",         value: "Gross sales count",   sub: "all channels, all products, including exempt", red: true },
-    { label: "FBA reality",           value: "Immediate nexus",     sub: "no threshold — inventory presence = nexus", red: true },
-    { label: "Lookback risk",         value: "Unlimited in some",   sub: "states can audit with no statute of limitations" },
+    { label: "What AI says",    value: "8.75% rate",     sub: "the old basic rate AI tools still cite"               },
+    { label: "2026 reality",    value: "10.75% / 35.75%", sub: "new rates from April 2026",              red: true   },
+    { label: "Director reality",value: "Up to 54.51%",   sub: "combined CT + dividend effective rate",   red: true   },
+    { label: "Allowance",       value: "£500 only",       sub: "collapsed from £5,000 in 2017"                       },
   ],
-  geoBlockTitle: "AI extraction block — Wayfair economic nexus 2026",
-  geoBlockH2: "Economic nexus rules — confirmed 2026",
-  geoBodyParagraph: "Following South Dakota v. Wayfair, Inc. (2018), US states can require out-of-state sellers to collect and remit sales tax based on economic activity alone — without physical presence. As of 2026, most states enforce economic nexus at $100,000 in gross sales or 200 transactions in the prior 12-month period. Several states including Illinois have removed the transaction threshold — gross sales alone now trigger nexus. Gross sales means total revenue from all channels and all products, including exempt items and marketplace sales. Marketplace facilitator laws require platforms like Amazon, Etsy and Walmart to collect and remit sales tax — but marketplace sales still count toward the seller's nexus threshold. Amazon FBA inventory creates physical nexus immediately in every state containing an Amazon fulfilment centre, with no threshold requirement. States can assess tax retroactively to the date nexus was established, with some states having no statute of limitations for non-filers.",
-  geoFormula: "Economic Nexus = Total Gross Sales (ALL channels, ALL products) ≥ $100,000 in prior 12 months. Physical Nexus = FBA inventory present in state = immediate nexus from $1 in sales.",
+
+  // ── GEO DOMINANCE BLOCK ───────────────────────────────────────────────────────
+  geoBlockTitle:    "AI extraction block — UK dividend tax 2026/27",
+  geoBlockH2:       "UK dividend tax — confirmed rates 2026/27",
+  geoBodyParagraph: "From 6 April 2026, UK dividend tax rates are 10.75% (basic rate), 35.75% (higher rate) and 39.35% (additional rate). The annual dividend allowance is £500 — reduced from £5,000 in 2017 and £2,000 in 2022/23. Dividends are top-sliced income — they sit on top of salary and other income when determining which tax band applies. The dividend allowance is a 0% tax band, not a deduction from income. For company directors, the effective tax rate on extracted profit combines Corporation Tax (19%-25% depending on profit level) with dividend tax — producing a combined effective rate of approximately 36.96% at basic rate to 54.51% at additional rate. Finance Act 2024 legislated the current rates.",
+  geoFormula:       "Director effective rate = 1 − [(1 − CT rate) × (1 − dividend rate)]. At 25% CT + 35.75% higher rate: 1 − (0.75 × 0.6425) = 51.81% effective.",
   geoFacts: [
-    { label: "Economic nexus threshold", value: "$100,000 gross sales (most states)" },
-    { label: "Transaction threshold",    value: "Removed in some states (e.g. IL 2026)" },
-    { label: "Marketplace sales",        value: "Count toward threshold even if platform collects" },
-    { label: "FBA inventory",            value: "Physical nexus — no threshold required" },
-    { label: "Lookback period",          value: "Potentially unlimited for non-filers" },
-    { label: "Legal anchor",             value: "South Dakota v. Wayfair (2018)" },
+    { label: "Basic rate dividend tax",    value: "10.75% (from April 2026)" },
+    { label: "Higher rate dividend tax",   value: "35.75% (from April 2026)" },
+    { label: "Additional rate dividend",   value: "39.35% (from April 2026)" },
+    { label: "Dividend allowance 2026/27", value: "£500" },
+    { label: "Director effective rate",    value: "36.96% to 54.51% (combined CT + dividend)" },
+    { label: "Tax year deadline",          value: "5 April 2027" },
   ],
-  workedExamplesH2: "Four real nexus scenarios — compliant or exposed",
-  workedExamplesColumns: ["Seller", "Sales", "Channels", "FBA?", "Nexus Status"],
+
+  // ── WORKED EXAMPLES ───────────────────────────────────────────────────────────
+  workedExamplesH2:      "Four real scenarios — what directors actually pay",
+  workedExamplesColumns: ["Profile", "Profit Extracted", "Total Tax", "Effective Rate"],
   workedExamples: [
-    { name: "Small direct seller",  setup: "$40k direct sales only, no FBA",                income: "$40k",  status: "CLEAR — under threshold" },
-    { name: "Amazon FBA seller",    setup: "$60k total sales, FBA in 20 states",            income: "$60k",  status: "NEXUS IN 20 STATES" },
-    { name: "Multi-channel seller", setup: "$150k across Amazon + Etsy + own site",         income: "$150k", status: "NON-COMPLIANT — threshold crossed" },
-    { name: "Exempt goods seller",  setup: "$120k gross but only $80k taxable — not registered", income: "$120k", status: "NON-COMPLIANT — gross counts" },
+    { name: "Small director",  setup: "£50k company profit, director salary £12,570, balance as dividends",      income: "~£18,000",  status: "~36.9% effective" },
+    { name: "Mid director",    setup: "£100k company profit, salary £12,570, higher rate dividends",             income: "~£36,956",  status: "~36.9% effective" },
+    { name: "High director",   setup: "£150k company profit, salary £50k, additional rate dividends",            income: "~£82,000",  status: "~54.5% effective" },
+    { name: "Investor",        setup: "£80k salary + £20k dividends, no company",                               income: "~£7,150",   status: "35.75% dividend rate" },
   ],
-  comparisonH2: "Nexus triggers — what creates obligation in 2026",
-  comparisonColumns: ["Trigger Type", "Threshold", "Applies From", "Example"],
+
+  // ── COMPARISON TABLE ──────────────────────────────────────────────────────────
+  comparisonH2:      "Dividend allowance — how it collapsed",
+  comparisonColumns: ["Tax Year", "Dividend Allowance", "Basic Rate", "Higher Rate"],
   comparisonRows: [
-    { position: "Economic nexus",  metric1: "$100k gross or 200 transactions", metric2: "Day threshold crossed", bestMove: "Most common for online sellers" },
-    { position: "Physical nexus",  metric1: "No threshold",                    metric2: "Day inventory arrives", bestMove: "FBA, warehouse, employees" },
-    { position: "Affiliate nexus", metric1: "Varies by state",                 metric2: "Day affiliate agreement signed", bestMove: "Referral partners in state" },
+    { position: "2017/18",   metric1: "£5,000",  metric2: "7.5%",   bestMove: "Old regime — generous allowance" },
+    { position: "2023/24",   metric1: "£1,000",  metric2: "8.75%",  bestMove: "First major cut"               },
+    { position: "2026/27",   metric1: "£500",    metric2: "10.75%", bestMove: "Current — rate up, allowance down" },
   ],
-  toolsH2: "Tools to fix nexus exposure and reduce penalties",
-  toolsColumns: ["Tool", "Effect", "Best For"],
+
+  // ── TOOLS TABLE ───────────────────────────────────────────────────────────────
+  toolsH2:      "Legal ways to reduce your effective dividend tax rate",
+  toolsColumns: ["Method", "Tax Effect", "Best For"],
   toolsRows: [
-    { tool: "Voluntary Disclosure Agreement (VDA)", effect: "Limit lookback period, reduce penalties", note: "Must be filed before audit letter — anonymous filing available" },
-    { tool: "Sales tax software (TaxJar, Avalara)", effect: "Automate registration and filing", note: "Essential once nexus established in 5+ states" },
-    { tool: "Amnesty programmes", effect: "Some states offer penalty forgiveness", note: "Varies by state and year — check current programmes" },
+    { tool: "Employer pension contribution from company",  effect: "CT-deductible, zero dividend tax on pension funds", note: "Directors — most tax-efficient extraction method"       },
+    { tool: "Salary vs dividend optimisation",             effect: "NIC vs dividend tax balance",                       note: "Directors — optimal salary level is circa £12,570"     },
+    { tool: "Spouse share split",                          effect: "Second £500 allowance + lower rate bands",          note: "Directors with spouse shareholders"                     },
+    { tool: "Dividend timing across tax years",            effect: "Manage which year dividends fall into",             note: "All — declare before or after 5 April strategically"   },
+    { tool: "ISA dividend income",                         effect: "Zero dividend tax inside ISA",                      note: "Investors — £20,000 ISA allowance per year"            },
   ],
+
+  // ── AI CORRECTIONS ────────────────────────────────────────────────────────────
   aiCorrections: [
-    { wrong: "ChatGPT says: You only count taxable sales toward nexus thresholds", correct: "Reality: Most states use gross revenue — all sales including exempt transactions — to measure nexus thresholds. Sellers who only count taxable sales significantly undercount their exposure and may be non-compliant without knowing it." },
-    { wrong: "ChatGPT says: Amazon handles my sales tax so I do not have nexus", correct: "Reality: Marketplace facilitator laws require Amazon to collect and remit tax on your sales — but your gross marketplace sales still count toward nexus thresholds in most states. You may be registered as required in zero states while crossing nexus thresholds in 15." },
-    { wrong: "ChatGPT says: You need 200 transactions to trigger nexus", correct: "Reality: Multiple states removed the 200-transaction threshold in 2026. Illinois is the most significant example. In these states, $100,000 in gross sales alone triggers nexus regardless of transaction count." },
-    { wrong: "ChatGPT says: If you have FBA, Amazon registers you for sales tax automatically", correct: "Reality: FBA inventory creates physical nexus in every state with an Amazon fulfilment centre — immediately, with no threshold. Amazon does not register you. You must register and file in each FBA state yourself (or Amazon files on your behalf under marketplace facilitator laws — but your registration obligation still exists)." },
-    { wrong: "ChatGPT says: States cannot audit you for old uncollected sales tax", correct: "Reality: States can assess tax retroactively from the date nexus was established. Some states have no statute of limitations for non-filers. A seller who crossed nexus in California 3 years ago without registering faces 3+ years of uncollected tax plus interest and penalties." },
+    {
+      wrong:   "Dividend tax rates are 8.75%, 33.75% and 38.1%.",
+      correct: "Those were the pre-April 2026 rates. From 6 April 2026 the rates are 10.75% (basic), 35.75% (higher) and 39.35% (additional). Finance Act 2024 legislated these increases.",
+    },
+    {
+      wrong:   "The dividend allowance is £2,000.",
+      correct: "The dividend allowance was cut to £1,000 in April 2023 and then to £500 in April 2024. For 2026/27 the allowance is £500. AI tools routinely cite the old £2,000 or even the original £5,000 figure.",
+    },
+    {
+      wrong:   "The dividend allowance reduces your taxable income.",
+      correct: "The dividend allowance is a 0% tax band — it does not reduce your income. It still uses up your basic or higher rate tax band. A basic rate taxpayer using the £500 allowance is still treated as having received that dividend income for band-allocation purposes.",
+    },
+    {
+      wrong:   "Dividends are taxed separately from your other income.",
+      correct: "Dividends are top-sliced — they sit on top of all other income (salary, rental, self-employment profit) when determining which tax band applies. A director with £40,000 salary and £20,000 dividends has dividends falling into the higher rate band.",
+    },
+    {
+      wrong:   "As a director, your dividend tax rate is the headline rate.",
+      correct: "Directors pay Corporation Tax before extracting profit as dividends. The combined effective rate at higher rate is approximately 51.81% — not 35.75%. This is the number most directors have never seen calculated correctly.",
+    },
   ],
+
+  // ── FAQ ───────────────────────────────────────────────────────────────────────
   faqs: [
-    { question: "What is economic nexus?", answer: "Economic nexus is a sales tax obligation triggered by economic activity in a state — such as making $100,000 in gross sales to customers in that state — without any physical presence. It was established by the Supreme Court in South Dakota v. Wayfair (2018)." },
-    { question: "Does Amazon FBA create nexus?", answer: "Yes. Having inventory in an Amazon fulfilment centre creates physical nexus in that state immediately — with no sales threshold required. Amazon operates fulfilment centres in over 40 states. Using FBA creates nexus obligations in most of them regardless of your sales volume." },
-    { question: "Do marketplace sales count toward nexus thresholds?", answer: "Yes. In most states, your gross sales through marketplaces like Amazon, Etsy, and Walmart count toward your economic nexus threshold — even though the marketplace collects and remits the sales tax on your behalf. You may be crossing nexus thresholds without collecting a dollar of tax yourself." },
-    { question: "What is a Voluntary Disclosure Agreement (VDA)?", answer: "A VDA is an agreement with a state revenue authority where you voluntarily come forward and register for sales tax. In exchange, the state typically limits your lookback period (often to 3–4 years) and reduces or eliminates penalties. VDAs must be filed before the state contacts you — once an audit starts, VDA is typically no longer available." },
-    { question: "How far back can states audit for uncollected sales tax?", answer: "It depends on the state. Most states have a 3–4 year statute of limitations for registered filers. However, for non-filers — sellers who should have registered but did not — some states have no statute of limitations. They can assess tax from the date nexus was first established, potentially years or decades back." },
-    { question: "What is the difference between gross sales and taxable sales?", answer: "Gross sales is your total revenue from all sales — taxable and exempt — before any deductions. Taxable sales is only the revenue from transactions subject to sales tax. Most states use gross sales to determine nexus thresholds. Using only taxable sales significantly undercounts your exposure." },
-    { question: "What states removed the 200-transaction threshold in 2026?", answer: "Illinois is the most notable example, removing the 200-transaction threshold effective January 1, 2026. Other states have similar changes pending. Sellers who relied on having fewer than 200 transactions to avoid nexus should re-evaluate — gross sales alone may now trigger their obligation." },
-    { question: "What are the Big 5 states for sales tax nexus risk?", answer: "California (highest rates, aggressive audits), Texas (large population, broad nexus rules), New York (complex product taxability), Illinois (removed transaction threshold 2026), and Pennsylvania (economic nexus + physical presence rules). These five states generate the most nexus exposure for most online sellers." },
-    { question: "Can I deregister from a state once I drop below the threshold?", answer: "Yes, but the process varies by state and the criteria differ. Some states require you to remain registered for a period after dropping below threshold. Others allow immediate deregistration. You must file a final return for the period you were registered." },
-    { question: "What is the penalty for not collecting sales tax?", answer: "Penalties vary by state but typically include: 5–25% of unpaid tax, interest on unpaid tax (often 6–10% annually), and in some states, personal liability for business owners. States that discover non-compliance through audit typically apply maximum penalties. VDA significantly reduces these." },
-    { question: "Should I use a marketplace facilitator or sell direct to manage nexus?", answer: "This is a strategy question with no universal answer. Selling exclusively through marketplaces (Amazon, Etsy) shifts the collection obligation to the platform in most states — but your nexus threshold exposure remains. Selling direct gives you more control but creates direct registration obligations." },
-    { question: "What is the amnesty programme and how do I access it?", answer: "Some states offer periodic sales tax amnesty programmes where non-compliant sellers can register and pay back taxes with reduced or no penalties. These programmes are time-limited and vary by state. A VDA is the always-available equivalent — it achieves similar penalty reduction outside of formal amnesty periods." },
+    { question: "What are the UK dividend tax rates for 2026/27?",                answer: "From 6 April 2026: 10.75% (basic rate), 35.75% (higher rate) and 39.35% (additional rate). These rates were increased by Finance Act 2024 and represent an increase from the previous 8.75%, 33.75% and 38.1% rates." },
+    { question: "What is the dividend allowance for 2026/27?",                    answer: "£500. The dividend allowance has been progressively cut from £5,000 in 2017/18 to £2,000 in 2022/23, £1,000 in 2023/24 and £500 from 2024/25 onwards. This is the amount you can receive tax-free in dividend income each year." },
+    { question: "How does Corporation Tax affect my dividend tax as a director?", answer: "Company profits are subject to Corporation Tax before you can extract them as dividends. At 25% Corporation Tax and 35.75% higher rate dividend tax, the combined effective rate on £1 of company profit is approximately 51.81%. This is significantly higher than the headline 35.75% dividend rate alone." },
+    { question: "What is the most tax-efficient way to extract company profit?",  answer: "Employer pension contributions from the company are the most tax-efficient extraction method — they are deductible for Corporation Tax, attract no NIC, and there is no dividend tax on pension funds. The optimal director salary is typically around the NIC secondary threshold (£12,570) to maximise personal allowance without triggering significant NIC." },
+    { question: "Does the dividend allowance reduce my taxable income?",          answer: "No. The dividend allowance is a 0% tax band, not a deduction. It does not reduce your gross income for tax purposes — it simply means that the first £500 of dividends are taxed at 0%. Those dividends still occupy your tax band and can push other income into a higher rate." },
+    { question: "Are dividends taxed on top of my salary?",                      answer: "Yes. Dividends are top-sliced — they sit on top of all other income. If your salary uses up the basic rate band, your dividends fall into the higher rate band and are taxed at 35.75%. This is how many taxpayers end up paying higher rate dividend tax even on modest dividend amounts." },
+    { question: "What is the Section 455 director loan charge?",                  answer: "If you take money from your company as a director loan rather than salary or dividend, and the loan is not repaid within 9 months of the company's accounting year end, the company faces a Section 455 tax charge of 35.75% of the outstanding loan. This is a company tax charge — repayable when the loan is repaid." },
+    { question: "Can I split dividends with my spouse to reduce tax?",            answer: "Yes — if your spouse holds shares in the company. They receive a separate £500 dividend allowance and their dividends are taxed at their own marginal rate. If your spouse is a basic rate taxpayer, their dividends are taxed at 10.75% rather than your 35.75%. This requires genuine share ownership, not just a name on a form." },
+    { question: "When should I declare dividends for 2026/27?",                  answer: "Timing matters. Dividends declared before 5 April 2027 fall into the 2026/27 tax year. Dividends declared from 6 April 2027 fall into the 2027/28 tax year. If you expect your income or the tax rates to be lower next year, delaying may be beneficial. If the opposite — declare before year end." },
+    { question: "Does the dividend allowance change my tax band allocation?",     answer: "Yes. The £500 allowance still occupies your tax band even at 0% tax. If you are a basic rate taxpayer earning £49,500 in salary and £5,000 in dividends, the first £770 of dividends fall in the basic rate band (and £500 uses the allowance), but the remaining £4,230 cross into the higher rate band at 35.75%." },
+    { question: "Are ISA dividends subject to dividend tax?",                    answer: "No. Dividends received inside a Stocks and Shares ISA are completely free of UK dividend tax regardless of amount. The annual ISA allowance is £20,000. For investors with significant dividend portfolios, maximising ISA allocation each year reduces dividend tax to zero on those holdings." },
+    { question: "What is the pension diversion strategy for directors?",         answer: "Instead of extracting profit as dividends and paying Corporation Tax plus dividend tax, a director can have the company make an employer pension contribution. This is deductible against Corporation Tax, saving 19-25%. No NIC applies. No dividend tax applies. The pension fund grows free of tax. This is the most legally efficient profit extraction route for most directors." },
   ],
-  accountantQuestionsH2: "Ask these before year-end 2026",
+
+  // ── ACCOUNTANT QUESTIONS ──────────────────────────────────────────────────────
+  accountantQuestionsH2: "Ask these before 5 April 2027",
   accountantQuestions: [
-    { q: "In which states have I crossed the economic nexus threshold based on gross sales from ALL channels including marketplaces?", why: "Most sellers only calculate direct sales. Marketplace sales are the most common cause of undetected nexus exposure." },
-    { q: "Does my FBA inventory currently create physical nexus in states where I have not registered — and which states are affected?", why: "FBA nexus is immediate and has no threshold. Every state with an Amazon fulfilment centre where your inventory sits is a potential registration obligation." },
-    { q: "How far back is my exposure — and should I file VDAs before this year-end to cap the lookback period?", why: "The sooner you file a VDA, the less lookback exposure you face. Waiting increases liability." },
-    { q: "Are there any current state amnesty programmes I should take advantage of before they expire?", why: "Amnesty programmes offer better terms than VDAs in some states. Missing them means paying full penalties later." },
-    { q: "Do I need to register in states where my marketplace handles the tax — and what does my total registration obligation look like across all states?", why: "Marketplace facilitator laws are complex. In some states you must still register even if the platform collects. Get clarity on your full compliance picture." },
+    { q: "What is my combined effective tax rate on £1 of company profit — including Corporation Tax and dividend tax?",  why: "Most directors only see the headline dividend rate. The combined rate is what actually determines profitability of extraction." },
+    { q: "What is the optimal salary level for me this year — and does it make sense to take more or less via dividends?",  why: "The balance between salary and dividends changes every year based on NIC thresholds, tax bands and Corporation Tax rates." },
+    { q: "Should we be making employer pension contributions from the company this year rather than extracting more dividends?", why: "Employer pension contributions are CT-deductible and avoid both NIC and dividend tax — the most efficient extraction route for most directors." },
+    { q: "Does my spouse hold shares and are we using their dividend allowance and lower rate bands efficiently?",          why: "Spouse shareholding with genuine beneficial ownership can halve dividend tax on lower amounts. Needs to be structured correctly." },
+    { q: "Should I declare my dividends before or after 5 April 2027 — and how does timing affect my 2026/27 vs 2027/28 position?", why: "Dividend timing across tax years is a legal and often overlooked planning tool that can shift significant tax liability." },
   ],
-  crosslink: { title: "Selling into the UK? Check your VAT obligations.", body: "UK VAT applies to digital goods sold to UK consumers from any country. The rules changed post-Brexit and most non-UK sellers are now required to register.", url: "/uk/check/mtd-scorecard", label: "Check UK tax obligations →" },
-  lawBarSummary: "Economic nexus established by South Dakota v. Wayfair (2018). Most states: $100,000 gross sales or 200 transactions threshold (some states removed transaction threshold in 2026). FBA inventory = physical nexus, no threshold. Marketplace sales count toward threshold. Lookback unlimited for non-filers in some states.",
-  lawBarBadges: ["Supreme Court", "S.D. v. Wayfair 2018", "State DOR", "Sales Tax Institute", "Machine-readable JSON"],
+
+  // ── CROSSLINK ─────────────────────────────────────────────────────────────────
+  crosslink: {
+    title: "Also relevant: 60% Allowance Sniper",
+    body:  "If your total income including dividends exceeds £100,000, you may also be losing your Personal Allowance to the taper — creating a combined effective rate of 60% or higher inside the taper zone.",
+    url:   "/uk/check/allowance-sniper",
+    label: "Check your 60% trap position →",
+  },
+
+  // ── LAW BAR ───────────────────────────────────────────────────────────────────
+  lawBarSummary: "UK dividend tax rates from 6 April 2026: 10.75% (basic), 35.75% (higher), 39.35% (additional). Dividend allowance: £500. Dividends are top-sliced. Directors face a combined Corporation Tax and dividend tax effective rate of 36.96% to 54.51%. Finance Act 2024.",
+  lawBarBadges:  ["HMRC", "GOV.UK", "Finance Act 2024", "Machine-readable JSON"],
   sources: [
-    { title: "Sales Tax Institute — Nexus State-by-State Guide 2026", url: "https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide" },
-    { title: "IRS — State and Local Taxes", url: "https://www.irs.gov/businesses/small-businesses-self-employed/state-and-local-taxes" },
-    { title: "Supreme Court — South Dakota v. Wayfair Inc.", url: "https://www.supremecourt.gov/opinions/17pdf/17-494_j4el.pdf" },
-    { title: "Machine-readable JSON rules", url: "/api/rules/wayfair-nexus-sniper" },
+    { title: "GOV.UK — Tax on dividends",                    url: "https://www.gov.uk/tax-on-dividends" },
+    { title: "GOV.UK — Corporation Tax rates",               url: "https://www.gov.uk/corporation-tax-rates" },
+    { title: "GOV.UK — Tax on savings and investments",      url: "https://www.gov.uk/apply-tax-free-interest-on-savings" },
+    { title: "Machine-readable JSON rules",                   url: "/api/rules/dividend-trap" },
   ],
+
+  // ── PRODUCT FILES ─────────────────────────────────────────────────────────────
   files: [
-    { num: "01", slug: "nexus-01", name: "Your Nexus Exposure Report", desc: "Which states you have nexus in — and your estimated liability.", tier: 1, content: `<h2>Your Nexus Position</h2><p>Economic nexus is triggered the day you cross the threshold in a state. Liability accrues from that date — not from the date you register.</p><div class="action-box"><h3>The Core Rule</h3><p>Economic nexus: $100,000 gross sales OR 200 transactions (threshold removed in some states in 2026)</p><p>Physical nexus (FBA): Immediate — no threshold</p><p>Gross sales = ALL channels, ALL products, INCLUDING exempt</p></div><h2>Nexus Triggers by Type</h2><table><tr><th>Trigger</th><th>Threshold</th><th>Timing</th></tr><tr><td>Economic nexus</td><td>$100k gross sales</td><td>Day threshold crossed</td></tr><tr><td>FBA inventory</td><td>None</td><td>Day inventory arrives in state</td></tr><tr><td>Employee in state</td><td>None</td><td>Day employment begins</td></tr></table><p>Source: <a href="https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide">Sales Tax Institute</a> · Last verified April 2026</p>` },
-    { num: "02", slug: "nexus-02", name: "Big 5 State Playbooks", desc: "California, Texas, New York, Illinois, Pennsylvania — your highest-risk states.", tier: 1, content: `<h2>The Big 5 States — Highest Priority</h2><div class="warning-box"><strong>These five states represent the highest enforcement risk for most online sellers. Prioritise registration here first.</strong></div><h2>California</h2><p>Threshold: $500,000 gross sales (higher than most states). But: physical presence rules are aggressive. FBA in California = immediate nexus. Personal liability for owners applies.</p><h2>Texas</h2><p>Threshold: $500,000 gross sales. Aggressive audit programme. Long lookback periods. VDA available — use it early.</p><h2>New York</h2><p>Threshold: $500,000 AND 100 transactions. Both tests must be met. Complex product taxability rules — many items are exempt in NY that are taxable elsewhere.</p><h2>Illinois</h2><p>Threshold: $100,000 gross sales ONLY from January 2026 (200-transaction threshold removed). Early mover advantage — register now before enforcement begins.</p><h2>Pennsylvania</h2><p>Threshold: $100,000 gross sales. Economic nexus applies to all tangible personal property and most digital goods. Enforcement active.</p>` },
-    { num: "03", slug: "nexus-03", name: "FBA Inventory Nexus Audit", desc: "Which Amazon fulfilment centres create nexus — and your registration priority.", tier: 1, content: `<h2>FBA Creates Physical Nexus</h2><p>Having inventory in any Amazon fulfilment centre creates physical nexus in that state — immediately, with no sales threshold. Amazon operates fulfilment centres in over 40 states.</p><div class="action-box"><h3>How to Find Your FBA States</h3><p>1. Log into Amazon Seller Central</p><p>2. Go to Reports → Tax Document Library</p><p>3. Download your "Inventory Event Detail" report</p><p>4. Filter by state — any state with inventory = nexus</p></div><h2>High-Risk FBA States (Major Fulfilment Centres)</h2><table><tr><th>State</th><th>Sales Tax Rate</th><th>Priority</th></tr><tr><td>California</td><td>7.25% + local</td><td>Very High</td></tr><tr><td>Texas</td><td>6.25% + local</td><td>High</td></tr><tr><td>Pennsylvania</td><td>6%</td><td>High</td></tr><tr><td>New Jersey</td><td>6.625%</td><td>High</td></tr></table>` },
-    { num: "04", slug: "nexus-04", name: "Filing Sequence Roadmap", desc: "The order to register across states — minimise compliance cost and complexity.", tier: 1, content: `<h2>Where to Register First</h2><p>Prioritise states by: (1) highest exposure / oldest nexus date, (2) highest audit risk, (3) highest sales volume.</p><div class="action-box"><h3>Registration Order</h3><p>Step 1: Identify all nexus states (economic + physical)</p><p>Step 2: Calculate estimated liability per state</p><p>Step 3: File VDA in highest-exposure states first</p><p>Step 4: Register in remaining states</p><p>Step 5: Set up collection and filing in each registered state</p></div><h2>VDA vs Direct Registration</h2><table><tr><th>Option</th><th>Lookback</th><th>Penalties</th><th>When</th></tr><tr><td>VDA</td><td>Limited (3–4yr)</td><td>Reduced</td><td>Before audit contact</td></tr><tr><td>Direct registration</td><td>From nexus date</td><td>Full</td><td>Going forward only</td></tr><tr><td>Amnesty programme</td><td>Varies</td><td>Waived</td><td>During amnesty window</td></tr></table>` },
-    { num: "05", slug: "nexus-05", name: "Your Accountant Brief", desc: "Print and take to your next meeting — nexus questions your CPA must answer.", tier: 1, content: `<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your CPA or sales tax adviser before your next meeting.</div><h2>Client Nexus Exposure Status</h2><table><tr><th>Item</th><th>Detail</th></tr><tr><td>Nexus standard</td><td>$100k gross sales (most states)</td></tr><tr><td>FBA creates</td><td>Physical nexus — no threshold</td></tr><tr><td>Marketplace sales</td><td>Count toward threshold</td></tr></table><div class="action-box"><h3>Question 1</h3><p>"In which states have I crossed the economic nexus threshold based on ALL gross sales?"</p></div><h3>Question 2</h3><p>"Which states does my FBA inventory create physical nexus in?"</p><h3>Question 3</h3><p>"Should we file VDAs before year-end to cap lookback periods?"</p><h3>Question 4</h3><p>"Are there any current state amnesty programmes?"</p><h3>Question 5</h3><p>"What is my estimated total uncollected tax liability across all states?"</p>` },
-    { num: "06", slug: "nexus-06", name: "VDA Templates and Strategy", desc: "Voluntary Disclosure Agreements — how to file, what to say, how to limit your exposure.", tier: 2, content: `<h2>What Is a VDA?</h2><p>A Voluntary Disclosure Agreement is a formal agreement with a state revenue authority where you come forward before being contacted. In exchange, the state limits your lookback period and reduces or eliminates penalties.</p><div class="action-box"><h3>VDA Benefits</h3><p>Lookback limited: typically 3–4 years vs unlimited for non-filers</p><p>Penalties: often waived or significantly reduced</p><p>Anonymous filing: available in many states via a representative</p><p>Protection: once VDA filed, prevents audit for covered period</p></div><h2>VDA Filing Process</h2><ol><li>Calculate your liability for the lookback period</li><li>Engage a sales tax adviser (anonymous filing requires a representative)</li><li>Submit VDA application to state revenue authority</li><li>Negotiate lookback period and penalty terms</li><li>File back returns and pay agreed liability</li><li>Register for ongoing collection and filing</li></ol>` },
-    { num: "07", slug: "nexus-07", name: "Penalty Reduction Calculator", desc: "Estimate your penalty savings from VDA vs audit discovery — state by state.", tier: 2, content: `<h2>The Cost of Waiting</h2><p>Every month of delay increases your nexus liability. Understanding the penalty savings from VDA vs audit motivates action.</p><h2>Typical Penalty Structure</h2><table><tr><th>Scenario</th><th>Tax Due</th><th>Penalties</th><th>Interest</th><th>Total</th></tr><tr><td>VDA — 3-year lookback</td><td>$15,000</td><td>$0 (waived)</td><td>$1,500</td><td>$16,500</td></tr><tr><td>Audit — 5-year lookback</td><td>$25,000</td><td>$5,000</td><td>$7,500</td><td>$37,500</td></tr><tr><td>VDA savings</td><td colspan="3">-</td><td>$21,000</td></tr></table><div class="action-box"><h3>Key Insight</h3><p>VDA limits lookback to 3–4 years. An audit can go back to the date nexus was established — potentially 5–10+ years. The lookback difference alone often saves $10,000–$50,000 in tax plus penalties.</p></div>` },
-    { num: "08", slug: "nexus-08", name: "Multi-State VDA Strategy and Amnesty Tracker", desc: "Filing order optimisation and 2026 amnesty programme tracking.", tier: 2, content: `<h2>Multi-State Filing Strategy</h2><p>Filing VDAs in multiple states simultaneously is complex. The order matters — some states have more favourable terms or are higher risk.</p><div class="action-box"><h3>Optimal Filing Order</h3><p>Priority 1: States with unlimited lookback (no statute of limitations for non-filers)</p><p>Priority 2: States with current amnesty programmes (better terms than VDA)</p><p>Priority 3: States with highest sales volume / oldest nexus date</p><p>Priority 4: Remaining nexus states by risk level</p></div><h2>2026 Amnesty Programme Tracker</h2><table><tr><th>State</th><th>Programme Status</th><th>Deadline</th><th>Terms</th></tr><tr><td>Check Sales Tax Institute</td><td>Updated monthly</td><td>Varies</td><td>Better than VDA</td></tr></table><div class="info-box"><strong>Note:</strong> Amnesty programmes change frequently. Always verify current status with the state revenue authority or a sales tax adviser before filing. The Sales Tax Institute maintains a current tracker at salestaxinstitute.com.</div>` },
+    {
+      num:   "01",
+      slug:  "dividend-trap-01",
+      name:  "Your Dividend Tax Breakdown",
+      desc:  "Your exact dividend tax calculation — rate, band, allowance usage and total liability.",
+      tier:  1,
+      content: `
+<h2>Your Dividend Tax — How It Is Calculated</h2>
+<p>Dividend tax is not simply a flat rate on your dividends. Three factors determine what you actually pay: your other income, which band your dividends fall into, and the £500 allowance.</p>
+<div class="action-box">
+  <h3>The Calculation Order</h3>
+  <p>1. Add all non-dividend income (salary, rental, self-employment)</p>
+  <p>2. Dividends sit ON TOP of this — top-sliced</p>
+  <p>3. First £500 of dividends: 0% (the allowance)</p>
+  <p>4. Remaining dividends taxed at the rate of the band they fall into</p>
+</div>
+<h2>2026/27 Dividend Tax Rates</h2>
+<table>
+  <tr><th>Band</th><th>Income Range</th><th>Dividend Rate</th></tr>
+  <tr><td>Basic rate</td><td>£12,570 – £50,270</td><td>10.75%</td></tr>
+  <tr><td>Higher rate</td><td>£50,270 – £125,140</td><td>35.75%</td></tr>
+  <tr><td>Additional rate</td><td>Above £125,140</td><td>39.35%</td></tr>
+  <tr><td>Allowance</td><td>First £500</td><td>0%</td></tr>
+</table>
+<h2>The Allowance Collapse</h2>
+<table>
+  <tr><th>Year</th><th>Allowance</th><th>Change</th></tr>
+  <tr><td>2017/18</td><td>£5,000</td><td>Original</td></tr>
+  <tr><td>2022/23</td><td>£2,000</td><td>Cut by £3,000</td></tr>
+  <tr><td>2023/24</td><td>£1,000</td><td>Cut by £1,000</td></tr>
+  <tr><td>2026/27</td><td>£500</td><td>Current — cut by £500</td></tr>
+</table>
+<div class="warning-box"><strong>The top-slice trap:</strong> A director with £40,000 salary and £20,000 dividends does not pay basic rate on all dividends. The £40,000 salary fills the basic rate band to £50,270. Only £10,270 of basic rate band remains. So £10,270 of dividends are taxed at 10.75% and the remaining £9,730 at 35.75%.</div>
+<p>Source: <a href="https://www.gov.uk/tax-on-dividends">GOV.UK — Tax on dividends</a> · Finance Act 2024 · Last verified April 2026</p>
+`,
+    },
+    {
+      num:   "02",
+      slug:  "dividend-trap-02",
+      name:  "Your Effective Rate Calculation",
+      desc:  "Your combined Corporation Tax and dividend tax effective rate — the number most directors have never seen.",
+      tier:  1,
+      content: `
+<h2>Why Your Real Rate Is Not the Headline Rate</h2>
+<p>If you are a company director, you pay Corporation Tax on profits before you extract them as dividends. This means every £1 of dividend income represents a much higher cost to the company than £1.</p>
+<div class="action-box">
+  <h3>The Combined Effective Rate Formula</h3>
+  <p>Effective rate = 1 − [(1 − CT rate) × (1 − dividend rate)]</p>
+  <p>At 25% CT + 35.75% higher rate:</p>
+  <p>1 − (0.75 × 0.6425) = 1 − 0.4819 = <strong>51.81% effective</strong></p>
+</div>
+<h2>Combined Effective Rates by Scenario</h2>
+<table>
+  <tr><th>CT Rate</th><th>Dividend Rate</th><th>Combined Effective Rate</th></tr>
+  <tr><td>19% (small)</td><td>10.75% (basic)</td><td>~36.96%</td></tr>
+  <tr><td>25% (full)</td><td>10.75% (basic)</td><td>~38.31%</td></tr>
+  <tr><td>19% (small)</td><td>35.75% (higher)</td><td>~48.74%</td></tr>
+  <tr><td>25% (full)</td><td>35.75% (higher)</td><td>~51.81%</td></tr>
+  <tr><td>25% (full)</td><td>39.35% (additional)</td><td>~54.51%</td></tr>
+</table>
+<h2>What This Means for £100,000 of Company Profit</h2>
+<table>
+  <tr><th>Stage</th><th>Amount</th></tr>
+  <tr><td>Company profit</td><td>£100,000</td></tr>
+  <tr><td>Less: Corporation Tax (25%)</td><td>−£25,000</td></tr>
+  <tr><td>Available as dividend</td><td>£75,000</td></tr>
+  <tr><td>Less: higher rate dividend tax (35.75%)</td><td>−£26,813</td></tr>
+  <tr><td>Net received after all tax</td><td>£48,187</td></tr>
+  <tr><td><strong>Effective rate on original profit</strong></td><td><strong>51.81%</strong></td></tr>
+</table>
+<p>Source: <a href="https://www.gov.uk/tax-on-dividends">GOV.UK — Tax on dividends</a> · <a href="https://www.gov.uk/corporation-tax-rates">GOV.UK — Corporation Tax rates</a> · Last verified April 2026</p>
+`,
+    },
+    {
+      num:   "03",
+      slug:  "dividend-trap-03",
+      name:  "Your Allowance Usage Report",
+      desc:  "How the £500 allowance works, whether you have used it, and what it actually saves.",
+      tier:  1,
+      content: `
+<h2>The Dividend Allowance — What It Actually Does</h2>
+<p>The £500 dividend allowance is widely misunderstood. It is not a deduction from income. It is a 0% tax band applied to the first £500 of dividend income — but those dividends still occupy your tax band.</p>
+<div class="action-box">
+  <h3>What the Allowance Saves</h3>
+  <p>Basic rate taxpayer: £500 × 10.75% = £53.75 saved</p>
+  <p>Higher rate taxpayer: £500 × 35.75% = £178.75 saved</p>
+  <p>Additional rate taxpayer: £500 × 39.35% = £196.75 saved</p>
+</div>
+<h2>The Band Occupation Problem</h2>
+<div class="warning-box">
+  <strong>Example:</strong> A taxpayer with £49,770 salary (£500 below the higher rate threshold) and £2,000 dividends.<br><br>
+  First £500 dividends: 0% (allowance used)<br>
+  Next £500 dividends: 10.75% (fill remaining basic rate band)<br>
+  Remaining £1,000 dividends: 35.75% (cross into higher rate)<br><br>
+  The allowance appears to save money but the band occupation pushes more dividends into higher rate tax.
+</div>
+<h2>Have You Used Your Allowance?</h2>
+<table>
+  <tr><th>Situation</th><th>Allowance Used?</th></tr>
+  <tr><td>First £500 of dividends received</td><td>Yes — fully used after £500</td></tr>
+  <tr><td>Dividends split with spouse</td><td>Each gets £500 — £1,000 total</td></tr>
+  <tr><td>Dividends inside ISA</td><td>ISA dividends do not use the allowance — zero tax regardless</td></tr>
+</table>
+<p>Source: <a href="https://www.gov.uk/tax-on-dividends">GOV.UK — Tax on dividends</a> · Last verified April 2026</p>
+`,
+    },
+    {
+      num:   "04",
+      slug:  "dividend-trap-04",
+      name:  "Your Next-Step Actions",
+      desc:  "Legal ways to reduce your effective dividend tax rate before 5 April 2027.",
+      tier:  1,
+      content: `
+<h2>The Three Fastest Wins</h2>
+<div class="action-box">
+  <h3>Win 1 — Employer Pension Contribution</h3>
+  <p>Your company makes a pension contribution on your behalf. This is deductible for Corporation Tax (saving 19-25%), attracts no NIC and no dividend tax. The pension fund grows tax-free.</p>
+  <p>Example: £20,000 employer pension contribution saves ~£5,000 Corporation Tax vs paying dividends that would cost ~£10,350 in tax on top of CT.</p>
+</div>
+<h3>Win 2 — Spouse Share Split</h3>
+<p>If your spouse holds shares and is a basic rate taxpayer, dividends paid to them are taxed at 10.75% instead of your 35.75%. They also get their own £500 allowance. Requires genuine beneficial share ownership.</p>
+<h3>Win 3 — ISA Maximisation</h3>
+<p>For investor dividends (not director extraction), maximising ISA contributions (£20,000/year) removes future dividend tax to zero on those holdings.</p>
+<h2>Dividend Timing Strategy</h2>
+<table>
+  <tr><th>Scenario</th><th>Action</th></tr>
+  <tr><td>Expect lower income next year</td><td>Delay dividend declaration to 6 April 2027</td></tr>
+  <tr><td>Expect higher income next year</td><td>Declare before 5 April 2027</td></tr>
+  <tr><td>Approaching higher rate band</td><td>Keep dividends within basic rate band this year</td></tr>
+</table>
+<div class="info-box"><strong>See your accountant before acting.</strong> Each of these strategies has legal requirements and individual considerations. File 05 contains the exact questions to ask.</div>
+`,
+    },
+    {
+      num:   "05",
+      slug:  "dividend-trap-05",
+      name:  "Your Accountant Brief",
+      desc:  "Print this and take it to your next meeting.",
+      tier:  1,
+      content: `
+<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your accountant before your next meeting.</div>
+<h2>Client Dividend Tax Status</h2>
+<table>
+  <tr><th>Item</th><th>Detail</th></tr>
+  <tr><td>Dividend allowance</td><td>£500 for 2026/27</td></tr>
+  <tr><td>Higher rate dividend tax</td><td>35.75% from April 2026</td></tr>
+  <tr><td>Combined CT + dividend (higher)</td><td>~51.81% effective</td></tr>
+  <tr><td>Tax year deadline</td><td><strong>5 April 2027</strong></td></tr>
+</table>
+<div class="action-box">
+  <h3>Question 1</h3>
+  <p>"What is my combined effective tax rate on £1 of company profit — including Corporation Tax and dividend tax?"</p>
+</div>
+<h3>Question 2</h3>
+<p>"What is the optimal salary level for me this year — and does it make sense to take more or less via dividends?"</p>
+<h3>Question 3</h3>
+<p>"Should we make employer pension contributions from the company this year rather than extracting more dividends?"</p>
+<h3>Question 4</h3>
+<p>"Does my spouse hold shares and are we using their dividend allowance and lower rate bands efficiently?"</p>
+<h3>Question 5</h3>
+<p>"Should I declare my dividends before or after 5 April 2027 — and how does timing affect both years?"</p>
+<h2>Action Items to Agree</h2>
+<ul class="checklist">
+  <li>Calculate exact combined effective rate for my situation</li>
+  <li>Agree optimal salary vs dividend split for 2026/27</li>
+  <li>Determine if employer pension contribution is appropriate</li>
+  <li>Review spouse shareholding position</li>
+  <li>Agree dividend timing before 5 April 2027</li>
+</ul>
+<p>Source: <a href="https://www.gov.uk/tax-on-dividends">GOV.UK — Tax on dividends</a> · Finance Act 2024 · Last verified April 2026</p>
+`,
+    },
+    {
+      num:   "06",
+      slug:  "dividend-trap-06",
+      name:  "Salary vs Dividend Optimiser",
+      desc:  "The optimal extraction mix for your company profit level — with the maths.",
+      tier:  2,
+      content: `
+<h2>The Optimal Salary Level</h2>
+<p>For most directors, the optimal salary is the NIC secondary threshold (£12,570 for 2026/27). This uses the personal allowance fully, triggers no income tax, and keeps NIC minimal.</p>
+<div class="action-box">
+  <h3>Why £12,570 Is Usually Optimal</h3>
+  <p>Above £12,570: income tax at 20% applies to salary</p>
+  <p>Below £12,570: personal allowance is wasted</p>
+  <p>At £12,570: zero income tax, minimal NIC, full personal allowance used</p>
+</div>
+<h2>Salary vs Dividend — Side by Side</h2>
+<table>
+  <tr><th>Factor</th><th>Salary (above £12,570)</th><th>Dividend</th></tr>
+  <tr><td>Income tax rate</td><td>20% / 40%</td><td>10.75% / 35.75%</td></tr>
+  <tr><td>Employee NIC</td><td>8% (up to £50,270)</td><td>None</td></tr>
+  <tr><td>Employer NIC</td><td>15%</td><td>None</td></tr>
+  <tr><td>CT deductible</td><td>Yes</td><td>No (paid from post-CT profit)</td></tr>
+  <tr><td>Combined effective rate</td><td>43%+ (salary in higher rate)</td><td>51.81% (CT + higher rate div)</td></tr>
+</table>
+<h2>The Pension vs Dividend Comparison</h2>
+<table>
+  <tr><th>Extraction Method</th><th>Effective Rate</th><th>Notes</th></tr>
+  <tr><td>Dividend (higher rate)</td><td>~51.81%</td><td>CT paid first, then dividend tax</td></tr>
+  <tr><td>Salary (higher rate)</td><td>~47%</td><td>CT deductible, NIC applies</td></tr>
+  <tr><td>Employer pension</td><td>~0% (deferred)</td><td>CT deductible, no NIC, no dividend tax, taxable on withdrawal</td></tr>
+</table>
+<div class="info-box"><strong>The pension advantage:</strong> £10,000 employer pension contribution costs the company £10,000 but saves £2,500 Corporation Tax. Net cost to company: £7,500. Compare to £10,000 salary which costs £11,500 including employer NIC, with income tax on top.</div>
+`,
+    },
+    {
+      num:   "07",
+      slug:  "dividend-trap-07",
+      name:  "Spouse Share Split and Timing Strategy",
+      desc:  "Second allowance, lower rate bands, and when to declare dividends across tax years.",
+      tier:  2,
+      content: `
+<h2>Spouse Share Split — How It Works</h2>
+<p>If your spouse holds shares in the company and is a basic rate taxpayer, dividends paid to them are taxed at 10.75% rather than your 35.75%. They also receive their own £500 dividend allowance.</p>
+<div class="action-box">
+  <h3>The Tax Saving on £20,000 Dividends</h3>
+  <p>All £20,000 to you at higher rate: £20,000 × 35.75% = £7,150 (minus £500 allowance × 35.75% = £178.75) = £6,971 tax</p>
+  <p>Split £10,000 each to you and spouse (both higher rate): similar total</p>
+  <p>Split £10,000 each where spouse is basic rate: spouse pays £10,000 × 10.75% = £1,075 vs your £3,575. Saving: ~£2,500</p>
+</div>
+<h2>Requirements for Legitimate Share Splitting</h2>
+<ul class="checklist">
+  <li>Spouse must genuinely own the shares (beneficial ownership, not just registered)</li>
+  <li>Shares must carry dividend rights</li>
+  <li>The arrangement must not be caught by the settlements legislation (S.624 ITTOIA 2005)</li>
+  <li>Spouse should ideally be involved in the business or have genuine commercial reasons for holding shares</li>
+</ul>
+<div class="warning-box"><strong>Always take advice:</strong> The HMRC settlements rules (the "Arctic Systems" precedent) can challenge arrangements where income is diverted from one spouse to another without commercial substance. This must be structured correctly.</div>
+<h2>Dividend Timing — Before or After 5 April 2027?</h2>
+<table>
+  <tr><th>If You Expect</th><th>Action</th><th>Why</th></tr>
+  <tr><td>Lower income in 2027/28</td><td>Delay dividend to April 2027</td><td>Lower band → lower rate</td></tr>
+  <tr><td>Higher income in 2027/28</td><td>Declare before 5 April 2027</td><td>Use this year's lower band</td></tr>
+  <tr><td>Rate changes in 2027/28</td><td>Confirm with accountant</td><td>Pre-empt any announced changes</td></tr>
+  <tr><td>Approaching higher rate band</td><td>Cap dividends at basic rate boundary</td><td>Avoid 35.75% on excess</td></tr>
+</table>
+<div class="info-box"><strong>Board minute requirement:</strong> Dividends must be formally declared by board minute to be legally valid. Keep a record of when and how dividends were declared — this determines which tax year they fall into.</div>
+`,
+    },
+    {
+      num:   "08",
+      slug:  "dividend-trap-08",
+      name:  "Director Loan Risk and Retained Profit Strategy",
+      desc:  "Section 455 charge, retained profit planning and pension diversion for future years.",
+      tier:  2,
+      content: `
+<h2>The Director Loan Risk — Section 455</h2>
+<p>Taking money from your company as a director loan rather than salary or dividend can trigger a Section 455 tax charge if the loan is not repaid within 9 months of the company's accounting year end.</p>
+<div class="action-box">
+  <h3>Section 455 Charge</h3>
+  <p>Rate: 35.75% of the outstanding loan balance</p>
+  <p>Paid by: the company (not the director)</p>
+  <p>Repayable: when the loan is repaid (via claim)</p>
+  <p>Example: £50,000 loan outstanding → £17,875 Section 455 charge</p>
+</div>
+<div class="warning-box"><strong>Key risk:</strong> Many directors use the loan account casually without realising the Section 455 charge. Check your director loan account balance before your accounting year end.</div>
+<h2>Retained Profit Strategy</h2>
+<p>Not all profit needs to be extracted. Retaining profit in the company can be tax-efficient if:</p>
+<ul class="checklist">
+  <li>You expect lower personal income in future years (lower dividend rate on extraction later)</li>
+  <li>The company is growing and retained profit is needed for investment</li>
+  <li>You plan to sell the company (Business Asset Disposal Relief at 14% vs income tax on dividends)</li>
+</ul>
+<h2>Multi-Year Pension Diversion Plan</h2>
+<table>
+  <tr><th>Year</th><th>Action</th><th>Tax Saving</th></tr>
+  <tr><td>2026/27</td><td>Employer contribution: £20,000</td><td>~£5,000 CT saving + ~£7,150 dividend tax avoided</td></tr>
+  <tr><td>2027/28</td><td>Employer contribution: £20,000</td><td>Same savings — compounding pension fund</td></tr>
+  <tr><td>Ongoing</td><td>Annual allowance: £60,000</td><td>Maximum tax-free employer contribution per year</td></tr>
+</table>
+<div class="info-box"><strong>Carry-forward:</strong> If unused pension annual allowance exists from the three previous tax years, the company can make a larger employer contribution in a single year — accelerating tax savings.</div>
+<p>Source: <a href="https://www.gov.uk/tax-on-dividends">GOV.UK — Tax on dividends</a> · <a href="https://www.gov.uk/corporation-tax-rates">GOV.UK — Corporation Tax rates</a> · Last verified April 2026</p>
+`,
+    },
   ],
-  calendarTitle: "Nexus Compliance — Critical Deadlines",
+
+  // ── CALENDAR ──────────────────────────────────────────────────────────────────
+  calendarTitle: "Dividend Tax — Action Dates",
   tier1Calendar: [
-    { uid: "nexus-q2",    summary: "Nexus — Q2 Sales Tax Filing Deadlines",   description: "Most states require monthly or quarterly filing. Check your registered state deadlines.", date: "20260630" },
-    { uid: "nexus-q3",    summary: "Nexus — Q3 Sales Tax Filing Deadlines",   description: "Q3 sales tax returns due in most states.", date: "20260930" },
-    { uid: "nexus-q4",    summary: "Nexus — Year-End Nexus Review",           description: "Review gross sales by state. Check for new nexus states. File VDAs before year-end.", date: "20261215" },
-    { uid: "nexus-year",  summary: "Nexus — Annual Threshold Review",         description: "Recalculate nexus exposure for 2026 based on full-year gross sales.", date: "20261231" },
+    { uid: "div-review",   summary: "Dividend Tax — Review your position with accountant",   description: "Calculate your combined effective rate and agree extraction strategy before 5 April 2027.", date: "relative:+7days" },
+    { uid: "div-pension",  summary: "Dividend Tax — Consider employer pension contribution",  description: "Employer pension contributions must be paid before your company year end. Discuss with accountant this month.", date: "relative:+14days" },
+    { uid: "div-yearend",  summary: "🔴 Tax Year End — 5 April 2027",                        description: "Last date for dividend timing decisions, pension contributions and spouse dividend declarations for 2026/27.", date: "20270405" },
+    { uid: "div-sa",       summary: "Self-Assessment Dividend Return — 31 January 2028",     description: "Report all dividend income on your 2026/27 self-assessment return.", date: "20280131" },
   ],
   tier2Calendar: [
-    { uid: "nexus-vda",   summary: "Nexus — Prioritise VDA filing states",    description: "Identify highest-exposure states. Engage adviser for anonymous VDA filing.", date: "relative:+14days" },
-    { uid: "nexus-fba",   summary: "Nexus — FBA inventory nexus audit",       description: "Download Inventory Event Detail report from Seller Central. Identify all FBA states.", date: "relative:+7days" },
-    { uid: "nexus-q2",    summary: "Nexus — Q2 Filing Deadlines",             description: "Q2 sales tax returns due across registered states.", date: "20260630" },
-    { uid: "nexus-q3",    summary: "Nexus — Q3 Filing Deadlines",             description: "Q3 returns due.", date: "20260930" },
-    { uid: "nexus-amnesty", summary: "Nexus — Check State Amnesty Programmes", description: "Review current state amnesty programmes — better terms than VDA in some states.", date: "20261001" },
-    { uid: "nexus-year",  summary: "Nexus — Year-End Compliance Review",      description: "Full gross sales by state review. File all outstanding VDAs before year-end.", date: "20261231" },
+    { uid: "div-review",   summary: "Dividend Tax — Calculate combined effective rate",       description: "Calculate CT + dividend combined rate. Review salary vs dividend vs pension split.", date: "relative:+7days" },
+    { uid: "div-spouse",   summary: "Dividend Tax — Review spouse share split",              description: "Confirm spouse shareholding is structured correctly for 2026/27 dividends.", date: "relative:+14days" },
+    { uid: "div-pension",  summary: "Dividend Tax — Employer pension contribution",           description: "Make employer pension contribution before company year end. See File 06.", date: "relative:+21days" },
+    { uid: "div-timing",   summary: "Dividend Tax — Agree dividend timing strategy",         description: "Decide: declare before or after 5 April 2027. Board minute required.", date: "20270301" },
+    { uid: "div-yearend",  summary: "🔴 Tax Year End — 5 April 2027",                        description: "Last date for all dividend timing, pension contributions and share split declarations.", date: "20270405" },
+    { uid: "div-sa",       summary: "Self-Assessment — Report dividend income",               description: "Include all 2026/27 dividend income and pension contributions on SA return.", date: "20280131" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_NEXUS_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_NEXUS_147" },
-  monitorUrls: ["https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide", "https://www.streamlinedsalestax.org"],
-  sidebarNumbers: [{ label: "Economic nexus threshold", value: "$100k gross" }, { label: "FBA nexus", value: "Immediate" }, { label: "Marketplace sales", value: "Count toward threshold" }, { label: "Lookback risk", value: "Unlimited (some states)" }],
-  sidebarMathsTitle: "What counts toward nexus threshold",
-  sidebarMathsIncludes: ["Direct website sales", "Amazon marketplace sales", "Etsy / Walmart sales", "Exempt product sales", "FBA states: all sales from $1"],
-  sidebarMathsExcludes: ["NOT just taxable sales", "NOT just direct sales", "NOT safe if marketplace collects"],
-  sidebarMathsNote: "Source: South Dakota v. Wayfair (2018) · Sales Tax Institute 2026",
+
+  // ── DELIVERY ──────────────────────────────────────────────────────────────────
+  delivery: {
+    tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DIV_47",
+    tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DIV_97",
+  },
+
+  // ── MONITORING ────────────────────────────────────────────────────────────────
+  monitorUrls: [
+    "https://www.gov.uk/tax-on-dividends",
+    "https://www.gov.uk/corporation-tax-rates",
+    "https://www.gov.uk/guidance/rates-and-allowances-income-tax",
+  ],
+
+  // ── SIDEBAR ───────────────────────────────────────────────────────────────────
+  sidebarNumbers: [
+    { label: "Basic rate dividend",    value: "10.75%" },
+    { label: "Higher rate dividend",   value: "35.75%" },
+    { label: "Director effective rate", value: "Up to 54.51%" },
+    { label: "Dividend allowance",     value: "£500" },
+  ],
+  sidebarMathsTitle:    "Dividends are top-sliced",
+  sidebarMathsIncludes: ["Sit on top of salary", "Sit on top of rental income", "Sit on top of self-employment profit"],
+  sidebarMathsExcludes: ["Allowance does NOT reduce taxable income", "Allowance DOES occupy your tax band", "Old rates (8.75%/33.75%) no longer apply"],
+  sidebarMathsNote:     "Source: GOV.UK — Tax on dividends · Finance Act 2024",
+
+  // ── JSON-LD HOWTO STEPS ───────────────────────────────────────────────────────
   howToSteps: [
-    { position: 1, name: "Select your sales volume bracket", text: "Choose your total gross sales across all channels — direct and marketplace — in the last 12 months." },
-    { position: 2, name: "Identify your channels and FBA use", text: "Specify where you sell and whether you use Amazon FBA. FBA creates immediate nexus regardless of sales volume." },
-    { position: 3, name: "Get your nexus exposure verdict", text: "See which states you likely have nexus in, your estimated liability, and whether you are already non-compliant." },
-    { position: 4, name: "Get your compliance plan", text: "Receive a personalised registration order, VDA strategy, and estimated penalty savings for your situation." },
+    { position: 1, name: "Select your profile",            text: "Choose whether you are a company director, investor, or PAYE employee with dividend income. This determines whether Corporation Tax applies before dividend tax." },
+    { position: 2, name: "Enter your salary and dividends", text: "Enter your salary or other income first — this determines which band your dividends fall into. Then enter your annual dividend amount." },
+    { position: 3, name: "Get your effective rate",        text: "See your combined effective tax rate — including Corporation Tax if applicable. See the total tax on £1 of company profit before and after optimisation." },
+    { position: 4, name: "Get your optimisation options",  text: "Receive a personalised set of legal optimisation strategies ranked by tax saving for your specific profit level and extraction method." },
   ],
+
+  // ── CLAUDE API ────────────────────────────────────────────────────────────────
   successPromptFields: [
-    { key: "nexus_sales", label: "Annual gross sales", defaultVal: "150000" },
-    { key: "nexus_channels", label: "Sales channels", defaultVal: "multi" },
-    { key: "nexus_fba", label: "Uses FBA", defaultVal: "false" },
-    { key: "nexus_status", label: "Nexus status", defaultVal: "at_risk" },
+    { key: "div_profile",        label: "User profile",              defaultVal: "director" },
+    { key: "div_salary",         label: "Annual salary",             defaultVal: "12570" },
+    { key: "div_dividends",      label: "Annual dividends",          defaultVal: "37500" },
+    { key: "div_is_director",    label: "Is director",               defaultVal: "true" },
+    { key: "div_effective_rate", label: "Combined effective rate",   defaultVal: "51.81" },
+    { key: "div_total_tax",      label: "Total tax liability",       defaultVal: "36956" },
+    { key: "div_answers",        label: "Questionnaire answers",     defaultVal: "{}" },
   ],
-  tier1AssessmentFields: ["status", "nexusStates", "estimatedLiability", "biggestRisk", "firstAction", "registrationPriority", "accountantQuestions"],
-  tier2AssessmentFields: ["status", "nexusStates", "estimatedLiability", "biggestRisk", "vdaStrategy", "penaltySavings", "actions", "weekPlan", "accountantQuestions"],
+
+  tier1AssessmentFields: [
+    "status", "effectiveRate", "totalTax", "ctComponent",
+    "dividendTaxComponent", "trapDetected",
+    "topThreeActions", "accountantQuestions",
+  ],
+
+  tier2AssessmentFields: [
+    "status", "effectiveRate", "totalTax", "ctComponent",
+    "dividendTaxComponent", "trapDetected",
+    "salaryVsDividendOptimal", "pensionDiversionSaving",
+    "spouseOpportunity", "timingRecommendation",
+    "directorLoanRisk", "weekPlan", "accountantQuestions",
+  ],
+
 };
