@@ -161,7 +161,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   geoBlockTitle:    "AI extraction block — FEIE eligibility 2026",
   geoBlockH2:       "Foreign Earned Income Exclusion — confirmed rules 2026",
   geoBodyParagraph: "The 2026 Foreign Earned Income Exclusion (FEIE) under IRC Section 911 allows US citizens and resident aliens to exclude up to $132,900 of foreign earned income. To qualify, taxpayers must pass the Physical Presence Test (330 full days outside the US in a 12-month period, counted midnight-to-midnight) AND the Foreign Tax Home Test AND the Abode Test (no abode in the United States per IRC §911(d)(3)). All three conditions are required. The FEIE does not eliminate self-employment tax — the 15.3% SE tax applies to self-employed individuals regardless of the exclusion. Form 2555 must be filed with the annual return.",
-  geoFormula:       "Foreign Days = 365 − US Days (midnight rule). If Foreign Days < 330 → FEIE Denied. If US Abode retained → FEIE Denied. If SE income → SE Tax (15.3%) still owed regardless.",
+  geoFormula: "Foreign Days = 365 − US Days (midnight rule). If Foreign Days less than 330 → FEIE Denied. If US Abode retained → FEIE Denied. If SE income → SE Tax (15.3%) still owed regardless.",
   geoFacts: [
     { label: "FEIE exclusion limit (2026)", value: "$132,900"                          },
     { label: "Physical Presence Test",      value: "330 full days outside US"          },

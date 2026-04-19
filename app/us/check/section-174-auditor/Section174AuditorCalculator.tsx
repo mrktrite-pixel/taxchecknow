@@ -443,7 +443,7 @@ export default function Section174AuditorCalculator() {
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Mostly new (>80%)
+                      Mostly new (over 80%)
                     </button>
                     <button
                       type="button"

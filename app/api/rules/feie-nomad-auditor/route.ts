@@ -36,7 +36,7 @@ export async function GET() {
         "self_employment_tax": "15.3% — applies even with FEIE",
         "filed_on": "Form 2555 with annual return"
     },
-    "formula": "Foreign Days = 365 − US Days (midnight rule). If Foreign Days < 330 → FEIE Denied. If US Abode retained → FEIE Denied. If SE income → SE Tax (15.3%) still owed regardless.",
+    "formula": "Foreign Days = 365 − US Days (midnight rule). If Foreign Days less than 330 → FEIE Denied. If US Abode retained → FEIE Denied. If SE income → SE Tax (15.3%) still owed regardless.",
     "thresholds": [
         {
             "label": "Clearly qualified — 330+ days abroad, no US ties",
@@ -193,7 +193,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/feie-nomad-auditor",
     "api_endpoint": "/api/rules/feie-nomad-auditor",
-    "generated_at": "2026-04-19T11:11:51.397Z"
+    "generated_at": "2026-04-19T11:33:16.542Z"
 };
 
   return NextResponse.json(rules, {

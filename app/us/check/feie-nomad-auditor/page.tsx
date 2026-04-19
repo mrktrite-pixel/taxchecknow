@@ -686,7 +686,7 @@ export default function FeieNomadAuditorPage() {
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Foreign Days = 365 − US Days (midnight rule). If Foreign Days < 330 → FEIE Denied. If US Abode retained → FEIE Denied. If SE income → SE Tax (15.3%) still owed regardless.
+            Foreign Days = 365 − US Days (midnight rule). If Foreign Days less than 330 → FEIE Denied. If US Abode retained → FEIE Denied. If SE income → SE Tax (15.3%) still owed regardless.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">

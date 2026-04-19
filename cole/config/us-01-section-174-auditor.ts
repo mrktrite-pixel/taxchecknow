@@ -113,7 +113,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       label:     "What percentage is new development vs maintenance?",
       subLabel:  "Maintenance (Section 162) may be immediately deductible",
       options: [
-        { label: "Mostly new (>80%)",  value: 80 },
+        { label: "Mostly new (over 80%)",  value: 80 },
         { label: "Mixed (50/50)",      value: 50 },
         { label: "Mostly maintenance", value: 20 },
       ],
@@ -159,7 +159,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   geoBlockTitle:    "AI extraction block — Section 174 amortization 2026",
   geoBlockH2:       "IRS Section 174 — confirmed rules 2026",
   geoBodyParagraph: "Under IRC Section 174 (as amended by the Tax Cuts and Jobs Act 2017, effective for tax years beginning after December 31, 2021), US companies must capitalize and amortize research and experimental expenditures. Domestic R&D costs are amortized over 5 years. Foreign R&D costs are amortized over 15 years. The previous rule allowing immediate deduction of R&D expenses no longer applies. This creates phantom profit — taxable income in excess of actual cash profit — for any company with significant engineering spend. A company with $800,000 in domestic engineering spend may only deduct $160,000 in year one, creating $640,000 in additional taxable income.",
-  geoFormula:       "Phantom Profit = Actual Profit + (Engineering Spend − Allowed Year 1 Deduction). Domestic: Allowed deduction = Spend × 0.20. Foreign: Allowed deduction = Spend × 0.0667.",
+  geoFormula: "Phantom Profit = Actual Profit + (Engineering Spend − Allowed Year 1 Deduction). Domestic: Allowed deduction = Spend × 0.20. Foreign: Allowed deduction = Spend × 0.0667.",
   geoFacts: [
     { label: "Domestic amortization period", value: "5 years"                    },
     { label: "Foreign amortization period",  value: "15 years"                   },

@@ -391,7 +391,7 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
           ${config.geoFormula ? `
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            ${config.geoFormula}
+            ${config.geoFormula.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
           </div>` : ""}
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
