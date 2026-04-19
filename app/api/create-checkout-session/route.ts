@@ -12,7 +12,7 @@ function getStripe() {
 // ── PRICE ID MAP ─────────────────────────────────────────────────────────────
 // Maps product_key → Stripe price ID environment variable
 // Pattern: [country]_[tier]_[product_slug]
-// All products standardised to £67 (tier 1) / £147 (tier 2)
+// UK: £67 / £147 · US: $67 / $147
 
 function getPriceId(productKey: string): string | undefined {
   const key = productKey.toLowerCase();
@@ -38,9 +38,45 @@ function getPriceId(productKey: string): string | undefined {
   if (key === "uk_147_dividend_trap") return process.env.STRIPE_UK_DIV_147;
 
   // ── UK BUNDLES ────────────────────────────────────────────────────────────
+  // MTD Complete: UK-01 + UK-03 + UK-04 — £197
+  // Income Check: UK-02 + UK-05 — £197
+  // Full Stack: all 5 — £347
   if (key === "uk_197_mtd_complete")  return process.env.STRIPE_UK_BUNDLE_MTD;
   if (key === "uk_197_income_check")  return process.env.STRIPE_UK_BUNDLE_INCOME;
   if (key === "uk_347_full_stack")    return process.env.STRIPE_UK_BUNDLE_FULL;
+
+  // ── US-01 Section 174 Phantom Tax Auditor ─────────────────────────────────
+  // URL: taxchecknow.com/us/check/section-174-auditor
+  // Prices: $67 / $147
+  if (key === "us_67_section_174_auditor")  return process.env.STRIPE_US_174_67;
+  if (key === "us_147_section_174_auditor") return process.env.STRIPE_US_174_147;
+
+  // ── US-02 FEIE Nomad Auditor ──────────────────────────────────────────────
+  // URL: taxchecknow.com/us/check/feie-nomad-auditor
+  // Prices: $67 / $147
+  if (key === "us_67_feie_nomad_auditor")  return process.env.STRIPE_US_FEIE_67;
+  if (key === "us_147_feie_nomad_auditor") return process.env.STRIPE_US_FEIE_147;
+
+  // ── US-03 QSBS Exit Auditor ───────────────────────────────────────────────
+  // URL: taxchecknow.com/us/check/qsbs-exit-auditor
+  // Prices: $67 / $147
+  if (key === "us_67_qsbs_exit_auditor")  return process.env.STRIPE_US_QSBS_67;
+  if (key === "us_147_qsbs_exit_auditor") return process.env.STRIPE_US_QSBS_147;
+
+  // ── US-04 ISO AMT Exercise Sniper ─────────────────────────────────────────
+  // URL: taxchecknow.com/us/check/iso-amt-sniper
+  // Prices: $67 / $147
+  if (key === "us_67_iso_amt_sniper")  return process.env.STRIPE_US_ISO_67;
+  if (key === "us_147_iso_amt_sniper") return process.env.STRIPE_US_ISO_147;
+
+  // ── US-05 Wayfair Nexus Sniper ────────────────────────────────────────────
+  // URL: taxchecknow.com/us/check/wayfair-nexus-sniper
+  // Prices: $67 / $147
+  if (key === "us_67_wayfair_nexus_sniper")  return process.env.STRIPE_US_NEXUS_67;
+  if (key === "us_147_wayfair_nexus_sniper") return process.env.STRIPE_US_NEXUS_147;
+
+  // ── US BUNDLES (add when built) ───────────────────────────────────────────
+  // if (key === "us_197_...") return process.env.STRIPE_US_BUNDLE_...;
 
   // ── AU GATES (add when built) ─────────────────────────────────────────────
   // if (key === "au_67_...") return process.env.STRIPE_AU_...;
@@ -58,6 +94,7 @@ function getPriceId(productKey: string): string | undefined {
 }
 
 // ── VALID TIERS ───────────────────────────────────────────────────────────────
+// UK: £67 / £147 · US: $67 / $147 · Bundles: 197 / 347
 const VALID_TIERS = [67, 147, 197, 347] as const;
 type ValidTier = typeof VALID_TIERS[number];
 
