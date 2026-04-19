@@ -640,7 +640,7 @@ export default function QsbsExitAuditorCalculator() {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                       5 quick questions then pay
                     </p>
-                    <p className="font-serif text-lg font-bold text-neutral-950">£{effectiveTier}</p>
+                    <p className="font-serif text-lg font-bold text-neutral-950">${effectiveTier}</p>
                   </div>
                   {[
                     { key: "contribution_timing", label: "When would you act on this?", options: [
