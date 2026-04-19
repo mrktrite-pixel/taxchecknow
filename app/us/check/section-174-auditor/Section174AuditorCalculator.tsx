@@ -141,8 +141,8 @@ function recommendedTier(
   newVsMaintenance: number | string,
   hasRDCredit: boolean,
 ): PackTier {
-  // Engineering spend >= $300k OR teamLocation is offshore OR mixed → tier2. Otherwise tier1.
-    if (engineeringSpend >= 300000 || teamLocation === "offshore" || teamLocation === "mixed") return 147;
+  // teamLocation is offshore or mixed → tier2. hasRDCredit → tier2. Otherwise tier1.
+    if (teamLocation === "offshore" || teamLocation === "mixed" || hasRDCredit === true) return 147;
   return 67;
 }
 
@@ -609,7 +609,7 @@ export default function Section174AuditorCalculator() {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                       5 quick questions then pay
                     </p>
-                    <p className="font-serif text-lg font-bold text-neutral-950">£{effectiveTier}</p>
+                    <p className="font-serif text-lg font-bold text-neutral-950">${effectiveTier}</p>
                   </div>
                   {[
                     { key: "contribution_timing", label: "When would you act on this?", options: [

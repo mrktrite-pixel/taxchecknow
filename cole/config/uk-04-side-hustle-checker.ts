@@ -140,12 +140,11 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
 
   tierAlgorithm: {
-    description:     "qualifyingIncome = selfEmploymentIncome + rentalIncome (adjusted for joint ownership). If >= 50000 → in scope 2026. If >= 30000 → in scope 2027. Below 30000 → approaching. Tier2 if qualifyingIncome >= 50000 AND multiple income streams. Tier1 if single stream or approaching.",
+    description:     "selfEmploymentIncome + rentalIncome >= 50000 → tier2. hasMultipleStreams → tier2. Otherwise tier1.",
     tier2Conditions: [
-      "qualifyingIncome >= 50000",
-      "hasMultipleStreams === true",
+      "(selfEmploymentIncome as number) + (rentalIncome as number) >= 50000",
     ],
-    tier2Flags: [],
+    tier2Flags: ["hasMultipleStreams"],
   },
 
   calculatorRuleBox: {
