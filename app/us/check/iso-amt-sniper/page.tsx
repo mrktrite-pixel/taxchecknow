@@ -201,7 +201,7 @@ const toolsRows = [
   {
     "tool": "Form 8801 AMT credit",
     "effect": "Recover AMT in future years",
-    "note": "After AMT triggered — claim credit when regular tax > tentative minimum"
+    "note": "After AMT triggered — claim credit when regular tax exceeds tentative minimum"
   },
   {
     "tool": "Disqualifying disposition",
@@ -888,7 +888,7 @@ export default function IsoAmtSniperPage() {
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Form 8801 AMT credit</td>
                 <td className="p-3 text-xs">Recover AMT in future years</td>
-                <td className="p-3 text-xs text-neutral-700">After AMT triggered — claim credit when regular tax > tentative minimum</td>
+                <td className="p-3 text-xs text-neutral-700">After AMT triggered — claim credit when regular tax exceeds tentative minimum</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Disqualifying disposition</td>

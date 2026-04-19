@@ -141,8 +141,8 @@ function recommendedTier(
   isoShares: number | string,
   spread: number | string,
 ): PackTier {
-  // isoShares > 5000 AND spread > 50 → tier2. salary > 300000 → tier2. Otherwise tier1.
-    if (isoShares > 5000 && spread > 50 || salary > 300000) return 147;
+  // isoShares exceeds 5000 AND spread exceeds 50 → tier2. salary exceeds 300000 → tier2. Otherwise tier1.
+    if (isoShares exceeds 5000 && spread exceeds 50 || salary exceeds 300000) return 147;
   return 67;
 }
 

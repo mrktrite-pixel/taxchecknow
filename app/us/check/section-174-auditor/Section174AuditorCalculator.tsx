@@ -139,7 +139,7 @@ function recommendedTier(
   bracketStatus: BracketStatus,
   teamLocation: number | string,
   newVsMaintenance: number | string,
-  hasR&DCredit: boolean,
+  hasRDCredit: boolean,
 ): PackTier {
   // Engineering spend >= $300k OR teamLocation is offshore OR mixed → tier2. Otherwise tier1.
     if (engineeringSpend >= 300000 || teamLocation === "offshore" || teamLocation === "mixed") return 147;
@@ -152,7 +152,7 @@ export default function Section174AuditorCalculator() {
   const [selectedBracket, setSelectedBracket] = useState<number | null>(null);
   const [teamLocation, setTeamLocation] = useState<number | string>("us");
   const [newVsMaintenance, setNewVsMaintenance] = useState<number | string>(80);
-  const [hasR&DCredit, setHasR&DCredit] = useState<boolean>(false);
+  const [hasRDCredit, setHasRDCredit] = useState<boolean>(false);
   const [email,           setEmail]           = useState("");
   const [emailSent,       setEmailSent]       = useState(false);
   const [sessionId,       setSessionId]       = useState<string | null>(null);
@@ -180,7 +180,7 @@ export default function Section174AuditorCalculator() {
     bracketStatus,
     teamLocation,
     newVsMaintenance,
-    hasR&DCredit,
+    hasRDCredit,
   );
   const effectiveTier   = overrideTier ?? calculatedTier;
   const selectedProduct = PRODUCTS[effectiveTier];
@@ -198,7 +198,7 @@ export default function Section174AuditorCalculator() {
     setSelectedBracket(index);
     setTeamLocation("us");
     setNewVsMaintenance(80);
-    setHasR&DCredit(false);
+    setHasRDCredit(false);
     setOverrideTier(null);
     setError("");
     // Save to sessionStorage for success page
@@ -251,7 +251,7 @@ export default function Section174AuditorCalculator() {
     sessionStorage.setItem("section-174-auditor_answers", JSON.stringify(answers));
     sessionStorage.setItem("section-174-auditor_teamLocation", String(teamLocation));
     sessionStorage.setItem("section-174-auditor_newVsMaintenance", String(newVsMaintenance));
-    sessionStorage.setItem("section-174-auditor_hasR&DCredit", String(hasR&DCredit));
+    sessionStorage.setItem("section-174-auditor_hasRDCredit", String(hasRDCredit));
     const sid          = sessionId ?? localStorage.getItem("section-174-auditor_session_id");
     const effectiveSid = sid ?? `fallback_${Date.now()}`;
     setCheckoutLoading(true);
@@ -476,9 +476,9 @@ export default function Section174AuditorCalculator() {
                     
                     <button
                       type="button"
-                      onClick={() => setHasR&DCredit(false)}
+                      onClick={() => setHasRDCredit(false)}
                       className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        hasR&DCredit === false
+                        hasRDCredit === false
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
@@ -486,9 +486,9 @@ export default function Section174AuditorCalculator() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setHasR&DCredit(true)}
+                      onClick={() => setHasRDCredit(true)}
                       className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        hasR&DCredit === true
+                        hasRDCredit === true
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>

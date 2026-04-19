@@ -556,7 +556,7 @@ export default function QsbsExitAuditorPage() {
               <p className="mb-1 text-xs text-neutral-800">✗ S-Corps and LLCs</p>
               <p className="mb-1 text-xs text-neutral-800">✗ Secondary market purchases</p>
               <p className="mb-1 text-xs text-neutral-800">✗ Service businesses (law, finance, consulting)</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Companies with >$50M assets at issuance</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Companies with over $50M assets at issuance</p>
               <p className="mt-2 text-[10px] text-neutral-500">Source: IRS — IRC Section 1202</p>
             </div>
 
