@@ -141,8 +141,8 @@ function recommendedTier(
   channels: number | string,
   hasFBA: boolean,
 ): PackTier {
-  // annualGrossSales >= 100000 OR hasFBA → tier2. channels is fba or multi or all → tier2. Otherwise tier1.
-    if (annualGrossSales >= 100000 || channels === "fba" || channels === "multi" || channels === "all" || hasFBA === true) return 147;
+  // (annualGrossSales as number) >= 100000 OR hasFBA → tier2. channels is fba or multi or all → tier2. Otherwise tier1.
+    if ((annualGrossSales as number) >= 100000 || channels === "fba" || channels === "multi" || channels === "all" || hasFBA === true) return 147;
   return 67;
 }
 
@@ -715,3 +715,4 @@ export default function WayfairNexusSniperCalculator() {
     </>
   );
 }
+
