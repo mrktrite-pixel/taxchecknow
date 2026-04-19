@@ -66,16 +66,16 @@ export const PRODUCT_CONFIG: ProductConfig = {
   },
 
   // ── COPY ──────────────────────────────────────────────────────────────────────
-  h1:              "UK Side-Hustle MTD 2026: Are You Required to File Quarterly from April?",
+  h1:              "UK Side-Hustle MTD 2026: Are You Legally Required to File Quarterly?",
   metaTitle:       "UK Side-Hustle MTD 2026: Are You Required to File Quarterly? | TaxCheckNow",
   metaDescription: "MTD for Income Tax is mandatory from 6 April 2026 if your qualifying income exceeds £50,000. Qualifying income is gross self-employment plus gross rental — not PAYE. Most people calculate this incorrectly. Check your exact scope in 60 seconds.",
   canonical:       "https://taxchecknow.com/uk/check/side-hustle-checker",
 
   answerHeadline: "The answer — HMRC confirmed April 2026",
   answerBody: [
-    "MTD for Income Tax becomes mandatory from 6 April 2026 if your qualifying income exceeded £50,000 in the 2024-25 tax year. Qualifying income is gross self-employment turnover plus gross UK property rental income — your share if jointly owned.",
-    "Your PAYE salary does NOT count toward this threshold. Neither do dividends, savings interest or pension income. Most people with a side hustle calculate this incorrectly — either including PAYE or using profit instead of gross turnover.",
-    "Three overlapping rules cause mass confusion: the £1,000 trading allowance (self-assessment trigger), the £50,000 MTD threshold (2026), and the £30,000 MTD threshold (2027). These are separate rules. Crossing one does not mean you have crossed them all.",
+    "From 6 April 2026, Making Tax Digital applies if your qualifying income exceeded £50,000 in the 2024-25 tax year. Qualifying income is gross self-employment turnover plus gross UK rental income only — your share if jointly owned.",
+    "Your PAYE salary does NOT count toward this threshold. A taxpayer with £60,000 salary and £20,000 freelance gross has qualifying income of £20,000 — not in scope. Most people calculate this incorrectly.",
+    "Three separate rules cause mass confusion: the £1,000 trading allowance (triggers Self Assessment), the £50,000 MTD threshold (2026 mandate), and the £30,000 MTD threshold (2027 expansion). Crossing one does not mean you have crossed all three.",
   ],
   answerSource: "Source: GOV.UK — Making Tax Digital for Income Tax · Finance (No.2) Act 2024",
 
@@ -151,6 +151,12 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calculatorRuleBox: {
     label: "The rule — HMRC confirmed",
     body:  "Qualifying income = gross self-employment turnover + gross UK rental income (your share). PAYE salary, dividends and savings interest are excluded. HMRC uses gross — not profit.",
+  },
+
+  chainVisual: {
+    label:  "Qualifying income — what counts and what does not",
+    broken: "Salary (£60k) + Side hustle (£20k) = £80k total  ❌  WRONG calculation",
+    fixed:  "Side hustle (£20k) only = £20k qualifying  ✔  CORRECT — PAYE excluded",
   },
 
   calculatorClarification: {

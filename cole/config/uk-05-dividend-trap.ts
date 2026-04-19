@@ -66,16 +66,16 @@ export const PRODUCT_CONFIG: ProductConfig = {
   },
 
   // ── COPY ──────────────────────────────────────────────────────────────────────
-  h1:              "UK Dividend Tax 2026/27: What Is Your Real Effective Tax Rate?",
-  metaTitle:       "UK Dividend Tax 2026/27: What Is Your Real Effective Tax Rate? | TaxCheckNow",
+  h1:              "UK Dividend Tax 2026/27: The 51% Combined Tax Auditor",
+  metaTitle:       "UK Dividend Tax 2026/27: The 51% Combined Tax Auditor | TaxCheckNow",
   metaDescription: "From April 2026, dividend tax rises to 10.75%/35.75%/39.35% and the allowance collapses to £500. But your real rate combines Corporation Tax too — up to 54.51%. Most directors calculate this wrong. Check your exact position.",
   canonical:       "https://taxchecknow.com/uk/check/dividend-trap",
 
   answerHeadline: "The answer — HMRC confirmed April 2026",
   answerBody: [
-    "From 6 April 2026, dividend tax rates are 10.75% (basic rate), 35.75% (higher rate) and 39.35% (additional rate). The dividend allowance is £500 — collapsed from £5,000 in 2017. Most people calculate their tax wrong because they only look at the dividend rate.",
-    "If you are a company director, your real effective tax rate combines Corporation Tax (25% on profits above £250,000, or 19-25% marginal for smaller companies) with dividend tax on what you extract. The combined effective rate on a higher-rate dividend is approximately 51.81% — not 35.75%.",
-    "The allowance collapse from £2,000 to £500 (April 2024 to April 2026) and the rate increases mean a director extracting £50,000 in dividends now pays significantly more than two years ago. This is the gap AI tools consistently miss.",
+    "From 6 April 2026, UK dividend tax rates are 10.75% (basic), 35.75% (higher) and 39.35% (additional). The dividend allowance is £500 — collapsed from £5,000 in 2017. Most calculators show only the dividend rate. That is the wrong number.",
+    "For company directors, profits are first taxed at Corporation Tax (up to 25%), then taxed again as dividends. The combined effective rate at higher rate is 51.81% — not 35.75%. This is the number AI tools consistently get wrong and most directors have never seen calculated correctly.",
+    "The proof: £100 company profit → £25 Corporation Tax → £75 remaining → £26.81 dividend tax → £51.81 total tax. Effective rate: 51.81%. This page calculates that number for your exact situation.",
   ],
   answerSource: "Source: GOV.UK — Tax on dividends · Finance Act 2024",
 
@@ -149,6 +149,12 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calculatorRuleBox: {
     label: "The rule — HMRC confirmed",
     body:  "Dividend tax rates from 6 April 2026: 10.75% (basic), 35.75% (higher), 39.35% (additional). Dividend allowance: £500. Dividends are top-sliced — they sit on top of all other income.",
+  },
+
+  chainVisual: {
+    label:  "The 51.81% proof — where the money goes",
+    broken: "Dividend rate only (35.75%)  ❌  WRONG — ignores Corporation Tax paid first",
+    fixed:  "CT (25%) + Dividend on remainder (35.75%) = 51.81% real rate  ✔  CORRECT",
   },
 
   calculatorClarification: {
