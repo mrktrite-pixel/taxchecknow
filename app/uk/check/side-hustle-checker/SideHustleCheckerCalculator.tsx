@@ -142,7 +142,7 @@ function recommendedTier(
   isJointlyOwned: boolean,
 ): PackTier {
   // selfEmploymentIncome + rentalIncome >= 50000 → tier2. hasMultipleStreams → tier2. Otherwise tier1.
-    if ((selfEmploymentIncome as number) + (rentalIncome as number) >= 50000 || hasMultipleStreams === true) return 147;
+    if ((selfEmploymentIncome as number) + (rentalIncome as number) >= 50000 || isJointlyOwned === true) return 147;
   return 67;
 }
 
@@ -725,3 +725,5 @@ export default function SideHustleCheckerCalculator() {
     </>
   );
 }
+
+
