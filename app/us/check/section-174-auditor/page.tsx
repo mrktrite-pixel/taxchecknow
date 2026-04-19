@@ -378,6 +378,35 @@ export default function Section174AuditorPage() {
 ],
   };
 
+  const calculatorSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Section 174 Phantom Tax Auditor — Free Check",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "url": "https://taxchecknow.com/us/check/section-174-auditor#calculator",
+    "description": "Under IRS Section 174, software development costs must be amortized over 5 years (domestic) or 15 years (foreign). SaaS companies are receiving $100k–$300k tax bills with $0 cash flow. Check your phantom profit exposure instantly.",
+    "isAccessibleForFree": true,
+    "featureList": [
+      "Instant binary compliance verdict",
+      "Personalised escape route calculation",
+      "No registration required",
+      "Based on IRS guidance April 2026"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free compliance check — paid personalised assessment available"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "TaxCheckNow",
+      "url": "https://taxchecknow.com"
+    }
+  };
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -396,6 +425,7 @@ export default function Section174AuditorPage() {
       <Script id="jsonld-webapp"    type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -539,10 +569,10 @@ export default function Section174AuditorPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised Section 174 audit built around your engineering spend, your team location, and your deductible vs non-deductible split.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · SRE Classification Kit
+                  $67 · SRE Classification Kit
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · Amortization Shield Audit
+                  $147 · Amortization Shield Audit
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>

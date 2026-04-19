@@ -378,6 +378,35 @@ export default function WayfairNexusSniperPage() {
 ],
   };
 
+  const calculatorSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Wayfair Nexus Sniper — Free Check",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "url": "https://taxchecknow.com/us/check/wayfair-nexus-sniper#calculator",
+    "description": "Most US states enforce economic nexus at $100,000 in GROSS sales — including marketplace sales. FBA inventory creates immediate nexus with no threshold. States can audit years later. Check your nexus exposure instantly.",
+    "isAccessibleForFree": true,
+    "featureList": [
+      "Instant binary compliance verdict",
+      "Personalised escape route calculation",
+      "No registration required",
+      "Based on IRS guidance April 2026"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free compliance check — paid personalised assessment available"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "TaxCheckNow",
+      "url": "https://taxchecknow.com"
+    }
+  };
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -396,6 +425,7 @@ export default function WayfairNexusSniperPage() {
       <Script id="jsonld-webapp"    type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -541,10 +571,10 @@ export default function WayfairNexusSniperPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised nexus audit built around your sales by state, your marketplace channels, and your FBA inventory locations.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · Nexus Heatmap Action Plan
+                  $67 · Nexus Heatmap Action Plan
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · VDA Shield System
+                  $147 · VDA Shield System
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>

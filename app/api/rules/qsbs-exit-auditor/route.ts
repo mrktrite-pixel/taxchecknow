@@ -188,7 +188,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/qsbs-exit-auditor",
     "api_endpoint": "/api/rules/qsbs-exit-auditor",
-    "generated_at": "2026-04-19T11:01:04.708Z"
+    "generated_at": "2026-04-19T11:11:57.391Z"
 };
 
   return NextResponse.json(rules, {

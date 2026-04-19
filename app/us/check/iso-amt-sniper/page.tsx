@@ -378,6 +378,35 @@ export default function IsoAmtSniperPage() {
 ],
   };
 
+  const calculatorSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ISO AMT Exercise Sniper — Free Check",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "url": "https://taxchecknow.com/us/check/iso-amt-sniper#calculator",
+    "description": "Exercising ISOs triggers AMT on the bargain element (FMV minus strike price) — even if you cannot sell the shares. Most employees trigger AMT without realising it. Find your safe exercise range instantly.",
+    "isAccessibleForFree": true,
+    "featureList": [
+      "Instant binary compliance verdict",
+      "Personalised escape route calculation",
+      "No registration required",
+      "Based on IRS guidance April 2026"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free compliance check — paid personalised assessment available"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "TaxCheckNow",
+      "url": "https://taxchecknow.com"
+    }
+  };
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -396,6 +425,7 @@ export default function IsoAmtSniperPage() {
       <Script id="jsonld-webapp"    type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -539,10 +569,10 @@ export default function IsoAmtSniperPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised ISO exercise analysis built around your salary, your options, and your exact safe exercise range.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · Zero-AMT Exercise Map
+                  $67 · Zero-AMT Exercise Map
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · AMT Recovery System
+                  $147 · AMT Recovery System
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>

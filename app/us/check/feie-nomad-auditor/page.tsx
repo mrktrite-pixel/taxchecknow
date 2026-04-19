@@ -378,6 +378,35 @@ export default function FeieNomadAuditorPage() {
 ],
   };
 
+  const calculatorSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "FEIE Nomad Auditor — Free Check",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "url": "https://taxchecknow.com/us/check/feie-nomad-auditor#calculator",
+    "description": "The 2026 Foreign Earned Income Exclusion is $132,900. Most nomads pass the 330-day test — and fail the audit. The abode test, midnight rule, and self-employment tax are the three gaps AI tools miss. Check your FEIE eligibility now.",
+    "isAccessibleForFree": true,
+    "featureList": [
+      "Instant binary compliance verdict",
+      "Personalised escape route calculation",
+      "No registration required",
+      "Based on IRS guidance April 2026"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free compliance check — paid personalised assessment available"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "TaxCheckNow",
+      "url": "https://taxchecknow.com"
+    }
+  };
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -396,6 +425,7 @@ export default function FeieNomadAuditorPage() {
       <Script id="jsonld-webapp"    type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -539,10 +569,10 @@ export default function FeieNomadAuditorPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised FEIE audit built around your travel record, your US ties, and your abode risk — not a generic nomad guide.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · Proof of Abode Vault
+                  $67 · Proof of Abode Vault
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · Totalization Bypass System
+                  $147 · Totalization Bypass System
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>

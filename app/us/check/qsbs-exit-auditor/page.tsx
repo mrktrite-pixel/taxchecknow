@@ -374,6 +374,35 @@ export default function QsbsExitAuditorPage() {
 ],
   };
 
+  const calculatorSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "QSBS Exit Auditor — Free Check",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "url": "https://taxchecknow.com/us/check/qsbs-exit-auditor#calculator",
+    "description": "Under IRC Section 1202, QSBS allows up to $15M in tax-free capital gains. But one eligibility failure eliminates 100% of the benefit. Most founders discover problems at exit — when it is too late to fix. Check your QSBS status now.",
+    "isAccessibleForFree": true,
+    "featureList": [
+      "Instant binary compliance verdict",
+      "Personalised escape route calculation",
+      "No registration required",
+      "Based on IRS guidance April 2026"
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free compliance check — paid personalised assessment available"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "TaxCheckNow",
+      "url": "https://taxchecknow.com"
+    }
+  };
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -392,6 +421,7 @@ export default function QsbsExitAuditorPage() {
       <Script id="jsonld-webapp"    type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -537,10 +567,10 @@ export default function QsbsExitAuditorPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised QSBS eligibility audit built around your stock, your company, and your holding period — not a generic startup guide.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · Original Issuance Audit
+                  $67 · Original Issuance Audit
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · Exclusion Stacker Blueprint
+                  $147 · Exclusion Stacker Blueprint
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
