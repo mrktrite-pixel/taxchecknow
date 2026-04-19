@@ -68,6 +68,24 @@ async function cole(productId: string) {
     config    = mod.PRODUCT_CONFIG;
     if (!config) throw new Error("Config file must export PRODUCT_CONFIG");
     console.log(`   ✅ Config loaded: ${config.name}`);
+
+    // ── VALIDATE: no JSX-breaking < > in string fields ────────────────────
+    const jsxFields = [
+      ...config.brackets.map(b => b.label),
+      ...(config.calculatorInputs || []).flatMap(i => 
+        "options" in i ? i.options.map((o: {label: string}) => o.label) : []
+      ),
+      ...config.workedExamples.map(e => e.status),
+      ...config.workedExamples.map(e => e.income),
+      config.geoBodyParagraph,
+      config.h1,
+    ];
+    const jsxIssues = jsxFields.filter(s => s && (s.includes("<") || s.includes(">")));
+    if (jsxIssues.length > 0) {
+      console.warn(`   ⚠️  JSX WARNING: < or > found in ${jsxIssues.length} field(s):`);
+      jsxIssues.forEach(s => console.warn(`      "${s?.slice(0, 60)}"`));
+      console.warn(`   Replace < with "less than" and > with "over" / "exceeds"`);
+    }
   } catch (err) {
     console.error(`   ❌ Config error: ${err}`);
     process.exit(1);

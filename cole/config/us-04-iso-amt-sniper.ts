@@ -22,7 +22,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   chainVisual: { label: "The ISO AMT trap — exercise without planning", broken: "Exercise full grant (10,000 shares @ $50 spread)  →  $500k AMT income  →  $150k tax bill  →  No cash to pay  ❌", fixed: "Exercise safe range (2,100 shares)  →  Stay below AMT threshold  →  $0 AMT  →  Full liquidity preserved  ✔" },
   brackets: [
-    { label: "Under 1,000 shares with small spread (<$10)", value: 1, status: "clear" },
+    { label: "Under 1,000 shares with small spread (under $10)", value: 1, status: "clear" },
     { label: "1,000–5,000 shares with moderate spread ($10–$50)", value: 2, status: "approaching" },
     { label: "5,000–20,000 shares with significant spread ($50–$100)", value: 3, status: "trap" },
     { label: "Over 20,000 shares or spread above $100", value: 4, status: "deep_trap" },

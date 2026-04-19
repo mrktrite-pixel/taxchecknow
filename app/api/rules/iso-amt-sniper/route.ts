@@ -39,7 +39,7 @@ export async function GET() {
     "formula": "AMT Income = Regular Income + (FMV − Strike Price) × Shares Exercised. Tentative Minimum Tax = AMT Income × 26% (up to $220,700) then 28%. AMT Due = Max(0, Tentative Minimum Tax − Regular Tax).",
     "thresholds": [
         {
-            "label": "Under 1,000 shares with small spread (<$10)",
+            "label": "Under 1,000 shares with small spread (under $10)",
             "value": 1,
             "status": "clear"
         },
@@ -193,7 +193,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/iso-amt-sniper",
     "api_endpoint": "/api/rules/iso-amt-sniper",
-    "generated_at": "2026-04-19T11:33:28.430Z"
+    "generated_at": "2026-04-19T11:49:01.854Z"
 };
 
   return NextResponse.json(rules, {

@@ -16,7 +16,7 @@ const DAYS_TO_END    = Math.max(0, Math.floor(
 
 const BRACKETS = [
   {
-    "label": "Under 1,000 shares with small spread (<$10)",
+    "label": "Under 1,000 shares with small spread (under $10)",
     "value": 1,
     "status": "clear"
   },

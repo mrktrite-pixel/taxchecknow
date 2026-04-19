@@ -141,8 +141,8 @@ function recommendedTier(
   usTies: number | string,
   isSelfEmployed: boolean,
 ): PackTier {
-  // daysAbroad < 330 OR usTies is high OR medium → tier2. isSelfEmployed → tier2. Otherwise tier1.
-    if (daysAbroad < 330 || usTies === "high" || usTies === "medium" || isSelfEmployed === true) return 147;
+  // daysAbroad under 330 OR usTies is high OR medium → tier2. isSelfEmployed → tier2. Otherwise tier1.
+    if (daysAbroad under 330 || usTies === "high" || usTies === "medium" || isSelfEmployed === true) return 147;
   return 67;
 }
 

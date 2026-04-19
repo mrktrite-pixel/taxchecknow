@@ -161,7 +161,7 @@ const workedExamples = [
     "name": "Short year",
     "setup": "280 days abroad, left US in May",
     "income": "280 days",
-    "status": "DENIED — <330"
+    "status": "DENIED — under 330"
   },
   {
     "name": "Freelancer",
@@ -795,7 +795,7 @@ export default function FeieNomadAuditorPage() {
                 <td className="p-3 font-mono">280 days</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    DENIED — <330
+                    DENIED — under 330
                   </span>
                 </td>
               </tr>

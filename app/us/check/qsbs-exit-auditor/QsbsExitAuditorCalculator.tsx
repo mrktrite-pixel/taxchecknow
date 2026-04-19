@@ -141,8 +141,8 @@ function recommendedTier(
   acquisitionType: number | string,
   holdingYears: number | string,
 ): PackTier {
-  // entityType not ccorp OR acquisitionType not original → tier2. holdingYears < 5 → tier2. Otherwise tier1.
-    if (entityType !== "ccorp" || acquisitionType !== "original" || holdingYears < 5) return 147;
+  // entityType not ccorp OR acquisitionType not original → tier2. holdingYears under 5 → tier2. Otherwise tier1.
+    if (entityType !== "ccorp" || acquisitionType !== "original" || holdingYears under 5) return 147;
   return 67;
 }
 
