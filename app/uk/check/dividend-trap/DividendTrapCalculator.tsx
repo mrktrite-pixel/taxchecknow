@@ -142,7 +142,7 @@ function recommendedTier(
   isDirector: boolean,
 ): PackTier {
   // isDirector AND dividends >= 25000 → tier2 (£97). effectiveRate >= 45% → tier2. Otherwise tier1 (£47).
-    if (isDirector === true && dividends >= 25000 || effectiveRate >= 45 || isDirector === true) return 147;
+    if (isDirector === true && (dividends as number) >= 25000 || (effectiveRate as number) >= 45 || isDirector === true) return 147;
   return 67;
 }
 
@@ -616,6 +616,12 @@ export default function DividendTrapCalculator() {
                       <p className="text-xs text-neutral-400">One-time · No subscription</p>
                     </div>
                     <p className="text-xs text-neutral-500">Not a generic guide. A plan for your position.</p>
+                  </div>
+                  <div className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3">
+                    <p className="text-xs text-amber-800">
+                      💡 An accountant charges <strong>£150–300/hr</strong> to answer these questions.
+                      This is <strong>£{effectiveTier}</strong>. One-time. Available right now.
+                    </p>
                   </div>
                   <button
                     onClick={() => setPopupStep("questions")}

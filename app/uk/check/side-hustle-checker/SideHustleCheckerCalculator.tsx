@@ -142,7 +142,7 @@ function recommendedTier(
   isJointlyOwned: boolean,
 ): PackTier {
   // qualifyingIncome = selfEmploymentIncome + rentalIncome (adjusted for joint ownership). If >= 50000 → in scope 2026. If >= 30000 → in scope 2027. Below 30000 → approaching. Tier2 if qualifyingIncome >= 50000 AND multiple income streams. Tier1 if single stream or approaching.
-    if (qualifyingIncome >= 50000 || hasMultipleStreams === true) return 147;
+    if ((qualifyingIncome as number) >= 50000 || hasMultipleStreams === true) return 147;
   return 67;
 }
 
@@ -606,6 +606,12 @@ export default function SideHustleCheckerCalculator() {
                       <p className="text-xs text-neutral-400">One-time · No subscription</p>
                     </div>
                     <p className="text-xs text-neutral-500">Not a generic guide. A plan for your position.</p>
+                  </div>
+                  <div className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3">
+                    <p className="text-xs text-amber-800">
+                      💡 An accountant charges <strong>£150–300/hr</strong> to answer these questions.
+                      This is <strong>£{effectiveTier}</strong>. One-time. Available right now.
+                    </p>
                   </div>
                   <button
                     onClick={() => setPopupStep("questions")}

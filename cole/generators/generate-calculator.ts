@@ -612,8 +612,14 @@ function buildTierLogic(config: ProductConfig): string {
   const lines: string[] = [];
 
   if (conditions.length > 0 || flags.length > 0) {
+    // Wrap numeric comparisons with casts to avoid TS type errors
+    // e.g. "dividends >= 25000" → "(dividends as number) >= 25000"
+    const castConditions = conditions.map(c =>
+      c.replace(/([a-zA-Z_][a-zA-Z0-9_]*)\s*(>=|<=|>|<)\s*(\d+)/g,
+        '($1 as number) $2 $3')
+    );
     const allConditions = [
-      ...conditions,
+      ...castConditions,
       ...flags.map(f => `${f} === true`),
     ];
     lines.push(`  if (${allConditions.join(" || ")}) return ${config.tier2.price};`);

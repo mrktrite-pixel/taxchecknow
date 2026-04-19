@@ -607,6 +607,12 @@ export default function DigitalLinkAuditorCalculator() {
                     </div>
                     <p className="text-xs text-neutral-500">Not a generic guide. A plan for your position.</p>
                   </div>
+                  <div className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3">
+                    <p className="text-xs text-amber-800">
+                      💡 An accountant charges <strong>£150–300/hr</strong> to answer these questions.
+                      This is <strong>£{effectiveTier}</strong>. One-time. Available right now.
+                    </p>
+                  </div>
                   <button
                     onClick={() => setPopupStep("questions")}
                     className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
