@@ -131,7 +131,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   sidebarNumbers: [{ label: "Exclusion cap", value: "$15M" }, { label: "Minimum hold", value: "5 years" }, { label: "Entity type", value: "C-Corp" }, { label: "Tax without QSBS", value: "~$3.5M" }],
   sidebarMathsTitle: "QSBS — all four tests required",
   sidebarMathsIncludes: ["C-Corporation entity", "Original issuance only", "5+ year hold", "Active business ≥80%"],
-  sidebarMathsExcludes: ["S-Corps and LLCs", "Secondary market purchases", "Service businesses (law, finance, consulting)", "Companies with >$50M assets at issuance"],
+  sidebarMathsExcludes: ["S-Corps and LLCs", "Secondary market purchases", "Service businesses (law, finance, consulting)", "Companies with over $50M assets at issuance"],
   sidebarMathsNote: "Source: IRS — IRC Section 1202",
   howToSteps: [
     { position: 1, name: "Select your company structure", text: "Choose your entity type. Only C-Corporation stock qualifies for QSBS." },

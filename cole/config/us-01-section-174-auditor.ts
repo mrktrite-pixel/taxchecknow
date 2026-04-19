@@ -121,7 +121,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     },
     {
       type:      "twoButton",
-      stateKey:  "hasR&DCredit",
+      stateKey:  "hasRDCredit",
       label:     "Do you currently claim the Section 41 R&D tax credit?",
       subLabel:  "Credit and amortization interact — both need optimising",
       options: [
