@@ -142,7 +142,7 @@ function recommendedTier(
   isDirector: boolean,
 ): PackTier {
   // isDirector AND dividends >= 25000 → tier2 (£97). effectiveRate >= 45% → tier2. Otherwise tier1 (£47).
-    if (isDirector === true && (dividends as number) >= 25000 || (effectiveRate as number) >= 45 || isDirector === true) return 147;
+    if (isDirector === true && (dividends as number) >= 25000 || isDirector === true) return 147;
   return 67;
 }
 
@@ -735,3 +735,5 @@ export default function DividendTrapCalculator() {
     </>
   );
 }
+
+
