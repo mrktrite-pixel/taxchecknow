@@ -430,6 +430,29 @@ export default function DigitalLinkAuditorPage() {
           <p className="mb-2 text-neutral-900">The most common breach is copying figures from accounting software into a separate spreadsheet, then typing those figures into the HMRC portal. Every manual re-entry breaks the digital link chain. HMRC expects an unbroken electronic trail from source records to submission.</p>
           <p className="mb-2 text-neutral-900">Permitted digital links include: automated data feeds, API connections, CSV imports, and formulaic links within spreadsheets. Copy-paste between separate files breaks the chain. Manually typing a figure from one system to another breaks the chain.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: HMRC — VAT Notice 700/22 · MTD for VAT digital links</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">James had been filing VAT returns for eleven years. He assumed he had been doing it right.</strong></p>
+                <p>Hartley Precision is VAT registered. James's bookkeeper Karen exports figures from the job management system into a spreadsheet, adjusts a few numbers, then Dave's office manually inputs them into the VAT return.</p>
+                <p>James heard MTD for VAT was already in force. He was pretty sure they were compliant. Karen had said something about it. But when he tried to explain their process to a supplier who asked, he realised he could not actually describe it clearly.</p>
+                <p>The issue, he would later learn, is not whether you use software. It is whether your data moves between systems without human retyping — what HMRC calls a digital link. Copy-pasting from a spreadsheet into the return software breaks the chain.</p>
+                <p><strong className="text-neutral-950">The audit showed three broken digital links in their current process. The export from the job system was fine. But Karen's manual adjustments and the retyping into the return software both broke the MTD requirement. They were technically non-compliant.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> They fixed it in a week. The job system had a direct HMRC submission API they had never turned on. Cost: nothing. Time: one afternoon.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -459,6 +482,30 @@ export default function DigitalLinkAuditorPage() {
             <li>✗ HMRC has not been enforcing digital links strictly — wrong. HMRC has been auditing VAT processes and issuing penalties for digital link failures. The soft-landing period ended in 2021. Non-compliance is a live risk.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">James had been filing VAT returns for eleven years. He assumed he had been doing it right.</p>
+            <p>Hartley Precision is VAT registered. James's bookkeeper Karen exports figures from the job management system into a spreadsheet, adjusts a few numbers, then Dave's office manually inputs them into the VAT return.</p>
+            <p>James heard MTD for VAT was already in force. He was pretty sure they were compliant. Karen had said something about it. But when he tried to explain their process to a supplier who asked, he realised he could not actually describe it clearly.</p>
+            <p>The issue, he would later learn, is not whether you use software. It is whether your data moves between systems without human retyping — what HMRC calls a digital link. Copy-pasting from a spreadsheet into the return software breaks the chain.</p>
+            <p className="font-semibold text-neutral-900">The audit showed three broken digital links in their current process. The export from the job system was fine. But Karen's manual adjustments and the retyping into the return software both broke the MTD requirement. They were technically non-compliant.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> They fixed it in a week. The job system had a direct HMRC submission API they had never turned on. Cost: nothing. Time: one afternoon.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

@@ -479,6 +479,29 @@ export default function WayfairNexusSniperPage() {
           <p className="mb-2 text-neutral-900">Gross sales means total revenue from all channels — not just taxable sales. Marketplace sales through Amazon, Etsy, and Walmart count toward your nexus threshold even though the marketplace collects the tax. FBA inventory in any Amazon fulfilment centre creates physical nexus immediately — no threshold required.</p>
           <p className="mb-2 text-neutral-900">States can audit you years later for uncollected sales tax, even if you never registered or knew you had nexus. Voluntary Disclosure Agreements (VDAs) can limit the lookback period and reduce penalties — but only before the audit letter arrives.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: South Dakota v. Wayfair, Inc. (2018) · State Department of Revenue · Sales Tax Institute 2026</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Stackform sold into 18 states. Tyler knew about sales tax in theory. He had not checked his nexus position since launch.</strong></p>
+                <p>The first version of Stackform sold only to Texas companies. As the product grew, AWS Marketplace opened up sales to California, New York, Illinois, Washington, Florida, and twelve more states automatically.</p>
+                <p>Tyler assumed SaaS was sometimes tax exempt. He had heard this at a founder dinner. The reality is more fragmented: some states tax SaaS fully, some partially, some not at all.</p>
+                <p>Each state sets its own threshold. Most use $100,000 in annual sales or 200 transactions. Tyler had crossed both in California, New York, and Washington in the prior year without registering in any of them.</p>
+                <p><strong className="text-neutral-950">The nexus audit showed active economic nexus in seven states with no sales tax registration. California exposure alone was 14 months of unregistered sales at up to 10.25%.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Rachel initiated voluntary disclosure in five states. Registered in all seven. Implemented a tax calculation API in the billing system. Nexus monitoring now runs automatically at 80% of each state threshold.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -508,6 +531,30 @@ export default function WayfairNexusSniperPage() {
             <li>✗ You need 200 transactions to trigger nexus — wrong. Multiple states including Illinois removed the 200-transaction threshold in 2026. Gross sales alone now trigger nexus in these states.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Stackform sold into 18 states. Tyler knew about sales tax in theory. He had not checked his nexus position since launch.</p>
+            <p>The first version of Stackform sold only to Texas companies. As the product grew, AWS Marketplace opened up sales to California, New York, Illinois, Washington, Florida, and twelve more states automatically.</p>
+            <p>Tyler assumed SaaS was sometimes tax exempt. He had heard this at a founder dinner. The reality is more fragmented: some states tax SaaS fully, some partially, some not at all.</p>
+            <p>Each state sets its own threshold. Most use $100,000 in annual sales or 200 transactions. Tyler had crossed both in California, New York, and Washington in the prior year without registering in any of them.</p>
+            <p className="font-semibold text-neutral-900">The nexus audit showed active economic nexus in seven states with no sales tax registration. California exposure alone was 14 months of unregistered sales at up to 10.25%.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Rachel initiated voluntary disclosure in five states. Registered in all seven. Implemented a tax calculation API in the billing system. Nexus monitoring now runs automatically at 80% of each state threshold.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

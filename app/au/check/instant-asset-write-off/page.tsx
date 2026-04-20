@@ -427,6 +427,29 @@ export default function InstantAssetWriteOffPage() {
           <p className="mb-2 text-neutral-900">The threshold is $20,000 per asset — not per purchase. If you buy five pieces of equipment each costing $18,000, all five qualify. If you buy one piece of equipment costing $22,000, it does not qualify and must be depreciated through the general small business pool.</p>
           <p className="mb-2 text-neutral-900">The most common mistake: ordering equipment in May, paying for it in June, but it is not delivered until July. If the asset is not installed and ready for use before 30 June, the write-off cannot be claimed in the current year — regardless of when it was ordered or paid for.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Instant asset write-off · ITAA 1997 s.328-180</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Gary's company needed a ride-on mower for the Rockingham property. He had priced one up — $17,500 from the local dealer. He was planning to buy it in July when things were quieter.</strong></p>
+                <p>He had mentioned it to his accountant at their last meeting in April. She had said something about checking the timing before he bought it. Gary had nodded and moved on. He had not really followed up.</p>
+                <p>In May, Sandra asked if he had ordered the mower yet. Gary said he was going to wait until after the financial year. Sandra asked why — the property needed it now. Gary called his accountant.</p>
+                <p>His accountant explained the instant asset write-off. The company's turnover was under $10 million. The mower was under $20,000. If the mower was installed and ready for use before 30 June, the full $17,500 could be immediately deducted in the 2025/26 return.</p>
+                <p><strong className="text-neutral-950">When Gary ran the calculator, the numbers made the decision obvious. The company paid corporate tax at 25%. A full $17,500 deduction in the current year would save $4,375 in tax — immediately. If Gary waited until July, the deduction would be $2,625 in year one (15% of $17,500 in the pool). The difference in year one: $1,750. The total NPV benefit over the pool depreciation period was around $1,200. Gary had been planning to wait for no particular reason.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Gary called the dealer the next day. He confirmed the mower was in stock and could be delivered and assembled by 20 June. He placed the order. He asked the dealer to email a confirmation showing the expected delivery and installation date — his accountant had said to keep that on file. The mower arrived on 18 June. The company would claim the full $17,500 deduction in its 2025/26 return.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -456,6 +479,30 @@ export default function InstantAssetWriteOffPage() {
             <li>✗ All businesses can use the instant asset write-off — wrong. The instant asset write-off at the $20,000 threshold applies to small businesses with aggregate annual turnover under $10 million. Businesses above this threshold use different depreciation rules. The turnover includes turnover of connected entities and affiliates.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Gary's company needed a ride-on mower for the Rockingham property. He had priced one up — $17,500 from the local dealer. He was planning to buy it in July when things were quieter.</p>
+            <p>He had mentioned it to his accountant at their last meeting in April. She had said something about checking the timing before he bought it. Gary had nodded and moved on. He had not really followed up.</p>
+            <p>In May, Sandra asked if he had ordered the mower yet. Gary said he was going to wait until after the financial year. Sandra asked why — the property needed it now. Gary called his accountant.</p>
+            <p>His accountant explained the instant asset write-off. The company's turnover was under $10 million. The mower was under $20,000. If the mower was installed and ready for use before 30 June, the full $17,500 could be immediately deducted in the 2025/26 return.</p>
+            <p className="font-semibold text-neutral-900">When Gary ran the calculator, the numbers made the decision obvious. The company paid corporate tax at 25%. A full $17,500 deduction in the current year would save $4,375 in tax — immediately. If Gary waited until July, the deduction would be $2,625 in year one (15% of $17,500 in the pool). The difference in year one: $1,750. The total NPV benefit over the pool depreciation period was around $1,200. Gary had been planning to wait for no particular reason.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary called the dealer the next day. He confirmed the mower was in stock and could be delivered and assembled by 20 June. He placed the order. He asked the dealer to email a confirmation showing the expected delivery and installation date — his accountant had said to keep that on file. The mower arrived on 18 June. The company would claim the full $17,500 deduction in its 2025/26 return.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

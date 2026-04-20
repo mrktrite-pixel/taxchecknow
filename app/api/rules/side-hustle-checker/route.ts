@@ -138,7 +138,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/side-hustle-checker",
     "api_endpoint": "/api/rules/side-hustle-checker",
-    "generated_at": "2026-04-20T03:02:13.031Z"
+    "generated_at": "2026-04-20T06:41:52.104Z"
 };
 
   return NextResponse.json(rules, {

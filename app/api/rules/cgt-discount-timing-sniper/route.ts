@@ -135,7 +135,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/cgt-discount-timing-sniper",
     "api_endpoint": "/api/rules/cgt-discount-timing-sniper",
-    "generated_at": "2026-04-20T04:40:12.919Z"
+    "generated_at": "2026-04-20T06:42:32.442Z"
 };
 
   return NextResponse.json(rules, {

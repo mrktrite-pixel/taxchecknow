@@ -438,6 +438,29 @@ export default function CgtDiscountTimingSniperPage() {
           <p className="mb-2 text-neutral-900">The 12-month holding period is measured from the date of acquisition to the date of disposal. For most assets, the disposal date is the date you enter into the contract — not the settlement date. Selling a property in May with July settlement means the CGT event occurred in May.</p>
           <p className="mb-2 text-neutral-900">The most common mistake: selling just inside the 12-month mark and paying double the CGT unnecessarily. Waiting even a few days to push the contract date past the 12-month anniversary can halve the tax bill. On a $200,000 gain at a 45% rate, that difference is $45,000.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — CGT discount · ITAA 1997 s.115-10</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Gary had bought 4,000 BHP shares in January 2025 for $51 each. By October 2025 they were trading at $62. He was thinking about selling before the end of the year.</strong></p>
+                <p>He had mentioned it to Sandra over dinner. She thought it sounded reasonable — lock in the profit, put it in the offset account. Gary agreed. He was about to call his broker.</p>
+                <p>Liam was at the table that evening. He had studied accounting briefly before switching to engineering. He asked one question: when did you buy them, Dad? Gary said January. Liam asked what month he was planning to sell. Gary said November or December.</p>
+                <p>Liam said that might be a problem. Gary was not sure what he meant. He looked it up that evening after Liam left.</p>
+                <p><strong className="text-neutral-950">When Gary ran the calculator, the numbers made it clear. He had held the shares for around 10 months. The gain on 4,000 shares at $11 each was $44,000. Without the 12-month discount, he would pay tax on the full $44,000 — at his marginal rate of 45%, that was $19,800. If he waited until February 2026, the shares would cross the 12-month mark. He would pay tax on only $22,000 — a saving of $9,900 just from waiting three months.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Gary waited. He sold in February 2026. The shares had moved slightly — he got $62.40 rather than $62.00 — but the CGT saving of $9,900 made the wait completely worthwhile. He also asked his accountant whether the company-held shares should be transferred to his personal name before future sales. That conversation added another item to their next meeting agenda.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -467,6 +490,30 @@ export default function CgtDiscountTimingSniperPage() {
             <li>✗ The discount applies to the gain before any capital losses — wrong. Capital losses must be offset against capital gains before applying the CGT discount. If you have $100,000 gain and $30,000 loss, the net gain is $70,000 and the discount applies to that — not to the $100,000.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Gary had bought 4,000 BHP shares in January 2025 for $51 each. By October 2025 they were trading at $62. He was thinking about selling before the end of the year.</p>
+            <p>He had mentioned it to Sandra over dinner. She thought it sounded reasonable — lock in the profit, put it in the offset account. Gary agreed. He was about to call his broker.</p>
+            <p>Liam was at the table that evening. He had studied accounting briefly before switching to engineering. He asked one question: when did you buy them, Dad? Gary said January. Liam asked what month he was planning to sell. Gary said November or December.</p>
+            <p>Liam said that might be a problem. Gary was not sure what he meant. He looked it up that evening after Liam left.</p>
+            <p className="font-semibold text-neutral-900">When Gary ran the calculator, the numbers made it clear. He had held the shares for around 10 months. The gain on 4,000 shares at $11 each was $44,000. Without the 12-month discount, he would pay tax on the full $44,000 — at his marginal rate of 45%, that was $19,800. If he waited until February 2026, the shares would cross the 12-month mark. He would pay tax on only $22,000 — a saving of $9,900 just from waiting three months.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary waited. He sold in February 2026. The shares had moved slightly — he got $62.40 rather than $62.00 — but the CGT saving of $9,900 made the wait completely worthwhile. He also asked his accountant whether the company-held shares should be transferred to his personal name before future sales. That conversation added another item to their next meeting agenda.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

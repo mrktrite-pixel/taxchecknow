@@ -484,6 +484,29 @@ export default function TrustTaxSplitterPage() {
           <p className="mb-2 text-neutral-900">The minor beneficiary rule is the trap most Kiwis miss. Distributing trust income to children under 16 does NOT reduce tax — minors are taxed at 39% on trust distributions. Only distributions to beneficiaries aged 16 and over attract personal tax rates.</p>
           <p className="mb-2 text-neutral-900">For trusts with significant retained income, the comparison with a company structure matters. A company is taxed at 28% — 11 percentage points less than the 39% trustee rate. Many trust structures that made sense five years ago are now significantly less efficient than a company.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: IRD — Trust and estate income · Income Tax Act 2007</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">The family trust had been sitting at 39% tax on retained income for two years. Nobody had suggested changing it.</strong></p>
+                <p>The trust earned net rental income of $22,000 in the 2025/26 year. David had left it retained in the trust. Tax: $8,580 at 39%.</p>
+                <p>Aroha knew the trust had beneficiaries — herself, Mike, and the two children. She had assumed the children could receive distributions and that this would reduce tax. She had not thought through the age implications.</p>
+                <p>At 39% retained in the trust she was paying the same rate as the top personal rate. She raised it with David in passing at the end of their meeting.</p>
+                <p><strong className="text-neutral-950">Tama at 16 could receive distributions at his personal rate — zero other income meant 10.5% on the first $15,600. That was a saving of 28.5 percentage points. Hana at 14 was different: the minor beneficiary rule meant 39% regardless. Two kids. Two completely different tax outcomes. One year apart.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> The trust distributed $10,000 to Tama before 31 March 2027. Tax: $1,050 instead of $3,900. Saving: $2,850. Aroha added Hana's 16th birthday to the calendar.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -513,6 +536,30 @@ export default function TrustTaxSplitterPage() {
             <li>✗ Trusts and companies are taxed similarly in NZ — wrong. The trustee rate is 39%. The company rate is 28%. For retained income, a company structure saves 11 percentage points per year. This difference is substantial for trusts holding income-generating assets.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">The family trust had been sitting at 39% tax on retained income for two years. Nobody had suggested changing it.</p>
+            <p>The trust earned net rental income of $22,000 in the 2025/26 year. David had left it retained in the trust. Tax: $8,580 at 39%.</p>
+            <p>Aroha knew the trust had beneficiaries — herself, Mike, and the two children. She had assumed the children could receive distributions and that this would reduce tax. She had not thought through the age implications.</p>
+            <p>At 39% retained in the trust she was paying the same rate as the top personal rate. She raised it with David in passing at the end of their meeting.</p>
+            <p className="font-semibold text-neutral-900">Tama at 16 could receive distributions at his personal rate — zero other income meant 10.5% on the first $15,600. That was a saving of 28.5 percentage points. Hana at 14 was different: the minor beneficiary rule meant 39% regardless. Two kids. Two completely different tax outcomes. One year apart.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> The trust distributed $10,000 to Tama before 31 March 2027. Tax: $1,050 instead of $3,900. Saving: $2,850. Aroha added Hana's 16th birthday to the calendar.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

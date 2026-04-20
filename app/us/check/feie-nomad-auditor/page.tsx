@@ -427,6 +427,29 @@ export default function FeieNomadAuditorPage() {
           <p className="mb-2 text-neutral-900">The most commonly missed requirement is the tax home and abode test. Your tax home must be in a foreign country — AND you must not have an abode in the United States. Having a US apartment (even if sublet), a storage unit with significant belongings, or a family home you return to regularly can all indicate a US abode — disqualifying you from FEIE even if you pass the day-count test.</p>
           <p className="mb-2 text-neutral-900">The FEIE election is also irrevocable for 5 years once revoked. Switching between FEIE and the Foreign Tax Credit (FTC) mid-career requires careful planning. Many nomads claim FEIE when the FTC would save more — particularly in high-tax countries like Germany or France where the FTC offset exceeds the FEIE exclusion value.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: IRS — Publication 54 · IRC Section 911 · IRS Form 2555</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Tyler spent four months in Lisbon. He worked the whole time. He assumed that was fine for taxes.</strong></p>
+                <p>After the Series A closed, Tyler and Maya based themselves in Lisbon for a quarter — good timezone overlap with Austin, excellent food, the visa was easy. Stackform kept running.</p>
+                <p>Tyler had heard about the Foreign Earned Income Exclusion from a founder friend who had lived abroad for three years. He mentioned it to Rachel before leaving. She said it was worth tracking the days.</p>
+                <p>What Tyler had not fully understood was the difference between the physical presence test and the bona fide residence test. He spent 118 days in Portugal — not 330. He also maintained his Austin apartment, Texas driver's licence, and filed as a Texas resident.</p>
+                <p><strong className="text-neutral-950">The physical presence test requires 330 qualifying days outside the US in a 12-month period. Tyler had 118. His Austin lease, Texas ID, and bank accounts argued against bona fide residence. He did not qualify for FEIE.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Tyler did not owe additional tax — he had not claimed the exclusion. But he nearly had. Rachel updated the policy: any founder travel over 30 days now gets a tax residency review before departure.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -456,6 +479,30 @@ export default function FeieNomadAuditorPage() {
             <li>✗ You can switch between FEIE and Foreign Tax Credit freely — wrong. Revoking the FEIE election means you cannot re-elect FEIE for 5 years without IRS permission. The decision to revoke should be modelled carefully before acting.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Tyler spent four months in Lisbon. He worked the whole time. He assumed that was fine for taxes.</p>
+            <p>After the Series A closed, Tyler and Maya based themselves in Lisbon for a quarter — good timezone overlap with Austin, excellent food, the visa was easy. Stackform kept running.</p>
+            <p>Tyler had heard about the Foreign Earned Income Exclusion from a founder friend who had lived abroad for three years. He mentioned it to Rachel before leaving. She said it was worth tracking the days.</p>
+            <p>What Tyler had not fully understood was the difference between the physical presence test and the bona fide residence test. He spent 118 days in Portugal — not 330. He also maintained his Austin apartment, Texas driver's licence, and filed as a Texas resident.</p>
+            <p className="font-semibold text-neutral-900">The physical presence test requires 330 qualifying days outside the US in a 12-month period. Tyler had 118. His Austin lease, Texas ID, and bank accounts argued against bona fide residence. He did not qualify for FEIE.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Tyler did not owe additional tax — he had not claimed the exclusion. But he nearly had. Rachel updated the policy: any founder travel over 30 days now gets a tax residency review before departure.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

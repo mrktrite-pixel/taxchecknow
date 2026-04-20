@@ -134,7 +134,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/section-174-auditor",
     "api_endpoint": "/api/rules/section-174-auditor",
-    "generated_at": "2026-04-20T03:02:20.135Z"
+    "generated_at": "2026-04-20T06:41:57.710Z"
 };
 
   return NextResponse.json(rules, {

@@ -479,6 +479,29 @@ export default function InterestReinstatementEnginePage() {
           <p className="mb-2 text-neutral-900">If you have been told by an accountant, AI tool, or website that your interest is not deductible — that advice is outdated. The 2021-2024 limitation rules have been repealed. From the 2025/26 tax year, all qualifying residential rental interest is fully deductible again.</p>
           <p className="mb-2 text-neutral-900">The key risk is loan tracing. The purpose of the borrowing — not the security — determines deductibility. If you have refinanced, topped up, or mixed personal and rental debt, you need to be able to prove which portion of your loan relates to rental property. This is where IRD audits focus.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: IRD — Interest deductibility for residential rental properties · Income Tax Act 2007</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">David had told Aroha in 2022 that she could not claim the interest on the Avondale rental. She had accepted it and not asked again.</strong></p>
+                <p>The Avondale property was in the family trust. Bought in 2017 for $620,000. Mortgage of $410,000 with ANZ. Annual interest around $28,000. From the 2021 phase-out, she had been claiming nothing.</p>
+                <p>Aroha had adjusted her mental model of the property — it was an asset, not a cashflow generator. The trust structure made distribution planning more complex anyway.</p>
+                <p>She had not followed the 2025 budget closely. Mike had mentioned something about interest being restored but she had not had time to look into it properly before their September meeting with David.</p>
+                <p><strong className="text-neutral-950">From 1 April 2025, 100% of mortgage interest was fully deductible on all residential rentals. On $28,000 of interest at a 33% marginal rate, the trust had a $9,240 annual tax saving available — sitting unclaimed in David's draft return.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> David updated the draft before filing. The deduction went back in. The trust had refinanced in 2022 — David confirmed the nexus was clean. The full deduction was supportable.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -508,6 +531,30 @@ export default function InterestReinstatementEnginePage() {
             <li>✗ The security (which property the mortgage is secured against) determines deductibility — wrong. The purpose of the borrowing determines deductibility. If you borrowed to purchase or improve a rental property, the interest is deductible regardless of which property the loan is secured against.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">David had told Aroha in 2022 that she could not claim the interest on the Avondale rental. She had accepted it and not asked again.</p>
+            <p>The Avondale property was in the family trust. Bought in 2017 for $620,000. Mortgage of $410,000 with ANZ. Annual interest around $28,000. From the 2021 phase-out, she had been claiming nothing.</p>
+            <p>Aroha had adjusted her mental model of the property — it was an asset, not a cashflow generator. The trust structure made distribution planning more complex anyway.</p>
+            <p>She had not followed the 2025 budget closely. Mike had mentioned something about interest being restored but she had not had time to look into it properly before their September meeting with David.</p>
+            <p className="font-semibold text-neutral-900">From 1 April 2025, 100% of mortgage interest was fully deductible on all residential rentals. On $28,000 of interest at a 33% marginal rate, the trust had a $9,240 annual tax saving available — sitting unclaimed in David's draft return.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> David updated the draft before filing. The deduction went back in. The trust had refinanced in 2022 — David confirmed the nexus was clean. The full deduction was supportable.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

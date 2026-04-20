@@ -432,6 +432,29 @@ export default function SmallBusinessCgtConcessionsPage() {
           <p className="mb-2 text-neutral-900">To access any concession, the taxpayer must first satisfy the basic conditions: either have aggregate turnover under $2 million, or have net assets under $6 million (excluding personal use assets). The asset being sold must also satisfy the active asset test — broadly, it must have been used in a business for at least half of the ownership period.</p>
           <p className="mb-2 text-neutral-900">The lifetime limit of $500,000 for the retirement exemption applies across all disposals — not per disposal. Once you have used $500,000 of the exemption across your lifetime, no further retirement exemption is available on future disposals.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Small business CGT concessions · ITAA 1997 Div 152</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Gary had been a silent partner in Dunnell Earthmoving since 2008. His 40% share was being bought out at $420,000 as part of a restructure. He assumed he would pay CGT on most of it.</strong></p>
+                <p>His cost base was $80,000 — the amount he had put in back in 2008. So the gain was $340,000. At his marginal rate of 37% after the 50% CGT discount, he was expecting to pay around $62,900. He had mentioned this to Sandra. She had winced.</p>
+                <p>When Gary's accountant called to go through the sale, she mentioned Division 152 early in the conversation. Gary did not know what it was. The accountant explained that as a small business with turnover under $2 million, and with Gary having owned his share for more than 15 years, there were concessions available.</p>
+                <p>Gary had owned the stake since January 2008. The sale was in March 2026. That was 18 years. And Gary was 64 — well over 55.</p>
+                <p><strong className="text-neutral-950">When Gary ran the calculator, it came back with the 15-year exemption as the primary option. Ownership over 15 years. Owner over 55. Turnover under $2M. Active asset test met — the business was an operating earthmoving operation the whole time. The 15-year exemption would eliminate the entire $340,000 gain. His CGT bill would be zero.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant back the same day. She confirmed he was right — all the conditions for the 15-year exemption were met. The election would be made in his 2025/26 tax return. Gary would pay zero CGT on the $340,000 gain. He sat with that number for a moment. He had been expecting to write a cheque for $62,900. He would not be writing any cheque at all. He called Sandra.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -461,6 +484,30 @@ export default function SmallBusinessCgtConcessionsPage() {
             <li>✗ The concessions are automatic if you qualify — wrong. The concessions must be elected in the tax return for the year the CGT event occurred. Missing the election means losing the concession — even if all the eligibility conditions were met.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Gary had been a silent partner in Dunnell Earthmoving since 2008. His 40% share was being bought out at $420,000 as part of a restructure. He assumed he would pay CGT on most of it.</p>
+            <p>His cost base was $80,000 — the amount he had put in back in 2008. So the gain was $340,000. At his marginal rate of 37% after the 50% CGT discount, he was expecting to pay around $62,900. He had mentioned this to Sandra. She had winced.</p>
+            <p>When Gary's accountant called to go through the sale, she mentioned Division 152 early in the conversation. Gary did not know what it was. The accountant explained that as a small business with turnover under $2 million, and with Gary having owned his share for more than 15 years, there were concessions available.</p>
+            <p>Gary had owned the stake since January 2008. The sale was in March 2026. That was 18 years. And Gary was 64 — well over 55.</p>
+            <p className="font-semibold text-neutral-900">When Gary ran the calculator, it came back with the 15-year exemption as the primary option. Ownership over 15 years. Owner over 55. Turnover under $2M. Active asset test met — the business was an operating earthmoving operation the whole time. The 15-year exemption would eliminate the entire $340,000 gain. His CGT bill would be zero.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant back the same day. She confirmed he was right — all the conditions for the 15-year exemption were met. The election would be made in his 2025/26 tax return. Gary would pay zero CGT on the $340,000 gain. He sat with that number for a moment. He had been expecting to write a cheque for $62,900. He would not be writing any cheque at all. He called Sandra.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

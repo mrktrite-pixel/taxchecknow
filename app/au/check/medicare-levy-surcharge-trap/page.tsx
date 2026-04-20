@@ -434,6 +434,29 @@ export default function MedicareLevySurchargeTrapPage() {
           <p className="mb-2 text-neutral-900">For the 2025/26 year, the surcharge thresholds are: $93,001 to $108,000 — 1% surcharge; $108,001 to $144,000 — 1.25% surcharge; over $144,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable.</p>
           <p className="mb-2 text-neutral-900">The key calculation: compare the annual cost of a basic hospital-only private health insurance policy against the MLS payable. For many people earning over $93,000, a basic hospital policy costing $1,200-$2,000 per year is cheaper than the surcharge. Once you have cover, the surcharge does not apply.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Medicare Levy Surcharge · ITAA 1936 Part VIIB</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Sandra had seen an ad for private health insurance on the television. She had mentioned it at dinner — maybe they should look into it. Gary had not given it much thought.</strong></p>
+                <p>They had both been on the FIFO employer health cover for years. When Gary retired, the cover stopped. He had not replaced it — they were generally healthy, they had Medicare, and the premiums seemed expensive. Life had moved on.</p>
+                <p>At their last accountant meeting in April, the accountant had asked about private health insurance. Gary had said no. The accountant had nodded and moved on. Gary had not connected this to anything.</p>
+                <p>Sandra brought it up again in May. She had been to the doctor twice that year and felt the wait at the bulk-billing clinic was getting longer. Gary called his accountant and asked directly: does not having private health insurance cost us anything at tax time?</p>
+                <p><strong className="text-neutral-950">The accountant's answer was immediate: yes. Gary's income — SMSF pension, company distributions — was around $155,000 for MLS purposes. The 1.5% MLS rate applied. His annual MLS was $2,325. Sandra's income was under the threshold so she was not affected individually. But Gary had been paying $2,325 in extra tax for two years. Total: $4,650 in avoidable tax.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Gary and Sandra looked at hospital cover options that afternoon. The cheapest qualifying basic hospital policy for Gary was $1,680 per year. The net saving from taking out cover: $645 per year. Gary called the insurer and signed up before the end of the week — ensuring coverage for the last two months of the current financial year and the full year going forward. He also asked his accountant whether prior years could be amended — they could not, but the surcharge stopped from the date cover commenced. Sandra asked why the accountant had not mentioned this when she saw they had no private health insurance listed. It was a fair question.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -463,6 +486,30 @@ export default function MedicareLevySurchargeTrapPage() {
             <li>✗ I only need cover for part of the year — wrong. To avoid the full-year MLS, you need appropriate hospital cover for every day of the financial year. If you cancel cover in February and the financial year ends in June, you will pay MLS for those months. The surcharge is calculated on the number of days without appropriate cover.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Sandra had seen an ad for private health insurance on the television. She had mentioned it at dinner — maybe they should look into it. Gary had not given it much thought.</p>
+            <p>They had both been on the FIFO employer health cover for years. When Gary retired, the cover stopped. He had not replaced it — they were generally healthy, they had Medicare, and the premiums seemed expensive. Life had moved on.</p>
+            <p>At their last accountant meeting in April, the accountant had asked about private health insurance. Gary had said no. The accountant had nodded and moved on. Gary had not connected this to anything.</p>
+            <p>Sandra brought it up again in May. She had been to the doctor twice that year and felt the wait at the bulk-billing clinic was getting longer. Gary called his accountant and asked directly: does not having private health insurance cost us anything at tax time?</p>
+            <p className="font-semibold text-neutral-900">The accountant's answer was immediate: yes. Gary's income — SMSF pension, company distributions — was around $155,000 for MLS purposes. The 1.5% MLS rate applied. His annual MLS was $2,325. Sandra's income was under the threshold so she was not affected individually. But Gary had been paying $2,325 in extra tax for two years. Total: $4,650 in avoidable tax.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary and Sandra looked at hospital cover options that afternoon. The cheapest qualifying basic hospital policy for Gary was $1,680 per year. The net saving from taking out cover: $645 per year. Gary called the insurer and signed up before the end of the week — ensuring coverage for the last two months of the current financial year and the full year going forward. He also asked his accountant whether prior years could be amended — they could not, but the surcharge stopped from the date cover commenced. Sandra asked why the accountant had not mentioned this when she saw they had no private health insurance listed. It was a fair question.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

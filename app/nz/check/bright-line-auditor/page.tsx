@@ -480,6 +480,29 @@ export default function BrightLineAuditorPage() {
           <p className="mb-2 text-neutral-900">The start date is your title registration date — not your purchase agreement date, and not your settlement date. Most people get this wrong. Using the wrong start date can mean thinking you are taxable when you are not, or thinking you are safe when the clock has not yet expired.</p>
           <p className="mb-2 text-neutral-900">The main home exemption still applies but requires passing both the time test (over 50% occupancy) and the area test (over 50% of land used as main home). Simply living in the property is not enough — you need to be able to prove it.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: IRD — Bright-line property rule · Income Tax Act 2007 s CB 6A</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Aroha's mother passed in March. She left a property in Panmure. Aroha and Mike needed to decide what to do with it.</strong></p>
+                <p>The property was worth around $680,000. They had not planned for it. They already had the Avondale rental and the Glen Eden Airbnb. Selling made more sense — use the proceeds to pay down the family home mortgage.</p>
+                <p>Aroha googled the bright-line rules before calling David. She found three different answers: 5 years, 10 years, 2 years. A government website still showed outdated information from 2021. A Reddit thread from 2023 said 10 years.</p>
+                <p>The property had been in her mother's name since 2013. Title registration: July 2013. It had passed to Aroha through the estate in April 2026.</p>
+                <p><strong className="text-neutral-950">Inherited properties received through a deceased estate are excluded from the bright-line test. Aroha did not owe bright-line tax. But she had nearly talked herself into believing she did — based on outdated information.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Aroha sold in June 2026. No bright-line tax. She kept David's written confirmation and the title documentation on file. IRD audit-ready.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -509,6 +532,30 @@ export default function BrightLineAuditorPage() {
             <li>✗ Living in the property means you are automatically exempt — wrong. You must pass both the time test (over 50% occupancy during ownership) and the area test (over 50% of land used as main home).</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Aroha's mother passed in March. She left a property in Panmure. Aroha and Mike needed to decide what to do with it.</p>
+            <p>The property was worth around $680,000. They had not planned for it. They already had the Avondale rental and the Glen Eden Airbnb. Selling made more sense — use the proceeds to pay down the family home mortgage.</p>
+            <p>Aroha googled the bright-line rules before calling David. She found three different answers: 5 years, 10 years, 2 years. A government website still showed outdated information from 2021. A Reddit thread from 2023 said 10 years.</p>
+            <p>The property had been in her mother's name since 2013. Title registration: July 2013. It had passed to Aroha through the estate in April 2026.</p>
+            <p className="font-semibold text-neutral-900">Inherited properties received through a deceased estate are excluded from the bright-line test. Aroha did not owe bright-line tax. But she had nearly talked herself into believing she did — based on outdated information.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Aroha sold in June 2026. No bright-line tax. She kept David's written confirmation and the title documentation on file. IRD audit-ready.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

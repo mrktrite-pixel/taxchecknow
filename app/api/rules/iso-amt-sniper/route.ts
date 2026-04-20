@@ -193,7 +193,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/iso-amt-sniper",
     "api_endpoint": "/api/rules/iso-amt-sniper",
-    "generated_at": "2026-04-20T02:58:01.396Z"
+    "generated_at": "2026-04-20T06:42:05.501Z"
 };
 
   return NextResponse.json(rules, {

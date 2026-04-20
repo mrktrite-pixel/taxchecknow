@@ -417,6 +417,29 @@ export default function Section174AuditorPage() {
           <p className="mb-2 text-neutral-900">This creates a phantom tax problem. A company that spent $600,000 on engineering in 2025 can only deduct $60,000 of it in 2025 (assuming mid-year convention, 5-year domestic). The remaining $540,000 is deducted over the following years. The cash went out — but the deduction is delayed.</p>
           <p className="mb-2 text-neutral-900">The offshore multiplier is the hidden killer. If you use offshore contractors in India, Eastern Europe, or elsewhere, those costs are amortized over 15 years — not 5. A company with $300,000 in offshore engineering can only deduct $10,000 in year one. The remaining $290,000 waits 14 more years.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC Section 174 · TCJA 2017 amendment</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Tyler had built his engineering team carefully. He had not built his tax strategy around them at all.</strong></p>
+                <p>Stackform runs eight engineers in Austin and four contractors in Bangalore through a vendor agreement. The India team handles API integrations and QA. Tyler brought them on eighteen months ago when the Series A closed.</p>
+                <p>His CPA Rachel had flagged something about R&D tax credits at the last quarterly. Tyler had nodded and moved on. The Section 174 change from 2022 had not come up directly. He assumed software development costs were still fully deductible in year one.</p>
+                <p>They were not. Since January 2022, Section 174 required domestic R&D to be amortised over five years and foreign R&D — the Bangalore team — over fifteen years. Tyler had been booking the India spend as an operating expense.</p>
+                <p><strong className="text-neutral-950">The audit showed $240,000 of the India team's annual cost classified incorrectly. Under the 15-year amortisation rule, only $16,000 was deductible in year one. The remaining $224,000 created a phantom tax liability Tyler had not modelled in his Series A projections.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Rachel reclassified the spend and filed an amended return. Going forward Tyler restructured the India engagement to maximise which portion qualified as domestic versus foreign development.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -446,6 +469,30 @@ export default function Section174AuditorPage() {
             <li>✗ Offshore engineering spend amortizes the same as US spend — wrong. Foreign R&D amortizes over 15 years. US R&D amortizes over 5 years. A company with significant offshore development faces a dramatically worse cash tax position than a fully domestic operation.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Tyler had built his engineering team carefully. He had not built his tax strategy around them at all.</p>
+            <p>Stackform runs eight engineers in Austin and four contractors in Bangalore through a vendor agreement. The India team handles API integrations and QA. Tyler brought them on eighteen months ago when the Series A closed.</p>
+            <p>His CPA Rachel had flagged something about R&D tax credits at the last quarterly. Tyler had nodded and moved on. The Section 174 change from 2022 had not come up directly. He assumed software development costs were still fully deductible in year one.</p>
+            <p>They were not. Since January 2022, Section 174 required domestic R&D to be amortised over five years and foreign R&D — the Bangalore team — over fifteen years. Tyler had been booking the India spend as an operating expense.</p>
+            <p className="font-semibold text-neutral-900">The audit showed $240,000 of the India team's annual cost classified incorrectly. Under the 15-year amortisation rule, only $16,000 was deductible in year one. The remaining $224,000 created a phantom tax liability Tyler had not modelled in his Series A projections.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Rachel reclassified the spend and filed an amended return. Going forward Tyler restructured the India engagement to maximise which portion qualified as domestic versus foreign development.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

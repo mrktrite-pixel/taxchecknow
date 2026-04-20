@@ -243,6 +243,30 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
             `<p className="mb-2 text-neutral-900">${para}</p>`
           ).join("\n          ")}
           <p className="mt-3 text-xs text-neutral-600">${config.answerSource}</p>
+
+${config.story ? `
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">${config.story.hook}</strong></p>
+                ${config.story.setup.map(para => `<p>${para}</p>`).join('\n                ')}
+                <p><strong className="text-neutral-950">${config.story.revelation}</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> ${config.story.resolution}
+                </p>
+              </div>
+              ${config.story.crosslinkTeaser ? `
+              <div className="mt-5 border-t border-neutral-100 pt-4">
+                <p className="text-xs text-neutral-500">${config.story.crosslinkTeaser}</p>
+              </div>` : ''}
+            </div>
+          </section>` : ''}
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -270,6 +294,32 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
             ${config.mistakes.map(m => `<li>✗ ${m}</li>`).join("\n            ")}
           </ul>
         </div>
+
+
+        ${config.story ? `
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">${config.story.hook}</p>
+            ${config.story.setup.map(para => `<p>${para}</p>`).join('\n            ')}
+            <p className="font-semibold text-neutral-900">${config.story.revelation}</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> ${config.story.resolution}</p>
+            </div>
+          </div>
+          ${config.story.crosslinkTeaser ? `
+          <div className="mt-5 border-t border-neutral-200 pt-4">
+            <p className="text-xs text-neutral-500">${config.story.crosslinkTeaser}</p>
+          </div>
+          ` : ""}
+        </div>
+        ` : ""}
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

@@ -421,6 +421,29 @@ export default function SideHustleCheckerPage() {
           <p className="mb-2 text-neutral-900">The £1,000 trading allowance is based on gross income — the total you receive before any expenses. If your gross income from all side hustles combined exceeds £1,000 in a tax year, you must register for self assessment and file a tax return, even if your profit after expenses is lower.</p>
           <p className="mb-2 text-neutral-900">The registration deadline is 5 October following the tax year end. For income earned in the 2025/26 tax year (ending 5 April 2026), you must register by 5 October 2026. Missing this deadline triggers an automatic £100 penalty.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Self assessment · Trading allowance · Platform reporting</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">The Birmingham flat had never felt like a side hustle. It was just something James and Helen owned.</strong></p>
+                <p>They bought it in 2019 when Helen's mother moved into assisted living. Kept it rather than sell. Rented it to a young couple for £975 a month. The letting agent handled everything. James had barely thought about it.</p>
+                <p>What changed in 2024 was Airbnb. The tenants left in January. Rather than find new long-term tenants immediately, Helen suggested trying short-term lets. Six months of Airbnb followed — decent money, more hassle than expected.</p>
+                <p>Then they went back to a long-term tenant in July. So the 2024/25 year had mixed property income: six months lettings, six months Airbnb, different rules potentially applying to each period.</p>
+                <p><strong className="text-neutral-950">The furnished holiday letting rules changed in April 2025. The Airbnb income no longer qualified for the old FHL tax advantages. And HMRC's platform reporting meant Airbnb had already sent his earnings data directly. The numbers needed to match.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> James provided Dave with the full breakdown — lettings income and Airbnb income by month. Dave recalculated. No major liability. But without the breakdown, the mismatch between HMRC data and the return could have triggered a query.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -450,6 +473,30 @@ export default function SideHustleCheckerPage() {
             <li>✗ The allowance covers profit not income — wrong. The £1,000 threshold is gross income — the total you receive before expenses. If your platform payments total more than £1,000, you must register, even if costs mean your profit is below £1,000.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">The Birmingham flat had never felt like a side hustle. It was just something James and Helen owned.</p>
+            <p>They bought it in 2019 when Helen's mother moved into assisted living. Kept it rather than sell. Rented it to a young couple for £975 a month. The letting agent handled everything. James had barely thought about it.</p>
+            <p>What changed in 2024 was Airbnb. The tenants left in January. Rather than find new long-term tenants immediately, Helen suggested trying short-term lets. Six months of Airbnb followed — decent money, more hassle than expected.</p>
+            <p>Then they went back to a long-term tenant in July. So the 2024/25 year had mixed property income: six months lettings, six months Airbnb, different rules potentially applying to each period.</p>
+            <p className="font-semibold text-neutral-900">The furnished holiday letting rules changed in April 2025. The Airbnb income no longer qualified for the old FHL tax advantages. And HMRC's platform reporting meant Airbnb had already sent his earnings data directly. The numbers needed to match.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> James provided Dave with the full breakdown — lettings income and Airbnb income by month. Dave recalculated. No major liability. But without the breakdown, the mismatch between HMRC data and the return could have triggered a query.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

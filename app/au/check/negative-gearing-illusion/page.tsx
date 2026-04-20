@@ -428,6 +428,29 @@ export default function NegativeGearingIllusionPage() {
           <p className="mb-2 text-neutral-900">What is rarely discussed is the cashflow reality. If your property loses $15,000 per year and you are in the 37% tax bracket, your tax saving is $5,550. But you are still $9,450 out of pocket after tax. The tax system shares your loss — it does not eliminate it.</p>
           <p className="mb-2 text-neutral-900">Negative gearing is a legitimate strategy only if the expected capital growth of the property exceeds the after-tax cashflow loss over the holding period. If capital growth is modest or the holding period is short, negative gearing can destroy wealth rather than build it.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Rental properties and negative gearing · ITAA 1997</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Gary's accountant had told him the Mandurah unit saved him about $5,400 per year in tax. Gary had been reasonably happy about that.</strong></p>
+                <p>The unit rented for $28,800 per year. The mortgage was $380,000 at 6.8% — interest cost around $25,840. Management fees, rates, insurance, and the odd repair came to another $9,200. Total expenses: $35,040. Net rental loss: $6,240. Tax saving at the 37% rate his accountant had used: $2,309.</p>
+                <p>Gary frowned at this. His accountant had said $5,400. He pulled out last year's tax return. The accountant had also included depreciation — the quantity surveyor's report. The total deductions were $14,600 including $8,360 of depreciation. Net rental loss with depreciation: $14,600. Tax saving at 37%: $5,402. That matched.</p>
+                <p>But Gary looked at the actual cash coming in and out. Depreciation was a non-cash deduction. He had not physically paid $8,360 in depreciation — that was just a paper entry. His real cash costs were $35,040. His real cash income was $28,800. Real cash loss before tax: $6,240. Tax saving at 37%: $2,309. Real after-tax cash loss: $3,931 per year.</p>
+                <p><strong className="text-neutral-950">When Gary ran the calculator, the output was clear. His real after-tax cashflow loss was $3,931 per year — not the $5,400 saving his accountant had described. The depreciation improved his tax position without costing him cash, but it also meant his tax saving was less than it appeared. The property needed to grow by around $3,931 per year just to break even on a cashflow basis, plus the eventual CGT on the capital gain.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant and walked through the numbers. The accountant confirmed the analysis was correct — the $5,400 was the total tax saving including the depreciation non-cash deduction. The real cash outflow was $3,931 per year. The accountant also modelled what the position would look like in 5 years when the depreciation deductions reduced and the cashflow loss increased. Gary decided to review the unit's position at the next annual meeting rather than buy a second property as he had been planning.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -457,6 +480,30 @@ export default function NegativeGearingIllusionPage() {
             <li>✗ I can deduct the full purchase price through depreciation — wrong. Depreciation is available on the building (if built after September 1987) at 2.5% per year, and on plant and equipment items at their effective life rate. The land component of the purchase price is never deductible.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Gary's accountant had told him the Mandurah unit saved him about $5,400 per year in tax. Gary had been reasonably happy about that.</p>
+            <p>The unit rented for $28,800 per year. The mortgage was $380,000 at 6.8% — interest cost around $25,840. Management fees, rates, insurance, and the odd repair came to another $9,200. Total expenses: $35,040. Net rental loss: $6,240. Tax saving at the 37% rate his accountant had used: $2,309.</p>
+            <p>Gary frowned at this. His accountant had said $5,400. He pulled out last year's tax return. The accountant had also included depreciation — the quantity surveyor's report. The total deductions were $14,600 including $8,360 of depreciation. Net rental loss with depreciation: $14,600. Tax saving at 37%: $5,402. That matched.</p>
+            <p>But Gary looked at the actual cash coming in and out. Depreciation was a non-cash deduction. He had not physically paid $8,360 in depreciation — that was just a paper entry. His real cash costs were $35,040. His real cash income was $28,800. Real cash loss before tax: $6,240. Tax saving at 37%: $2,309. Real after-tax cash loss: $3,931 per year.</p>
+            <p className="font-semibold text-neutral-900">When Gary ran the calculator, the output was clear. His real after-tax cashflow loss was $3,931 per year — not the $5,400 saving his accountant had described. The depreciation improved his tax position without costing him cash, but it also meant his tax saving was less than it appeared. The property needed to grow by around $3,931 per year just to break even on a cashflow basis, plus the eventual CGT on the capital gain.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant and walked through the numbers. The accountant confirmed the analysis was correct — the $5,400 was the total tax saving including the depreciation non-cash deduction. The real cash outflow was $3,931 per year. The accountant also modelled what the position would look like in 5 years when the depreciation deductions reduced and the cashflow loss increased. Gary decided to review the unit's position at the next annual meeting rather than buy a second property as he had been planning.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

@@ -479,6 +479,29 @@ export default function IsoAmtSniperPage() {
           <p className="mb-2 text-neutral-900">This creates a six-figure tax bill with zero cash liquidity. Exercising 10,000 options with a $50 spread generates $500,000 of AMT income and approximately $150,000 of AMT — owed in April even if the shares are illiquid and worth nothing in cash terms.</p>
           <p className="mb-2 text-neutral-900">The safe exercise range is the number you need — how many shares you can exercise before AMT kicks in. Most employees never calculate this. They exercise their full grant and receive a tax bill they cannot pay.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: IRS — Form 6251 Instructions · IRC Section 56(b)(3) · IRS Publication 525</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">Tyler's option grant said 800,000 shares at $0.12 exercise price. It looked like free money. It was more complicated.</strong></p>
+                <p>The options were granted when Stackform was worth almost nothing. The Series A was priced at $2.40 — a 20x increase. Tyler knew the spread was valuable. He did not know exactly how it interacted with the Alternative Minimum Tax.</p>
+                <p>He had read enough to know that exercising ISOs created an AMT adjustment equal to the spread. On 800,000 options at a $2.28 spread, that was $1.824M of AMT income.</p>
+                <p>What he had not modelled was the AMT rate, his existing regular tax liability, and whether the AMT credit would be usable in future years. He had also not considered the timing.</p>
+                <p><strong className="text-neutral-950">Exercising all 800,000 options in one year would create $1.824M of AMT income. At the 28% AMT rate, his additional tax bill could reach $340,000 in cash he needed before the tax deadline.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Rachel designed a staged exercise plan: 200,000 options this year, 200,000 after the Series B, the remainder modelled at exit. Tyler paid $0 additional AMT in year one.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -508,6 +531,30 @@ export default function IsoAmtSniperPage() {
             <li>✗ AMT is a permanent tax — wrong. AMT paid on ISO exercise creates a Minimum Tax Credit (Form 8801) that can be recovered in future years when your regular tax exceeds your tentative minimum tax.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Tyler's option grant said 800,000 shares at $0.12 exercise price. It looked like free money. It was more complicated.</p>
+            <p>The options were granted when Stackform was worth almost nothing. The Series A was priced at $2.40 — a 20x increase. Tyler knew the spread was valuable. He did not know exactly how it interacted with the Alternative Minimum Tax.</p>
+            <p>He had read enough to know that exercising ISOs created an AMT adjustment equal to the spread. On 800,000 options at a $2.28 spread, that was $1.824M of AMT income.</p>
+            <p>What he had not modelled was the AMT rate, his existing regular tax liability, and whether the AMT credit would be usable in future years. He had also not considered the timing.</p>
+            <p className="font-semibold text-neutral-900">Exercising all 800,000 options in one year would create $1.824M of AMT income. At the 28% AMT rate, his additional tax bill could reach $340,000 in cash he needed before the tax deadline.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Rachel designed a staged exercise plan: 200,000 options this year, 200,000 after the Series B, the remainder modelled at exit. Tyler paid $0 additional AMT in year one.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">

@@ -434,6 +434,29 @@ export default function RentalPropertyDeductionAuditPage() {
           <p className="mb-2 text-neutral-900">The most commonly missed legitimate deduction is depreciation. Many landlords do not have a quantity surveyor's depreciation schedule and therefore claim nothing for the building or plant and equipment. On a property built after 1987, building depreciation alone can be worth $5,000-$15,000 per year in additional deductions.</p>
           <p className="mb-2 text-neutral-900">The ATO specifically targets: repairs to newly acquired properties (these are initial repairs and are capital, not deductible immediately), travel to inspect rental properties (no longer deductible for residential properties), and holiday homes claimed as investment properties but used personally.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Rental properties · ITAA 1997</p>
+
+
+          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
+          <section className="mt-10">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
+              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
+                Here is the situation — explained without the jargon.
+              </h2>
+              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+                <p><strong className="text-neutral-950">The ATO letter arrived on a Thursday morning. It was a data-matching letter — the ATO had received rental income data from Gary's property management agent and it did not match what was on the return.</strong></p>
+                <p>Gary forwarded it to his accountant immediately. The accountant reviewed the last three years of returns and found two issues. First, the rental income for one year was slightly understated — a deposit that had been coded incorrectly. That was minor.</p>
+                <p>The second issue was larger. Gary had claimed the new bathroom and kitchen renovation in the Mandurah unit as repairs — $26,000 in the 2023/24 year. The ATO's letter was specifically asking about this amount. A renovation of this scale was capital expenditure, not a repair. It should have been depreciated, not immediately deducted.</p>
+                <p>Gary had also been claiming flights to Mandurah as inspection expenses. Two trips per year at around $400 each. The travel deduction for residential rental inspections had been abolished in 2017. His accountant had not caught this either.</p>
+                <p><strong className="text-neutral-950">When Gary ran the deduction audit calculator, it flagged both issues immediately. The kitchen and bathroom renovation at $26,000 should have been depreciated — not immediately deducted. The overclaim on the deduction was $26,000 in 2023/24. The ATO, if it pursued it, would disallow the deduction and add interest and penalties on the underpaid tax — approximately $9,620 in tax, interest, and penalties. The flights totalling $800 over three years added another $296 in exposure.</strong></p>
+                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                  <strong className="text-neutral-950">The bottom line:</strong> Gary's accountant prepared an amended return for 2023/24, correctly treating the renovation as a capital improvement and removing the travel claims. They also lodged the amendment proactively before the ATO issued a formal assessment — this reduced the penalty rate. The accountant also obtained a quantity surveyor report for the first time. It identified $7,800 in annual depreciation that had not been claimed in any of the prior years. Gary was able to amend two of those years to reclaim the missed depreciation — offsetting a portion of the overclaim adjustment.
+                </p>
+              </div>
+              
+            </div>
+          </section>
+
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -463,6 +486,30 @@ export default function RentalPropertyDeductionAuditPage() {
             <li>✗ Travel to inspect my rental property is tax deductible — wrong. Since 1 July 2017, travel expenses (including flights, accommodation, and car costs) to inspect, maintain, or collect rent from a residential investment property are not deductible. This applies to individuals and trusts — it does not apply to companies.</li>
           </ul>
         </div>
+
+
+        
+        {/* ── STORY SECTION — plain English persona scenario ── */}
+        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">The ATO letter arrived on a Thursday morning. It was a data-matching letter — the ATO had received rental income data from Gary's property management agent and it did not match what was on the return.</p>
+            <p>Gary forwarded it to his accountant immediately. The accountant reviewed the last three years of returns and found two issues. First, the rental income for one year was slightly understated — a deposit that had been coded incorrectly. That was minor.</p>
+            <p>The second issue was larger. Gary had claimed the new bathroom and kitchen renovation in the Mandurah unit as repairs — $26,000 in the 2023/24 year. The ATO's letter was specifically asking about this amount. A renovation of this scale was capital expenditure, not a repair. It should have been depreciated, not immediately deducted.</p>
+            <p>Gary had also been claiming flights to Mandurah as inspection expenses. Two trips per year at around $400 each. The travel deduction for residential rental inspections had been abolished in 2017. His accountant had not caught this either.</p>
+            <p className="font-semibold text-neutral-900">When Gary ran the deduction audit calculator, it flagged both issues immediately. The kitchen and bathroom renovation at $26,000 should have been depreciated — not immediately deducted. The overclaim on the deduction was $26,000 in 2023/24. The ATO, if it pursued it, would disallow the deduction and add interest and penalties on the underpaid tax — approximately $9,620 in tax, interest, and penalties. The flights totalling $800 over three years added another $296 in exposure.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary's accountant prepared an amended return for 2023/24, correctly treating the renovation as a capital improvement and removing the travel claims. They also lodged the amendment proactively before the ATO issued a formal assessment — this reduced the penalty rate. The accountant also obtained a quantity surveyor report for the first time. It identified $7,800 in annual depreciation that had not been claimed in any of the prior years. Gary was able to amend two of those years to reclaim the missed depreciation — offsetting a portion of the overclaim adjustment.</p>
+            </div>
+          </div>
+          
+        </div>
+        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
