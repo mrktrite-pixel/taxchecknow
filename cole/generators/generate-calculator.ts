@@ -411,7 +411,7 @@ ${config.calculatorInputs.map(input => buildInputJSX(input)).join("\n")}
               Check my exact position →
             </button>
             <p className="mt-2 text-center text-xs text-neutral-500">
-              £{effectiveTier} · One-time · No subscription
+              ${config.currency === "USD" || config.currency === "NZD" || config.currency === "CAD" || config.currency === "AUD" ? "$" : "£"}{effectiveTier} · One-time · No subscription
             </p>
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
           </div>
@@ -451,15 +451,15 @@ ${config.calculatorInputs.map(input => buildInputJSX(input)).join("\n")}
                   </div>
                   <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3">
                     <div className="mb-1 flex items-center justify-between">
-                      <p className="font-serif text-2xl font-bold text-neutral-950">${config.currency === "USD" ? "$" : "£"}{effectiveTier}</p>
+                      <p className="font-serif text-2xl font-bold text-neutral-950">${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}{effectiveTier}</p>
                       <p className="text-xs text-neutral-400">One-time · No subscription</p>
                     </div>
                     <p className="text-xs text-neutral-500">Not a generic guide. A plan for your position.</p>
                   </div>
                   <div className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3">
                     <p className="text-xs text-amber-800">
-                      💡 An accountant charges <strong>${config.currency === "USD" ? "$250–500/hr" : "£150–300/hr"}</strong> to answer these questions.
-                      This is <strong>${config.currency === "USD" ? "$" : "£"}{effectiveTier}</strong>. One-time. Available right now.
+                      💡 An accountant charges <strong>${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$250–500/hr" : "£150–300/hr"}</strong> to answer these questions.
+                      This is <strong>${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}{effectiveTier}</strong>. One-time. Available right now.
                     </p>
                   </div>
                   <button
@@ -472,7 +472,7 @@ ${config.calculatorInputs.map(input => buildInputJSX(input)).join("\n")}
                       <button
                         onClick={() => setOverrideTier(${config.tier1.price})}
                         className="text-xs text-neutral-400 underline transition hover:text-neutral-600">
-                        Need less detail? ${config.currency === "USD" ? "$" : "£"}${config.tier1.price} instead
+                        Need less detail? ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}${config.tier1.price} instead
                       </button>
                     </p>
                   )}
@@ -488,7 +488,7 @@ ${config.calculatorInputs.map(input => buildInputJSX(input)).join("\n")}
                     <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                       5 quick questions then pay
                     </p>
-                    <p className="font-serif text-lg font-bold text-neutral-950">${config.currency === "USD" ? "$" : "£"}{effectiveTier}</p>
+                    <p className="font-serif text-lg font-bold text-neutral-950">${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}{effectiveTier}</p>
                   </div>
                   {[
                     { key: "contribution_timing", label: "When would you act on this?", options: [
@@ -541,7 +541,7 @@ ${config.calculatorInputs.map(input => buildInputJSX(input)).join("\n")}
                     onClick={handleContinueToPayment}
                     disabled={!answersComplete || checkoutLoading}
                     className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50">
-                    {checkoutLoading ? "Redirecting…" : \`Pay ${config.currency === "USD" ? "$" : "£"}\${effectiveTier} →\`}
+                    {checkoutLoading ? "Redirecting…" : \`Pay ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}\${effectiveTier} →\`}
                   </button>
                   {error && <p className="text-sm font-medium text-red-700">{error}</p>}
                   <button onClick={() => setShowPopup(false)}
@@ -561,12 +561,12 @@ ${config.calculatorInputs.map(input => buildInputJSX(input)).join("\n")}
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-neutral-900">{selectedProduct.name}</p>
-              <p className="truncate text-xs text-neutral-500">From ${config.currency === "USD" ? "$" : "£"}${config.tier1.price}</p>
+              <p className="truncate text-xs text-neutral-500">From ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}${config.tier1.price}</p>
             </div>
             <button
               onClick={() => { setShowPopup(true); setPopupStep("intro"); }}
               className="rounded-xl bg-neutral-950 px-4 py-3 text-sm font-bold text-white">
-              From ${config.currency === "USD" ? "$" : "£"}${config.tier1.price} →
+              From ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}${config.tier1.price} →
             </button>
           </div>
         </div>

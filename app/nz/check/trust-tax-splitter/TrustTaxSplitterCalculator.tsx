@@ -552,7 +552,7 @@ export default function TrustTaxSplitterCalculator() {
               Check my exact position →
             </button>
             <p className="mt-2 text-center text-xs text-neutral-500">
-              £{effectiveTier} · One-time · No subscription
+              ${effectiveTier} · One-time · No subscription
             </p>
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
           </div>
@@ -592,15 +592,15 @@ export default function TrustTaxSplitterCalculator() {
                   </div>
                   <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3">
                     <div className="mb-1 flex items-center justify-between">
-                      <p className="font-serif text-2xl font-bold text-neutral-950">£{effectiveTier}</p>
+                      <p className="font-serif text-2xl font-bold text-neutral-950">${effectiveTier}</p>
                       <p className="text-xs text-neutral-400">One-time · No subscription</p>
                     </div>
                     <p className="text-xs text-neutral-500">Not a generic guide. A plan for your position.</p>
                   </div>
                   <div className="mb-4 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3">
                     <p className="text-xs text-amber-800">
-                      💡 An accountant charges <strong>£150–300/hr</strong> to answer these questions.
-                      This is <strong>£{effectiveTier}</strong>. One-time. Available right now.
+                      💡 An accountant charges <strong>$250–500/hr</strong> to answer these questions.
+                      This is <strong>${effectiveTier}</strong>. One-time. Available right now.
                     </p>
                   </div>
                   <button
@@ -613,7 +613,7 @@ export default function TrustTaxSplitterCalculator() {
                       <button
                         onClick={() => setOverrideTier(67)}
                         className="text-xs text-neutral-400 underline transition hover:text-neutral-600">
-                        Need less detail? £67 instead
+                        Need less detail? $67 instead
                       </button>
                     </p>
                   )}
@@ -629,7 +629,7 @@ export default function TrustTaxSplitterCalculator() {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                       5 quick questions then pay
                     </p>
-                    <p className="font-serif text-lg font-bold text-neutral-950">£{effectiveTier}</p>
+                    <p className="font-serif text-lg font-bold text-neutral-950">${effectiveTier}</p>
                   </div>
                   {[
                     { key: "contribution_timing", label: "When would you act on this?", options: [
@@ -682,7 +682,7 @@ export default function TrustTaxSplitterCalculator() {
                     onClick={handleContinueToPayment}
                     disabled={!answersComplete || checkoutLoading}
                     className="w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50">
-                    {checkoutLoading ? "Redirecting…" : `Pay £${effectiveTier} →`}
+                    {checkoutLoading ? "Redirecting…" : `Pay $${effectiveTier} →`}
                   </button>
                   {error && <p className="text-sm font-medium text-red-700">{error}</p>}
                   <button onClick={() => setShowPopup(false)}
@@ -702,12 +702,12 @@ export default function TrustTaxSplitterCalculator() {
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-neutral-900">{selectedProduct.name}</p>
-              <p className="truncate text-xs text-neutral-500">From £67</p>
+              <p className="truncate text-xs text-neutral-500">From $67</p>
             </div>
             <button
               onClick={() => { setShowPopup(true); setPopupStep("intro"); }}
               className="rounded-xl bg-neutral-950 px-4 py-3 text-sm font-bold text-white">
-              From £67 →
+              From $67 →
             </button>
           </div>
         </div>

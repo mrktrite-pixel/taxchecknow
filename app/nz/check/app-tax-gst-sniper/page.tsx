@@ -567,10 +567,10 @@ export default function AppTaxGstSniperPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised GST decision built around your platform income, your expenses, and your break-even point — not a generic GST guide.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · GST Registration Logic Pack
+                  $67 · GST Registration Logic Pack
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · Mixed-Use GST Audit
+                  $147 · Mixed-Use GST Audit
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>

@@ -569,10 +569,10 @@ export default function InterestReinstatementEnginePage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised interest deductibility audit built around your loan structure, your refinance history, and your rental income — not a generic landlord guide.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · Refinance Tracing System
+                  $67 · Refinance Tracing System
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · Portfolio Re-Leverage Strategy
+                  $147 · Portfolio Re-Leverage Strategy
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>

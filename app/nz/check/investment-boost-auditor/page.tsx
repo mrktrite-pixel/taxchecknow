@@ -585,10 +585,10 @@ export default function InvestmentBoostAuditorPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised Investment Boost audit built around your asset, your purchase date, and your available-for-use evidence — not a generic depreciation guide.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · New to NZ Asset Log
+                  $67 · New to NZ Asset Log
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · Change-of-Use and Stage Claim Audit
+                  $147 · Change-of-Use and Stage Claim Audit
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>

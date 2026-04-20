@@ -319,10 +319,10 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
               <p className="mb-3 text-sm text-neutral-300">${config.tier1.value}</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  ${config.currency === "USD" ? "$" : "£"}${config.tier1.price} · ${config.tier1.name.replace(/^Your /, "")}
+                  ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}${config.tier1.price} · ${config.tier1.name.replace(/^Your /, "")}
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  ${config.currency === "USD" ? "$" : "£"}${config.tier2.price} · ${config.tier2.name.replace(/^Your /, "")}
+                  ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}${config.tier2.price} · ${config.tier2.name.replace(/^Your /, "")}
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>

@@ -569,10 +569,10 @@ export default function BrightLineAuditorPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised bright-line audit built around your title date, sale date, and main home usage — not a generic property guide.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · Main Home Proof Kit
+                  $67 · Main Home Proof Kit
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · Rollover Relief Audit
+                  $147 · Rollover Relief Audit
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
