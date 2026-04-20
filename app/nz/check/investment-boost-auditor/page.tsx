@@ -472,11 +472,12 @@ export default function InvestmentBoostAuditorPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRD Verified · Income Tax Act 2007 — Investment Boost (s EE 31B)
-          </span>
+          <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇳🇿 IRD Verified · Income Tax Act 2007 — Investment Boost (s EE 31B) ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-NZ
           </span>
         </div>
 
@@ -485,55 +486,11 @@ export default function InvestmentBoostAuditorPage() {
           NZ Investment Boost 2026: Claim Your 20% Instant Asset Deduction
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — IRD confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Under NZ's Investment Boost (Income Tax Act 2007 s EE 31B), eligible business assets that are first available for use on or after 22 May 2025 can claim an optional 20% upfront deduction in year one, plus normal depreciation on the remaining 80%. This is not just paper depreciation — it is an immediate cashflow jolt.</p>
-          <p className="mb-2 text-neutral-900">The key test is when the asset was first available for use — not the invoice date, not the build start date, and not the date you paid for it. A $500,000 warehouse fit-out that became available for use on 23 May 2025 generates a $100,000 upfront deduction and an estimated $28,000 tax saving at the 28% company rate.</p>
-          <p className="mb-2 text-neutral-900">Commercial and industrial buildings qualify. Residential rental buildings do not. New to New Zealand imported assets qualify even if previously used overseas. The claim is optional — you choose whether to use it. And you must disclose the claim in IR10 Box 60.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Investment Boost · Income Tax Act 2007 s EE 31B</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The Investment Boost trigger — what matters and what does not
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Invoice date / purchase date  ❌  NOT the test — many miss eligibility using this
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ First available for use on or after 22 May 2025  ✔  CORRECT IRD trigger
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Commercial buildings do not qualify for the Investment Boost — wrong. New commercial and industrial buildings can qualify for the 20% upfront deduction even though their standard depreciation rate is low. This is one of the most commonly missed eligibility categories.</li>
-            <li>✗ The purchase date is the key test for Investment Boost eligibility — wrong. The key test is the first available-for-use date. An asset purchased in February 2025 but not available for use until June 2025 qualifies. An asset purchased in June 2025 but used before 22 May 2025 does not qualify.</li>
-            <li>✗ Used imported assets do not qualify for Investment Boost — wrong. Assets that are new to New Zealand can qualify even if they were previously used overseas. What matters is that they have not been used in New Zealand before. Shipping documents and customs records prove this.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <InvestmentBoostAuditorCalculator />
           </div>
 
@@ -588,14 +545,14 @@ export default function InvestmentBoostAuditorPage() {
               <h3 className="mb-1 text-lg font-bold">Investment Boost Auditor</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised Investment Boost audit built around your asset, your purchase date, and your available-for-use evidence — not a generic depreciation guide.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · New to NZ Asset Log
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Change-of-Use and Stage Claim Audit
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -626,6 +583,58 @@ export default function InvestmentBoostAuditorPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — IRD confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Under NZ's Investment Boost (Income Tax Act 2007 s EE 31B), eligible business assets that are first available for use on or after 22 May 2025 can claim an optional 20% upfront deduction in year one, plus normal depreciation on the remaining 80%. This is not just paper depreciation — it is an immediate cashflow jolt.</p>
+          <p className="mb-2 text-neutral-900">The key test is when the asset was first available for use — not the invoice date, not the build start date, and not the date you paid for it. A $500,000 warehouse fit-out that became available for use on 23 May 2025 generates a $100,000 upfront deduction and an estimated $28,000 tax saving at the 28% company rate.</p>
+          <p className="mb-2 text-neutral-900">Commercial and industrial buildings qualify. Residential rental buildings do not. New to New Zealand imported assets qualify even if previously used overseas. The claim is optional — you choose whether to use it. And you must disclose the claim in IR10 Box 60.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Investment Boost · Income Tax Act 2007 s EE 31B</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The Investment Boost trigger — what matters and what does not
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Invoice date / purchase date  ❌  NOT the test — many miss eligibility using this
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ First available for use on or after 22 May 2025  ✔  CORRECT IRD trigger
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            Common AI errors on this topic
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ Commercial buildings do not qualify for the Investment Boost — wrong. New commercial and industrial buildings can qualify for the 20% upfront deduction even though their standard depreciation rate is low. This is one of the most commonly missed eligibility categories.</li>
+            <li>✗ The purchase date is the key test for Investment Boost eligibility — wrong. The key test is the first available-for-use date. An asset purchased in February 2025 but not available for use until June 2025 qualifies. An asset purchased in June 2025 but used before 22 May 2025 does not qualify.</li>
+            <li>✗ Used imported assets do not qualify for Investment Boost — wrong. Assets that are new to New Zealand can qualify even if they were previously used overseas. What matters is that they have not been used in New Zealand before. Shipping documents and customs records prove this.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

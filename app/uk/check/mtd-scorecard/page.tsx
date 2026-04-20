@@ -443,9 +443,10 @@ export default function MtdScorecardPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 HMRC Verified · Finance Act 2021 — Making Tax Digital
-          </span>
+          <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇬🇧 HMRC Verified · Finance Act 2021 — Making Tax Digital ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
           </span>
@@ -456,55 +457,11 @@ export default function MtdScorecardPage() {
           Making Tax Digital 2026: Are You Actually Compliant?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — HMRC confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is live from 6 April 2026 for self-employed individuals and landlords with combined gross income over £50,000. From April 2027 the threshold drops to £30,000, and April 2028 it drops to £20,000.</p>
-          <p className="mb-2 text-neutral-900">MTD does NOT mean four full tax returns per year. Quarterly updates are a brief digital summary of income and expenses — not a complete self assessment. The final declaration at year end is the equivalent of your current tax return. Most people are significantly overestimating the burden.</p>
-          <p className="mb-2 text-neutral-900">The real risk is not the quarterly update — it is the approved software requirement. From April 2026 you must use HMRC-approved MTD-compatible software for your record keeping. Spreadsheets alone do not qualify unless bridged with approved software.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Making Tax Digital for Income Tax · Finance Act 2021</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            MTD — what it actually requires vs what people think
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Four full tax returns per year  ❌  This is wrong — and causing unnecessary panic
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Four brief quarterly updates + one final annual declaration  ✔  Same information, different timing
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about MTD
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ MTD means four full tax returns per year — wrong. Quarterly updates are a brief income and expense summary. The full annual declaration is still filed once a year. HMRC describes quarterly updates as a digital check-in, not a mini return.</li>
-            <li>✗ Spreadsheets are fine for MTD — wrong. Spreadsheets alone do not meet MTD requirements. You must use HMRC-approved software, or bridge your spreadsheet to approved software using a recognised bridging tool.</li>
-            <li>✗ MTD only applies if you are self-employed — wrong. Landlords with gross rental income over £50,000 are in scope from April 2026, even if they have no other self-employment income.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <MtdScorecardCalculator />
           </div>
 
@@ -559,14 +516,14 @@ export default function MtdScorecardPage() {
               <h3 className="mb-1 text-lg font-bold">MTD Scorecard</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised MTD compliance audit built around your income sources, your threshold position, and your software gap — not a generic HMRC guide.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   £67 · MTD Readiness Pack
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   £147 · MTD Implementation Plan
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -597,6 +554,58 @@ export default function MtdScorecardPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — HMRC confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is live from 6 April 2026 for self-employed individuals and landlords with combined gross income over £50,000. From April 2027 the threshold drops to £30,000, and April 2028 it drops to £20,000.</p>
+          <p className="mb-2 text-neutral-900">MTD does NOT mean four full tax returns per year. Quarterly updates are a brief digital summary of income and expenses — not a complete self assessment. The final declaration at year end is the equivalent of your current tax return. Most people are significantly overestimating the burden.</p>
+          <p className="mb-2 text-neutral-900">The real risk is not the quarterly update — it is the approved software requirement. From April 2026 you must use HMRC-approved MTD-compatible software for your record keeping. Spreadsheets alone do not qualify unless bridged with approved software.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Making Tax Digital for Income Tax · Finance Act 2021</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            MTD — what it actually requires vs what people think
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Four full tax returns per year  ❌  This is wrong — and causing unnecessary panic
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Four brief quarterly updates + one final annual declaration  ✔  Same information, different timing
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about MTD
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ MTD means four full tax returns per year — wrong. Quarterly updates are a brief income and expense summary. The full annual declaration is still filed once a year. HMRC describes quarterly updates as a digital check-in, not a mini return.</li>
+            <li>✗ Spreadsheets are fine for MTD — wrong. Spreadsheets alone do not meet MTD requirements. You must use HMRC-approved software, or bridge your spreadsheet to approved software using a recognised bridging tool.</li>
+            <li>✗ MTD only applies if you are self-employed — wrong. Landlords with gross rental income over £50,000 are in scope from April 2026, even if they have no other self-employment income.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

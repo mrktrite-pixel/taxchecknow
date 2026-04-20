@@ -399,11 +399,12 @@ export default function FbtHiddenExposurePage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ATO Verified · FBTAA 1986 — Fringe Benefits Tax Assessment Act
-          </span>
+          <a href="https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇦🇺 ATO Verified · FBTAA 1986 — Fringe Benefits Tax Assessment Act ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-AU
           </span>
         </div>
 
@@ -412,55 +413,11 @@ export default function FbtHiddenExposurePage() {
           FBT 2026: What Benefits Are Costing Your Business 47% Tax?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — ATO confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Fringe benefits tax is charged at 47% on the taxable value of non-cash benefits provided to employees or their associates. FBT is paid by the employer — not the employee — and is separate from income tax. The FBT year runs from 1 April to 31 March, with the return and payment due by 21 May.</p>
-          <p className="mb-2 text-neutral-900">Car benefits are the most common FBT exposure. Under the statutory formula method, a car provided for private use is taxed at 20% of the car's base value each year — regardless of how much private use actually occurs. A $60,000 car creates $12,000 of FBT-liable value annually — at 47%, that is $5,640 FBT.</p>
-          <p className="mb-2 text-neutral-900">The operating cost method can reduce car FBT significantly if business use is high and a logbook has been kept. If business use is over 75%, the operating cost method almost always produces a lower FBT liability than the statutory formula.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Fringe benefits tax · FBTAA 1986</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            How FBT works on a company car
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Company buys car for director → assume no tax  ❌  FBT applies on private use
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Logbook kept + operating cost method → FBT based on actual private use  ✔  Lower liability
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about FBT
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ FBT only applies to large companies — wrong. FBT applies to any employer that provides benefits to employees — including small businesses and sole directors who are also employees of their own company. Many small business owners unknowingly trigger FBT on car benefits and entertainment.</li>
-            <li>✗ If the employee pays for the benefit, there is no FBT — wrong. If the employee contributes toward the cost of a benefit, the contribution reduces the taxable value but does not eliminate FBT. The benefit must be specifically structured as an employee contribution to have effect.</li>
-            <li>✗ Work Christmas parties and client lunches are fully FBT-exempt — wrong. Entertainment expenditure is complex. Minor benefits under $300 per employee may qualify for the minor benefit exemption. But regular entertainment, client functions, and Christmas parties above the threshold attract FBT.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <FbtHiddenExposureCalculator />
           </div>
 
@@ -516,14 +473,14 @@ export default function FbtHiddenExposurePage() {
               <h3 className="mb-1 text-lg font-bold">FBT Hidden Exposure Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised FBT risk audit — car benefit analysis, benefit classification, and safe structuring guide.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · FBT Risk Fix Plan
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · FBT Compliance System
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -542,6 +499,58 @@ export default function FbtHiddenExposurePage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — ATO confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Fringe benefits tax is charged at 47% on the taxable value of non-cash benefits provided to employees or their associates. FBT is paid by the employer — not the employee — and is separate from income tax. The FBT year runs from 1 April to 31 March, with the return and payment due by 21 May.</p>
+          <p className="mb-2 text-neutral-900">Car benefits are the most common FBT exposure. Under the statutory formula method, a car provided for private use is taxed at 20% of the car's base value each year — regardless of how much private use actually occurs. A $60,000 car creates $12,000 of FBT-liable value annually — at 47%, that is $5,640 FBT.</p>
+          <p className="mb-2 text-neutral-900">The operating cost method can reduce car FBT significantly if business use is high and a logbook has been kept. If business use is over 75%, the operating cost method almost always produces a lower FBT liability than the statutory formula.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Fringe benefits tax · FBTAA 1986</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            How FBT works on a company car
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Company buys car for director → assume no tax  ❌  FBT applies on private use
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Logbook kept + operating cost method → FBT based on actual private use  ✔  Lower liability
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about FBT
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ FBT only applies to large companies — wrong. FBT applies to any employer that provides benefits to employees — including small businesses and sole directors who are also employees of their own company. Many small business owners unknowingly trigger FBT on car benefits and entertainment.</li>
+            <li>✗ If the employee pays for the benefit, there is no FBT — wrong. If the employee contributes toward the cost of a benefit, the contribution reduces the taxable value but does not eliminate FBT. The benefit must be specifically structured as an employee contribution to have effect.</li>
+            <li>✗ Work Christmas parties and client lunches are fully FBT-exempt — wrong. Entertainment expenditure is complex. Minor benefits under $300 per employee may qualify for the minor benefit exemption. But regular entertainment, client functions, and Christmas parties above the threshold attract FBT.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

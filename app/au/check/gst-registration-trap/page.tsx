@@ -411,11 +411,12 @@ export default function GstRegistrationTrapPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ATO Verified · A New Tax System (Goods and Services Tax) Act 1999 — GST registration
-          </span>
+          <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇦🇺 ATO Verified · A New Tax System (Goods and Services Tax) Act 1999 — GST registration ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-AU
           </span>
         </div>
 
@@ -424,55 +425,11 @@ export default function GstRegistrationTrapPage() {
           GST Registration 2026: Are You Required to Register Already?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — ATO confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">You must register for GST if your current or projected GST turnover meets or exceeds $75,000 in any 12-month period. Once you cross the threshold, you must register within 21 days. Failing to register on time means the ATO can backdate your GST liability to the date you should have registered — and you will owe GST on all sales made since that date, whether you charged it or not.</p>
-          <p className="mb-2 text-neutral-900">The threshold is based on GST turnover — broadly, the total value of taxable and GST-free supplies. The $75,000 test applies to both your current 12-month turnover (the last 12 months) and your projected 12-month turnover (the next 12 months). If either exceeds $75,000, you are required to register.</p>
-          <p className="mb-2 text-neutral-900">The most common trap: a growing business crosses $75,000 in a month or quarter and does not notice. By the time the accountant picks it up at year end, the business has been operating without registration for six months — with backdated GST liability on every invoice in that period.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — GST registration · GST Act 1999</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The GST registration trap — how it works
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Cross $75k → don't notice → miss 21-day window → ATO backdates GST to crossing date  ❌
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Monitor threshold monthly → register within 21 days → charge GST from registration date  ✔
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about GST registration
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ I only need to register once my annual turnover exceeds $75,000 — wrong. The $75,000 threshold applies to any rolling 12-month period — not just a financial year. If your turnover in the last 12 months has exceeded $75,000 at any point, you are required to register. The test is continuous — not annual.</li>
-            <li>✗ If I didn't charge GST, I don't owe it — wrong. If you should have been registered but were not, the ATO treats your sales as GST-inclusive. If you charged $1,000 and should have been registered, $90.91 of that was GST. You owe the GST component whether or not you collected it from customers.</li>
-            <li>✗ Casual or one-off income does not count toward the threshold — wrong. All taxable supplies and GST-free supplies count toward the GST turnover threshold. This includes cash income, consulting, online sales, Airbnb, and services provided overseas to Australian clients.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <GstRegistrationTrapCalculator />
           </div>
 
@@ -527,14 +484,14 @@ export default function GstRegistrationTrapPage() {
               <h3 className="mb-1 text-lg font-bold">GST Registration Trap Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised GST registration check — threshold analysis, backdating risk assessment, and registration strategy.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · GST Registration Fix Plan
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · GST Compliance System
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -553,6 +510,58 @@ export default function GstRegistrationTrapPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — ATO confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">You must register for GST if your current or projected GST turnover meets or exceeds $75,000 in any 12-month period. Once you cross the threshold, you must register within 21 days. Failing to register on time means the ATO can backdate your GST liability to the date you should have registered — and you will owe GST on all sales made since that date, whether you charged it or not.</p>
+          <p className="mb-2 text-neutral-900">The threshold is based on GST turnover — broadly, the total value of taxable and GST-free supplies. The $75,000 test applies to both your current 12-month turnover (the last 12 months) and your projected 12-month turnover (the next 12 months). If either exceeds $75,000, you are required to register.</p>
+          <p className="mb-2 text-neutral-900">The most common trap: a growing business crosses $75,000 in a month or quarter and does not notice. By the time the accountant picks it up at year end, the business has been operating without registration for six months — with backdated GST liability on every invoice in that period.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — GST registration · GST Act 1999</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The GST registration trap — how it works
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Cross $75k → don't notice → miss 21-day window → ATO backdates GST to crossing date  ❌
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Monitor threshold monthly → register within 21 days → charge GST from registration date  ✔
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about GST registration
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ I only need to register once my annual turnover exceeds $75,000 — wrong. The $75,000 threshold applies to any rolling 12-month period — not just a financial year. If your turnover in the last 12 months has exceeded $75,000 at any point, you are required to register. The test is continuous — not annual.</li>
+            <li>✗ If I didn't charge GST, I don't owe it — wrong. If you should have been registered but were not, the ATO treats your sales as GST-inclusive. If you charged $1,000 and should have been registered, $90.91 of that was GST. You owe the GST component whether or not you collected it from customers.</li>
+            <li>✗ Casual or one-off income does not count toward the threshold — wrong. All taxable supplies and GST-free supplies count toward the GST turnover threshold. This includes cash income, consulting, online sales, Airbnb, and services provided overseas to Australian clients.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

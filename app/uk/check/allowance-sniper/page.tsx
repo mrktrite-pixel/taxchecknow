@@ -418,9 +418,10 @@ export default function AllowanceSniperPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 HMRC Verified · Income Tax Act 2007 — Personal Allowance Taper
-          </span>
+          <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇬🇧 HMRC Verified · Income Tax Act 2007 — Personal Allowance Taper ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
           </span>
@@ -431,55 +432,11 @@ export default function AllowanceSniperPage() {
           The 60% Tax Trap: Is Your Income Between £100,000 and £125,140?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — HMRC confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">If your adjusted net income is between £100,000 and £125,140, your personal allowance is tapered away at £1 for every £2 of income above £100,000. This creates an effective marginal tax rate of 60% on income in that band — not the 40% or 45% most people assume.</p>
-          <p className="mb-2 text-neutral-900">The taper is completely legal, has been in place since 2010, and is not widely understood even by people it affects. On £125,140 income you lose the entire £12,570 personal allowance — worth £5,028 in additional tax at the 40% rate.</p>
-          <p className="mb-2 text-neutral-900">The escape route is straightforward: pension contributions reduce your adjusted net income. A £10,000 pension contribution for someone earning £110,000 recovers £5,000 of allowance and eliminates £3,000 of the 60% rate exposure — worth £3,000 in real tax saving on top of the basic pension relief.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Income Tax personal allowance · Income Tax Act 2007 s.35</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The 60% trap — how it works
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Income £110,000 → 40% tax on income → most people stop here  ❌  Missing the taper
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Income £110,000 → 40% on income PLUS lose £5,000 allowance = 60% effective rate  ✔  The real position
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about the 60% trap
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The highest UK income tax rate is 45% — wrong for income in the £100k-£125,140 band. The personal allowance taper creates an effective 60% rate on income in this range. This is not publicised by HMRC and surprises most people who hit it for the first time.</li>
-            <li>✗ Pension contributions only save 40% tax relief — wrong if you are in the taper band. A pension contribution in the £100k-£125,140 band saves 40% relief PLUS restores personal allowance — giving an effective 60% relief on the amount contributed. It is the most tax-efficient pension band in the UK.</li>
-            <li>✗ The taper only applies to very high earners — wrong. It starts at £100,000 — a level reached by many directors, senior professionals, landlords with multiple properties, and anyone with a strong year. It is far more common than people realise.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <AllowanceSniperCalculator />
           </div>
 
@@ -534,14 +491,14 @@ export default function AllowanceSniperPage() {
               <h3 className="mb-1 text-lg font-bold">Allowance Sniper</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised allowance audit showing your taper exposure, pension relief opportunity, and exact recovery amount.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   £67 · Allowance Recovery Pack
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   £147 · 60% Tax Escape Plan
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -566,6 +523,58 @@ export default function AllowanceSniperPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — HMRC confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">If your adjusted net income is between £100,000 and £125,140, your personal allowance is tapered away at £1 for every £2 of income above £100,000. This creates an effective marginal tax rate of 60% on income in that band — not the 40% or 45% most people assume.</p>
+          <p className="mb-2 text-neutral-900">The taper is completely legal, has been in place since 2010, and is not widely understood even by people it affects. On £125,140 income you lose the entire £12,570 personal allowance — worth £5,028 in additional tax at the 40% rate.</p>
+          <p className="mb-2 text-neutral-900">The escape route is straightforward: pension contributions reduce your adjusted net income. A £10,000 pension contribution for someone earning £110,000 recovers £5,000 of allowance and eliminates £3,000 of the 60% rate exposure — worth £3,000 in real tax saving on top of the basic pension relief.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Income Tax personal allowance · Income Tax Act 2007 s.35</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The 60% trap — how it works
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Income £110,000 → 40% tax on income → most people stop here  ❌  Missing the taper
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Income £110,000 → 40% on income PLUS lose £5,000 allowance = 60% effective rate  ✔  The real position
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about the 60% trap
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ The highest UK income tax rate is 45% — wrong for income in the £100k-£125,140 band. The personal allowance taper creates an effective 60% rate on income in this range. This is not publicised by HMRC and surprises most people who hit it for the first time.</li>
+            <li>✗ Pension contributions only save 40% tax relief — wrong if you are in the taper band. A pension contribution in the £100k-£125,140 band saves 40% relief PLUS restores personal allowance — giving an effective 60% relief on the amount contributed. It is the most tax-efficient pension band in the UK.</li>
+            <li>✗ The taper only applies to very high earners — wrong. It starts at £100,000 — a level reached by many directors, senior professionals, landlords with multiple properties, and anyone with a strong year. It is far more common than people realise.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

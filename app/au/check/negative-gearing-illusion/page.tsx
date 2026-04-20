@@ -405,11 +405,12 @@ export default function NegativeGearingIllusionPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ATO Verified · ITAA 1997 — Rental property deductions (s.26-19)
-          </span>
+          <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇦🇺 ATO Verified · ITAA 1997 — Rental property deductions (s.26-19) ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-AU
           </span>
         </div>
 
@@ -418,55 +419,11 @@ export default function NegativeGearingIllusionPage() {
           Negative Gearing 2026: Is Your Tax Saving Actually Costing You Money?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — ATO confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Negative gearing occurs when your rental property expenses — interest, rates, insurance, management, repairs — exceed your rental income. The resulting loss can be offset against your other income (salary, business income), reducing your tax bill. This is the tax saving everyone talks about.</p>
-          <p className="mb-2 text-neutral-900">What is rarely discussed is the cashflow reality. If your property loses $15,000 per year and you are in the 37% tax bracket, your tax saving is $5,550. But you are still $9,450 out of pocket after tax. The tax system shares your loss — it does not eliminate it.</p>
-          <p className="mb-2 text-neutral-900">Negative gearing is a legitimate strategy only if the expected capital growth of the property exceeds the after-tax cashflow loss over the holding period. If capital growth is modest or the holding period is short, negative gearing can destroy wealth rather than build it.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Rental properties and negative gearing · ITAA 1997</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The negative gearing illusion — what the numbers actually show
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Property loses $15k → I save $15k in tax  ❌  This is wrong
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Property loses $15k → Tax saving is $5,550 at 37% → Real cost: $9,450 out of pocket  ✔
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about negative gearing
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Negative gearing saves me the full amount of my loss in tax — wrong. The tax saving is your marginal rate multiplied by the loss. At 37%, a $15,000 loss saves you $5,550 — not $15,000. You are still $9,450 out of pocket every year. The property must grow in value to compensate for this ongoing cash outflow.</li>
-            <li>✗ All rental expenses are immediately deductible — wrong. Repairs and maintenance are immediately deductible. Capital improvements are not — they are depreciated over their effective life. Confusing capital improvements with repairs is one of the most common ATO audit triggers on rental properties.</li>
-            <li>✗ I can deduct the full purchase price through depreciation — wrong. Depreciation is available on the building (if built after September 1987) at 2.5% per year, and on plant and equipment items at their effective life rate. The land component of the purchase price is never deductible.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <NegativeGearingIllusionCalculator />
           </div>
 
@@ -521,14 +478,14 @@ export default function NegativeGearingIllusionPage() {
               <h3 className="mb-1 text-lg font-bold">Negative Gearing Illusion Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised cashflow analysis showing your real after-tax position — not the gross tax saving your accountant shows you.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Negative Gearing Reality Check
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Property Portfolio Strategy
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -547,6 +504,58 @@ export default function NegativeGearingIllusionPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — ATO confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Negative gearing occurs when your rental property expenses — interest, rates, insurance, management, repairs — exceed your rental income. The resulting loss can be offset against your other income (salary, business income), reducing your tax bill. This is the tax saving everyone talks about.</p>
+          <p className="mb-2 text-neutral-900">What is rarely discussed is the cashflow reality. If your property loses $15,000 per year and you are in the 37% tax bracket, your tax saving is $5,550. But you are still $9,450 out of pocket after tax. The tax system shares your loss — it does not eliminate it.</p>
+          <p className="mb-2 text-neutral-900">Negative gearing is a legitimate strategy only if the expected capital growth of the property exceeds the after-tax cashflow loss over the holding period. If capital growth is modest or the holding period is short, negative gearing can destroy wealth rather than build it.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Rental properties and negative gearing · ITAA 1997</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The negative gearing illusion — what the numbers actually show
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Property loses $15k → I save $15k in tax  ❌  This is wrong
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Property loses $15k → Tax saving is $5,550 at 37% → Real cost: $9,450 out of pocket  ✔
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about negative gearing
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ Negative gearing saves me the full amount of my loss in tax — wrong. The tax saving is your marginal rate multiplied by the loss. At 37%, a $15,000 loss saves you $5,550 — not $15,000. You are still $9,450 out of pocket every year. The property must grow in value to compensate for this ongoing cash outflow.</li>
+            <li>✗ All rental expenses are immediately deductible — wrong. Repairs and maintenance are immediately deductible. Capital improvements are not — they are depreciated over their effective life. Confusing capital improvements with repairs is one of the most common ATO audit triggers on rental properties.</li>
+            <li>✗ I can deduct the full purchase price through depreciation — wrong. Depreciation is available on the building (if built after September 1987) at 2.5% per year, and on plant and equipment items at their effective life rate. The land component of the purchase price is never deductible.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

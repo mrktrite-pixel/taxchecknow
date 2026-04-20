@@ -394,11 +394,12 @@ export default function Section174AuditorPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRS Verified · IRC Section 174 — Research and Experimental Expenditures
-          </span>
+          <a href="https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇺🇸 IRS Verified · IRC Section 174 — Research and Experimental Expenditures ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-US
           </span>
         </div>
 
@@ -407,55 +408,11 @@ export default function Section174AuditorPage() {
           Section 174 2026: Is Your Engineering Spend Creating a Phantom Tax Bill?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — IRS confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Since January 1, 2022, Section 174 requires all research and experimental (R&E) expenditures — including software development costs — to be amortized rather than expensed immediately. US-based R&D is amortized over 5 years. Foreign (offshore) R&D is amortized over 15 years.</p>
-          <p className="mb-2 text-neutral-900">This creates a phantom tax problem. A company that spent $600,000 on engineering in 2025 can only deduct $60,000 of it in 2025 (assuming mid-year convention, 5-year domestic). The remaining $540,000 is deducted over the following years. The cash went out — but the deduction is delayed.</p>
-          <p className="mb-2 text-neutral-900">The offshore multiplier is the hidden killer. If you use offshore contractors in India, Eastern Europe, or elsewhere, those costs are amortized over 15 years — not 5. A company with $300,000 in offshore engineering can only deduct $10,000 in year one. The remaining $290,000 waits 14 more years.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC Section 174 · TCJA 2017 amendment</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            Section 174 — what changed and when
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Pre-2022: $600k engineering → $600k deduction in year one  ❌  No longer available
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ From 2022: $600k engineering → $60k deduction year one → $120k in years 2-6  ✔  Mandatory amortization
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most tech founders get wrong about Section 174
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ You can still expense R&D costs immediately — wrong since January 1, 2022. The TCJA 2017 change took effect in 2022. All R&E expenditures including software development must now be capitalized and amortized. No immediate deduction. This caught thousands of companies off guard.</li>
-            <li>✗ Section 174 only affects biotech and traditional R&D companies — wrong. Any company developing software, including SaaS, mobile apps, and internal tools, is subject to Section 174. The IRS treats software development as R&E expenditure.</li>
-            <li>✗ Offshore engineering spend amortizes the same as US spend — wrong. Foreign R&D amortizes over 15 years. US R&D amortizes over 5 years. A company with significant offshore development faces a dramatically worse cash tax position than a fully domestic operation.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <Section174AuditorCalculator />
           </div>
 
@@ -509,14 +466,14 @@ export default function Section174AuditorPage() {
               <h3 className="mb-1 text-lg font-bold">Section 174 Auditor</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised Section 174 audit showing your amortization exposure, offshore multiplier impact, and estimated tax hit.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Section 174 Exposure Report
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Section 174 Recovery Plan
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -541,6 +498,58 @@ export default function Section174AuditorPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — IRS confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Since January 1, 2022, Section 174 requires all research and experimental (R&E) expenditures — including software development costs — to be amortized rather than expensed immediately. US-based R&D is amortized over 5 years. Foreign (offshore) R&D is amortized over 15 years.</p>
+          <p className="mb-2 text-neutral-900">This creates a phantom tax problem. A company that spent $600,000 on engineering in 2025 can only deduct $60,000 of it in 2025 (assuming mid-year convention, 5-year domestic). The remaining $540,000 is deducted over the following years. The cash went out — but the deduction is delayed.</p>
+          <p className="mb-2 text-neutral-900">The offshore multiplier is the hidden killer. If you use offshore contractors in India, Eastern Europe, or elsewhere, those costs are amortized over 15 years — not 5. A company with $300,000 in offshore engineering can only deduct $10,000 in year one. The remaining $290,000 waits 14 more years.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC Section 174 · TCJA 2017 amendment</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            Section 174 — what changed and when
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Pre-2022: $600k engineering → $600k deduction in year one  ❌  No longer available
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ From 2022: $600k engineering → $60k deduction year one → $120k in years 2-6  ✔  Mandatory amortization
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most tech founders get wrong about Section 174
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ You can still expense R&D costs immediately — wrong since January 1, 2022. The TCJA 2017 change took effect in 2022. All R&E expenditures including software development must now be capitalized and amortized. No immediate deduction. This caught thousands of companies off guard.</li>
+            <li>✗ Section 174 only affects biotech and traditional R&D companies — wrong. Any company developing software, including SaaS, mobile apps, and internal tools, is subject to Section 174. The IRS treats software development as R&E expenditure.</li>
+            <li>✗ Offshore engineering spend amortizes the same as US spend — wrong. Foreign R&D amortizes over 15 years. US R&D amortizes over 5 years. A company with significant offshore development faces a dramatically worse cash tax position than a fully domestic operation.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

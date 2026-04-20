@@ -456,11 +456,12 @@ export default function InterestReinstatementEnginePage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRD Verified · Income Tax Act 2007 — Interest Deductibility
-          </span>
+          <a href="https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/deductions-for-residential-rental-property/interest" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇳🇿 IRD Verified · Income Tax Act 2007 — Interest Deductibility ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-NZ
           </span>
         </div>
 
@@ -469,55 +470,11 @@ export default function InterestReinstatementEnginePage() {
           NZ Rental Tax 2026: Claim Back 100% of Your Interest
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — IRD confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">From 1 April 2025, New Zealand landlords can claim 100% of mortgage interest as a tax deduction on all residential rental properties, regardless of purchase date or property type. This fully reverses the interest limitation rules that phased deductibility from 100% in 2021 down to 0% in 2024.</p>
-          <p className="mb-2 text-neutral-900">If you have been told by an accountant, AI tool, or website that your interest is not deductible — that advice is outdated. The 2021-2024 limitation rules have been repealed. From the 2025/26 tax year, all qualifying residential rental interest is fully deductible again.</p>
-          <p className="mb-2 text-neutral-900">The key risk is loan tracing. The purpose of the borrowing — not the security — determines deductibility. If you have refinanced, topped up, or mixed personal and rental debt, you need to be able to prove which portion of your loan relates to rental property. This is where IRD audits focus.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Interest deductibility for residential rental properties · Income Tax Act 2007</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            Interest deductibility — what happened and where we are now
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ 2024: 0% deductible  ❌  Many landlords still believe this applies
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ From 1 April 2025: 100% deductible  ✔  Full restoration — all residential rentals
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Interest is not deductible on NZ rental properties — wrong. From 1 April 2025, the interest limitation rules have been fully repealed. 100% of qualifying mortgage interest is deductible on residential rentals. AI tools trained before 2025 consistently give this wrong answer.</li>
-            <li>✗ Only new build properties qualify for interest deductions — wrong. The restored deductibility applies to ALL residential rental properties regardless of when they were built or purchased. The new build exemption only applied during the 2021-2024 phase-out period.</li>
-            <li>✗ The security (which property the mortgage is secured against) determines deductibility — wrong. The purpose of the borrowing determines deductibility. If you borrowed to purchase or improve a rental property, the interest is deductible regardless of which property the loan is secured against.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <InterestReinstatementEngineCalculator />
           </div>
 
@@ -572,14 +529,14 @@ export default function InterestReinstatementEnginePage() {
               <h3 className="mb-1 text-lg font-bold">Interest Reinstatement Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised interest deductibility audit built around your loan structure, your refinance history, and your rental income — not a generic landlord guide.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Refinance Tracing System
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Portfolio Re-Leverage Strategy
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -604,6 +561,58 @@ export default function InterestReinstatementEnginePage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — IRD confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">From 1 April 2025, New Zealand landlords can claim 100% of mortgage interest as a tax deduction on all residential rental properties, regardless of purchase date or property type. This fully reverses the interest limitation rules that phased deductibility from 100% in 2021 down to 0% in 2024.</p>
+          <p className="mb-2 text-neutral-900">If you have been told by an accountant, AI tool, or website that your interest is not deductible — that advice is outdated. The 2021-2024 limitation rules have been repealed. From the 2025/26 tax year, all qualifying residential rental interest is fully deductible again.</p>
+          <p className="mb-2 text-neutral-900">The key risk is loan tracing. The purpose of the borrowing — not the security — determines deductibility. If you have refinanced, topped up, or mixed personal and rental debt, you need to be able to prove which portion of your loan relates to rental property. This is where IRD audits focus.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Interest deductibility for residential rental properties · Income Tax Act 2007</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            Interest deductibility — what happened and where we are now
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ 2024: 0% deductible  ❌  Many landlords still believe this applies
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ From 1 April 2025: 100% deductible  ✔  Full restoration — all residential rentals
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            Common AI errors on this topic
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ Interest is not deductible on NZ rental properties — wrong. From 1 April 2025, the interest limitation rules have been fully repealed. 100% of qualifying mortgage interest is deductible on residential rentals. AI tools trained before 2025 consistently give this wrong answer.</li>
+            <li>✗ Only new build properties qualify for interest deductions — wrong. The restored deductibility applies to ALL residential rental properties regardless of when they were built or purchased. The new build exemption only applied during the 2021-2024 phase-out period.</li>
+            <li>✗ The security (which property the mortgage is secured against) determines deductibility — wrong. The purpose of the borrowing determines deductibility. If you borrowed to purchase or improve a rental property, the interest is deductible regardless of which property the loan is secured against.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

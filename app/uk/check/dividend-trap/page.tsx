@@ -404,9 +404,10 @@ export default function DividendTrapPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 HMRC Verified · Income Tax Act 2007 — Dividend Tax Rates
-          </span>
+          <a href="https://www.gov.uk/tax-on-dividends" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇬🇧 HMRC Verified · Income Tax Act 2007 — Dividend Tax Rates ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
           </span>
@@ -417,55 +418,11 @@ export default function DividendTrapPage() {
           UK Dividend Tax 2026: Are You Paying 39.35% When You Should Pay 8.75%?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — HMRC confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">The UK dividend tax allowance is £500 for 2024/25 and 2025/26 — down from £2,000 in 2022/23 and £1,000 in 2023/24. Dividends above this allowance are taxed at 8.75% (basic rate), 33.75% (higher rate), or 39.35% (additional rate).</p>
-          <p className="mb-2 text-neutral-900">For company directors taking dividends, the rate depends on their total income including salary. A director on £50,000 salary who takes £30,000 in dividends has most of those dividends in the higher rate band — taxed at 33.75%, not 8.75%. Many directors are paying the higher rate without realising it.</p>
-          <p className="mb-2 text-neutral-900">The optimal salary and dividend split changes every year as allowances shift. Using the wrong split — or ignoring the allowance reduction — can cost thousands in unnecessary tax. The calculation needs to be done annually, not set once and forgotten.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Dividend tax rates and allowances · Income Tax Act 2007</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            Dividend tax bands — where you actually sit
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Take salary + dividends → assume 8.75% rate → pay wrong amount  ❌  Missing higher rate exposure
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Map total income → identify correct dividend band → optimise split  ✔  Right tax, right structure
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most director shareholders get wrong about dividends
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The dividend allowance is still £2,000 — wrong. The allowance was cut to £1,000 in 2023/24 and £500 in 2024/25 and beyond. Directors who set their dividend strategy in 2022 and have not revisited it are likely underpaying tax and risking HMRC inquiry.</li>
-            <li>✗ Dividends are always taxed at 8.75% — wrong. The 8.75% rate only applies to dividends in the basic rate band. Once total income (salary + dividends + other) exceeds £50,270, dividends are taxed at 33.75%. Above £125,140 they attract 39.35%.</li>
-            <li>✗ As long as you take a small salary and dividends you are tax-efficient — wrong. Tax efficiency depends on the exact amounts, your total income, your partner's tax position, and whether you are in the personal allowance taper. It requires annual recalculation.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <DividendTrapCalculator />
           </div>
 
@@ -520,14 +477,14 @@ export default function DividendTrapPage() {
               <h3 className="mb-1 text-lg font-bold">Dividend Trap</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised dividend tax calculation showing your exact liability, the allowance you may be wasting, and opportunities to reduce your bill.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   £67 · Dividend Tax Audit
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   £147 · Dividend Optimisation Plan
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -552,6 +509,58 @@ export default function DividendTrapPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — HMRC confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">The UK dividend tax allowance is £500 for 2024/25 and 2025/26 — down from £2,000 in 2022/23 and £1,000 in 2023/24. Dividends above this allowance are taxed at 8.75% (basic rate), 33.75% (higher rate), or 39.35% (additional rate).</p>
+          <p className="mb-2 text-neutral-900">For company directors taking dividends, the rate depends on their total income including salary. A director on £50,000 salary who takes £30,000 in dividends has most of those dividends in the higher rate band — taxed at 33.75%, not 8.75%. Many directors are paying the higher rate without realising it.</p>
+          <p className="mb-2 text-neutral-900">The optimal salary and dividend split changes every year as allowances shift. Using the wrong split — or ignoring the allowance reduction — can cost thousands in unnecessary tax. The calculation needs to be done annually, not set once and forgotten.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Dividend tax rates and allowances · Income Tax Act 2007</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            Dividend tax bands — where you actually sit
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Take salary + dividends → assume 8.75% rate → pay wrong amount  ❌  Missing higher rate exposure
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Map total income → identify correct dividend band → optimise split  ✔  Right tax, right structure
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most director shareholders get wrong about dividends
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ The dividend allowance is still £2,000 — wrong. The allowance was cut to £1,000 in 2023/24 and £500 in 2024/25 and beyond. Directors who set their dividend strategy in 2022 and have not revisited it are likely underpaying tax and risking HMRC inquiry.</li>
+            <li>✗ Dividends are always taxed at 8.75% — wrong. The 8.75% rate only applies to dividends in the basic rate band. Once total income (salary + dividends + other) exceeds £50,270, dividends are taxed at 33.75%. Above £125,140 they attract 39.35%.</li>
+            <li>✗ As long as you take a small salary and dividends you are tax-efficient — wrong. Tax efficiency depends on the exact amounts, your total income, your partner's tax position, and whether you are in the personal allowance taper. It requires annual recalculation.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

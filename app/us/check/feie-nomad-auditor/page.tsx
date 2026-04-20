@@ -404,11 +404,12 @@ export default function FeieNomadAuditorPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRS Verified · IRC Section 911 — Foreign Earned Income Exclusion
-          </span>
+          <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇺🇸 IRS Verified · IRC Section 911 — Foreign Earned Income Exclusion ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-US
           </span>
         </div>
 
@@ -417,55 +418,11 @@ export default function FeieNomadAuditorPage() {
           FEIE 2026: Do You Actually Qualify — or Is Your Abode Still in the US?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — IRS confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">The Foreign Earned Income Exclusion (FEIE) allows qualifying US citizens to exclude up to $126,500 of foreign earned income from US federal tax in 2026. To qualify, you must meet either the Physical Presence Test (330 full days outside the US in a 12-month period) or the Bona Fide Residence Test (genuine resident of a foreign country for a full calendar year).</p>
-          <p className="mb-2 text-neutral-900">The most commonly missed requirement is the tax home and abode test. Your tax home must be in a foreign country — AND you must not have an abode in the United States. Having a US apartment (even if sublet), a storage unit with significant belongings, or a family home you return to regularly can all indicate a US abode — disqualifying you from FEIE even if you pass the day-count test.</p>
-          <p className="mb-2 text-neutral-900">The FEIE election is also irrevocable for 5 years once revoked. Switching between FEIE and the Foreign Tax Credit (FTC) mid-career requires careful planning. Many nomads claim FEIE when the FTC would save more — particularly in high-tax countries like Germany or France where the FTC offset exceeds the FEIE exclusion value.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRS — Publication 54 · IRC Section 911 · IRS Form 2555</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            FEIE qualification — both tests must be met
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ 330 days abroad → assume FEIE qualified  ❌  Day count alone is not enough
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ 330 days abroad + foreign tax home + NO US abode = FEIE qualified  ✔  All three required
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most digital nomads get wrong about FEIE
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Spending 330 days outside the US automatically qualifies you for FEIE — wrong. You must also have a foreign tax home and no US abode. A US apartment you maintain, a storage unit, or regular returns to a family property can all indicate a US abode that disqualifies you regardless of days abroad.</li>
-            <li>✗ FEIE is always better than the Foreign Tax Credit — wrong. If you live in a high-tax country (UK, Germany, France, Australia) where local taxes exceed the US rate, the Foreign Tax Credit may eliminate your US liability entirely — with no day-count requirement and no abode test.</li>
-            <li>✗ You can switch between FEIE and Foreign Tax Credit freely — wrong. Revoking the FEIE election means you cannot re-elect FEIE for 5 years without IRS permission. The decision to revoke should be modelled carefully before acting.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <FeieNomadAuditorCalculator />
           </div>
 
@@ -520,14 +477,14 @@ export default function FeieNomadAuditorPage() {
               <h3 className="mb-1 text-lg font-bold">FEIE Nomad Auditor</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised FEIE eligibility audit showing which test you qualify under, your exclusion amount, and your abode risk.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · FEIE Eligibility Report
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · FEIE Optimisation Plan
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -558,6 +515,58 @@ export default function FeieNomadAuditorPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — IRS confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">The Foreign Earned Income Exclusion (FEIE) allows qualifying US citizens to exclude up to $126,500 of foreign earned income from US federal tax in 2026. To qualify, you must meet either the Physical Presence Test (330 full days outside the US in a 12-month period) or the Bona Fide Residence Test (genuine resident of a foreign country for a full calendar year).</p>
+          <p className="mb-2 text-neutral-900">The most commonly missed requirement is the tax home and abode test. Your tax home must be in a foreign country — AND you must not have an abode in the United States. Having a US apartment (even if sublet), a storage unit with significant belongings, or a family home you return to regularly can all indicate a US abode — disqualifying you from FEIE even if you pass the day-count test.</p>
+          <p className="mb-2 text-neutral-900">The FEIE election is also irrevocable for 5 years once revoked. Switching between FEIE and the Foreign Tax Credit (FTC) mid-career requires careful planning. Many nomads claim FEIE when the FTC would save more — particularly in high-tax countries like Germany or France where the FTC offset exceeds the FEIE exclusion value.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRS — Publication 54 · IRC Section 911 · IRS Form 2555</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            FEIE qualification — both tests must be met
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ 330 days abroad → assume FEIE qualified  ❌  Day count alone is not enough
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ 330 days abroad + foreign tax home + NO US abode = FEIE qualified  ✔  All three required
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most digital nomads get wrong about FEIE
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ Spending 330 days outside the US automatically qualifies you for FEIE — wrong. You must also have a foreign tax home and no US abode. A US apartment you maintain, a storage unit, or regular returns to a family property can all indicate a US abode that disqualifies you regardless of days abroad.</li>
+            <li>✗ FEIE is always better than the Foreign Tax Credit — wrong. If you live in a high-tax country (UK, Germany, France, Australia) where local taxes exceed the US rate, the Foreign Tax Credit may eliminate your US liability entirely — with no day-count requirement and no abode test.</li>
+            <li>✗ You can switch between FEIE and Foreign Tax Credit freely — wrong. Revoking the FEIE election means you cannot re-elect FEIE for 5 years without IRS permission. The decision to revoke should be modelled carefully before acting.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

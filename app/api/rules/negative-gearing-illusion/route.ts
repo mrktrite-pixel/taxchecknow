@@ -130,7 +130,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/negative-gearing-illusion",
     "api_endpoint": "/api/rules/negative-gearing-illusion",
-    "generated_at": "2026-04-20T07:42:11.738Z"
+    "generated_at": "2026-04-20T08:04:27.437Z"
 };
 
   return NextResponse.json(rules, {

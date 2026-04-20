@@ -439,11 +439,12 @@ export default function CgtMainResidenceTrapPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ATO Verified · ITAA 1997 — Main Residence Exemption (s.118-110)
-          </span>
+          <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇦🇺 ATO Verified · ITAA 1997 — Main Residence Exemption (s.118-110) ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-AU
           </span>
         </div>
 
@@ -452,55 +453,11 @@ export default function CgtMainResidenceTrapPage() {
           CGT Main Residence 2026: Is Your Tax-Free Home Actually Taxable?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — ATO confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">The main residence exemption removes CGT on your home — but only if you meet the conditions. If you rented your home at any point, used it for business, or were absent for more than six years, part of your gain may be taxable. The exemption is proportional, not all-or-nothing.</p>
-          <p className="mb-2 text-neutral-900">The 6-year rule allows you to treat a property as your main residence for up to six years while renting it out — but only if you do not treat another property as your main residence at the same time, and only if you moved back in or sold within six years of moving out.</p>
-          <p className="mb-2 text-neutral-900">The most common mistake: people assume that because a property was their main residence at some point, the full sale is tax-free. It is not. The taxable portion is calculated as the number of non-exempt days divided by the total ownership days, multiplied by the capital gain.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Main residence exemption · ITAA 1997 s.118-110</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            How the main residence exemption actually works
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Property was my home = fully tax-free  ❌  Most people assume this
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Exempt days divided by total days = exempt fraction  ✔  Proportional calculation
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about the main residence exemption
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The main residence exemption is all-or-nothing — wrong. The exemption is proportional. If you rented your home for 2 of the 10 years you owned it, 20% of the gain is taxable regardless of whether you qualify for the 6-year rule.</li>
-            <li>✗ The 6-year rule makes all rental periods tax-free — wrong. The 6-year absence rule applies from the date you moved out, not from any rental period. And it resets only if you move back in as your main residence before moving out again.</li>
-            <li>✗ Using the property for a home office does not affect the exemption — wrong. If you claim a deduction for a dedicated home office area, that area may be excluded from the main residence exemption, creating a partial taxable gain on sale.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <CgtMainResidenceTrapCalculator />
           </div>
 
@@ -555,14 +512,14 @@ export default function CgtMainResidenceTrapPage() {
               <h3 className="mb-1 text-lg font-bold">CGT Main Residence Trap Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised CGT audit built around your purchase date, rental periods, and sale date — not a generic ATO guide.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Main Residence CGT Fix Plan
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · CGT Minimisation System
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -587,6 +544,58 @@ export default function CgtMainResidenceTrapPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — ATO confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">The main residence exemption removes CGT on your home — but only if you meet the conditions. If you rented your home at any point, used it for business, or were absent for more than six years, part of your gain may be taxable. The exemption is proportional, not all-or-nothing.</p>
+          <p className="mb-2 text-neutral-900">The 6-year rule allows you to treat a property as your main residence for up to six years while renting it out — but only if you do not treat another property as your main residence at the same time, and only if you moved back in or sold within six years of moving out.</p>
+          <p className="mb-2 text-neutral-900">The most common mistake: people assume that because a property was their main residence at some point, the full sale is tax-free. It is not. The taxable portion is calculated as the number of non-exempt days divided by the total ownership days, multiplied by the capital gain.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Main residence exemption · ITAA 1997 s.118-110</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            How the main residence exemption actually works
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Property was my home = fully tax-free  ❌  Most people assume this
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Exempt days divided by total days = exempt fraction  ✔  Proportional calculation
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about the main residence exemption
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ The main residence exemption is all-or-nothing — wrong. The exemption is proportional. If you rented your home for 2 of the 10 years you owned it, 20% of the gain is taxable regardless of whether you qualify for the 6-year rule.</li>
+            <li>✗ The 6-year rule makes all rental periods tax-free — wrong. The 6-year absence rule applies from the date you moved out, not from any rental period. And it resets only if you move back in as your main residence before moving out again.</li>
+            <li>✗ Using the property for a home office does not affect the exemption — wrong. If you claim a deduction for a dedicated home office area, that area may be excluded from the main residence exemption, creating a partial taxable gain on sale.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

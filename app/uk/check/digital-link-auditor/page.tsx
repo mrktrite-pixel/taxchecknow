@@ -407,9 +407,10 @@ export default function DigitalLinkAuditorPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 HMRC Verified · VAT Notice 700/22 — Making Tax Digital for VAT
-          </span>
+          <a href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇬🇧 HMRC Verified · VAT Notice 700/22 — Making Tax Digital for VAT ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
           </span>
@@ -420,55 +421,11 @@ export default function DigitalLinkAuditorPage() {
           MTD VAT Digital Links 2026: Is Your Process Actually Compliant?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — HMRC confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Under MTD for VAT, there must be a digital link between every step in your VAT accounting process — from the original transaction records through to the final VAT return submission. A digital link means data is transferred electronically — not manually retyped or copy-pasted.</p>
-          <p className="mb-2 text-neutral-900">The most common breach is copying figures from accounting software into a separate spreadsheet, then typing those figures into the HMRC portal. Every manual re-entry breaks the digital link chain. HMRC expects an unbroken electronic trail from source records to submission.</p>
-          <p className="mb-2 text-neutral-900">Permitted digital links include: automated data feeds, API connections, CSV imports, and formulaic links within spreadsheets. Copy-paste between separate files breaks the chain. Manually typing a figure from one system to another breaks the chain.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — VAT Notice 700/22 · MTD for VAT digital links</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The digital link chain — what HMRC requires
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Accounting software → copy figures → spreadsheet → type into portal  ❌  Two breaks in the chain
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Accounting software → CSV import → bridging software → API submission  ✔  Unbroken digital chain
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most businesses get wrong about digital links
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Copying figures between spreadsheets is fine for MTD — wrong. Copy-paste between separate files or applications breaks the digital link. The link must be maintained electronically — through import, export, formula reference, or API. Manually copying a number is not digital.</li>
-            <li>✗ As long as you use accounting software you are compliant — wrong. The digital link must run all the way from source transaction to HMRC submission. If any step in your process involves manual retyping — even just one figure — the chain is broken.</li>
-            <li>✗ HMRC has not been enforcing digital links strictly — wrong. HMRC has been auditing VAT processes and issuing penalties for digital link failures. The soft-landing period ended in 2021. Non-compliance is a live risk.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <DigitalLinkAuditorCalculator />
           </div>
 
@@ -524,14 +481,14 @@ export default function DigitalLinkAuditorPage() {
               <h3 className="mb-1 text-lg font-bold">Digital Link Auditor</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised digital link audit showing your compliance gaps and the fastest fix for each one.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   £67 · Digital Link Audit Pack
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   £147 · MTD VAT Compliance Plan
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -556,6 +513,58 @@ export default function DigitalLinkAuditorPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — HMRC confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Under MTD for VAT, there must be a digital link between every step in your VAT accounting process — from the original transaction records through to the final VAT return submission. A digital link means data is transferred electronically — not manually retyped or copy-pasted.</p>
+          <p className="mb-2 text-neutral-900">The most common breach is copying figures from accounting software into a separate spreadsheet, then typing those figures into the HMRC portal. Every manual re-entry breaks the digital link chain. HMRC expects an unbroken electronic trail from source records to submission.</p>
+          <p className="mb-2 text-neutral-900">Permitted digital links include: automated data feeds, API connections, CSV imports, and formulaic links within spreadsheets. Copy-paste between separate files breaks the chain. Manually typing a figure from one system to another breaks the chain.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — VAT Notice 700/22 · MTD for VAT digital links</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The digital link chain — what HMRC requires
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Accounting software → copy figures → spreadsheet → type into portal  ❌  Two breaks in the chain
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Accounting software → CSV import → bridging software → API submission  ✔  Unbroken digital chain
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most businesses get wrong about digital links
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ Copying figures between spreadsheets is fine for MTD — wrong. Copy-paste between separate files or applications breaks the digital link. The link must be maintained electronically — through import, export, formula reference, or API. Manually copying a number is not digital.</li>
+            <li>✗ As long as you use accounting software you are compliant — wrong. The digital link must run all the way from source transaction to HMRC submission. If any step in your process involves manual retyping — even just one figure — the chain is broken.</li>
+            <li>✗ HMRC has not been enforcing digital links strictly — wrong. HMRC has been auditing VAT processes and issuing penalties for digital link failures. The soft-landing period ended in 2021. Non-compliance is a live risk.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

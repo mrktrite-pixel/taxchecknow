@@ -220,11 +220,12 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ${config.authority} Verified · ${config.legalAnchor}
-          </span>
+          <a href="${config.sources[0]?.url}" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            ${ config.country === "au" ? "🇦🇺" : config.country === "us" ? "🇺🇸" : config.country === "nz" ? "🇳🇿" : config.country === "ca" ? "🇨🇦" : "🇬🇧" } ${config.authority} Verified · ${config.legalAnchor} ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · ${config.language}
           </span>
         </div>
 
@@ -233,53 +234,11 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
           ${config.h1}
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            ${config.answerHeadline}
-          </p>
-          ${config.answerBody.map(para =>
-            `<p className="mb-2 text-neutral-900">${para}</p>`
-          ).join("\n          ")}
-          <p className="mt-3 text-xs text-neutral-600">${config.answerSource}</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        ${config.chainVisual ? `
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            ${config.chainVisual.label ?? "The digital link — what HMRC requires"}
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ ${config.chainVisual.broken}
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ ${config.chainVisual.fixed}
-            </div>
-          </div>
-        </div>` : ""}
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            ${config.mistakesHeadline}
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            ${config.mistakes.map(m => `<li>✗ ${m}</li>`).join("\n            ")}
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <${calculatorName} />
           </div>
 
@@ -322,14 +281,14 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
               <h3 className="mb-1 text-lg font-bold">${config.name}</h3>
               <p className="mb-3 text-sm text-neutral-300">${config.tier1.value}</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}${config.tier1.price} · ${config.tier1.name.replace(/^Your /, "")}
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}${config.tier2.price} · ${config.tier2.name.replace(/^Your /, "")}
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -348,6 +307,56 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            ${config.answerHeadline}
+          </p>
+          ${config.answerBody.map(para =>
+            `<p className="mb-2 text-neutral-900">${para}</p>`
+          ).join("\n          ")}
+          <p className="mt-3 text-xs text-neutral-600">${config.answerSource}</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        ${config.chainVisual ? `
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            ${config.chainVisual.label ?? "The digital link — what HMRC requires"}
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ ${config.chainVisual.broken}
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ ${config.chainVisual.fixed}
+            </div>
+          </div>
+        </div>` : ""}
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            ${config.mistakesHeadline}
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            ${config.mistakes.map(m => `<li>✗ ${m}</li>`).join("\n            ")}
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

@@ -452,11 +452,12 @@ export default function QsbsExitAuditorPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRS Verified · IRC Section 1202
-          </span>
+          <a href="https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇺🇸 IRS Verified · IRC Section 1202 ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-US
           </span>
         </div>
 
@@ -465,55 +466,11 @@ export default function QsbsExitAuditorPage() {
           The 2026 QSBS Exit Auditor: Will Your $15M Exit Be Tax-Free?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — IRS confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Under IRC Section 1202, Qualified Small Business Stock allows up to $15,000,000 in tax-free capital gains — or 10× your original investment, whichever is greater. To qualify, your stock must be issued by a C-Corporation, acquired at original issuance, held for at least 5 years, and the company must pass the active business test throughout the holding period.</p>
-          <p className="mb-2 text-neutral-900">One eligibility failure eliminates 100% of the tax benefit. S-Corps, LLCs and partnerships do not qualify. Secondary market purchases do not qualify. Service businesses in law, finance, consulting and hospitality are excluded industries.</p>
-          <p className="mb-2 text-neutral-900">Most founders discover QSBS problems at exit — when restructuring is no longer possible. The time to audit is during the holding period, not when the term sheet arrives.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC Section 1202 · IRS Publication 550</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            QSBS qualification — all conditions must be met throughout
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ C-Corp ✓  BUT  Purchased secondary  ❌  →  QSBS DISQUALIFIED — $3.5M tax owed
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ C-Corp ✓  Original issuance ✓  5yr hold ✓  Active business ✓  →  $0 TAX ON EXIT
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ QSBS applies to all startups — wrong. Only qualified trades and C-Corporations qualify. S-Corps, LLCs, partnerships and certain service industries are excluded.</li>
-            <li>✗ Stock ownership alone qualifies for QSBS — wrong. Stock must be acquired at original issuance directly from the company, not purchased on a secondary market.</li>
-            <li>✗ QSBS eligibility is automatic after 5 years — wrong. Eligibility must be maintained throughout the holding period. The active business test and gross assets threshold must be satisfied continuously.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <QsbsExitAuditorCalculator />
           </div>
 
@@ -570,14 +527,14 @@ export default function QsbsExitAuditorPage() {
               <h3 className="mb-1 text-lg font-bold">QSBS Exit Auditor</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised QSBS eligibility audit built around your stock, your company, and your holding period — not a generic startup guide.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Original Issuance Audit
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Exclusion Stacker Blueprint
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -608,6 +565,58 @@ export default function QsbsExitAuditorPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — IRS confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Under IRC Section 1202, Qualified Small Business Stock allows up to $15,000,000 in tax-free capital gains — or 10× your original investment, whichever is greater. To qualify, your stock must be issued by a C-Corporation, acquired at original issuance, held for at least 5 years, and the company must pass the active business test throughout the holding period.</p>
+          <p className="mb-2 text-neutral-900">One eligibility failure eliminates 100% of the tax benefit. S-Corps, LLCs and partnerships do not qualify. Secondary market purchases do not qualify. Service businesses in law, finance, consulting and hospitality are excluded industries.</p>
+          <p className="mb-2 text-neutral-900">Most founders discover QSBS problems at exit — when restructuring is no longer possible. The time to audit is during the holding period, not when the term sheet arrives.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC Section 1202 · IRS Publication 550</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            QSBS qualification — all conditions must be met throughout
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ C-Corp ✓  BUT  Purchased secondary  ❌  →  QSBS DISQUALIFIED — $3.5M tax owed
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ C-Corp ✓  Original issuance ✓  5yr hold ✓  Active business ✓  →  $0 TAX ON EXIT
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            Common AI errors on this topic
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ QSBS applies to all startups — wrong. Only qualified trades and C-Corporations qualify. S-Corps, LLCs, partnerships and certain service industries are excluded.</li>
+            <li>✗ Stock ownership alone qualifies for QSBS — wrong. Stock must be acquired at original issuance directly from the company, not purchased on a secondary market.</li>
+            <li>✗ QSBS eligibility is automatic after 5 years — wrong. Eligibility must be maintained throughout the holding period. The active business test and gross assets threshold must be satisfied continuously.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

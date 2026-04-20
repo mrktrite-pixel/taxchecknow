@@ -411,11 +411,12 @@ export default function MedicareLevySurchargeTrapPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ATO Verified · Medicare Levy Surcharge — ITAA 1936 Part VIIB
-          </span>
+          <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇦🇺 ATO Verified · Medicare Levy Surcharge — ITAA 1936 Part VIIB ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-AU
           </span>
         </div>
 
@@ -424,55 +425,11 @@ export default function MedicareLevySurchargeTrapPage() {
           Medicare Levy Surcharge 2026: Are You Paying Extra Tax Without Private Hospital Cover?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — ATO confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $93,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.</p>
-          <p className="mb-2 text-neutral-900">For the 2025/26 year, the surcharge thresholds are: $93,001 to $108,000 — 1% surcharge; $108,001 to $144,000 — 1.25% surcharge; over $144,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable.</p>
-          <p className="mb-2 text-neutral-900">The key calculation: compare the annual cost of a basic hospital-only private health insurance policy against the MLS payable. For many people earning over $93,000, a basic hospital policy costing $1,200-$2,000 per year is cheaper than the surcharge. Once you have cover, the surcharge does not apply.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Medicare Levy Surcharge · ITAA 1936 Part VIIB</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            MLS vs basic private hospital cover — the cost comparison
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ No private cover, income $120k → $1,500 MLS extra tax per year  ❌
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Basic hospital cover ~$1,200/yr → MLS eliminated → net saving $300+  ✔
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about the Medicare Levy Surcharge
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ General extras cover avoids the surcharge — wrong. The MLS is only avoided by holding appropriate private hospital cover — not general treatment (extras) cover. A policy covering dental, optical, and physiotherapy does not satisfy the MLS requirement. You need hospital cover specifically.</li>
-            <li>✗ The surcharge only applies to the income over the threshold — wrong. The MLS applies to your entire taxable income, total reportable fringe benefits, and reportable employer super contributions — not just the amount over the threshold. An income of $100,000 incurs MLS on the full $100,000, not just the $7,000 above $93,000.</li>
-            <li>✗ I only need cover for part of the year — wrong. To avoid the full-year MLS, you need appropriate hospital cover for every day of the financial year. If you cancel cover in February and the financial year ends in June, you will pay MLS for those months. The surcharge is calculated on the number of days without appropriate cover.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <MedicareLevySurchargeTrapCalculator />
           </div>
 
@@ -527,14 +484,14 @@ export default function MedicareLevySurchargeTrapPage() {
               <h3 className="mb-1 text-lg font-bold">Medicare Levy Surcharge Trap Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised MLS analysis — surcharge calculation, cover timing strategy, and cost vs tax comparison.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · MLS Avoidance Plan
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Income and Insurance Optimisation System
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -553,6 +510,58 @@ export default function MedicareLevySurchargeTrapPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — ATO confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $93,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.</p>
+          <p className="mb-2 text-neutral-900">For the 2025/26 year, the surcharge thresholds are: $93,001 to $108,000 — 1% surcharge; $108,001 to $144,000 — 1.25% surcharge; over $144,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable.</p>
+          <p className="mb-2 text-neutral-900">The key calculation: compare the annual cost of a basic hospital-only private health insurance policy against the MLS payable. For many people earning over $93,000, a basic hospital policy costing $1,200-$2,000 per year is cheaper than the surcharge. Once you have cover, the surcharge does not apply.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Medicare Levy Surcharge · ITAA 1936 Part VIIB</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            MLS vs basic private hospital cover — the cost comparison
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ No private cover, income $120k → $1,500 MLS extra tax per year  ❌
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Basic hospital cover ~$1,200/yr → MLS eliminated → net saving $300+  ✔
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about the Medicare Levy Surcharge
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ General extras cover avoids the surcharge — wrong. The MLS is only avoided by holding appropriate private hospital cover — not general treatment (extras) cover. A policy covering dental, optical, and physiotherapy does not satisfy the MLS requirement. You need hospital cover specifically.</li>
+            <li>✗ The surcharge only applies to the income over the threshold — wrong. The MLS applies to your entire taxable income, total reportable fringe benefits, and reportable employer super contributions — not just the amount over the threshold. An income of $100,000 incurs MLS on the full $100,000, not just the $7,000 above $93,000.</li>
+            <li>✗ I only need cover for part of the year — wrong. To avoid the full-year MLS, you need appropriate hospital cover for every day of the financial year. If you cancel cover in February and the financial year ends in June, you will pay MLS for those months. The surcharge is calculated on the number of days without appropriate cover.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

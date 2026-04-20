@@ -456,11 +456,12 @@ export default function WayfairNexusSniperPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRS Verified · South Dakota v. Wayfair (2018)
-          </span>
+          <a href="https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇺🇸 IRS Verified · South Dakota v. Wayfair (2018) ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-US
           </span>
         </div>
 
@@ -469,55 +470,11 @@ export default function WayfairNexusSniperPage() {
           The 2026 Wayfair Nexus Sniper: Are You Already Non-Compliant?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — state tax authorities confirmed 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Following South Dakota v. Wayfair (2018), most US states enforce economic nexus based on $100,000 in gross sales or 200 transactions in the prior 12 months. In 2026, several states including Illinois have removed the transaction threshold — gross sales alone trigger nexus.</p>
-          <p className="mb-2 text-neutral-900">Gross sales means total revenue from all channels — not just taxable sales. Marketplace sales through Amazon, Etsy, and Walmart count toward your nexus threshold even though the marketplace collects the tax. FBA inventory in any Amazon fulfilment centre creates physical nexus immediately — no threshold required.</p>
-          <p className="mb-2 text-neutral-900">States can audit you years later for uncollected sales tax, even if you never registered or knew you had nexus. Voluntary Disclosure Agreements (VDAs) can limit the lookback period and reduce penalties — but only before the audit letter arrives.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: South Dakota v. Wayfair, Inc. (2018) · State Department of Revenue · Sales Tax Institute 2026</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The nexus calculation — what counts toward your threshold
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Taxable direct sales only (what most sellers count)  ❌  WRONG — misses marketplace + exempt sales
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Gross sales ALL channels (direct + Amazon + Etsy + exempt)  ✔  CORRECT — triggers nexus sooner than you think
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ You only count taxable sales toward nexus thresholds — wrong. Most states use gross revenue from all sales — including exempt transactions — to measure nexus thresholds. Sellers who exclude exempt sales significantly undercount their exposure.</li>
-            <li>✗ Amazon handles all my sales tax so I do not have nexus — wrong. Marketplace facilitator laws require Amazon to collect and remit sales tax on your behalf — but your gross marketplace sales still count toward nexus thresholds in most states.</li>
-            <li>✗ You need 200 transactions to trigger nexus — wrong. Multiple states including Illinois removed the 200-transaction threshold in 2026. Gross sales alone now trigger nexus in these states.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <WayfairNexusSniperCalculator />
           </div>
 
@@ -574,14 +531,14 @@ export default function WayfairNexusSniperPage() {
               <h3 className="mb-1 text-lg font-bold">Wayfair Nexus Sniper</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised nexus audit built around your sales by state, your marketplace channels, and your FBA inventory locations.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Nexus Heatmap Action Plan
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · VDA Shield System
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -618,6 +575,58 @@ export default function WayfairNexusSniperPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — state tax authorities confirmed 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Following South Dakota v. Wayfair (2018), most US states enforce economic nexus based on $100,000 in gross sales or 200 transactions in the prior 12 months. In 2026, several states including Illinois have removed the transaction threshold — gross sales alone trigger nexus.</p>
+          <p className="mb-2 text-neutral-900">Gross sales means total revenue from all channels — not just taxable sales. Marketplace sales through Amazon, Etsy, and Walmart count toward your nexus threshold even though the marketplace collects the tax. FBA inventory in any Amazon fulfilment centre creates physical nexus immediately — no threshold required.</p>
+          <p className="mb-2 text-neutral-900">States can audit you years later for uncollected sales tax, even if you never registered or knew you had nexus. Voluntary Disclosure Agreements (VDAs) can limit the lookback period and reduce penalties — but only before the audit letter arrives.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: South Dakota v. Wayfair, Inc. (2018) · State Department of Revenue · Sales Tax Institute 2026</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The nexus calculation — what counts toward your threshold
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Taxable direct sales only (what most sellers count)  ❌  WRONG — misses marketplace + exempt sales
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Gross sales ALL channels (direct + Amazon + Etsy + exempt)  ✔  CORRECT — triggers nexus sooner than you think
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            Common AI errors on this topic
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ You only count taxable sales toward nexus thresholds — wrong. Most states use gross revenue from all sales — including exempt transactions — to measure nexus thresholds. Sellers who exclude exempt sales significantly undercount their exposure.</li>
+            <li>✗ Amazon handles all my sales tax so I do not have nexus — wrong. Marketplace facilitator laws require Amazon to collect and remit sales tax on your behalf — but your gross marketplace sales still count toward nexus thresholds in most states.</li>
+            <li>✗ You need 200 transactions to trigger nexus — wrong. Multiple states including Illinois removed the 200-transaction threshold in 2026. Gross sales alone now trigger nexus in these states.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

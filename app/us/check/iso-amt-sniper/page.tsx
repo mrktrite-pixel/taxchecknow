@@ -456,11 +456,12 @@ export default function IsoAmtSniperPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRS Verified · IRC Section 56(b)(3)
-          </span>
+          <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇺🇸 IRS Verified · IRC Section 56(b)(3) ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-US
           </span>
         </div>
 
@@ -469,55 +470,11 @@ export default function IsoAmtSniperPage() {
           The 2026 ISO Exercise Sniper: Avoid a $150K Phantom Tax Bill
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — IRS confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Exercising Incentive Stock Options (ISOs) can trigger the Alternative Minimum Tax (AMT). The bargain element — the spread between the 409A fair market value and your strike price — is treated as AMT income at the moment of exercise, even if you cannot sell the shares.</p>
-          <p className="mb-2 text-neutral-900">This creates a six-figure tax bill with zero cash liquidity. Exercising 10,000 options with a $50 spread generates $500,000 of AMT income and approximately $150,000 of AMT — owed in April even if the shares are illiquid and worth nothing in cash terms.</p>
-          <p className="mb-2 text-neutral-900">The safe exercise range is the number you need — how many shares you can exercise before AMT kicks in. Most employees never calculate this. They exercise their full grant and receive a tax bill they cannot pay.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRS — Form 6251 Instructions · IRC Section 56(b)(3) · IRS Publication 525</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The ISO AMT trap — exercise without planning
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Exercise full grant (10,000 shares @ $50 spread)  →  $500k AMT income  →  $150k tax bill  →  No cash to pay  ❌
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Exercise safe range (2,100 shares)  →  Stay below AMT threshold  →  $0 AMT  →  Full liquidity preserved  ✔
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ ISOs are tax-free until you sell the shares — wrong. ISO exercise creates AMT income immediately at the spread (FMV minus strike). The tax is due in April of the year you exercise, not when you sell.</li>
-            <li>✗ AMT is rare and does not affect most employees — wrong. Any employee with significant ISO grants at a growing company is at risk. The AMT exemption phases out rapidly at higher income levels.</li>
-            <li>✗ AMT is a permanent tax — wrong. AMT paid on ISO exercise creates a Minimum Tax Credit (Form 8801) that can be recovered in future years when your regular tax exceeds your tentative minimum tax.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <IsoAmtSniperCalculator />
           </div>
 
@@ -572,14 +529,14 @@ export default function IsoAmtSniperPage() {
               <h3 className="mb-1 text-lg font-bold">ISO AMT Exercise Sniper</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised ISO exercise analysis built around your salary, your options, and your exact safe exercise range.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Zero-AMT Exercise Map
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · AMT Recovery System
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -616,6 +573,58 @@ export default function IsoAmtSniperPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — IRS confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Exercising Incentive Stock Options (ISOs) can trigger the Alternative Minimum Tax (AMT). The bargain element — the spread between the 409A fair market value and your strike price — is treated as AMT income at the moment of exercise, even if you cannot sell the shares.</p>
+          <p className="mb-2 text-neutral-900">This creates a six-figure tax bill with zero cash liquidity. Exercising 10,000 options with a $50 spread generates $500,000 of AMT income and approximately $150,000 of AMT — owed in April even if the shares are illiquid and worth nothing in cash terms.</p>
+          <p className="mb-2 text-neutral-900">The safe exercise range is the number you need — how many shares you can exercise before AMT kicks in. Most employees never calculate this. They exercise their full grant and receive a tax bill they cannot pay.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRS — Form 6251 Instructions · IRC Section 56(b)(3) · IRS Publication 525</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The ISO AMT trap — exercise without planning
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Exercise full grant (10,000 shares @ $50 spread)  →  $500k AMT income  →  $150k tax bill  →  No cash to pay  ❌
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Exercise safe range (2,100 shares)  →  Stay below AMT threshold  →  $0 AMT  →  Full liquidity preserved  ✔
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            Common AI errors on this topic
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ ISOs are tax-free until you sell the shares — wrong. ISO exercise creates AMT income immediately at the spread (FMV minus strike). The tax is due in April of the year you exercise, not when you sell.</li>
+            <li>✗ AMT is rare and does not affect most employees — wrong. Any employee with significant ISO grants at a growing company is at risk. The AMT exemption phases out rapidly at higher income levels.</li>
+            <li>✗ AMT is a permanent tax — wrong. AMT paid on ISO exercise creates a Minimum Tax Credit (Form 8801) that can be recovered in future years when your regular tax exceeds your tentative minimum tax.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

@@ -404,11 +404,12 @@ export default function InstantAssetWriteOffPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ATO Verified · ITAA 1997 — Instant asset write-off (s.328-180)
-          </span>
+          <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/depreciation-and-capital-expenses-and-allowances/simpler-depreciation-for-small-business/instant-asset-write-off" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇦🇺 ATO Verified · ITAA 1997 — Instant asset write-off (s.328-180) ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-AU
           </span>
         </div>
 
@@ -417,55 +418,11 @@ export default function InstantAssetWriteOffPage() {
           Instant Asset Write-Off 2026: Will You Miss Your EOFY Deductions?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — ATO confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">For the 2024/25 and 2025/26 income years, eligible small businesses with aggregate annual turnover under $10 million can immediately deduct the cost of eligible assets costing less than $20,000. The asset must be first used or installed ready for use in the relevant income year — before 30 June.</p>
-          <p className="mb-2 text-neutral-900">The threshold is $20,000 per asset — not per purchase. If you buy five pieces of equipment each costing $18,000, all five qualify. If you buy one piece of equipment costing $22,000, it does not qualify and must be depreciated through the general small business pool.</p>
-          <p className="mb-2 text-neutral-900">The most common mistake: ordering equipment in May, paying for it in June, but it is not delivered until July. If the asset is not installed and ready for use before 30 June, the write-off cannot be claimed in the current year — regardless of when it was ordered or paid for.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Instant asset write-off · ITAA 1997 s.328-180</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The instant asset write-off — what triggers the deduction
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Order in June, deliver in July → claim this year  ❌  NOT ready for use before 30 June
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Order in May, installed by 25 June → claim this year  ✔  Ready for use before 30 June
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about the instant asset write-off
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ I can claim the write-off if I order the asset before 30 June — wrong. The asset must be installed and ready for use before 30 June. An order placed in June but delivered in July cannot be claimed in the current year. Physical installation and readiness for use is the test — not the order or payment date.</li>
-            <li>✗ The $20,000 threshold is the total spend across all assets — wrong. The $20,000 threshold applies per asset. You can buy multiple assets each under $20,000 and claim an immediate write-off for each one. There is no cap on the total number of eligible assets.</li>
-            <li>✗ All businesses can use the instant asset write-off — wrong. The instant asset write-off at the $20,000 threshold applies to small businesses with aggregate annual turnover under $10 million. Businesses above this threshold use different depreciation rules. The turnover includes turnover of connected entities and affiliates.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <InstantAssetWriteOffCalculator />
           </div>
 
@@ -520,14 +477,14 @@ export default function InstantAssetWriteOffPage() {
               <h3 className="mb-1 text-lg font-bold">Instant Asset Write-Off Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised instant asset write-off check — eligibility, threshold, timing, and asset qualification.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Instant Asset Write-Off Plan
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Full Depreciation System
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -546,6 +503,58 @@ export default function InstantAssetWriteOffPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — ATO confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">For the 2024/25 and 2025/26 income years, eligible small businesses with aggregate annual turnover under $10 million can immediately deduct the cost of eligible assets costing less than $20,000. The asset must be first used or installed ready for use in the relevant income year — before 30 June.</p>
+          <p className="mb-2 text-neutral-900">The threshold is $20,000 per asset — not per purchase. If you buy five pieces of equipment each costing $18,000, all five qualify. If you buy one piece of equipment costing $22,000, it does not qualify and must be depreciated through the general small business pool.</p>
+          <p className="mb-2 text-neutral-900">The most common mistake: ordering equipment in May, paying for it in June, but it is not delivered until July. If the asset is not installed and ready for use before 30 June, the write-off cannot be claimed in the current year — regardless of when it was ordered or paid for.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Instant asset write-off · ITAA 1997 s.328-180</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The instant asset write-off — what triggers the deduction
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Order in June, deliver in July → claim this year  ❌  NOT ready for use before 30 June
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Order in May, installed by 25 June → claim this year  ✔  Ready for use before 30 June
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about the instant asset write-off
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ I can claim the write-off if I order the asset before 30 June — wrong. The asset must be installed and ready for use before 30 June. An order placed in June but delivered in July cannot be claimed in the current year. Physical installation and readiness for use is the test — not the order or payment date.</li>
+            <li>✗ The $20,000 threshold is the total spend across all assets — wrong. The $20,000 threshold applies per asset. You can buy multiple assets each under $20,000 and claim an immediate write-off for each one. There is no cap on the total number of eligible assets.</li>
+            <li>✗ All businesses can use the instant asset write-off — wrong. The instant asset write-off at the $20,000 threshold applies to small businesses with aggregate annual turnover under $10 million. Businesses above this threshold use different depreciation rules. The turnover includes turnover of connected entities and affiliates.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

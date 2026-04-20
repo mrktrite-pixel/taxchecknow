@@ -409,11 +409,12 @@ export default function SmallBusinessCgtConcessionsPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ATO Verified · ITAA 1997 — Small business CGT concessions (Div 152)
-          </span>
+          <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇦🇺 ATO Verified · ITAA 1997 — Small business CGT concessions (Div 152) ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-AU
           </span>
         </div>
 
@@ -422,55 +423,11 @@ export default function SmallBusinessCgtConcessionsPage() {
           Small Business CGT 2026: Do You Qualify for the $500K Lifetime Exemption?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — ATO confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Division 152 of ITAA 1997 provides four CGT concessions specifically for small businesses: the 15-year exemption (eliminates the gain entirely after 15 years), the 50% active asset reduction, the retirement exemption (up to $500,000 lifetime, tax-free), and the rollover (defer the gain for two years). These can be combined — potentially eliminating CGT entirely on a business sale.</p>
-          <p className="mb-2 text-neutral-900">To access any concession, the taxpayer must first satisfy the basic conditions: either have aggregate turnover under $2 million, or have net assets under $6 million (excluding personal use assets). The asset being sold must also satisfy the active asset test — broadly, it must have been used in a business for at least half of the ownership period.</p>
-          <p className="mb-2 text-neutral-900">The lifetime limit of $500,000 for the retirement exemption applies across all disposals — not per disposal. Once you have used $500,000 of the exemption across your lifetime, no further retirement exemption is available on future disposals.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Small business CGT concessions · ITAA 1997 Div 152</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The four small business CGT concessions — stacked for maximum benefit
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Sell business without planning → full CGT at marginal rate  ❌
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ 15-year OR 50% reduction + retirement exemption → potentially zero CGT  ✔
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about small business CGT
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ You automatically qualify if your turnover is under $2 million — wrong. The turnover test is just one of two threshold tests. You must also satisfy the active asset test for the specific asset being sold. A property that was not actively used in the business for at least half the ownership period fails the active asset test regardless of turnover.</li>
-            <li>✗ The $500,000 retirement exemption applies per sale — wrong. The $500,000 retirement exemption is a lifetime limit across all eligible capital gains across all disposals. If you have used $300,000 on a prior sale, only $200,000 remains for future sales.</li>
-            <li>✗ The concessions are automatic if you qualify — wrong. The concessions must be elected in the tax return for the year the CGT event occurred. Missing the election means losing the concession — even if all the eligibility conditions were met.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <SmallBusinessCgtConcessionsCalculator />
           </div>
 
@@ -526,14 +483,14 @@ export default function SmallBusinessCgtConcessionsPage() {
               <h3 className="mb-1 text-lg font-bold">Small Business CGT Concessions Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised small business CGT concessions eligibility check — active asset test, turnover test, and retirement exemption analysis.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Small Business CGT Eligibility Check
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Small Business Exit Tax Strategy
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -552,6 +509,58 @@ export default function SmallBusinessCgtConcessionsPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — ATO confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Division 152 of ITAA 1997 provides four CGT concessions specifically for small businesses: the 15-year exemption (eliminates the gain entirely after 15 years), the 50% active asset reduction, the retirement exemption (up to $500,000 lifetime, tax-free), and the rollover (defer the gain for two years). These can be combined — potentially eliminating CGT entirely on a business sale.</p>
+          <p className="mb-2 text-neutral-900">To access any concession, the taxpayer must first satisfy the basic conditions: either have aggregate turnover under $2 million, or have net assets under $6 million (excluding personal use assets). The asset being sold must also satisfy the active asset test — broadly, it must have been used in a business for at least half of the ownership period.</p>
+          <p className="mb-2 text-neutral-900">The lifetime limit of $500,000 for the retirement exemption applies across all disposals — not per disposal. Once you have used $500,000 of the exemption across your lifetime, no further retirement exemption is available on future disposals.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Small business CGT concessions · ITAA 1997 Div 152</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The four small business CGT concessions — stacked for maximum benefit
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Sell business without planning → full CGT at marginal rate  ❌
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ 15-year OR 50% reduction + retirement exemption → potentially zero CGT  ✔
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about small business CGT
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ You automatically qualify if your turnover is under $2 million — wrong. The turnover test is just one of two threshold tests. You must also satisfy the active asset test for the specific asset being sold. A property that was not actively used in the business for at least half the ownership period fails the active asset test regardless of turnover.</li>
+            <li>✗ The $500,000 retirement exemption applies per sale — wrong. The $500,000 retirement exemption is a lifetime limit across all eligible capital gains across all disposals. If you have used $300,000 on a prior sale, only $200,000 remains for future sales.</li>
+            <li>✗ The concessions are automatic if you qualify — wrong. The concessions must be elected in the tax return for the year the CGT event occurred. Missing the election means losing the concession — even if all the eligibility conditions were met.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

@@ -457,11 +457,12 @@ export default function BrightLineAuditorPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRD Verified · Income Tax Act 2007 — Bright-Line Test
-          </span>
+          <a href="https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇳🇿 IRD Verified · Income Tax Act 2007 — Bright-Line Test ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-NZ
           </span>
         </div>
 
@@ -470,55 +471,11 @@ export default function BrightLineAuditorPage() {
           NZ Bright-Line 2026: Is Your Property Sale Tax-Free?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — IRD confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">From 1 July 2024, New Zealand's bright-line test is 2 years for ALL residential property sales. If you sell more than 730 days after your title registration date, your profit is generally tax-free. The old 5-year and 10-year rules have been repealed.</p>
-          <p className="mb-2 text-neutral-900">The start date is your title registration date — not your purchase agreement date, and not your settlement date. Most people get this wrong. Using the wrong start date can mean thinking you are taxable when you are not, or thinking you are safe when the clock has not yet expired.</p>
-          <p className="mb-2 text-neutral-900">The main home exemption still applies but requires passing both the time test (over 50% occupancy) and the area test (over 50% of land used as main home). Simply living in the property is not enough — you need to be able to prove it.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Bright-line property rule · Income Tax Act 2007 s CB 6A</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The bright-line clock — what starts and stops it
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Purchase agreement date → sale date  ❌  WRONG — most people use this
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Title registration date → binding sale agreement  ✔  CORRECT IRD rule
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The 10-year bright-line still applies — wrong. From 1 July 2024, the bright-line period is 2 years for all residential property sales regardless of purchase date or property type. The old rules have been repealed.</li>
-            <li>✗ The purchase agreement date starts the bright-line clock — wrong. The start date is your title registration date. Using the wrong date can result in incorrect tax assessment.</li>
-            <li>✗ Living in the property means you are automatically exempt — wrong. You must pass both the time test (over 50% occupancy during ownership) and the area test (over 50% of land used as main home).</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <BrightLineAuditorCalculator />
           </div>
 
@@ -572,14 +529,14 @@ export default function BrightLineAuditorPage() {
               <h3 className="mb-1 text-lg font-bold">Bright-Line Escape Auditor</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised bright-line audit built around your title date, sale date, and main home usage — not a generic property guide.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Main Home Proof Kit
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Rollover Relief Audit
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -610,6 +567,58 @@ export default function BrightLineAuditorPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — IRD confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">From 1 July 2024, New Zealand's bright-line test is 2 years for ALL residential property sales. If you sell more than 730 days after your title registration date, your profit is generally tax-free. The old 5-year and 10-year rules have been repealed.</p>
+          <p className="mb-2 text-neutral-900">The start date is your title registration date — not your purchase agreement date, and not your settlement date. Most people get this wrong. Using the wrong start date can mean thinking you are taxable when you are not, or thinking you are safe when the clock has not yet expired.</p>
+          <p className="mb-2 text-neutral-900">The main home exemption still applies but requires passing both the time test (over 50% occupancy) and the area test (over 50% of land used as main home). Simply living in the property is not enough — you need to be able to prove it.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Bright-line property rule · Income Tax Act 2007 s CB 6A</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            The bright-line clock — what starts and stops it
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Purchase agreement date → sale date  ❌  WRONG — most people use this
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Title registration date → binding sale agreement  ✔  CORRECT IRD rule
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            Common AI errors on this topic
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ The 10-year bright-line still applies — wrong. From 1 July 2024, the bright-line period is 2 years for all residential property sales regardless of purchase date or property type. The old rules have been repealed.</li>
+            <li>✗ The purchase agreement date starts the bright-line clock — wrong. The start date is your title registration date. Using the wrong date can result in incorrect tax assessment.</li>
+            <li>✗ Living in the property means you are automatically exempt — wrong. You must pass both the time test (over 50% occupancy during ownership) and the area test (over 50% of land used as main home).</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

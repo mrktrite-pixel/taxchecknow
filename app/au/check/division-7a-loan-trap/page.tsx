@@ -419,11 +419,12 @@ export default function Division7aLoanTrapPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ATO Verified · ITAA 1936 — Division 7A
-          </span>
+          <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇦🇺 ATO Verified · ITAA 1936 — Division 7A ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-AU
           </span>
         </div>
 
@@ -432,55 +433,11 @@ export default function Division7aLoanTrapPage() {
           Division 7A 2026: Is Your Director Loan About to Become Taxable Income?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — ATO confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Under Division 7A of ITAA 1936, if a private company lends money to a shareholder or their associate without a complying loan agreement, the loan is treated as an unfranked dividend — fully taxable at the shareholder's marginal rate. This applies even if the loan was never intended to be a dividend and even if the company never formally declared one.</p>
-          <p className="mb-2 text-neutral-900">To avoid the deemed dividend, loans must be documented with a written agreement before the company's lodgement day, charged at the ATO benchmark interest rate (currently 8.27% for 2025/26), and repaid with minimum annual repayments over a maximum of 7 years (25 years for loans secured by a registered mortgage over real property).</p>
-          <p className="mb-2 text-neutral-900">The most common trap: directors draw cash from their company without paperwork, the balance accumulates over years, and at tax time the accountant discovers the entire amount is a deemed dividend. On a $200,000 loan at a 47% marginal rate, that is $94,000 in unexpected tax.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Division 7A · ITAA 1936</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            How Division 7A works — the trap and the fix
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Draw cash from company → no paperwork → deemed dividend at 47%  ❌
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Written loan agreement + benchmark interest + minimum repayments  ✔  Loan stays as loan
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about Division 7A
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ I can just repay the loan before tax time and avoid the issue — wrong. The loan agreement must be in place before the company's lodgement day (the earlier of the due date and the date the return is lodged). A loan repaid after lodgement day without a proper agreement is still a deemed dividend.</li>
-            <li>✗ Division 7A only applies to large companies — wrong. Division 7A applies to all private companies regardless of size. It affects small family companies, professional practices, and property holding companies equally. The ATO actively targets unprepared small business owners.</li>
-            <li>✗ My accountant handles it so I don't need to understand it — wrong. Many directors do not know their loan balance or whether minimum repayments are being made. A missed minimum repayment converts that year's shortfall into a deemed dividend — even if the loan agreement exists.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <Division7aLoanTrapCalculator />
           </div>
 
@@ -535,14 +492,14 @@ export default function Division7aLoanTrapPage() {
               <h3 className="mb-1 text-lg font-bold">Division 7A Loan Trap Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised Div 7A audit — minimum repayment calculation, loan compliance check, and risk classification.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Division 7A Loan Fix Plan
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Division 7A Loan Restructure System
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -561,6 +518,58 @@ export default function Division7aLoanTrapPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — ATO confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Under Division 7A of ITAA 1936, if a private company lends money to a shareholder or their associate without a complying loan agreement, the loan is treated as an unfranked dividend — fully taxable at the shareholder's marginal rate. This applies even if the loan was never intended to be a dividend and even if the company never formally declared one.</p>
+          <p className="mb-2 text-neutral-900">To avoid the deemed dividend, loans must be documented with a written agreement before the company's lodgement day, charged at the ATO benchmark interest rate (currently 8.27% for 2025/26), and repaid with minimum annual repayments over a maximum of 7 years (25 years for loans secured by a registered mortgage over real property).</p>
+          <p className="mb-2 text-neutral-900">The most common trap: directors draw cash from their company without paperwork, the balance accumulates over years, and at tax time the accountant discovers the entire amount is a deemed dividend. On a $200,000 loan at a 47% marginal rate, that is $94,000 in unexpected tax.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Division 7A · ITAA 1936</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            How Division 7A works — the trap and the fix
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Draw cash from company → no paperwork → deemed dividend at 47%  ❌
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Written loan agreement + benchmark interest + minimum repayments  ✔  Loan stays as loan
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about Division 7A
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ I can just repay the loan before tax time and avoid the issue — wrong. The loan agreement must be in place before the company's lodgement day (the earlier of the due date and the date the return is lodged). A loan repaid after lodgement day without a proper agreement is still a deemed dividend.</li>
+            <li>✗ Division 7A only applies to large companies — wrong. Division 7A applies to all private companies regardless of size. It affects small family companies, professional practices, and property holding companies equally. The ATO actively targets unprepared small business owners.</li>
+            <li>✗ My accountant handles it so I don't need to understand it — wrong. Many directors do not know their loan balance or whether minimum repayments are being made. A missed minimum repayment converts that year's shortfall into a deemed dividend — even if the loan agreement exists.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

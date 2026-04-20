@@ -398,9 +398,10 @@ export default function SideHustleCheckerPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 HMRC Verified · Income Tax (Trading and Other Income) Act 2005
-          </span>
+          <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇬🇧 HMRC Verified · Income Tax (Trading and Other Income) Act 2005 ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
           </span>
@@ -411,55 +412,11 @@ export default function SideHustleCheckerPage() {
           Side Hustle Tax UK 2026: Does HMRC Already Know?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — HMRC confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">From January 2026, digital platforms including eBay, Etsy, Airbnb, Fiverr, Vinted, and Uber are legally required to report your earnings to HMRC. This means HMRC receives your platform income data automatically — whether you have declared it or not.</p>
-          <p className="mb-2 text-neutral-900">The £1,000 trading allowance is based on gross income — the total you receive before any expenses. If your gross income from all side hustles combined exceeds £1,000 in a tax year, you must register for self assessment and file a tax return, even if your profit after expenses is lower.</p>
-          <p className="mb-2 text-neutral-900">The registration deadline is 5 October following the tax year end. For income earned in the 2025/26 tax year (ending 5 April 2026), you must register by 5 October 2026. Missing this deadline triggers an automatic £100 penalty.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Self assessment · Trading allowance · Platform reporting</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            HMRC platform reporting — how it works from 2026
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Platform pays you → you decide whether to declare  ❌  No longer works — HMRC gets the data directly
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Platform pays you → platform reports to HMRC → HMRC cross-checks your return  ✔  The new reality
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most side hustlers get wrong
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The £1,000 allowance is per platform — wrong. The £1,000 trading allowance is your total across ALL income sources. Multiple platforms, multiple types of side income — they all count together. Earn £600 on Etsy and £600 on Vinted and you are over the threshold.</li>
-            <li>✗ HMRC only knows if you tell them — wrong from January 2026. Digital platforms now report directly to HMRC. If you earned over a certain amount on a qualifying platform, HMRC already has your data. Undeclared income will now be cross-referenced against platform reports.</li>
-            <li>✗ The allowance covers profit not income — wrong. The £1,000 threshold is gross income — the total you receive before expenses. If your platform payments total more than £1,000, you must register, even if costs mean your profit is below £1,000.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <SideHustleCheckerCalculator />
           </div>
 
@@ -514,14 +471,14 @@ export default function SideHustleCheckerPage() {
               <h3 className="mb-1 text-lg font-bold">Side Hustle Checker</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised side hustle tax assessment showing your declaration obligations, tax exposure, and whether you are already on HMRC radar.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   £67 · Side Hustle Tax Pack
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   £147 · Side Hustle Registration Plan
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -552,6 +509,58 @@ export default function SideHustleCheckerPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — HMRC confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">From January 2026, digital platforms including eBay, Etsy, Airbnb, Fiverr, Vinted, and Uber are legally required to report your earnings to HMRC. This means HMRC receives your platform income data automatically — whether you have declared it or not.</p>
+          <p className="mb-2 text-neutral-900">The £1,000 trading allowance is based on gross income — the total you receive before any expenses. If your gross income from all side hustles combined exceeds £1,000 in a tax year, you must register for self assessment and file a tax return, even if your profit after expenses is lower.</p>
+          <p className="mb-2 text-neutral-900">The registration deadline is 5 October following the tax year end. For income earned in the 2025/26 tax year (ending 5 April 2026), you must register by 5 October 2026. Missing this deadline triggers an automatic £100 penalty.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Self assessment · Trading allowance · Platform reporting</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            HMRC platform reporting — how it works from 2026
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Platform pays you → you decide whether to declare  ❌  No longer works — HMRC gets the data directly
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Platform pays you → platform reports to HMRC → HMRC cross-checks your return  ✔  The new reality
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most side hustlers get wrong
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ The £1,000 allowance is per platform — wrong. The £1,000 trading allowance is your total across ALL income sources. Multiple platforms, multiple types of side income — they all count together. Earn £600 on Etsy and £600 on Vinted and you are over the threshold.</li>
+            <li>✗ HMRC only knows if you tell them — wrong from January 2026. Digital platforms now report directly to HMRC. If you earned over a certain amount on a qualifying platform, HMRC already has your data. Undeclared income will now be cross-referenced against platform reports.</li>
+            <li>✗ The allowance covers profit not income — wrong. The £1,000 threshold is gross income — the total you receive before expenses. If your platform payments total more than £1,000, you must register, even if costs mean your profit is below £1,000.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

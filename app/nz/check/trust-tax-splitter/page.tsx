@@ -461,11 +461,12 @@ export default function TrustTaxSplitterPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRD Verified · Income Tax Act 2007 — Trustee Income
-          </span>
+          <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇳🇿 IRD Verified · Income Tax Act 2007 — Trustee Income ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-NZ
           </span>
         </div>
 
@@ -474,55 +475,11 @@ export default function TrustTaxSplitterPage() {
           NZ Trust Tax 2026: Are You Paying 39% When You Don't Have To?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — IRD confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">The default trustee tax rate in New Zealand is 39%. But many trusts are paying this rate unnecessarily. Trust income of $10,000 or less in a year is taxed at 33% under the de minimis rule. And income distributed to adult beneficiaries is taxed at their personal rate — which can be as low as 10.5%.</p>
-          <p className="mb-2 text-neutral-900">The minor beneficiary rule is the trap most Kiwis miss. Distributing trust income to children under 16 does NOT reduce tax — minors are taxed at 39% on trust distributions. Only distributions to beneficiaries aged 16 and over attract personal tax rates.</p>
-          <p className="mb-2 text-neutral-900">For trusts with significant retained income, the comparison with a company structure matters. A company is taxed at 28% — 11 percentage points less than the 39% trustee rate. Many trust structures that made sense five years ago are now significantly less efficient than a company.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Trust and estate income · Income Tax Act 2007</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            Where trust income tax rate depends on what you do with it
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Leave income in trust → 39% trustee rate → significant overcharge  ❌
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Distribute to adult beneficiary at low income → 10.5% personal rate → 28.5% saving  ✔
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ All trust income in NZ is taxed at 39% — wrong. Trust income of $10,000 or less in a year is taxed at 33% under the de minimis threshold. And income distributed to adult beneficiaries is taxed at their personal marginal rate, which can be significantly lower than 39%.</li>
-            <li>✗ You can reduce trust tax by distributing to your children — wrong. Minor beneficiaries under 16 are taxed at 39% on trust distributions — the same as the trustee rate. This is the minor beneficiary anti-avoidance rule. Only distributions to adults aged 16 and over attract the lower personal rates.</li>
-            <li>✗ Trusts and companies are taxed similarly in NZ — wrong. The trustee rate is 39%. The company rate is 28%. For retained income, a company structure saves 11 percentage points per year. This difference is substantial for trusts holding income-generating assets.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <TrustTaxSplitterCalculator />
           </div>
 
@@ -577,14 +534,14 @@ export default function TrustTaxSplitterPage() {
               <h3 className="mb-1 text-lg font-bold">Trust Tax Splitter</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised trust tax audit built around your trust income, your beneficiaries, and your distribution strategy — not a generic trust guide.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Beneficiary Distribution Pack
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Trust vs Company Pivot Audit
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -615,6 +572,58 @@ export default function TrustTaxSplitterPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — IRD confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">The default trustee tax rate in New Zealand is 39%. But many trusts are paying this rate unnecessarily. Trust income of $10,000 or less in a year is taxed at 33% under the de minimis rule. And income distributed to adult beneficiaries is taxed at their personal rate — which can be as low as 10.5%.</p>
+          <p className="mb-2 text-neutral-900">The minor beneficiary rule is the trap most Kiwis miss. Distributing trust income to children under 16 does NOT reduce tax — minors are taxed at 39% on trust distributions. Only distributions to beneficiaries aged 16 and over attract personal tax rates.</p>
+          <p className="mb-2 text-neutral-900">For trusts with significant retained income, the comparison with a company structure matters. A company is taxed at 28% — 11 percentage points less than the 39% trustee rate. Many trust structures that made sense five years ago are now significantly less efficient than a company.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Trust and estate income · Income Tax Act 2007</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            Where trust income tax rate depends on what you do with it
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Leave income in trust → 39% trustee rate → significant overcharge  ❌
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Distribute to adult beneficiary at low income → 10.5% personal rate → 28.5% saving  ✔
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            Common AI errors on this topic
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ All trust income in NZ is taxed at 39% — wrong. Trust income of $10,000 or less in a year is taxed at 33% under the de minimis threshold. And income distributed to adult beneficiaries is taxed at their personal marginal rate, which can be significantly lower than 39%.</li>
+            <li>✗ You can reduce trust tax by distributing to your children — wrong. Minor beneficiaries under 16 are taxed at 39% on trust distributions — the same as the trustee rate. This is the minor beneficiary anti-avoidance rule. Only distributions to adults aged 16 and over attract the lower personal rates.</li>
+            <li>✗ Trusts and companies are taxed similarly in NZ — wrong. The trustee rate is 39%. The company rate is 28%. For retained income, a company structure saves 11 percentage points per year. This difference is substantial for trusts holding income-generating assets.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

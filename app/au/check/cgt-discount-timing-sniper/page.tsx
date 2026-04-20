@@ -415,11 +415,12 @@ export default function CgtDiscountTimingSniperPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 ATO Verified · ITAA 1997 — CGT discount (s.115-10)
-          </span>
+          <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-discount" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇦🇺 ATO Verified · ITAA 1997 — CGT discount (s.115-10) ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-AU
           </span>
         </div>
 
@@ -428,55 +429,11 @@ export default function CgtDiscountTimingSniperPage() {
           CGT Discount 2026: Did You Hold Long Enough for the 50% Discount?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — ATO confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">The 50% CGT discount applies to capital gains made by individuals and trusts on assets held for more than 12 months. For companies, the discount is not available — companies pay CGT at their corporate tax rate on the full gain. Superannuation funds receive a one-third discount (33.33%).</p>
-          <p className="mb-2 text-neutral-900">The 12-month holding period is measured from the date of acquisition to the date of disposal. For most assets, the disposal date is the date you enter into the contract — not the settlement date. Selling a property in May with July settlement means the CGT event occurred in May.</p>
-          <p className="mb-2 text-neutral-900">The most common mistake: selling just inside the 12-month mark and paying double the CGT unnecessarily. Waiting even a few days to push the contract date past the 12-month anniversary can halve the tax bill. On a $200,000 gain at a 45% rate, that difference is $45,000.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — CGT discount · ITAA 1997 s.115-10</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            How the CGT discount timing works
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Held 11 months 29 days → sell on contract date → no discount → full gain taxed  ❌
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Wait 2 more days → contract date past 12-month mark → 50% discount applies  ✔
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about the CGT discount
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The 12 months is measured from settlement to settlement — wrong. The holding period is measured from acquisition date to disposal date — both being the contract date, not settlement date. For off-the-plan purchases, the acquisition date may be the contract date even if settlement is years later.</li>
-            <li>✗ The CGT discount applies to all asset sales — wrong. The CGT discount does not apply to assets held by companies, assets acquired before 20 September 1985 (pre-CGT), or assets that are revenue assets (trading stock). It also does not apply to foreign residents on taxable Australian property in most cases.</li>
-            <li>✗ The discount applies to the gain before any capital losses — wrong. Capital losses must be offset against capital gains before applying the CGT discount. If you have $100,000 gain and $30,000 loss, the net gain is $70,000 and the discount applies to that — not to the $100,000.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <CgtDiscountTimingSniperCalculator />
           </div>
 
@@ -530,14 +487,14 @@ export default function CgtDiscountTimingSniperPage() {
               <h3 className="mb-1 text-lg font-bold">CGT Discount Timing Sniper</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised CGT discount audit — exact eligibility check based on your purchase and contract dates.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · CGT Discount Timing Plan
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Multi-Asset CGT Strategy
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -556,6 +513,58 @@ export default function CgtDiscountTimingSniperPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — ATO confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">The 50% CGT discount applies to capital gains made by individuals and trusts on assets held for more than 12 months. For companies, the discount is not available — companies pay CGT at their corporate tax rate on the full gain. Superannuation funds receive a one-third discount (33.33%).</p>
+          <p className="mb-2 text-neutral-900">The 12-month holding period is measured from the date of acquisition to the date of disposal. For most assets, the disposal date is the date you enter into the contract — not the settlement date. Selling a property in May with July settlement means the CGT event occurred in May.</p>
+          <p className="mb-2 text-neutral-900">The most common mistake: selling just inside the 12-month mark and paying double the CGT unnecessarily. Waiting even a few days to push the contract date past the 12-month anniversary can halve the tax bill. On a $200,000 gain at a 45% rate, that difference is $45,000.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — CGT discount · ITAA 1997 s.115-10</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            How the CGT discount timing works
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Held 11 months 29 days → sell on contract date → no discount → full gain taxed  ❌
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Wait 2 more days → contract date past 12-month mark → 50% discount applies  ✔
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            What most people get wrong about the CGT discount
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ The 12 months is measured from settlement to settlement — wrong. The holding period is measured from acquisition date to disposal date — both being the contract date, not settlement date. For off-the-plan purchases, the acquisition date may be the contract date even if settlement is years later.</li>
+            <li>✗ The CGT discount applies to all asset sales — wrong. The CGT discount does not apply to assets held by companies, assets acquired before 20 September 1985 (pre-CGT), or assets that are revenue assets (trading stock). It also does not apply to foreign residents on taxable Australian property in most cases.</li>
+            <li>✗ The discount applies to the gain before any capital losses — wrong. Capital losses must be offset against capital gains before applying the CGT discount. If you have $100,000 gain and $30,000 loss, the net gain is $70,000 and the discount applies to that — not to the $100,000.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}

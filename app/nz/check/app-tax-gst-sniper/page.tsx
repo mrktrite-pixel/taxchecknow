@@ -455,11 +455,12 @@ export default function AppTaxGstSniperPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 IRD Verified · Goods and Services Tax Act 1985 — Marketplace Rules
-          </span>
+          <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
+            🇳🇿 IRD Verified · Goods and Services Tax Act 1985 — Marketplace Rules ↗
+          </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
-            Last verified: {LAST_VERIFIED} · en-GB
+            Last verified: {LAST_VERIFIED} · en-NZ
           </span>
         </div>
 
@@ -468,55 +469,11 @@ export default function AppTaxGstSniperPage() {
           NZ App Tax 2026: Are You Losing 15% of Your Side-Hustle Income?
         </h1>
 
-        {/* BLOCK 1 — Answer-first strike */}
-        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            {/* GOAT Block 1 — Answer-first */}
-            The answer — IRD confirmed April 2026
-          </p>
-          <p className="mb-2 text-neutral-900">Under New Zealand's GST marketplace rules, platforms like Airbnb, Uber and Bookabach must charge 15% GST on your earnings — even if you are not GST registered and even if you are under the $60,000 threshold. This is what Kiwis call the App Tax.</p>
-          <p className="mb-2 text-neutral-900">If you are not registered, you receive an 8.5% flat-rate credit instead of the full 15% GST recovery. The difference — 6.5% of your platform income — stays with the government. On $4,000 per month of Airbnb income, that is $260 per month or $3,120 per year that you may be leaving behind.</p>
-          <p className="mb-2 text-neutral-900">Whether GST registration actually saves you money depends on your expenses. If you have significant costs — vehicle, cleaning, supplies, property expenses — the full 15% GST recovery on those costs can exceed the flat-rate credit. The break-even point is calculable and many Kiwi side-hustlers are on the wrong side of it.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRD — GST for marketplace sellers · GST Act 1985</p>
-
-
-
-        </div>
-
-        {/* CHAIN VISUAL — if present in config */}
-        
-        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            What happens to your GST under App Tax
-          </p>
-          <div className="space-y-2 font-mono text-sm">
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Not registered: Platform charges 15% GST → You get 8.5% credit → 6.5% gone  ❌
-            </div>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Registered: Platform charges 15% GST → You claim full 15% → Plus recover GST on your costs  ✔
-            </div>
-          </div>
-        </div>
-
-        {/* BLOCK 1b — AI Mistakes */}
-        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
-          </p>
-          <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ You do not need to worry about GST if you are under $60,000 — wrong. Under App Tax rules, the platform charges GST on your earnings regardless of your registration status or income level. The $60,000 threshold determines whether you must register, not whether GST is charged.</li>
-            <li>✗ You are not paying GST if you are not registered — wrong. GST is charged by the platform and remitted to IRD. You receive a flat-rate credit of 8.5% but the platform has already collected and paid 15%. You are absorbing the 6.5% difference.</li>
-            <li>✗ The flat-rate credit is equivalent to GST registration — wrong. The flat-rate credit is 8.5%, not 15%. If your expenses are significant, you could recover far more GST by registering than you receive via the flat-rate credit.</li>
-          </ul>
-        </div>
-
-
-        {/* Calculator + Sidebar grid */}
+        {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
 
           {/* Left — Calculator (client component) */}
-          <div>
+          <div id="calculator">
             <AppTaxGstSniperCalculator />
           </div>
 
@@ -570,14 +527,14 @@ export default function AppTaxGstSniperPage() {
               <h3 className="mb-1 text-lg font-bold">App Tax GST Sniper</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised GST decision built around your platform income, your expenses, and your break-even point — not a generic GST guide.</p>
               <div className="space-y-2">
-                <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
+                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · GST Registration Logic Pack
-                </div>
-                <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
+                </a>
+                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Mixed-Use GST Audit
-                </div>
+                </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
             </div>
 
             {/* Sources panel */}
@@ -608,6 +565,58 @@ export default function AppTaxGstSniperPage() {
 
           </aside>
         </div>
+      </section>
+
+      {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* BLOCK 1 — Answer-first strike */}
+        <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The answer — IRD confirmed April 2026
+          </p>
+          <p className="mb-2 text-neutral-900">Under New Zealand's GST marketplace rules, platforms like Airbnb, Uber and Bookabach must charge 15% GST on your earnings — even if you are not GST registered and even if you are under the $60,000 threshold. This is what Kiwis call the App Tax.</p>
+          <p className="mb-2 text-neutral-900">If you are not registered, you receive an 8.5% flat-rate credit instead of the full 15% GST recovery. The difference — 6.5% of your platform income — stays with the government. On $4,000 per month of Airbnb income, that is $260 per month or $3,120 per year that you may be leaving behind.</p>
+          <p className="mb-2 text-neutral-900">Whether GST registration actually saves you money depends on your expenses. If you have significant costs — vehicle, cleaning, supplies, property expenses — the full 15% GST recovery on those costs can exceed the flat-rate credit. The break-even point is calculable and many Kiwi side-hustlers are on the wrong side of it.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRD — GST for marketplace sellers · GST Act 1985</p>
+        </div>
+
+        {/* CHAIN VISUAL — if present in config */}
+        
+        <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            What happens to your GST under App Tax
+          </p>
+          <div className="space-y-2 font-mono text-sm">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
+              ❌ Not registered: Platform charges 15% GST → You get 8.5% credit → 6.5% gone  ❌
+            </div>
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+              ✔ Registered: Platform charges 15% GST → You claim full 15% → Plus recover GST on your costs  ✔
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCK 1b — AI Mistakes */}
+        <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
+            Common AI errors on this topic
+          </p>
+          <ul className="space-y-1.5 text-sm text-neutral-900">
+            <li>✗ You do not need to worry about GST if you are under $60,000 — wrong. Under App Tax rules, the platform charges GST on your earnings regardless of your registration status or income level. The $60,000 threshold determines whether you must register, not whether GST is charged.</li>
+            <li>✗ You are not paying GST if you are not registered — wrong. GST is charged by the platform and remitted to IRD. You receive a flat-rate credit of 8.5% but the platform has already collected and paid 15%. You are absorbing the 6.5% difference.</li>
+            <li>✗ The flat-rate credit is equivalent to GST registration — wrong. The flat-rate credit is 8.5%, not 15%. If your expenses are significant, you could recover far more GST by registering than you receive via the flat-rate credit.</li>
+          </ul>
+        </div>
+
+        {/* Back to calculator CTA */}
+        <div className="mb-8 text-center">
+          <a href="#calculator"
+            className="inline-flex items-center gap-2 bg-neutral-950 px-6 py-3 text-sm font-bold text-white hover:bg-neutral-700 transition">
+            ↑ Check your position free — use the calculator above
+          </a>
+        </div>
+
       </section>
 
       {/* ── STORY SECTION — plain English persona scenario ── */}
