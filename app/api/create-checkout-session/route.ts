@@ -2,199 +2,274 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 // Stripe initialised inside handler — not at module level
-// Prevents build failures when env variables not yet set
+// Prevents build failures when env variables not yet set in Vercel
+
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error("Missing STRIPE_SECRET_KEY — add to Vercel environment variables");
   return new Stripe(key, { apiVersion: "2026-03-25.dahlia" });
 }
 
-// ── PRICE ID MAP ─────────────────────────────────────────────────────────────
-// Maps product_key → Stripe price ID environment variable
-// Pattern: [country]_[tier]_[product_slug]
-// UK: £67 / £147 · US: $67 / $147
-
-function getPriceId(productKey: string): string | undefined {
+// Maps product_key to the correct Stripe price ID env variable
+// Add new products here as Gates are built
+function getPriceId(tier: number, productKey: string): string | undefined {
   const key = productKey.toLowerCase();
 
-  // ── UK-01 MTD Mandate Auditor ─────────────────────────────────────────────
-  if (key === "uk_67_mtd_scorecard")  return process.env.STRIPE_UK_MTD_67;
-  if (key === "uk_147_mtd_scorecard") return process.env.STRIPE_UK_MTD_147;
+  // ─── SUPERTAXCHECK — Legacy AU Super Products ─────────────────────────────
 
-  // ── UK-02 Allowance Sniper ────────────────────────────────────────────────
-  if (key === "uk_67_allowance_sniper")  return process.env.STRIPE_UK_ALLOWANCE_67;
-  if (key === "uk_147_allowance_sniper") return process.env.STRIPE_UK_ALLOWANCE_147;
+  // Gate 01 — Div 296 Wealth Eraser
+  if (key.includes("div296")) {
+    if (tier === 67) return process.env.STRIPE_DIV296_67;
+    if (tier === 147) return process.env.STRIPE_DIV296_147;
+  }
 
-  // ── UK-03 Digital Link Forensic Auditor ───────────────────────────────────
-  if (key === "uk_67_digital_link_auditor")  return process.env.STRIPE_UK_DLA_67;
-  if (key === "uk_147_digital_link_auditor") return process.env.STRIPE_UK_DLA_147;
+  // Gate 02 — Death Benefit Tax-Wall
+  if (key.includes("death_benefit") || key.includes("dbtw")) {
+    if (tier === 67) return process.env.STRIPE_DBTW_67;
+    if (tier === 147) return process.env.STRIPE_DBTW_147;
+  }
 
-  // ── UK-04 Side-Hustle MTD Scope Engine ────────────────────────────────────
-  if (key === "uk_67_side_hustle_checker")  return process.env.STRIPE_UK_SH_67;
-  if (key === "uk_147_side_hustle_checker") return process.env.STRIPE_UK_SH_147;
+  // Gate 03 — Super-to-Trust Exit
+  if (key.includes("super_to_trust") || key.includes("exit")) {
+    if (tier === 67) return process.env.STRIPE_EXIT_67;
+    if (tier === 147) return process.env.STRIPE_EXIT_147;
+  }
 
-  // ── UK-05 Dividend Trap Engine ────────────────────────────────────────────
-  if (key === "uk_67_dividend_trap")  return process.env.STRIPE_UK_DIV_67;
-  if (key === "uk_147_dividend_trap") return process.env.STRIPE_UK_DIV_147;
+  // Gate 04 — Bring-Forward $390K Window
+  if (key.includes("bring_forward") || key.includes("bfw")) {
+    if (tier === 67) return process.env.STRIPE_BFW_67;
+    if (tier === 147) return process.env.STRIPE_BFW_147;
+  }
 
-  // ── UK BUNDLES ────────────────────────────────────────────────────────────
-  // MTD Complete: UK-01 + UK-03 + UK-04 — £197
-  // Income Check: UK-02 + UK-05 — £197
-  // Full Stack: all 5 — £347
-  if (key === "uk_197_mtd_complete")  return process.env.STRIPE_UK_BUNDLE_MTD;
-  if (key === "uk_197_income_check")  return process.env.STRIPE_UK_BUNDLE_INCOME;
-  if (key === "uk_347_full_stack")    return process.env.STRIPE_UK_BUNDLE_FULL;
+  // Gate 05 — Transfer Balance Cap Optimiser
+  if (key.includes("transfer_balance") || key.includes("tbc")) {
+    if (tier === 67) return process.env.STRIPE_TBC_67;
+    if (tier === 147) return process.env.STRIPE_TBC_147;
+  }
 
-  // ── US-01 Section 174 Phantom Tax Auditor ─────────────────────────────────
-  // URL: taxchecknow.com/us/check/section-174-auditor
-  // Prices: $67 / $147
-  if (key === "us_67_section_174_auditor")  return process.env.STRIPE_US_174_67;
-  if (key === "us_147_section_174_auditor") return process.env.STRIPE_US_174_147;
+  // ─── TAXCHECKNOW UK ───────────────────────────────────────────────────────
 
-  // ── US-02 FEIE Nomad Auditor ──────────────────────────────────────────────
-  // URL: taxchecknow.com/us/check/feie-nomad-auditor
-  // Prices: $67 / $147
-  if (key === "us_67_feie_nomad_auditor")  return process.env.STRIPE_US_FEIE_67;
-  if (key === "us_147_feie_nomad_auditor") return process.env.STRIPE_US_FEIE_147;
+  if (key.includes("uk_") && key.includes("mtd")) {
+    if (tier === 67) return process.env.STRIPE_UK_MTD_67;
+    if (tier === 147) return process.env.STRIPE_UK_MTD_147;
+  }
+  if (key.includes("uk_") && key.includes("allowance")) {
+    if (tier === 67) return process.env.STRIPE_UK_ALLOWANCE_67;
+    if (tier === 147) return process.env.STRIPE_UK_ALLOWANCE_147;
+  }
+  if (key.includes("uk_") && key.includes("digital_link")) {
+    if (tier === 67) return process.env.STRIPE_UK_DLA_67;
+    if (tier === 147) return process.env.STRIPE_UK_DLA_147;
+  }
+  if (key.includes("uk_") && key.includes("side_hustle")) {
+    if (tier === 67) return process.env.STRIPE_UK_SH_67;
+    if (tier === 147) return process.env.STRIPE_UK_SH_147;
+  }
+  if (key.includes("uk_") && key.includes("dividend")) {
+    if (tier === 67) return process.env.STRIPE_UK_DIV_67;
+    if (tier === 147) return process.env.STRIPE_UK_DIV_147;
+  }
 
-  // ── US-03 QSBS Exit Auditor ───────────────────────────────────────────────
-  // URL: taxchecknow.com/us/check/qsbs-exit-auditor
-  // Prices: $67 / $147
-  if (key === "us_67_qsbs_exit_auditor")  return process.env.STRIPE_US_QSBS_67;
-  if (key === "us_147_qsbs_exit_auditor") return process.env.STRIPE_US_QSBS_147;
+  // ─── TAXCHECKNOW US ───────────────────────────────────────────────────────
 
-  // ── US-04 ISO AMT Exercise Sniper ─────────────────────────────────────────
-  // URL: taxchecknow.com/us/check/iso-amt-sniper
-  // Prices: $67 / $147
-  if (key === "us_67_iso_amt_sniper")  return process.env.STRIPE_US_ISO_67;
-  if (key === "us_147_iso_amt_sniper") return process.env.STRIPE_US_ISO_147;
+  if (key.includes("us_") && key.includes("174")) {
+    if (tier === 67) return process.env.STRIPE_US_174_67;
+    if (tier === 147) return process.env.STRIPE_US_174_147;
+  }
+  if (key.includes("us_") && key.includes("feie")) {
+    if (tier === 67) return process.env.STRIPE_US_FEIE_67;
+    if (tier === 147) return process.env.STRIPE_US_FEIE_147;
+  }
+  if (key.includes("us_") && key.includes("qsbs")) {
+    if (tier === 67) return process.env.STRIPE_US_QSBS_67;
+    if (tier === 147) return process.env.STRIPE_US_QSBS_147;
+  }
+  if (key.includes("us_") && key.includes("iso")) {
+    if (tier === 67) return process.env.STRIPE_US_ISO_67;
+    if (tier === 147) return process.env.STRIPE_US_ISO_147;
+  }
+  if (key.includes("us_") && key.includes("wayfair") || key.includes("us_") && key.includes("nexus")) {
+    if (tier === 67) return process.env.STRIPE_US_NEXUS_67;
+    if (tier === 147) return process.env.STRIPE_US_NEXUS_147;
+  }
 
-  // ── US-05 Wayfair Nexus Sniper ────────────────────────────────────────────
-  // URL: taxchecknow.com/us/check/wayfair-nexus-sniper
-  // Prices: $67 / $147
-  if (key === "us_67_wayfair_nexus_sniper")  return process.env.STRIPE_US_NEXUS_67;
-  if (key === "us_147_wayfair_nexus_sniper") return process.env.STRIPE_US_NEXUS_147;
+  // ─── TAXCHECKNOW NZ ───────────────────────────────────────────────────────
 
-  // ── US BUNDLES (add when built) ───────────────────────────────────────────
-  // if (key === "us_197_...") return process.env.STRIPE_US_BUNDLE_...;
+  if (key.includes("nz_") && key.includes("bright_line")) {
+    if (tier === 67) return process.env.STRIPE_NZ_BL_67;
+    if (tier === 147) return process.env.STRIPE_NZ_BL_147;
+  }
+  if (key.includes("nz_") && key.includes("gst")) {
+    if (tier === 67) return process.env.STRIPE_NZ_GST_67;
+    if (tier === 147) return process.env.STRIPE_NZ_GST_147;
+  }
+  if (key.includes("nz_") && key.includes("interest")) {
+    if (tier === 67) return process.env.STRIPE_NZ_IR_67;
+    if (tier === 147) return process.env.STRIPE_NZ_IR_147;
+  }
+  if (key.includes("nz_") && key.includes("trust")) {
+    if (tier === 67) return process.env.STRIPE_NZ_TT_67;
+    if (tier === 147) return process.env.STRIPE_NZ_TT_147;
+  }
+  if (key.includes("nz_") && key.includes("investment_boost")) {
+    if (tier === 67) return process.env.STRIPE_NZ_IB_67;
+    if (tier === 147) return process.env.STRIPE_NZ_IB_147;
+  }
 
-  // ── AU GATES (add when built) ─────────────────────────────────────────────
-  // if (key === "au_67_...") return process.env.STRIPE_AU_...;
+  // ─── TAXCHECKNOW AU ───────────────────────────────────────────────────────
 
-  // ── NZ GATES (add when built) ─────────────────────────────────────────────
-  // if (key === "nz_67_...") return process.env.STRIPE_NZ_...;
-
-  // ── CA GATES (add when built) ─────────────────────────────────────────────
-  // if (key === "ca_67_...") return process.env.STRIPE_CA_...;
-
-  // ── VISA GATES (add when built) ───────────────────────────────────────────
-  // if (key === "vi_uk_67_...") return process.env.STRIPE_VI_UK_...;
+  if (key.includes("au_") && key.includes("cgt_main_residence")) {
+    if (tier === 67) return process.env.STRIPE_AU_CGT_MR_67;
+    if (tier === 147) return process.env.STRIPE_AU_CGT_MR_147;
+  }
+  if (key.includes("au_") && key.includes("division_7a")) {
+    if (tier === 67) return process.env.STRIPE_AU_DIV7A_67;
+    if (tier === 147) return process.env.STRIPE_AU_DIV7A_147;
+  }
+  if (key.includes("au_") && key.includes("fbt")) {
+    if (tier === 67) return process.env.STRIPE_AU_FBT_67;
+    if (tier === 147) return process.env.STRIPE_AU_FBT_147;
+  }
+  if (key.includes("au_") && key.includes("cgt_discount")) {
+    if (tier === 67) return process.env.STRIPE_AU_CGT_DT_67;
+    if (tier === 147) return process.env.STRIPE_AU_CGT_DT_147;
+  }
+  if (key.includes("au_") && key.includes("negative_gearing")) {
+    if (tier === 67) return process.env.STRIPE_AU_NG_67;
+    if (tier === 147) return process.env.STRIPE_AU_NG_147;
+  }
+  if (key.includes("au_") && key.includes("small_business_cgt")) {
+    if (tier === 67) return process.env.STRIPE_AU_SBCGT_67;
+    if (tier === 147) return process.env.STRIPE_AU_SBCGT_147;
+  }
+  if (key.includes("au_") && key.includes("instant_asset")) {
+    if (tier === 67) return process.env.STRIPE_AU_IAWO_67;
+    if (tier === 147) return process.env.STRIPE_AU_IAWO_147;
+  }
+  if (key.includes("au_") && key.includes("gst_registration")) {
+    if (tier === 67) return process.env.STRIPE_AU_GST_67;
+    if (tier === 147) return process.env.STRIPE_AU_GST_147;
+  }
+  if (key.includes("au_") && key.includes("rental")) {
+    if (tier === 67) return process.env.STRIPE_AU_RENTAL_67;
+    if (tier === 147) return process.env.STRIPE_AU_RENTAL_147;
+  }
+  if (key.includes("au_") && key.includes("medicare") || key.includes("au_") && key.includes("mls")) {
+    if (tier === 67) return process.env.STRIPE_AU_MLS_67;
+    if (tier === 147) return process.env.STRIPE_AU_MLS_147;
+  }
 
   return undefined;
 }
 
-// ── VALID TIERS ───────────────────────────────────────────────────────────────
-// UK: £67 / £147 · US: $67 / $147 · Bundles: 197 / 347
-const VALID_TIERS = [67, 147, 197, 347] as const;
-type ValidTier = typeof VALID_TIERS[number];
+function getSuccessPath(productKey: string, tier: number): string {
+  const key = productKey.toLowerCase();
+  const variant = tier === 147 ? "execute" : "prepare";
 
-function isValidTier(tier: number): tier is ValidTier {
-  return (VALID_TIERS as readonly number[]).includes(tier);
+  // ─── Supertaxcheck legacy ─────────────────────────────────────────────────
+  if (key.includes("death_benefit") || key.includes("dbtw")) {
+    return `/check/death-benefit-tax-wall/success/${variant}`;
+  }
+  if (key.includes("super_to_trust") || key.includes("exit")) {
+    return `/check/super-to-trust-exit/success/${variant}`;
+  }
+  if (key.includes("bring_forward") || key.includes("bfw")) {
+    return `/check/bring-forward-window/success/${variant}`;
+  }
+  if (key.includes("transfer_balance") || key.includes("tbc")) {
+    return `/check/transfer-balance-cap/success/${variant}`;
+  }
+
+  // ─── TaxCheckNow — success path comes from config (passed via success_url) ─
+  // For all UK/US/NZ/AU products, success_url is passed directly from the
+  // calculator component, so this fallback is rarely used.
+  // Default: Gate 01
+  return `/check/div296-wealth-eraser/success/${variant}`;
 }
 
 export async function POST(req: Request) {
   try {
     const stripe = getStripe();
-    const body   = await req.json();
+    const body = await req.json();
 
-    const {
-      decision_session_id,
-      tier,
-      product_key,
-      success_url,
-      cancel_url,
-    } = body;
+    const { decision_session_id, tier, product_key, success_url, cancel_url } = body;
 
-    console.log("[checkout] incoming:", { decision_session_id, tier, product_key });
+    console.log("Incoming checkout request:", { decision_session_id, tier, product_key });
 
-    // ── VALIDATION ────────────────────────────────────────────────────────────
-    if (!decision_session_id || !tier || !product_key) {
+    if (!decision_session_id || !tier) {
       return NextResponse.json(
-        { error: "Missing required fields: decision_session_id, tier and product_key are required." },
+        { error: "Missing required fields: decision_session_id and tier are required." },
         { status: 400 }
       );
     }
 
     const normalizedTier = Number(tier);
-    if (!isValidTier(normalizedTier)) {
+
+    if (![67, 147].includes(normalizedTier)) {
       return NextResponse.json(
-        { error: `Invalid tier: ${normalizedTier}. Expected one of: ${VALID_TIERS.join(", ")}` },
+        { error: "Invalid tier. Expected 67 or 147." },
         { status: 400 }
       );
     }
 
-    // ── PRICE ID LOOKUP ───────────────────────────────────────────────────────
-    const priceId = getPriceId(product_key);
+    const productKey = product_key || `supertax_${normalizedTier}_div296_wealth_eraser`;
+    const priceId = getPriceId(normalizedTier, productKey);
+
     if (!priceId) {
-      console.error("[checkout] missing price ID:", { product_key, tier: normalizedTier });
+      console.error("Missing Stripe price ID for:", { productKey, tier: normalizedTier });
       return NextResponse.json(
-        {
-          error: `No Stripe price configured for: ${product_key}`,
-          hint:  `Add the matching STRIPE_... environment variable to Vercel for this product and tier`,
-        },
+        { error: `No Stripe price configured for: ${productKey}. Add ${productKey} to Vercel environment variables.` },
         { status: 500 }
       );
     }
 
-    // ── BUILD URLS ────────────────────────────────────────────────────────────
-    const baseUrl            = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://supertaxcheck.com.au";
+    const successPath = getSuccessPath(productKey, normalizedTier);
+
     const resolvedSuccessUrl = success_url
       ? `${success_url}?payment=success&tier=${normalizedTier}&session_id={CHECKOUT_SESSION_ID}`
-      : `${baseUrl}?payment=success&tier=${normalizedTier}&session_id={CHECKOUT_SESSION_ID}`;
-    const resolvedCancelUrl  = cancel_url || `${baseUrl}/uk`;
+      : `${baseUrl}${successPath}?payment=success&tier=${normalizedTier}&session_id={CHECKOUT_SESSION_ID}`;
 
-    console.log("[checkout] creating session:", { priceId, product_key, resolvedSuccessUrl });
+    const resolvedCancelUrl = cancel_url || `${baseUrl}/check/div296-wealth-eraser`;
 
-    // ── CREATE STRIPE SESSION ─────────────────────────────────────────────────
+    console.log("Creating Stripe session:", { priceId, productKey, successPath });
+
     const session = await stripe.checkout.sessions.create({
-      mode:                 "payment",
+      mode: "payment",
       payment_method_types: ["card"],
-      line_items:           [{ price: priceId, quantity: 1 }],
-      success_url:          resolvedSuccessUrl,
-      cancel_url:           resolvedCancelUrl,
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: resolvedSuccessUrl,
+      cancel_url: resolvedCancelUrl,
       metadata: {
         decision_session_id: String(decision_session_id),
-        tier:                String(normalizedTier),
-        product_key:         String(product_key),
-        site:                "taxchecknow",
+        tier: String(normalizedTier),
+        product_key: productKey,
         verification_source: "stripe_checkout",
       },
       payment_intent_data: {
         metadata: {
           decision_session_id: String(decision_session_id),
-          tier:                String(normalizedTier),
-          product_key:         String(product_key),
-          site:                "taxchecknow",
+          tier: String(normalizedTier),
+          product_key: productKey,
         },
       },
     });
 
-    console.log("[checkout] session created:", session.id);
+    console.log("Stripe session created:", session.id);
 
     if (!session.url) {
       return NextResponse.json(
-        { error: "Stripe session created but no URL returned." },
+        { error: "Stripe session created but no checkout URL returned." },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ url: session.url, session_id: session.id });
-
+    return NextResponse.json({ url: session.url });
   } catch (err: unknown) {
-    console.error("[checkout] error:", err);
+    console.error("Stripe checkout error:", err);
     return NextResponse.json(
       {
-        error:   "Failed to create checkout session.",
+        error: "Failed to create checkout session.",
         details: err instanceof Error ? err.message : "Unknown error",
       },
       { status: 500 }
