@@ -156,4 +156,25 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   tier1AssessmentFields: ["status", "daysHeld", "brightLineVerdict", "mainHomeRisk", "taxExposure", "firstAction", "documentationNeeded", "accountantQuestions"],
   tier2AssessmentFields: ["status", "daysHeld", "brightLineVerdict", "mainHomeRisk", "transferRisk", "rolloverEligibility", "actions", "weekPlan", "accountantQuestions"],
+  persona: {
+    name: "Aroha",
+    age: 43,
+    occupation: "Speech language therapist (part-time), Airbnb host, landlord — Auckland",
+    location: "Pt Chevalier, Auckland",
+    family: "Husband Mike (civil engineer). Two teenagers — Tama (16) and Hana (14).",
+    financialSnapshot: "3 properties: family home, Avondale rental (in family trust), Glen Eden Airbnb. Household income ~$180k.",
+    painPoint: "Aroha does the family finances and researches before every accountant meeting to ask the right questions.",
+    discovery: "Aroha found three different bright-line answers on three different websites. She needed one definitive source.",
+    voice: "Thorough. Trusts research. Appreciates when complexity is acknowledged. Wry Kiwi humour.",
+  },
+  story: {
+    hook: "Aroha's mother passed in March. She left a property in Panmure. Aroha and Mike needed to decide what to do with it.",
+    setup: [
+    "The property was worth around $680,000. They had not planned for it. They already had the Avondale rental and the Glen Eden Airbnb. Selling made more sense — use the proceeds to pay down the family home mortgage.",
+    "Aroha googled the bright-line rules before calling David. She found three different answers: 5 years, 10 years, 2 years. A government website still showed outdated information from 2021. A Reddit thread from 2023 said 10 years.",
+    "The property had been in her mother's name since 2013. Title registration: July 2013. It had passed to Aroha through the estate in April 2026.",
+    ],
+    revelation: "Inherited properties received through a deceased estate are excluded from the bright-line test. Aroha did not owe bright-line tax. But she had nearly talked herself into believing she did — based on outdated information.",
+    resolution: "Aroha sold in June 2026. No bright-line tax. She kept David's written confirmation and the title documentation on file. IRD audit-ready.",
+  },
 };

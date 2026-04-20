@@ -141,7 +141,7 @@ function recommendedTier(
   channels: number | string,
   hasFBA: boolean,
 ): PackTier {
-  // (annualGrossSales as number) >= 100000 OR hasFBA → tier2. channels is fba or multi or all → tier2. Otherwise tier1.
+  // annualGrossSales >= 100000 OR hasFBA → tier2. channels is fba or multi or all → tier2. Otherwise tier1.
     if ((annualGrossSales as number) >= 100000 || channels === "fba" || channels === "multi" || channels === "all" || hasFBA === true) return 147;
   return 67;
 }
@@ -552,7 +552,7 @@ export default function WayfairNexusSniperCalculator() {
               Check my exact position →
             </button>
             <p className="mt-2 text-center text-xs text-neutral-500">
-              £{effectiveTier} · One-time · No subscription
+              ${effectiveTier} · One-time · No subscription
             </p>
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
           </div>
@@ -715,4 +715,3 @@ export default function WayfairNexusSniperCalculator() {
     </>
   );
 }
-

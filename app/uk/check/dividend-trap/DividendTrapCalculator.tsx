@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
 
-const DEADLINE_ISO   = "2027-04-05T23:59:59Z";
+const DEADLINE_ISO   = "2027-01-31T23:59:59.000Z";
 const DAYS_TO_END    = Math.max(0, Math.floor(
   (new Date(DEADLINE_ISO).getTime() - Date.now()) / 86_400_000
 ));
@@ -16,29 +16,24 @@ const DAYS_TO_END    = Math.max(0, Math.floor(
 
 const BRACKETS = [
   {
-    "label": "Director — extract profits as dividends",
+    "label": "Dividends in basic rate band — 8.75% rate",
     "value": 1,
+    "status": "clear"
+  },
+  {
+    "label": "Dividends crossing into higher rate — 33.75%",
+    "value": 2,
     "status": "trap"
   },
   {
-    "label": "Investor — dividends from shares / funds",
-    "value": 2,
-    "status": "approaching"
-  },
-  {
-    "label": "PAYE employee + dividend income",
+    "label": "Dividends at additional rate — 39.35%",
     "value": 3,
-    "status": "approaching"
-  },
-  {
-    "label": "High earner — dividends above £50,270",
-    "value": 4,
     "status": "deep_trap"
   },
   {
-    "label": "Additional rate taxpayer — dividends above £125,140",
-    "value": 5,
-    "status": "above_trap"
+    "label": "Not sure which band my dividends fall into",
+    "value": 4,
+    "status": "risk"
   }
 ] as const;
 
@@ -49,16 +44,16 @@ type PackTier      = 67 | 147;
 
 const PRODUCTS: Record<PackTier, { name: string; tagline: string; value: string; cta: string }> = {
   67: {
-    name:    "Your Dividend Tax Position",
-    tagline: "What is my real effective tax rate on profit — and what am I actually paying?",
-    value:   "A personal dividend tax assessment showing your combined corporation tax and dividend tax effective rate — not just the headline dividend rate.",
-    cta:     "Get My Tax Position — £47 →",
+    name:    "Your Dividend Tax Audit",
+    tagline: "Are you paying the right tax on your dividends — or quietly overpaying?",
+    value:   "A personalised dividend tax calculation showing your exact liability, the allowance you may be wasting, and opportunities to reduce your bill.",
+    cta:     "Get My Dividend Audit — £67 →",
   },
   147: {
-    name:    "Your Dividend Optimisation System",
-    tagline: "I know my rate — now show me how to reduce it legally.",
-    value:   "A personal dividend optimisation system covering salary vs dividend, pension diversion, spouse share splitting, timing strategy and director loan risk.",
-    cta:     "Get My Optimisation System — £97 →",
+    name:    "Your Dividend Optimisation Plan",
+    tagline: "Restructure your remuneration to minimise dividend tax legally",
+    value:   "Full dividend audit plus salary/dividend split optimisation, spousal dividend strategy, and a written remuneration plan for your accountant.",
+    cta:     "Get My Optimisation Plan — £147 →",
   },
 };
 
@@ -137,12 +132,12 @@ function getStatusStyle(status: BracketStatus): {
 
 function recommendedTier(
   bracketStatus: BracketStatus,
-  salary: number | string,
-  dividends: number | string,
-  isDirector: boolean,
+  totalIncome: number | string,
+  dividendAmount: number | string,
+  partnerHasShares: boolean,
 ): PackTier {
-  // isDirector AND dividends >= 25000 → tier2 (£97). effectiveRate >= 45% → tier2. Otherwise tier1 (£47).
-    if (isDirector === true && (dividends as number) >= 25000 || isDirector === true) return 147;
+  // totalIncome over £50270 OR dividendAmount over £20000 → tier2. partnerHasShares opportunity → tier2.
+    if ((totalIncome as number) > 50270 || (dividendAmount as number) > 20000 || partnerHasShares === true) return 147;
   return 67;
 }
 
@@ -150,9 +145,9 @@ function recommendedTier(
 
 export default function DividendTrapCalculator() {
   const [selectedBracket, setSelectedBracket] = useState<number | null>(null);
-  const [salary, setSalary] = useState<number | string>(30000);
-  const [dividends, setDividends] = useState<number | string>(17500);
-  const [isDirector, setIsDirector] = useState<boolean>(false);
+  const [totalIncome, setTotalIncome] = useState<number | string>(85000);
+  const [dividendAmount, setDividendAmount] = useState<number | string>(12000);
+  const [partnerHasShares, setPartnerHasShares] = useState<boolean>(false);
   const [email,           setEmail]           = useState("");
   const [emailSent,       setEmailSent]       = useState(false);
   const [sessionId,       setSessionId]       = useState<string | null>(null);
@@ -178,9 +173,9 @@ export default function DividendTrapCalculator() {
   // Tier algorithm — COLE decides, buyer never chooses
   const calculatedTier: PackTier = recommendedTier(
     bracketStatus,
-    salary,
-    dividends,
-    isDirector,
+    totalIncome,
+    dividendAmount,
+    partnerHasShares,
   );
   const effectiveTier   = overrideTier ?? calculatedTier;
   const selectedProduct = PRODUCTS[effectiveTier];
@@ -196,9 +191,9 @@ export default function DividendTrapCalculator() {
 
   async function handleBracketSelect(index: number) {
     setSelectedBracket(index);
-    setSalary(30000);
-    setDividends(17500);
-    setIsDirector(false);
+    setTotalIncome(85000);
+    setDividendAmount(12000);
+    setPartnerHasShares(false);
     setOverrideTier(null);
     setError("");
     // Save to sessionStorage for success page
@@ -249,9 +244,9 @@ export default function DividendTrapCalculator() {
     if (!answersComplete || checkoutLoading) return;
     // Save inputs for success page personalisation
     sessionStorage.setItem("dividend-trap_answers", JSON.stringify(answers));
-    sessionStorage.setItem("dividend-trap_salary", String(salary));
-    sessionStorage.setItem("dividend-trap_dividends", String(dividends));
-    sessionStorage.setItem("dividend-trap_isDirector", String(isDirector));
+    sessionStorage.setItem("dividend-trap_totalIncome", String(totalIncome));
+    sessionStorage.setItem("dividend-trap_dividendAmount", String(dividendAmount));
+    sessionStorage.setItem("dividend-trap_partnerHasShares", String(partnerHasShares));
     const sid          = sessionId ?? localStorage.getItem("dividend-trap_session_id");
     const effectiveSid = sid ?? `fallback_${Date.now()}`;
     setCheckoutLoading(true);
@@ -303,10 +298,10 @@ export default function DividendTrapCalculator() {
           {/* Rule box — GOAT Block 3 */}
           <div className="mb-4 rounded-xl border-2 border-neutral-900 bg-neutral-950 px-4 py-4">
             <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-              The rule — HMRC confirmed
+              Dividend tax rates 2025/26 — HMRC confirmed
             </p>
             <p className="mt-1 text-sm leading-relaxed text-white">
-              Dividend tax rates from 6 April 2026: 10.75% (basic), 35.75% (higher), 39.35% (additional). Dividend allowance: £500. Dividends are top-sliced — they sit on top of all other income.
+              Dividend allowance: £500. Rates: 8.75% (basic — income up to £50,270 total), 33.75% (higher — income £50,271 to £125,140), 39.35% (additional — income over £125,140). Dividends sit on top of other income in tax band calculations.
             </p>
           </div>
 
@@ -342,10 +337,10 @@ export default function DividendTrapCalculator() {
           {/* Clarification box */}
           <div className="mt-4 rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-3">
             <p className="font-mono text-[10px] uppercase tracking-widest text-amber-700">
-              ⚠️ key clarification
+              Key clarification
             </p>
             <p className="mt-1 text-xs leading-relaxed text-amber-900">
-              The dividend allowance is a 0% tax band — it does NOT reduce your income for tax purposes. It still uses up your tax band, potentially pushing more dividends into a higher rate.
+              Dividends are added on top of other income when calculating which band they fall into. A director with £37,700 salary and £20,000 dividends: the salary uses the basic rate band, the dividends push into higher rate. Most of the dividends are taxed at 33.75% — not 8.75%.
             </p>
           </div>
         </div>
@@ -390,57 +385,37 @@ export default function DividendTrapCalculator() {
                 Refine your position
               </p>
               <div className="space-y-5">
-                {/* BUTTON GROUP — Your annual salary (or other income before dividends) */}
+                {/* BUTTON GROUP — What is your total income including salary, dividends, and other sources? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Your annual salary (or other income before dividends)</p>
-                  <p className="mb-2 text-xs text-neutral-500">Used to determine which dividend tax band applies</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">What is your total income including salary, dividends, and other sources?</p>
+                  <p className="mb-2 text-xs text-neutral-500">Include all income — salary, dividends, rental, side income</p>
                   <div className="flex flex-wrap gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setSalary(0)}
+                      onClick={() => setTotalIncome(40000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        salary === 0
+                        totalIncome === 40000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Under £12,570
+                      Under £50,270
                     </button>
                     <button
                       type="button"
-                      onClick={() => setSalary(30000)}
+                      onClick={() => setTotalIncome(85000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        salary === 30000
+                        totalIncome === 85000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      £12,570–£50,270
+                      £50,270–£125,140
                     </button>
                     <button
                       type="button"
-                      onClick={() => setSalary(70000)}
+                      onClick={() => setTotalIncome(150000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        salary === 70000
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      £50,270–£100,000
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSalary(110000)}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        salary === 110000
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      £100,000–£125,140
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSalary(150000)}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        salary === 150000
+                        totalIncome === 150000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
@@ -449,90 +424,80 @@ export default function DividendTrapCalculator() {
                   </div>
                   
                 </div>
-                {/* BUTTON GROUP — Annual dividend income */}
+                {/* BUTTON GROUP — How much did you take in dividends this year? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Annual dividend income</p>
-                  <p className="mb-2 text-xs text-neutral-500">Gross dividends received or declared</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">How much did you take in dividends this year?</p>
+                  <p className="mb-2 text-xs text-neutral-500">Gross dividends received from your company or investments</p>
                   <div className="flex flex-wrap gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setDividends(5000)}
+                      onClick={() => setDividendAmount(3000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        dividends === 5000
+                        dividendAmount === 3000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Under £10k
+                      Under £5,000
                     </button>
                     <button
                       type="button"
-                      onClick={() => setDividends(17500)}
+                      onClick={() => setDividendAmount(12000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        dividends === 17500
+                        dividendAmount === 12000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      £10k–£25k
+                      £5,000–£20,000
                     </button>
                     <button
                       type="button"
-                      onClick={() => setDividends(37500)}
+                      onClick={() => setDividendAmount(35000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        dividends === 37500
+                        dividendAmount === 35000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      £25k–£50k
+                      £20,000–£50,000
                     </button>
                     <button
                       type="button"
-                      onClick={() => setDividends(75000)}
+                      onClick={() => setDividendAmount(70000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        dividends === 75000
+                        dividendAmount === 70000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      £50k–£100k
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDividends(120000)}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        dividends === 120000
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      Over £100k
+                      Over £50,000
                     </button>
                   </div>
                   
                 </div>
-                {/* TWO-BUTTON TOGGLE — Are you a company director extracting profit? */}
+                {/* TWO-BUTTON TOGGLE — Does your spouse or civil partner also hold shares in the company? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Are you a company director extracting profit?</p>
-                  <p className="mb-2 text-xs text-neutral-500">Affects whether Corporation Tax applies before dividend extraction</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">Does your spouse or civil partner also hold shares in the company?</p>
+                  <p className="mb-2 text-xs text-neutral-500">Spousal dividend splitting can significantly reduce the tax bill</p>
                   <div className="flex gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setIsDirector(false)}
+                      onClick={() => setPartnerHasShares(true)}
                       className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        isDirector === false
+                        partnerHasShares === true
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      No — investor / employee
+                      Yes — they own shares
                     </button>
                     <button
                       type="button"
-                      onClick={() => setIsDirector(true)}
+                      onClick={() => setPartnerHasShares(false)}
                       className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        isDirector === true
+                        partnerHasShares === false
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Yes — director
+                      No — shares are in my name only
                     </button>
                   </div>
                 </div>
@@ -593,7 +558,7 @@ export default function DividendTrapCalculator() {
                   </p>
                   <p className="mt-1 font-serif text-xl font-bold text-white">{selectedProduct.name}</p>
                   <p className="mt-1 text-sm text-neutral-300">
-                    {DAYS_TO_END} days to 5 April 2027
+                    {DAYS_TO_END} days to 31 January 2027
                   </p>
                 </div>
                 <button onClick={() => setShowPopup(false)}
@@ -735,6 +700,3 @@ export default function DividendTrapCalculator() {
     </>
   );
 }
-
-
-

@@ -11,65 +11,65 @@ import Link from "next/link";
 const FILES = [
   {
     "num": "01",
-    "slug": "digital-link-auditor-01",
-    "name": "Your Digital Links Assessment",
-    "desc": "Workflow map showing where your chain breaks — and whether you are likely compliant, at risk or failing.",
+    "slug": "dl-01",
+    "name": "Your Digital Link Chain Audit",
+    "desc": "Map of your current VAT process and where digital links are broken.",
     "tier": 1,
     "start": false
   },
   {
     "num": "02",
-    "slug": "digital-link-auditor-02",
-    "name": "Your Compliance Gap Report",
-    "desc": "Clear verdict on whether your process is likely compliant, at risk, or broken — and what to fix first.",
+    "slug": "dl-02",
+    "name": "Bridging Software Selection Guide",
+    "desc": "The right bridging tool for your spreadsheet setup.",
     "tier": 1,
     "start": true
   },
   {
     "num": "03",
-    "slug": "digital-link-auditor-03",
-    "name": "Excel Bridging Software Guide",
-    "desc": "When bridging can work, what to verify, and the warning signs it is not compliant.",
+    "slug": "dl-03",
+    "name": "Digital Link Evidence Pack",
+    "desc": "What to keep to evidence compliance if HMRC audits your process.",
     "tier": 1,
     "start": false
   },
   {
     "num": "04",
-    "slug": "digital-link-auditor-04",
-    "name": "Software Migration Checklist",
-    "desc": "If your current setup is too fragile — what to move first.",
+    "slug": "dl-04",
+    "name": "Accountant Brief — Digital Links",
+    "desc": "Questions for your accountant about VAT digital link compliance.",
     "tier": 1,
     "start": false
   },
   {
     "num": "05",
-    "slug": "digital-link-auditor-05",
-    "name": "Your Accountant Brief",
-    "desc": "Exact questions to ask to verify compliance before Q1 submission.",
+    "slug": "dl-05",
+    "name": "VAT Return Process Checklist",
+    "desc": "Step-by-step compliant VAT return process.",
     "tier": 1,
     "start": false
   },
   {
     "num": "06",
-    "slug": "digital-link-auditor-06",
-    "name": "Digital Links Audit Template",
-    "desc": "Step-by-step worksheet to map your full chain from source record to HMRC submission.",
+    "slug": "dl-06",
+    "name": "Full Software Migration Guide",
+    "desc": "Moving from spreadsheets to fully digital accounting software.",
     "tier": 2,
     "start": false
   },
   {
     "num": "07",
-    "slug": "digital-link-auditor-07",
-    "name": "HMRC Audit Preparation Guide",
-    "desc": "What HMRC checks, what evidence to keep, and what a defensible workflow looks like.",
+    "slug": "dl-07",
+    "name": "Multi-Entity VAT Group Guide",
+    "desc": "Digital link requirements for VAT groups with multiple legal entities.",
     "tier": 2,
     "start": false
   },
   {
     "num": "08",
-    "slug": "digital-link-auditor-08",
-    "name": "Your Implementation Checklist",
-    "desc": "Full sequence to move from current process to compliant process before the deadline.",
+    "slug": "dl-08",
+    "name": "HMRC Compliance Check Response",
+    "desc": "What to do if HMRC asks about your digital link process.",
     "tier": 2,
     "start": false
   }
@@ -79,17 +79,12 @@ const FILES = [
 
 interface Assessment {
   status: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  workflowVerdict: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  biggestGap: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  mainRisk: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  gap2: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  gap3: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  breachPoints: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  fixRequired: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  bridgingOption: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  migrationOption: string | string[] | { title: string; deadline: string; steps: string[] }[];
   actions: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  bridgeRec: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  bridgeWhy: string | string[] | { title: string; deadline: string; steps: string[] }[];
   weekPlan: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  evidenceChecklist: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  accountantQuestions: string | string[] | { title: string; deadline: string; steps: string[] }[];
   [key: string]: unknown;
 }
 
@@ -104,7 +99,7 @@ export default function SuccessPlan() {
   const [checked,    setChecked]    = useState<Record<number, boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-08-07T23:59:59.000+01:00").getTime() - Date.now()) / 86_400_000
+    (new Date("2026-08-07T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -127,22 +122,18 @@ export default function SuccessPlan() {
   async function generateAssessment(name: string) {
     setLoading(true);
     try {
-      const dla_workflow = sessionStorage.getItem("digital-link-auditor_dla_workflow") || "spreadsheet + copy/paste";
-      const dla_records_location = sessionStorage.getItem("digital-link-auditor_dla_records_location") || "spreadsheet";
-      const dla_transfer_method = sessionStorage.getItem("digital-link-auditor_dla_transfer_method") || "copypaste";
-      const dla_workflow_verified = sessionStorage.getItem("digital-link-auditor_dla_workflow_verified") || "false";
-      const dla_status = sessionStorage.getItem("digital-link-auditor_dla_status") || "compliance_failure";
-      const dla_biggest_gap = sessionStorage.getItem("digital-link-auditor_dla_biggest_gap") || "Manual transfer detected";
+      const dl_process = sessionStorage.getItem("digital-link-auditor_dl_process") || "copypaste";
+      const dl_software = sessionStorage.getItem("digital-link-auditor_dl_software") || "true";
 
       const prompt = `You are a UK tax expert. Write a personalised action plan for ${name !== "your" ? name : "this taxpayer"}.
 
 Their data:
-- Workflow type: ${dla_workflow}\n- Records location: ${dla_records_location}\n- Transfer method: ${dla_transfer_method}\n- Workflow verified: ${dla_workflow_verified}\n- Compliance status: ${dla_status}\n- Biggest gap: ${dla_biggest_gap}
+- VAT process: ${dl_process}\n- Uses approved software: ${dl_software}
 
 Write a personalised, specific action plan. Use their name if provided. Reference their specific numbers. Be direct and actionable — not generic.
 
 Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. Just JSON with these fields:
-"status": "...", "workflowVerdict": "...", "biggestGap": "...", "mainRisk": "...", "gap2": "...", "gap3": "...", "actions": "...", "bridgeRec": "...", "bridgeWhy": "...", "weekPlan": "...", "evidenceChecklist": "...", "accountantQuestions": "..."
+"status": "...", "breachPoints": "...", "fixRequired": "...", "bridgingOption": "...", "migrationOption": "...", "actions": "...", "weekPlan": "..."
 
 For array fields use actual arrays. For action items use objects with title, deadline, steps array.`;
 
@@ -171,28 +162,19 @@ For array fields use actual arrays. For action items use objects with title, dea
     const displayName = name !== "your" ? name : "Your";
     const result: Record<string, unknown> = {};
     result["status"] = "status — building for " + displayName;
-    result["workflowVerdict"] = "workflowVerdict — building for " + displayName;
-    result["biggestGap"] = "biggestGap — building for " + displayName;
-    result["mainRisk"] = "mainRisk — building for " + displayName;
-    result["gap2"] = "gap2 — building for " + displayName;
-    result["gap3"] = "gap3 — building for " + displayName;
+    result["breachPoints"] = "breachPoints — building for " + displayName;
+    result["fixRequired"] = "fixRequired — building for " + displayName;
+    result["bridgingOption"] = "bridgingOption — building for " + displayName;
+    result["migrationOption"] = "migrationOption — building for " + displayName;
     result["actions"] = [];
-    result["bridgeRec"] = "bridgeRec — building for " + displayName;
-    result["bridgeWhy"] = "bridgeWhy — building for " + displayName;
     result["weekPlan"] = [];
-    result["evidenceChecklist"] = "evidenceChecklist — building for " + displayName;
-    result["accountantQuestions"] = [];
     return result as Assessment;
   }
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const dla_workflow = sessionStorage.getItem("digital-link-auditor_dla_workflow") || "spreadsheet + copy/paste";
-    const dla_records_location = sessionStorage.getItem("digital-link-auditor_dla_records_location") || "spreadsheet";
-    const dla_transfer_method = sessionStorage.getItem("digital-link-auditor_dla_transfer_method") || "copypaste";
-    const dla_workflow_verified = sessionStorage.getItem("digital-link-auditor_dla_workflow_verified") || "false";
-    const dla_status = sessionStorage.getItem("digital-link-auditor_dla_status") || "compliance_failure";
-    const dla_biggest_gap = sessionStorage.getItem("digital-link-auditor_dla_biggest_gap") || "Manual transfer detected";
+    const dl_process = sessionStorage.getItem("digital-link-auditor_dl_process") || "copypaste";
+    const dl_software = sessionStorage.getItem("digital-link-auditor_dl_software") || "true";
 
     // Helper to format relative dates
     function relativeDate(daysFromNow: number): string {
@@ -206,59 +188,23 @@ For array fields use actual arrays. For action items use objects with title, dea
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN",
       "METHOD:PUBLISH",
-      `X-WR-CALNAME:Digital Link Forensic Auditor — Action Dates`,
+      `X-WR-CALNAME:Digital Link Auditor — Action Dates`,
       "BEGIN:VEVENT",
-      `UID:dla-map-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(7)}`,
-      `DTEND;VALUE=DATE:${relativeDate(7)}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD Digital Links — Map your workflow",
-      "DESCRIPTION:Map every step. Identify manual transfers. See File 06.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:dla-fix-${Date.now()}@taxchecknow.com`,
+      `UID:dl-audit-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${relativeDate(14)}`,
       `DTEND;VALUE=DATE:${relativeDate(14)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:MTD Digital Links — Fix the chain",
-      "DESCRIPTION:Install bridging software or begin migration. See Files 03 and 04.",
+      "SUMMARY:Digital Link — Full Process Audit",
+      "DESCRIPTION:Complete digital link audit and implement any bridging software needed.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:dla-test-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(21)}`,
-      `DTEND;VALUE=DATE:${relativeDate(21)}`,
+      `UID:dl-vat1-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(30)}`,
+      `DTEND;VALUE=DATE:${relativeDate(30)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:MTD Digital Links — Test submission",
-      "DESCRIPTION:Run a test submission before deadline. Save confirmation as evidence.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:dla-confirm-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(21)}`,
-      `DTEND;VALUE=DATE:${relativeDate(21)}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD Digital Links — Get written confirmation",
-      "DESCRIPTION:Accountant confirms compliance in writing. Forward File 05.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:dla-q1-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260807"}`,
-      `DTEND;VALUE=DATE:${"20260807"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:🔴 MTD Q1 Deadline — 7 August 2026",
-      "DESCRIPTION:First MTD quarterly submission — digital chain must be compliant.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:dla-final-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20280131"}`,
-      `DTEND;VALUE=DATE:${"20280131"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD Final Declaration — 31 January 2028",
-      "DESCRIPTION:File your MTD final declaration through compliant software.",
+      "SUMMARY:VAT Return — Digital Link Confirmed",
+      "DESCRIPTION:Submit next VAT return with confirmed compliant digital link chain.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -282,7 +228,7 @@ For array fields use actual arrays. For action items use objects with title, dea
       ? (assessment.accountantQuestions as string[]).map((q, i) => `${i + 1}. "${q}"`).join("\n")
       : String(assessment.accountantQuestions);
     await navigator.clipboard.writeText(
-      `Digital Link Forensic Auditor — questions for my accountant:\n\n${questions}\n\nPrepared by TaxCheckNow · taxchecknow.com`
+      `Digital Link Auditor — questions for my accountant:\n\n${questions}\n\nPrepared by TaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -308,7 +254,7 @@ For array fields use actual arrays. For action items use objects with title, dea
       <nav className="no-print border-b border-neutral-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <Link href="/" className="font-serif text-lg font-bold text-neutral-950">TaxCheckNow</Link>
-          <span className="font-mono text-xs text-neutral-400">United Kingdom · Digital Link Forensic Auditor</span>
+          <span className="font-mono text-xs text-neutral-400">United Kingdom · Digital Link Auditor</span>
         </div>
       </nav>
 
@@ -319,10 +265,10 @@ For array fields use actual arrays. For action items use objects with title, dea
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-                Payment confirmed · Your Digital Link Implementation Plan · £147
+                Payment confirmed · Your MTD VAT Compliance Plan · £147
               </p>
               <h1 className="mt-1 font-serif text-2xl font-bold text-neutral-950">
-                {greeting} Digital Link Forensic Auditor Action Plan
+                {greeting} Digital Link Auditor Action Plan
               </h1>
               <p className="mt-1 text-sm text-emerald-800">
                 Built around your numbers, your gaps, your deadline — not the average taxpayer.
@@ -426,7 +372,7 @@ For array fields use actual arrays. For action items use objects with title, dea
                     </p>
                     <p className="mt-0.5 text-xs text-blue-600">
                       Full brief in{" "}
-                      <a href="/files/uk/digital-link-auditor/digital-link-auditor-05"
+                      <a href="/files/uk/digital-link-auditor/dl-05"
                         target="_blank" rel="noopener noreferrer"
                         className="font-semibold underline">File 05 →</a>
                     </p>
@@ -458,28 +404,12 @@ For array fields use actual arrays. For action items use objects with title, dea
               <div className="mb-4 space-y-2">
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">MTD Digital Links — Map your workflow</span>
+                  <span className="text-sm text-neutral-700">Digital Link — Full Process Audit</span>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">MTD Digital Links — Fix the chain</span>
+                  <span className="text-sm text-neutral-700">VAT Return — Digital Link Confirmed</span>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">MTD Digital Links — Test submission</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">MTD Digital Links — Get written confirmation</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">🔴 MTD Q1 Deadline — 7 August 2026</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">7 Aug 2026</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">MTD Final Declaration — 31 January 2028</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">31 Jan 2028</span>
                 </div>
               </div>
               <button onClick={handleCalendar}
@@ -580,7 +510,7 @@ For array fields use actual arrays. For action items use objects with title, dea
                 </div>
                 <p className="mt-2 text-xs text-neutral-500">
                   7 August 2026 · No backdating after this date ·{" "}
-                  <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
+                  <a href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat" target="_blank" rel="noopener noreferrer"
                     className="underline hover:text-neutral-400 transition">
                     HMRC source
                   </a>
@@ -601,7 +531,7 @@ For array fields use actual arrays. For action items use objects with title, dea
             TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified UK tax adviser before making financial decisions.
             Based on HMRC guidance April 2026.{" "}
-            <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">GOV.UK — Use Making Tax Digital for Income Tax</a> · <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">GOV.UK — Find MTD compatible software</a>
+            <a href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">HMRC — VAT Notice 700/22 — MTD digital links</a> · <a href="/api/rules/digital-link-auditor" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">Machine-readable JSON rules</a>
           </p>
         </div>
 

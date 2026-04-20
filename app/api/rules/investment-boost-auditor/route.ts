@@ -188,7 +188,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nz/check/investment-boost-auditor",
     "api_endpoint": "/api/rules/investment-boost-auditor",
-    "generated_at": "2026-04-20T00:03:06.018Z"
+    "generated_at": "2026-04-20T02:58:27.956Z"
 };
 
   return NextResponse.json(rules, {

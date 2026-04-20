@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
 
-const DEADLINE_ISO   = "2026-08-07T23:59:59.000+01:00";
+const DEADLINE_ISO   = "2026-10-05T23:59:59.000Z";
 const DAYS_TO_END    = Math.max(0, Math.floor(
   (new Date(DEADLINE_ISO).getTime() - Date.now()) / 86_400_000
 ));
@@ -16,27 +16,27 @@ const DAYS_TO_END    = Math.max(0, Math.floor(
 
 const BRACKETS = [
   {
-    "label": "Side hustle only (self-employment)",
+    "label": "Gross side income under £1,000 — trading allowance covers it",
     "value": 1,
-    "status": "in_scope"
+    "status": "clear"
   },
   {
-    "label": "Side hustle + UK rental property",
+    "label": "Gross income £1,000–£5,000 — must register for self assessment",
     "value": 2,
-    "status": "in_scope"
+    "status": "trap"
   },
   {
-    "label": "PAYE job + side hustle",
+    "label": "Gross income £5,000–£85,000 — income tax and possibly VAT",
     "value": 3,
-    "status": "approaching"
+    "status": "deep_trap"
   },
   {
-    "label": "Company director + rental property",
+    "label": "Gross income over £85,000 — VAT registration required",
     "value": 4,
-    "status": "in_scope"
+    "status": "deep_trap"
   },
   {
-    "label": "Multiple income streams (mixed)",
+    "label": "Not sure of my total gross platform income",
     "value": 5,
     "status": "risk"
   }
@@ -49,16 +49,16 @@ type PackTier      = 67 | 147;
 
 const PRODUCTS: Record<PackTier, { name: string; tagline: string; value: string; cta: string }> = {
   67: {
-    name:    "Your MTD Scope Assessment",
-    tagline: "Am I legally required to file quarterly from April — and when?",
-    value:   "A personal MTD scope assessment built around your income streams, your qualifying income calculation, and your exact mandate date — not a generic MTD guide.",
-    cta:     "Get My Scope Assessment — £47 →",
+    name:    "Your Side Hustle Tax Pack",
+    tagline: "Does HMRC know about your side income — and should you be worried?",
+    value:   "A personalised side hustle tax assessment showing your declaration obligations, tax exposure, and whether you are already on HMRC radar.",
+    cta:     "Get My Side Hustle Pack — £67 →",
   },
   147: {
-    name:    "Your MTD Strategy System",
-    tagline: "I am in scope — build my full multi-income compliance plan.",
-    value:   "A personal MTD scope assessment built around your income streams, your qualifying income calculation, and your exact mandate date — not a generic MTD guide.",
-    cta:     "Get My Strategy System — £97 →",
+    name:    "Your Side Hustle Registration Plan",
+    tagline: "Get registered and compliant before HMRC contacts you",
+    value:   "Full side hustle audit plus self assessment registration guide, expense claim maximiser, and backdated disclosure plan if needed.",
+    cta:     "Get My Registration Plan — £147 →",
   },
 };
 
@@ -137,12 +137,12 @@ function getStatusStyle(status: BracketStatus): {
 
 function recommendedTier(
   bracketStatus: BracketStatus,
-  selfEmploymentIncome: number | string,
-  rentalIncome: number | string,
-  isJointlyOwned: boolean,
+  grossSideIncome: number | string,
+  isRegistered: boolean,
+  platformIncome: boolean,
 ): PackTier {
-  // selfEmploymentIncome + rentalIncome >= 50000 → tier2. hasMultipleStreams → tier2. Otherwise tier1.
-    if ((selfEmploymentIncome as number) + (rentalIncome as number) >= 50000 || isJointlyOwned === true) return 147;
+  // grossSideIncome over £1000 AND not registered → tier2. Platform income and not registered → tier2.
+    if ((grossSideIncome as number) > 1000 || isRegistered === true) return 147;
   return 67;
 }
 
@@ -150,9 +150,9 @@ function recommendedTier(
 
 export default function SideHustleCheckerCalculator() {
   const [selectedBracket, setSelectedBracket] = useState<number | null>(null);
-  const [selfEmploymentIncome, setSelfEmploymentIncome] = useState<number | string>(10000);
-  const [rentalIncome, setRentalIncome] = useState<number | string>(0);
-  const [isJointlyOwned, setIsJointlyOwned] = useState<boolean>(false);
+  const [grossSideIncome, setGrossSideIncome] = useState<number | string>(3000);
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
+  const [platformIncome, setPlatformIncome] = useState<boolean>(true);
   const [email,           setEmail]           = useState("");
   const [emailSent,       setEmailSent]       = useState(false);
   const [sessionId,       setSessionId]       = useState<string | null>(null);
@@ -178,9 +178,9 @@ export default function SideHustleCheckerCalculator() {
   // Tier algorithm — COLE decides, buyer never chooses
   const calculatedTier: PackTier = recommendedTier(
     bracketStatus,
-    selfEmploymentIncome,
-    rentalIncome,
-    isJointlyOwned,
+    grossSideIncome,
+    isRegistered,
+    platformIncome,
   );
   const effectiveTier   = overrideTier ?? calculatedTier;
   const selectedProduct = PRODUCTS[effectiveTier];
@@ -196,9 +196,9 @@ export default function SideHustleCheckerCalculator() {
 
   async function handleBracketSelect(index: number) {
     setSelectedBracket(index);
-    setSelfEmploymentIncome(10000);
-    setRentalIncome(0);
-    setIsJointlyOwned(false);
+    setGrossSideIncome(3000);
+    setIsRegistered(false);
+    setPlatformIncome(false);
     setOverrideTier(null);
     setError("");
     // Save to sessionStorage for success page
@@ -249,9 +249,9 @@ export default function SideHustleCheckerCalculator() {
     if (!answersComplete || checkoutLoading) return;
     // Save inputs for success page personalisation
     sessionStorage.setItem("side-hustle-checker_answers", JSON.stringify(answers));
-    sessionStorage.setItem("side-hustle-checker_selfEmploymentIncome", String(selfEmploymentIncome));
-    sessionStorage.setItem("side-hustle-checker_rentalIncome", String(rentalIncome));
-    sessionStorage.setItem("side-hustle-checker_isJointlyOwned", String(isJointlyOwned));
+    sessionStorage.setItem("side-hustle-checker_grossSideIncome", String(grossSideIncome));
+    sessionStorage.setItem("side-hustle-checker_isRegistered", String(isRegistered));
+    sessionStorage.setItem("side-hustle-checker_platformIncome", String(platformIncome));
     const sid          = sessionId ?? localStorage.getItem("side-hustle-checker_session_id");
     const effectiveSid = sid ?? `fallback_${Date.now()}`;
     setCheckoutLoading(true);
@@ -303,10 +303,10 @@ export default function SideHustleCheckerCalculator() {
           {/* Rule box — GOAT Block 3 */}
           <div className="mb-4 rounded-xl border-2 border-neutral-900 bg-neutral-950 px-4 py-4">
             <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-              The rule — HMRC confirmed
+              The rules — HMRC confirmed
             </p>
             <p className="mt-1 text-sm leading-relaxed text-white">
-              Qualifying income = gross self-employment turnover + gross UK rental income (your share). PAYE salary, dividends and savings interest are excluded. HMRC uses gross — not profit.
+              Trading allowance: £1,000 gross income per year — threshold, not profit. Over £1,000: must register for self assessment by 5 October after tax year end. Platform reporting: platforms report your income to HMRC from January 2026. Penalty for late registration: £100 automatically.
             </p>
           </div>
 
@@ -342,10 +342,10 @@ export default function SideHustleCheckerCalculator() {
           {/* Clarification box */}
           <div className="mt-4 rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-3">
             <p className="font-mono text-[10px] uppercase tracking-widest text-amber-700">
-              ⚠️ key clarification
+              Key clarification
             </p>
             <p className="mt-1 text-xs leading-relaxed text-amber-900">
-              Your £60,000 PAYE salary does NOT count toward the MTD threshold. A taxpayer with £60,000 PAYE and £20,000 freelance gross has qualifying income of £20,000 — not in scope for 2026.
+              The £1,000 allowance is per person, not per platform. All your side income from every source counts together. If you use the trading allowance you cannot also claim expenses — it is one or the other.
             </p>
           </div>
         </div>
@@ -390,139 +390,108 @@ export default function SideHustleCheckerCalculator() {
                 Refine your position
               </p>
               <div className="space-y-5">
-                {/* BUTTON GROUP — Gross self-employment turnover (before expenses) */}
+                {/* BUTTON GROUP — What is your total gross income from all side hustles? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Gross self-employment turnover (before expenses)</p>
-                  <p className="mb-2 text-xs text-neutral-500">Use gross turnover — not profit. HMRC uses gross.</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">What is your total gross income from all side hustles?</p>
+                  <p className="mb-2 text-xs text-neutral-500">Include all platforms combined — before any expenses</p>
                   <div className="flex flex-wrap gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setSelfEmploymentIncome(10000)}
+                      onClick={() => setGrossSideIncome(500)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        selfEmploymentIncome === 10000
+                        grossSideIncome === 500
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Under £20k
+                      Under £1,000
                     </button>
                     <button
                       type="button"
-                      onClick={() => setSelfEmploymentIncome(25000)}
+                      onClick={() => setGrossSideIncome(3000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        selfEmploymentIncome === 25000
+                        grossSideIncome === 3000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      £20k–£30k
+                      £1,000–£5,000
                     </button>
                     <button
                       type="button"
-                      onClick={() => setSelfEmploymentIncome(40000)}
+                      onClick={() => setGrossSideIncome(15000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        selfEmploymentIncome === 40000
+                        grossSideIncome === 15000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      £30k–£50k
+                      £5,000–£30,000
                     </button>
                     <button
                       type="button"
-                      onClick={() => setSelfEmploymentIncome(60000)}
+                      onClick={() => setGrossSideIncome(50000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        selfEmploymentIncome === 60000
+                        grossSideIncome === 50000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      £50k–£75k
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSelfEmploymentIncome(90000)}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        selfEmploymentIncome === 90000
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      Over £75k
+                      Over £30,000
                     </button>
                   </div>
                   
                 </div>
-                {/* BUTTON GROUP — Gross UK rental income (before expenses) */}
+                {/* TWO-BUTTON TOGGLE — Are you already registered for self assessment? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Gross UK rental income (before expenses)</p>
-                  <p className="mb-2 text-xs text-neutral-500">Your share only if jointly owned. Zero if no rental income.</p>
-                  <div className="flex flex-wrap gap-2">
-                    
-                    <button
-                      type="button"
-                      onClick={() => setRentalIncome(0)}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        rentalIncome === 0
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      £0
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRentalIncome(10000)}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        rentalIncome === 10000
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      Under £20k
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRentalIncome(25000)}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        rentalIncome === 25000
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      £20k–£30k
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRentalIncome(35000)}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        rentalIncome === 35000
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      Over £30k
-                    </button>
-                  </div>
-                  
-                </div>
-                {/* TWO-BUTTON TOGGLE — Is any rental property jointly owned? */}
-                <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Is any rental property jointly owned?</p>
-                  <p className="mb-2 text-xs text-neutral-500">Only your share of rental income counts toward qualifying income</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">Are you already registered for self assessment?</p>
+                  <p className="mb-2 text-xs text-neutral-500">A UTR number means you are registered</p>
                   <div className="flex gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setIsJointlyOwned(false)}
+                      onClick={() => setIsRegistered(true)}
                       className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        isJointlyOwned === false
+                        isRegistered === true
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      No / Not applicable
+                      Yes — already registered
                     </button>
                     <button
                       type="button"
-                      onClick={() => setIsJointlyOwned(true)}
+                      onClick={() => setIsRegistered(false)}
                       className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        isJointlyOwned === true
+                        isRegistered === false
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Yes
+                      No — not registered
+                    </button>
+                  </div>
+                </div>
+                {/* TWO-BUTTON TOGGLE — Is your income from digital platforms (eBay, Etsy, Airbnb, Fiverr etc.)? */}
+                <div>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">Is your income from digital platforms (eBay, Etsy, Airbnb, Fiverr etc.)?</p>
+                  <p className="mb-2 text-xs text-neutral-500">These platforms now report directly to HMRC from January 2026</p>
+                  <div className="flex gap-2">
+                    
+                    <button
+                      type="button"
+                      onClick={() => setPlatformIncome(true)}
+                      className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
+                        platformIncome === true
+                          ? "border-neutral-950 bg-neutral-950 text-white"
+                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                      }`}>
+                      Yes — platform income
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPlatformIncome(false)}
+                      className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
+                        platformIncome === false
+                          ? "border-neutral-950 bg-neutral-950 text-white"
+                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                      }`}>
+                      No — other side income
                     </button>
                   </div>
                 </div>
@@ -583,7 +552,7 @@ export default function SideHustleCheckerCalculator() {
                   </p>
                   <p className="mt-1 font-serif text-xl font-bold text-white">{selectedProduct.name}</p>
                   <p className="mt-1 text-sm text-neutral-300">
-                    {DAYS_TO_END} days to 7 August 2026
+                    {DAYS_TO_END} days to 5 October 2026
                   </p>
                 </div>
                 <button onClick={() => setShowPopup(false)}
@@ -725,5 +694,3 @@ export default function SideHustleCheckerCalculator() {
     </>
   );
 }
-
-

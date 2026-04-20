@@ -156,4 +156,25 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   tier1AssessmentFields: ["status", "annualTaxSaving", "cashflowShift", "tracingRisk", "firstAction", "documentationNeeded", "accountantQuestions"],
   tier2AssessmentFields: ["status", "annualTaxSaving", "cashflowShift", "tracingRisk", "debtShiftOpportunity", "ltcReview", "actions", "weekPlan", "accountantQuestions"],
+  persona: {
+    name: "Aroha",
+    age: 43,
+    occupation: "Speech language therapist (part-time), Airbnb host, landlord — Auckland",
+    location: "Pt Chevalier, Auckland",
+    family: "Husband Mike (civil engineer). Two teenagers — Tama (16) and Hana (14).",
+    financialSnapshot: "3 properties: family home, Avondale rental (in family trust), Glen Eden Airbnb. Household income ~$180k.",
+    painPoint: "Aroha does the family finances and researches before every accountant meeting to ask the right questions.",
+    discovery: "Aroha found three different bright-line answers on three different websites. She needed one definitive source.",
+    voice: "Thorough. Trusts research. Appreciates when complexity is acknowledged. Wry Kiwi humour.",
+  },
+  story: {
+    hook: "David had told Aroha in 2022 that she could not claim the interest on the Avondale rental. She had accepted it and not asked again.",
+    setup: [
+    "The Avondale property was in the family trust. Bought in 2017 for $620,000. Mortgage of $410,000 with ANZ. Annual interest around $28,000. From the 2021 phase-out, she had been claiming nothing.",
+    "Aroha had adjusted her mental model of the property — it was an asset, not a cashflow generator. The trust structure made distribution planning more complex anyway.",
+    "She had not followed the 2025 budget closely. Mike had mentioned something about interest being restored but she had not had time to look into it properly before their September meeting with David.",
+    ],
+    revelation: "From 1 April 2025, 100% of mortgage interest was fully deductible on all residential rentals. On $28,000 of interest at a 33% marginal rate, the trust had a $9,240 annual tax saving available — sitting unclaimed in David's draft return.",
+    resolution: "David updated the draft before filing. The deduction went back in. The trust had refinanced in 2022 — David confirmed the nexus was clean. The full deduction was supportable.",
+  },
 };

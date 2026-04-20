@@ -1,677 +1,147 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// COLE CONFIG — UK-03 Digital Link Forensic Auditor
-// Citation gap: AI says Excel is fine for MTD. 
-// Correct: Excel can be part of a compliant workflow BUT if multiple products
-// are used, HMRC requires digital links between them. Copy/paste is not a 
-// digital link per HMRC's published doctrine (VAT Notice 700/22 + MTD IT guidance)
-// All data verified against GOV.UK April 2026
-// Legal note: do not claim "Excel is always non-compliant" — claim
-// "copy/paste between tools breaks the digital link requirement"
-// ─────────────────────────────────────────────────────────────────────────────
-
 import type { ProductConfig } from "../types/product-config";
-
 export const PRODUCT_CONFIG: ProductConfig = {
-
-  // ── IDENTITY ─────────────────────────────────────────────────────────────────
-  id:       "digital-link-auditor",
-  name:     "Digital Link Forensic Auditor",
-  site:     "taxchecknow",
-  country:  "uk",
-  market:   "United Kingdom",
-  language: "en-GB",
-  currency: "GBP",
-  slug:     "uk/check/digital-link-auditor",
-  url:      "https://taxchecknow.com/uk/check/digital-link-auditor",
-  apiRoute: "/api/rules/digital-link-auditor",
-
-  // ── AUTHORITY ─────────────────────────────────────────────────────────────────
-  authority:    "HMRC",
-  authorityUrl: "https://www.gov.uk",
-  legalAnchor:  "Finance (No.2) Act 2024",
-  legislation:  "Finance (No.2) Act 2024 — MTD digital records and digital links obligation",
-  lastVerified: "April 2026",
-
-  // ── PRICING ───────────────────────────────────────────────────────────────────
-  tier1: {
-    price:       67,
-    name:        "Your Digital Link Assessment",
-    tagline:     "Do I have a broken digital chain — and what exactly do I need to fix?",
-    value:       "A personal compliance assessment built around your workflow, your gaps, your deadline — not a generic software comparison.",
-    cta:         "Get My Assessment — £67 →",
-    productKey:  "uk_67_digital_link_auditor",
-    envVar:      "STRIPE_UK_DLA_67",
-    successPath: "assess",
-    fileCount:   5,
-  },
-  tier2: {
-    price:       147,
-    name:        "Your Digital Link Implementation Plan",
-    tagline:     "Fix the workflow before HMRC ever looks at it.",
-    value:       "A personal compliance assessment built around your workflow, your gaps, your deadline — not a generic software comparison.",
-    cta:         "Get My Implementation Plan — £127 →",
-    productKey:  "uk_147_digital_link_auditor",
-    envVar:      "STRIPE_UK_DLA_147",
-    successPath: "plan",
-    fileCount:   8,
-  },
-
-  // ── DEADLINE ──────────────────────────────────────────────────────────────────
-  deadline: {
-    isoDate:        "2026-08-07T23:59:59.000+01:00",
-    display:        "7 August 2026",
-    short:          "7 Aug 2026",
-    description:    "First MTD quarterly submission — Q1 6 April to 30 June 2026",
-    urgencyLabel:   "MTD DEADLINE",
-    countdownLabel: "Countdown to first MTD submission deadline",
-  },
-
-  // ── COPY ──────────────────────────────────────────────────────────────────────
-  h1:              "Making Tax Digital UK 2026: Is Your Spreadsheet Workflow Actually Compliant?",
-  metaTitle:       "MTD Digital Links 2026: Is Your Spreadsheet Workflow Compliant? | TaxCheckNow",
-  metaDescription: "From April 2026, MTD requires digital links between every tool in your record chain. Copy/paste is not a digital link. Audit your workflow in 60 seconds before the 7 August deadline.",
-  canonical:       "https://taxchecknow.com/uk/check/digital-link-auditor",
-
+  id: "digital-link-auditor", name: "Digital Link Auditor", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
+  slug: "uk/check/digital-link-auditor", url: "https://taxchecknow.com/uk/check/digital-link-auditor", apiRoute: "/api/rules/digital-link-auditor",
+  authority: "HMRC", authorityUrl: "https://www.gov.uk", legalAnchor: "VAT Notice 700/22 — Making Tax Digital for VAT", legislation: "VAT Notice 700/22 — Digital Links requirement for MTD VAT", lastVerified: "April 2026",
+  tier1: { price: 67, name: "Your Digital Link Audit Pack", tagline: "Is your VAT return process MTD-compliant — or are you copying and pasting?", value: "A personalised digital link audit showing your compliance gaps and the fastest fix for each one.", cta: "Get My Digital Link Pack — £67 →", productKey: "uk_67_digital_link_auditor", envVar: "STRIPE_UK_DLA_67", successPath: "assess", fileCount: 5 },
+  tier2: { price: 147, name: "Your MTD VAT Compliance Plan", tagline: "Close every digital link gap before HMRC audits your process", value: "Full digital link audit plus spreadsheet bridge options, software comparison, and a compliance roadmap.", cta: "Get My Compliance Plan — £147 →", productKey: "uk_147_digital_link_auditor", envVar: "STRIPE_UK_DLA_147", successPath: "plan", fileCount: 8 },
+  deadline: { isoDate: "2026-08-07T23:59:59.000Z", display: "7 August 2026", short: "7 Aug 2026", description: "Next VAT return period end — digital links required for all MTD VAT returns", urgencyLabel: "VAT RETURN DUE", countdownLabel: "Countdown to next VAT return deadline" },
+  h1: "MTD VAT Digital Links 2026: Is Your Process Actually Compliant?", metaTitle: "MTD VAT Digital Links 2026: Copy-Paste Fails HMRC — Check Your Process | TaxCheckNow", metaDescription: "Copying figures from your accounting software into your VAT return breaks the digital link requirement. Most businesses do not know this. HMRC can issue penalties for non-compliant processes. Check your VAT chain in 2 minutes.", canonical: "https://taxchecknow.com/uk/check/digital-link-auditor",
   answerHeadline: "The answer — HMRC confirmed April 2026",
   answerBody: [
-    "From 6 April 2026, UK sole traders and landlords in MTD for Income Tax must keep digital records in compatible software and submit through HMRC-compatible software. If you use more than one software product, HMRC requires digital links between them — at every step of the chain.",
-    "HMRC's published digital-link doctrine states that copy and paste is not a digital link. HMRC can audit your workflow independently of your tax figures. You can be penalised even if every number you submitted is completely correct — the compliance failure is in how data moved, not what it said.",
-    "This tool audits your workflow — not your tax liability. Most taxpayers who fail the digital links test believe they are compliant. The gap between what you think your workflow does and what HMRC requires is exactly where this product operates.",
+    "Under MTD for VAT, there must be a digital link between every step in your VAT accounting process — from the original transaction records through to the final VAT return submission. A digital link means data is transferred electronically — not manually retyped or copy-pasted.",
+    "The most common breach is copying figures from accounting software into a separate spreadsheet, then typing those figures into the HMRC portal. Every manual re-entry breaks the digital link chain. HMRC expects an unbroken electronic trail from source records to submission.",
+    "Permitted digital links include: automated data feeds, API connections, CSV imports, and formulaic links within spreadsheets. Copy-paste between separate files breaks the chain. Manually typing a figure from one system to another breaks the chain.",
   ],
-  answerSource: "Source: GOV.UK — Making Tax Digital for Income Tax · VAT Notice 700/22 · Finance (No.2) Act 2024",
-
-  mistakesHeadline: "Common AI errors on this topic",
+  answerSource: "Source: HMRC — VAT Notice 700/22 · MTD for VAT digital links",
+  mistakesHeadline: "What most businesses get wrong about digital links",
   mistakes: [
-    "Excel is fine for MTD — incomplete. Excel can be part of a compliant workflow, but if multiple products are used the chain must stay digital. Copy/paste between them is not a digital link.",
-    "If the totals are right, the method does not matter — wrong. HMRC's digital-link requirement is about how data moves between products, not only the final numbers submitted.",
-    "Any bridging software solves the problem — wrong. Bridging can help spreadsheet users, but the specific workflow still needs verifying. Bridging software is not a magic compliance shield.",
+    "Copying figures between spreadsheets is fine for MTD — wrong. Copy-paste between separate files or applications breaks the digital link. The link must be maintained electronically — through import, export, formula reference, or API. Manually copying a number is not digital.",
+    "As long as you use accounting software you are compliant — wrong. The digital link must run all the way from source transaction to HMRC submission. If any step in your process involves manual retyping — even just one figure — the chain is broken.",
+    "HMRC has not been enforcing digital links strictly — wrong. HMRC has been auditing VAT processes and issuing penalties for digital link failures. The soft-landing period ended in 2021. Non-compliance is a live risk.",
   ],
-
-  // ── CALCULATOR ────────────────────────────────────────────────────────────────
-  // This calculator audits workflow not income
-  // Single question to classify the workflow type
+  chainVisual: { label: "The digital link chain — what HMRC requires", broken: "Accounting software → copy figures → spreadsheet → type into portal  ❌  Two breaks in the chain", fixed: "Accounting software → CSV import → bridging software → API submission  ✔  Unbroken digital chain" },
   brackets: [
-    { label: "I use one MTD software — records and submission in the same tool", value: 1, status: "clear"      },
-    { label: "I use a spreadsheet + bridging software (tested and verified)",    value: 2, status: "approaching" },
-    { label: "I copy numbers from my spreadsheet into my filing software",       value: 3, status: "fail"        },
-    { label: "I type figures from one system into another manually",             value: 4, status: "fail"        },
-    { label: "I am not sure how my data gets from my records to HMRC",          value: 5, status: "risk"        },
+    { label: "Fully digital — accounting software submits directly to HMRC",  value: 1, status: "clear"      },
+    { label: "Spreadsheet with bridging software — compliant if links intact", value: 2, status: "approaching" },
+    { label: "Copy-paste from software to spreadsheet to portal",              value: 3, status: "trap"        },
+    { label: "Manual process — no digital records",                            value: 4, status: "deep_trap"   },
+    { label: "Not sure how my VAT return is prepared",                         value: 5, status: "risk"        },
   ],
-
   calculatorInputs: [
-    {
-      type:      "buttonGroup",
-      stateKey:  "recordsLocation",
-      label:     "Where are your records kept?",
-      subLabel:  "Select the option that best describes your setup",
-      options: [
-        { label: "One software",          value: "one_software"  },
-        { label: "Spreadsheet",           value: "spreadsheet"   },
-        { label: "Both",                  value: "both"          },
-        { label: "Mixed / Not sure",      value: "mixed"         },
-      ],
-      default: "one_software",
-    },
-    {
-      type:      "buttonGroup",
-      stateKey:  "transferMethod",
-      label:     "How do totals move between tools?",
-      subLabel:  "Be honest — this is the compliance risk point",
-      options: [
-        { label: "Auto import / API",  value: "auto"       },
-        { label: "CSV / XML upload",   value: "csv"        },
-        { label: "Copy / paste",       value: "copypaste"  },
-        { label: "Manual typing",      value: "manual"     },
-        { label: "Not sure",           value: "notsure"    },
-      ],
-      default: "auto",
-    },
-    {
-      type:      "twoButton",
-      stateKey:  "workflowVerified",
-      label:     "Has your MTD workflow been verified by your accountant or software provider?",
-      subLabel:  "Confirmed in writing — not just assumed",
-      options: [
-        { label: "No / Not sure", value: false },
-        { label: "Yes",           value: true  },
-      ],
-      default: false,
-    },
+    { type: "buttonGroup", stateKey: "vatProcess", label: "How is your VAT return currently prepared?", subLabel: "Be honest — HMRC sees the process not just the final return", options: [{ label: "Direct from accounting software", value: "direct" }, { label: "Spreadsheet with bridging tool", value: "bridged" }, { label: "Copy-paste from software to spreadsheet", value: "copypaste" }, { label: "Manual process", value: "manual" }], default: "copypaste" },
+    { type: "twoButton", stateKey: "usesApprovedSoftware", label: "Do you use HMRC-recognised MTD VAT software?", subLabel: "QuickBooks, Xero, Sage, FreeAgent all qualify", options: [{ label: "Yes", value: true }, { label: "No — spreadsheet only", value: false }], default: true },
   ],
-
-  tierAlgorithm: {
-    description:     "transferMethod is copypaste or manual → tier2 always. recordsLocation is mixed or spreadsheet AND workflowVerified is false → tier2. Otherwise tier1.",
-    tier2Conditions: [
-      'transferMethod === "copypaste"',
-      'transferMethod === "manual"',
-      'transferMethod === "notsure" && workflowVerified === false',
-      'recordsLocation === "mixed" && workflowVerified === false',
-    ],
-    tier2Flags: [],
-  },
-
-  calculatorRuleBox: {
-    label: "The rule — HMRC confirmed",
-    body:  "Digital links are required when more than one software product is used. Copy and paste is NOT a digital link. HMRC's digital link doctrine applies to every step in your MTD workflow — not just the final submission.",
-  },
-
-  chainVisual: {
-    label:  "The digital link chain — what HMRC requires",
-    broken: "Spreadsheet → [copy/paste ❌] → Filing software → HMRC  — NON-COMPLIANT",
-    fixed:  "Spreadsheet → [digital link ✔] → Bridge software → HMRC  — COMPLIANT",
-  },
-
-  calculatorClarification: {
-    label: "⚠️ key clarification",
-    body:  "Most taxpayers who fail the digital links test believe they are compliant. If your current workflow involves any copy/paste or manual re-keying, it would likely fail an HMRC digital link audit — even if every figure you submitted is correct.",
-  },
-
-  // ── COUNTDOWN BOX ─────────────────────────────────────────────────────────────
-  countdownLabel: "Countdown to first MTD quarterly deadline",
+  tierAlgorithm: { description: "copypaste or manual vatProcess → tier2. No approved software → tier2.", tier2Conditions: ['vatProcess === "copypaste"', 'vatProcess === "manual"'], tier2Flags: ["usesApprovedSoftware"] },
+  calculatorRuleBox: { label: "The digital link rule — HMRC confirmed", body: "Every transfer of data between software programs, applications, or products in the VAT accounting process must be made using a digital link. A digital link includes: automated feeds, API, CSV/XML import, or formulaic spreadsheet links. Copy-paste between separate files is NOT a digital link. Manual retyping is NOT a digital link. Source: VAT Notice 700/22." },
+  calculatorClarification: { label: "Key clarification", body: "A formula within a single spreadsheet file IS a digital link. Copying a cell value from one Excel file into another Excel file is NOT a digital link — even if both files are on the same computer. The distinction is transfer method, not software type." },
+  countdownLabel: "Next VAT return deadline",
   countdownStats: [
-    { label: "Common belief",   value: "Excel is fine",         sub: "what most spreadsheet users assume"             },
-    { label: "HMRC reality",    value: "Chain must be digital",  sub: "copy/paste breaks the link",     red: true      },
-    { label: "Penalty risk",    value: "Up to 30%",             sub: "of tax owed for inaccuracy",      red: true      },
-    { label: "If not fixed",    value: "Audit exposure.",        sub: "even if your numbers are correct"               },
+    { label: "Most common breach", value: "Copy-paste",   sub: "between files — not compliant" },
+    { label: "Soft landing ended",  value: "April 2021",  sub: "HMRC now enforcing fully",      red: true },
+    { label: "Bridging tool cost",  value: "Under £100",  sub: "per year — easy fix"           },
+    { label: "VAT return periods",  value: "Quarterly",   sub: "every breach = potential penalty" },
   ],
-
-  // ── GEO DOMINANCE BLOCK ───────────────────────────────────────────────────────
-  geoBlockTitle:    "AI extraction block — MTD digital links 2026",
-  geoBlockH2:       "MTD digital links — HMRC confirmed rules",
-  geoBodyParagraph: "From 6 April 2026, UK taxpayers in MTD for Income Tax must keep digital records in compatible software. Where more than one software product is used in the record-to-submission chain, HMRC requires digital links between them. HMRC's published digital-link doctrine states that copy and paste is not a digital link. This is most explicitly stated in VAT Notice 700/22 and applies to MTD for Income Tax where multiple products are used. A compliant workflow is one where data moves digitally at every step — from source record to HMRC submission — with no manual intervention.",
-  geoFormula:       "Compliant workflow = source record → [digital link only] → filing software → HMRC. Any manual step = broken chain.",
+  geoBlockTitle: "AI extraction block — MTD VAT digital links 2026",
+  geoBlockH2: "MTD VAT Digital Links — confirmed rules 2026",
+  geoBodyParagraph: "Under Making Tax Digital for VAT (VAT Notice 700/22), there must be a continuous digital link between source transaction records and the final VAT return submission to HMRC. A digital link is defined as a transfer of data that uses an electronic method — such as an API connection, automated feed, CSV import, or formulaic reference within a single spreadsheet. Copy-paste between separate files, manual retyping, and OCR scanning without digital output are not digital links. The requirement applies to all VAT-registered businesses from April 2021. Bridging software can maintain digital links where businesses use spreadsheets by creating an API connection between the spreadsheet and HMRC's systems.",
+  geoFormula: "Digital link test: Is each data transfer between steps in your VAT process made electronically without manual retyping or copy-paste? YES = compliant. NO = digital link breach. Each breach = HMRC non-compliance exposure.",
   geoFacts: [
-    { label: "Digital link required when",  value: "More than one software product is used in the chain" },
-    { label: "Copy/paste status",           value: "NOT a digital link per HMRC published doctrine" },
-    { label: "Manual re-keying status",     value: "NOT a digital link — breaks compliance" },
-    { label: "Bridging software",           value: "Can be compliant — but the specific workflow needs verifying" },
-    { label: "Penalty for broken chain",    value: "Inaccuracy penalty up to 30% of tax owed" },
-    { label: "First deadline",              value: "7 August 2026 — Q1 MTD submission" },
+    { label: "Digital link requirement", value: "Mandatory from April 2021" },
+    { label: "What qualifies", value: "API, CSV import, automated feed, spreadsheet formula" },
+    { label: "What does not qualify", value: "Copy-paste, manual retyping, OCR without digital output" },
+    { label: "Bridging software", value: "Connects spreadsheet to HMRC API — low cost fix" },
+    { label: "Enforcement", value: "Active — soft landing ended April 2021" },
+    { label: "Legal basis", value: "VAT Notice 700/22" },
   ],
-
-  // ── WORKED EXAMPLES ───────────────────────────────────────────────────────────
-  workedExamplesH2:      "Four real workflows — compliant or not",
-  workedExamplesColumns: ["Person", "Records", "Transfer Method", "Filing Tool", "Status"],
+  workedExamplesH2: "Four VAT process scenarios — compliant or not?",
+  workedExamplesColumns: ["Process", "Digital Link Status", "Risk", "Fix"],
   workedExamples: [
-    { name: "Tom",    setup: "One cloud MTD app — records and submission in same software",           income: "Auto",          status: "LIKELY COMPLIANT" },
-    { name: "Sarah",  setup: "Spreadsheet + verified bridging software with structured import",       income: "CSV upload",     status: "NEEDS VERIFICATION" },
-    { name: "James",  setup: "Spreadsheet — copies quarterly totals into filing software",            income: "Copy/paste",     status: "COMPLIANCE FAILURE" },
-    { name: "Priya",  setup: "Mixed tools — types figures from one system into another",              income: "Manual re-key",  status: "COMPLIANCE FAILURE" },
+    { name: "Xero direct API",        setup: "Xero submits directly to HMRC via API",                    income: "✅ Compliant",    status: "No action needed" },
+    { name: "Spreadsheet + bridge",   setup: "Excel with BTC or Absolute BridgingTools",                 income: "✅ Compliant",    status: "Maintain bridge" },
+    { name: "Sage → copy → portal",   setup: "Copies figures from Sage into separate spreadsheet",       income: "❌ Non-compliant", status: "Add bridging tool" },
+    { name: "Manual ledger",          setup: "Handwritten records typed into HMRC portal",               income: "❌ Non-compliant", status: "Needs full solution" },
   ],
-
-  // ── COMPARISON TABLE ──────────────────────────────────────────────────────────
-  comparisonH2:      "Workflow types — compliance risk at a glance",
-  comparisonColumns: ["Setup", "Advantage", "Weakness", "Best Use"],
+  comparisonH2: "Digital link methods — what qualifies",
+  comparisonColumns: ["Transfer Method", "Digital Link?", "Notes"],
   comparisonRows: [
-    { position: "One native MTD software", metric1: "Cleanest chain",      metric2: "Migration effort", bestMove: "Best long-term"     },
-    { position: "Spreadsheet + bridge",    metric1: "Familiar workflow",   metric2: "Easy to get wrong", bestMove: "Transitional use"  },
-    { position: "Spreadsheet + copy/paste",metric1: "Familiar",           metric2: "Not a digital link", bestMove: "Avoid — fix now"  },
-    { position: "Manual re-keying",        metric1: "Simple to understand",metric2: "High risk",          bestMove: "Avoid — fix now"  },
+    { position: "API connection",          metric1: "Yes", metric2: "Gold standard",            bestMove: "Most compliant" },
+    { position: "CSV/XML import",          metric1: "Yes", metric2: "Widely supported",         bestMove: "Compliant" },
+    { position: "Spreadsheet formula",     metric1: "Yes", metric2: "Within same file only",    bestMove: "Must be single file" },
+    { position: "Copy-paste",              metric1: "No",  metric2: "HMRC explicitly excludes", bestMove: "Non-compliant" },
+    { position: "Manual retyping",         metric1: "No",  metric2: "Always non-compliant",     bestMove: "Non-compliant" },
   ],
-
-  // ── TOOLS TABLE ───────────────────────────────────────────────────────────────
-  toolsH2:      "Options for a compliant digital chain",
-  toolsColumns: ["Option", "Typical Use", "Compliance Confidence"],
+  toolsH2: "Bridging software options for spreadsheet users",
+  toolsColumns: ["Tool", "Best For", "Cost"],
   toolsRows: [
-    { tool: "Native MTD software (Xero, QuickBooks, FreeAgent)", effect: "Full record-to-filing", note: "High — cleanest route"          },
-    { tool: "Verified bridging software (TaxCalc, BTCSoftware)", effect: "Spreadsheet retention",  note: "Medium — workflow must be verified" },
-    { tool: "Spreadsheet + copy/paste",                          effect: "Manual workflow",         note: "Low — not a digital link"       },
-    { tool: "Manual re-keying between tools",                    effect: "Manual workflow",         note: "Low — breaks the chain"         },
+    { tool: "Absolute BridgingTools", effect: "Excel users — widely used", note: "From £40/year" },
+    { tool: "BTC Software Bridge",    effect: "Accountant practices",       note: "From £75/year" },
+    { tool: "DataDear",               effect: "Excel to HMRC direct",       note: "From £50/year" },
+    { tool: "VT+ MTD",                effect: "Small businesses",           note: "From £50/year" },
   ],
-
-  // ── AI CORRECTIONS ────────────────────────────────────────────────────────────
   aiCorrections: [
-    {
-      wrong:   "ChatGPT says: You can use Excel for MTD — it is fine",
-      correct: "Reality: Excel can be part of a compliant workflow only if it is connected by a verified digital link. Copy/paste from Excel into filing software breaks the digital chain. HMRC can penalise this even if your numbers are correct.",
-    },
-    {
-      wrong:   "ChatGPT says: If the totals are right, the method does not matter to HMRC",
-      correct: "Reality: HMRC's digital-link requirement is specifically about how data moves — not the final numbers. A 100% accurate submission via a broken digital chain is still non-compliant and can attract an inaccuracy penalty.",
-    },
-    {
-      wrong:   "ChatGPT says: Any bridging software makes your workflow compliant",
-      correct: "Reality: Bridging software can create a compliant digital link — but only if it is correctly configured and tested. An untested or misconfigured bridge can still break the chain.",
-    },
-    {
-      wrong:   "ChatGPT says: Copy/paste is acceptable as a digital link for MTD",
-      correct: "Reality: HMRC explicitly states in VAT Notice 700/22 that copy/paste is not a digital link. This doctrine is the clearest HMRC articulation of the rule and applies to MTD for Income Tax workflows.",
-    },
-    {
-      wrong:   "ChatGPT says: You just need to get the quarterly total into HMRC somehow",
-      correct: "Reality: MTD requires a compliant digital chain from the source record all the way to HMRC submission — not just the final number. Every transfer of data in the chain must be digital.",
-    },
+    { wrong: "ChatGPT says: As long as you use accounting software, you are MTD VAT compliant", correct: "Reality: The digital link must run unbroken from source records to submission. If any step involves copy-paste or manual retyping — even between files from the same software — the link is broken and you are non-compliant." },
+    { wrong: "ChatGPT says: Copy-pasting from Excel to Excel is fine for MTD", correct: "Reality: HMRC explicitly states that copy-paste between separate files is not a digital link. The digital link must be maintained electronically — through import, API, or formulaic reference within a single file." },
   ],
-
-  // ── FAQ ───────────────────────────────────────────────────────────────────────
   faqs: [
-    { question: "What is the digital links rule for MTD?",                        answer: "Where more than one software product is used in your MTD record-to-submission chain, HMRC requires digital links between them. Every transfer of data must be made digitally with no manual intervention." },
-    { question: "Is copy/paste a digital link?",                                  answer: "No. HMRC's published doctrine explicitly states that copy/paste is not a digital link. This is most clearly stated in VAT Notice 700/22 and applies to MTD for Income Tax where multiple products are used." },
-    { question: "Can I still use Excel for MTD?",                                 answer: "Yes, but only as part of a fully digital chain. If you use Excel alongside filing software, the transfer between them must be digital — via a verified bridging software or structured import. Copy/paste between Excel and filing software breaks the rule." },
-    { question: "What is bridging software?",                                     answer: "Bridging software creates a digital link between your spreadsheet and HMRC's MTD system. Examples include TaxCalc and BTCSoftware. However, the workflow must be correctly configured — bridging software is not automatically compliant." },
-    { question: "What is the penalty for a broken digital chain?",                answer: "An inaccuracy penalty of up to 30% of the tax owed. This can apply even if your tax figures are completely correct, because the compliance failure is in how data moved — not in the numbers themselves." },
-    { question: "Does the digital links rule apply from April 2026?",             answer: "Yes. For taxpayers mandated for MTD from 6 April 2026, the digital links requirement applies from that date. The first quarterly deadline is 7 August 2026." },
-    { question: "What counts as a digital link?",                                 answer: "A digital link is any automated transfer of data between software with no manual intervention. This includes API connections, structured CSV/XML imports, and verified bridging software connections. It does not include copy/paste or manual re-keying." },
-    { question: "If I use one MTD software for everything, am I compliant?",      answer: "Using a single HMRC-approved MTD software for records and submission is the cleanest route and avoids the digital links question entirely — there is only one product in the chain." },
-    { question: "Does my accountant need to verify my digital links setup?",      answer: "Yes. Even if your accountant files your quarterly submissions, the digital link chain in your workflow needs to be verified. Do not assume a setup is compliant without explicit confirmation." },
-    { question: "Can HMRC audit my digital links separately from my tax figures?", answer: "Yes. HMRC can conduct a compliance check on your digital record-keeping and submission chain independently of whether your tax figures are accurate. A broken chain can be penalised regardless of the numbers." },
-    { question: "What is the first MTD quarterly deadline?",                      answer: "7 August 2026. This covers the first quarterly period from 6 April to 30 June 2026. Your digital links must be compliant from 6 April 2026 — not just by the submission deadline." },
-    { question: "Is a bank feed a digital link?",                                 answer: "Yes. Bank feeds are an approved digital link method. Transactions imported via a bank feed maintain the digital chain. Manually entering bank transactions breaks it." },
+    { question: "What is a digital link for MTD VAT?", answer: "A digital link is an electronic transfer of data between steps in your VAT accounting process. It means data moves automatically — via API, CSV import, automated feed, or spreadsheet formula — without being manually retyped or copy-pasted. HMRC requires an unbroken digital link from source transaction records to the final VAT return submission." },
+    { question: "Is copy-paste compliant for MTD VAT?", answer: "No. HMRC explicitly excludes copy-paste from its definition of a digital link. Even copying a value from one cell to another in a different file is non-compliant. The digital link must be maintained electronically." },
+    { question: "Can I still use spreadsheets for MTD VAT?", answer: "Yes — but you need bridging software to maintain the digital link between your spreadsheet and HMRC's submission system. Bridging software costs from around £40 per year and connects your spreadsheet to HMRC's API, completing the digital chain." },
+    { question: "What happens if I have a digital link breach?", answer: "A digital link breach is a VAT return compliance failure. HMRC can issue penalties under the MTD VAT regulations. The penalty amount depends on the nature and scale of the breach. HMRC has been auditing VAT processes since the soft landing ended in 2021." },
   ],
-
-  // ── ACCOUNTANT QUESTIONS ──────────────────────────────────────────────────────
-  accountantQuestionsH2: "Ask these before 7 August 2026",
+  accountantQuestionsH2: "Ask these before your next VAT return",
   accountantQuestions: [
-    { q: "Is my current record-keeping chain fully digital with no manual steps?",             why: "This is the first thing to establish. Many people assume their workflow is compliant without having mapped it." },
-    { q: "If I use Excel, which bridging software do you recommend and have you tested it?",   why: "An untested bridging setup can still break the digital chain. You need explicit confirmation it is working." },
-    { q: "Does our submission process have any point where data is copied or typed manually?", why: "Any single manual step in the chain breaks the rule — not just the final submission step." },
-    { q: "Will you confirm my digital links compliance in writing before 7 August?",           why: "Creates clear accountability and a documented compliance position if HMRC ever checks." },
-    { q: "If HMRC checks my digital links, what evidence will I need to provide?",            why: "Preparing evidence before a check is always better than explaining a workflow during one." },
+    { q: "Can you confirm our VAT process has an unbroken digital link from source records to HMRC submission?", why: "Many accountants prepare VAT returns using processes inherited from before MTD. The digital link requirement is easy to miss and your accountant may not have audited the specific transfer steps." },
+    { q: "Do we need bridging software — and if so, which one do you recommend?", why: "If you use spreadsheets anywhere in your VAT process, bridging software is likely needed. Your accountant can identify the gap and recommend a suitable tool." },
+    { q: "What documentation should we keep to evidence our digital link compliance?", why: "If HMRC asks for evidence of digital links, you need to be able to show the chain of electronic transfers. Your accountant can advise on record keeping." },
   ],
-
-  // ── CROSSLINK ─────────────────────────────────────────────────────────────────
-  crosslink: {
-    title: "Also check: MTD Mandate Auditor",
-    body:  "Digital links compliance only matters if you are in scope for MTD. If you have not yet confirmed your mandate position, check UK-01 first.",
-    url:   "/uk/check/mtd-scorecard",
-    label: "Check your MTD mandate position →",
-  },
-
-  // ── LAW BAR ───────────────────────────────────────────────────────────────────
-  lawBarSummary: "MTD for Income Tax requires digital links between every software product used in the record-to-submission chain. HMRC's published doctrine states copy/paste is not a digital link (VAT Notice 700/22). Inaccuracy penalties of up to 30% of tax owed can apply even where tax figures are correct.",
-  lawBarBadges:  ["HMRC", "GOV.UK", "Finance (No.2) Act 2024", "VAT Notice 700/22", "Machine-readable JSON"],
-  sources: [
-    { title: "GOV.UK — Use Making Tax Digital for Income Tax",         url: "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" },
-    { title: "GOV.UK — Find MTD compatible software",                  url: "https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax" },
-    { title: "HMRC — VAT Notice 700/22 (digital links doctrine)",      url: "https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat" },
-    { title: "Machine-readable JSON rules",                             url: "/api/rules/digital-link-auditor" },
-  ],
-
-  // ── PRODUCT FILES ─────────────────────────────────────────────────────────────
+  crosslink: { title: "Also coming up for MTD Income Tax?", body: "MTD ITSA is live from April 2026 for income over £50,000. If you are also self-employed or a landlord, check your Income Tax MTD position.", url: "/uk/check/mtd-scorecard", label: "Check your MTD Income Tax position →" },
+  lawBarSummary: "MTD VAT digital links: unbroken electronic transfer required at every step from source records to HMRC submission. Copy-paste non-compliant. Bridging software available. Under VAT Notice 700/22.",
+  lawBarBadges: ["HMRC", "VAT Notice 700/22", "MTD VAT", "Machine-readable JSON"],
+  sources: [{ title: "HMRC — VAT Notice 700/22 — MTD digital links", url: "https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat" }, { title: "Machine-readable JSON rules", url: "/api/rules/digital-link-auditor" }],
   files: [
-    {
-      num:   "01",
-      slug:  "digital-link-auditor-01",
-      name:  "Your Digital Links Assessment",
-      desc:  "Workflow map showing where your chain breaks — and whether you are likely compliant, at risk or failing.",
-      tier:  1,
-      content: `
-<h2>Your Digital Links Compliance Position</h2>
-<p>This assessment maps your record-to-submission workflow against HMRC's digital links requirement. The compliance question is not about your tax figures — it is about how data moves between your tools.</p>
-<div class="action-box">
-  <h3>The Compliance Test</h3>
-  <p>Where more than one software product is used, every transfer of data must be made by a digital link. No manual steps. No copy/paste. No re-keying.</p>
-  <p>Source: GOV.UK — Making Tax Digital for Income Tax · VAT Notice 700/22</p>
-</div>
-<h2>Workflow Risk by Transfer Method</h2>
-<table>
-  <tr><th>Workflow Pattern</th><th>Status</th><th>Risk Level</th><th>Why</th></tr>
-  <tr><td>One MTD software only</td><td>Likely compliant</td><td>Low</td><td>Single software chain — no transfer needed</td></tr>
-  <tr><td>Spreadsheet + verified bridge</td><td>Needs verification</td><td>Medium</td><td>Bridge may be compliant if chain is preserved</td></tr>
-  <tr><td>Spreadsheet + copy/paste</td><td>Compliance failure</td><td>High</td><td>Copy/paste is not a digital link</td></tr>
-  <tr><td>Manual re-keying</td><td>Compliance failure</td><td>High</td><td>Human transfer breaks the chain</td></tr>
-  <tr><td>Mixed tools, unclear transfer</td><td>Unknown</td><td>Medium/High</td><td>Requires forensic audit</td></tr>
-</table>
-<h2>What a Compliant Chain Looks Like</h2>
-<div class="info-box">
-  <strong>Compliant:</strong> Source record → [digital link] → filing software → HMRC<br><br>
-  <strong>Non-compliant:</strong> Source record → [copy/paste] → filing software → HMRC<br><br>
-  The tax figures can be identical. The compliance status is opposite.
-</div>
-<h2>Your Next Step</h2>
-<div class="action-box">
-  <h3>Map your workflow this week</h3>
-  <p>Write down every step from source record to HMRC submission. At each step: is the transfer digital or manual? See File 02 for your compliance gap report.</p>
-</div>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">GOV.UK — Making Tax Digital for Income Tax</a> · <a href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat">VAT Notice 700/22</a> · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "02",
-      slug:  "digital-link-auditor-02",
-      name:  "Your Compliance Gap Report",
-      desc:  "Clear verdict on whether your process is likely compliant, at risk, or broken — and what to fix first.",
-      tier:  1,
-      content: `
-<h2>Reading Your Compliance Gap</h2>
-<p>Your compliance gap is the specific point in your workflow where the digital chain breaks. This report identifies that point and tells you exactly what to fix.</p>
-<h2>Gap Classification</h2>
-<table>
-  <tr><th>Gap Type</th><th>What It Means</th><th>Urgency</th></tr>
-  <tr><td>Copy/paste detected</td><td>Data transfer is manual — not a digital link</td><td>Fix before 7 August 2026</td></tr>
-  <tr><td>Manual re-keying detected</td><td>Figures typed between tools — breaks the chain</td><td>Fix before 7 August 2026</td></tr>
-  <tr><td>Bridging unverified</td><td>Bridge exists but workflow not confirmed</td><td>Verify before 7 August 2026</td></tr>
-  <tr><td>Mixed tools, unclear</td><td>Transfer method unknown</td><td>Map and verify urgently</td></tr>
-  <tr><td>Single software chain</td><td>No digital link question arises</td><td>No action needed</td></tr>
-</table>
-<h2>The Fix Priority Order</h2>
-<ol>
-  <li><strong>Identify every step</strong> in your current workflow — from first record to HMRC submission</li>
-  <li><strong>Classify each transfer</strong> — digital (API, CSV import, bridge) or manual (copy/paste, typing)</li>
-  <li><strong>Fix the first manual step</strong> — this is always the biggest risk point</li>
-  <li><strong>Verify bridging software</strong> if used — confirm the link is active and correctly configured</li>
-  <li><strong>Get written confirmation</strong> from your accountant before 7 August 2026</li>
-</ol>
-<div class="warning-box">
-  <strong>The key insight:</strong> HMRC does not need your tax figures to be wrong to penalise you. A correct submission via a broken chain can still attract an inaccuracy penalty of up to 30% of tax owed.
-</div>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">GOV.UK — Making Tax Digital for Income Tax</a> · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "03",
-      slug:  "digital-link-auditor-03",
-      name:  "Excel Bridging Software Guide",
-      desc:  "When bridging can work, what to verify, and the warning signs it is not compliant.",
-      tier:  1,
-      content: `
-<h2>Can Excel Work for MTD?</h2>
-<p>Yes — but only as part of a fully digital chain. Excel alone is not enough if it requires manual steps to transfer data to your filing software. The ATT confirms that bridging software can be used by spreadsheet users for quarterly updates.</p>
-<h2>What Bridging Software Does</h2>
-<div class="info-box">
-  Bridging software reads data directly from your spreadsheet cells and submits it to HMRC digitally — without you copying or typing anything. The bridge IS the digital link.
-</div>
-<h2>Approved Bridging Options</h2>
-<table>
-  <tr><th>Software</th><th>Approach</th><th>Price</th></tr>
-  <tr><td>TaxCalc</td><td>Reads directly from Excel cells</td><td>From £15/month</td></tr>
-  <tr><td>BTCSoftware</td><td>Structured import from spreadsheet</td><td>From £12/month</td></tr>
-  <tr><td>Absolute Tax</td><td>Excel-to-HMRC bridge</td><td>From £10/month</td></tr>
-</table>
-<p>Full approved list: <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax">GOV.UK — Find MTD compatible software</a></p>
-<h2>Warning Signs Your Bridge Is Not Compliant</h2>
-<ul class="checklist">
-  <li>You copy figures from your spreadsheet before importing</li>
-  <li>You type totals into the bridging software manually</li>
-  <li>The bridge has not been tested with a live submission</li>
-  <li>Your accountant set it up but you have not verified it works</li>
-  <li>The bridge reads from a different version of your spreadsheet than the one you use</li>
-</ul>
-<h2>How to Verify Your Bridge</h2>
-<ol>
-  <li>Open your bridging software</li>
-  <li>Confirm it links directly to your working spreadsheet file</li>
-  <li>Confirm no manual data entry is required between spreadsheet and bridge</li>
-  <li>Run a test submission before 7 August 2026</li>
-  <li>Save the submission confirmation as evidence</li>
-</ol>
-`,
-    },
-    {
-      num:   "04",
-      slug:  "digital-link-auditor-04",
-      name:  "Software Migration Checklist",
-      desc:  "If your current setup is too fragile — what to move first.",
-      tier:  1,
-      content: `
-<h2>When to Move Away From Your Current Setup</h2>
-<p>If your current workflow has copy/paste or manual re-keying that cannot be fixed with bridging software, migrating to a single MTD-approved software is the cleanest solution.</p>
-<div class="action-box">
-  <h3>Migration is the right choice if:</h3>
-  <p>Your bridging setup cannot be verified before 7 August</p>
-  <p>You use multiple disconnected tools with no bridge available</p>
-  <p>Your accountant cannot confirm compliance in writing</p>
-</div>
-<h2>Migration Decision</h2>
-<table>
-  <tr><th>Stay with spreadsheet + bridge IF</th><th>Move to native MTD software IF</th></tr>
-  <tr><td>Bridge is already configured and tested</td><td>No verified bridge exists</td></tr>
-  <tr><td>Accountant confirms compliance</td><td>Accountant cannot confirm compliance</td></tr>
-  <tr><td>Data is clean and structured</td><td>Deadline is less than 4 weeks away</td></tr>
-</table>
-<h2>Migration Checklist</h2>
-<ul class="checklist">
-  <li>Choose your replacement software (see File 03 for options)</li>
-  <li>Export all records from current tools in a structured format</li>
-  <li>Import records into new software from 6 April 2026 onwards</li>
-  <li>Connect bank feed to new software</li>
-  <li>Connect new software to HMRC via Government Gateway</li>
-  <li>Run a test submission before 7 August 2026</li>
-  <li>Keep old records as backup — do not delete</li>
-</ul>
-<div class="highlight"><strong>Time needed:</strong> Allow at least 2 weeks for migration, bank feed setup and HMRC connection. Do not start this in the week before the deadline.</div>
-`,
-    },
-    {
-      num:   "05",
-      slug:  "digital-link-auditor-05",
-      name:  "Your Accountant Brief",
-      desc:  "Exact questions to ask to verify compliance before Q1 submission.",
-      tier:  1,
-      content: `
-<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your accountant before your next meeting. These questions establish accountability before the 7 August deadline.</div>
-<h2>Client Digital Links Status</h2>
-<table>
-  <tr><th>Item</th><th>Detail</th></tr>
-  <tr><td>Deadline</td><td><strong>7 August 2026</strong> — first MTD quarterly submission</td></tr>
-  <tr><td>Issue</td><td>Digital links compliance — how data moves between tools</td></tr>
-  <tr><td>Risk</td><td>Inaccuracy penalty up to 30% of tax owed if chain is broken</td></tr>
-  <tr><td>HMRC doctrine</td><td>Copy/paste is not a digital link (VAT Notice 700/22)</td></tr>
-</table>
-<h2>Five Questions to Ask</h2>
-<div class="action-box">
-  <h3>Question 1</h3>
-  <p>"Is my current record-keeping chain fully digital with no manual steps?"</p>
-</div>
-<h3>Question 2</h3>
-<p>"If I use Excel, which bridging software do you recommend and have you tested it?"</p>
-<h3>Question 3</h3>
-<p>"Does our submission process have any point where data is copied or typed manually?"</p>
-<h3>Question 4</h3>
-<p>"Will you confirm my digital links compliance in writing before 7 August?"</p>
-<h3>Question 5</h3>
-<p>"If HMRC checks my digital links, what evidence will I need to provide?"</p>
-<h2>Action Items to Agree</h2>
-<ul class="checklist">
-  <li>Map the current workflow step by step</li>
-  <li>Identify any manual transfer points</li>
-  <li>Agree the fix — bridge, migration or confirmation</li>
-  <li>Get written confirmation of compliance before 7 August</li>
-</ul>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">GOV.UK — Making Tax Digital for Income Tax</a> · <a href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat">VAT Notice 700/22</a> · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "06",
-      slug:  "digital-link-auditor-06",
-      name:  "Digital Links Audit Template",
-      desc:  "Step-by-step worksheet to map your full chain from source record to HMRC submission.",
-      tier:  2,
-      content: `
-<h2>How to Use This Template</h2>
-<p>Work through every step in your MTD workflow from the first transaction record to the HMRC submission. At each step, classify the transfer as digital or manual.</p>
-<h2>Your Workflow Map</h2>
-<table>
-  <tr><th>Step</th><th>What Happens</th><th>Tool Used</th><th>Transfer Type</th><th>Status</th></tr>
-  <tr><td>1</td><td>Record source transaction</td><td></td><td></td><td></td></tr>
-  <tr><td>2</td><td>Categorise income/expense</td><td></td><td></td><td></td></tr>
-  <tr><td>3</td><td>Transfer to filing software</td><td></td><td>Digital / Manual</td><td></td></tr>
-  <tr><td>4</td><td>Review quarterly totals</td><td></td><td></td><td></td></tr>
-  <tr><td>5</td><td>Submit to HMRC</td><td></td><td></td><td></td></tr>
-</table>
-<h2>Transfer Classification Guide</h2>
-<table>
-  <tr><th>Transfer Method</th><th>Classification</th><th>Compliant</th></tr>
-  <tr><td>API / automatic bank feed</td><td>Digital link</td><td>Yes</td></tr>
-  <tr><td>CSV / XML structured import</td><td>Digital link</td><td>Yes</td></tr>
-  <tr><td>Verified bridging software</td><td>Digital link</td><td>Yes (if configured correctly)</td></tr>
-  <tr><td>Copy/paste</td><td>Manual transfer</td><td>No</td></tr>
-  <tr><td>Manual re-keying</td><td>Manual transfer</td><td>No</td></tr>
-  <tr><td>Email a total for entry</td><td>Manual transfer</td><td>No</td></tr>
-</table>
-<h2>Audit Result</h2>
-<ul class="checklist">
-  <li>Every step in my workflow is classified</li>
-  <li>No manual transfers detected — workflow is likely compliant</li>
-  <li>Manual transfer at step [X] identified — fix required</li>
-  <li>Accountant has reviewed and confirmed compliance in writing</li>
-</ul>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">GOV.UK — Making Tax Digital for Income Tax</a> · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "07",
-      slug:  "digital-link-auditor-07",
-      name:  "HMRC Audit Preparation Guide",
-      desc:  "What HMRC checks, what evidence to keep, and what a defensible workflow looks like.",
-      tier:  2,
-      content: `
-<h2>What HMRC Checks in a Digital Links Review</h2>
-<p>HMRC can conduct a compliance check on your digital record-keeping and submission chain separately from a tax enquiry. They are looking for evidence that data moved digitally at every step.</p>
-<h2>What Evidence to Keep</h2>
-<ul class="checklist">
-  <li>Screenshots of your software showing bank feed connection</li>
-  <li>Export logs or import confirmations from bridging software</li>
-  <li>Quarterly submission confirmations from HMRC</li>
-  <li>Written confirmation from your accountant of workflow compliance</li>
-  <li>Any bridging software configuration documentation</li>
-</ul>
-<h2>What a Defensible Workflow Looks Like</h2>
-<div class="info-box">
-  <strong>Strong evidence position:</strong><br><br>
-  "Records are kept in [software]. Transactions enter via bank feed. Quarterly totals are submitted directly from [software] to HMRC via the MTD API. No manual transfer occurs at any step. Accountant [name] has reviewed and confirmed compliance on [date]."
-</div>
-<h2>Red Flags HMRC Looks For</h2>
-<table>
-  <tr><th>Red Flag</th><th>Why It Matters</th></tr>
-  <tr><td>Inconsistent submission data patterns</td><td>Suggests manual adjustment between records and submission</td></tr>
-  <tr><td>No bank feed connection</td><td>Transactions may have been entered manually</td></tr>
-  <tr><td>Bridging software not registered</td><td>Cannot verify the bridge created a digital link</td></tr>
-  <tr><td>Accountant cannot explain the workflow</td><td>No documented compliance position</td></tr>
-</table>
-<div class="action-box">
-  <h3>Before 7 August 2026</h3>
-  <p>Run one test submission and save the confirmation. Keep the HMRC reference number. This is your evidence that the digital chain worked.</p>
-</div>
-`,
-    },
-    {
-      num:   "08",
-      slug:  "digital-link-auditor-08",
-      name:  "Your Implementation Checklist",
-      desc:  "Full sequence to move from current process to compliant process before the deadline.",
-      tier:  2,
-      content: `
-<div class="action-box">
-  <h3>Deadline: 7 August 2026</h3>
-  <p>Work through every item before your first quarterly submission. Do not skip steps.</p>
-</div>
-<h2>Part 1 — Map Your Current Workflow (This Week)</h2>
-<ul class="checklist">
-  <li>Write down every step from first transaction record to HMRC submission</li>
-  <li>Classify each transfer as digital or manual (use File 06 template)</li>
-  <li>Identify every tool used in the chain</li>
-  <li>Identify every manual step (copy/paste, re-keying, email)</li>
-</ul>
-<h2>Part 2 — Fix the Chain</h2>
-<h3>If you use one MTD software for everything:</h3>
-<ul class="checklist">
-  <li>Confirm the software is HMRC-approved</li>
-  <li>Confirm it is connected to HMRC via Government Gateway</li>
-  <li>Run a test submission before 7 August</li>
-</ul>
-<h3>If you use Excel + bridging software:</h3>
-<ul class="checklist">
-  <li>Confirm the bridge reads directly from your working spreadsheet</li>
-  <li>Confirm no manual entry is required between spreadsheet and bridge</li>
-  <li>Test the full chain with a live submission</li>
-  <li>Save the submission confirmation as evidence</li>
-</ul>
-<h3>If you have copy/paste or manual re-keying:</h3>
-<ul class="checklist">
-  <li>Stop — this must be fixed before 7 August</li>
-  <li>Option A: Install verified bridging software (see File 03)</li>
-  <li>Option B: Migrate to single MTD software (see File 04)</li>
-  <li>Agree the fix with your accountant this week</li>
-</ul>
-<h2>Part 3 — Get Written Confirmation</h2>
-<ul class="checklist">
-  <li>Forward File 05 (Accountant Brief) to your accountant</li>
-  <li>Get written confirmation of compliance before 7 August</li>
-  <li>Keep the confirmation with your MTD records</li>
-</ul>
-<h2>Part 4 — Prepare Your Evidence File</h2>
-<ul class="checklist">
-  <li>Screenshot bank feed connection in software</li>
-  <li>Save bridging software configuration (if applicable)</li>
-  <li>Save Q1 submission confirmation from HMRC</li>
-  <li>Note HMRC reference number for Q1</li>
-</ul>
-<div class="highlight"><strong>Final check:</strong> Can you describe your workflow in one sentence with no manual steps? If yes — you are compliant. If not — there is still something to fix.</div>
-`,
-    },
+    { num: "01", slug: "dl-01", name: "Your Digital Link Chain Audit", desc: "Map of your current VAT process and where digital links are broken.", tier: 1, content: `<h2>Digital Link Chain Audit</h2><div class="action-box"><h3>What HMRC Requires</h3><p>Every transfer of VAT data must be digital</p><p>No copy-paste between files</p><p>No manual retyping at any step</p></div><h2>Process Map</h2><table><tr><th>Step</th><th>Your Process</th><th>Digital Link?</th></tr><tr><td>Transactions to software</td><td>Bank feed or manual entry</td><td>Check</td></tr><tr><td>Software to VAT summary</td><td>Direct or export</td><td>Check</td></tr><tr><td>VAT summary to submission</td><td>API or manual</td><td>Check</td></tr></table>` },
+    { num: "02", slug: "dl-02", name: "Bridging Software Selection Guide", desc: "The right bridging tool for your spreadsheet setup.", tier: 1, content: `<h2>Bridging Software Options</h2><table><tr><th>Tool</th><th>Cost</th><th>Best for</th></tr><tr><td>Absolute BridgingTools</td><td>From £40/year</td><td>Excel users</td></tr><tr><td>BTC Software</td><td>From £75/year</td><td>Practices</td></tr><tr><td>DataDear</td><td>From £50/year</td><td>Excel power users</td></tr></table>` },
+    { num: "03", slug: "dl-03", name: "Digital Link Evidence Pack", desc: "What to keep to evidence compliance if HMRC audits your process.", tier: 1, content: `<h2>Evidence Pack</h2><p>Keep records of your digital link process including: software screenshots, CSV import logs, API submission confirmations, and process documentation.</p><div class="action-box"><h3>Minimum Evidence</h3><p>Screenshot of software to submission chain</p><p>Bridging software account confirmation</p><p>VAT submission confirmations from HMRC</p></div>` },
+    { num: "04", slug: "dl-04", name: "Accountant Brief — Digital Links", desc: "Questions for your accountant about VAT digital link compliance.", tier: 1, content: `<h2>Digital Link Questions</h2><h3>Question 1</h3><p>"Can you confirm our VAT process has an unbroken digital link?"</p><h3>Question 2</h3><p>"Do we need bridging software?"</p><h3>Question 3</h3><p>"What records should we keep?"</p>` },
+    { num: "05", slug: "dl-05", name: "VAT Return Process Checklist", desc: "Step-by-step compliant VAT return process.", tier: 1, content: `<h2>Compliant VAT Return Process</h2><ul class="checklist"><li>All transactions recorded in approved software</li><li>Data exported via CSV or API — not copy-pasted</li><li>Bridging software connected to HMRC (if spreadsheet used)</li><li>Submission made via API — not manual portal entry</li><li>Submission confirmation saved</li></ul>` },
+    { num: "06", slug: "dl-06", name: "Full Software Migration Guide", desc: "Moving from spreadsheets to fully digital accounting software.", tier: 2, content: `<h2>Moving to Fully Digital Software</h2><p>If your process has multiple compliance gaps, migrating to fully integrated accounting software may be simpler than adding bridging tools at each break.</p><div class="action-box"><h3>Migration Options</h3><p>QuickBooks: from £10/month — direct HMRC submission</p><p>Xero: from £15/month — accountant-friendly</p><p>FreeAgent: free with some bank accounts</p></div>` },
+    { num: "07", slug: "dl-07", name: "Multi-Entity VAT Group Guide", desc: "Digital link requirements for VAT groups with multiple legal entities.", tier: 2, content: `<h2>VAT Groups and Digital Links</h2><p>Businesses that file a combined VAT return for a group of companies must maintain digital links across all entities in the group. Each subsidiary's data must flow digitally to the representative member's return.</p>` },
+    { num: "08", slug: "dl-08", name: "HMRC Compliance Check Response", desc: "What to do if HMRC asks about your digital link process.", tier: 2, content: `<h2>Responding to HMRC Compliance Checks</h2><p>If HMRC contacts you about VAT digital link compliance, respond promptly and provide your process documentation. Co-operation typically results in more favourable outcomes than delay.</p><div class="action-box"><h3>Response Steps</h3><p>1. Review your process immediately</p><p>2. Identify and document any gaps</p><p>3. Implement fixes before responding</p><p>4. Provide evidence of current compliance</p></div>` },
   ],
-
-  // ── CALENDAR ──────────────────────────────────────────────────────────────────
-  calendarTitle: "MTD Digital Links — Action Deadlines",
-  tier1Calendar: [
-    { uid: "dla-audit",   summary: "MTD Digital Links — Map your workflow",     description: "Map every step from source record to HMRC submission. Identify any manual transfers. See File 06 at taxchecknow.com/files/uk/digital-link-auditor/digital-link-auditor-06", date: "relative:+7days" },
-    { uid: "dla-verify",  summary: "MTD Digital Links — Verify with accountant", description: "Get written confirmation of workflow compliance before the deadline.", date: "relative:+14days" },
-    { uid: "dla-q1",      summary: "🔴 MTD Q1 Deadline — 7 August 2026",        description: "First MTD quarterly submission. Your digital chain must be compliant from 6 April 2026.", date: "20260807" },
-    { uid: "dla-final",   summary: "MTD Final Declaration — 31 January 2028",   description: "File your MTD final declaration through compliant software.", date: "20280131" },
-  ],
-  tier2Calendar: [
-    { uid: "dla-map",     summary: "MTD Digital Links — Map your workflow",      description: "Map every step. Identify manual transfers. See File 06.", date: "relative:+7days" },
-    { uid: "dla-fix",     summary: "MTD Digital Links — Fix the chain",          description: "Install bridging software or begin migration. See Files 03 and 04.", date: "relative:+14days" },
-    { uid: "dla-test",    summary: "MTD Digital Links — Test submission",         description: "Run a test submission before deadline. Save confirmation as evidence.", date: "relative:+21days" },
-    { uid: "dla-confirm", summary: "MTD Digital Links — Get written confirmation", description: "Accountant confirms compliance in writing. Forward File 05.", date: "relative:+21days" },
-    { uid: "dla-q1",      summary: "🔴 MTD Q1 Deadline — 7 August 2026",        description: "First MTD quarterly submission — digital chain must be compliant.", date: "20260807" },
-    { uid: "dla-final",   summary: "MTD Final Declaration — 31 January 2028",   description: "File your MTD final declaration through compliant software.", date: "20280131" },
-  ],
-
-  // ── DELIVERY ──────────────────────────────────────────────────────────────────
-  delivery: {
-    tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DLA_67",
-    tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DLA_127",
+  calendarTitle: "Digital Link — VAT Return Dates",
+  tier1Calendar: [{ uid: "dl-vat1", summary: "VAT Return — Digital Link Check", description: "Before submitting your next VAT return, confirm your digital link chain is complete.", date: "relative:+7days" }],
+  tier2Calendar: [{ uid: "dl-audit", summary: "Digital Link — Full Process Audit", description: "Complete digital link audit and implement any bridging software needed.", date: "relative:+14days" }, { uid: "dl-vat1", summary: "VAT Return — Digital Link Confirmed", description: "Submit next VAT return with confirmed compliant digital link chain.", date: "relative:+30days" }],
+  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DLA_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DLA_147" },
+  monitorUrls: ["https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat"],
+  sidebarNumbers: [{ label: "Most common breach", value: "Copy-paste" }, { label: "Bridging tool cost", value: "From £40/yr" }, { label: "Soft landing ended", value: "April 2021" }, { label: "VAT returns per year", value: "4 (quarterly)" }],
+  sidebarMathsTitle: "What makes a digital link",
+  sidebarMathsIncludes: ["API connection", "CSV/XML import", "Automated feed", "Spreadsheet formula (same file)"],
+  sidebarMathsExcludes: ["NOT copy-paste between files", "NOT manual retyping", "NOT OCR without digital output"],
+  sidebarMathsNote: "Source: HMRC — VAT Notice 700/22",
+  howToSteps: [{ position: 1, name: "Describe your VAT process", text: "Select how your VAT return is currently prepared." }, { position: 2, name: "Check your software", text: "Confirm whether you use HMRC-recognised MTD VAT software." }, { position: 3, name: "Get your compliance verdict", text: "See exactly where your digital link chain is broken and what you need to fix." }],
+  successPromptFields: [{ key: "dl_process", label: "VAT process", defaultVal: "copypaste" }, { key: "dl_software", label: "Uses approved software", defaultVal: "true" }],
+  tier1AssessmentFields: ["status", "breachPoints", "fixRequired", "bridgingOption", "firstAction"],
+  tier2AssessmentFields: ["status", "breachPoints", "fixRequired", "bridgingOption", "migrationOption", "actions", "weekPlan"],
+  persona: {
+    name: "James",
+    age: 54,
+    occupation: "Director, Hartley Precision Engineering Ltd — 12 employees, West Midlands",
+    location: "Solihull, West Midlands",
+    family: "Wife Helen (part-time teacher). Two kids at university.",
+    financialSnapshot: "£62k salary, £38k dividends. Birmingham rental flat. Same accountant his dad used — once a year in April.",
+    painPoint: "James runs a tight ship on the factory floor. His tax affairs are a different story.",
+    discovery: "James searched after getting an HMRC letter — not threatening, just a reminder that made him realise he had no idea if his numbers were right.",
+    voice: "Plain. Direct. Wants the number and what to do about it. No jargon.",
   },
-
-  // ── MONITORING ────────────────────────────────────────────────────────────────
-  monitorUrls: [
-    "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax",
-    "https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax",
-    "https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat/vat-notice-70022-making-tax-digital-for-vat",
-  ],
-
-  // ── SIDEBAR ───────────────────────────────────────────────────────────────────
-  sidebarNumbers: [
-    { label: "First deadline",      value: "7 Aug 2026" },
-    { label: "Penalty risk",        value: "Up to 30%" },
-    { label: "Affected workflows",  value: "~500,000+" },
-    { label: "Most common failure", value: "Copy/paste" },
-  ],
-  sidebarMathsTitle:    "What counts as a digital link",
-  sidebarMathsIncludes: ["API / automatic connection", "Bank feed import", "CSV / XML structured import", "Verified bridging software"],
-  sidebarMathsExcludes: ["Copy/paste between tools", "Manual re-keying", "Emailing totals for entry", "Typing figures from one screen to another"],
-  sidebarMathsNote:     "Source: GOV.UK MTD guidance · VAT Notice 700/22",
-
-  // ── JSON-LD HOWTO STEPS ───────────────────────────────────────────────────────
-  howToSteps: [
-    { position: 1, name: "Select your workflow type",      text: "Choose the option that best describes how your MTD records move from source to HMRC." },
-    { position: 2, name: "Get your compliance verdict",    text: "See immediately whether your workflow is likely compliant, at risk or a compliance failure." },
-    { position: 3, name: "Answer the forensic questions",  text: "Three questions about where records are kept, how data moves and whether your workflow has been verified." },
-    { position: 4, name: "Get your gap report and plan",   text: "Receive a personalised compliance gap report and action plan specific to your workflow." },
-  ],
-
-  // ── CLAUDE API ────────────────────────────────────────────────────────────────
-  successPromptFields: [
-    { key: "dla_workflow",          label: "Workflow type",            defaultVal: "spreadsheet + copy/paste" },
-    { key: "dla_records_location",  label: "Records location",        defaultVal: "spreadsheet" },
-    { key: "dla_transfer_method",   label: "Transfer method",         defaultVal: "copypaste" },
-    { key: "dla_workflow_verified", label: "Workflow verified",       defaultVal: "false" },
-    { key: "dla_status",            label: "Compliance status",       defaultVal: "compliance_failure" },
-    { key: "dla_biggest_gap",       label: "Biggest gap",             defaultVal: "Manual transfer detected" },
-  ],
-
-  tier1AssessmentFields: [
-    "status", "workflowVerdict", "biggestGap", "mainRisk",
-    "firstAction", "bridgeRec", "accountantQuestions",
-  ],
-
-  tier2AssessmentFields: [
-    "status", "workflowVerdict", "biggestGap", "mainRisk",
-    "gap2", "gap3",
-    "actions", "bridgeRec", "bridgeWhy",
-    "weekPlan", "evidenceChecklist", "accountantQuestions",
-  ],
-
+  story: {
+    hook: "James had been filing VAT returns for eleven years. He assumed he had been doing it right.",
+    setup: [
+    "Hartley Precision is VAT registered. James's bookkeeper Karen exports figures from the job management system into a spreadsheet, adjusts a few numbers, then Dave's office manually inputs them into the VAT return.",
+    "James heard MTD for VAT was already in force. He was pretty sure they were compliant. Karen had said something about it. But when he tried to explain their process to a supplier who asked, he realised he could not actually describe it clearly.",
+    "The issue, he would later learn, is not whether you use software. It is whether your data moves between systems without human retyping — what HMRC calls a digital link. Copy-pasting from a spreadsheet into the return software breaks the chain.",
+    ],
+    revelation: "The audit showed three broken digital links in their current process. The export from the job system was fine. But Karen's manual adjustments and the retyping into the return software both broke the MTD requirement. They were technically non-compliant.",
+    resolution: "They fixed it in a week. The job system had a direct HMRC submission API they had never turned on. Cost: nothing. Time: one afternoon.",
+  },
 };

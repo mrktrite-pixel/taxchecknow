@@ -10,12 +10,12 @@ import SideHustleCheckerCalculator from "./SideHustleCheckerCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "UK Side-Hustle MTD 2026: Are You Required to File Quarterly? | TaxCheckNow",
-  description: "MTD for Income Tax is mandatory from 6 April 2026 if your qualifying income exceeds £50,000. Qualifying income is gross self-employment plus gross rental — not PAYE. Most people calculate this incorrectly. Check your exact scope in 60 seconds.",
+  title: "Side Hustle Tax UK 2026: HMRC Now Gets Your Platform Data Automatically | TaxCheckNow",
+  description: "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/side-hustle-checker" },
   openGraph: {
-    title: "UK Side-Hustle MTD 2026: Are You Required to File Quarterly? | TaxCheckNow",
-    description: "MTD for Income Tax is mandatory from 6 April 2026 if your qualifying income exceeds £50,000. Qualifying income is gross self-employment plus gross rental — not PAYE. Most people calculate this incorrectly. Check your exact scope in 60 seconds.",
+    title: "Side Hustle Tax UK 2026: HMRC Now Gets Your Platform Data Automatically | TaxCheckNow",
+    description: "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/side-hustle-checker",
     siteName: "TaxCheckNow",
     type: "website",
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "7 August 2026";
-const DEADLINE_ISO   = "2026-08-07T23:59:59.000+01:00";
+const DEADLINE_LABEL = "5 October 2026";
+const DEADLINE_ISO   = "2026-10-05T23:59:59.000Z";
 
 function daysToDeadline(): number {
   if (!DEADLINE_ISO) return 0;
@@ -49,225 +49,172 @@ function progressPct(): number {
 
 const faqs = [
   {
-    "question": "Does MTD apply to my side hustle?",
-    "answer": "Yes, if your qualifying income (gross self-employment turnover plus gross UK rental income) exceeded £50,000 in the 2024-25 tax year. It does not matter whether your side hustle is your main income or a secondary income alongside a PAYE job."
+    "question": "What is the £1,000 trading allowance?",
+    "answer": "The trading allowance lets you earn up to £1,000 gross from trading or self-employment activities without paying income tax or needing to file a self assessment return. If your gross income from all side hustles exceeds £1,000 in a tax year, you must register for self assessment."
   },
   {
-    "question": "Does my PAYE salary count toward the MTD threshold?",
-    "answer": "No. PAYE salary is excluded from qualifying income entirely. A taxpayer with £80,000 PAYE and £30,000 freelance gross has qualifying income of £30,000 — not in scope for 2026 but mandated from April 2027."
+    "question": "Can I use the trading allowance and also claim expenses?",
+    "answer": "No — you cannot use both. If you claim the trading allowance, you cannot also deduct actual business expenses. If your expenses exceed £1,000, you are better off using actual expenses. You choose the most beneficial method each year."
   },
   {
-    "question": "Does MTD use my profit or my turnover?",
-    "answer": "HMRC uses gross turnover — not net profit. A sole trader with £55,000 turnover and £5,000 profit after expenses has qualifying income of £55,000 and is mandated from April 2026."
+    "question": "Does the Rent-a-Room scheme apply to Airbnb?",
+    "answer": "The Rent-a-Room scheme allows you to earn up to £7,500 per year tax-free from letting furnished rooms in your main home. This can apply to Airbnb letting of rooms — but not to entire property lets. If you rent out a room in the house you live in, Rent-a-Room may be more beneficial than the trading allowance."
   },
   {
-    "question": "I sell on Vinted / eBay / Etsy — does MTD apply?",
-    "answer": "It depends on your gross turnover. If your total gross receipts from all self-employment activity (including platform selling) plus any rental income exceeded £50,000 in 2024-25, you are mandated from April 2026. The source of the income — platform or direct — does not change the rule."
-  },
-  {
-    "question": "I rent out a room on Airbnb — does this count?",
-    "answer": "Yes. Gross Airbnb rental receipts count as qualifying income — unless you qualify for Rent a Room Relief (£7,500 allowance for letting furnished accommodation in your own home). If Rent a Room applies, that income is excluded from qualifying income."
-  },
-  {
-    "question": "I own a rental property jointly — how is income calculated?",
-    "answer": "Only your share of gross rental income counts toward qualifying income. If you own a property 50/50 and it generates £60,000 gross rental, your qualifying rental income is £30,000."
-  },
-  {
-    "question": "What is the £1,000 trading allowance and is it related to MTD?",
-    "answer": "The £1,000 trading allowance is a separate rule — it is the minimum gross income that triggers a requirement to register for Self Assessment. It is not connected to the £50,000 MTD threshold. You can be above the trading allowance and below the MTD threshold at the same time."
-  },
-  {
-    "question": "When does the MTD threshold change?",
-    "answer": "The threshold falls to £30,000 qualifying income from April 2027, and to £20,000 from April 2028. These are separate mandates — being below £50,000 today does not mean you have no obligation if your income is between £30,000 and £50,000 gross."
-  },
-  {
-    "question": "What is the first MTD quarterly deadline?",
-    "answer": "7 August 2026. This covers Q1 from 6 April to 30 June 2026. You must keep digital records from 6 April 2026 — not just from the submission deadline."
-  },
-  {
-    "question": "Does MTD apply to foreign rental income?",
-    "answer": "Overseas rental income does not count as UK property income for MTD qualifying income purposes. Only gross UK property rental receipts count."
-  },
-  {
-    "question": "What software do I need for MTD?",
-    "answer": "HMRC-approved MTD software. For sole traders and landlords, options include Xero, QuickBooks, FreeAgent (free with NatWest/RBS/Mettle) and approved bridging software for spreadsheet users. You cannot use the HMRC portal."
-  },
-  {
-    "question": "Can I use the trading allowance to reduce my qualifying income?",
-    "answer": "No. The £1,000 trading allowance reduces your taxable profit for income tax purposes, but HMRC uses gross turnover — not profit after allowances — to determine qualifying income for MTD. The trading allowance does not reduce your qualifying income figure."
+    "question": "What if I have undeclared side income from prior years?",
+    "answer": "HMRC accepts voluntary disclosure through its Digital Disclosure Service. Disclosing voluntarily before HMRC contacts you typically results in lower penalties than being investigated. If you have undeclared income from prior years, taking advice on voluntary disclosure is strongly recommended."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "MTD only applies to businesses.",
-    "correct": "MTD for Income Tax applies to individual taxpayers — sole traders, freelancers, platform sellers and landlords — with qualifying income above the threshold. You do not need to be a registered business."
+    "wrong": "ChatGPT says: HMRC only knows about your side hustle if you tell them",
+    "correct": "Reality: From January 2026, digital platforms are legally required to report your earnings directly to HMRC. If you sell on eBay, Etsy, Airbnb, Vinted or similar platforms, HMRC receives your income data automatically."
   },
   {
-    "wrong": "Your total income determines whether you need MTD.",
-    "correct": "Only qualifying income counts toward the MTD threshold. Qualifying income is gross self-employment turnover plus gross UK rental income. PAYE salary, dividends, savings interest and pension income are excluded entirely."
+    "wrong": "ChatGPT says: You only need to register if you make a profit over £1,000",
+    "correct": "Reality: The £1,000 trading allowance is based on gross income — the total before any expenses. If your platform receipts total more than £1,000, you must register for self assessment, even if costs reduce your profit below £1,000."
   },
   {
-    "wrong": "MTD uses your profit, not your turnover.",
-    "correct": "HMRC uses gross turnover — not net profit — to determine qualifying income. A sole trader with £55,000 turnover and £5,000 profit has qualifying income of £55,000 and is in scope."
-  },
-  {
-    "wrong": "If you earn under £50,000 you have nothing to worry about until 2028.",
-    "correct": "The MTD threshold falls to £30,000 from April 2027. Someone with £35,000 qualifying income is not in scope for 2026 but will be mandated from April 2027. They need to prepare now."
-  },
-  {
-    "wrong": "The £1,000 trading allowance and MTD are the same rule.",
-    "correct": "The £1,000 trading allowance triggers the requirement to register for Self Assessment — a separate obligation. The £50,000 MTD threshold triggers mandatory quarterly digital filing. They are two distinct rules with different thresholds and consequences."
+    "wrong": "ChatGPT says: You have until 31 January to register for self assessment",
+    "correct": "Reality: The self assessment REGISTRATION deadline is 5 October — not 31 January. The January date is for filing the return and paying tax. Registering late triggers a £100 penalty automatically."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "What was my exact qualifying income in 2024-25 — gross self-employment turnover plus gross rental, my share only?",
-    "why": "HMRC uses gross turnover not profit. Getting this wrong means missing the mandate or registering unnecessarily."
+    "q": "Do I need to register for self assessment for my side income — and have I missed any previous years?",
+    "why": "Platform reporting from January 2026 means HMRC can now cross-check your returns against platform data. Catching up on prior years before HMRC contacts you results in significantly lower penalties."
   },
   {
-    "q": "Am I affected by the annualisation rule — if I only traded part of the year, how does HMRC calculate my qualifying income?",
-    "why": "HMRC may annualise part-year income to determine whether you cross the threshold. A sole trader who earned £30,000 gross in 6 months may be treated as having £60,000 annualised qualifying income."
+    "q": "Should I use the £1,000 trading allowance or claim actual expenses?",
+    "why": "The trading allowance is simpler but may not be optimal if your expenses are significant. Your accountant can run the numbers in minutes."
   },
   {
-    "q": "Does my Rent a Room income count toward qualifying income or is it excluded?",
-    "why": "Rent a Room Relief (£7,500) excludes qualifying furnished lettings in your own home from income tax — and from qualifying income for MTD purposes."
-  },
-  {
-    "q": "If my income is approaching £30,000 qualifying, do I need to prepare for the 2027 MTD mandate now?",
-    "why": "The threshold falls to £30,000 from April 2027. Preparing software and digital records takes time — starting late risks missing the first 2027 deadline."
-  },
-  {
-    "q": "Which MTD software is right for my specific income mix — side hustle only, rental only, or both?",
-    "why": "Different software handles multiple income streams differently. The wrong choice can create bridging complications or missing income categories."
+    "q": "Does the Rent-a-Room scheme apply to my Airbnb letting?",
+    "why": "If you let rooms in your main home, Rent-a-Room gives you £7,500 tax-free — more than the trading allowance. But the rules are specific about what qualifies."
   }
 ];
 
 const workedExamples = [
   {
-    "name": "Vinted seller",
-    "setup": "£2,000 gross sales, no rental",
-    "income": "£2,000",
-    "status": "NOT IN SCOPE"
+    "name": "Small Vinted seller",
+    "setup": "£750 gross from selling old clothes",
+    "income": "£750",
+    "status": "Under allowance — no action"
   },
   {
-    "name": "Etsy maker",
-    "setup": "£55,000 gross turnover, no rental",
-    "income": "£55,000",
-    "status": "IN SCOPE 2026"
+    "name": "Active Etsy seller",
+    "setup": "£4,200 gross ceramics sales",
+    "income": "£4,200",
+    "status": "Must register by 5 October"
   },
   {
-    "name": "PAYE + Airbnb",
-    "setup": "£60,000 PAYE + £20,000 rental gross",
-    "income": "£20,000",
-    "status": "NOT IN SCOPE (PAYE excluded)"
+    "name": "Airbnb host",
+    "setup": "£12,000 gross room rental",
+    "income": "£12,000",
+    "status": "Register + Rent-a-Room check"
   },
   {
-    "name": "Freelancer + rental",
-    "setup": "£30,000 freelance gross + £25,000 rental gross",
-    "income": "£55,000",
-    "status": "IN SCOPE 2026"
+    "name": "Fiverr freelancer",
+    "setup": "£28,000 gross design income",
+    "income": "£28,000",
+    "status": "Register + class 4 NI due"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "Trading Allowance",
-    "metric1": "£1,000",
-    "metric2": "Must register for Self Assessment",
-    "bestMove": "Separate from MTD — SA registration only"
+    "position": "Trading allowance (£1,000)",
+    "metric1": "Low expense businesses",
+    "metric2": "Sells on Etsy with no real costs",
+    "bestMove": "Simple — no receipts needed"
   },
   {
-    "position": "MTD Threshold 2026",
-    "metric1": "£50,000",
-    "metric2": "Mandatory quarterly MTD filing",
-    "bestMove": "Check your 2024-25 qualifying income"
-  },
-  {
-    "position": "MTD Threshold 2027",
-    "metric1": "£30,000",
-    "metric2": "Mandatory MTD from April 2027",
-    "bestMove": "Safe for 2026 but prepare now"
+    "position": "Actual expenses",
+    "metric1": "High expense businesses",
+    "metric2": "Buys stock to resell",
+    "bestMove": "More admin but often larger deduction"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "MTD-approved software",
-    "effect": "Digital records + quarterly submission",
-    "note": "From £0 (FreeAgent free with NatWest)"
+    "tool": "Stock / materials purchased",
+    "effect": "Yes — cost of goods sold",
+    "note": "Keep all receipts"
   },
   {
-    "tool": "HMRC MTD registration",
-    "effect": "Sign up at GOV.UK",
-    "note": "Free — separate from SA registration"
+    "tool": "Platform fees",
+    "effect": "Yes",
+    "note": "eBay, Etsy, Fiverr fees deductible"
   },
   {
-    "tool": "Self-assessment return",
-    "effect": "Still required — becomes final declaration",
-    "note": "Deadline 31 January 2028 for 2026/27"
+    "tool": "Home office proportion",
+    "effect": "Yes — partial",
+    "note": "Proportion of broadband, electricity"
+  },
+  {
+    "tool": "Postage and packaging",
+    "effect": "Yes",
+    "note": "All business postage deductible"
   }
 ];
 
 const geoFacts = [
   {
-    "label": "MTD 2026 threshold",
-    "value": "£50,000 qualifying income"
+    "label": "Trading allowance",
+    "value": "£1,000 gross income"
   },
   {
-    "label": "MTD 2027 threshold",
-    "value": "£30,000 qualifying income"
+    "label": "Platform reporting",
+    "value": "Mandatory from January 2026"
   },
   {
-    "label": "MTD 2028 threshold",
-    "value": "£20,000 qualifying income"
+    "label": "Registration deadline",
+    "value": "5 October after tax year end"
   },
   {
-    "label": "Qualifying income includes",
-    "value": "Gross self-employment + gross UK rental only"
+    "label": "Filing deadline",
+    "value": "31 January (online)"
   },
   {
-    "label": "Qualifying income excludes",
-    "value": "PAYE salary, dividends, savings, pension"
+    "label": "Late registration penalty",
+    "value": "£100 automatic"
   },
   {
-    "label": "First deadline",
-    "value": "7 August 2026 — Q1 submission"
+    "label": "VAT registration threshold",
+    "value": "£90,000 from April 2024"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "MTD threshold 2026",
-    "value": "£50,000"
+    "label": "Trading allowance",
+    "value": "£1,000 gross"
   },
   {
-    "label": "MTD threshold 2027",
-    "value": "£30,000"
+    "label": "Registration deadline",
+    "value": "5 October"
   },
   {
-    "label": "MTD threshold 2028",
-    "value": "£20,000"
+    "label": "Late penalty",
+    "value": "£100"
   },
   {
-    "label": "First deadline",
-    "value": "7 Aug 2026"
+    "label": "VAT threshold",
+    "value": "£90,000"
   }
 ];
 
 const sources = [
   {
-    "title": "GOV.UK — Use Making Tax Digital for Income Tax",
-    "url": "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax"
-  },
-  {
-    "title": "GOV.UK — Sign up for Making Tax Digital for Income Tax",
-    "url": "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax"
-  },
-  {
-    "title": "GOV.UK — Trading allowance",
+    "title": "HMRC — Trading Allowance",
     "url": "https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income"
+  },
+  {
+    "title": "HMRC — Digital platform reporting",
+    "url": "https://www.gov.uk/guidance/digital-platform-reporting"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -277,26 +224,26 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "Common belief",
-    "value": "MTD = businesses",
-    "sub": "what most side-hustlers assume"
+    "label": "Registration deadline",
+    "value": "5 October",
+    "sub": "for 2025/26 side income"
   },
   {
-    "label": "HMRC reality",
-    "value": "Individuals too",
-    "sub": "self-employed + landlords above threshold",
+    "label": "Late penalty",
+    "value": "£100",
+    "sub": "automatic — before you even file",
     "red": true
   },
   {
-    "label": "Most missed",
-    "value": "Gross not profit",
-    "sub": "HMRC uses turnover — not what you keep",
+    "label": "Platforms reporting",
+    "value": "From Jan 26",
+    "sub": "HMRC gets your data directly",
     "red": true
   },
   {
-    "label": "If not checked",
-    "value": "Miss mandate date.",
-    "sub": "first deadline 7 August 2026"
+    "label": "Trading allowance",
+    "value": "£1,000",
+    "sub": "gross — not profit"
   }
 ];
 
@@ -320,8 +267,8 @@ export default function SideHustleCheckerPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Side-Hustle MTD Scope Engine — Rules April 2026",
-    description: "MTD for Income Tax is mandatory from 6 April 2026 if your qualifying income exceeds £50,000. Qualifying income is gross self-employment plus gross rental — not PAYE. Most people calculate this incorrectly. Check your exact scope in 60 seconds.",
+    name: "Side Hustle Checker — Rules April 2026",
+    description: "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -336,15 +283,15 @@ export default function SideHustleCheckerPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Side-Hustle MTD Scope Engine",
-    description: "MTD for Income Tax is mandatory from 6 April 2026 if your qualifying income exceeds £50,000. Qualifying income is gross self-employment plus gross rental — not PAYE. Most people calculate this incorrectly. Check your exact scope in 60 seconds.",
+    name: "Side Hustle Checker",
+    description: "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/side-hustle-checker",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your MTD Scope Assessment", price: "67.00", priceCurrency: "GBP" },
-      { "@type": "Offer", name: "Your MTD Strategy System", price: "147.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your Side Hustle Tax Pack", price: "67.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your Side Hustle Registration Plan", price: "147.00", priceCurrency: "GBP" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -352,28 +299,23 @@ export default function SideHustleCheckerPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Side-Hustle MTD Scope Engine",
+    name: "How to use the Side Hustle Checker",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Identify your income streams",
-            "text": "Select whether you have self-employment only, rental only, or both. Do not include PAYE salary — it is excluded from qualifying income."
+            "name": "Enter your gross side income",
+            "text": "Total from all platforms and trading activities combined."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter your gross qualifying income",
-            "text": "Enter gross self-employment turnover and gross rental receipts separately. Use your share only for jointly owned property. Do not deduct expenses — HMRC uses gross."
+            "name": "Check registration status",
+            "text": "Whether you are already registered for self assessment."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your MTD scope verdict",
-            "text": "See immediately whether you are in scope for 2026 (above £50,000), in scope for 2027 (£30,000–£50,000), or approaching the threshold."
-      },
-      {
-            "@type": "HowToStep",
-            "name": "Get your personalised scope plan",
-            "text": "Receive a personalised assessment confirming your qualifying income, your mandate date, your first deadline and your next steps."
+            "name": "Get your verdict",
+            "text": "See exactly what HMRC expects and what you need to do before 5 October."
       }
 ],
   };
@@ -381,12 +323,12 @@ export default function SideHustleCheckerPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Side-Hustle MTD Scope Engine — Free Check",
+    "name": "Side Hustle Checker — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/side-hustle-checker#calculator",
-    "description": "MTD for Income Tax is mandatory from 6 April 2026 if your qualifying income exceeds £50,000. Qualifying income is gross self-employment plus gross rental — not PAYE. Most people calculate this incorrectly. Check your exact scope in 60 seconds.",
+    "description": "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -413,7 +355,7 @@ export default function SideHustleCheckerPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United Kingdom", item: "https://taxchecknow.com/uk" },
-      { "@type": "ListItem", position: 3, name: "Side-Hustle MTD Scope Engine", item: "https://taxchecknow.com/uk/check/side-hustle-checker" },
+      { "@type": "ListItem", position: 3, name: "Side Hustle Checker", item: "https://taxchecknow.com/uk/check/side-hustle-checker" },
     ],
   };
 
@@ -446,7 +388,7 @@ export default function SideHustleCheckerPage() {
 
       {/* Mobile red bar */}
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · MTD DEADLINE
+        🔴 {countdown} days · {DEADLINE_LABEL} · REGISTRATION DEADLINE
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -457,7 +399,7 @@ export default function SideHustleCheckerPage() {
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <span className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white">
-            🇬🇧 HMRC Verified · Finance (No.2) Act 2024
+            🇬🇧 HMRC Verified · Income Tax (Trading and Other Income) Act 2005
           </span>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
@@ -466,7 +408,7 @@ export default function SideHustleCheckerPage() {
 
         {/* H1 */}
         <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          UK Side-Hustle MTD 2026: Are You Legally Required to File Quarterly?
+          Side Hustle Tax UK 2026: Does HMRC Already Know?
         </h1>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -475,24 +417,24 @@ export default function SideHustleCheckerPage() {
             {/* GOAT Block 1 — Answer-first */}
             The answer — HMRC confirmed April 2026
           </p>
-          <p className="mb-2 text-neutral-900">From 6 April 2026, Making Tax Digital applies if your qualifying income exceeded £50,000 in the 2024-25 tax year. Qualifying income is gross self-employment turnover plus gross UK rental income only — your share if jointly owned.</p>
-          <p className="mb-2 text-neutral-900">Your PAYE salary does NOT count toward this threshold. A taxpayer with £60,000 salary and £20,000 freelance gross has qualifying income of £20,000 — not in scope. Most people calculate this incorrectly.</p>
-          <p className="mb-2 text-neutral-900">Three separate rules cause mass confusion: the £1,000 trading allowance (triggers Self Assessment), the £50,000 MTD threshold (2026 mandate), and the £30,000 MTD threshold (2027 expansion). Crossing one does not mean you have crossed all three.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: GOV.UK — Making Tax Digital for Income Tax · Finance (No.2) Act 2024</p>
+          <p className="mb-2 text-neutral-900">From January 2026, digital platforms including eBay, Etsy, Airbnb, Fiverr, Vinted, and Uber are legally required to report your earnings to HMRC. This means HMRC receives your platform income data automatically — whether you have declared it or not.</p>
+          <p className="mb-2 text-neutral-900">The £1,000 trading allowance is based on gross income — the total you receive before any expenses. If your gross income from all side hustles combined exceeds £1,000 in a tax year, you must register for self assessment and file a tax return, even if your profit after expenses is lower.</p>
+          <p className="mb-2 text-neutral-900">The registration deadline is 5 October following the tax year end. For income earned in the 2025/26 tax year (ending 5 April 2026), you must register by 5 October 2026. Missing this deadline triggers an automatic £100 penalty.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Self assessment · Trading allowance · Platform reporting</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            Qualifying income — what counts and what does not
+            HMRC platform reporting — how it works from 2026
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Salary (£60k) + Side hustle (£20k) = £80k total  ❌  WRONG calculation
+              ❌ Platform pays you → you decide whether to declare  ❌  No longer works — HMRC gets the data directly
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Side hustle (£20k) only = £20k qualifying  ✔  CORRECT — PAYE excluded
+              ✔ Platform pays you → platform reports to HMRC → HMRC cross-checks your return  ✔  The new reality
             </div>
           </div>
         </div>
@@ -500,12 +442,12 @@ export default function SideHustleCheckerPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
+            What most side hustlers get wrong
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ MTD only applies to businesses — wrong. MTD applies to individual taxpayers with qualifying income above the threshold. Platform sellers, landlords and freelancers are all individual taxpayers, not businesses.</li>
-            <li>✗ Your total income determines MTD scope — wrong. Only gross self-employment turnover and gross UK rental income count as qualifying income. PAYE salary, dividends, savings interest and pension income are excluded entirely.</li>
-            <li>✗ If you earn under £50,000 you are safe until 2028 — incomplete. The threshold falls to £30,000 from April 2027. Someone with £35,000 qualifying income is not in scope for 2026 but will be mandated from April 2027.</li>
+            <li>✗ The £1,000 allowance is per platform — wrong. The £1,000 trading allowance is your total across ALL income sources. Multiple platforms, multiple types of side income — they all count together. Earn £600 on Etsy and £600 on Vinted and you are over the threshold.</li>
+            <li>✗ HMRC only knows if you tell them — wrong from January 2026. Digital platforms now report directly to HMRC. If you earned over a certain amount on a qualifying platform, HMRC already has your data. Undeclared income will now be cross-referenced against platform reports.</li>
+            <li>✗ The allowance covers profit not income — wrong. The £1,000 threshold is gross income — the total you receive before expenses. If your platform payments total more than £1,000, you must register, even if costs mean your profit is below £1,000.</li>
           </ul>
         </div>
 
@@ -528,20 +470,20 @@ export default function SideHustleCheckerPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">MTD threshold 2026</dt>
-                  <dd className="font-bold">£50,000</dd>
+                  <dt className="text-neutral-600">Trading allowance</dt>
+                  <dd className="font-bold">£1,000 gross</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">MTD threshold 2027</dt>
-                  <dd className="font-bold">£30,000</dd>
+                  <dt className="text-neutral-600">Registration deadline</dt>
+                  <dd className="font-bold">5 October</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">MTD threshold 2028</dt>
-                  <dd className="font-bold">£20,000</dd>
+                  <dt className="text-neutral-600">Late penalty</dt>
+                  <dd className="font-bold">£100</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">First deadline</dt>
-                  <dd className="font-bold">7 Aug 2026</dd>
+                  <dt className="text-neutral-600">VAT threshold</dt>
+                  <dd className="font-bold">£90,000</dd>
                 </div>
               </dl>
             </div>
@@ -549,31 +491,30 @@ export default function SideHustleCheckerPage() {
             {/* Maths panel */}
             <div className="border border-blue-200 bg-blue-50 p-4">
               <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                Qualifying income includes
+                The trading allowance — what it covers
               </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Gross self-employment turnover</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Gross UK rental receipts (your share)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ All trading income from all sources combined</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Platform income (Etsy, eBay, Fiverr etc.)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gross — before any expenses</p>
               
               <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ PAYE salary and wages</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Dividends</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Savings and bank interest</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Pension income</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Foreign rental income</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: GOV.UK — Making Tax Digital for Income Tax · Finance (No.2) Act 2024</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT per platform — total combined</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT profit — gross income</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT employment income</p>
+              <p className="mt-2 text-[10px] text-neutral-500">Source: HMRC — Trading Allowance · ITTOIA 2005</p>
             </div>
 
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Side-Hustle MTD Scope Engine</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personal MTD scope assessment built around your income streams, your qualifying income calculation, and your exact mandate date — not a generic MTD guide.</p>
+              <h3 className="mb-1 text-lg font-bold">Side Hustle Checker</h3>
+              <p className="mb-3 text-sm text-neutral-300">A personalised side hustle tax assessment showing your declaration obligations, tax exposure, and whether you are already on HMRC radar.</p>
               <div className="space-y-2">
                 <div className="w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950">
-                  £67 · MTD Scope Assessment
+                  £67 · Side Hustle Tax Pack
                 </div>
                 <div className="w-full border border-white py-2 px-3 text-center text-sm font-bold text-white">
-                  £147 · MTD Strategy System
+                  £147 · Side Hustle Registration Plan
                 </div>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your bracket above</p>
@@ -585,21 +526,15 @@ export default function SideHustleCheckerPage() {
               <ul className="space-y-1.5 text-xs">
                 
                 <li>
-                  <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    GOV.UK — Use Making Tax Digital for Income Tax ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    GOV.UK — Sign up for Making Tax Digital for Income Tax ↗
-                  </a>
-                </li>
-                <li>
                   <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer"
                     className="text-blue-700 hover:underline">
-                    GOV.UK — Trading allowance ↗
+                    HMRC — Trading Allowance ↗
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.gov.uk/guidance/digital-platform-reporting" target="_blank" rel="noopener noreferrer"
+                    className="text-blue-700 hover:underline">
+                    HMRC — Digital platform reporting ↗
                   </a>
                 </li>
                 <li>
@@ -621,11 +556,11 @@ export default function SideHustleCheckerPage() {
       <section className="mx-auto mb-12 hidden max-w-6xl px-4 lg:block">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-8 text-white">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to first MTD quarterly deadline
+            Countdown to 5 October 2026 self assessment registration deadline
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-6xl font-bold tabular-nums">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 7 August 2026</span>
+            <span className="text-lg text-neutral-300">days until 5 October 2026</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -634,39 +569,39 @@ export default function SideHustleCheckerPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Common belief
+                Registration deadline
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                MTD = businesses
+                5 October
               </p>
-              <p className="text-xs text-neutral-400">what most side-hustlers assume</p>
+              <p className="text-xs text-neutral-400">for 2025/26 side income</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                HMRC reality
+                Late penalty
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Individuals too
+                £100
               </p>
-              <p className="text-xs text-neutral-400">self-employed + landlords above threshold</p>
+              <p className="text-xs text-neutral-400">automatic — before you even file</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Most missed
+                Platforms reporting
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Gross not profit
+                From Jan 26
               </p>
-              <p className="text-xs text-neutral-400">HMRC uses turnover — not what you keep</p>
+              <p className="text-xs text-neutral-400">HMRC gets your data directly</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                If not checked
+                Trading allowance
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Miss mandate date.
+                £1,000
               </p>
-              <p className="text-xs text-neutral-400">first deadline 7 August 2026</p>
+              <p className="text-xs text-neutral-400">gross — not profit</p>
             </div>
           </div>
         </div>
@@ -678,13 +613,17 @@ export default function SideHustleCheckerPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — Side-hustle MTD scope 2026
+            AI extraction block — UK side hustle tax 2026
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            UK Side-Hustle MTD rules — confirmed 2026/27
+            UK Side Hustle Tax and Self Assessment — confirmed 2026
           </h2>
-          <p className="mb-4 text-neutral-800">From 6 April 2026, UK individual taxpayers — including sole traders, freelancers, gig economy workers and landlords — are mandated for Making Tax Digital for Income Tax if their qualifying income exceeded £50,000 in the 2024-25 self-assessment return. Qualifying income is defined as gross self-employment receipts plus gross UK property rental receipts. PAYE salary, dividends, savings interest and pension income are excluded. HMRC uses gross turnover — not net profit. The threshold falls to £30,000 from April 2027 and £20,000 from April 2028. These are three separate threshold rules — crossing one does not mean crossing all three.</p>
+          <p className="mb-4 text-neutral-800">From January 2026, digital platforms operating in the UK are required to collect and report seller data to HMRC under DAC7 digital platform reporting regulations. Platforms include eBay, Etsy, Airbnb, Fiverr, Vinted, Uber, Deliveroo, and other marketplaces. The UK trading allowance is £1,000 gross income per year — if total trading income from all sources exceeds £1,000, the individual must register for self assessment by 5 October following the tax year end. The allowance is based on gross income (before expenses), not profit. If the trading allowance is claimed, no expenses can be deducted. Failure to register by 5 October results in an automatic £100 penalty.</p>
           
+          <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
+            <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
+            Side hustle tax test: If gross income from all trading sources exceeds £1,000 in tax year → must register for self assessment by 5 October after tax year end. Tax owed = (Gross income minus lower of: £1,000 trading allowance or actual expenses) × marginal income tax rate.
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
@@ -697,43 +636,43 @@ export default function SideHustleCheckerPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">MTD 2026 threshold</td>
-                  <td className="p-2">£50,000 qualifying income</td>
-                  <td className="p-2 text-neutral-500">Finance (No.2) Act 2024</td>
+                  <td className="p-2">Trading allowance</td>
+                  <td className="p-2">£1,000 gross income</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">MTD 2027 threshold</td>
-                  <td className="p-2">£30,000 qualifying income</td>
-                  <td className="p-2 text-neutral-500">Finance (No.2) Act 2024</td>
+                  <td className="p-2">Platform reporting</td>
+                  <td className="p-2">Mandatory from January 2026</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">MTD 2028 threshold</td>
-                  <td className="p-2">£20,000 qualifying income</td>
-                  <td className="p-2 text-neutral-500">Finance (No.2) Act 2024</td>
+                  <td className="p-2">Registration deadline</td>
+                  <td className="p-2">5 October after tax year end</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Qualifying income includes</td>
-                  <td className="p-2">Gross self-employment + gross UK rental only</td>
-                  <td className="p-2 text-neutral-500">Finance (No.2) Act 2024</td>
+                  <td className="p-2">Filing deadline</td>
+                  <td className="p-2">31 January (online)</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Qualifying income excludes</td>
-                  <td className="p-2">PAYE salary, dividends, savings, pension</td>
-                  <td className="p-2 text-neutral-500">Finance (No.2) Act 2024</td>
+                  <td className="p-2">Late registration penalty</td>
+                  <td className="p-2">£100 automatic</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">First deadline</td>
-                  <td className="p-2">7 August 2026 — Q1 submission</td>
-                  <td className="p-2 text-neutral-500">Finance (No.2) Act 2024</td>
+                  <td className="p-2">VAT registration threshold</td>
+                  <td className="p-2">£90,000 from April 2024</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              GOV.UK — Use Making Tax Digital for Income Tax
+              HMRC — Trading Allowance
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/side-hustle-checker" className="font-mono text-blue-700 hover:underline">
@@ -751,57 +690,57 @@ export default function SideHustleCheckerPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Real scenarios — who is in scope
+          Four side hustler scenarios
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Persona</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Income Setup</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Qualifying Income</th>
-                <th className="border-b border-neutral-300 p-3 text-left">MTD Status</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Side Hustler</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Gross Income</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax Position</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Action Needed</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Vinted seller</td>
-                <td className="p-3 text-neutral-700">£2,000 gross sales, no rental</td>
-                <td className="p-3 font-mono">£2,000</td>
+                <td className="p-3 font-bold">Small Vinted seller</td>
+                <td className="p-3 text-neutral-700">£750 gross from selling old clothes</td>
+                <td className="p-3 font-mono">£750</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NOT IN SCOPE
+                    Under allowance — no action
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Etsy maker</td>
-                <td className="p-3 text-neutral-700">£55,000 gross turnover, no rental</td>
-                <td className="p-3 font-mono">£55,000</td>
+                <td className="p-3 font-bold">Active Etsy seller</td>
+                <td className="p-3 text-neutral-700">£4,200 gross ceramics sales</td>
+                <td className="p-3 font-mono">£4,200</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    IN SCOPE 2026
+                    Must register by 5 October
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">PAYE + Airbnb</td>
-                <td className="p-3 text-neutral-700">£60,000 PAYE + £20,000 rental gross</td>
-                <td className="p-3 font-mono">£20,000</td>
+                <td className="p-3 font-bold">Airbnb host</td>
+                <td className="p-3 text-neutral-700">£12,000 gross room rental</td>
+                <td className="p-3 font-mono">£12,000</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NOT IN SCOPE (PAYE excluded)
+                    Register + Rent-a-Room check
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Freelancer + rental</td>
-                <td className="p-3 text-neutral-700">£30,000 freelance gross + £25,000 rental gross</td>
-                <td className="p-3 font-mono">£55,000</td>
+                <td className="p-3 font-bold">Fiverr freelancer</td>
+                <td className="p-3 text-neutral-700">£28,000 gross design income</td>
+                <td className="p-3 font-mono">£28,000</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    IN SCOPE 2026
+                    Register + class 4 NI due
                   </span>
                 </td>
               </tr>
@@ -818,36 +757,30 @@ export default function SideHustleCheckerPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          The three threshold rules — do not confuse them
+          Trading allowance vs actual expenses — which saves more?
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Rule</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Threshold</th>
-                <th className="border-b border-neutral-300 p-3 text-left">What It Means</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Method</th>
+                <th className="border-b border-neutral-300 p-3 text-left">When It Wins</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Example</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Trading Allowance</td>
-                <td className="p-3 font-mono text-xs">£1,000</td>
-                <td className="p-3 text-xs">Must register for Self Assessment</td>
-                <td className="p-3 text-xs text-neutral-700">Separate from MTD — SA registration only</td>
+                <td className="p-3 font-bold">Trading allowance (£1,000)</td>
+                <td className="p-3 font-mono text-xs">Low expense businesses</td>
+                <td className="p-3 text-xs">Sells on Etsy with no real costs</td>
+                <td className="p-3 text-xs text-neutral-700">Simple — no receipts needed</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">MTD Threshold 2026</td>
-                <td className="p-3 font-mono text-xs">£50,000</td>
-                <td className="p-3 text-xs">Mandatory quarterly MTD filing</td>
-                <td className="p-3 text-xs text-neutral-700">Check your 2024-25 qualifying income</td>
-              </tr>
-              <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">MTD Threshold 2027</td>
-                <td className="p-3 font-mono text-xs">£30,000</td>
-                <td className="p-3 text-xs">Mandatory MTD from April 2027</td>
-                <td className="p-3 text-xs text-neutral-700">Safe for 2026 but prepare now</td>
+                <td className="p-3 font-bold">Actual expenses</td>
+                <td className="p-3 font-mono text-xs">High expense businesses</td>
+                <td className="p-3 text-xs">Buys stock to resell</td>
+                <td className="p-3 text-xs text-neutral-700">More admin but often larger deduction</td>
               </tr>
             </tbody>
           </table>
@@ -862,33 +795,38 @@ export default function SideHustleCheckerPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          What you need if you are in scope
+          What expenses can be claimed against side hustle income
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">What You Need</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Purpose</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Cost</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Expense</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Claimable?</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Notes</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">MTD-approved software</td>
-                <td className="p-3 text-xs">Digital records + quarterly submission</td>
-                <td className="p-3 text-xs text-neutral-700">From £0 (FreeAgent free with NatWest)</td>
+                <td className="p-3 font-bold">Stock / materials purchased</td>
+                <td className="p-3 text-xs">Yes — cost of goods sold</td>
+                <td className="p-3 text-xs text-neutral-700">Keep all receipts</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">HMRC MTD registration</td>
-                <td className="p-3 text-xs">Sign up at GOV.UK</td>
-                <td className="p-3 text-xs text-neutral-700">Free — separate from SA registration</td>
+                <td className="p-3 font-bold">Platform fees</td>
+                <td className="p-3 text-xs">Yes</td>
+                <td className="p-3 text-xs text-neutral-700">eBay, Etsy, Fiverr fees deductible</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Self-assessment return</td>
-                <td className="p-3 text-xs">Still required — becomes final declaration</td>
-                <td className="p-3 text-xs text-neutral-700">Deadline 31 January 2028 for 2026/27</td>
+                <td className="p-3 font-bold">Home office proportion</td>
+                <td className="p-3 text-xs">Yes — partial</td>
+                <td className="p-3 text-xs text-neutral-700">Proportion of broadband, electricity</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Postage and packaging</td>
+                <td className="p-3 text-xs">Yes</td>
+                <td className="p-3 text-xs text-neutral-700">All business postage deductible</td>
               </tr>
             </tbody>
           </table>
@@ -948,7 +886,7 @@ export default function SideHustleCheckerPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before 7 August 2026
+            Ask these before 5 October 2026
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -977,14 +915,14 @@ export default function SideHustleCheckerPage() {
             Also relevant
           </p>
           <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Already confirmed in scope? Check your digital links.
+            Also a landlord with rental income?
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            Being in scope for MTD is step one. Being digitally compliant is step two. If you use Excel or multiple tools, your workflow may break the digital links rule even if your numbers are correct.
+            Rental income has different rules from trading income — and different MTD ITSA obligations. Check your landlord tax position separately.
           </p>
-          <Link href="/uk/check/digital-link-auditor"
+          <Link href="/uk/check/mtd-scorecard"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
-            Audit your digital links compliance →
+            Check your landlord MTD position →
           </Link>
         </div>
       </section>
@@ -998,7 +936,7 @@ export default function SideHustleCheckerPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            MTD for Income Tax is mandatory from 6 April 2026 for UK individual taxpayers with qualifying income (gross self-employment + gross UK rental) above £50,000 in 2024-25. PAYE salary is excluded. HMRC uses gross turnover not profit. Threshold falls to £30,000 from April 2027.
+            UK trading allowance: £1,000 gross income. Over £1,000: register for self assessment by 5 October. Platform reporting mandatory from January 2026. Late registration penalty: £100. Under ITTOIA 2005.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1006,10 +944,10 @@ export default function SideHustleCheckerPage() {
               HMRC
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              GOV.UK
+              ITTOIA 2005
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Finance (No.2) Act 2024
+              DAC7 Reporting
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
               Machine-readable JSON
@@ -1017,20 +955,15 @@ export default function SideHustleCheckerPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
-              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">GOV.UK — Use Making Tax Digital for Income Tax ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/use-making-tax-digital-for-income-tax</p>
-            </a>
-            <a href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
-              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">GOV.UK — Sign up for Making Tax Digital for Income Tax ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax</p>
-            </a>
             <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">GOV.UK — Trading allowance ↗</p>
+              <p className="font-bold text-neutral-900">HMRC — Trading Allowance ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income</p>
+            </a>
+            <a href="https://www.gov.uk/guidance/digital-platform-reporting" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Digital platform reporting ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/digital-platform-reporting</p>
             </a>
             <a href="/api/rules/side-hustle-checker" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">

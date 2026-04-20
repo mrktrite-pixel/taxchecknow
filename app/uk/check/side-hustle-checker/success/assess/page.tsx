@@ -11,41 +11,41 @@ import Link from "next/link";
 const FILES = [
   {
     "num": "01",
-    "slug": "side-hustle-checker-01",
-    "name": "Your Qualifying Income Breakdown",
-    "desc": "Exact calculation of your qualifying income — included vs excluded, your share only.",
+    "slug": "sh-01",
+    "name": "Your Side Hustle Tax Verdict",
+    "desc": "Your exact declaration position — what you owe and what you need to do.",
     "tier": 1,
     "start": false
   },
   {
     "num": "02",
-    "slug": "side-hustle-checker-02",
-    "name": "Your MTD Scope Confirmation",
-    "desc": "Written confirmation of whether you are in scope — 2026, 2027 or not yet.",
+    "slug": "sh-02",
+    "name": "Self Assessment Registration Guide",
+    "desc": "Step-by-step self assessment registration for side hustlers.",
     "tier": 1,
     "start": true
   },
   {
     "num": "03",
-    "slug": "side-hustle-checker-03",
-    "name": "Your MTD Registration Steps",
-    "desc": "Step-by-step HMRC registration walkthrough for side-hustle taxpayers.",
+    "slug": "sh-03",
+    "name": "Trading Allowance vs Expenses Calculator",
+    "desc": "Which method saves you more tax — allowance or actual costs?",
     "tier": 1,
     "start": false
   },
   {
     "num": "04",
-    "slug": "side-hustle-checker-04",
-    "name": "Your Deadline Calendar",
-    "desc": "Personalised MTD deadlines based on your income streams and mandate date.",
+    "slug": "sh-04",
+    "name": "Platform Income Record Template",
+    "desc": "Monthly income tracker for all platform earnings.",
     "tier": 1,
     "start": false
   },
   {
     "num": "05",
-    "slug": "side-hustle-checker-05",
-    "name": "Your Accountant Brief",
-    "desc": "Print this and take it to your next meeting — includes the annualisation risk question.",
+    "slug": "sh-05",
+    "name": "Accountant Brief — Side Hustle",
+    "desc": "Questions to take to your accountant.",
     "tier": 1,
     "start": false
   }
@@ -55,14 +55,10 @@ const FILES = [
 
 interface Assessment {
   status: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  qualifyingIncome: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  mandateDate: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  firstDeadline: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  hiddenInsight: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  riskFlags: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  declarationRequired: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  taxExposure: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  registrationDeadline: string | string[] | { title: string; deadline: string; steps: string[] }[];
   firstAction: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  softwareRec: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  accountantQuestions: string | string[] | { title: string; deadline: string; steps: string[] }[];
   [key: string]: unknown;
 }
 
@@ -77,7 +73,7 @@ export default function SuccessAssess() {
   const [checked,    setChecked]    = useState<Record<number, boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-08-07T23:59:59.000+01:00").getTime() - Date.now()) / 86_400_000
+    (new Date("2026-10-05T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -100,23 +96,19 @@ export default function SuccessAssess() {
   async function generateAssessment(name: string) {
     setLoading(true);
     try {
-      const sh_income_type = sessionStorage.getItem("side-hustle-checker_sh_income_type") || "side hustle + rental";
-      const sh_self_employment = sessionStorage.getItem("side-hustle-checker_sh_self_employment") || "40000";
-      const sh_rental = sessionStorage.getItem("side-hustle-checker_sh_rental") || "15000";
-      const sh_jointly_owned = sessionStorage.getItem("side-hustle-checker_sh_jointly_owned") || "false";
-      const sh_qualifying_income = sessionStorage.getItem("side-hustle-checker_sh_qualifying_income") || "55000";
-      const sh_status = sessionStorage.getItem("side-hustle-checker_sh_status") || "in_scope_2026";
-      const sh_answers = sessionStorage.getItem("side-hustle-checker_sh_answers") || "{}";
+      const sh_income = sessionStorage.getItem("side-hustle-checker_sh_income") || "3000";
+      const sh_registered = sessionStorage.getItem("side-hustle-checker_sh_registered") || "false";
+      const sh_platform = sessionStorage.getItem("side-hustle-checker_sh_platform") || "true";
 
       const prompt = `You are a UK tax expert. Write a personalised assessment for ${name !== "your" ? name : "this taxpayer"}.
 
 Their data:
-- Income type selected: ${sh_income_type}\n- Gross self-employment income: ${sh_self_employment}\n- Gross rental income: ${sh_rental}\n- Jointly owned property: ${sh_jointly_owned}\n- Total qualifying income: ${sh_qualifying_income}\n- MTD scope status: ${sh_status}\n- Questionnaire answers: ${sh_answers}
+- Gross side income: ${sh_income}\n- Is registered: ${sh_registered}\n- Platform income: ${sh_platform}
 
 Write a personalised, specific assessment. Use their name if provided. Reference their specific numbers. Be direct and actionable — not generic.
 
 Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. Just JSON with these fields:
-"status": "...", "qualifyingIncome": "...", "mandateDate": "...", "firstDeadline": "...", "hiddenInsight": "...", "riskFlags": "...", "firstAction": "...", "softwareRec": "...", "accountantQuestions": "..."
+"status": "...", "declarationRequired": "...", "taxExposure": "...", "registrationDeadline": "...", "firstAction": "..."
 
 For array fields use actual arrays. For action items use objects with title, deadline, steps array.`;
 
@@ -145,26 +137,18 @@ For array fields use actual arrays. For action items use objects with title, dea
     const displayName = name !== "your" ? name : "Your";
     const result: Record<string, unknown> = {};
     result["status"] = "status — building for " + displayName;
-    result["qualifyingIncome"] = "qualifyingIncome — building for " + displayName;
-    result["mandateDate"] = "mandateDate — building for " + displayName;
-    result["firstDeadline"] = "firstDeadline — building for " + displayName;
-    result["hiddenInsight"] = "hiddenInsight — building for " + displayName;
-    result["riskFlags"] = "riskFlags — building for " + displayName;
+    result["declarationRequired"] = "declarationRequired — building for " + displayName;
+    result["taxExposure"] = "taxExposure — building for " + displayName;
+    result["registrationDeadline"] = "registrationDeadline — building for " + displayName;
     result["firstAction"] = "firstAction — building for " + displayName;
-    result["softwareRec"] = "softwareRec — building for " + displayName;
-    result["accountantQuestions"] = [];
     return result as Assessment;
   }
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const sh_income_type = sessionStorage.getItem("side-hustle-checker_sh_income_type") || "side hustle + rental";
-    const sh_self_employment = sessionStorage.getItem("side-hustle-checker_sh_self_employment") || "40000";
-    const sh_rental = sessionStorage.getItem("side-hustle-checker_sh_rental") || "15000";
-    const sh_jointly_owned = sessionStorage.getItem("side-hustle-checker_sh_jointly_owned") || "false";
-    const sh_qualifying_income = sessionStorage.getItem("side-hustle-checker_sh_qualifying_income") || "55000";
-    const sh_status = sessionStorage.getItem("side-hustle-checker_sh_status") || "in_scope_2026";
-    const sh_answers = sessionStorage.getItem("side-hustle-checker_sh_answers") || "{}";
+    const sh_income = sessionStorage.getItem("side-hustle-checker_sh_income") || "3000";
+    const sh_registered = sessionStorage.getItem("side-hustle-checker_sh_registered") || "false";
+    const sh_platform = sessionStorage.getItem("side-hustle-checker_sh_platform") || "true";
 
     // Helper to format relative dates
     function relativeDate(daysFromNow: number): string {
@@ -178,41 +162,23 @@ For array fields use actual arrays. For action items use objects with title, dea
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN",
       "METHOD:PUBLISH",
-      `X-WR-CALNAME:Side-Hustle MTD Scope Engine — Action Dates`,
+      `X-WR-CALNAME:Side Hustle Checker — Action Dates`,
       "BEGIN:VEVENT",
-      `UID:sh-confirm-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(7)}`,
-      `DTEND;VALUE=DATE:${relativeDate(7)}`,
+      `UID:sh-reg-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20261005"}`,
+      `DTEND;VALUE=DATE:${"20261005"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Side-Hustle MTD — Confirm qualifying income",
-      "DESCRIPTION:Confirm exact qualifying income with accountant. Check annualisation risk if part-year trading.",
+      "SUMMARY:Self Assessment Registration Deadline",
+      "DESCRIPTION:Register for self assessment by 5 October 2026 for 2025/26 side income.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:sh-register-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(14)}`,
-      `DTEND;VALUE=DATE:${relativeDate(14)}`,
+      `UID:sh-file-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20270131"}`,
+      `DTEND;VALUE=DATE:${"20270131"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Side-Hustle MTD — Register with HMRC",
-      "DESCRIPTION:Register at gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax before 7 August 2026.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:sh-q1-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260807"}`,
-      `DTEND;VALUE=DATE:${"20260807"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:🔴 MTD Q1 Deadline — 7 August 2026",
-      "DESCRIPTION:First MTD quarterly submission — 6 April to 30 June 2026.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:sh-final-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20280131"}`,
-      `DTEND;VALUE=DATE:${"20280131"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD Final Declaration — 31 January 2028",
-      "DESCRIPTION:File MTD final declaration through your software. Replaces SA100.",
+      "SUMMARY:Self Assessment Filing Deadline",
+      "DESCRIPTION:File your 2025/26 return and pay tax by 31 January 2027.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -236,7 +202,7 @@ For array fields use actual arrays. For action items use objects with title, dea
       ? (assessment.accountantQuestions as string[]).map((q, i) => `${i + 1}. "${q}"`).join("\n")
       : String(assessment.accountantQuestions);
     await navigator.clipboard.writeText(
-      `Side-Hustle MTD Scope Engine — questions for my accountant:\n\n${questions}\n\nPrepared by TaxCheckNow · taxchecknow.com`
+      `Side Hustle Checker — questions for my accountant:\n\n${questions}\n\nPrepared by TaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -262,7 +228,7 @@ For array fields use actual arrays. For action items use objects with title, dea
       <nav className="no-print border-b border-neutral-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <Link href="/" className="font-serif text-lg font-bold text-neutral-950">TaxCheckNow</Link>
-          <span className="font-mono text-xs text-neutral-400">United Kingdom · Side-Hustle MTD Scope Engine</span>
+          <span className="font-mono text-xs text-neutral-400">United Kingdom · Side Hustle Checker</span>
         </div>
       </nav>
 
@@ -273,10 +239,10 @@ For array fields use actual arrays. For action items use objects with title, dea
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-                Payment confirmed · Your MTD Scope Assessment · £67
+                Payment confirmed · Your Side Hustle Tax Pack · £67
               </p>
               <h1 className="mt-1 font-serif text-2xl font-bold text-neutral-950">
-                {greeting} Side-Hustle MTD Scope Engine Assessment
+                {greeting} Side Hustle Checker Assessment
               </h1>
               <p className="mt-1 text-sm text-emerald-800">
                 A personal assessment built around your specific position — not a generic guide.
@@ -293,9 +259,9 @@ For array fields use actual arrays. For action items use objects with title, dea
         {/* DEADLINE BAR */}
         <div className="print-section flex items-center justify-between rounded-xl bg-red-700 px-5 py-3">
           <span className="text-sm font-bold text-white">
-            🔴 {daysToDeadline} days to 7 August 2026
+            🔴 {daysToDeadline} days to 5 October 2026
           </span>
-          <span className="font-mono text-sm font-bold text-white">7 August 2026</span>
+          <span className="font-mono text-sm font-bold text-white">5 October 2026</span>
         </div>
 
         {/* LOADING */}
@@ -337,7 +303,7 @@ For array fields use actual arrays. For action items use objects with title, dea
                     </p>
                     <p className="mt-0.5 text-xs text-blue-600">
                       Full brief in{" "}
-                      <a href="/files/uk/side-hustle-checker/side-hustle-checker-05"
+                      <a href="/files/uk/side-hustle-checker/sh-05"
                         target="_blank" rel="noopener noreferrer"
                         className="font-semibold underline">File 05 →</a>
                     </p>
@@ -369,20 +335,12 @@ For array fields use actual arrays. For action items use objects with title, dea
               <div className="mb-4 space-y-2">
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Side-Hustle MTD — Confirm qualifying income</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
+                  <span className="text-sm text-neutral-700">Self Assessment Registration Deadline</span>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">5 Oct 2026</span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Side-Hustle MTD — Register with HMRC</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">🔴 MTD Q1 Deadline — 7 August 2026</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">7 Aug 2026</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">MTD Final Declaration — 31 January 2028</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">31 Jan 2028</span>
+                  <span className="text-sm text-neutral-700">Self Assessment Filing Deadline</span>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">31 Jan 2027</span>
                 </div>
               </div>
               <button onClick={handleCalendar}
@@ -460,7 +418,7 @@ For array fields use actual arrays. For action items use objects with title, dea
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
                 Open File 02 — it has your exact numbers.
                 Forward File 05 to your accountant.
-                Act before 7 August 2026.
+                Act before 5 October 2026.
               </p>
               <div className="mb-4 flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -482,8 +440,8 @@ For array fields use actual arrays. For action items use objects with title, dea
                     style={{ width: `${Math.min(100, Math.max(5, ((365 - daysToDeadline) / 365) * 100))}%` }} />
                 </div>
                 <p className="mt-2 text-xs text-neutral-500">
-                  7 August 2026 · No backdating after this date ·{" "}
-                  <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
+                  5 October 2026 · No backdating after this date ·{" "}
+                  <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer"
                     className="underline hover:text-neutral-400 transition">
                     HMRC source
                   </a>
@@ -498,14 +456,14 @@ For array fields use actual arrays. For action items use objects with title, dea
                 Want the full implementation plan?
               </p>
               <p className="mb-1 font-serif text-lg font-bold text-neutral-950">
-                Upgrade to Your MTD Strategy System
+                Upgrade to Your Side Hustle Registration Plan
               </p>
               <p className="mb-3 text-sm leading-relaxed text-neutral-600">
-                A personal MTD scope assessment built around your income streams, your qualifying income calculation, and your exact mandate date — not a generic MTD guide.
+                Full side hustle audit plus self assessment registration guide, expense claim maximiser, and backdated disclosure plan if needed.
               </p>
               <Link href="/uk/check/side-hustle-checker"
                 className="font-mono text-xs font-bold text-neutral-700 underline transition hover:text-neutral-950">
-                Get Your MTD Strategy System — £147 →
+                Get Your Side Hustle Registration Plan — £147 →
               </Link>
             </div>
 
@@ -520,7 +478,7 @@ For array fields use actual arrays. For action items use objects with title, dea
             TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified UK tax adviser before making financial decisions.
             Based on HMRC guidance April 2026.{" "}
-            <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">GOV.UK — Use Making Tax Digital for Income Tax</a> · <a href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">GOV.UK — Sign up for Making Tax Digital for Income Tax</a>
+            <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">HMRC — Trading Allowance</a> · <a href="https://www.gov.uk/guidance/digital-platform-reporting" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">HMRC — Digital platform reporting</a>
           </p>
         </div>
 

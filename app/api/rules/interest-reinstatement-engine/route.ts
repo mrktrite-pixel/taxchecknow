@@ -174,7 +174,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nz/check/interest-reinstatement-engine",
     "api_endpoint": "/api/rules/interest-reinstatement-engine",
-    "generated_at": "2026-04-19T23:56:06.735Z"
+    "generated_at": "2026-04-20T02:58:11.514Z"
 };
 
   return NextResponse.json(rules, {

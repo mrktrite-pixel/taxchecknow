@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
 
-const DEADLINE_ISO   = "2026-04-15T23:59:59.000-05:00";
+const DEADLINE_ISO   = "2026-04-15T23:59:59.000Z";
 const DAYS_TO_END    = Math.max(0, Math.floor(
   (new Date(DEADLINE_ISO).getTime() - Date.now()) / 86_400_000
 ));
@@ -16,29 +16,29 @@ const DAYS_TO_END    = Math.max(0, Math.floor(
 
 const BRACKETS = [
   {
-    "label": "Under $100k engineering spend",
-    "value": 50000,
-    "status": "clear"
-  },
-  {
-    "label": "$100k – $300k engineering spend",
-    "value": 200000,
+    "label": "Under $100k engineering spend — limited exposure",
+    "value": 1,
     "status": "approaching"
   },
   {
-    "label": "$300k – $600k engineering spend",
-    "value": 450000,
+    "label": "$100k-$500k — material Section 174 impact",
+    "value": 2,
     "status": "trap"
   },
   {
-    "label": "$600k – $1M engineering spend",
-    "value": 800000,
+    "label": "$500k-$2M — significant cash tax hit expected",
+    "value": 3,
     "status": "deep_trap"
   },
   {
-    "label": "Over $1M engineering spend",
-    "value": 1500000,
+    "label": "Over $2M engineering — major Section 174 problem",
+    "value": 4,
     "status": "deep_trap"
+  },
+  {
+    "label": "Have offshore engineering team — 15-year multiplier risk",
+    "value": 5,
+    "status": "risk"
   }
 ] as const;
 
@@ -49,16 +49,16 @@ type PackTier      = 67 | 147;
 
 const PRODUCTS: Record<PackTier, { name: string; tagline: string; value: string; cta: string }> = {
   67: {
-    name:    "Your SRE Classification Kit",
-    tagline: "Stop overpaying due to R&D misclassification",
-    value:   "A personalised Section 174 audit built around your engineering spend, your team location, and your deductible vs non-deductible split.",
-    cta:     "Get My Classification Kit — $67 →",
+    name:    "Your Section 174 Exposure Report",
+    tagline: "Is your engineering spend creating a phantom tax bill you did not budget for?",
+    value:   "A personalised Section 174 audit showing your amortization exposure, offshore multiplier impact, and estimated tax hit.",
+    cta:     "Get My Section 174 Report — $67 →",
   },
   147: {
-    name:    "Your Amortization Shield Audit",
-    tagline: "Full tax strategy and cash flow protection against phantom profit",
-    value:   "A personalised Section 174 audit built around your engineering spend, your team location, and your deductible vs non-deductible split.",
-    cta:     "Get My Shield Audit — $147 →",
+    name:    "Your Section 174 Recovery Plan",
+    tagline: "Identify every dollar that can be reclassified or accelerated",
+    value:   "Full Section 174 audit plus expense reclassification strategy, accounting method analysis, and a written brief for your CPA.",
+    cta:     "Get My Recovery Plan — $147 →",
   },
 };
 
@@ -137,12 +137,12 @@ function getStatusStyle(status: BracketStatus): {
 
 function recommendedTier(
   bracketStatus: BracketStatus,
-  teamLocation: number | string,
-  newVsMaintenance: number | string,
-  hasRDCredit: boolean,
+  usDomesticRD: number | string,
+  offshoreRD: number | string,
+  hasFiledCorrectly: boolean,
 ): PackTier {
-  // teamLocation is offshore or mixed → tier2. hasRDCredit → tier2. Otherwise tier1.
-    if (teamLocation === "offshore" || teamLocation === "mixed" || hasRDCredit === true) return 147;
+  // offshoreRD over 0 OR usDomesticRD over 500000 → tier2. Not filed correctly → tier2.
+    if ((offshoreRD as number) > 0 || (usDomesticRD as number) > 500000 || hasFiledCorrectly === true) return 147;
   return 67;
 }
 
@@ -150,9 +150,9 @@ function recommendedTier(
 
 export default function Section174AuditorCalculator() {
   const [selectedBracket, setSelectedBracket] = useState<number | null>(null);
-  const [teamLocation, setTeamLocation] = useState<number | string>("us");
-  const [newVsMaintenance, setNewVsMaintenance] = useState<number | string>(80);
-  const [hasRDCredit, setHasRDCredit] = useState<boolean>(false);
+  const [usDomesticRD, setUsDomesticRD] = useState<number | string>(300000);
+  const [offshoreRD, setOffshoreRD] = useState<number | string>(300000);
+  const [hasFiledCorrectly, setHasFiledCorrectly] = useState<boolean>(false);
   const [email,           setEmail]           = useState("");
   const [emailSent,       setEmailSent]       = useState(false);
   const [sessionId,       setSessionId]       = useState<string | null>(null);
@@ -178,9 +178,9 @@ export default function Section174AuditorCalculator() {
   // Tier algorithm — COLE decides, buyer never chooses
   const calculatedTier: PackTier = recommendedTier(
     bracketStatus,
-    teamLocation,
-    newVsMaintenance,
-    hasRDCredit,
+    usDomesticRD,
+    offshoreRD,
+    hasFiledCorrectly,
   );
   const effectiveTier   = overrideTier ?? calculatedTier;
   const selectedProduct = PRODUCTS[effectiveTier];
@@ -196,9 +196,9 @@ export default function Section174AuditorCalculator() {
 
   async function handleBracketSelect(index: number) {
     setSelectedBracket(index);
-    setTeamLocation("us");
-    setNewVsMaintenance(80);
-    setHasRDCredit(false);
+    setUsDomesticRD(300000);
+    setOffshoreRD(300000);
+    setHasFiledCorrectly(false);
     setOverrideTier(null);
     setError("");
     // Save to sessionStorage for success page
@@ -249,9 +249,9 @@ export default function Section174AuditorCalculator() {
     if (!answersComplete || checkoutLoading) return;
     // Save inputs for success page personalisation
     sessionStorage.setItem("section-174-auditor_answers", JSON.stringify(answers));
-    sessionStorage.setItem("section-174-auditor_teamLocation", String(teamLocation));
-    sessionStorage.setItem("section-174-auditor_newVsMaintenance", String(newVsMaintenance));
-    sessionStorage.setItem("section-174-auditor_hasRDCredit", String(hasRDCredit));
+    sessionStorage.setItem("section-174-auditor_usDomesticRD", String(usDomesticRD));
+    sessionStorage.setItem("section-174-auditor_offshoreRD", String(offshoreRD));
+    sessionStorage.setItem("section-174-auditor_hasFiledCorrectly", String(hasFiledCorrectly));
     const sid          = sessionId ?? localStorage.getItem("section-174-auditor_session_id");
     const effectiveSid = sid ?? `fallback_${Date.now()}`;
     setCheckoutLoading(true);
@@ -303,10 +303,10 @@ export default function Section174AuditorCalculator() {
           {/* Rule box — GOAT Block 3 */}
           <div className="mb-4 rounded-xl border-2 border-neutral-900 bg-neutral-950 px-4 py-4">
             <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-              The rule — IRS confirmed
+              The Section 174 rules — IRS confirmed
             </p>
             <p className="mt-1 text-sm leading-relaxed text-white">
-              Section 174 requires R&D costs to be capitalized and amortized. Domestic: 5 years. Foreign: 15 years. Year 1 deduction: ~20% domestic, ~6.67% foreign. The immediate deduction ended after 2021.
+              Effective January 1, 2022: all R&E expenditures (including software development) must be capitalized and amortized. US domestic: 5-year amortization with mid-year convention (10% year 1, 20% years 2-5, 10% year 6). Foreign: 15-year amortization (3.33% year 1, 6.67% years 2-15, 3.33% year 16). No immediate expensing available.
             </p>
           </div>
 
@@ -342,10 +342,10 @@ export default function Section174AuditorCalculator() {
           {/* Clarification box */}
           <div className="mt-4 rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-3">
             <p className="font-mono text-[10px] uppercase tracking-widest text-amber-700">
-              ⚠️ key clarification
+              Key clarification
             </p>
             <p className="mt-1 text-xs leading-relaxed text-amber-900">
-              Phantom profit is not a mistake on your return. It is the correct IRS calculation. A company with $0 cash profit can owe $150,000+ in tax under Section 174. Most founders discover this when the bill arrives.
+              Software development costs are specifically included as R&E expenditures under IRS Revenue Procedure 2000-50 and the Section 174 rules. This applies to internal software, commercial software, and SaaS platforms. The tech industry is heavily affected — not just traditional R&D companies.
             </p>
           </div>
         </div>
@@ -390,109 +390,129 @@ export default function Section174AuditorCalculator() {
                 Refine your position
               </p>
               <div className="space-y-5">
-                {/* BUTTON GROUP — Where is your engineering team based? */}
+                {/* BUTTON GROUP — What is your US-based engineering / R&D spend per year? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Where is your engineering team based?</p>
-                  <p className="mb-2 text-xs text-neutral-500">Determines 5-year vs 15-year amortization schedule</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">What is your US-based engineering / R&D spend per year?</p>
+                  <p className="mb-2 text-xs text-neutral-500">Include employee salaries, contractor fees, and related costs for US-based team</p>
                   <div className="flex flex-wrap gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setTeamLocation("us")}
+                      onClick={() => setUsDomesticRD(50000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        teamLocation === "us"
+                        usDomesticRD === 50000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      US only
+                      Under $100k
                     </button>
                     <button
                       type="button"
-                      onClick={() => setTeamLocation("mixed")}
+                      onClick={() => setUsDomesticRD(300000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        teamLocation === "mixed"
+                        usDomesticRD === 300000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Mix US + offshore
+                      $100k-$500k
                     </button>
                     <button
                       type="button"
-                      onClick={() => setTeamLocation("offshore")}
+                      onClick={() => setUsDomesticRD(1000000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        teamLocation === "offshore"
+                        usDomesticRD === 1000000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Offshore only
+                      $500k-$2M
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUsDomesticRD(3000000)}
+                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
+                        usDomesticRD === 3000000
+                          ? "border-neutral-950 bg-neutral-950 text-white"
+                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                      }`}>
+                      Over $2M
                     </button>
                   </div>
                   
                 </div>
-                {/* BUTTON GROUP — What percentage is new development vs maintenance? */}
+                {/* BUTTON GROUP — What is your offshore / foreign engineering spend per year? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">What percentage is new development vs maintenance?</p>
-                  <p className="mb-2 text-xs text-neutral-500">Maintenance (Section 162) may be immediately deductible</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">What is your offshore / foreign engineering spend per year?</p>
+                  <p className="mb-2 text-xs text-neutral-500">India, Eastern Europe, LATAM, or any non-US team — 15-year amortization applies</p>
                   <div className="flex flex-wrap gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setNewVsMaintenance(80)}
+                      onClick={() => setOffshoreRD(0)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        newVsMaintenance === 80
+                        offshoreRD === 0
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Mostly new (over 80%)
+                      None
                     </button>
                     <button
                       type="button"
-                      onClick={() => setNewVsMaintenance(50)}
+                      onClick={() => setOffshoreRD(50000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        newVsMaintenance === 50
+                        offshoreRD === 50000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Mixed (50/50)
+                      Under $100k
                     </button>
                     <button
                       type="button"
-                      onClick={() => setNewVsMaintenance(20)}
+                      onClick={() => setOffshoreRD(300000)}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        newVsMaintenance === 20
+                        offshoreRD === 300000
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Mostly maintenance
+                      $100k-$500k
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setOffshoreRD(750000)}
+                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
+                        offshoreRD === 750000
+                          ? "border-neutral-950 bg-neutral-950 text-white"
+                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                      }`}>
+                      Over $500k
                     </button>
                   </div>
                   
                 </div>
-                {/* TWO-BUTTON TOGGLE — Do you currently claim the Section 41 R&D tax credit? */}
+                {/* TWO-BUTTON TOGGLE — Has your CPA specifically addressed Section 174 amortization in your recent returns? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Do you currently claim the Section 41 R&D tax credit?</p>
-                  <p className="mb-2 text-xs text-neutral-500">Credit and amortization interact — both need optimising</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">Has your CPA specifically addressed Section 174 amortization in your recent returns?</p>
+                  <p className="mb-2 text-xs text-neutral-500">Many generalist CPAs missed this change in 2022 and 2023</p>
                   <div className="flex gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setHasRDCredit(false)}
+                      onClick={() => setHasFiledCorrectly(true)}
                       className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        hasRDCredit === false
+                        hasFiledCorrectly === true
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      No / Not sure
+                      Yes — Section 174 was addressed
                     </button>
                     <button
                       type="button"
-                      onClick={() => setHasRDCredit(true)}
+                      onClick={() => setHasFiledCorrectly(false)}
                       className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        hasRDCredit === true
+                        hasFiledCorrectly === false
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Yes
+                      No / not sure
                     </button>
                   </div>
                 </div>
@@ -532,7 +552,7 @@ export default function Section174AuditorCalculator() {
               Check my exact position →
             </button>
             <p className="mt-2 text-center text-xs text-neutral-500">
-              £{effectiveTier} · One-time · No subscription
+              ${effectiveTier} · One-time · No subscription
             </p>
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
           </div>

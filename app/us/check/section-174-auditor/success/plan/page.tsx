@@ -11,65 +11,65 @@ import Link from "next/link";
 const FILES = [
   {
     "num": "01",
-    "slug": "section-174-01",
-    "name": "Your Phantom Profit Calculation",
-    "desc": "Your exact Section 174 exposure — engineering spend, allowed deduction, taxable phantom profit.",
+    "slug": "s174-01",
+    "name": "Your Section 174 Exposure Report",
+    "desc": "Your exact year-1 deduction and phantom income under current law.",
     "tier": 1,
     "start": false
   },
   {
     "num": "02",
-    "slug": "section-174-02",
-    "name": "Your Section 162 Reclassification Guide",
-    "desc": "What qualifies as immediately deductible maintenance under Section 162.",
+    "slug": "s174-02",
+    "name": "Expense Reclassification Guide",
+    "desc": "Costs that may not qualify as R&E and can be expensed immediately.",
     "tier": 1,
     "start": true
   },
   {
     "num": "03",
-    "slug": "section-174-03",
-    "name": "Section 41 R&D Credit Optimizer",
-    "desc": "How the R&D credit interacts with Section 174 amortization — and how to maximise both.",
+    "slug": "s174-03",
+    "name": "Offshore vs Domestic Cost Allocation",
+    "desc": "How to correctly allocate and document US vs foreign R&E costs.",
     "tier": 1,
     "start": false
   },
   {
     "num": "04",
-    "slug": "section-174-04",
-    "name": "Form 3115 Walkthrough",
-    "desc": "Fix prior-year Section 174 errors with a change in accounting method.",
+    "slug": "s174-04",
+    "name": "Section 41 R&D Credit Analysis",
+    "desc": "Can the research tax credit offset your Section 174 timing impact?",
     "tier": 1,
     "start": false
   },
   {
     "num": "05",
-    "slug": "section-174-05",
-    "name": "Your Accountant Brief",
-    "desc": "Print and take to your next meeting — Section 174 questions your CPA must answer.",
+    "slug": "s174-05",
+    "name": "CPA Brief — Section 174",
+    "desc": "Questions for your CPA about Section 174 compliance and planning.",
     "tier": 1,
     "start": false
   },
   {
     "num": "06",
-    "slug": "section-174-06",
-    "name": "Offshore Risk Audit",
-    "desc": "Identify your 15-year foreign amortization exposure and restructuring options.",
+    "slug": "s174-06",
+    "name": "Prior Year Amendment Analysis",
+    "desc": "Whether your 2022 and 2023 returns were filed correctly.",
     "tier": 2,
     "start": false
   },
   {
     "num": "07",
-    "slug": "section-174-07",
-    "name": "Tax Cash Flow Model",
-    "desc": "Predict your Section 174 liability for 2026 and 2027 — plan estimated payments.",
+    "slug": "s174-07",
+    "name": "Multi-Year Amortization Model",
+    "desc": "Your Section 174 amortization pools and deductions for years 1-6.",
     "tier": 2,
     "start": false
   },
   {
     "num": "08",
-    "slug": "section-174-08",
-    "name": "Implementation Checklist",
-    "desc": "Every step to address your Section 174 exposure before the filing deadline.",
+    "slug": "s174-08",
+    "name": "Entity Structure Optimisation",
+    "desc": "Whether your entity type affects Section 174 treatment.",
     "tier": 2,
     "start": false
   }
@@ -79,15 +79,12 @@ const FILES = [
 
 interface Assessment {
   status: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  phantomProfit: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  allowedDeduction: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  taxImpact: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  biggestRisk: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  offshoreExposure: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  section41Opportunity: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  year1Deduction: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  phantomIncome: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  reclassOpportunity: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  priorYearRisk: string | string[] | { title: string; deadline: string; steps: string[] }[];
   actions: string | string[] | { title: string; deadline: string; steps: string[] }[];
   weekPlan: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  accountantQuestions: string | string[] | { title: string; deadline: string; steps: string[] }[];
   [key: string]: unknown;
 }
 
@@ -102,7 +99,7 @@ export default function SuccessPlan() {
   const [checked,    setChecked]    = useState<Record<number, boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-04-15T23:59:59.000-05:00").getTime() - Date.now()) / 86_400_000
+    (new Date("2026-04-15T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -125,21 +122,19 @@ export default function SuccessPlan() {
   async function generateAssessment(name: string) {
     setLoading(true);
     try {
-      const s174_spend = sessionStorage.getItem("section-174-auditor_s174_spend") || "$300k-$600k";
-      const s174_location = sessionStorage.getItem("section-174-auditor_s174_location") || "mixed";
-      const s174_new_pct = sessionStorage.getItem("section-174-auditor_s174_new_pct") || "80";
-      const s174_has_credit = sessionStorage.getItem("section-174-auditor_s174_has_credit") || "false";
-      const s174_phantom_profit = sessionStorage.getItem("section-174-auditor_s174_phantom_profit") || "420000";
+      const s174_us = sessionStorage.getItem("section-174-auditor_s174_us") || "300000";
+      const s174_offshore = sessionStorage.getItem("section-174-auditor_s174_offshore") || "300000";
+      const s174_filed = sessionStorage.getItem("section-174-auditor_s174_filed") || "false";
 
       const prompt = `You are a UK tax expert. Write a personalised action plan for ${name !== "your" ? name : "this taxpayer"}.
 
 Their data:
-- Engineering spend bracket: ${s174_spend}\n- Team location: ${s174_location}\n- New development percentage: ${s174_new_pct}\n- Claims Section 41 credit: ${s174_has_credit}\n- Estimated phantom profit: ${s174_phantom_profit}
+- US R&D spend: ${s174_us}\n- Offshore R&D spend: ${s174_offshore}\n- Filed correctly: ${s174_filed}
 
 Write a personalised, specific action plan. Use their name if provided. Reference their specific numbers. Be direct and actionable — not generic.
 
 Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. Just JSON with these fields:
-"status": "...", "phantomProfit": "...", "allowedDeduction": "...", "taxImpact": "...", "biggestRisk": "...", "offshoreExposure": "...", "section41Opportunity": "...", "actions": "...", "weekPlan": "...", "accountantQuestions": "..."
+"status": "...", "year1Deduction": "...", "phantomIncome": "...", "reclassOpportunity": "...", "priorYearRisk": "...", "actions": "...", "weekPlan": "..."
 
 For array fields use actual arrays. For action items use objects with title, deadline, steps array.`;
 
@@ -168,25 +163,20 @@ For array fields use actual arrays. For action items use objects with title, dea
     const displayName = name !== "your" ? name : "Your";
     const result: Record<string, unknown> = {};
     result["status"] = "status — building for " + displayName;
-    result["phantomProfit"] = "phantomProfit — building for " + displayName;
-    result["allowedDeduction"] = "allowedDeduction — building for " + displayName;
-    result["taxImpact"] = "taxImpact — building for " + displayName;
-    result["biggestRisk"] = "biggestRisk — building for " + displayName;
-    result["offshoreExposure"] = "offshoreExposure — building for " + displayName;
-    result["section41Opportunity"] = "section41Opportunity — building for " + displayName;
+    result["year1Deduction"] = "year1Deduction — building for " + displayName;
+    result["phantomIncome"] = "phantomIncome — building for " + displayName;
+    result["reclassOpportunity"] = "reclassOpportunity — building for " + displayName;
+    result["priorYearRisk"] = "priorYearRisk — building for " + displayName;
     result["actions"] = [];
     result["weekPlan"] = [];
-    result["accountantQuestions"] = [];
     return result as Assessment;
   }
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const s174_spend = sessionStorage.getItem("section-174-auditor_s174_spend") || "$300k-$600k";
-    const s174_location = sessionStorage.getItem("section-174-auditor_s174_location") || "mixed";
-    const s174_new_pct = sessionStorage.getItem("section-174-auditor_s174_new_pct") || "80";
-    const s174_has_credit = sessionStorage.getItem("section-174-auditor_s174_has_credit") || "false";
-    const s174_phantom_profit = sessionStorage.getItem("section-174-auditor_s174_phantom_profit") || "420000";
+    const s174_us = sessionStorage.getItem("section-174-auditor_s174_us") || "300000";
+    const s174_offshore = sessionStorage.getItem("section-174-auditor_s174_offshore") || "300000";
+    const s174_filed = sessionStorage.getItem("section-174-auditor_s174_filed") || "false";
 
     // Helper to format relative dates
     function relativeDate(daysFromNow: number): string {
@@ -200,59 +190,23 @@ For array fields use actual arrays. For action items use objects with title, dea
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN",
       "METHOD:PUBLISH",
-      `X-WR-CALNAME:Section 174 Phantom Tax Auditor — Action Dates`,
+      `X-WR-CALNAME:Section 174 Auditor — Action Dates`,
       "BEGIN:VEVENT",
-      `UID:s174-classify-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(7)}`,
-      `DTEND;VALUE=DATE:${relativeDate(7)}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Section 174 — Classify engineering spend",
-      "DESCRIPTION:Separate §174 (new dev) from §162 (maintenance). Identify domestic vs foreign split.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:s174-credit-${Date.now()}@taxchecknow.com`,
+      `UID:s174-review-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${relativeDate(14)}`,
       `DTEND;VALUE=DATE:${relativeDate(14)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Section 174 — Optimise Section 41 credit",
-      "DESCRIPTION:Calculate R&D credit alongside amortization. Agree method with CPA.",
+      "SUMMARY:Section 174 — Prior year compliance review",
+      "DESCRIPTION:Review 2022, 2023, 2024 returns for Section 174 compliance.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:s174-q1-${Date.now()}@taxchecknow.com`,
+      `UID:s174-federal-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${"20260415"}`,
       `DTEND;VALUE=DATE:${"20260415"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Section 174 — Q1 Estimated Tax Due",
-      "DESCRIPTION:Q1 2026 estimated tax payment.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:s174-q2-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260616"}`,
-      `DTEND;VALUE=DATE:${"20260616"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Section 174 — Q2 Estimated Tax Due",
-      "DESCRIPTION:Q2 2026 estimated tax payment.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:s174-q3-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260915"}`,
-      `DTEND;VALUE=DATE:${"20260915"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Section 174 — Q3 Estimated Tax Due",
-      "DESCRIPTION:Q3 2026 estimated tax payment.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:s174-final-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260415"}`,
-      `DTEND;VALUE=DATE:${"20260415"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Section 174 — Tax Return Deadline",
-      "DESCRIPTION:2025 federal return due with Section 174 amortization schedules.",
+      "SUMMARY:Federal Tax Return Due",
+      "DESCRIPTION:April 15, 2026.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -276,7 +230,7 @@ For array fields use actual arrays. For action items use objects with title, dea
       ? (assessment.accountantQuestions as string[]).map((q, i) => `${i + 1}. "${q}"`).join("\n")
       : String(assessment.accountantQuestions);
     await navigator.clipboard.writeText(
-      `Section 174 Phantom Tax Auditor — questions for my accountant:\n\n${questions}\n\nPrepared by TaxCheckNow · taxchecknow.com`
+      `Section 174 Auditor — questions for my accountant:\n\n${questions}\n\nPrepared by TaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -302,7 +256,7 @@ For array fields use actual arrays. For action items use objects with title, dea
       <nav className="no-print border-b border-neutral-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <Link href="/" className="font-serif text-lg font-bold text-neutral-950">TaxCheckNow</Link>
-          <span className="font-mono text-xs text-neutral-400">United States · Section 174 Phantom Tax Auditor</span>
+          <span className="font-mono text-xs text-neutral-400">United States · Section 174 Auditor</span>
         </div>
       </nav>
 
@@ -313,10 +267,10 @@ For array fields use actual arrays. For action items use objects with title, dea
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-                Payment confirmed · Your Amortization Shield Audit · £147
+                Payment confirmed · Your Section 174 Recovery Plan · £147
               </p>
               <h1 className="mt-1 font-serif text-2xl font-bold text-neutral-950">
-                {greeting} Section 174 Phantom Tax Auditor Action Plan
+                {greeting} Section 174 Auditor Action Plan
               </h1>
               <p className="mt-1 text-sm text-emerald-800">
                 Built around your numbers, your gaps, your deadline — not the average taxpayer.
@@ -420,7 +374,7 @@ For array fields use actual arrays. For action items use objects with title, dea
                     </p>
                     <p className="mt-0.5 text-xs text-blue-600">
                       Full brief in{" "}
-                      <a href="/files/us/section-174-auditor/section-174-05"
+                      <a href="/files/us/section-174-auditor/s174-05"
                         target="_blank" rel="noopener noreferrer"
                         className="font-semibold underline">File 05 →</a>
                     </p>
@@ -452,27 +406,11 @@ For array fields use actual arrays. For action items use objects with title, dea
               <div className="mb-4 space-y-2">
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Section 174 — Classify engineering spend</span>
+                  <span className="text-sm text-neutral-700">Section 174 — Prior year compliance review</span>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Section 174 — Optimise Section 41 credit</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Section 174 — Q1 Estimated Tax Due</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">15 Apr 2026</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Section 174 — Q2 Estimated Tax Due</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">16 Jun 2026</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Section 174 — Q3 Estimated Tax Due</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">15 Sep 2026</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Section 174 — Tax Return Deadline</span>
+                  <span className="text-sm text-neutral-700">Federal Tax Return Due</span>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">15 Apr 2026</span>
                 </div>
               </div>
@@ -574,7 +512,7 @@ For array fields use actual arrays. For action items use objects with title, dea
                 </div>
                 <p className="mt-2 text-xs text-neutral-500">
                   April 15, 2026 · No backdating after this date ·{" "}
-                  <a href="https://www.irs.gov/publications/p535" target="_blank" rel="noopener noreferrer"
+                  <a href="https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" target="_blank" rel="noopener noreferrer"
                     className="underline hover:text-neutral-400 transition">
                     IRS source
                   </a>
@@ -595,7 +533,7 @@ For array fields use actual arrays. For action items use objects with title, dea
             TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified UK tax adviser before making financial decisions.
             Based on IRS guidance April 2026.{" "}
-            <a href="https://www.irs.gov/publications/p535" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">IRS — Publication 535: Business Expenses</a> · <a href="https://www.irs.gov/businesses/small-businesses-self-employed/research-and-development-costs" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">IRS — IRC Section 174</a>
+            <a href="https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">IRS — Section 174 research and experimental expenditures</a> · <a href="/api/rules/section-174-auditor" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">Machine-readable JSON rules</a>
           </p>
         </div>
 

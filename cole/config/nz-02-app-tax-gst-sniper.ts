@@ -158,4 +158,25 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   tier1AssessmentFields: ["status", "flatRateCredit", "registrationBenefit", "breakEvenPoint", "firstAction", "bigPurchaseOpportunity", "accountantQuestions"],
   tier2AssessmentFields: ["status", "flatRateCredit", "registrationBenefit", "breakEvenPoint", "changeOfUseRisk", "apportionmentNeeded", "actions", "weekPlan", "accountantQuestions"],
+  persona: {
+    name: "Aroha",
+    age: 43,
+    occupation: "Speech language therapist (part-time), Airbnb host, landlord — Auckland",
+    location: "Pt Chevalier, Auckland",
+    family: "Husband Mike (civil engineer). Two teenagers — Tama (16) and Hana (14).",
+    financialSnapshot: "3 properties: family home, Avondale rental (in family trust), Glen Eden Airbnb. Household income ~$180k.",
+    painPoint: "Aroha does the family finances and researches before every accountant meeting to ask the right questions.",
+    discovery: "Aroha found three different bright-line answers on three different websites. She needed one definitive source.",
+    voice: "Thorough. Trusts research. Appreciates when complexity is acknowledged. Wry Kiwi humour.",
+  },
+  story: {
+    hook: "Aroha had been running the Glen Eden property on Airbnb for two years. She had never thought about GST.",
+    setup: [
+    "The property earned around $3,200 per month when occupied. Aroha managed it herself. She was below the $60,000 GST threshold and had assumed GST simply did not apply to her.",
+    "What she had not understood was the App Tax. From 2023, Airbnb had been required to collect and remit 15% GST on her earnings regardless of her registration status. The platform took the GST. She received a flat-rate credit of only 8.5%.",
+    "She had also been running significant costs through the property: a new heat pump ($4,200), replacement carpet ($2,800), regular cleaning. None of the GST on those expenses was recoverable as an unregistered person.",
+    ],
+    revelation: "The heat pump alone — $4,200 GST-inclusive — contained $547 of recoverable GST she had walked away from. The ongoing registration calculation did not support registering. But large purchases changed the maths.",
+    resolution: "Aroha did not register for GST. The ongoing numbers did not support it. But she now asks David before any major purchase whether voluntary registration for that year would be beneficial.",
+  },
 };

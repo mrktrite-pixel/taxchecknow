@@ -1,588 +1,150 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// COLE CONFIG — UK-02 Allowance Sniper
-// Reverse engineered from live taxchecknow.com/uk/check/allowance-sniper
-// All data verified against GOV.UK April 2026
-// Legal anchor: Income Tax Act 2007 s.35
-// ─────────────────────────────────────────────────────────────────────────────
-
 import type { ProductConfig } from "../types/product-config";
-
 export const PRODUCT_CONFIG: ProductConfig = {
-
-  // ── IDENTITY ─────────────────────────────────────────────────────────────────
-  id:       "allowance-sniper",
-  name:     "Allowance Sniper",
-  site:     "taxchecknow",
-  country:  "uk",
-  market:   "United Kingdom",
-  language: "en-GB",
-  currency: "GBP",
-  slug:     "uk/check/allowance-sniper",
-  url:      "https://taxchecknow.com/uk/check/allowance-sniper",
-  apiRoute: "/api/rules/allowance-sniper",
-
-  // ── AUTHORITY ─────────────────────────────────────────────────────────────────
-  authority:    "HMRC",
-  authorityUrl: "https://www.gov.uk",
-  legalAnchor:  "Income Tax Act 2007 s.35",
-  legislation:  "Income Tax Act 2007 s.35 — Personal Allowance taper",
-  lastVerified: "April 2026",
-
-  // ── PRICING ───────────────────────────────────────────────────────────────────
-  tier1: {
-    price:       67,
-    name:        "Your Allowance Sniper Assessment",
-    tagline:     "What is my exact trap position and what contribution gets me out?",
-    value:       "A personal assessment built around your income, your ANI position, and your specific escape route — not a generic pension guide.",
-    cta:         "Get My Assessment — £67 →",
-    productKey:  "uk_67_allowance_sniper",
-    envVar:      "STRIPE_UK_ALLOWANCE_67",
-    successPath: "decide",
-    fileCount:   5,
-  },
-  tier2: {
-    price:       147,
-    name:        "Your Allowance Sniper Action Plan",
-    tagline:     "I am in the trap — build my full implementation plan.",
-    value:       "A personal assessment built around your income, your ANI position, and your specific escape route — not a generic pension guide.",
-    cta:         "Get My Action Plan — £147 →",
-    productKey:  "uk_147_allowance_sniper",
-    envVar:      "STRIPE_UK_ALLOWANCE_147",
-    successPath: "plan",
-    fileCount:   8,
-  },
-
-  // ── DEADLINE ──────────────────────────────────────────────────────────────────
-  deadline: {
-    isoDate:        "2027-04-05T23:59:59Z",
-    display:        "5 April 2027",
-    short:          "5 Apr 2027",
-    description:    "Tax year end — pension contributions and Gift Aid must be paid by this date to reduce 2026/27 ANI",
-    urgencyLabel:   "TAX YEAR END",
-    countdownLabel: "Countdown to 5 April 2027 — tax year end",
-  },
-
-  // ── COPY ──────────────────────────────────────────────────────────────────────
-  h1:              "UK 60% Tax Trap 2026: Are You Paying 60% on Part of Your Income?",
-  metaTitle:       "UK 60% Tax Trap 2026: Are You Paying 60% on Part of Your Income? | TaxCheckNow",
-  metaDescription: "The £100,000 Personal Allowance taper creates a 60% effective marginal rate between £100,000 and £125,140 adjusted net income. 2.06 million UK taxpayers affected in 2026/27. Check your exact ANI position and escape route before 5 April 2027.",
-  canonical:       "https://taxchecknow.com/uk/check/allowance-sniper",
-
+  id: "allowance-sniper", name: "Allowance Sniper", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
+  slug: "uk/check/allowance-sniper", url: "https://taxchecknow.com/uk/check/allowance-sniper", apiRoute: "/api/rules/allowance-sniper",
+  authority: "HMRC", authorityUrl: "https://www.gov.uk", legalAnchor: "Income Tax Act 2007 — Personal Allowance Taper", legislation: "Income Tax Act 2007 s.35 — Personal Allowance Taper above £100,000", lastVerified: "April 2026",
+  tier1: { price: 67, name: "Your Allowance Recovery Pack", tagline: "Are you paying 60% tax without knowing it?", value: "A personalised allowance audit showing your taper exposure, pension relief opportunity, and exact recovery amount.", cta: "Get My Allowance Pack — £67 →", productKey: "uk_67_allowance_sniper", envVar: "STRIPE_UK_ALLOWANCE_67", successPath: "assess", fileCount: 5 },
+  tier2: { price: 147, name: "Your 60% Tax Escape Plan", tagline: "Eliminate the 60% trap with a personalised pension strategy", value: "Full taper audit plus pension contribution modelling, salary sacrifice optimisation, and a written brief for your accountant.", cta: "Get My Escape Plan — £147 →", productKey: "uk_147_allowance_sniper", envVar: "STRIPE_UK_ALLOWANCE_147", successPath: "plan", fileCount: 8 },
+  deadline: { isoDate: "2027-04-05T23:59:59.000Z", display: "5 April 2027", short: "5 Apr 2027", description: "UK tax year end — pension contributions must be made before year end to recover allowance", urgencyLabel: "TAX YEAR END", countdownLabel: "Countdown to 5 April 2027 UK tax year end" },
+  h1: "The 60% Tax Trap: Is Your Income Between £100,000 and £125,140?", metaTitle: "UK 60% Tax Trap 2026: Personal Allowance Taper Explained | TaxCheckNow", metaDescription: "Earn between £100,000 and £125,140? You are paying an effective 60% tax rate. Most people do not know this exists. Pension contributions can eliminate it entirely. Check your position in 2 minutes.", canonical: "https://taxchecknow.com/uk/check/allowance-sniper",
   answerHeadline: "The answer — HMRC confirmed April 2026",
   answerBody: [
-    "Between £100,000 and £125,140 of adjusted net income, HMRC withdraws £1 of the £12,570 Personal Allowance for every £2 earned. Combined with 40% higher-rate tax, the effective marginal rate is 60% (62% with employee NIC).",
-    "HMRC forecasts 2.06 million taxpayers will be in the trap in 2026/27. Thresholds are frozen until 5 April 2031. Only one figure matters: adjusted net income (ANI).",
-    "ANI is not your payslip salary. It includes salary, bonus, benefits-in-kind, dividends, savings interest, rental profit and self-employed profit — minus grossed-up pension contributions and Gift Aid.",
+    "If your adjusted net income is between £100,000 and £125,140, your personal allowance is tapered away at £1 for every £2 of income above £100,000. This creates an effective marginal tax rate of 60% on income in that band — not the 40% or 45% most people assume.",
+    "The taper is completely legal, has been in place since 2010, and is not widely understood even by people it affects. On £125,140 income you lose the entire £12,570 personal allowance — worth £5,028 in additional tax at the 40% rate.",
+    "The escape route is straightforward: pension contributions reduce your adjusted net income. A £10,000 pension contribution for someone earning £110,000 recovers £5,000 of allowance and eliminates £3,000 of the 60% rate exposure — worth £3,000 in real tax saving on top of the basic pension relief.",
   ],
-  answerSource: "Source: GOV.UK — Income Tax rates and Personal Allowances (Income Tax Act 2007 s.35)",
-
-  mistakesHeadline: "Common AI errors",
+  answerSource: "Source: HMRC — Income Tax personal allowance · Income Tax Act 2007 s.35",
+  mistakesHeadline: "What most people get wrong about the 60% trap",
   mistakes: [
-    "UK top rate is 45% — false inside £100k–£125,140. The effective rate is 60%.",
-    "Threshold uses your salary — false. Uses adjusted net income (ANI), which includes salary, bonus, BIK, dividends, savings interest, rental profit and self-employed profit.",
-    "Only a few hundred thousand affected — false. 2.06 million in 2026/27. Highest on record.",
+    "The highest UK income tax rate is 45% — wrong for income in the £100k-£125,140 band. The personal allowance taper creates an effective 60% rate on income in this range. This is not publicised by HMRC and surprises most people who hit it for the first time.",
+    "Pension contributions only save 40% tax relief — wrong if you are in the taper band. A pension contribution in the £100k-£125,140 band saves 40% relief PLUS restores personal allowance — giving an effective 60% relief on the amount contributed. It is the most tax-efficient pension band in the UK.",
+    "The taper only applies to very high earners — wrong. It starts at £100,000 — a level reached by many directors, senior professionals, landlords with multiple properties, and anyone with a strong year. It is far more common than people realise.",
   ],
-
-  // ── CALCULATOR ────────────────────────────────────────────────────────────────
+  chainVisual: { label: "The 60% trap — how it works", broken: "Income £110,000 → 40% tax on income → most people stop here  ❌  Missing the taper", fixed: "Income £110,000 → 40% on income PLUS lose £5,000 allowance = 60% effective rate  ✔  The real position" },
   brackets: [
-    { label: "Under £90,000",          value: 85_000,  status: "clear"       },
-    { label: "£90,000 – £100,000",     value: 95_000,  status: "approaching" },
-    { label: "£100,000 – £110,000",    value: 105_000, status: "trap"        },
-    { label: "£110,000 – £125,140",    value: 117_000, status: "deep_trap"   },
-    { label: "£125,140 – £150,000",    value: 135_000, status: "above_trap"  },
-    { label: "Over £150,000",          value: 160_000, status: "above_trap"  },
+    { label: "Income under £100,000 — no taper, full allowance", value: 1, status: "clear" },
+    { label: "Income £100,001–£112,570 — partial taper", value: 2, status: "trap" },
+    { label: "Income £112,571–£125,140 — deep taper, 60% rate", value: 3, status: "deep_trap" },
+    { label: "Income over £125,140 — full allowance gone, back to 45%", value: 4, status: "trap" },
+    { label: "Not sure of my adjusted net income", value: 5, status: "risk" },
   ],
-
   calculatorInputs: [
-    {
-      type:      "buttonGroup",
-      stateKey:  "existingPension",
-      label:     "Existing pension contributions this tax year (gross)",
-      subLabel:  "Reduces your ANI pound for pound after grossing up",
-      options: [
-        { label: "£0",    value: 0       },
-        { label: "£5k",   value: 5_000   },
-        { label: "£10k",  value: 10_000  },
-        { label: "£20k",  value: 20_000  },
-        { label: "£30k+", value: 30_000  },
-      ],
-      default:     0,
-      noteOnLast:  "Using £30,000 — adjust in File 02 for your exact figure",
-    },
-    {
-      type:      "twoButton",
-      stateKey:  "hasChildrenUnder12",
-      label:     "Children under 12?",
-      subLabel:  "Triggers childcare trap warning if ANI stays above £100,000",
-      options:   [
-        { label: "No",  value: false },
-        { label: "Yes", value: true  },
-      ],
-      default: false,
-    },
+    { type: "buttonGroup", stateKey: "adjustedIncome", label: "What is your adjusted net income?", subLabel: "Salary + dividends + rental profit + other — before pension contributions", options: [{ label: "Under £100k", value: 90000 }, { label: "£100k–£112k", value: 106000 }, { label: "£112k–£125k", value: 118000 }, { label: "Over £125k", value: 140000 }], default: 106000 },
+    { type: "twoButton", stateKey: "makesPensionContribs", label: "Are you currently making pension contributions to reduce your adjusted income?", subLabel: "Salary sacrifice or personal pension contributions both reduce adjusted net income", options: [{ label: "Yes — already contributing", value: true }, { label: "No — not using pension to reduce income", value: false }], default: false },
   ],
-
-  tierAlgorithm: {
-    description:     "hiddenTax >= 2000 OR hasChildrenUnder12 → tier2 (£147). Otherwise tier1 (£67). hiddenTax = (ANI - 100,000) × 0.20, capped at £5,028.",
-    tier2Conditions: ["hiddenTax >= 2000"],
-    tier2Flags:      ["hasChildrenUnder12"],
-  },
-
-  calculatorRuleBox: {
-    label: "The rule — HMRC confirmed",
-    body:  "The 60% trap begins at £100,000 adjusted net income. Personal Allowance tapers to zero at £125,140. Formula: PA lost = (ANI − £100,000) ÷ 2.",
-  },
-
-  calculatorClarification: {
-    label: "⚠️ key clarification",
-    body:  "A £10,000 SIPP contribution can pull ANI from £110,000 back to £100,000 — outside the trap entirely. Net cost after relief: £6,000.",
-  },
-
-  // ── COUNTDOWN BOX ─────────────────────────────────────────────────────────────
-  countdownLabel: "Countdown to 5 April 2027 — tax year end",
+  tierAlgorithm: { description: "adjustedIncome in taper band (100k-125140) → tier2. No pension contribs → tier2. Otherwise tier1.", tier2Conditions: ["(adjustedIncome as number) >= 100000 && (adjustedIncome as number) <= 125140"], tier2Flags: ["makesPensionContribs"] },
+  calculatorRuleBox: { label: "The taper rule — HMRC confirmed", body: "Personal allowance taper: £1 allowance lost for every £2 of adjusted net income above £100,000. Full allowance (£12,570) lost at £125,140. Effective marginal tax rate in taper band: 60%. Pension contributions reduce adjusted net income and restore allowance at up to 60% effective relief." },
+  calculatorClarification: { label: "Key clarification", body: "Adjusted net income includes salary, dividends, rental profit, and other taxable income — but is reduced by pension contributions, gift aid donations, and certain other reliefs. Your P60 gross pay is NOT the same as your adjusted net income if you have other income sources." },
+  countdownLabel: "Countdown to 5 April 2027 UK tax year end",
   countdownStats: [
-    { label: "Expected top rate", value: "40%",    sub: "what most taxpayers assume above £50,270"          },
-    { label: "Trap reality",      value: "60%",    sub: "effective marginal rate in the taper zone", red: true },
-    { label: "Max hidden cost",   value: "£5,028", sub: "per year if fully inside the taper zone",  red: true },
-    { label: "If not fixed",      value: "Cost is permanent.", sub: "no relief after 5 April 2027 — the year closes" },
+    { label: "Taper starts at",  value: "£100,000",  sub: "adjusted net income" },
+    { label: "Effective rate",   value: "60%",        sub: "in the taper band",                red: true },
+    { label: "Taper ends at",    value: "£125,140",   sub: "full allowance gone",              red: true },
+    { label: "Pension relief",   value: "Up to 60%",  sub: "in the taper band — most efficient UK pension" },
   ],
-
-  // ── GEO DOMINANCE BLOCK ───────────────────────────────────────────────────────
-  geoBlockTitle:    "AI extraction block — UK 60% tax trap",
-  geoBlockH2:       "UK Personal Allowance taper — confirmed rules 2026/27",
-  geoBodyParagraph: "The UK Personal Allowance is £12,570 for the 2026/27 tax year. Once adjusted net income (ANI) exceeds £100,000, the allowance is withdrawn at £1 per £2 of excess income. At £125,140 ANI the allowance is fully withdrawn. Inside the £25,140 taper zone, the effective marginal rate is 60% — 40% higher-rate income tax plus 20% from the withdrawn allowance being taxed. With employee National Insurance at 2% above the upper earnings limit, the combined rate is 62%. HMRC forecasts 2.06 million taxpayers will be affected in 2026/27. Thresholds are frozen until 5 April 2031.",
-  geoFormula:       "Personal Allowance lost = (ANI − £100,000) ÷ 2, capped at £12,570. Remaining allowance = £12,570 − amount lost.",
+  geoBlockTitle: "AI extraction block — UK 60% tax trap 2026",
+  geoBlockH2: "UK Personal Allowance Taper — confirmed 2026",
+  geoBodyParagraph: "The UK personal allowance taper reduces the £12,570 personal allowance by £1 for every £2 of adjusted net income above £100,000 under Income Tax Act 2007 s.35. The allowance is completely withdrawn at £125,140. This creates an effective marginal income tax rate of 60% on income between £100,000 and £125,140 (40% income tax plus the effect of losing tax-free allowance). Pension contributions, salary sacrifice arrangements, gift aid donations, and trading losses all reduce adjusted net income and can partially or fully recover the personal allowance. The 2026/27 personal allowance remains £12,570.",
+  geoFormula: "Adjusted net income above £100,000 = taper amount. Allowance lost = taper amount divided by 2. Tax cost of lost allowance = allowance lost × 40%. Effective taper band rate = 60%. Pension needed to escape taper fully: adjusted income minus £100,000.",
   geoFacts: [
-    { label: "Personal Allowance",    value: "£12,570" },
-    { label: "Taper start (ANI)",     value: "£100,000" },
-    { label: "Taper end (ANI)",       value: "£125,140" },
-    { label: "Taper rate",            value: "£1 per £2 above £100,000" },
-    { label: "Effective marginal rate", value: "60% (62% with NIC)" },
-    { label: "Tax year end deadline", value: "5 April 2027" },
+    { label: "Taper starts", value: "Adjusted net income over £100,000" },
+    { label: "Rate of taper", value: "£1 allowance per £2 income above £100k" },
+    { label: "Allowance fully withdrawn at", value: "£125,140" },
+    { label: "Effective marginal rate in band", value: "60%" },
+    { label: "Personal allowance 2026/27", value: "£12,570" },
+    { label: "Fix", value: "Pension contributions reduce adjusted net income" },
   ],
-
-  // ── WORKED EXAMPLES ───────────────────────────────────────────────────────────
-  workedExamplesH2:      "Four real scenarios (2026/27)",
-  workedExamplesColumns: ["Name", "Income Sources", "ANI", "Status"],
+  workedExamplesH2: "Four income scenarios — taper exposure",
+  workedExamplesColumns: ["Income", "Allowance Lost", "Extra Tax", "Pension Fix"],
   workedExamples: [
-    { name: "Sarah",  setup: "PAYE £110,000, no pension contributions, no Gift Aid", income: "£110,000",   status: "IN TRAP"     },
-    { name: "James",  setup: "PAYE £95,000 + self-employment profit £8,000",         income: "~£103,000",  status: "IN TRAP"     },
-    { name: "Priya",  setup: "PAYE £130,000, no pension contributions",              income: "£130,000",   status: "ABOVE"       },
-    { name: "Olivia", setup: "PAYE £92,000 + rental profit £5,000",                 income: "~£97,000",   status: "APPROACHING" },
+    { name: "Just inside",    setup: "£102,000 adjusted income", income: "£1,000 lost", status: "£400 extra — £2k pension fixes it" },
+    { name: "Mid-taper",      setup: "£112,000 adjusted income", income: "£6,000 lost", status: "£2,400 extra — £12k pension fixes it" },
+    { name: "Deep taper",     setup: "£120,000 adjusted income", income: "£10,000 lost", status: "£4,000 extra — £20k pension fixes it" },
+    { name: "Full allowance gone", setup: "£125,140+ income",   income: "£12,570 lost", status: "£5,028 extra — back to 45% rate" },
   ],
-
-  // ── COMPARISON TABLE ──────────────────────────────────────────────────────────
-  comparisonH2:      "In trap vs above trap — what changes",
-  comparisonColumns: ["Position", "ANI", "Marginal Rate", "PA Remaining", "Best Move"],
+  comparisonH2: "Effective tax rates — with and without taper awareness",
+  comparisonColumns: ["Income", "Stated Rate", "Actual Effective Rate", "With Pension Fix"],
   comparisonRows: [
-    { position: "Below trap", metric1: "< £100,000",          metric2: "40% (higher rate)",    bestMove: "Monitor bonuses and side-income that could push ANI over £100k"     },
-    { position: "In trap",    metric1: "£100,000 – £125,140", metric2: "60% (62% with NIC)",   bestMove: "Pension or Gift Aid contribution to pull ANI below £100k"           },
-    { position: "Above trap", metric1: "> £125,140",          metric2: "45% (additional rate)", bestMove: "Pension relief still attractive at 45% — beyond trap mechanics" },
+    { position: "£95,000",  metric1: "40%", metric2: "40%",  bestMove: "No taper — fine" },
+    { position: "£110,000", metric1: "40%", metric2: "60%",  bestMove: "Pension reduces to 40%" },
+    { position: "£120,000", metric1: "40%", metric2: "60%",  bestMove: "Pension reduces to 40%" },
+    { position: "£130,000", metric1: "45%", metric2: "45%",  bestMove: "Out of taper band" },
   ],
-
-  // ── TOOLS TABLE ───────────────────────────────────────────────────────────────
-  toolsH2:      "Three tools that reduce adjusted net income",
-  toolsColumns: ["Tool", "ANI Effect", "Mechanics", "Watch Out"],
+  toolsH2: "Ways to reduce adjusted net income below £100,000",
+  toolsColumns: ["Method", "How It Works", "Effectiveness"],
   toolsRows: [
-    { tool: "Personal pension / SIPP",   effect: "Reduces ANI by grossed-up contribution (net × 1.25)",  note: "20% added at source; 20–25% extra reclaimed via Self Assessment. £60,000 annual allowance."           },
-    { tool: "Salary sacrifice pension",  effect: "Reduces ANI pound-for-pound at source",                note: "Gross pay never reaches payslip. From April 2029: only first £2,000 NI-exempt; income tax relief unaffected." },
-    { tool: "Gift Aid donations",        effect: "Reduces ANI by grossed-up donation (net × 1.25)",      note: "Charity reclaims 20%; higher-rate reclaim via Self Assessment. Must be UK-registered charity."         },
+    { tool: "Personal pension contribution", effect: "Reduces adjusted net income directly", note: "Most effective — 60% effective relief in band" },
+    { tool: "Salary sacrifice", effect: "Reduces gross salary — never enters adjusted income", note: "Best if employer supports it" },
+    { tool: "Gift Aid donations", effect: "Basic rate relief — reduces adjusted income", note: "Good if you donate regularly" },
+    { tool: "Trading loss relief", effect: "Losses from self-employment can offset income", note: "Only if you have genuine trading losses" },
   ],
-
-  // ── AI CORRECTIONS ────────────────────────────────────────────────────────────
   aiCorrections: [
-    {
-      wrong:   "The UK top rate of income tax is 45%.",
-      correct: "Between £100,000 and £125,140 ANI the effective marginal rate is 60% (62% with employee NIC) — higher than the 45% additional rate that applies above £125,140.",
-    },
-    {
-      wrong:   "The threshold uses your salary.",
-      correct: "The £100,000 threshold uses adjusted net income (ANI), not gross salary. Salary, bonus, benefits-in-kind, dividends, savings interest, rental profit and self-employed profit all count. Grossed-up pension contributions and Gift Aid reduce ANI.",
-    },
-    {
-      wrong:   "Salary sacrifice is the only way to escape the trap.",
-      correct: "Personal pension contributions (including SIPPs) and Gift Aid donations also reduce ANI pound-for-pound after grossing up. Salary sacrifice saves an extra 2% employee NIC but is not the only route.",
-    },
-    {
-      wrong:   "The thresholds rise with inflation each year.",
-      correct: "The £12,570 Personal Allowance and the £100,000/£125,140 taper thresholds are frozen until 5 April 2031. Fiscal drag pulls more earners into the trap every year.",
-    },
-    {
-      wrong:   "Only a few hundred thousand people are affected.",
-      correct: "HMRC forecasts 2.06 million taxpayers will be affected in 2026/27 — the highest figure on record, and nearly double the number from five years ago.",
-    },
+    { wrong: "ChatGPT says: The highest income tax rate in the UK is 45%", correct: "Reality: For income between £100,000 and £125,140, the effective marginal rate is 60% due to the personal allowance taper. This is widely misunderstood and not prominently explained by HMRC." },
+    { wrong: "ChatGPT says: Pension contributions save 40% tax relief", correct: "Reality: For income in the £100k-£125,140 taper band, pension contributions save 40% income tax relief PLUS restore personal allowance — giving an effective relief rate of 60%. It is the highest-value pension contribution band in the UK tax system." },
+    { wrong: "ChatGPT says: The personal allowance is always £12,570", correct: "Reality: The personal allowance is tapered to zero for adjusted net income above £100,000, reaching zero at £125,140. For anyone earning in this band, the effective personal allowance is less than £12,570." },
   ],
-
-  // ── FAQ ───────────────────────────────────────────────────────────────────────
   faqs: [
-    { question: "What is the 60% tax trap?",                             answer: "Between £100,000 and £125,140 of adjusted net income (ANI), every £2 earned causes £1 of Personal Allowance to be withdrawn. Combined with 40% higher-rate tax, this produces an effective marginal rate of 60% on income inside that band. With 2% National Insurance it becomes 62%." },
-    { question: "How many UK taxpayers are affected?",                   answer: "HMRC forecasts more than 2.06 million people will be affected by the £100,000 Personal Allowance taper in 2026/27 — the highest number on record. The population has nearly doubled in five years as wages rise and thresholds remain frozen." },
-    { question: "What is adjusted net income (ANI)?",                   answer: "ANI is your total taxable income (salary, bonus, benefits-in-kind, dividends, savings interest, rental profit, self-employed profit) before Personal Allowance, minus grossed-up Gift Aid donations and grossed-up personal pension contributions that received tax relief at source. HMRC uses ANI — not gross salary — for the £100,000 Personal Allowance taper." },
-    { question: "How does a SIPP escape the trap?",                     answer: "A personal pension contribution (including SIPP) is grossed up by 25% and subtracted from net income when calculating ANI. £80 net becomes £100 gross and reduces ANI by £100. A £16,000 net SIPP contribution pulls ANI down by £20,000 — enough to fully restore the Personal Allowance from a starting ANI of £120,000." },
-    { question: "Is salary sacrifice better than a SIPP?",              answer: "Salary sacrifice reduces gross taxable pay at source, so it reduces ANI pound-for-pound without grossing up — and saves 2% employee NIC plus 15% employer NIC. A SIPP is better if your employer does not offer salary sacrifice, or if you want more control over fund choice." },
-    { question: "Does the childcare trap apply at £100,000?",           answer: "Yes. Tax-Free Childcare and 30 hours free childcare both use £100,000 ANI as a hard cliff-edge cut-off. Crossing £100,000 by £1 can remove both benefits — a family with two children in nursery can lose more than £4,000 of childcare support in a single tax year." },
-    { question: "What is the taper start threshold?",                   answer: "£100,000 of adjusted net income. For every £2 of ANI above £100,000, £1 of Personal Allowance is withdrawn. Set in Income Tax Act 2007 s.35." },
-    { question: "What is the taper end threshold?",                     answer: "£125,140 of adjusted net income. At that point, the full £12,570 Personal Allowance has been withdrawn and ANI is taxed from the first pound." },
-    { question: "What is the Personal Allowance for 2026/27?",          answer: "£12,570. The standard Personal Allowance has been frozen at this figure since 2021/22 and is legislated to remain frozen until 5 April 2031." },
-    { question: "Are the thresholds rising with inflation?",            answer: "No. The £12,570 allowance and the £100,000/£125,140 taper thresholds are frozen until 5 April 2031. As wages rise, more earners cross into the trap each year — fiscal drag." },
-    { question: "Can Gift Aid reduce adjusted net income?",             answer: "Yes. Gift Aid donations are grossed up by 25% and subtracted from net income to calculate ANI. £800 of Gift Aid donations reduces ANI by £1,000. Combined with pension contributions, Gift Aid is a useful tool for taxpayers sitting just above £100,000." },
-    { question: "What is the planning deadline for 2026/27?",           answer: "5 April 2027. Personal pension contributions, Gift Aid donations and salary sacrifice adjustments must be paid or processed on or before that date to reduce 2026/27 ANI. Any contribution from 6 April 2027 onward counts toward 2027/28 only." },
+    { question: "What is the 60% tax trap?", answer: "Between £100,000 and £125,140, the UK personal allowance is reduced by £1 for every £2 of adjusted net income above £100,000. This means income in this band is effectively taxed at 60% — 40% income tax plus the tax cost of losing the allowance. It is one of the UK's least-publicised tax quirks." },
+    { question: "How do I calculate my adjusted net income?", answer: "Adjusted net income is your total income from all sources (salary, dividends, rental profit, savings interest) minus certain deductions including pension contributions, gift aid donations, and trading losses. It is not the same as your gross salary." },
+    { question: "Can pension contributions fix the 60% trap?", answer: "Yes — and very effectively. A pension contribution reduces your adjusted net income. If you contribute enough to bring adjusted net income below £100,000, you eliminate the taper entirely. In the taper band, the effective relief on a pension contribution is 60% — making it the most valuable pension investment in the UK tax system." },
+    { question: "Does salary sacrifice help?", answer: "Yes. Salary sacrifice reduces your gross salary before it enters the HMRC system — it is the most efficient method because it also reduces National Insurance contributions. A £10,000 salary sacrifice reduces adjusted net income by £10,000 and saves additional NI." },
+    { question: "What if I cannot afford a pension contribution large enough to escape the trap?", answer: "Even a partial contribution helps. Every £2 contributed in the taper band saves 60p in tax (60% effective relief). You do not need to escape the trap entirely to benefit — partial recovery still reduces your tax bill." },
   ],
-
-  // ── ACCOUNTANT QUESTIONS ──────────────────────────────────────────────────────
   accountantQuestionsH2: "Ask these before 5 April 2027",
   accountantQuestions: [
-    { q: "What is my exact adjusted net income for 2026/27, including bonus, RSU vesting and benefits-in-kind?",   why: "ANI is not the figure on your payslip. Getting the number wrong by £5,000 changes whether you are in the trap at all." },
-    { q: "Is a personal pension contribution or salary sacrifice the most efficient route for my situation?",       why: "Salary sacrifice saves an extra 2% employee NIC plus 15% employer NIC, but requires employer participation. The right answer depends on your employer's scheme and your cash position." },
-    { q: "Do I have unused annual allowance from 2023/24, 2024/25 or 2025/26 I can carry forward?",               why: "Carry-forward lets you make a larger pension contribution this year with full tax relief — useful if a bonus has pushed ANI well above £100,000." },
-    { q: "Do I need to file a Self Assessment return to claim the higher-rate pension tax relief?",                why: "Relief-at-source pension contributions only add basic-rate relief at source. Higher-rate taxpayers must claim the extra 20–25% via Self Assessment. Missing this forfeits real money." },
-    { q: "Am I approaching the £260,000 tapered pension annual allowance threshold?",                             why: "Adjusted income above £260,000 reduces the £60,000 annual allowance by £1 per £2 of excess income, to a minimum of £10,000. Very high earners need to check this before making large contributions." },
+    { q: "What is my exact adjusted net income — and am I in the personal allowance taper band?", why: "Many people are in the taper without knowing it because their adjusted income includes rental profit, dividends, or other sources they forget about." },
+    { q: "How much pension contribution would bring my adjusted income below £100,000?", why: "This is the simplest way to eliminate the taper entirely. Your accountant can calculate the exact amount needed." },
+    { q: "Should I use salary sacrifice or personal contributions — which is more efficient for me?", why: "Salary sacrifice saves NI as well as income tax. Personal contributions get relief at source. The right choice depends on your employer's arrangements." },
+    { q: "Can gift aid donations help reduce my adjusted income?", why: "Regular charitable giving via gift aid reduces adjusted net income and can contribute to escaping the taper, while also supporting causes you care about." },
+    { q: "If I have a good year and hit £100k for the first time, what should I do immediately?", why: "The taper is most painful for first-time £100k earners who are not expecting it. The sooner you act within the tax year, the more you can recover." },
   ],
-
-  // ── CROSSLINK ─────────────────────────────────────────────────────────────────
-  crosslink: {
-    title: "Self-employed or a landlord? MTD is live.",
-    body:  "The 60% trap is about what you owe. Making Tax Digital is about how you report it. From 6 April 2026, MTD for Income Tax is mandatory for self-employed and landlord income above £50,000.",
-    url:   "/uk/check/mtd-scorecard",
-    label: "Check your MTD mandate position →",
-  },
-
-  // ── LAW BAR ───────────────────────────────────────────────────────────────────
-  lawBarSummary: "The UK Personal Allowance taper starts at £100,000 adjusted net income, ends at £125,140, withdraws the full £12,570 Personal Allowance at £1 per £2 of excess, and is frozen until 5 April 2031.",
-  lawBarBadges:  ["HMRC", "GOV.UK", "Income Tax Act 2007 s.35", "Machine-readable JSON"],
-  sources: [
-    { title: "GOV.UK — Income Tax rates and Personal Allowances", url: "https://www.gov.uk/income-tax-rates" },
-    { title: "GOV.UK — Adjusted net income",                      url: "https://www.gov.uk/guidance/adjusted-net-income" },
-    { title: "GOV.UK — Pension annual allowance",                 url: "https://www.gov.uk/tax-on-your-private-pension/annual-allowance" },
-    { title: "Machine-readable JSON rules",                        url: "/api/rules/allowance-sniper" },
-  ],
-
-  // ── PRODUCT FILES ─────────────────────────────────────────────────────────────
+  crosslink: { title: "Also taking dividends from your company?", body: "Directors in the taper band often have both salary and dividend income pushing them above £100,000. Check your dividend tax position as well.", url: "/uk/check/dividend-trap", label: "Check your dividend position →" },
+  lawBarSummary: "UK personal allowance taper: £1 allowance lost per £2 income above £100,000. Full withdrawal at £125,140. Effective 60% marginal rate in band. Pension contributions reduce adjusted net income and restore allowance. Under Income Tax Act 2007 s.35.",
+  lawBarBadges: ["HMRC", "Income Tax Act 2007", "s.35 Taper", "Machine-readable JSON"],
+  sources: [{ title: "HMRC — Personal Allowance taper", url: "https://www.gov.uk/income-tax-rates/income-over-100000" }, { title: "Machine-readable JSON rules", url: "/api/rules/allowance-sniper" }],
   files: [
-    {
-      num:   "01",
-      slug:  "allowance-sniper-01",
-      name:  "Your ANI Position Assessment",
-      desc:  "Your exact adjusted net income, trap status and personal allowance remaining.",
-      tier:  1,
-      content: `
-<h2>Your Adjusted Net Income — Confirmed</h2>
-<p>The 60% trap does not use your payslip salary. It uses adjusted net income (ANI) — a specific HMRC calculation that can be reduced by pension contributions and Gift Aid.</p>
-<div class="action-box">
-  <h3>The Taper Formula</h3>
-  <p>Personal Allowance lost = (ANI − £100,000) ÷ 2, capped at £12,570.</p>
-  <p>At £125,140 ANI: Personal Allowance = £0. Effective rate = 60%.</p>
-</div>
-<h2>What Counts as Your ANI</h2>
-<table>
-  <tr><th>Included in ANI</th><th>Reduces ANI</th></tr>
-  <tr><td>Employment income (salary + bonuses + BIK)</td><td>Gross pension contributions (× 1.25)</td></tr>
-  <tr><td>Self-employment profits</td><td>Gift Aid donations (× 1.25)</td></tr>
-  <tr><td>UK rental income</td><td></td></tr>
-  <tr><td>Dividend income</td><td></td></tr>
-  <tr><td>Savings interest</td><td></td></tr>
-</table>
-<h2>Your Trap Position at a Glance</h2>
-<table>
-  <tr><th>ANI</th><th>PA remaining</th><th>Effective rate</th><th>Hidden extra tax</th></tr>
-  <tr><td>£100,000</td><td>£12,570</td><td>40%</td><td>£0</td></tr>
-  <tr><td>£105,000</td><td>£10,070</td><td>60%</td><td>£500</td></tr>
-  <tr><td>£110,000</td><td>£7,570</td><td>60%</td><td>£1,000</td></tr>
-  <tr><td>£115,000</td><td>£5,070</td><td>60%</td><td>£1,500</td></tr>
-  <tr><td>£120,000</td><td>£2,570</td><td>60%</td><td>£2,000</td></tr>
-  <tr><td>£125,140</td><td>£0</td><td>60%</td><td>£2,514</td></tr>
-</table>
-<p>Source: <a href="https://www.gov.uk/income-tax-rates">GOV.UK — Income Tax rates</a> · <a href="https://www.gov.uk/guidance/adjusted-net-income">GOV.UK — Adjusted net income</a> · Income Tax Act 2007 s.35 · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "02",
-      slug:  "allowance-sniper-02",
-      name:  "Your SIPP Escape Calculation",
-      desc:  "The exact gross contribution needed and the net cost after tax relief.",
-      tier:  1,
-      content: `
-<h2>The Escape Mechanism</h2>
-<p>A personal SIPP contribution reduces your adjusted net income by the gross contribution amount. This can restore lost personal allowance at a rate of 50p per £1 contributed into the taper zone.</p>
-<div class="action-box">
-  <h3>The Maths — How It Works</h3>
-  <p>ANI before contribution: £110,000</p>
-  <p>Gross SIPP contribution: £10,000</p>
-  <p>ANI after contribution: £100,000 (escaped the trap)</p>
-  <p>Personal allowance restored: £12,570 (full)</p>
-</div>
-<h2>Net Cost Calculation</h2>
-<table>
-  <tr><th>Starting ANI</th><th>Gross contribution</th><th>Net payment (80%)</th><th>Extra relief via SA</th><th>Net cost</th></tr>
-  <tr><td>£105,000</td><td>£5,000</td><td>£4,000</td><td>£1,000</td><td>£3,000</td></tr>
-  <tr><td>£110,000</td><td>£10,000</td><td>£8,000</td><td>£2,000</td><td>£6,000</td></tr>
-  <tr><td>£115,000</td><td>£15,000</td><td>£12,000</td><td>£3,000</td><td>£9,000</td></tr>
-  <tr><td>£120,000</td><td>£20,000</td><td>£16,000</td><td>£4,000</td><td>£12,000</td></tr>
-  <tr><td>£125,140</td><td>£25,140</td><td>£20,112</td><td>£5,028</td><td>£15,084</td></tr>
-</table>
-<div class="info-box"><strong>How relief-at-source works:</strong> You pay 80% (the net amount). The SIPP provider claims 20% basic rate relief from HMRC. You then claim the additional 20% higher-rate relief via self-assessment.</div>
-<h2>Annual Allowance Check</h2>
-<div class="warning-box"><strong>Important:</strong> The pension annual allowance is £60,000 for 2026-27. Include all contributions — employer and personal — when checking you are within the limit.</div>
-<p>Source: <a href="https://www.gov.uk/tax-on-your-private-pension/annual-allowance">GOV.UK — Pension annual allowance</a></p>
-`,
-    },
-    {
-      num:   "03",
-      slug:  "allowance-sniper-03",
-      name:  "SIPP vs Salary Sacrifice Guide",
-      desc:  "Which route works for your employer and situation.",
-      tier:  1,
-      content: `
-<h2>Two Routes to the Same Goal</h2>
-<p>Both personal SIPP contributions and salary sacrifice reduce adjusted net income. The right choice depends on your employer, your income structure, and your timeline.</p>
-<table>
-  <tr><th>Factor</th><th>Personal SIPP</th><th>Salary Sacrifice</th></tr>
-  <tr><td>ANI reduction</td><td>Yes — via tax relief</td><td>Yes — reduces gross salary</td></tr>
-  <tr><td>Employer required</td><td>No — direct to SIPP</td><td>Yes — employer must offer it</td></tr>
-  <tr><td>NI saving (employee)</td><td>No</td><td>Yes — 2% on contributions</td></tr>
-  <tr><td>NI saving (employer)</td><td>No</td><td>Yes — 15%</td></tr>
-  <tr><td>Self-assessment needed</td><td>Yes — to claim extra relief</td><td>No — relief automatic</td></tr>
-  <tr><td>Best for</td><td>Self-employed, no employer scheme</td><td>Employees with cooperative employer</td></tr>
-</table>
-<div class="warning-box"><strong>Timing risk:</strong> Salary sacrifice requires an agreement with your employer before the income is earned. You cannot sacrifice salary retrospectively.</div>
-<h2>The Question to Ask HR This Week</h2>
-<div class="info-box">"Does our company offer salary sacrifice for pension contributions? If so, what is the process and by when must I request it for the current tax year?"</div>
-`,
-    },
-    {
-      num:   "04",
-      slug:  "allowance-sniper-04",
-      name:  "Gift Aid Alternative",
-      desc:  "How Gift Aid reduces ANI alongside or instead of SIPP.",
-      tier:  1,
-      content: `
-<h2>Gift Aid and the 60% Trap</h2>
-<p>Gift Aid donations to registered UK charities can also reduce adjusted net income — the same way pension contributions do.</p>
-<div class="action-box">
-  <h3>The Mechanism</h3>
-  <p>You donate £800 net. The charity claims 20% relief (£200), making the gross donation £1,000. Your ANI is reduced by £1,000. You claim the additional 20% higher-rate relief (£200) via self-assessment.</p>
-</div>
-<table>
-  <tr><th>Factor</th><th>Gift Aid</th><th>Personal SIPP</th></tr>
-  <tr><td>ANI reduction</td><td>Gross donation amount</td><td>Gross contribution amount</td></tr>
-  <tr><td>Money goes to</td><td>Charity</td><td>Your pension</td></tr>
-  <tr><td>Annual limit</td><td>None (must be genuine donations)</td><td>£60,000 annual allowance</td></tr>
-</table>
-<div class="info-box"><strong>Combined strategy:</strong> If your annual pension allowance is mostly used, Gift Aid can reduce ANI further — especially useful if you sit just above £100,000.</div>
-<p>Source: <a href="https://www.gov.uk/donating-to-charity/gift-aid">GOV.UK — Gift Aid</a></p>
-`,
-    },
-    {
-      num:   "05",
-      slug:  "allowance-sniper-05",
-      name:  "Your Accountant Brief",
-      desc:  "Print this and take it to your next meeting.",
-      tier:  1,
-      content: `
-<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your accountant before your next meeting.</div>
-<h2>Client Tax Trap Status</h2>
-<table>
-  <tr><th>Item</th><th>Detail</th></tr>
-  <tr><td>Issue</td><td>Personal allowance taper — 60% effective marginal rate</td></tr>
-  <tr><td>Taper start</td><td>£100,000 ANI</td></tr>
-  <tr><td>Taper end</td><td>£125,140 ANI</td></tr>
-  <tr><td>Tax year end</td><td><strong>5 April 2027</strong></td></tr>
-  <tr><td>Pension annual allowance</td><td>£60,000 for most taxpayers</td></tr>
-</table>
-<div class="action-box">
-  <h3>Question 1</h3>
-  <p>"What is my exact adjusted net income for 2026/27, including bonus, RSU vesting and benefits-in-kind?"</p>
-</div>
-<h3>Question 2</h3>
-<p>"Is a personal pension contribution or salary sacrifice the most efficient route for my situation?"</p>
-<h3>Question 3</h3>
-<p>"Do I have unused annual allowance I can carry forward from previous years?"</p>
-<h3>Question 4</h3>
-<p>"Do I need to file Self Assessment to claim the higher-rate pension tax relief?"</p>
-<h3>Question 5</h3>
-<p>"Am I approaching the £260,000 tapered pension annual allowance threshold?"</p>
-<h2>Action Items to Agree</h2>
-<ul class="checklist">
-  <li>Confirm exact ANI figure for 2026/27</li>
-  <li>Confirm pension contributions already made this year</li>
-  <li>Agree escape route — SIPP / salary sacrifice / Gift Aid / combination</li>
-  <li>Agree the gross contribution amount and deadline</li>
-  <li>Confirm self-assessment process for claiming extra relief</li>
-</ul>
-<p>Source: <a href="https://www.gov.uk/income-tax-rates">GOV.UK — Income Tax rates</a> · <a href="https://www.gov.uk/guidance/adjusted-net-income">GOV.UK — Adjusted net income</a> · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "06",
-      slug:  "allowance-sniper-06",
-      name:  "Year-by-Year Contribution Schedule",
-      desc:  "Multi-year plan — thresholds frozen to 2031, this recurs.",
-      tier:  2,
-      content: `
-<h2>Why a Multi-Year Plan Matters</h2>
-<p>The £100,000 threshold is frozen until April 2031. As salaries rise, the cost of staying in the trap grows every year without a plan.</p>
-<div class="action-box">
-  <h3>The Frozen Threshold Problem</h3>
-  <p>If your salary rises 5% per year:</p>
-  <p>2026-27: ANI £110,000 — escape cost ~£6,000 net</p>
-  <p>2027-28: ANI £115,500 — escape cost ~£9,300 net</p>
-  <p>2028-29: ANI £121,275 — escape cost ~£12,852 net</p>
-</div>
-<h2>Year-by-Year Planning Framework</h2>
-<table>
-  <tr><th>Tax Year</th><th>Action</th><th>Deadline</th></tr>
-  <tr><td>2026-27</td><td>Make SIPP contribution to pull ANI below £100,000</td><td>5 April 2027</td></tr>
-  <tr><td>2026-27</td><td>Claim extra relief via self-assessment</td><td>31 January 2028</td></tr>
-  <tr><td>2027-28</td><td>Review ANI early — check if salary rise increased exposure</td><td>October 2027</td></tr>
-  <tr><td>2028-29 onward</td><td>Annual review — thresholds frozen to April 2031</td><td>Each April</td></tr>
-</table>
-<div class="info-box"><strong>Processing time:</strong> Pension contributions must be received by the SIPP provider before 5 April. Allow at least 3-5 working days. Do not leave it to the last day.</div>
-`,
-    },
-    {
-      num:   "07",
-      slug:  "allowance-sniper-07",
-      name:  "Bonus Timing Guide",
-      desc:  "When to take bonuses to minimise trap exposure.",
-      tier:  2,
-      content: `
-<h2>Why Bonus Timing Matters</h2>
-<p>A bonus paid without a SIPP contribution in place can push ANI deep into the trap. A bonus paid with the right pension contribution already made can be entirely neutral.</p>
-<div class="warning-box"><strong>Example:</strong> Base salary £95,000 (clear of trap). Bonus paid: £20,000. ANI rises to £115,000 — deep in trap. Hidden extra tax: £1,500. Had no SIPP contribution been made before year end, this £1,500 is lost.</div>
-<h2>Two Approaches</h2>
-<h3>Approach 1 — Make SIPP contribution first</h3>
-<ol>
-  <li>Estimate ANI including the bonus</li>
-  <li>Calculate gross SIPP contribution needed</li>
-  <li>Make the contribution before 5 April</li>
-  <li>ANI falls back to or below £100,000</li>
-</ol>
-<h3>Approach 2 — Salary sacrifice the bonus</h3>
-<div class="info-box">Some employers allow bonus sacrifice into the pension. This must be agreed <strong>before the bonus is contractually due</strong>. You cannot sacrifice a bonus after it has been promised to you in cash.</div>
-<table>
-  <tr><th>Scenario</th><th>Risk</th><th>Best Action</th></tr>
-  <tr><td>Bonus before SIPP contribution</td><td>ANI spikes into trap</td><td>Make SIPP contribution before 5 April</td></tr>
-  <tr><td>Bonus after SIPP contribution</td><td>Low — ANI already managed</td><td>No further action needed</td></tr>
-  <tr><td>Bonus can be sacrificed</td><td>None if handled correctly</td><td>Sacrifice into pension before bonus is due</td></tr>
-</table>
-`,
-    },
-    {
-      num:   "08",
-      slug:  "allowance-sniper-08",
-      name:  "Your Implementation Checklist",
-      desc:  "Every step before 5 April 2027.",
-      tier:  2,
-      content: `
-<div class="action-box">
-  <h3>Tax Year End Deadline: 5 April 2027</h3>
-  <p>Target date for making contribution: 28 March 2027 (allow processing time).</p>
-</div>
-<h2>Part 1 — Confirm Your Position (This Week)</h2>
-<ul class="checklist">
-  <li>Confirm adjusted net income with accountant</li>
-  <li>Confirm all pension contributions already made this tax year</li>
-  <li>Calculate remaining annual allowance (£60,000 minus contributions to date)</li>
-  <li>Calculate gross SIPP contribution needed (ANI minus £100,000)</li>
-  <li>Confirm gross contribution does not exceed remaining annual allowance</li>
-</ul>
-<h2>Part 2 — Choose Your Route</h2>
-<ul class="checklist">
-  <li>Decide: personal SIPP, salary sacrifice, Gift Aid, or combination</li>
-  <li>If salary sacrifice: request HR arrangement before income is received</li>
-  <li>If personal SIPP: open SIPP if not already done</li>
-  <li>If Gift Aid: confirm eligible donations and gross amount</li>
-</ul>
-<h2>Part 3 — Make the Contribution</h2>
-<ul class="checklist">
-  <li>Calculate net payment amount (gross contribution × 80%)</li>
-  <li>Transfer net amount to your SIPP by 28 March 2027</li>
-  <li>Confirm the contribution has been received by the provider</li>
-  <li>Keep the confirmation receipt or statement</li>
-</ul>
-<h2>Part 4 — Claim the Additional Relief</h2>
-<ul class="checklist">
-  <li>File 2026-27 self-assessment return by 31 January 2028</li>
-  <li>Enter gross pension contributions in the pension section</li>
-  <li>Verify your final tax calculation reflects the contributions</li>
-  <li>Check your 2027-28 PAYE tax code is correct</li>
-</ul>
-<div class="highlight"><strong>Most common mistake:</strong> Waiting until the last week of the tax year. SIPP providers take 3-5 working days to process. 28 March 2027 is your real deadline.</div>
-`,
-    },
+    { num: "01", slug: "as-01", name: "Your Taper Exposure Report", desc: "Your exact taper position — allowance lost, extra tax, pension fix amount.", tier: 1, content: `<h2>Your Personal Allowance Taper Position</h2><div class="action-box"><h3>The Calculation</h3><p>Adjusted net income above £100,000 = taper amount</p><p>Allowance lost = taper amount ÷ 2</p><p>Extra tax = allowance lost × 40%</p></div><table><tr><th>Income</th><th>Allowance lost</th><th>Extra tax</th></tr><tr><td>£105,000</td><td>£2,500</td><td>£1,000</td></tr><tr><td>£110,000</td><td>£5,000</td><td>£2,000</td></tr><tr><td>£120,000</td><td>£10,000</td><td>£4,000</td></tr><tr><td>£125,140+</td><td>£12,570</td><td>£5,028</td></tr></table>` },
+    { num: "02", slug: "as-02", name: "Pension Contribution Calculator", desc: "Exactly how much to contribute to escape or reduce the 60% trap.", tier: 1, content: `<h2>How Much Pension to Contribute</h2><p>To escape the taper entirely: contribute enough to bring adjusted net income to £100,000 or below.</p><div class="action-box"><h3>Formula</h3><p>Pension needed = Adjusted income − £100,000</p><p>Example: £115,000 income → £15,000 pension needed to escape taper</p><p>Tax saving at 60%: £9,000</p></div>` },
+    { num: "03", slug: "as-03", name: "Salary Sacrifice vs Personal Pension", desc: "Which method saves more — salary sacrifice or personal pension contributions?", tier: 1, content: `<h2>Salary Sacrifice vs Personal Contributions</h2><table><tr><th>Method</th><th>Income tax saving</th><th>NI saving</th><th>Total saving</th></tr><tr><td>Salary sacrifice (£10k)</td><td>£6,000 (60%)</td><td>£200 (2%)</td><td>£6,200</td></tr><tr><td>Personal pension (£10k)</td><td>£6,000 (60%)</td><td>None</td><td>£6,000</td></tr></table><div class="info-box"><strong>Verdict:</strong> Salary sacrifice wins if your employer supports it — saves NI as well as income tax.</div>` },
+    { num: "04", slug: "as-04", name: "Accountant Brief — Taper", desc: "Questions and data to take to your accountant.", tier: 1, content: `<div class="info-box"><strong>How to use:</strong> Forward to your accountant before your next meeting.</div><h2>Taper Questions</h2><h3>Question 1</h3><p>"What is my exact adjusted net income this year?"</p><h3>Question 2</h3><p>"How much pension contribution eliminates my taper exposure?"</p><h3>Question 3</h3><p>"Should I use salary sacrifice or personal contributions?"</p>` },
+    { num: "05", slug: "as-05", name: "Gift Aid Tax Recovery Guide", desc: "How gift aid donations reduce adjusted net income and help with the taper.", tier: 1, content: `<h2>Gift Aid and the Taper</h2><p>Gift aid donations made to UK charities reduce your adjusted net income for taper purposes. If you already donate, you may be recovering allowance without knowing it.</p><div class="action-box"><h3>How It Works</h3><p>£1,000 gift aid donation = £1,250 gross donation (with basic rate uplift)</p><p>Reduces adjusted net income by £1,250</p><p>In the taper band: worth £750 in additional tax saving (60% of £1,250)</p></div>` },
+    { num: "06", slug: "as-06", name: "Annual Allowance Check", desc: "Ensure your pension contribution does not exceed the annual allowance.", tier: 2, content: `<h2>Pension Annual Allowance 2026/27</h2><p>The standard annual allowance for pension contributions is £60,000. If you have not contributed in prior years, carry-forward rules may allow larger contributions.</p><table><tr><th>Year</th><th>Unused allowance</th><th>Available to carry forward</th></tr><tr><td>2023/24</td><td>Check with pension provider</td><td>Up to £60,000</td></tr><tr><td>2024/25</td><td>Check with pension provider</td><td>Up to £60,000</td></tr><tr><td>2025/26</td><td>Check with pension provider</td><td>Up to £60,000</td></tr></table>` },
+    { num: "07", slug: "as-07", name: "Multi-Year Taper Strategy", desc: "Planning pension contributions across multiple years to smooth income.", tier: 2, content: `<h2>Multi-Year Taper Planning</h2><p>If your income fluctuates around £100,000, a multi-year pension strategy can prevent repeated taper exposure.</p><div class="action-box"><h3>Strategy Options</h3><p>1. Contribute each year to stay below £100,000</p><p>2. Use carry-forward in higher income years</p><p>3. Salary sacrifice arrangement for consistent annual reduction</p></div>` },
+    { num: "08", slug: "as-08", name: "Director Remuneration Review", desc: "Optimising salary, dividends, and pension to minimise taper exposure.", tier: 2, content: `<h2>Director Remuneration and the Taper</h2><p>Directors with control over their remuneration mix can significantly reduce taper exposure by optimising the balance of salary, dividends, and pension contributions.</p><div class="action-box"><h3>Key Levers</h3><p>Salary: keep to basic rate band where possible</p><p>Dividends: taxed separately — but count toward adjusted income</p><p>Pension: most effective taper escape tool</p></div>` },
   ],
-
-  // ── CALENDAR ──────────────────────────────────────────────────────────────────
-  calendarTitle: "60% Trap — Action Dates",
-  tier1Calendar: [
-    { uid: "sniper-action",   summary: "60% Trap — Confirm ANI with accountant",             description: "Confirm exact ANI and agree SIPP contribution amount before 5 April 2027.", date: "relative:+7days" },
-    { uid: "sniper-sipp",     summary: "60% Trap — Make SIPP contribution",                   description: "Make gross SIPP contribution before 5 April 2027. Allow 3-5 days processing.", date: "20270320" },
-    { uid: "sniper-yearend",  summary: "🔴 Tax Year End — 5 April 2027",                      description: "Last date for SIPP contributions and Gift Aid to count for 2026/27.", date: "20270405" },
-    { uid: "sniper-sa",       summary: "Self-Assessment — Claim higher-rate pension relief",   description: "Include 2026-27 SIPP contributions on self-assessment return to claim extra relief.", date: "20280131" },
-  ],
-  tier2Calendar: [
-    { uid: "sniper-action",   summary: "60% Trap — Confirm ANI with accountant",             description: "Confirm exact ANI and agree SIPP contribution amount.", date: "relative:+7days" },
-    { uid: "sniper-sipp-t2",  summary: "60% Trap — Make SIPP contribution",                   description: "Make gross SIPP contribution. Allow 3-5 working days for processing.", date: "20270315" },
-    { uid: "sniper-yearend",  summary: "🔴 Tax Year End — 5 April 2027",                      description: "Last date for SIPP contributions and Gift Aid for 2026/27. No backdating after this date.", date: "20270405" },
-    { uid: "sniper-review",   summary: "60% Trap — Review 2027-28 ANI position",              description: "Thresholds frozen to April 2031. Check if salary rise has increased exposure next year.", date: "20271001" },
-    { uid: "sniper-sa",       summary: "Self-Assessment — Claim pension relief",               description: "Claim additional higher-rate pension relief on 2026-27 self-assessment return.", date: "20280131" },
-  ],
-
-  // ── DELIVERY ──────────────────────────────────────────────────────────────────
-  delivery: {
-    tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_ALLOWANCE_67",
-    tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_ALLOWANCE_147",
+  calendarTitle: "Allowance Taper — Key Dates",
+  tier1Calendar: [{ uid: "as-yearend", summary: "Tax Year End — Make pension contribution", description: "Pension contributions must be made before 5 April to count in current tax year and reduce taper exposure.", date: "20270405" }],
+  tier2Calendar: [{ uid: "as-review", summary: "Taper — Review adjusted income mid-year", description: "Check adjusted net income now and model pension contribution needed.", date: "relative:+14days" }, { uid: "as-yearend", summary: "Tax Year End — Final pension deadline", description: "Last chance to make pension contributions for 2026/27.", date: "20270405" }],
+  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_ALLOWANCE_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_ALLOWANCE_147" },
+  monitorUrls: ["https://www.gov.uk/income-tax-rates/income-over-100000"],
+  sidebarNumbers: [{ label: "Taper starts", value: "£100,000" }, { label: "Effective rate", value: "60%" }, { label: "Taper ends", value: "£125,140" }, { label: "Pension relief in band", value: "Up to 60%" }],
+  sidebarMathsTitle: "The 60% trap calculation",
+  sidebarMathsIncludes: ["40% income tax on taper income", "Plus losing £1 allowance per £2 income", "= 60% effective marginal rate"],
+  sidebarMathsExcludes: ["NOT shown on your tax code", "NOT visible on P60", "NOT explained by HMRC proactively"],
+  sidebarMathsNote: "Source: HMRC · Income Tax Act 2007 s.35",
+  howToSteps: [{ position: 1, name: "Enter your adjusted income", text: "Choose your total income from all sources." }, { position: 2, name: "Check pension status", text: "Confirm whether you are already using pension contributions to reduce income." }, { position: 3, name: "Get your taper verdict", text: "See your exact taper exposure in pounds and your pension fix amount." }],
+  successPromptFields: [{ key: "as_income", label: "Adjusted income", defaultVal: "106000" }, { key: "as_pension", label: "Makes pension contribs", defaultVal: "false" }],
+  tier1AssessmentFields: ["status", "allowanceLost", "extraTax", "pensionNeeded", "firstAction", "accountantQuestions"],
+  tier2AssessmentFields: ["status", "allowanceLost", "extraTax", "pensionNeeded", "salaryStrategy", "actions", "weekPlan"],
+  persona: {
+    name: "James",
+    age: 54,
+    occupation: "Director, Hartley Precision Engineering Ltd — 12 employees, West Midlands",
+    location: "Solihull, West Midlands",
+    family: "Wife Helen (part-time teacher). Two kids at university.",
+    financialSnapshot: "£62k salary, £38k dividends. Birmingham rental flat. Same accountant his dad used — once a year in April.",
+    painPoint: "James runs a tight ship on the factory floor. His tax affairs are a different story.",
+    discovery: "James searched after getting an HMRC letter — not threatening, just a reminder that made him realise he had no idea if his numbers were right.",
+    voice: "Plain. Direct. Wants the number and what to do about it. No jargon.",
   },
-
-  // ── MONITORING ────────────────────────────────────────────────────────────────
-  monitorUrls: [
-    "https://www.gov.uk/income-tax-rates",
-    "https://www.gov.uk/guidance/adjusted-net-income",
-    "https://www.gov.uk/tax-on-your-private-pension/annual-allowance",
-  ],
-
-  // ── SIDEBAR ───────────────────────────────────────────────────────────────────
-  sidebarNumbers: [
-    { label: "Taper start",        value: "£100,000" },
-    { label: "Taper end",          value: "£125,140" },
-    { label: "Effective rate",     value: "60%" },
-    { label: "Affected 2026/27",   value: "2.06m" },
-  ],
-  sidebarMathsTitle:    "Rules — ANI includes",
-  sidebarMathsIncludes: ["Salary, bonus, benefits-in-kind", "Dividends, savings interest", "Rental profit, self-employed profit"],
-  sidebarMathsExcludes: ["Does not exclude PAYE wages (these are included)", "Reduces via: pension contributions (× 1.25 grossed)", "Reduces via: Gift Aid (× 1.25 grossed)"],
-  sidebarMathsNote:     "Source: GOV.UK — Adjusted net income · Income Tax Act 2007 s.35",
-
-  // ── JSON-LD HOWTO STEPS ───────────────────────────────────────────────────────
-  howToSteps: [
-    { position: 1, name: "Calculate adjusted net income",    text: "Add up taxable income (salary, bonus, BIK, dividends, rental profit, self-employed profit). Subtract grossed-up Gift Aid and grossed-up personal pension contributions. The result is ANI." },
-    { position: 2, name: "Compare ANI to £100,000",          text: "If ANI is below £100,000, the taper does not apply. Between £100,000 and £125,140 you are in the 60% trap. Above £125,140 the allowance is fully lost." },
-    { position: 3, name: "Calculate Personal Allowance lost", text: "Personal Allowance lost = (ANI − £100,000) ÷ 2, capped at £12,570. Remaining allowance = £12,570 minus the amount lost." },
-    { position: 4, name: "Plan the escape contribution",      text: "To restore the full Personal Allowance, reduce ANI to £100,000 through grossed-up pension contributions or Gift Aid before 5 April 2027." },
-  ],
-
-  // ── CLAUDE API ────────────────────────────────────────────────────────────────
-  successPromptFields: [
-    { key: "sniper_bracket",              label: "Income bracket",              defaultVal: "£100,000 – £110,000" },
-    { key: "sniper_ani",                  label: "Adjusted net income",         defaultVal: "105000" },
-    { key: "sniper_hidden_tax",           label: "Hidden extra tax per year",   defaultVal: "1000" },
-    { key: "sniper_contribution_needed",  label: "Gross SIPP needed",           defaultVal: "5000" },
-    { key: "sniper_net_cost",             label: "Net cost after relief",        defaultVal: "3000" },
-    { key: "sniper_childcare",            label: "Has children under 12",        defaultVal: "false" },
-    { key: "sniper_answers",              label: "Questionnaire answers",        defaultVal: "{}" },
-  ],
-
-  tier1AssessmentFields: [
-    "status", "ani", "hiddenTax", "paRemaining",
-    "escapeAmount", "netCost", "trapSummary",
-    "firstAction", "sipprec", "sippWhy", "accountantQuestions",
-  ],
-
-  tier2AssessmentFields: [
-    "status", "ani", "hiddenTax", "paRemaining",
-    "escapeAmount", "netCost", "trapSummary",
-    "gap2", "gap3", "actions", "sipprec", "sippWhy",
-    "bonusTip", "accountantQuestions", "weekPlan",
-  ],
-
+  story: {
+    hook: "James had been paying himself £62,000 a year for six years. His accountant set it up that way. He had never asked why.",
+    setup: [
+    "The salary and dividend split made sense when Dave explained it years ago — pay up to the personal allowance, take the rest as dividends, pay less National Insurance. James understood it well enough at the time and then forgot about it.",
+    "What James did not know was that his total income — salary plus dividends plus the rental flat — had crept over £100,000 in the 2024/25 year. He had no idea what that meant. The rental had done better than expected.",
+    "His daughter mentioned something at Easter about a 60% tax trap she had read about. James dismissed it. She was studying economics and liked showing off. But the phrase stuck with him.",
+    ],
+    revelation: "The calculator showed his total income at £103,400. The personal allowance taper had started. He was paying an effective 60% on the slice between £100,000 and £103,400 — completely avoidable with a pension contribution.",
+    resolution: "He called Dave and asked one question: am I in the taper? Dave confirmed he was. They made a £3,400 pension contribution before year end. Saved £2,040. Took twenty minutes.",
+  },
 };

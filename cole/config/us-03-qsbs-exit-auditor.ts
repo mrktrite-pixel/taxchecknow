@@ -147,4 +147,25 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   tier1AssessmentFields: ["status", "eligibilityVerdict", "exclusionAmount", "taxSaving", "failureRisk", "firstAction", "accountantQuestions"],
   tier2AssessmentFields: ["status", "eligibilityVerdict", "exclusionAmount", "taxSaving", "stackingOpportunity", "entityRisk", "actions", "weekPlan", "accountantQuestions"],
+  persona: {
+    name: "Tyler",
+    age: 36,
+    occupation: "Co-founder and CEO, Stackform Inc — B2B SaaS, Austin TX, Series A",
+    location: "Austin, Texas",
+    family: "Partner Maya (UX designer). No kids. Dog named Kernel.",
+    financialSnapshot: "$800k engineering payroll — 8 US engineers, 4 India offshore. $2.1M ARR. ISO options. QSBS qualified. Sells into 18 states.",
+    painPoint: "Tyler is meticulous about product. His tax situation has grown faster than his attention to it.",
+    discovery: "Tyler found the gap when an AI tool gave him three different answers on Section 174 before a board meeting.",
+    voice: "Precise. Data-driven. Shares good tools immediately. Respects speed and specificity.",
+  },
+  story: {
+    hook: "Tyler's lawyer had mentioned QSBS when they incorporated. That was three years ago. Tyler had filed it away.",
+    setup: [
+    "Stackform was incorporated as a Delaware C-Corp from day one. The QSBS exclusion — up to $10M of gain excluded from federal tax — was mentioned in the incorporation docs. Tyler had assumed it applied automatically.",
+    "At the Series A the cap table got more complex. Tyler's ISO options were repriced. A small secondary transaction allowed an early angel to sell some shares. Everything happened quickly.",
+    "Tyler was preparing for a potential Series B and had started thinking about an eventual exit. A founder friend who had sold a company mentioned his QSBS exclusion had saved him $2.4M in federal tax.",
+    ],
+    revelation: "ISO options are not stock — they become stock on exercise. Tyler had not yet exercised. The five-year holding period clock starts on exercise, not grant. He had been counting from the wrong date.",
+    resolution: "Tyler exercised 200,000 ISOs immediately — starting the five-year clock. Rachel confirmed Stackform met the gross asset test. The remaining options were modelled against Series B valuation and AMT exposure.",
+  },
 };

@@ -160,4 +160,25 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   tier1AssessmentFields: ["status", "boostDeduction", "taxSaving", "availabilityRisk", "documentationNeeded", "ir10Disclosure", "accountantQuestions"],
   tier2AssessmentFields: ["status", "boostDeduction", "taxSaving", "changeOfUseRisk", "stageClaimOpportunity", "disposalRecovery", "actions", "weekPlan", "accountantQuestions"],
+  persona: {
+    name: "Aroha",
+    age: 43,
+    occupation: "Speech language therapist (part-time), Airbnb host, landlord — Auckland",
+    location: "Pt Chevalier, Auckland",
+    family: "Husband Mike (civil engineer). Two teenagers — Tama (16) and Hana (14).",
+    financialSnapshot: "3 properties: family home, Avondale rental (in family trust), Glen Eden Airbnb. Household income ~$180k.",
+    painPoint: "Aroha does the family finances and researches before every accountant meeting to ask the right questions.",
+    discovery: "Aroha found three different bright-line answers on three different websites. She needed one definitive source.",
+    voice: "Thorough. Trusts research. Appreciates when complexity is acknowledged. Wry Kiwi humour.",
+  },
+  story: {
+    hook: "Aroha had ordered a new heat pump for the Glen Eden Airbnb in June 2025. It arrived in August. She had not thought about the tax implications.",
+    setup: [
+    "The old heat pump had been limping. She finally ordered a new Mitsubishi system — $6,800 including installation. She paid the deposit in June. The unit arrived and was commissioned on 14 August 2025.",
+    "Mike had mentioned something about an investment boost for business assets. He had read about it in an industry newsletter related to his construction work. Aroha was not sure whether a heat pump in an Airbnb qualified.",
+    "She mentioned it to David at the September meeting. He looked it up. The Investment Boost allowed an optional 20% upfront deduction on eligible depreciable business assets first available for use on or after 22 May 2025.",
+    ],
+    revelation: "The heat pump qualified. New business asset. First available for use on 14 August 2025 — after the 22 May 2025 threshold. The Airbnb was a taxable activity. At Aroha's marginal rate, the first-year tax benefit was around $449.",
+    resolution: "David claimed the Investment Boost in the 2025/26 return and disclosed it in IR10 Box 60. Aroha asked about the carpet replacement from March 2025 — before the threshold. It did not qualify. The heat pump did. Small detail, meaningful difference.",
+  },
 };

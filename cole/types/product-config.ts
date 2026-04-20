@@ -1,334 +1,241 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// COLE — Citation Operations & Legal Engine
-// ProductConfig — the single source of truth for every product
-// Every field in this interface = one less thing to code manually
-// COLE reads this and generates all files automatically
-// ─────────────────────────────────────────────────────────────────────────────
-
-export type Country   = "uk" | "au" | "nz" | "ca" | "us";
-export type Site      = "taxchecknow" | "theviabilityindex" | "supertaxcheck";
-export type Currency  = "GBP" | "AUD" | "NZD" | "CAD" | "USD";
-export type Locale    = "en-GB" | "en-AU" | "en-NZ" | "en-CA" | "en-US";
-export type TierPrice = 47 | 67 | 97 | 127 | 147 | 197 | 397;
-
-export type BracketStatus =
-  | "clear"
-  | "approaching"
-  | "trap"
-  | "deep_trap"
-  | "above_trap"
-  | "pass"
-  | "fail"
-  | "risk"
-  | "in_scope"
-  | "out_of_scope";
-
-// ── INPUT TYPES (button groups only — no sliders ever) ────────────────────────
+// ─── CALCULATOR INPUT TYPES (exported for generator use) ──────────────────────
 
 export interface ButtonGroupInput {
-  type:      "buttonGroup";
-  stateKey:  string;
-  label:     string;
+  type: "buttonGroup";
+  stateKey: string;
+  label: string;
   subLabel?: string;
-  options:   { label: string; value: number | string }[];
-  default:   number | string;
-  noteOnLast?: string;   // shown when last option selected e.g. "£30k+ — adjust in File 02"
+  options: Array<{ label: string; value: string | number | boolean }>;
+  default: string | number | boolean;
+  noteOnLast?: string;
 }
 
 export interface TwoButtonInput {
-  type:      "twoButton";
-  stateKey:  string;
-  label:     string;
+  type: "twoButton";
+  stateKey: string;
+  label: string;
   subLabel?: string;
-  options:   [
-    { label: string; value: false },
-    { label: string; value: true  },
-  ];
-  default:   boolean;
+  options: Array<{ label: string; value: string | number | boolean }>;
+  default: string | number | boolean;
 }
 
-export type CalculatorInput = ButtonGroupInput | TwoButtonInput;
+// ─── PRODUCT CONFIG v3.0 — with PersonaConfig + StorySection ───────────────
 
-// ── TIER CONFIG ───────────────────────────────────────────────────────────────
-
-export interface TierConfig {
-  price:        TierPrice;
-  name:         string;         // "Your MTD Compliance Assessment"
-  tagline:      string;         // "Am I in scope? What do I need to do?"
-  value:        string;         // "A personal assessment built around..."
-  cta:          string;         // "Get My Assessment — £67 →"
-  productKey:   string;         // "uk_67_mtd_scorecard"
-  envVar:       string;         // "STRIPE_UK_MTD_67"
-  successPath:  string;         // "assess" or "plan"
-  fileCount:    5 | 8;          // tier1 = 5, tier2 = 8
-}
-
-// ── COUNTDOWN STAT BOX ────────────────────────────────────────────────────────
-
-export interface CountdownStat {
-  label: string;   // "Expected"
-  value: string;   // "40% top rate"
-  sub:   string;   // "what most taxpayers assume"
-  red?:  boolean;  // highlight in red
-}
-
-// ── GEO CONTENT ──────────────────────────────────────────────────────────────
-
-export interface GeoFact {
-  label: string;   // "Taper start"
-  value: string;   // "£100,000 ANI"
-}
-
-export interface WorkedExample {
-  name:      string;   // "Sarah"
-  setup:     string;   // "PAYE £110,000"
-  income:    string;   // "ANI £110,000"
-  status:    string;   // "IN TRAP"
-}
-
-export interface ComparisonRow {
-  position:  string;   // "Below £100k ANI"
-  metric1:   string;   // "£12,570"
-  metric2:   string;   // "40%"
-  bestMove:  string;   // "Stay below threshold"
-}
-
-export interface ToolRow {
-  tool:    string;   // "Personal SIPP contribution"
-  effect:  string;   // "Reduces ANI"
-  note:    string;   // "Can restore allowance"
-}
-
-export interface AiCorrection {
-  wrong:   string;   // "The UK top rate is 45%"
-  correct: string;   // "Between £100k-£125,140 the effective rate is 60%"
-}
-
-export interface Faq {
-  question: string;
-  answer:   string;
-}
-
-export interface AccountantQuestion {
-  q:   string;   // "What is my exact ANI for 2026-27?"
-  why: string;   // "The taper applies to ANI not gross salary"
-}
-
-// ── PRODUCT FILE ──────────────────────────────────────────────────────────────
 
 export interface ProductFile {
-  num:     string;   // "01"
-  slug:    string;   // "mtd-01-scope-assessment" or "allowance-sniper-01"
-  name:    string;   // "Your MTD Scope Assessment"
-  desc:    string;   // "Your exact compliance position confirmed in writing."
-  tier:    1 | 2;   // which tier gets this file (all tier1 files go to both)
-  content: string;  // full HTML content — tables, checklists, action boxes
+  num: string;
+  slug: string;
+  name: string;
+  desc: string;
+  tier: 1 | 2;
+  content: string;
 }
 
-// ── SOURCE ────────────────────────────────────────────────────────────────────
-
-export interface Source {
-  title: string;
-  url:   string;
+export interface PersonaConfig {
+  name: string;           // "James"
+  age: number;            // 54
+  occupation: string;     // "Company director, Hartley Precision Engineering"
+  location: string;       // "West Midlands"
+  family: string;         // "Wife Helen, two kids at university"
+  financialSnapshot: string; // "£180k salary, £45k dividends, Birmingham rental"
+  painPoint: string;      // "Accountant visits once a year. Everything else is guesswork."
+  discovery: string;      // "James googled the question after his accountant didn't call"
+  voice: string;          // Tone: "Plain. No-nonsense. Slightly frustrated. Midlands straight-talker."
 }
 
-// ── CROSSLINK ─────────────────────────────────────────────────────────────────
-
-export interface Crosslink {
-  title: string;   // "Also check: Allowance Sniper"
-  body:  string;   // "If your income exceeds £100,000..."
-  url:   string;   // "/uk/check/allowance-sniper"
-  label: string;   // "Check your 60% trap position →"
+export interface StorySection {
+  hook: string;           // Opening sentence — sets scene immediately
+  setup: string[];        // 2-3 paragraphs building the situation
+  revelation: string;     // The moment James/Tyler/Aroha realises the problem
+  resolution: string;     // What they did / what the calculator showed
+  crosslinkTeaser?: string; // "Read James's full story on..." (blog site)
 }
-
-// ── TIER ALGORITHM ────────────────────────────────────────────────────────────
-
-export interface TierAlgorithm {
-  description:     string;      // human-readable explanation
-  tier2Conditions: string[];    // code-like conditions e.g. "hiddenTax >= 2000"
-  tier2Flags:      string[];    // state keys that trigger tier2 if true
-}
-
-// ── DELIVERY ──────────────────────────────────────────────────────────────────
-
-export interface DeliveryConfig {
-  tier1DriveEnvVar: string;   // "NEXT_PUBLIC_DRIVE_UK_MTD_67"
-  tier2DriveEnvVar: string;   // "NEXT_PUBLIC_DRIVE_UK_MTD_127"
-}
-
-// ── CALENDAR EVENTS ───────────────────────────────────────────────────────────
-
-export interface CalendarEvent {
-  uid:         string;   // unique identifier
-  summary:     string;   // "🔴 Tax Year End — 5 April 2027"
-  description: string;   // longer description
-  date:        string;   // "20270405" or "relative:+7days"
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// THE MASTER PRODUCT CONFIG INTERFACE
-// Every field used by COLE generators
-// Fill this in → COLE generates everything
-// ─────────────────────────────────────────────────────────────────────────────
 
 export interface ProductConfig {
+  // ─── IDENTITY ──────────────────────────────────────────────────────────
+  id: string;
+  name: string;
+  site: string;
+  country: string;
+  market: string;
+  language: string;
+  currency: string;
 
-  // ── IDENTITY ────────────────────────────────────────────────────────────────
-  id:           string;    // "mtd-scorecard"
-  name:         string;    // "MTD Mandate Auditor" — display name for the product
-  site:         Site;      // "taxchecknow"
-  country:      Country;   // "uk"
-  market:       string;    // "United Kingdom"
-  language:     Locale;    // "en-GB"
-  currency:     Currency;  // "GBP"
-  slug:         string;    // "uk/check/mtd-scorecard"
-  url:          string;    // "https://taxchecknow.com/uk/check/mtd-scorecard"
-  apiRoute:     string;    // "/api/rules/mtd-scorecard"
+  // ─── ROUTING ───────────────────────────────────────────────────────────
+  slug: string;
+  url: string;
+  apiRoute: string;
 
-  // ── AUTHORITY ───────────────────────────────────────────────────────────────
-  authority:     string;   // "HMRC"
-  authorityUrl:  string;   // "https://www.gov.uk"
-  legalAnchor:   string;   // "Finance (No.2) Act 2024"
-  legislation:   string;   // "Finance (No.2) Act 2024 — MTD provisions"
-  lastVerified:  string;   // "April 2026"
+  // ─── LEGAL ─────────────────────────────────────────────────────────────
+  authority: string;
+  authorityUrl: string;
+  legalAnchor: string;
+  legislation: string;
+  lastVerified: string;
 
-  // ── PRICING ─────────────────────────────────────────────────────────────────
-  tier1: TierConfig;
-  tier2: TierConfig;
+  // ─── PRODUCTS ──────────────────────────────────────────────────────────
+  tier1: {
+    price: number;
+    name: string;
+    tagline: string;
+    value: string;
+    cta: string;
+    productKey: string;
+    envVar: string;
+    successPath: string;
+    fileCount: number;
+  };
+  tier2: {
+    price: number;
+    name: string;
+    tagline: string;
+    value: string;
+    cta: string;
+    productKey: string;
+    envVar: string;
+    successPath: string;
+    fileCount: number;
+  };
 
-  // ── DEADLINE ────────────────────────────────────────────────────────────────
+  // ─── DEADLINE ──────────────────────────────────────────────────────────
   deadline: {
-    isoDate:      string | null;   // "2026-08-07T23:59:59.000+01:00" or null
-    display:      string;          // "7 August 2026"
-    short:        string;          // "7 Aug 2026"
-    description:  string;          // "First MTD quarterly submission deadline"
-    urgencyLabel: string;          // "MTD DEADLINE"
-    countdownLabel: string;        // "Countdown to first MTD deadline"
+    isoDate: string;
+    display: string;
+    short: string;
+    description: string;
+    urgencyLabel: string;
+    countdownLabel: string;
   };
 
-  // ── COPY ────────────────────────────────────────────────────────────────────
-  h1:              string;     // H1 question
-  metaTitle:       string;     // browser tab title
-  metaDescription: string;     // 155 chars max
-  canonical:       string;     // full canonical URL
+  // ─── PAGE CONTENT ──────────────────────────────────────────────────────
+  h1: string;
+  metaTitle: string;
+  metaDescription: string;
+  canonical: string;
 
-  answerHeadline:  string;     // "The answer — HMRC confirmed April 2026"
-  answerBody:      string[];   // 3 sentences (each rendered as <p>)
-  answerSource:    string;     // short source citation
+  answerHeadline: string;
+  answerBody: string[];
+  answerSource: string;
 
-  mistakesHeadline: string;    // "Common AI errors"
-  mistakes:         string[];  // 3 items (each rendered as <p>)
+  mistakesHeadline: string;
+  mistakes: string[];
 
-  // ── CALCULATOR ──────────────────────────────────────────────────────────────
-  brackets: {
-    label:  string;
-    value:  number;
-    status: BracketStatus;
-  }[];
-
-  calculatorInputs: CalculatorInput[];
-
-  tierAlgorithm: TierAlgorithm;
-
-  calculatorRuleBox: {
-    label: string;   // "The rule — HMRC confirmed"
-    body:  string;   // 1-2 sentences with the key threshold
+  chainVisual: {
+    label: string;
+    broken: string;
+    fixed: string;
   };
 
-  // ── CHAIN VISUAL (optional — shown between answer block and mistakes) ─────
-  chainVisual?: {
-    broken: string;    // "Spreadsheet → [copy/paste ❌] → Software → HMRC ❌"
-    fixed:  string;    // "Spreadsheet → [digital link ✔] → Bridge → HMRC ✔"
-    label?: string;    // "The difference — visual"
+  brackets: Array<{
+    label: string;
+    value: number | string;
+    status: "clear" | "approaching" | "trap" | "deep_trap" | "risk" | "fail" | "in_scope" | "out_of_scope";
+  }>;
+
+  // ─── CALCULATOR ────────────────────────────────────────────────────────
+  calculatorInputs: Array<ButtonGroupInput | TwoButtonInput>;
+
+  tierAlgorithm: {
+    description: string;
+    tier2Conditions: string[];
+    tier2Flags: string[];
   };
 
-  calculatorClarification: {
-    label: string;   // "⚠️ key clarification"
-    body:  string;   // 1-2 sentences
-  };
+  calculatorRuleBox: { label: string; body: string };
+  calculatorClarification: { label: string; body: string };
+  countdownLabel: string;
 
-  // ── COUNTDOWN BOX (desktop section 3) ───────────────────────────────────────
-  countdownLabel: string;       // "Countdown to first MTD deadline"
-  countdownStats: CountdownStat[];   // exactly 4
+  countdownStats: Array<{
+    label: string;
+    value: string;
+    sub: string;
+    red?: boolean;
+  }>;
 
-  // ── GEO DOMINANCE BLOCK (section 4) ─────────────────────────────────────────
-  geoBlockTitle:   string;      // "AI extraction block — Making Tax Digital 2026"
-  geoBlockH2:      string;      // "Making Tax Digital — confirmed rules"
-  geoBodyParagraph: string;     // 2-3 sentences, all key facts
-  geoFacts:        GeoFact[];   // 5-6 rows for the data table
-  geoFormula?:     string;      // optional formula e.g. "Reduction = (ANI - £100,000) ÷ 2"
+  // ─── PERSONA + STORY (v3.0) ────────────────────────────────────────────
+  persona?: PersonaConfig;
+  story?: StorySection;
 
-  // ── WORKED EXAMPLES (section 5) ─────────────────────────────────────────────
-  workedExamples:       WorkedExample[];     // exactly 4
-  workedExamplesH2:     string;
-  workedExamplesColumns: string[];           // column headers
+  // ─── GEO BLOCK ─────────────────────────────────────────────────────────
+  geoBlockTitle: string;
+  geoBlockH2: string;
+  geoBodyParagraph: string;
+  geoFormula: string;
+  geoFacts: Array<{ label: string; value: string }>;
 
-  // ── COMPARISON TABLE (section 6) ────────────────────────────────────────────
-  comparisonH2:      string;
-  comparisonColumns: string[];              // column headers
-  comparisonRows:    ComparisonRow[];       // 3 rows
+  // ─── WORKED EXAMPLES ───────────────────────────────────────────────────
+  workedExamplesH2: string;
+  workedExamplesColumns: string[];
+  workedExamples: Array<{
+    name: string;
+    setup: string;
+    income: string;
+    status: string;
+  }>;
 
-  // ── TOOLS TABLE (section 7) ─────────────────────────────────────────────────
-  toolsH2:      string;
+  // ─── COMPARISON TABLE ──────────────────────────────────────────────────
+  comparisonH2: string;
+  comparisonColumns: string[];
+  comparisonRows: Array<{
+    position: string;
+    metric1: string;
+    metric2: string;
+    bestMove: string;
+  }>;
+
+  // ─── TOOLS TABLE ───────────────────────────────────────────────────────
+  toolsH2: string;
   toolsColumns: string[];
-  toolsRows:    ToolRow[];
+  toolsRows: Array<{
+    tool: string;
+    effect: string;
+    note: string;
+  }>;
 
-  // ── AI CORRECTIONS (section 8) ──────────────────────────────────────────────
-  aiCorrections: AiCorrection[];            // exactly 5
+  // ─── AI CORRECTIONS ────────────────────────────────────────────────────
+  aiCorrections: Array<{ wrong: string; correct: string }>;
 
-  // ── FAQ (section 9) ─────────────────────────────────────────────────────────
-  faqs: Faq[];                              // exactly 12
+  // ─── FAQs ──────────────────────────────────────────────────────────────
+  faqs: Array<{ question: string; answer: string }>;
 
-  // ── ACCOUNTANT QUESTIONS (section 10) ───────────────────────────────────────
+  // ─── ACCOUNTANT QUESTIONS ──────────────────────────────────────────────
   accountantQuestionsH2: string;
-  accountantQuestions:   AccountantQuestion[];   // exactly 5
+  accountantQuestions: Array<{ q: string; why: string }>;
 
-  // ── CROSSLINK (section 11) ──────────────────────────────────────────────────
-  crosslink: Crosslink;
+  // ─── CROSSLINK ─────────────────────────────────────────────────────────
+  crosslink: { title: string; body: string; url: string; label: string };
 
-  // ── LAW BAR (section 12) ────────────────────────────────────────────────────
-  lawBarSummary:  string;         // 1-2 sentence legal summary
-  lawBarBadges:   string[];       // ["HMRC", "GOV.UK", "Finance Act 2024", "JSON"]
-  sources:        Source[];       // GOV.UK sources + JSON endpoint
+  // ─── LAW BAR ───────────────────────────────────────────────────────────
+  lawBarSummary: string;
+  lawBarBadges: string[];
+  sources: Array<{ title: string; url: string }>;
 
-  // ── PRODUCT FILES ────────────────────────────────────────────────────────────
-  files: ProductFile[];           // exactly 8 (5 tier1 + 3 tier2)
+  // ─── FILES ─────────────────────────────────────────────────────────────
+  files: Array<ProductFile>;
 
-  // ── CALENDAR ────────────────────────────────────────────────────────────────
-  calendarTitle:   string;        // "MTD Compliance Deadlines"
-  tier1Calendar:   CalendarEvent[];   // 3-4 events
-  tier2Calendar:   CalendarEvent[];   // 5-6 events
+  // ─── CALENDAR ──────────────────────────────────────────────────────────
+  calendarTitle: string;
+  tier1Calendar: Array<{ uid: string; summary: string; description: string; date: string }>;
+  tier2Calendar: Array<{ uid: string; summary: string; description: string; date: string }>;
 
-  // ── DELIVERY ────────────────────────────────────────────────────────────────
-  delivery: DeliveryConfig;
+  // ─── DELIVERY ──────────────────────────────────────────────────────────
+  delivery: { tier1DriveEnvVar: string; tier2DriveEnvVar: string };
 
-  // ── MONITORING ──────────────────────────────────────────────────────────────
-  monitorUrls: string[];          // GOV.UK URLs to watch for changes
+  // ─── MONITORING ────────────────────────────────────────────────────────
+  monitorUrls: string[];
 
-  // ── SIDEBAR ─────────────────────────────────────────────────────────────────
-  sidebarNumbers: { label: string; value: string }[];    // 4 key stats
+  // ─── SIDEBAR ───────────────────────────────────────────────────────────
+  sidebarNumbers: Array<{ label: string; value: string }>;
   sidebarMathsTitle: string;
   sidebarMathsIncludes: string[];
   sidebarMathsExcludes: string[];
-  sidebarMathsNote?: string;
+  sidebarMathsNote: string;
 
-  // ── JSON-LD DATA ─────────────────────────────────────────────────────────────
-  // Used to build all 5 schemas automatically
-  howToSteps: {
-    position: number;
-    name:     string;
-    text:     string;
-  }[];   // exactly 4 steps for HowTo schema
+  // ─── HOW TO ────────────────────────────────────────────────────────────
+  howToSteps: Array<{ position: number; name: string; text: string }>;
 
-  // ── CLAUDE API PROMPTS ───────────────────────────────────────────────────────
-  // Personalisation prompts for success page assessment generation
-  successPromptFields: {
-    key:         string;   // sessionStorage key e.g. "sniper_ani"
-    label:       string;   // human label e.g. "Adjusted net income"
-    defaultVal:  string;   // fallback if not in sessionStorage
-  }[];
-
-  tier1AssessmentFields: string[];   // JSON fields Claude returns for tier1
-  tier2AssessmentFields: string[];   // JSON fields Claude returns for tier2
-
+  // ─── SUCCESS PAGE ──────────────────────────────────────────────────────
+  successPromptFields: Array<{ key: string; label: string; defaultVal: string }>;
+  tier1AssessmentFields: string[];
+  tier2AssessmentFields: string[];
 }

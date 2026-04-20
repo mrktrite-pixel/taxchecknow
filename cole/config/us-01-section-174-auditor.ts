@@ -1,325 +1,146 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// COLE CONFIG — US-01 Section 174 Phantom Tax Auditor
-// Citation gap: AI says R&D costs are immediately deductible
-// Correct: Section 174 requires capitalisation and amortisation
-// 5 years domestic / 15 years foreign
-// Phantom profit = tax on income that does not exist in cash
-// Legal anchor: IRC Section 174 (TCJA 2017, effective 2022)
-// ─────────────────────────────────────────────────────────────────────────────
-
 import type { ProductConfig } from "../types/product-config";
-
 export const PRODUCT_CONFIG: ProductConfig = {
-
-  id:       "section-174-auditor",
-  name:     "Section 174 Phantom Tax Auditor",
-  site:     "taxchecknow",
-  country:  "us",
-  market:   "United States",
-  language: "en-US",
-  currency: "USD",
-  slug:     "us/check/section-174-auditor",
-  url:      "https://taxchecknow.com/us/check/section-174-auditor",
-  apiRoute: "/api/rules/section-174-auditor",
-
-  authority:    "IRS",
-  authorityUrl: "https://www.irs.gov",
-  legalAnchor:  "IRC Section 174",
-  legislation:  "IRC Section 174 — Research and Experimental Expenditures (TCJA 2017, effective tax year 2022)",
-  lastVerified: "April 2026",
-
-  tier1: {
-    price:       67,
-    name:        "Your SRE Classification Kit",
-    tagline:     "Stop overpaying due to R&D misclassification",
-    value:       "A personalised Section 174 audit built around your engineering spend, your team location, and your deductible vs non-deductible split.",
-    cta:         "Get My Classification Kit — $67 →",
-    productKey:  "us_67_section_174_auditor",
-    envVar:      "STRIPE_US_174_67",
-    successPath: "assess",
-    fileCount:   5,
-  },
-  tier2: {
-    price:       147,
-    name:        "Your Amortization Shield Audit",
-    tagline:     "Full tax strategy and cash flow protection against phantom profit",
-    value:       "A personalised Section 174 audit built around your engineering spend, your team location, and your deductible vs non-deductible split.",
-    cta:         "Get My Shield Audit — $147 →",
-    productKey:  "us_147_section_174_auditor",
-    envVar:      "STRIPE_US_174_147",
-    successPath: "plan",
-    fileCount:   8,
-  },
-
-  deadline: {
-    isoDate:        "2026-04-15T23:59:59.000-05:00",
-    display:        "April 15, 2026",
-    short:          "Apr 15 2026",
-    description:    "US Federal Tax Filing Deadline — 2025 tax year returns",
-    urgencyLabel:   "TAX DEADLINE",
-    countdownLabel: "Countdown to April 15, 2026 filing deadline",
-  },
-
-  h1:              "The 2026 Section 174 Phantom Tax Auditor™",
-  metaTitle:       "Section 174 Phantom Tax 2026: Are You Paying Tax on Money You Never Made? | TaxCheckNow",
-  metaDescription: "Under IRS Section 174, software development costs must be amortized over 5 years (domestic) or 15 years (foreign). SaaS companies are receiving $100k–$300k tax bills with $0 cash flow. Check your phantom profit exposure instantly.",
-  canonical:       "https://taxchecknow.com/us/check/section-174-auditor",
-
+  id: "section-174-auditor", name: "Section 174 Auditor", site: "taxchecknow", country: "us", market: "United States", language: "en-US", currency: "USD",
+  slug: "us/check/section-174-auditor", url: "https://taxchecknow.com/us/check/section-174-auditor", apiRoute: "/api/rules/section-174-auditor",
+  authority: "IRS", authorityUrl: "https://www.irs.gov", legalAnchor: "IRC Section 174 — Research and Experimental Expenditures", legislation: "IRC Section 174 as amended by TCJA 2017 — mandatory amortization from 2022", lastVerified: "April 2026",
+  tier1: { price: 67, name: "Your Section 174 Exposure Report", tagline: "Is your engineering spend creating a phantom tax bill you did not budget for?", value: "A personalised Section 174 audit showing your amortization exposure, offshore multiplier impact, and estimated tax hit.", cta: "Get My Section 174 Report — $67 →", productKey: "us_67_section_174_auditor", envVar: "STRIPE_US_174_67", successPath: "assess", fileCount: 5 },
+  tier2: { price: 147, name: "Your Section 174 Recovery Plan", tagline: "Identify every dollar that can be reclassified or accelerated", value: "Full Section 174 audit plus expense reclassification strategy, accounting method analysis, and a written brief for your CPA.", cta: "Get My Recovery Plan — $147 →", productKey: "us_147_section_174_auditor", envVar: "STRIPE_US_174_147", successPath: "plan", fileCount: 8 },
+  deadline: { isoDate: "2026-04-15T23:59:59.000Z", display: "April 15, 2026", short: "Apr 15 2026", description: "Federal tax return deadline — Section 174 amortization must be reflected in 2025 return", urgencyLabel: "TAX DEADLINE", countdownLabel: "Countdown to April 15, 2026 federal tax deadline" },
+  h1: "Section 174 2026: Is Your Engineering Spend Creating a Phantom Tax Bill?", metaTitle: "Section 174 Amortization 2026: Tech Company Tax Trap Explained | TaxCheckNow", metaDescription: "Since 2022, R&D expenses must be amortized over 5 years (US) or 15 years (offshore). Companies with $500k+ engineering spend are getting unexpected tax bills. Offshore teams make it much worse. Check your Section 174 exposure in 2 minutes.", canonical: "https://taxchecknow.com/us/check/section-174-auditor",
   answerHeadline: "The answer — IRS confirmed April 2026",
   answerBody: [
-    "Under IRS Section 174, software development costs must be capitalized and amortized over 5 years for US-based development or 15 years for foreign development. You cannot fully deduct engineering salaries in 2026.",
-    "This creates phantom profit — taxable income that does not exist as cash. A SaaS company with $1,000,000 revenue and $800,000 in engineering spend can only deduct $160,000 in year one. Taxable profit: $840,000. Most founders do not know this until the IRS bill arrives.",
-    "SaaS companies are receiving $100,000–$300,000 tax bills with $0 cash flow. Section 174 vs Section 41 confusion makes this worse — AI tools consistently mix up the amortization rule and the R&D credit.",
+    "Since January 1, 2022, Section 174 requires all research and experimental (R&E) expenditures — including software development costs — to be amortized rather than expensed immediately. US-based R&D is amortized over 5 years. Foreign (offshore) R&D is amortized over 15 years.",
+    "This creates a phantom tax problem. A company that spent $600,000 on engineering in 2025 can only deduct $60,000 of it in 2025 (assuming mid-year convention, 5-year domestic). The remaining $540,000 is deducted over the following years. The cash went out — but the deduction is delayed.",
+    "The offshore multiplier is the hidden killer. If you use offshore contractors in India, Eastern Europe, or elsewhere, those costs are amortized over 15 years — not 5. A company with $300,000 in offshore engineering can only deduct $10,000 in year one. The remaining $290,000 waits 14 more years.",
   ],
-  answerSource: "Source: IRS — IRC Section 174 · IRS Publication 535 · TCJA 2017",
-
-  mistakesHeadline: "Common AI errors on this topic",
+  answerSource: "Source: IRS — IRC Section 174 · TCJA 2017 amendment",
+  mistakesHeadline: "What most tech founders get wrong about Section 174",
   mistakes: [
-    "You can deduct R&D expenses immediately — wrong. Under Section 174, R&D must be amortized over 5 years (domestic) or 15 years (foreign). The immediate deduction expired after tax year 2021.",
-    "Section 41 covers your R&D deduction — wrong. Section 41 is a tax credit, not a deduction. Section 174 governs the deductibility of research expenditures. They are separate rules.",
-    "Offshore developers are treated the same as US developers — wrong. Foreign development costs are amortized over 15 years, not 5. This triples the phantom profit exposure for companies with offshore engineering teams.",
+    "You can still expense R&D costs immediately — wrong since January 1, 2022. The TCJA 2017 change took effect in 2022. All R&E expenditures including software development must now be capitalized and amortized. No immediate deduction. This caught thousands of companies off guard.",
+    "Section 174 only affects biotech and traditional R&D companies — wrong. Any company developing software, including SaaS, mobile apps, and internal tools, is subject to Section 174. The IRS treats software development as R&E expenditure.",
+    "Offshore engineering spend amortizes the same as US spend — wrong. Foreign R&D amortizes over 15 years. US R&D amortizes over 5 years. A company with significant offshore development faces a dramatically worse cash tax position than a fully domestic operation.",
   ],
-
-  chainVisual: {
-    label:  "The phantom profit problem — why your tax bill shocks you",
-    broken: "Revenue $1M − Engineering $800k = $200k profit (what you expected to pay tax on)  ❌",
-    fixed:  "Revenue $1M − Allowed deduction $160k = $840k taxable profit (what IRS says)  ✔",
-  },
-
+  chainVisual: { label: "Section 174 — what changed and when", broken: "Pre-2022: $600k engineering → $600k deduction in year one  ❌  No longer available", fixed: "From 2022: $600k engineering → $60k deduction year one → $120k in years 2-6  ✔  Mandatory amortization" },
   brackets: [
-    { label: "Under $100k engineering spend",          value: 50_000,   status: "clear"       },
-    { label: "$100k – $300k engineering spend",        value: 200_000,  status: "approaching" },
-    { label: "$300k – $600k engineering spend",        value: 450_000,  status: "trap"        },
-    { label: "$600k – $1M engineering spend",          value: 800_000,  status: "deep_trap"   },
-    { label: "Over $1M engineering spend",             value: 1_500_000, status: "deep_trap"  },
+    { label: "Under $100k engineering spend — limited exposure",         value: 1, status: "approaching" },
+    { label: "$100k-$500k — material Section 174 impact",               value: 2, status: "trap"        },
+    { label: "$500k-$2M — significant cash tax hit expected",            value: 3, status: "deep_trap"   },
+    { label: "Over $2M engineering — major Section 174 problem",         value: 4, status: "deep_trap"   },
+    { label: "Have offshore engineering team — 15-year multiplier risk", value: 5, status: "risk"        },
   ],
-
   calculatorInputs: [
-    {
-      type:      "buttonGroup",
-      stateKey:  "teamLocation",
-      label:     "Where is your engineering team based?",
-      subLabel:  "Determines 5-year vs 15-year amortization schedule",
-      options: [
-        { label: "US only",          value: "us"      },
-        { label: "Mix US + offshore", value: "mixed"   },
-        { label: "Offshore only",    value: "offshore" },
-      ],
-      default: "us",
-    },
-    {
-      type:      "buttonGroup",
-      stateKey:  "newVsMaintenance",
-      label:     "What percentage is new development vs maintenance?",
-      subLabel:  "Maintenance (Section 162) may be immediately deductible",
-      options: [
-        { label: "Mostly new (over 80%)",  value: 80 },
-        { label: "Mixed (50/50)",      value: 50 },
-        { label: "Mostly maintenance", value: 20 },
-      ],
-      default: 80,
-    },
-    {
-      type:      "twoButton",
-      stateKey:  "hasRDCredit",
-      label:     "Do you currently claim the Section 41 R&D tax credit?",
-      subLabel:  "Credit and amortization interact — both need optimising",
-      options: [
-        { label: "No / Not sure", value: false },
-        { label: "Yes",           value: true  },
-      ],
-      default: false,
-    },
+    { type: "buttonGroup", stateKey: "usDomesticRD", label: "What is your US-based engineering / R&D spend per year?", subLabel: "Include employee salaries, contractor fees, and related costs for US-based team", options: [{ label: "Under $100k", value: 50000 }, { label: "$100k-$500k", value: 300000 }, { label: "$500k-$2M", value: 1000000 }, { label: "Over $2M", value: 3000000 }], default: 300000 },
+    { type: "buttonGroup", stateKey: "offshoreRD", label: "What is your offshore / foreign engineering spend per year?", subLabel: "India, Eastern Europe, LATAM, or any non-US team — 15-year amortization applies", options: [{ label: "None", value: 0 }, { label: "Under $100k", value: 50000 }, { label: "$100k-$500k", value: 300000 }, { label: "Over $500k", value: 750000 }], default: 300000 },
+    { type: "twoButton", stateKey: "hasFiledCorrectly", label: "Has your CPA specifically addressed Section 174 amortization in your recent returns?", subLabel: "Many generalist CPAs missed this change in 2022 and 2023", options: [{ label: "Yes — Section 174 was addressed", value: true }, { label: "No / not sure", value: false }], default: false },
   ],
-
-  tierAlgorithm: {
-    description:     "teamLocation is offshore or mixed → tier2. hasRDCredit → tier2. Otherwise tier1.",
-    tier2Conditions: [
-      'teamLocation === "offshore"',
-      'teamLocation === "mixed"',
-    ],
-    tier2Flags: ["hasRDCredit"],
-  },
-
-  calculatorRuleBox: {
-    label: "The rule — IRS confirmed",
-    body:  "Section 174 requires R&D costs to be capitalized and amortized. Domestic: 5 years. Foreign: 15 years. Year 1 deduction: ~20% domestic, ~6.67% foreign. The immediate deduction ended after 2021.",
-  },
-
-  calculatorClarification: {
-    label: "⚠️ key clarification",
-    body:  "Phantom profit is not a mistake on your return. It is the correct IRS calculation. A company with $0 cash profit can owe $150,000+ in tax under Section 174. Most founders discover this when the bill arrives.",
-  },
-
-  countdownLabel: "Countdown to April 15, 2026 filing deadline",
+  tierAlgorithm: { description: "offshoreRD over 0 OR usDomesticRD over 500000 → tier2. Not filed correctly → tier2.", tier2Conditions: ["(offshoreRD as number) > 0", "(usDomesticRD as number) > 500000"], tier2Flags: ["hasFiledCorrectly"] },
+  calculatorRuleBox: { label: "The Section 174 rules — IRS confirmed", body: "Effective January 1, 2022: all R&E expenditures (including software development) must be capitalized and amortized. US domestic: 5-year amortization with mid-year convention (10% year 1, 20% years 2-5, 10% year 6). Foreign: 15-year amortization (3.33% year 1, 6.67% years 2-15, 3.33% year 16). No immediate expensing available." },
+  calculatorClarification: { label: "Key clarification", body: "Software development costs are specifically included as R&E expenditures under IRS Revenue Procedure 2000-50 and the Section 174 rules. This applies to internal software, commercial software, and SaaS platforms. The tech industry is heavily affected — not just traditional R&D companies." },
+  countdownLabel: "Countdown to April 15, 2026 federal tax deadline",
   countdownStats: [
-    { label: "What founders expect",  value: "Full deduction",    sub: "deduct all engineering spend year 1"           },
-    { label: "IRS reality",           value: "~20% year 1",       sub: "domestic — only 1/5 deductible annually", red: true },
-    { label: "Offshore penalty",      value: "~6.67% year 1",     sub: "15-year amortization for foreign dev",    red: true },
-    { label: "Phantom profit risk",   value: "Up to $840k",       sub: "taxable on $1M revenue / $800k spend"              },
+    { label: "US R&D amortization", value: "5 years",  sub: "with mid-year convention" },
+    { label: "Offshore amortization", value: "15 years", sub: "3x longer — the hidden multiplier", red: true },
+    { label: "Year 1 deduction (US)", value: "10%",     sub: "of total domestic R&D spend" },
+    { label: "Year 1 deduction (offshore)", value: "3.33%", sub: "of total foreign R&D spend", red: true },
   ],
-
-  geoBlockTitle:    "AI extraction block — Section 174 amortization 2026",
-  geoBlockH2:       "IRS Section 174 — confirmed rules 2026",
-  geoBodyParagraph: "Under IRC Section 174 (as amended by the Tax Cuts and Jobs Act 2017, effective for tax years beginning after December 31, 2021), US companies must capitalize and amortize research and experimental expenditures. Domestic R&D costs are amortized over 5 years. Foreign R&D costs are amortized over 15 years. The previous rule allowing immediate deduction of R&D expenses no longer applies. This creates phantom profit — taxable income in excess of actual cash profit — for any company with significant engineering spend. A company with $800,000 in domestic engineering spend may only deduct $160,000 in year one, creating $640,000 in additional taxable income.",
-  geoFormula: "Phantom Profit = Actual Profit + (Engineering Spend − Allowed Year 1 Deduction). Domestic: Allowed deduction = Spend × 0.20. Foreign: Allowed deduction = Spend × 0.0667.",
+  geoBlockTitle: "AI extraction block — Section 174 2026",
+  geoBlockH2: "IRC Section 174 R&D Amortization — confirmed 2026",
+  geoBodyParagraph: "Under IRC Section 174 as amended by the Tax Cuts and Jobs Act 2017 (effective January 1, 2022), research and experimental expenditures — including software development costs — must be capitalized and amortized rather than deducted immediately. Domestic US R&E costs are amortized over 5 years using the half-year convention: 10% in year one, 20% in years two through five, and 10% in year six. Foreign (offshore) R&E costs are amortized over 15 years: 3.33% in year one, 6.67% in years two through fifteen, and 3.33% in year sixteen. No immediate expensing is available under current law. Software development is treated as R&E expenditure per IRS Revenue Procedure 2000-50.",
+  geoFormula: "Year 1 deduction (US R&D) = Total US R&D × 10%. Year 1 deduction (offshore R&D) = Total offshore R&D × 3.33%. Total year 1 deduction = US deduction + offshore deduction. Phantom income = Total R&D spend minus total year 1 deduction.",
   geoFacts: [
-    { label: "Domestic amortization period", value: "5 years"                    },
-    { label: "Foreign amortization period",  value: "15 years"                   },
-    { label: "Year 1 domestic deduction",    value: "~20% of qualifying spend"   },
-    { label: "Year 1 foreign deduction",     value: "~6.67% of qualifying spend" },
-    { label: "Legal anchor",                 value: "IRC Section 174 (TCJA 2017)" },
-    { label: "Effective from",               value: "Tax years after Dec 31, 2021" },
+    { label: "Effective date", value: "January 1, 2022" },
+    { label: "US amortization period", value: "5 years (10% year 1)" },
+    { label: "Offshore amortization period", value: "15 years (3.33% year 1)" },
+    { label: "Software development", value: "Included as R&E expenditure" },
+    { label: "Immediate expensing", value: "Not available under current law" },
+    { label: "Legal basis", value: "IRC Section 174 as amended by TCJA 2017" },
   ],
-
-  workedExamplesH2:      "Four real scenarios — the phantom profit calculation",
-  workedExamplesColumns: ["Company", "Engineering Spend", "Allowed Deduction (Yr 1)", "Phantom Profit", "Status"],
+  workedExamplesH2: "Three company scenarios — Section 174 impact",
+  workedExamplesColumns: ["Company", "US R&D", "Offshore R&D", "Year 1 Deduction", "Phantom Income"],
   workedExamples: [
-    { name: "SaaS startup",     setup: "$200k domestic spend, $1M revenue",    income: "$40k deductible",  status: "AT RISK"     },
-    { name: "Scale-up",        setup: "$800k domestic spend, $2M revenue",    income: "$160k deductible", status: "PHANTOM TRAP" },
-    { name: "Offshore team",   setup: "$500k foreign spend, $1.5M revenue",   income: "$33k deductible",  status: "HIGH RISK"   },
-    { name: "Mixed team",      setup: "$300k US + $200k offshore, $1M revenue", income: "$73k deductible", status: "AT RISK"    },
+    { name: "US-only startup",   setup: "$500k US engineers, no offshore",         income: "$50k (10%)",    status: "$450k phantom income" },
+    { name: "Hybrid team",       setup: "$500k US + $300k offshore (India)",        income: "$60k",          status: "$740k phantom income" },
+    { name: "Offshore-heavy",    setup: "$200k US + $600k offshore",                income: "$40k",          status: "$760k phantom income" },
   ],
-
-  comparisonH2:      "Domestic vs offshore — amortization comparison",
-  comparisonColumns: ["Engineering Location", "Amortization Period", "Year 1 Deduction", "Phantom Profit Risk"],
+  comparisonH2: "Section 174 — before and after 2022",
+  comparisonColumns: ["Item", "Pre-2022", "Post-2022 (Current)"],
   comparisonRows: [
-    { position: "US-based team",      metric1: "5 years",  metric2: "~20% year 1",    bestMove: "Maximise Section 162 maintenance classification" },
-    { position: "Offshore team",      metric1: "15 years", metric2: "~6.67% year 1",  bestMove: "Review Section 41 credit + restructuring"        },
-    { position: "Mixed US + offshore",metric1: "Both",     metric2: "Blended rate",   bestMove: "Audit activity split + optimize location mix"    },
+    { position: "US R&D deduction year 1",      metric1: "100% immediate", metric2: "10% (5-year amortization)", bestMove: "90% delayed" },
+    { position: "Offshore R&D deduction year 1", metric1: "100% immediate", metric2: "3.33% (15-year amortization)", bestMove: "96.67% delayed" },
+    { position: "Software development",           metric1: "Expensed or capitalized — choice", metric2: "Mandatory amortization", bestMove: "No choice" },
   ],
-
-  toolsH2:      "What reduces phantom profit exposure",
-  toolsColumns: ["Strategy", "Effect", "Notes"],
+  toolsH2: "Strategies to mitigate Section 174 impact",
+  toolsColumns: ["Strategy", "How It Works", "Suitable For"],
   toolsRows: [
-    { tool: "Section 162 maintenance reclassification", effect: "Immediately deductible",      note: "Bug fixes, security patches, routine maintenance qualify" },
-    { tool: "Section 41 R&D credit",                   effect: "Dollar-for-dollar tax credit", note: "Credit on qualified research expenses — separate from §174" },
-    { tool: "Form 3115 — change in accounting method",  effect: "Fix prior-year errors",        note: "Apply retroactively for missed amortization treatment"     },
+    { tool: "Expense reclassification", effect: "Move costs out of R&E category where legitimate", note: "Quality assurance, routine maintenance, post-development support" },
+    { tool: "Entity structure review",  effect: "Some costs may qualify differently by entity",   note: "Partnership and S-corp structures — get specialist advice" },
+    { tool: "R&D tax credit offset",    effect: "Section 41 credit can offset Section 174 timing", note: "Credit does not eliminate timing — reduces net tax cost" },
+    { tool: "Loss carryforward planning", effect: "NOL management to offset amortization impact",  note: "Requires careful multi-year modelling" },
   ],
-
   aiCorrections: [
-    {
-      wrong:   "ChatGPT says: You can deduct R&D expenses immediately in 2026",
-      correct: "Reality: Under Section 174, R&D must be capitalized and amortized over 5 years (domestic) or 15 years (foreign). The immediate deduction rule ended after tax year 2021.",
-    },
-    {
-      wrong:   "ChatGPT says: Section 41 covers your R&D tax deduction",
-      correct: "Reality: Section 41 is a tax credit, not a deduction. Section 174 governs the amortization of research expenditures. They are separate rules that interact — both need optimising.",
-    },
-    {
-      wrong:   "ChatGPT says: Offshore developers are treated the same as US developers",
-      correct: "Reality: Foreign development costs must be amortized over 15 years — not 5. A company with $500k offshore engineering spend can deduct only $33k in year one. Phantom profit: $467k.",
-    },
-    {
-      wrong:   "ChatGPT says: If you have losses, Section 174 does not affect you",
-      correct: "Reality: Section 174 amortization affects taxable income calculation regardless of overall profitability. It can convert a cash-flow loss into a taxable income position.",
-    },
-    {
-      wrong:   "ChatGPT says: Bug fixes and maintenance are subject to Section 174",
-      correct: "Reality: Routine maintenance, bug fixes and security patches are generally deductible under Section 162 as ordinary business expenses — not subject to Section 174 amortization.",
-    },
+    { wrong: "ChatGPT says: You can still expense R&D costs immediately in the US", correct: "Reality: The immediate expensing of R&E costs ended on January 1, 2022 under the TCJA change. All R&E expenditures including software development must now be amortized over 5 years (domestic) or 15 years (offshore). There is no opt-out." },
+    { wrong: "ChatGPT says: Section 174 only affects biotech and pharmaceutical companies", correct: "Reality: Section 174 applies to any R&E expenditure including software development. SaaS companies, app developers, and any business that builds software is subject to the amortization requirement." },
+    { wrong: "ChatGPT says: Offshore engineering costs amortize the same as US costs", correct: "Reality: Foreign R&E costs amortize over 15 years — three times longer than the 5-year domestic period. A company with significant offshore development faces dramatically worse year-one deductions." },
   ],
-
   faqs: [
-    { question: "What is Section 174?",                                           answer: "IRC Section 174 requires US companies to capitalize and amortize research and experimental expenditures. Domestic R&D is amortized over 5 years. Foreign R&D over 15 years. The immediate deduction rule that previously applied ended after tax year 2021." },
-    { question: "What is phantom profit?",                                        answer: "Phantom profit is taxable income that exceeds your actual cash profit due to Section 174 amortization. A company with $800k engineering spend and $200k cash profit may have $840k of taxable income because only $160k of the engineering spend is deductible in year one." },
-    { question: "Does Section 174 apply to software companies?",                  answer: "Yes. Software development costs — including engineering salaries, contractor fees, and related expenses for developing new software — are generally treated as research and experimental expenditures subject to Section 174 amortization." },
-    { question: "What is the difference between Section 174 and Section 41?",     answer: "Section 174 governs the amortization of R&D expenditures (a deduction). Section 41 provides a tax credit for qualified research expenses. They are separate rules. Section 174 amortization is mandatory. Section 41 credit is elective and calculated separately." },
-    { question: "What can be deducted immediately under Section 162?",            answer: "Routine maintenance, bug fixes, security patches, and other activities that do not constitute the development of new or improved functionality may qualify as ordinary business expenses under Section 162 and be immediately deductible." },
-    { question: "How does offshore development affect Section 174?",              answer: "Foreign research and development is amortized over 15 years instead of 5 years for domestic R&D. A company spending $500k on offshore engineers can deduct only approximately $33k in year one — creating $467k in additional phantom profit." },
-    { question: "What is Form 3115?",                                             answer: "Form 3115 is an application to change an accounting method. Companies that have been incorrectly treating R&D expenses can use Form 3115 to retroactively apply Section 174 amortization treatment and correct prior-year errors." },
-    { question: "Does Section 174 affect startups with no revenue?",              answer: "Yes. Section 174 amortization creates deferred deductions — the costs are capitalized and deducted over 5 or 15 years regardless of whether the company has revenue. This affects net operating loss calculations and future tax positions." },
-    { question: "Can I still claim the R&D tax credit under Section 41?",         answer: "Yes. Section 41 R&D credit is separate from Section 174 amortization. Companies can claim the credit on qualifying research expenses while also amortizing those same expenses under Section 174. However, the credit reduces the amortizable basis of the expenditure." },
-    { question: "What was Section 174 before the TCJA change?",                  answer: "Before the Tax Cuts and Jobs Act change (effective 2022), companies could immediately deduct 100% of domestic R&D expenses in the year they were incurred. The TCJA eliminated this immediate deduction for tax years beginning after December 31, 2021." },
-    { question: "Is there any legislative effort to restore immediate deduction?",answer: "Congress has considered restoring immediate R&D deductibility but has not enacted legislation as of April 2026. Companies should plan around current law — 5-year domestic / 15-year foreign amortization — until any change is enacted." },
-    { question: "What is the mid-point convention for Section 174?",              answer: "Under Section 174, a mid-point convention applies. For the first year, only half a year of amortization is allowed regardless of when in the year the expenditure was incurred. This is why the first-year deduction rate is approximately 10% per year × 50% = 5% per year for a 10% annual rate." },
+    { question: "What is Section 174 and when did it change?", answer: "Section 174 governs how R&E expenditures are deducted for federal tax purposes. Before 2022, companies could immediately deduct all R&E costs. From January 1, 2022, the TCJA change requires mandatory capitalization and amortization over 5 years (domestic) or 15 years (foreign). Software development is included." },
+    { question: "Does Section 174 apply to software development?", answer: "Yes. The IRS treats software development as R&E expenditure under Revenue Procedure 2000-50. This applies to internal software, SaaS platforms, mobile apps, and any other software development activity. SaaS companies are significantly affected." },
+    { question: "What if my CPA did not address Section 174 correctly in 2022 or 2023?", answer: "Companies that did not properly capitalize and amortize R&E costs in prior years may need to file amended returns. The IRS has been increasing scrutiny of Section 174 compliance. Taking advice on whether an amendment is needed and whether it creates greater or lesser tax liability is recommended." },
+    { question: "Is there any relief or change expected?", answer: "Congress has considered restoring immediate expensing of domestic R&D but no law has been enacted as of April 2026. Companies should plan around current law and not assume legislative changes will occur." },
   ],
-
-  accountantQuestionsH2: "Ask these before April 15, 2026",
+  accountantQuestionsH2: "Ask these before filing your next return",
   accountantQuestions: [
-    { q: "Have you classified all engineering expenditures correctly between Section 174, Section 162 and Section 41?",  why: "Misclassification is the most common Section 174 error. Routine maintenance may qualify as immediately deductible under Section 162." },
-    { q: "What is our total phantom profit exposure for 2025 — and did we account for it in our estimated tax payments?", why: "Underpayment of estimated tax due to Section 174 can trigger penalties on top of the tax owed." },
-    { q: "Do we need to file Form 3115 to correct any prior-year Section 174 treatment?",                                why: "If R&D was incorrectly deducted immediately in prior years, Form 3115 allows retroactive correction." },
-    { q: "Are we optimising both Section 174 amortization and Section 41 credit together?",                              why: "The interaction between the two rules affects the net tax position. Both need to be optimised simultaneously." },
-    { q: "Does our offshore engineering spend qualify for any treaty relief or restructuring to reduce the 15-year exposure?", why: "International restructuring can shift some foreign R&D costs to domestic classification under certain circumstances." },
+    { q: "Have you specifically identified and segregated our Section 174 R&E costs — and applied the correct US vs offshore amortization periods?", why: "Many generalist CPAs applied the pre-2022 rules in 2022 and 2023 returns. The offshore multiplier is easy to miss if not specifically looked for." },
+    { q: "Do we have any costs that can legitimately be reclassified out of Section 174 R&E treatment?", why: "Quality assurance, routine maintenance, and post-development support do not qualify as R&E. Every dollar correctly reclassified reduces amortization burden." },
+    { q: "How do our accumulated Section 174 amortization pools affect our NOL position and multi-year tax planning?", why: "Section 174 creates growing amortization pools that affect future years' deductions. Multi-year modelling is essential for cash tax planning." },
   ],
-
-  crosslink: {
-    title: "Also relevant: ISO AMT Exercise Sniper",
-    body:  "If your company has issued stock options, phantom income from Section 174 can interact with ISO exercise decisions and AMT exposure. Check your ISO position before exercising.",
-    url:   "/us/check/iso-amt-sniper",
-    label: "Check your ISO AMT exposure →",
-  },
-
-  lawBarSummary: "IRC Section 174 requires capitalization and amortization of R&D expenditures over 5 years (domestic) or 15 years (foreign) for tax years beginning after December 31, 2021. Immediate deduction is no longer available. Phantom profit results where engineering spend exceeds the allowable year-one deduction.",
-  lawBarBadges:  ["IRS", "IRC Section 174", "TCJA 2017", "Machine-readable JSON"],
-  sources: [
-    { title: "IRS — Publication 535: Business Expenses",               url: "https://www.irs.gov/publications/p535" },
-    { title: "IRS — IRC Section 174",                                  url: "https://www.irs.gov/businesses/small-businesses-self-employed/research-and-development-costs" },
-    { title: "IRS — Form 3115: Change in Accounting Method",           url: "https://www.irs.gov/forms-pubs/about-form-3115" },
-    { title: "Machine-readable JSON rules",                             url: "/api/rules/section-174-auditor" },
-  ],
-
+  crosslink: { title: "Also holding ISOs or QSBS from your startup?", body: "Section 174 affects your current tax bill. ISOs and QSBS affect your exit. Check your ISO AMT exposure and QSBS eligibility separately.", url: "/us/check/qsbs-exit-auditor", label: "Check your QSBS position →" },
+  lawBarSummary: "Section 174 mandatory amortization effective January 1, 2022. US domestic R&E: 5 years (10% year 1). Offshore R&E: 15 years (3.33% year 1). Software development included. No immediate expensing under current law.",
+  lawBarBadges: ["IRS", "IRC Section 174", "TCJA 2017", "Machine-readable JSON"],
+  sources: [{ title: "IRS — Section 174 research and experimental expenditures", url: "https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" }, { title: "Machine-readable JSON rules", url: "/api/rules/section-174-auditor" }],
   files: [
-    { num: "01", slug: "section-174-01", name: "Your Phantom Profit Calculation",      desc: "Your exact Section 174 exposure — engineering spend, allowed deduction, taxable phantom profit.", tier: 1, content: `<h2>Your Phantom Profit — Confirmed</h2><p>Under IRC Section 174, your engineering expenditures must be capitalized and amortized. This creates taxable income beyond your cash profit.</p><div class="action-box"><h3>The Core Calculation</h3><p>Year 1 domestic deduction = Engineering spend × 20%</p><p>Year 1 foreign deduction = Engineering spend × 6.67%</p><p>Phantom profit = Actual profit + (Spend − Allowed deduction)</p></div><h2>Domestic vs Foreign Amortization</h2><table><tr><th>Location</th><th>Period</th><th>Year 1 Rate</th></tr><tr><td>US-based</td><td>5 years</td><td>~20%</td></tr><tr><td>Foreign</td><td>15 years</td><td>~6.67%</td></tr></table><p>Source: <a href="https://www.irs.gov/publications/p535">IRS Publication 535</a> · IRC Section 174 · Last verified April 2026</p>` },
-    { num: "02", slug: "section-174-02", name: "Your Section 162 Reclassification Guide", desc: "What qualifies as immediately deductible maintenance under Section 162.", tier: 1, content: `<h2>Section 162 vs Section 174</h2><p>Not all engineering work is subject to Section 174 amortization. Routine maintenance and bug fixes may qualify as immediately deductible ordinary business expenses under Section 162.</p><div class="action-box"><h3>Immediately Deductible Under Section 162</h3><p>Bug fixes and defect repairs</p><p>Security patches and vulnerability fixes</p><p>Performance optimisation of existing features</p><p>Routine maintenance of existing software</p></div><h2>Subject to Section 174 Amortization</h2><table><tr><th>Activity</th><th>Classification</th></tr><tr><td>New feature development</td><td>Section 174</td></tr><tr><td>New product development</td><td>Section 174</td></tr><tr><td>Bug fixes</td><td>Section 162</td></tr><tr><td>Security patches</td><td>Section 162</td></tr></table><p>Source: <a href="https://www.irs.gov/publications/p535">IRS Publication 535</a></p>` },
-    { num: "03", slug: "section-174-03", name: "Section 41 R&D Credit Optimizer",       desc: "How the R&D credit interacts with Section 174 amortization — and how to maximise both.", tier: 1, content: `<h2>Section 41 Credit vs Section 174 Deduction</h2><p>Section 41 provides a tax credit for qualified research expenses. Section 174 governs amortization. They are separate but interact.</p><div class="info-box"><strong>Key rule:</strong> Claiming the Section 41 credit reduces the amortizable basis of the R&D expenditure by the credit amount. Both still apply — but they must be optimised together.</div><h2>Credit Calculation Basics</h2><table><tr><th>Method</th><th>Rate</th><th>Notes</th></tr><tr><td>Regular Research Credit</td><tdover 20% of excess QREs</td><td>Complex baseline calculation</td></tr><tr><td>Alternative Simplified Credit</td><td>14% of excess QREs</td><td>Simpler — good for most companies</td></tr><tr><td>Startup credit</td><td>Up to $500k/year</td><td>Against payroll tax for early-stage</td></tr></table><p>Source: <a href="https://www.irs.gov/businesses/small-businesses-self-employed/qualified-research-activities">IRS — Section 41</a></p>` },
-    { num: "04", slug: "section-174-04", name: "Form 3115 Walkthrough",                 desc: "Fix prior-year Section 174 errors with a change in accounting method.", tier: 1, content: `<h2>What is Form 3115?</h2><p>Form 3115 (Application for Change in Accounting Method) allows companies to retroactively correct Section 174 treatment errors from prior years.</p><div class="action-box"><h3>When You Need Form 3115</h3><p>You deducted R&D immediately in 2022 or later years</p><p>You did not track domestic vs foreign R&D separately</p><p>You need to retroactively establish amortization schedules</p></div><h2>Form 3115 Filing Basics</h2><table><tr><th>Item</th><th>Detail</th></tr><tr><td>Filed with</td><td>Tax return for the year of change</td></tr><tr><td>Automatic change</td><td>Section 174 is an automatic change (no IRS approval needed)</td></tr><tr><td>Section 481(a) adjustment</td><td>Catch-up adjustment applied in year of change</td></tr></table><div class="warning-box"><strong>Important:</strong> Always work with a qualified CPA when filing Form 3115. The calculation of the Section 481(a) adjustment requires careful documentation.</div>` },
-    { num: "05", slug: "section-174-05", name: "Your Accountant Brief",                  desc: "Print and take to your next meeting — Section 174 questions your CPA must answer.", tier: 1, content: `<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your CPA before your next meeting.</div><h2>Client Section 174 Status</h2><table><tr><th>Item</th><th>Detail</th></tr><tr><td>Issue</td><td>Section 174 phantom profit exposure</td></tr><tr><td>Domestic amortization</td><td>5 years (~20% year 1)</td></tr><tr><td>Foreign amortization</td><td>15 years (~6.67% year 1)</td></tr><tr><td>Filing deadline</td><td><strong>April 15, 2026</strong></td></tr></table><div class="action-box"><h3>Question 1</h3><p>"Have you classified all engineering expenditures correctly between Section 174, Section 162 and Section 41?"</p></div><h3>Question 2</h3><p>"What is our total phantom profit for 2025 — and did we account for it in estimated tax payments?"</p><h3>Question 3</h3><p>"Do we need Form 3115 to correct any prior-year treatment?"</p><h3>Question 4</h3><p>"Are we optimising Section 174 amortization and Section 41 credit together?"</p><h3>Question 5</h3><p>"Does our offshore spend qualify for any restructuring to reduce the 15-year exposure?"</p><ul class="checklist"><li>Confirm engineering spend classification (§174 vs §162)</li><li>Calculate phantom profit for 2025</li><li>Confirm estimated tax payments covered the liability</li><li>Agree Section 41 credit strategy</li><li>Assess Form 3115 need</li></ul><p>Source: <a href="https://www.irs.gov/publications/p535">IRS Publication 535</a> · IRC Section 174 · Last verified April 2026</p>` },
-    { num: "06", slug: "section-174-06", name: "Offshore Risk Audit",                    desc: "Identify your 15-year foreign amortization exposure and restructuring options.", tier: 2, content: `<h2>The 15-Year Offshore Penalty</h2><p>Foreign R&D costs must be amortized over 15 years — triple the domestic rate. For companies with offshore teams, this creates significantly higher phantom profit.</p><div class="action-box"><h3>The Math</h3><p>$500k offshore engineering → $33k year 1 deduction → $467k phantom profit</p><p>$500k domestic engineering → $100k year 1 deduction → $400k phantom profit</p></div><h2>Restructuring Options</h2><table><tr><th>Option</th><th>Effect</th><th>Complexity</th></tr><tr><td>Shift work to US contractors</td><td>5-year vs 15-year rate</td><td>Low</td></tr><tr><td>Cost-sharing agreement</td><td>May affect classification</td><td>High</td></tr><tr><td>Contract research allocation</td><td>Affects which entity owns costs</td><td>Medium</td></tr></table>` },
-    { num: "07", slug: "section-174-07", name: "Tax Cash Flow Model",                   desc: "Predict your Section 174 liability for 2026 and 2027 — plan estimated payments.", tier: 2, content: `<h2>Why Estimated Tax Payments Matter</h2><p>Section 174 phantom profit creates tax liability that must be paid through estimated quarterly payments. Missing these triggers underpayment penalties on top of the tax owed.</p><h2>Quarterly Estimated Tax Dates</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th></tr><tr><td>Q1</td><td>Jan–Mar 2026</td><td>April 15, 2026</td></tr><tr><td>Q2</td><td>Apr–May 2026</td><td>June 16, 2026</td></tr><tr><td>Q3</td><td>Jun–Aug 2026</td><td>September 15, 2026</td></tr><tr><td>Q4</td><td>Sep–Dec 2026</td><td>January 15, 2027</td></tr></table><div class="warning-box"><strong>Safe harbour rule:</strong> Pay at least 100% of prior-year tax liability (110% if AGI exceeds $150k) to avoid underpayment penalties regardless of current-year liability.</div>` },
-    { num: "08", slug: "section-174-08", name: "Implementation Checklist",               desc: "Every step to address your Section 174 exposure before the filing deadline.", tier: 2, content: `<div class="action-box"><h3>Filing Deadline: April 15, 2026</h3><p>For 2025 tax year returns. Extension available to October 15, 2026 — but extension to file is not extension to pay.</p></div><h2>Part 1 — Classify Your Spend (This Week)</h2><ul class="checklist"><li>List all engineering expenditures for 2025</li><li>Separate new development from maintenance (§174 vs §162)</li><li>Identify domestic vs foreign engineering spend</li><li>Calculate year 1 allowed deduction for each category</li></ul><h2>Part 2 — Calculate Phantom Profit</h2><ul class="checklist"><li>Sum Section 174 amortizable spend</li><li>Calculate year 1 deduction (20% domestic / 6.67% foreign)</li><li>Calculate phantom profit = spend minus allowed deduction</li><li>Add phantom profit to cash profit for taxable income</li></ul><h2>Part 3 — Optimise Credits</h2><ul class="checklist"><li>Identify qualified research expenses for Section 41 credit</li><li>Choose regular or alternative simplified credit method</li><li>Calculate credit amount and apply against tax liability</li></ul><h2>Part 4 — File Correctly</h2><ul class="checklist"><li>Prepare Form 3115 if prior-year errors need correcting</li><li>Ensure estimated tax payments covered liability</li><li>File return with correct Section 174 amortization schedules</li><li>Document engineering activity split for audit defence</li></ul>` },
+    { num: "01", slug: "s174-01", name: "Your Section 174 Exposure Report", desc: "Your exact year-1 deduction and phantom income under current law.", tier: 1, content: `<h2>Your Section 174 Position</h2><div class="action-box"><h3>Year 1 Deduction Rates</h3><p>US domestic R&E: 10% in year 1</p><p>Offshore R&E: 3.33% in year 1</p><p>Formula: US spend × 10% + Offshore spend × 3.33%</p></div>` },
+    { num: "02", slug: "s174-02", name: "Expense Reclassification Guide", desc: "Costs that may not qualify as R&E and can be expensed immediately.", tier: 1, content: `<h2>Reclassification Opportunities</h2><table><tr><th>Cost Type</th><th>R&E?</th><th>Treatment</th></tr><tr><td>Software development</td><td>Yes</td><td>Amortize over 5/15 years</td></tr><tr><td>Quality assurance testing</td><td>May not be</td><td>Potentially immediate</td></tr><tr><td>Routine maintenance</td><td>No</td><td>Immediate deduction</td></tr><tr><td>Post-launch support</td><td>No</td><td>Immediate deduction</td></tr></table>` },
+    { num: "03", slug: "s174-03", name: "Offshore vs Domestic Cost Allocation", desc: "How to correctly allocate and document US vs foreign R&E costs.", tier: 1, content: `<h2>US vs Foreign R&E Allocation</h2><p>Costs must be allocated to US or foreign based on where the research activity occurs. Offshore contractor costs are foreign R&E. US employee costs are domestic. Mixed team costs require allocation by activity.</p>` },
+    { num: "04", slug: "s174-04", name: "Section 41 R&D Credit Analysis", desc: "Can the research tax credit offset your Section 174 timing impact?", tier: 1, content: `<h2>Section 41 R&D Credit</h2><p>The Section 41 research credit can offset some of the tax cost of Section 174 amortization. The credit is calculated separately and reduces tax owed — not the amortization period itself.</p><div class="action-box"><h3>Credit Calculation (simplified)</h3><p>20% × (qualified research expenses minus base amount)</p><p>Alternative simplified credit: 14% of excess qualified research expenses</p></div>` },
+    { num: "05", slug: "s174-05", name: "CPA Brief — Section 174", desc: "Questions for your CPA about Section 174 compliance and planning.", tier: 1, content: `<h2>Section 174 CPA Questions</h2><h3>Question 1</h3><p>"Have you correctly segregated US and offshore R&E costs?"</p><h3>Question 2</h3><p>"Do we have reclassification opportunities?"</p><h3>Question 3</h3><p>"How do our amortization pools affect future year planning?"</p>` },
+    { num: "06", slug: "s174-06", name: "Prior Year Amendment Analysis", desc: "Whether your 2022 and 2023 returns were filed correctly.", tier: 2, content: `<h2>Prior Year Section 174 Compliance</h2><p>If Section 174 amortization was not applied in 2022 or 2023 returns, there may be both an obligation to amend and potentially a tax benefit or detriment from doing so. Analysis requires review of each year's position.</p>` },
+    { num: "07", slug: "s174-07", name: "Multi-Year Amortization Model", desc: "Your Section 174 amortization pools and deductions for years 1-6.", tier: 2, content: `<h2>5-Year Amortization Model</h2><table><tr><th>Year</th><th>US Deduction Rate</th><th>On $500k US R&D</th></tr><tr><td>Year 1</td><td>10%</td><td>$50,000</td></tr><tr><td>Year 2</td><td>20%</td><td>$100,000</td></tr><tr><td>Year 3</td><td>20%</td><td>$100,000</td></tr><tr><td>Year 4</td><td>20%</td><td>$100,000</td></tr><tr><td>Year 5</td><td>20%</td><td>$100,000</td></tr><tr><td>Year 6</td><td>10%</td><td>$50,000</td></tr></table>` },
+    { num: "08", slug: "s174-08", name: "Entity Structure Optimisation", desc: "Whether your entity type affects Section 174 treatment.", tier: 2, content: `<h2>Entity Structure and Section 174</h2><p>C-corps, S-corps, and partnerships may have different practical impacts from Section 174 depending on their specific tax positions, loss carryforward availability, and shareholder situations. Specialist advice is recommended for entities with complex ownership structures.</p>` },
   ],
-
-  calendarTitle: "Section 174 — Tax Deadlines",
-  tier1Calendar: [
-    { uid: "s174-q1",    summary: "Section 174 — Q1 Estimated Tax Due",         description: "Q1 2026 estimated tax payment. Section 174 phantom profit must be included in estimated liability.", date: "20260415" },
-    { uid: "s174-q2",    summary: "Section 174 — Q2 Estimated Tax Due",         description: "Q2 2026 estimated tax payment.", date: "20260616" },
-    { uid: "s174-q3",    summary: "Section 174 — Q3 Estimated Tax Due",         description: "Q3 2026 estimated tax payment.", date: "20260915" },
-    { uid: "s174-final", summary: "Section 174 — Tax Return Filing Deadline",   description: "2025 federal tax return due. Section 174 amortization schedules must be included.", date: "20260415" },
-  ],
-  tier2Calendar: [
-    { uid: "s174-classify", summary: "Section 174 — Classify engineering spend",  description: "Separate §174 (new dev) from §162 (maintenance). Identify domestic vs foreign split.", date: "relative:+7days" },
-    { uid: "s174-credit",   summary: "Section 174 — Optimise Section 41 credit",  description: "Calculate R&D credit alongside amortization. Agree method with CPA.", date: "relative:+14days" },
-    { uid: "s174-q1",       summary: "Section 174 — Q1 Estimated Tax Due",        description: "Q1 2026 estimated tax payment.", date: "20260415" },
-    { uid: "s174-q2",       summary: "Section 174 — Q2 Estimated Tax Due",        description: "Q2 2026 estimated tax payment.", date: "20260616" },
-    { uid: "s174-q3",       summary: "Section 174 — Q3 Estimated Tax Due",        description: "Q3 2026 estimated tax payment.", date: "20260915" },
-    { uid: "s174-final",    summary: "Section 174 — Tax Return Deadline",         description: "2025 federal return due with Section 174 amortization schedules.", date: "20260415" },
-  ],
-
+  calendarTitle: "Section 174 — Tax Filing Dates",
+  tier1Calendar: [{ uid: "s174-federal", summary: "Federal Tax Return Due — Section 174 Amortization", description: "Ensure Section 174 amortization is correctly reflected in 2025 federal return.", date: "20260415" }],
+  tier2Calendar: [{ uid: "s174-review", summary: "Section 174 — Prior year compliance review", description: "Review 2022, 2023, 2024 returns for Section 174 compliance.", date: "relative:+14days" }, { uid: "s174-federal", summary: "Federal Tax Return Due", description: "April 15, 2026.", date: "20260415" }],
   delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_174_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_174_147" },
-
-  monitorUrls: [
-    "https://www.irs.gov/businesses/small-businesses-self-employed/research-and-development-costs",
-    "https://www.irs.gov/publications/p535",
-  ],
-
-  sidebarNumbers: [
-    { label: "Domestic amortization", value: "5 years"  },
-    { label: "Foreign amortization",  value: "15 years" },
-    { label: "Year 1 domestic rate",  value: "~20%"     },
-    { label: "Year 1 foreign rate",   value: "~6.67%"   },
-  ],
-  sidebarMathsTitle:    "What is subject to Section 174",
-  sidebarMathsIncludes: ["Engineering salaries (new development)", "Contractor fees for new software", "Cloud computing costs for R&D"],
-  sidebarMathsExcludes: ["Bug fixes and routine maintenance (§162)", "Marketing and sales engineering", "Customer support"],
-  sidebarMathsNote:     "Source: IRS Publication 535 · IRC Section 174",
-
-  howToSteps: [
-    { position: 1, name: "Select your engineering spend bracket", text: "Choose your approximate total engineering expenditure for the tax year." },
-    { position: 2, name: "Identify team location",                text: "Specify whether your engineers are US-based, offshore, or mixed. This determines 5-year vs 15-year amortization." },
-    { position: 3, name: "Get your phantom profit calculation",   text: "See your estimated taxable income after Section 174 amortization — including the gap between cash profit and taxable profit." },
-    { position: 4, name: "Get your classification plan",         text: "Receive a personalised plan for Section 162 reclassification, Section 41 credit optimisation and estimated tax planning." },
-  ],
-
-  successPromptFields: [
-    { key: "s174_spend",         label: "Engineering spend bracket",  defaultVal: "$300k-$600k" },
-    { key: "s174_location",      label: "Team location",              defaultVal: "mixed"        },
-    { key: "s174_new_pct",       label: "New development percentage", defaultVal: "80"           },
-    { key: "s174_has_credit",    label: "Claims Section 41 credit",   defaultVal: "false"        },
-    { key: "s174_phantom_profit",label: "Estimated phantom profit",   defaultVal: "420000"       },
-  ],
-
-  tier1AssessmentFields: ["status", "phantomProfit", "allowedDeduction", "taxImpact", "biggestRisk", "firstAction", "section162Opportunity", "accountantQuestions"],
-  tier2AssessmentFields: ["status", "phantomProfit", "allowedDeduction", "taxImpact", "biggestRisk", "offshoreExposure", "section41Opportunity", "actions", "weekPlan", "accountantQuestions"],
+  monitorUrls: ["https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174"],
+  sidebarNumbers: [{ label: "US R&D year 1 deduction", value: "10%" }, { label: "Offshore year 1 deduction", value: "3.33%" }, { label: "US amortization period", value: "5 years" }, { label: "Offshore amortization", value: "15 years" }],
+  sidebarMathsTitle: "Section 174 amortization rates",
+  sidebarMathsIncludes: ["US domestic: 5 years (10% year 1)", "Foreign/offshore: 15 years (3.33% year 1)", "Software development included"],
+  sidebarMathsExcludes: ["NOT immediate expensing — removed 2022", "NOT choice — mandatory amortization"],
+  sidebarMathsNote: "Source: IRS — IRC Section 174 · TCJA 2017",
+  howToSteps: [{ position: 1, name: "Enter US engineering spend", text: "Your annual US-based R&D and software development costs." }, { position: 2, name: "Enter offshore spend", text: "Any offshore or foreign engineering costs — subject to 15-year amortization." }, { position: 3, name: "Get your Section 174 verdict", text: "See your year-1 deduction, phantom income, and action plan." }],
+  successPromptFields: [{ key: "s174_us", label: "US R&D spend", defaultVal: "300000" }, { key: "s174_offshore", label: "Offshore R&D spend", defaultVal: "300000" }, { key: "s174_filed", label: "Filed correctly", defaultVal: "false" }],
+  tier1AssessmentFields: ["status", "year1Deduction", "phantomIncome", "taxHit", "firstAction", "cpaQuestions"],
+  tier2AssessmentFields: ["status", "year1Deduction", "phantomIncome", "reclassOpportunity", "priorYearRisk", "actions", "weekPlan"],
+  persona: {
+    name: "Tyler",
+    age: 36,
+    occupation: "Co-founder and CEO, Stackform Inc — B2B SaaS, Austin TX, Series A",
+    location: "Austin, Texas",
+    family: "Partner Maya (UX designer). No kids. Dog named Kernel.",
+    financialSnapshot: "$800k engineering payroll — 8 US engineers, 4 India offshore. $2.1M ARR. ISO options. QSBS qualified. Sells into 18 states.",
+    painPoint: "Tyler is meticulous about product. His tax situation has grown faster than his attention to it.",
+    discovery: "Tyler found the gap when an AI tool gave him three different answers on Section 174 before a board meeting.",
+    voice: "Precise. Data-driven. Shares good tools immediately. Respects speed and specificity.",
+  },
+  story: {
+    hook: "Tyler had built his engineering team carefully. He had not built his tax strategy around them at all.",
+    setup: [
+    "Stackform runs eight engineers in Austin and four contractors in Bangalore through a vendor agreement. The India team handles API integrations and QA. Tyler brought them on eighteen months ago when the Series A closed.",
+    "His CPA Rachel had flagged something about R&D tax credits at the last quarterly. Tyler had nodded and moved on. The Section 174 change from 2022 had not come up directly. He assumed software development costs were still fully deductible in year one.",
+    "They were not. Since January 2022, Section 174 required domestic R&D to be amortised over five years and foreign R&D — the Bangalore team — over fifteen years. Tyler had been booking the India spend as an operating expense.",
+    ],
+    revelation: "The audit showed $240,000 of the India team's annual cost classified incorrectly. Under the 15-year amortisation rule, only $16,000 was deductible in year one. The remaining $224,000 created a phantom tax liability Tyler had not modelled in his Series A projections.",
+    resolution: "Rachel reclassified the spend and filed an amended return. Going forward Tyler restructured the India engagement to maximise which portion qualified as domestic versus foreign development.",
+  },
 };

@@ -11,65 +11,65 @@ import Link from "next/link";
 const FILES = [
   {
     "num": "01",
-    "slug": "dividend-trap-01",
-    "name": "Your Dividend Tax Breakdown",
-    "desc": "Your exact dividend tax calculation — rate, band, allowance usage and total liability.",
+    "slug": "dt-01",
+    "name": "Your Dividend Tax Calculation",
+    "desc": "Your exact dividend tax bill and which rate band you are in.",
     "tier": 1,
     "start": false
   },
   {
     "num": "02",
-    "slug": "dividend-trap-02",
-    "name": "Your Effective Rate Calculation",
-    "desc": "Your combined Corporation Tax and dividend tax effective rate — the number most directors have never seen.",
+    "slug": "dt-02",
+    "name": "Salary and Dividend Optimiser",
+    "desc": "The most tax-efficient split for your income level.",
     "tier": 1,
     "start": true
   },
   {
     "num": "03",
-    "slug": "dividend-trap-03",
-    "name": "Your Allowance Usage Report",
-    "desc": "How the £500 allowance works, whether you have used it, and what it actually saves.",
+    "slug": "dt-03",
+    "name": "Spousal Dividend Strategy Guide",
+    "desc": "How to use your spouse's allowance and lower rate band legally.",
     "tier": 1,
     "start": false
   },
   {
     "num": "04",
-    "slug": "dividend-trap-04",
-    "name": "Your Next-Step Actions",
-    "desc": "Legal ways to reduce your effective dividend tax rate before 5 April 2027.",
+    "slug": "dt-04",
+    "name": "Allowance Cut History",
+    "desc": "How the dividend allowance has changed and what it means for you.",
     "tier": 1,
     "start": false
   },
   {
     "num": "05",
-    "slug": "dividend-trap-05",
-    "name": "Your Accountant Brief",
-    "desc": "Print this and take it to your next meeting.",
+    "slug": "dt-05",
+    "name": "Accountant Brief — Dividends",
+    "desc": "Questions to take to your accountant about dividend optimisation.",
     "tier": 1,
     "start": false
   },
   {
     "num": "06",
-    "slug": "dividend-trap-06",
-    "name": "Salary vs Dividend Optimiser",
-    "desc": "The optimal extraction mix for your company profit level — with the maths.",
+    "slug": "dt-06",
+    "name": "Pension Contribution Dividend Interaction",
+    "desc": "How pension contributions reduce effective dividend tax rate.",
     "tier": 2,
     "start": false
   },
   {
     "num": "07",
-    "slug": "dividend-trap-07",
-    "name": "Spouse Share Split and Timing Strategy",
-    "desc": "Second allowance, lower rate bands, and when to declare dividends across tax years.",
+    "slug": "dt-07",
+    "name": "Corporate Retained Profits Strategy",
+    "desc": "When it makes sense to leave profits in the company rather than take dividends.",
     "tier": 2,
     "start": false
   },
   {
     "num": "08",
-    "slug": "dividend-trap-08",
-    "name": "Director Loan Risk and Retained Profit Strategy",
-    "desc": "Section 455 charge, retained profit planning and pension diversion for future years.",
+    "slug": "dt-08",
+    "name": "ISA Dividend Sheltering Guide",
+    "desc": "Using ISAs to hold dividend-generating investments tax-free.",
     "tier": 2,
     "start": false
   }
@@ -79,18 +79,12 @@ const FILES = [
 
 interface Assessment {
   status: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  effectiveRate: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  totalTax: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  ctComponent: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  dividendTaxComponent: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  trapDetected: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  salaryVsDividendOptimal: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  pensionDiversionSaving: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  spouseOpportunity: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  timingRecommendation: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  directorLoanRisk: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  dividendRate: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  taxBill: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  pensionOpportunity: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  spousalStrategy: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  actions: string | string[] | { title: string; deadline: string; steps: string[] }[];
   weekPlan: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  accountantQuestions: string | string[] | { title: string; deadline: string; steps: string[] }[];
   [key: string]: unknown;
 }
 
@@ -105,7 +99,7 @@ export default function SuccessPlan() {
   const [checked,    setChecked]    = useState<Record<number, boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2027-04-05T23:59:59Z").getTime() - Date.now()) / 86_400_000
+    (new Date("2027-01-31T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -128,23 +122,19 @@ export default function SuccessPlan() {
   async function generateAssessment(name: string) {
     setLoading(true);
     try {
-      const div_profile = sessionStorage.getItem("dividend-trap_div_profile") || "director";
-      const div_salary = sessionStorage.getItem("dividend-trap_div_salary") || "12570";
-      const div_dividends = sessionStorage.getItem("dividend-trap_div_dividends") || "37500";
-      const div_is_director = sessionStorage.getItem("dividend-trap_div_is_director") || "true";
-      const div_effective_rate = sessionStorage.getItem("dividend-trap_div_effective_rate") || "51.81";
-      const div_total_tax = sessionStorage.getItem("dividend-trap_div_total_tax") || "36956";
-      const div_answers = sessionStorage.getItem("dividend-trap_div_answers") || "{}";
+      const dt_income = sessionStorage.getItem("dividend-trap_dt_income") || "85000";
+      const dt_dividends = sessionStorage.getItem("dividend-trap_dt_dividends") || "12000";
+      const dt_partner = sessionStorage.getItem("dividend-trap_dt_partner") || "false";
 
       const prompt = `You are a UK tax expert. Write a personalised action plan for ${name !== "your" ? name : "this taxpayer"}.
 
 Their data:
-- User profile: ${div_profile}\n- Annual salary: ${div_salary}\n- Annual dividends: ${div_dividends}\n- Is director: ${div_is_director}\n- Combined effective rate: ${div_effective_rate}\n- Total tax liability: ${div_total_tax}\n- Questionnaire answers: ${div_answers}
+- Total income: ${dt_income}\n- Dividend amount: ${dt_dividends}\n- Partner has shares: ${dt_partner}
 
 Write a personalised, specific action plan. Use their name if provided. Reference their specific numbers. Be direct and actionable — not generic.
 
 Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. Just JSON with these fields:
-"status": "...", "effectiveRate": "...", "totalTax": "...", "ctComponent": "...", "dividendTaxComponent": "...", "trapDetected": "...", "salaryVsDividendOptimal": "...", "pensionDiversionSaving": "...", "spouseOpportunity": "...", "timingRecommendation": "...", "directorLoanRisk": "...", "weekPlan": "...", "accountantQuestions": "..."
+"status": "...", "dividendRate": "...", "taxBill": "...", "pensionOpportunity": "...", "spousalStrategy": "...", "actions": "...", "weekPlan": "..."
 
 For array fields use actual arrays. For action items use objects with title, deadline, steps array.`;
 
@@ -173,30 +163,20 @@ For array fields use actual arrays. For action items use objects with title, dea
     const displayName = name !== "your" ? name : "Your";
     const result: Record<string, unknown> = {};
     result["status"] = "status — building for " + displayName;
-    result["effectiveRate"] = "effectiveRate — building for " + displayName;
-    result["totalTax"] = "totalTax — building for " + displayName;
-    result["ctComponent"] = "ctComponent — building for " + displayName;
-    result["dividendTaxComponent"] = "dividendTaxComponent — building for " + displayName;
-    result["trapDetected"] = "trapDetected — building for " + displayName;
-    result["salaryVsDividendOptimal"] = "salaryVsDividendOptimal — building for " + displayName;
-    result["pensionDiversionSaving"] = "pensionDiversionSaving — building for " + displayName;
-    result["spouseOpportunity"] = "spouseOpportunity — building for " + displayName;
-    result["timingRecommendation"] = "timingRecommendation — building for " + displayName;
-    result["directorLoanRisk"] = "directorLoanRisk — building for " + displayName;
+    result["dividendRate"] = "dividendRate — building for " + displayName;
+    result["taxBill"] = "taxBill — building for " + displayName;
+    result["pensionOpportunity"] = "pensionOpportunity — building for " + displayName;
+    result["spousalStrategy"] = "spousalStrategy — building for " + displayName;
+    result["actions"] = [];
     result["weekPlan"] = [];
-    result["accountantQuestions"] = [];
     return result as Assessment;
   }
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const div_profile = sessionStorage.getItem("dividend-trap_div_profile") || "director";
-    const div_salary = sessionStorage.getItem("dividend-trap_div_salary") || "12570";
-    const div_dividends = sessionStorage.getItem("dividend-trap_div_dividends") || "37500";
-    const div_is_director = sessionStorage.getItem("dividend-trap_div_is_director") || "true";
-    const div_effective_rate = sessionStorage.getItem("dividend-trap_div_effective_rate") || "51.81";
-    const div_total_tax = sessionStorage.getItem("dividend-trap_div_total_tax") || "36956";
-    const div_answers = sessionStorage.getItem("dividend-trap_div_answers") || "{}";
+    const dt_income = sessionStorage.getItem("dividend-trap_dt_income") || "85000";
+    const dt_dividends = sessionStorage.getItem("dividend-trap_dt_dividends") || "12000";
+    const dt_partner = sessionStorage.getItem("dividend-trap_dt_partner") || "false";
 
     // Helper to format relative dates
     function relativeDate(daysFromNow: number): string {
@@ -210,59 +190,32 @@ For array fields use actual arrays. For action items use objects with title, dea
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN",
       "METHOD:PUBLISH",
-      `X-WR-CALNAME:Dividend Trap Engine — Action Dates`,
+      `X-WR-CALNAME:Dividend Trap — Action Dates`,
       "BEGIN:VEVENT",
-      `UID:div-review-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(7)}`,
-      `DTEND;VALUE=DATE:${relativeDate(7)}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Dividend Tax — Calculate combined effective rate",
-      "DESCRIPTION:Calculate CT + dividend combined rate. Review salary vs dividend vs pension split.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:div-spouse-${Date.now()}@taxchecknow.com`,
+      `UID:dt-structure-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${relativeDate(14)}`,
       `DTEND;VALUE=DATE:${relativeDate(14)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Dividend Tax — Review spouse share split",
-      "DESCRIPTION:Confirm spouse shareholding is structured correctly for 2026/27 dividends.",
+      "SUMMARY:Dividend — Review shareholding structure",
+      "DESCRIPTION:Review spousal shareholding and pension contribution interaction.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:div-pension-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(21)}`,
-      `DTEND;VALUE=DATE:${relativeDate(21)}`,
+      `UID:dt-review-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(30)}`,
+      `DTEND;VALUE=DATE:${relativeDate(30)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Dividend Tax — Employer pension contribution",
-      "DESCRIPTION:Make employer pension contribution before company year end. See File 06.",
+      "SUMMARY:Dividend — Salary and dividend split review",
+      "DESCRIPTION:Optimise split for 2026/27.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:div-timing-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270301"}`,
-      `DTEND;VALUE=DATE:${"20270301"}`,
+      `UID:dt-sa-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20270131"}`,
+      `DTEND;VALUE=DATE:${"20270131"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Dividend Tax — Agree dividend timing strategy",
-      "DESCRIPTION:Decide: declare before or after 5 April 2027. Board minute required.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:div-yearend-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270405"}`,
-      `DTEND;VALUE=DATE:${"20270405"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:🔴 Tax Year End — 5 April 2027",
-      "DESCRIPTION:Last date for all dividend timing, pension contributions and share split declarations.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:div-sa-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20280131"}`,
-      `DTEND;VALUE=DATE:${"20280131"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Self-Assessment — Report dividend income",
-      "DESCRIPTION:Include all 2026/27 dividend income and pension contributions on SA return.",
+      "SUMMARY:Self Assessment Deadline",
+      "DESCRIPTION:31 January 2027.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -286,7 +239,7 @@ For array fields use actual arrays. For action items use objects with title, dea
       ? (assessment.accountantQuestions as string[]).map((q, i) => `${i + 1}. "${q}"`).join("\n")
       : String(assessment.accountantQuestions);
     await navigator.clipboard.writeText(
-      `Dividend Trap Engine — questions for my accountant:\n\n${questions}\n\nPrepared by TaxCheckNow · taxchecknow.com`
+      `Dividend Trap — questions for my accountant:\n\n${questions}\n\nPrepared by TaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -312,7 +265,7 @@ For array fields use actual arrays. For action items use objects with title, dea
       <nav className="no-print border-b border-neutral-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <Link href="/" className="font-serif text-lg font-bold text-neutral-950">TaxCheckNow</Link>
-          <span className="font-mono text-xs text-neutral-400">United Kingdom · Dividend Trap Engine</span>
+          <span className="font-mono text-xs text-neutral-400">United Kingdom · Dividend Trap</span>
         </div>
       </nav>
 
@@ -323,10 +276,10 @@ For array fields use actual arrays. For action items use objects with title, dea
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-                Payment confirmed · Your Dividend Optimisation System · £147
+                Payment confirmed · Your Dividend Optimisation Plan · £147
               </p>
               <h1 className="mt-1 font-serif text-2xl font-bold text-neutral-950">
-                {greeting} Dividend Trap Engine Action Plan
+                {greeting} Dividend Trap Action Plan
               </h1>
               <p className="mt-1 text-sm text-emerald-800">
                 Built around your numbers, your gaps, your deadline — not the average taxpayer.
@@ -343,9 +296,9 @@ For array fields use actual arrays. For action items use objects with title, dea
         {/* DEADLINE BAR */}
         <div className="print-section flex items-center justify-between rounded-xl bg-red-700 px-5 py-3">
           <span className="text-sm font-bold text-white">
-            🔴 {daysToDeadline} days to 5 April 2027
+            🔴 {daysToDeadline} days to 31 January 2027
           </span>
-          <span className="font-mono text-sm font-bold text-white">5 April 2027</span>
+          <span className="font-mono text-sm font-bold text-white">31 January 2027</span>
         </div>
 
         {/* LOADING */}
@@ -383,7 +336,7 @@ For array fields use actual arrays. For action items use objects with title, dea
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  Actions to take before 5 April 2027
+                  Actions to take before 31 January 2027
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as { title: string; deadline: string; steps: string[] }[]).map((action, i) => (
@@ -430,7 +383,7 @@ For array fields use actual arrays. For action items use objects with title, dea
                     </p>
                     <p className="mt-0.5 text-xs text-blue-600">
                       Full brief in{" "}
-                      <a href="/files/uk/dividend-trap/dividend-trap-05"
+                      <a href="/files/uk/dividend-trap/dt-05"
                         target="_blank" rel="noopener noreferrer"
                         className="font-semibold underline">File 05 →</a>
                     </p>
@@ -462,28 +415,16 @@ For array fields use actual arrays. For action items use objects with title, dea
               <div className="mb-4 space-y-2">
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Dividend Tax — Calculate combined effective rate</span>
+                  <span className="text-sm text-neutral-700">Dividend — Review shareholding structure</span>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Dividend Tax — Review spouse share split</span>
+                  <span className="text-sm text-neutral-700">Dividend — Salary and dividend split review</span>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Dividend Tax — Employer pension contribution</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">This week</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Dividend Tax — Agree dividend timing strategy</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">1 Mar 2027</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">🔴 Tax Year End — 5 April 2027</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">5 Apr 2027</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">Self-Assessment — Report dividend income</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">31 Jan 2028</span>
+                  <span className="text-sm text-neutral-700">Self Assessment Deadline</span>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">31 Jan 2027</span>
                 </div>
               </div>
               <button onClick={handleCalendar}
@@ -561,7 +502,7 @@ For array fields use actual arrays. For action items use objects with title, dea
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
                 Open File 02 — it has your exact numbers.
                 Forward File 05 to your accountant.
-                Tick off the action checklist above before 5 April 2027.
+                Tick off the action checklist above before 31 January 2027.
               </p>
               <div className="mb-4 flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -583,7 +524,7 @@ For array fields use actual arrays. For action items use objects with title, dea
                     style={{ width: `${Math.min(100, Math.max(5, ((365 - daysToDeadline) / 365) * 100))}%` }} />
                 </div>
                 <p className="mt-2 text-xs text-neutral-500">
-                  5 April 2027 · No backdating after this date ·{" "}
+                  31 January 2027 · No backdating after this date ·{" "}
                   <a href="https://www.gov.uk/tax-on-dividends" target="_blank" rel="noopener noreferrer"
                     className="underline hover:text-neutral-400 transition">
                     HMRC source
@@ -605,7 +546,7 @@ For array fields use actual arrays. For action items use objects with title, dea
             TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified UK tax adviser before making financial decisions.
             Based on HMRC guidance April 2026.{" "}
-            <a href="https://www.gov.uk/tax-on-dividends" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">GOV.UK — Tax on dividends</a> · <a href="https://www.gov.uk/corporation-tax-rates" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">GOV.UK — Corporation Tax rates</a>
+            <a href="https://www.gov.uk/tax-on-dividends" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">HMRC — Tax on dividends</a> · <a href="/api/rules/dividend-trap" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">Machine-readable JSON rules</a>
           </p>
         </div>
 

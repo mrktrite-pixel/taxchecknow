@@ -563,7 +563,7 @@ export default function QsbsExitAuditorCalculator() {
               Check my exact position →
             </button>
             <p className="mt-2 text-center text-xs text-neutral-500">
-              £{effectiveTier} · One-time · No subscription
+              ${effectiveTier} · One-time · No subscription
             </p>
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
           </div>
@@ -726,4 +726,3 @@ export default function QsbsExitAuditorCalculator() {
     </>
   );
 }
-

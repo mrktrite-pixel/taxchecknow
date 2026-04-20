@@ -158,4 +158,25 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   tier1AssessmentFields: ["status", "trustTaxRate", "taxLeakage", "distributionOpportunity", "minorBeneficiaryRisk", "firstAction", "resolutionDeadline", "accountantQuestions"],
   tier2AssessmentFields: ["status", "trustTaxRate", "taxLeakage", "distributionOpportunity", "companyComparison", "imputationCredits", "actions", "weekPlan", "accountantQuestions"],
+  persona: {
+    name: "Aroha",
+    age: 43,
+    occupation: "Speech language therapist (part-time), Airbnb host, landlord — Auckland",
+    location: "Pt Chevalier, Auckland",
+    family: "Husband Mike (civil engineer). Two teenagers — Tama (16) and Hana (14).",
+    financialSnapshot: "3 properties: family home, Avondale rental (in family trust), Glen Eden Airbnb. Household income ~$180k.",
+    painPoint: "Aroha does the family finances and researches before every accountant meeting to ask the right questions.",
+    discovery: "Aroha found three different bright-line answers on three different websites. She needed one definitive source.",
+    voice: "Thorough. Trusts research. Appreciates when complexity is acknowledged. Wry Kiwi humour.",
+  },
+  story: {
+    hook: "The family trust had been sitting at 39% tax on retained income for two years. Nobody had suggested changing it.",
+    setup: [
+    "The trust earned net rental income of $22,000 in the 2025/26 year. David had left it retained in the trust. Tax: $8,580 at 39%.",
+    "Aroha knew the trust had beneficiaries — herself, Mike, and the two children. She had assumed the children could receive distributions and that this would reduce tax. She had not thought through the age implications.",
+    "At 39% retained in the trust she was paying the same rate as the top personal rate. She raised it with David in passing at the end of their meeting.",
+    ],
+    revelation: "Tama at 16 could receive distributions at his personal rate — zero other income meant 10.5% on the first $15,600. That was a saving of 28.5 percentage points. Hana at 14 was different: the minor beneficiary rule meant 39% regardless. Two kids. Two completely different tax outcomes. One year apart.",
+    resolution: "The trust distributed $10,000 to Tama before 31 March 2027. Tax: $1,050 instead of $3,900. Saving: $2,850. Aroha added Hana's 16th birthday to the calendar.",
+  },
 };

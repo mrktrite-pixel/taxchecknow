@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
 
-const DEADLINE_ISO   = "2026-08-07T23:59:59.000+01:00";
+const DEADLINE_ISO   = "2026-08-07T23:59:59.000Z";
 const DAYS_TO_END    = Math.max(0, Math.floor(
   (new Date(DEADLINE_ISO).getTime() - Date.now()) / 86_400_000
 ));
@@ -16,27 +16,27 @@ const DAYS_TO_END    = Math.max(0, Math.floor(
 
 const BRACKETS = [
   {
-    "label": "I use one MTD software — records and submission in the same tool",
+    "label": "Fully digital — accounting software submits directly to HMRC",
     "value": 1,
     "status": "clear"
   },
   {
-    "label": "I use a spreadsheet + bridging software (tested and verified)",
+    "label": "Spreadsheet with bridging software — compliant if links intact",
     "value": 2,
     "status": "approaching"
   },
   {
-    "label": "I copy numbers from my spreadsheet into my filing software",
+    "label": "Copy-paste from software to spreadsheet to portal",
     "value": 3,
-    "status": "fail"
+    "status": "trap"
   },
   {
-    "label": "I type figures from one system into another manually",
+    "label": "Manual process — no digital records",
     "value": 4,
-    "status": "fail"
+    "status": "deep_trap"
   },
   {
-    "label": "I am not sure how my data gets from my records to HMRC",
+    "label": "Not sure how my VAT return is prepared",
     "value": 5,
     "status": "risk"
   }
@@ -49,16 +49,16 @@ type PackTier      = 67 | 147;
 
 const PRODUCTS: Record<PackTier, { name: string; tagline: string; value: string; cta: string }> = {
   67: {
-    name:    "Your Digital Link Assessment",
-    tagline: "Do I have a broken digital chain — and what exactly do I need to fix?",
-    value:   "A personal compliance assessment built around your workflow, your gaps, your deadline — not a generic software comparison.",
-    cta:     "Get My Assessment — £67 →",
+    name:    "Your Digital Link Audit Pack",
+    tagline: "Is your VAT return process MTD-compliant — or are you copying and pasting?",
+    value:   "A personalised digital link audit showing your compliance gaps and the fastest fix for each one.",
+    cta:     "Get My Digital Link Pack — £67 →",
   },
   147: {
-    name:    "Your Digital Link Implementation Plan",
-    tagline: "Fix the workflow before HMRC ever looks at it.",
-    value:   "A personal compliance assessment built around your workflow, your gaps, your deadline — not a generic software comparison.",
-    cta:     "Get My Implementation Plan — £127 →",
+    name:    "Your MTD VAT Compliance Plan",
+    tagline: "Close every digital link gap before HMRC audits your process",
+    value:   "Full digital link audit plus spreadsheet bridge options, software comparison, and a compliance roadmap.",
+    cta:     "Get My Compliance Plan — £147 →",
   },
 };
 
@@ -137,12 +137,11 @@ function getStatusStyle(status: BracketStatus): {
 
 function recommendedTier(
   bracketStatus: BracketStatus,
-  recordsLocation: number | string,
-  transferMethod: number | string,
-  workflowVerified: boolean,
+  vatProcess: number | string,
+  usesApprovedSoftware: boolean,
 ): PackTier {
-  // transferMethod is copypaste or manual → tier2 always. recordsLocation is mixed or spreadsheet AND workflowVerified is false → tier2. Otherwise tier1.
-    if (transferMethod === "copypaste" || transferMethod === "manual" || transferMethod === "notsure" && workflowVerified === false || recordsLocation === "mixed" && workflowVerified === false) return 147;
+  // copypaste or manual vatProcess → tier2. No approved software → tier2.
+    if (vatProcess === "copypaste" || vatProcess === "manual" || usesApprovedSoftware === true) return 147;
   return 67;
 }
 
@@ -150,9 +149,8 @@ function recommendedTier(
 
 export default function DigitalLinkAuditorCalculator() {
   const [selectedBracket, setSelectedBracket] = useState<number | null>(null);
-  const [recordsLocation, setRecordsLocation] = useState<number | string>("one_software");
-  const [transferMethod, setTransferMethod] = useState<number | string>("auto");
-  const [workflowVerified, setWorkflowVerified] = useState<boolean>(false);
+  const [vatProcess, setVatProcess] = useState<number | string>("copypaste");
+  const [usesApprovedSoftware, setUsesApprovedSoftware] = useState<boolean>(true);
   const [email,           setEmail]           = useState("");
   const [emailSent,       setEmailSent]       = useState(false);
   const [sessionId,       setSessionId]       = useState<string | null>(null);
@@ -178,9 +176,8 @@ export default function DigitalLinkAuditorCalculator() {
   // Tier algorithm — COLE decides, buyer never chooses
   const calculatedTier: PackTier = recommendedTier(
     bracketStatus,
-    recordsLocation,
-    transferMethod,
-    workflowVerified,
+    vatProcess,
+    usesApprovedSoftware,
   );
   const effectiveTier   = overrideTier ?? calculatedTier;
   const selectedProduct = PRODUCTS[effectiveTier];
@@ -196,9 +193,8 @@ export default function DigitalLinkAuditorCalculator() {
 
   async function handleBracketSelect(index: number) {
     setSelectedBracket(index);
-    setRecordsLocation("one_software");
-    setTransferMethod("auto");
-    setWorkflowVerified(false);
+    setVatProcess("copypaste");
+    setUsesApprovedSoftware(false);
     setOverrideTier(null);
     setError("");
     // Save to sessionStorage for success page
@@ -249,9 +245,8 @@ export default function DigitalLinkAuditorCalculator() {
     if (!answersComplete || checkoutLoading) return;
     // Save inputs for success page personalisation
     sessionStorage.setItem("digital-link-auditor_answers", JSON.stringify(answers));
-    sessionStorage.setItem("digital-link-auditor_recordsLocation", String(recordsLocation));
-    sessionStorage.setItem("digital-link-auditor_transferMethod", String(transferMethod));
-    sessionStorage.setItem("digital-link-auditor_workflowVerified", String(workflowVerified));
+    sessionStorage.setItem("digital-link-auditor_vatProcess", String(vatProcess));
+    sessionStorage.setItem("digital-link-auditor_usesApprovedSoftware", String(usesApprovedSoftware));
     const sid          = sessionId ?? localStorage.getItem("digital-link-auditor_session_id");
     const effectiveSid = sid ?? `fallback_${Date.now()}`;
     setCheckoutLoading(true);
@@ -303,10 +298,10 @@ export default function DigitalLinkAuditorCalculator() {
           {/* Rule box — GOAT Block 3 */}
           <div className="mb-4 rounded-xl border-2 border-neutral-900 bg-neutral-950 px-4 py-4">
             <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-              The rule — HMRC confirmed
+              The digital link rule — HMRC confirmed
             </p>
             <p className="mt-1 text-sm leading-relaxed text-white">
-              Digital links are required when more than one software product is used. Copy and paste is NOT a digital link. HMRC's digital link doctrine applies to every step in your MTD workflow — not just the final submission.
+              Every transfer of data between software programs, applications, or products in the VAT accounting process must be made using a digital link. A digital link includes: automated feeds, API, CSV/XML import, or formulaic spreadsheet links. Copy-paste between separate files is NOT a digital link. Manual retyping is NOT a digital link. Source: VAT Notice 700/22.
             </p>
           </div>
 
@@ -342,10 +337,10 @@ export default function DigitalLinkAuditorCalculator() {
           {/* Clarification box */}
           <div className="mt-4 rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-3">
             <p className="font-mono text-[10px] uppercase tracking-widest text-amber-700">
-              ⚠️ key clarification
+              Key clarification
             </p>
             <p className="mt-1 text-xs leading-relaxed text-amber-900">
-              Most taxpayers who fail the digital links test believe they are compliant. If your current workflow involves any copy/paste or manual re-keying, it would likely fail an HMRC digital link audit — even if every figure you submitted is correct.
+              A formula within a single spreadsheet file IS a digital link. Copying a cell value from one Excel file into another Excel file is NOT a digital link — even if both files are on the same computer. The distinction is transfer method, not software type.
             </p>
           </div>
         </div>
@@ -390,139 +385,80 @@ export default function DigitalLinkAuditorCalculator() {
                 Refine your position
               </p>
               <div className="space-y-5">
-                {/* BUTTON GROUP — Where are your records kept? */}
+                {/* BUTTON GROUP — How is your VAT return currently prepared? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Where are your records kept?</p>
-                  <p className="mb-2 text-xs text-neutral-500">Select the option that best describes your setup</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">How is your VAT return currently prepared?</p>
+                  <p className="mb-2 text-xs text-neutral-500">Be honest — HMRC sees the process not just the final return</p>
                   <div className="flex flex-wrap gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setRecordsLocation("one_software")}
+                      onClick={() => setVatProcess("direct")}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        recordsLocation === "one_software"
+                        vatProcess === "direct"
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      One software
+                      Direct from accounting software
                     </button>
                     <button
                       type="button"
-                      onClick={() => setRecordsLocation("spreadsheet")}
+                      onClick={() => setVatProcess("bridged")}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        recordsLocation === "spreadsheet"
+                        vatProcess === "bridged"
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Spreadsheet
+                      Spreadsheet with bridging tool
                     </button>
                     <button
                       type="button"
-                      onClick={() => setRecordsLocation("both")}
+                      onClick={() => setVatProcess("copypaste")}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        recordsLocation === "both"
+                        vatProcess === "copypaste"
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Both
+                      Copy-paste from software to spreadsheet
                     </button>
                     <button
                       type="button"
-                      onClick={() => setRecordsLocation("mixed")}
+                      onClick={() => setVatProcess("manual")}
                       className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        recordsLocation === "mixed"
+                        vatProcess === "manual"
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
-                      Mixed / Not sure
+                      Manual process
                     </button>
                   </div>
                   
                 </div>
-                {/* BUTTON GROUP — How do totals move between tools? */}
+                {/* TWO-BUTTON TOGGLE — Do you use HMRC-recognised MTD VAT software? */}
                 <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">How do totals move between tools?</p>
-                  <p className="mb-2 text-xs text-neutral-500">Be honest — this is the compliance risk point</p>
-                  <div className="flex flex-wrap gap-2">
-                    
-                    <button
-                      type="button"
-                      onClick={() => setTransferMethod("auto")}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        transferMethod === "auto"
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      Auto import / API
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setTransferMethod("csv")}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        transferMethod === "csv"
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      CSV / XML upload
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setTransferMethod("copypaste")}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        transferMethod === "copypaste"
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      Copy / paste
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setTransferMethod("manual")}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        transferMethod === "manual"
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      Manual typing
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setTransferMethod("notsure")}
-                      className={`rounded-lg border-2 px-4 py-2.5 text-sm font-bold transition ${
-                        transferMethod === "notsure"
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      Not sure
-                    </button>
-                  </div>
-                  
-                </div>
-                {/* TWO-BUTTON TOGGLE — Has your MTD workflow been verified by your accountant or software provider? */}
-                <div>
-                  <p className="mb-1 text-sm font-semibold text-neutral-800">Has your MTD workflow been verified by your accountant or software provider?</p>
-                  <p className="mb-2 text-xs text-neutral-500">Confirmed in writing — not just assumed</p>
+                  <p className="mb-1 text-sm font-semibold text-neutral-800">Do you use HMRC-recognised MTD VAT software?</p>
+                  <p className="mb-2 text-xs text-neutral-500">QuickBooks, Xero, Sage, FreeAgent all qualify</p>
                   <div className="flex gap-2">
                     
                     <button
                       type="button"
-                      onClick={() => setWorkflowVerified(false)}
+                      onClick={() => setUsesApprovedSoftware(true)}
                       className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        workflowVerified === false
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
-                      }`}>
-                      No / Not sure
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setWorkflowVerified(true)}
-                      className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
-                        workflowVerified === true
+                        usesApprovedSoftware === true
                           ? "border-neutral-950 bg-neutral-950 text-white"
                           : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                       }`}>
                       Yes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUsesApprovedSoftware(false)}
+                      className={`flex-1 rounded-lg border-2 py-3 text-sm font-bold transition ${
+                        usesApprovedSoftware === false
+                          ? "border-neutral-950 bg-neutral-950 text-white"
+                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                      }`}>
+                      No — spreadsheet only
                     </button>
                   </div>
                 </div>

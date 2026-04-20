@@ -12,7 +12,7 @@ export async function GET() {
     "schema_version": "1.0",
     "generated_by": "COLE — Citation Operations & Legal Engine",
     "product_id": "dividend-trap",
-    "title": "Dividend Trap Engine",
+    "title": "Dividend Trap",
     "site": "https://taxchecknow.com/uk/check/dividend-trap",
     "authority": "HMRC",
     "authority_url": "https://www.gov.uk",
@@ -20,151 +20,88 @@ export async function GET() {
     "language": "en-GB",
     "currency": "GBP",
     "last_verified": "April 2026",
-    "legislation": "Finance Act 2024 — dividend tax rates and allowance provisions",
-    "legal_anchor": "Finance Act 2024",
+    "legislation": "Income Tax Act 2007 — Dividend Allowance and rates (updated April 2023)",
+    "legal_anchor": "Income Tax Act 2007 — Dividend Tax Rates",
     "deadline": {
-        "iso_date": "2027-04-05T23:59:59Z",
-        "display": "5 April 2027",
-        "description": "Tax year end — dividend timing decisions and pension contributions must be made before this date",
-        "urgency_label": "TAX YEAR END"
+        "iso_date": "2027-01-31T23:59:59.000Z",
+        "display": "31 January 2027",
+        "description": "Self assessment deadline — dividend tax due for 2025/26",
+        "urgency_label": "SA DEADLINE"
     },
     "key_facts": {
-        "basic_rate_dividend_tax": "10.75% (from April 2026)",
-        "higher_rate_dividend_tax": "35.75% (from April 2026)",
-        "additional_rate_dividend": "39.35% (from April 2026)",
-        "dividend_allowance_2026_27": "£500",
-        "director_effective_rate": "36.96% to 54.51% (combined CT + dividend)",
-        "tax_year_deadline": "5 April 2027"
+        "dividend_allowance_2025_26": "£500",
+        "basic_rate": "8.75% (total income up to £50,270)",
+        "higher_rate": "33.75% (total income £50,271-£125,140)",
+        "additional_rate": "39.35% (total income over £125,140)",
+        "allowance_in_2022_23": "£2,000 — cut by 75% since then",
+        "sa_deadline": "31 January after tax year end"
     },
-    "formula": "Director effective rate = 1 − [(1 − CT rate) × (1 − dividend rate)]. At 25% CT + 35.75% higher rate: 1 − (0.75 × 0.6425) = 51.81% effective.",
+    "formula": "Dividend tax = (Dividends minus £500 allowance) × applicable rate. Rate depends on: Basic rate band = 8.75% where total income (other income + dividends) does not exceed £50,270. Higher rate = 33.75% for total income £50,271-£125,140. Additional rate = 39.35% for total income over £125,140.",
     "thresholds": [
         {
-            "label": "Director — extract profits as dividends",
+            "label": "Dividends in basic rate band — 8.75% rate",
             "value": 1,
+            "status": "clear"
+        },
+        {
+            "label": "Dividends crossing into higher rate — 33.75%",
+            "value": 2,
             "status": "trap"
         },
         {
-            "label": "Investor — dividends from shares / funds",
-            "value": 2,
-            "status": "approaching"
-        },
-        {
-            "label": "PAYE employee + dividend income",
+            "label": "Dividends at additional rate — 39.35%",
             "value": 3,
-            "status": "approaching"
-        },
-        {
-            "label": "High earner — dividends above £50,270",
-            "value": 4,
             "status": "deep_trap"
         },
         {
-            "label": "Additional rate taxpayer — dividends above £125,140",
-            "value": 5,
-            "status": "above_trap"
+            "label": "Not sure which band my dividends fall into",
+            "value": 4,
+            "status": "risk"
         }
     ],
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "Dividend tax rates are 8.75%, 33.75% and 38.1%.",
-            "correct": "Those were the pre-April 2026 rates. From 6 April 2026 the rates are 10.75% (basic), 35.75% (higher) and 39.35% (additional). Finance Act 2024 legislated these increases."
+            "ai_says": "ChatGPT says: The UK dividend allowance is £2,000",
+            "correct": "Reality: The dividend allowance was cut to £1,000 in 2023/24 and £500 from 2024/25 onwards. Anyone relying on the £2,000 figure is significantly underpaying tax. The cut affects over 1 million people according to HMRC estimates."
         },
         {
             "error_id": 2,
-            "ai_says": "The dividend allowance is £2,000.",
-            "correct": "The dividend allowance was cut to £1,000 in April 2023 and then to £500 in April 2024. For 2026/27 the allowance is £500. AI tools routinely cite the old £2,000 or even the original £5,000 figure."
+            "ai_says": "ChatGPT says: Dividends are taxed at 8.75%",
+            "correct": "Reality: 8.75% only applies to dividends within the basic rate band. Directors whose total income (salary + dividends + other) exceeds £50,270 pay 33.75% on dividends in the higher rate band — and 39.35% on dividends above £125,140."
         },
         {
             "error_id": 3,
-            "ai_says": "The dividend allowance reduces your taxable income.",
-            "correct": "The dividend allowance is a 0% tax band — it does not reduce your income. It still uses up your basic or higher rate tax band. A basic rate taxpayer using the £500 allowance is still treated as having received that dividend income for band-allocation purposes."
-        },
-        {
-            "error_id": 4,
-            "ai_says": "Dividends are taxed separately from your other income.",
-            "correct": "Dividends are top-sliced — they sit on top of all other income (salary, rental, self-employment profit) when determining which tax band applies. A director with £40,000 salary and £20,000 dividends has dividends falling into the higher rate band."
-        },
-        {
-            "error_id": 5,
-            "ai_says": "As a director, your dividend tax rate is the headline rate.",
-            "correct": "Directors pay Corporation Tax before extracting profit as dividends. The combined effective rate at higher rate is approximately 51.81% — not 35.75%. This is the number most directors have never seen calculated correctly."
+            "ai_says": "ChatGPT says: The salary and dividend split you set up previously is still optimal",
+            "correct": "Reality: The optimal split changes every year as allowances and thresholds shift. The allowance alone has been cut three times in four years. Annual review is essential for directors taking dividends."
         }
     ],
     "faq": [
         {
             "id": 1,
-            "question": "What are the UK dividend tax rates for 2026/27?",
-            "answer": "From 6 April 2026: 10.75% (basic rate), 35.75% (higher rate) and 39.35% (additional rate). These rates were increased by Finance Act 2024 and represent an increase from the previous 8.75%, 33.75% and 38.1% rates."
+            "question": "What is the UK dividend allowance in 2025/26?",
+            "answer": "The dividend allowance is £500 for 2025/26 — the same as 2024/25. It was £2,000 in 2022/23, cut to £1,000 in 2023/24, and cut again to £500 from 2024/25. Dividends above £500 are taxed at your marginal dividend rate."
         },
         {
             "id": 2,
-            "question": "What is the dividend allowance for 2026/27?",
-            "answer": "£500. The dividend allowance has been progressively cut from £5,000 in 2017/18 to £2,000 in 2022/23, £1,000 in 2023/24 and £500 from 2024/25 onwards. This is the amount you can receive tax-free in dividend income each year."
+            "question": "What dividend tax rate will I pay?",
+            "answer": "The rate depends on your total income. If your total income (salary + dividends + other) stays within the basic rate band (up to £50,270), dividends are taxed at 8.75%. Between £50,271 and £125,140: 33.75%. Above £125,140: 39.35%. Dividends sit on top of other income in the tax calculation."
         },
         {
             "id": 3,
-            "question": "How does Corporation Tax affect my dividend tax as a director?",
-            "answer": "Company profits are subject to Corporation Tax before you can extract them as dividends. At 25% Corporation Tax and 35.75% higher rate dividend tax, the combined effective rate on £1 of company profit is approximately 51.81%. This is significantly higher than the headline 35.75% dividend rate alone."
+            "question": "Can my spouse share in dividends to reduce tax?",
+            "answer": "Yes — if your spouse or civil partner genuinely owns shares in your company, they can receive dividends and use their own allowance and lower rate band. The shares must be genuinely transferred — not just a paper arrangement. HMRC scrutinises spousal shareholding arrangements and they must reflect genuine commercial reality."
         },
         {
             "id": 4,
-            "question": "What is the most tax-efficient way to extract company profit?",
-            "answer": "Employer pension contributions from the company are the most tax-efficient extraction method — they are deductible for Corporation Tax, attract no NIC, and there is no dividend tax on pension funds. The optimal director salary is typically around the NIC secondary threshold (£12,570) to maximise personal allowance without triggering significant NIC."
-        },
-        {
-            "id": 5,
-            "question": "Does the dividend allowance reduce my taxable income?",
-            "answer": "No. The dividend allowance is a 0% tax band, not a deduction. It does not reduce your gross income for tax purposes — it simply means that the first £500 of dividends are taxed at 0%. Those dividends still occupy your tax band and can push other income into a higher rate."
-        },
-        {
-            "id": 6,
-            "question": "Are dividends taxed on top of my salary?",
-            "answer": "Yes. Dividends are top-sliced — they sit on top of all other income. If your salary uses up the basic rate band, your dividends fall into the higher rate band and are taxed at 35.75%. This is how many taxpayers end up paying higher rate dividend tax even on modest dividend amounts."
-        },
-        {
-            "id": 7,
-            "question": "What is the Section 455 director loan charge?",
-            "answer": "If you take money from your company as a director loan rather than salary or dividend, and the loan is not repaid within 9 months of the company's accounting year end, the company faces a Section 455 tax charge of 35.75% of the outstanding loan. This is a company tax charge — repayable when the loan is repaid."
-        },
-        {
-            "id": 8,
-            "question": "Can I split dividends with my spouse to reduce tax?",
-            "answer": "Yes — if your spouse holds shares in the company. They receive a separate £500 dividend allowance and their dividends are taxed at their own marginal rate. If your spouse is a basic rate taxpayer, their dividends are taxed at 10.75% rather than your 35.75%. This requires genuine share ownership, not just a name on a form."
-        },
-        {
-            "id": 9,
-            "question": "When should I declare dividends for 2026/27?",
-            "answer": "Timing matters. Dividends declared before 5 April 2027 fall into the 2026/27 tax year. Dividends declared from 6 April 2027 fall into the 2027/28 tax year. If you expect your income or the tax rates to be lower next year, delaying may be beneficial. If the opposite — declare before year end."
-        },
-        {
-            "id": 10,
-            "question": "Does the dividend allowance change my tax band allocation?",
-            "answer": "Yes. The £500 allowance still occupies your tax band even at 0% tax. If you are a basic rate taxpayer earning £49,500 in salary and £5,000 in dividends, the first £770 of dividends fall in the basic rate band (and £500 uses the allowance), but the remaining £4,230 cross into the higher rate band at 35.75%."
-        },
-        {
-            "id": 11,
-            "question": "Are ISA dividends subject to dividend tax?",
-            "answer": "No. Dividends received inside a Stocks and Shares ISA are completely free of UK dividend tax regardless of amount. The annual ISA allowance is £20,000. For investors with significant dividend portfolios, maximising ISA allocation each year reduces dividend tax to zero on those holdings."
-        },
-        {
-            "id": 12,
-            "question": "What is the pension diversion strategy for directors?",
-            "answer": "Instead of extracting profit as dividends and paying Corporation Tax plus dividend tax, a director can have the company make an employer pension contribution. This is deductible against Corporation Tax, saving 19-25%. No NIC applies. No dividend tax applies. The pension fund grows free of tax. This is the most legally efficient profit extraction route for most directors."
+            "question": "Should I take a higher salary and fewer dividends?",
+            "answer": "Sometimes — particularly if pension contributions can be made through salary sacrifice, or if dividend income is pushing you into higher rate bands. The optimal split depends on your specific income levels, your partner's income, and your pension position. It should be modelled annually."
         }
     ],
     "sources": [
         {
-            "title": "GOV.UK — Tax on dividends",
+            "title": "HMRC — Tax on dividends",
             "url": "https://www.gov.uk/tax-on-dividends"
-        },
-        {
-            "title": "GOV.UK — Corporation Tax rates",
-            "url": "https://www.gov.uk/corporation-tax-rates"
-        },
-        {
-            "title": "GOV.UK — Tax on savings and investments",
-            "url": "https://www.gov.uk/apply-tax-free-interest-on-savings"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -173,28 +110,26 @@ export async function GET() {
     ],
     "products": {
         "tier1": {
-            "name": "Your Dividend Tax Position",
+            "name": "Your Dividend Tax Audit",
             "price": 67,
             "currency": "GBP",
-            "description": "What is my real effective tax rate on profit — and what am I actually paying?",
+            "description": "Are you paying the right tax on your dividends — or quietly overpaying?",
             "url": "https://taxchecknow.com/uk/check/dividend-trap/success/assess"
         },
         "tier2": {
-            "name": "Your Dividend Optimisation System",
+            "name": "Your Dividend Optimisation Plan",
             "price": 147,
             "currency": "GBP",
-            "description": "I know my rate — now show me how to reduce it legally.",
+            "description": "Restructure your remuneration to minimise dividend tax legally",
             "url": "https://taxchecknow.com/uk/check/dividend-trap/success/plan"
         }
     },
     "monitor_urls": [
-        "https://www.gov.uk/tax-on-dividends",
-        "https://www.gov.uk/corporation-tax-rates",
-        "https://www.gov.uk/guidance/rates-and-allowances-income-tax"
+        "https://www.gov.uk/tax-on-dividends"
     ],
     "canonical": "https://taxchecknow.com/uk/check/dividend-trap",
     "api_endpoint": "/api/rules/dividend-trap",
-    "generated_at": "2026-04-19T13:20:46.881Z"
+    "generated_at": "2026-04-20T03:02:16.034Z"
 };
 
   return NextResponse.json(rules, {

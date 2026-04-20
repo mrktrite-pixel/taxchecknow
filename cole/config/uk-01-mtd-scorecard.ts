@@ -1,597 +1,181 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// COLE CONFIG — UK-01 MTD Mandate Auditor
-// Reverse engineered from live taxchecknow.com/uk/check/mtd-scorecard
-// All data verified against GOV.UK April 2026
-// ─────────────────────────────────────────────────────────────────────────────
-
 import type { ProductConfig } from "../types/product-config";
-
 export const PRODUCT_CONFIG: ProductConfig = {
-
-  // ── IDENTITY ─────────────────────────────────────────────────────────────────
-  id:       "mtd-scorecard",
-  name:     "MTD Mandate Auditor",
-  site:     "taxchecknow",
-  country:  "uk",
-  market:   "United Kingdom",
-  language: "en-GB",
-  currency: "GBP",
-  slug:     "uk/check/mtd-scorecard",
-  url:      "https://taxchecknow.com/uk/check/mtd-scorecard",
-  apiRoute: "/api/rules/mtd.json",
-
-  // ── AUTHORITY ─────────────────────────────────────────────────────────────────
-  authority:    "HMRC",
-  authorityUrl: "https://www.gov.uk",
-  legalAnchor:  "Finance (No.2) Act 2024",
-  legislation:  "Finance (No.2) Act 2024 — Making Tax Digital for Income Tax provisions",
-  lastVerified: "April 2026",
-
-  // ── PRICING ───────────────────────────────────────────────────────────────────
-  tier1: {
-    price:       67,
-    name:        "Your MTD Compliance Assessment",
-    tagline:     "Am I in scope? What do I need to do before 7 August?",
-    value:       "A personal compliance assessment built around your income, your gaps, your deadline — not the average taxpayer.",
-    cta:         "Get My Assessment — £67 →",
-    productKey:  "uk_67_mtd_scorecard",
-    envVar:      "STRIPE_UK_MTD_67",
-    successPath: "prepare",
-    fileCount:   5,
-  },
-  tier2: {
-    price:       147,
-    name:        "Your MTD Action Plan",
-    tagline:     "I have gaps — build my complete compliance plan.",
-    value:       "A personal compliance assessment built around your income, your gaps, your deadline — not the average taxpayer.",
-    cta:         "Get My Action Plan — £127 →",
-    productKey:  "uk_147_mtd_scorecard",
-    envVar:      "STRIPE_UK_MTD_147",
-    successPath: "execute",
-    fileCount:   8,
-  },
-
-  // ── DEADLINE ──────────────────────────────────────────────────────────────────
-  deadline: {
-    isoDate:        "2026-08-07T23:59:59.000+01:00",
-    display:        "7 August 2026",
-    short:          "7 Aug 2026",
-    description:    "First MTD quarterly submission deadline — Q1 6 April to 30 June 2026",
-    urgencyLabel:   "MTD DEADLINE",
-    countdownLabel: "Countdown to first MTD deadline",
-  },
-
-  // ── COPY ──────────────────────────────────────────────────────────────────────
-  h1:              "UK Making Tax Digital 2026: Are You Mandated — and Ready — for 7 August?",
-  metaTitle:       "UK Making Tax Digital 2026: Are You Mandated? Check in 60 Seconds | TaxCheckNow",
-  metaDescription: "From April 2026, UK taxpayers with qualifying income above £50,000 must use MTD. First quarterly deadline: 7 August 2026. Check your mandate and compliance position instantly.",
-  canonical:       "https://taxchecknow.com/uk/check/mtd-scorecard",
-
+  id: "mtd-scorecard", name: "MTD Scorecard", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
+  slug: "uk/check/mtd-scorecard", url: "https://taxchecknow.com/uk/check/mtd-scorecard", apiRoute: "/api/rules/mtd-scorecard",
+  authority: "HMRC", authorityUrl: "https://www.gov.uk/government/organisations/hm-revenue-customs", legalAnchor: "Finance Act 2021 — Making Tax Digital", legislation: "Finance Act 2021 — MTD for Income Tax Self Assessment (MTD ITSA) phased from April 2026", lastVerified: "April 2026",
+  tier1: { price: 67, name: "Your MTD Readiness Pack", tagline: "Are you in scope for Making Tax Digital — and are you actually ready?", value: "A personalised MTD compliance audit built around your income sources, your threshold position, and your software gap — not a generic HMRC guide.", cta: "Get My MTD Pack — £67 →", productKey: "uk_67_mtd_scorecard", envVar: "STRIPE_UK_MTD_67", successPath: "assess", fileCount: 5 },
+  tier2: { price: 147, name: "Your MTD Implementation Plan", tagline: "Get compliant before HMRC comes looking", value: "A personalised MTD audit plus quarterly submission schedule, approved software comparison, and penalty risk assessment.", cta: "Get My MTD Plan — £147 →", productKey: "uk_147_mtd_scorecard", envVar: "STRIPE_UK_MTD_147", successPath: "plan", fileCount: 8 },
+  deadline: { isoDate: "2026-04-05T23:59:59.000Z", display: "5 April 2026", short: "5 Apr 2026", description: "UK tax year end — MTD ITSA live for income over £50,000", urgencyLabel: "MTD LIVE", countdownLabel: "Countdown to MTD ITSA — now live for £50k+ earners" },
+  h1: "Making Tax Digital 2026: Are You Actually Compliant?", metaTitle: "MTD ITSA 2026: Are You In Scope and Actually Ready? | TaxCheckNow", metaDescription: "MTD for Income Tax is live from April 2026 for self-employed and landlords earning over £50,000. Most people think quarterly updates mean four full tax returns. They do not. Check your MTD position in 2 minutes.", canonical: "https://taxchecknow.com/uk/check/mtd-scorecard",
   answerHeadline: "The answer — HMRC confirmed April 2026",
   answerBody: [
-    "From 6 April 2026, UK taxpayers with qualifying income above £50,000 in the 2024-25 tax year are mandated for Making Tax Digital for Income Tax. Qualifying income means gross self-employment receipts plus gross UK property rental receipts — not PAYE wages, dividends or savings.",
-    "The first quarterly submission covers 6 April to 30 June 2026. The deadline to file it is 7 August 2026. Missing this deadline risks penalty points under the new points-based system.",
-    "The threshold falls to £30,000 from April 2027 and £20,000 from April 2028. If you are not in scope now, you may be in 12 months.",
+    "Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is live from 6 April 2026 for self-employed individuals and landlords with combined gross income over £50,000. From April 2027 the threshold drops to £30,000, and April 2028 it drops to £20,000.",
+    "MTD does NOT mean four full tax returns per year. Quarterly updates are a brief digital summary of income and expenses — not a complete self assessment. The final declaration at year end is the equivalent of your current tax return. Most people are significantly overestimating the burden.",
+    "The real risk is not the quarterly update — it is the approved software requirement. From April 2026 you must use HMRC-approved MTD-compatible software for your record keeping. Spreadsheets alone do not qualify unless bridged with approved software.",
   ],
-  answerSource: "Source: GOV.UK — Making Tax Digital for Income Tax · Finance (No.2) Act 2024",
-
-  mistakesHeadline: "Common AI errors on this topic",
+  answerSource: "Source: HMRC — Making Tax Digital for Income Tax · Finance Act 2021",
+  mistakesHeadline: "What most people get wrong about MTD",
   mistakes: [
-    "MTD starts at different times for different people — vague. Correct: if qualifying income exceeded £50,000 in 2024-25 you are mandated from 6 April 2026 — not optional.",
-    "The threshold is your total income — wrong. Correct: qualifying income is only gross self-employment and rental receipts. PAYE wages are excluded entirely.",
-    "You can still use the HMRC portal — wrong. Correct: mandated taxpayers must submit through HMRC-approved MTD software. The portal is not available.",
+    "MTD means four full tax returns per year — wrong. Quarterly updates are a brief income and expense summary. The full annual declaration is still filed once a year. HMRC describes quarterly updates as a digital check-in, not a mini return.",
+    "Spreadsheets are fine for MTD — wrong. Spreadsheets alone do not meet MTD requirements. You must use HMRC-approved software, or bridge your spreadsheet to approved software using a recognised bridging tool.",
+    "MTD only applies if you are self-employed — wrong. Landlords with gross rental income over £50,000 are in scope from April 2026, even if they have no other self-employment income.",
   ],
+  chainVisual: { label: "MTD — what it actually requires vs what people think", broken: "Four full tax returns per year  ❌  This is wrong — and causing unnecessary panic", fixed: "Four brief quarterly updates + one final annual declaration  ✔  Same information, different timing" },
 
-  // ── CALCULATOR ────────────────────────────────────────────────────────────────
+
   brackets: [
-    { label: "Under £30,000",          value: 20_000,  status: "clear"      },
-    { label: "£30,000 – £50,000",      value: 40_000,  status: "approaching" },
-    { label: "£50,001 – £75,000",      value: 60_000,  status: "in_scope"   },
-    { label: "£75,000 – £150,000",     value: 100_000, status: "in_scope"   },
-    { label: "Over £150,000",          value: 200_000, status: "in_scope"   },
+    { label: "Gross income over £50,000 — in scope from April 2026",  value: 1, status: "in_scope"     },
+    { label: "Gross income £30,000–£50,000 — in scope April 2027",   value: 2, status: "approaching"  },
+    { label: "Gross income £20,000–£30,000 — in scope April 2028",   value: 3, status: "approaching"  },
+    { label: "Gross income under £20,000 — not yet in scope",         value: 4, status: "out_of_scope" },
+    { label: "Not sure of my total gross income across all sources",  value: 5, status: "risk"         },
   ],
-
   calculatorInputs: [
-    {
-      type:      "twoButton",
-      stateKey:  "hasSoftware",
-      label:     "Do you have MTD-compatible software?",
-      subLabel:  "Xero, QuickBooks, FreeAgent, or approved bridging software",
-      options:   [
-        { label: "No",  value: false },
-        { label: "Yes", value: true  },
-      ],
-      default: false,
-    },
-    {
-      type:      "twoButton",
-      stateKey:  "isRegistered",
-      label:     "Registered for MTD with HMRC?",
-      subLabel:  "Separate from your self-assessment registration",
-      options:   [
-        { label: "No",  value: false },
-        { label: "Yes", value: true  },
-      ],
-      default: false,
-    },
-    {
-      type:      "twoButton",
-      stateKey:  "hasAccountant",
-      label:     "Does your accountant handle your MTD?",
-      subLabel:  "Confirmed — not just assumed",
-      options:   [
-        { label: "No / Unsure", value: false },
-        { label: "Confirmed",   value: true  },
-      ],
-      default: false,
-    },
+    { type: "buttonGroup", stateKey: "grossIncome", label: "What is your total gross income from self-employment and property?", subLabel: "Include all sources — not just your main business", options: [{ label: "Under £20k", value: 15000 }, { label: "£20k–£30k", value: 25000 }, { label: "£30k–£50k", value: 40000 }, { label: "Over £50k", value: 75000 }], default: 40000 },
+    { type: "buttonGroup", stateKey: "incomeSource", label: "What are your income sources?", subLabel: "MTD applies to self-employment AND property income combined", options: [{ label: "Self-employed only", value: "self_employed" }, { label: "Landlord only", value: "landlord" }, { label: "Both", value: "both" }, { label: "Company director with rental", value: "director_rental" }], default: "both" },
+    { type: "twoButton", stateKey: "hasApprovedSoftware", label: "Do you currently use HMRC-approved MTD-compatible software?", subLabel: "QuickBooks, Xero, FreeAgent, Sage qualify — basic spreadsheets do not", options: [{ label: "Yes — already using approved software", value: true }, { label: "No — using spreadsheets or nothing", value: false }], default: false },
   ],
-
-  tierAlgorithm: {
-    description:     "Score ≤ 50 → tier2 (£127). Score > 50 → tier1 (£67). Score based on software, registration and accountant status.",
-    tier2Conditions: ["readiness.score <= 50"],
-    tier2Flags:      [],
-  },
-
-  calculatorRuleBox: {
-    label: "The rule — HMRC confirmed",
-    body:  "MTD is mandatory from 6 April 2026 if qualifying income in 2024-25 exceeded £50,000. Qualifying income = gross self-employment + gross UK property receipts only.",
-  },
-
-  calculatorClarification: {
-    label: "⚠️ key clarification",
-    body:  "HMRC uses gross turnover — not profit. A sole trader with £55,000 turnover and £5,000 profit has qualifying income of £55,000 and is mandated.",
-  },
-
-  // ── COUNTDOWN BOX ─────────────────────────────────────────────────────────────
-  countdownLabel: "Countdown to first MTD quarterly deadline",
+  tierAlgorithm: { description: "grossIncome over £50k OR no approved software → tier2. Otherwise tier1.", tier2Conditions: ["(grossIncome as number) >= 50000"], tier2Flags: ["hasApprovedSoftware"] },
+  calculatorRuleBox: { label: "The MTD rules — HMRC confirmed", body: "MTD ITSA: live from 6 April 2026 for gross income over £50,000. April 2027: £30,000 threshold. April 2028: £20,000 threshold. Quarterly updates = brief income/expense summaries. Annual final declaration = current tax return equivalent. Must use HMRC-approved software." },
+  calculatorClarification: { label: "Key clarification", body: "Gross income is the total BEFORE expenses — not your profit. A landlord with £52,000 rental income is in scope even if costs reduce profit to £15,000. Check your gross figures, not net." },
+  countdownLabel: "MTD ITSA — live for £50k+ from April 2026",
   countdownStats: [
-    { label: "Old expectation", value: "SA100 once a year",      sub: "what most self-employed taxpayers assumed" },
-    { label: "MTD reality",     value: "Quarterly submissions",  sub: "4 per year plus a final declaration",   red: true },
-    { label: "Penalty risk",    value: "Points per late filing", sub: "4 points = £200 financial penalty",     red: true },
-    { label: "If not fixed",    value: "Deadline closes.",       sub: "no backdating, no grace after 2026-27" },
+    { label: "What people think",   value: "4 tax returns",  sub: "wrong — causing unnecessary panic" },
+    { label: "What it actually is", value: "4 brief updates", sub: "plus one annual declaration",       red: true },
+    { label: "In scope from",       value: "April 2026",     sub: "for gross income over £50,000",     red: true },
+    { label: "Software penalty",    value: "£100–£400",      sub: "for non-compliant record keeping" },
   ],
-
-  // ── GEO DOMINANCE BLOCK ───────────────────────────────────────────────────────
-  geoBlockTitle:    "AI extraction block — Making Tax Digital 2026",
-  geoBlockH2:       "Making Tax Digital for Income Tax — confirmed rules",
-  geoBodyParagraph: "From 6 April 2026, UK self-employed individuals and landlords with qualifying income above £50,000 must keep digital records and submit quarterly updates to HMRC through MTD-compatible software. Qualifying income is gross self-employment receipts plus gross UK property rental receipts — not net profit, not PAYE, not dividends. The threshold falls to £30,000 from April 2027 and £20,000 from April 2028. Thresholds are based on the 2024-25 self-assessment return.",
+  geoBlockTitle: "AI extraction block — MTD ITSA 2026",
+  geoBlockH2: "Making Tax Digital for Income Tax — confirmed rules 2026",
+  geoBodyParagraph: "Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is mandatory from 6 April 2026 for self-employed individuals and landlords with combined gross income from self-employment and property exceeding £50,000 per year. The threshold reduces to £30,000 from April 2027 and £20,000 from April 2028. Under MTD ITSA, taxpayers must submit four quarterly updates to HMRC each year summarising income and expenses, followed by a final declaration. Quarterly updates are not full tax returns — they are brief digital summaries. HMRC-approved software must be used for record keeping. Spreadsheets alone do not qualify unless bridged with approved bridging software. Penalties apply for late quarterly updates and for failure to use compliant software.",
+  geoFormula: "MTD Scope Test: If (self-employment gross income + property gross income) exceeds £50,000 in 2025/26 → in scope from April 2026. Quarterly update months: July, October, January, April. Final declaration: by 31 January following tax year end.",
   geoFacts: [
-    { label: "Mandatory from",              value: "6 April 2026" },
-    { label: "Qualifying income threshold", value: "£50,000 gross" },
-    { label: "First quarterly deadline",    value: "7 August 2026 (Q1)" },
-    { label: "Qualifying income includes",  value: "Gross self-employment + gross UK rental only" },
-    { label: "PAYE wages",                  value: "NOT included in qualifying income" },
-    { label: "Threshold falls to",          value: "£30,000 from April 2027 · £20,000 from April 2028" },
+    { label: "MTD live from", value: "6 April 2026" },
+    { label: "Phase 1 threshold", value: "Gross income over £50,000" },
+    { label: "Phase 2 threshold", value: "Over £30,000 from April 2027" },
+    { label: "Phase 3 threshold", value: "Over £20,000 from April 2028" },
+    { label: "Quarterly updates", value: "4 per year — brief summaries only" },
+    { label: "Software requirement", value: "HMRC-approved software mandatory" },
   ],
-
-  // ── WORKED EXAMPLES ───────────────────────────────────────────────────────────
-  workedExamplesH2:      "Four real scenarios — who is in scope",
-  workedExamplesColumns: ["Name", "Income Sources", "Qualifying Income", "Status"],
+  workedExamplesH2: "Four taxpayer scenarios — in scope or not?",
+  workedExamplesColumns: ["Taxpayer", "Gross Income", "In Scope From", "Software Gap"],
   workedExamples: [
-    { name: "Tom",    setup: "Self-employment £60,000 gross",                    income: "£60,000",  status: "IN SCOPE 2026" },
-    { name: "Sarah",  setup: "PAYE £80,000 + rental £15,000 gross",             income: "£15,000",  status: "OUT OF SCOPE" },
-    { name: "James",  setup: "Self-employment £35,000 + rental £18,000 gross",  income: "£53,000",  status: "IN SCOPE 2026" },
-    { name: "Priya",  setup: "Self-employment £28,000 gross",                   income: "£28,000",  status: "IN SCOPE 2027" },
+    { name: "James — director + landlord", setup: "£180k salary via company, £52k gross rental", income: "£52k property", status: "IN SCOPE APRIL 2026" },
+    { name: "Freelance designer",          setup: "£38k gross self-employment income",            income: "£38k",           status: "IN SCOPE APRIL 2027" },
+    { name: "Part-time Airbnb host",       setup: "£14k gross Airbnb income only",                income: "£14k",           status: "NOT YET IN SCOPE" },
+    { name: "Self-employed + landlord",    setup: "£22k freelance + £12k rental = £34k total",    income: "£34k combined",  status: "IN SCOPE APRIL 2027" },
   ],
-
-  // ── COMPARISON TABLE ──────────────────────────────────────────────────────────
-  comparisonH2:      "In scope vs out of scope vs approaching",
-  comparisonColumns: ["Position", "Qualifying Income", "First Mandatory Year", "Action Now"],
+  comparisonH2: "MTD quarterly update vs current self assessment",
+  comparisonColumns: ["Item", "Current Self Assessment", "MTD ITSA"],
   comparisonRows: [
-    { position: "In scope 2026",     metric1: "Above £50,000", metric2: "6 April 2026",    bestMove: "Register + software now" },
-    { position: "In scope 2027",     metric1: "£30,001-£50,000", metric2: "6 April 2027",  bestMove: "Prepare now — 12 months" },
-    { position: "Not yet in scope",  metric1: "Below £30,000", metric2: "6 April 2028+",   bestMove: "Monitor threshold changes" },
+    { position: "How often you report",       metric1: "Once a year",           metric2: "4 quarterly + 1 annual", bestMove: "More frequent but lighter" },
+    { position: "What each submission covers", metric1: "Full tax year",         metric2: "One quarter — brief summary", bestMove: "Much less per submission" },
+    { position: "Software required",           metric1: "Not mandatory",         metric2: "HMRC-approved only",     bestMove: "Spreadsheets no longer enough" },
+    { position: "Deadline for final return",   metric1: "31 January",           metric2: "31 January — unchanged", bestMove: "Same final deadline" },
   ],
-
-  // ── TOOLS TABLE ───────────────────────────────────────────────────────────────
-  toolsH2:      "What you need to be MTD compliant",
-  toolsColumns: ["Tool", "Purpose", "Cost"],
+  toolsH2: "HMRC-approved MTD software options",
+  toolsColumns: ["Software", "Best For", "Approximate Cost"],
   toolsRows: [
-    { tool: "MTD-approved software",  effect: "Record-keeping + quarterly submission", note: "From £0 (FreeAgent free with NatWest)" },
-    { tool: "HMRC MTD registration",  effect: "Sign up at GOV.UK before deadline",     note: "Free — separate from SA registration"  },
-    { tool: "Bridging software",      effect: "Connects Excel to HMRC",                note: "From £10/month (TaxCalc, BTCSoftware)" },
+    { tool: "QuickBooks",  effect: "Self-employed and small businesses",  note: "From £10/month — widely used" },
+    { tool: "Xero",        effect: "Small to medium businesses",          note: "From £15/month — accountant favourite" },
+    { tool: "FreeAgent",   effect: "Freelancers and contractors",         note: "Free with some business bank accounts" },
+    { tool: "Sage",        effect: "Established businesses",              note: "From £12/month — good for payroll integration" },
   ],
-
-  // ── AI CORRECTIONS ────────────────────────────────────────────────────────────
   aiCorrections: [
-    {
-      wrong:   "MTD only applies to VAT-registered businesses",
-      correct: "MTD for Income Tax applies to self-employed individuals and landlords above the £50,000 qualifying income threshold from April 2026 — regardless of VAT registration.",
-    },
-    {
-      wrong:   "The qualifying income threshold is based on your total income",
-      correct: "Qualifying income is specifically gross self-employment receipts plus gross UK property rental receipts. PAYE wages, dividends and savings interest are excluded.",
-    },
-    {
-      wrong:   "You can continue to use the HMRC portal for MTD submissions",
-      correct: "Mandated taxpayers cannot use the HMRC portal. All quarterly submissions must go through HMRC-approved MTD software.",
-    },
-    {
-      wrong:   "MTD penalties are the same as the existing SA late filing penalties",
-      correct: "MTD uses a new points-based penalty system. Each late quarterly submission earns a point. Four points triggers a £200 financial penalty.",
-    },
-    {
-      wrong:   "If your accountant files for you, you do not need to worry about MTD",
-      correct: "Even if your accountant files your quarterly submissions, you must register for MTD yourself and ensure your records are kept digitally from 6 April 2026.",
-    },
+    { wrong: "ChatGPT says: MTD means you have to file four full tax returns every year", correct: "Reality: Quarterly updates are brief digital summaries of income and expenses — not full tax returns. HMRC has explicitly confirmed that quarterly updates are not mini self assessments. The annual final declaration is the equivalent of your current return." },
+    { wrong: "ChatGPT says: MTD only applies to self-employed people", correct: "Reality: Landlords with gross property income over £50,000 are in scope from April 2026, even with no self-employment income. Combined income from both sources counts toward the threshold." },
+    { wrong: "ChatGPT says: You can use a spreadsheet for MTD", correct: "Reality: Spreadsheets alone do not meet MTD requirements. You must use HMRC-approved software, or bridge your spreadsheet to compliant software using a recognised bridging tool. Unapproved record keeping can trigger penalties." },
+    { wrong: "ChatGPT says: The MTD threshold is £10,000", correct: "Reality: The threshold for April 2026 is £50,000 gross income. It reduces to £30,000 in April 2027 and £20,000 in April 2028. The old £10,000 threshold was from an earlier proposal that was revised." },
   ],
-
-  // ── FAQ ───────────────────────────────────────────────────────────────────────
   faqs: [
-    { question: "What is Making Tax Digital for Income Tax?",                    answer: "Making Tax Digital for Income Tax (MTD ITSA) requires self-employed individuals and landlords above the qualifying income threshold to keep digital records and submit quarterly updates to HMRC through approved software, replacing the annual SA100 tax return." },
-    { question: "When does MTD start?",                                          answer: "MTD is mandatory from 6 April 2026 for those with qualifying income above £50,000 in the 2024-25 tax year. The threshold falls to £30,000 from April 2027 and £20,000 from April 2028." },
-    { question: "What counts as qualifying income for MTD?",                     answer: "Qualifying income is gross self-employment receipts plus gross UK property rental receipts. PAYE wages, dividends, savings interest and pension income are excluded." },
-    { question: "What is the first MTD quarterly deadline?",                     answer: "The first quarterly submission covers 6 April to 30 June 2026. The deadline to file it is 7 August 2026." },
-    { question: "What happens if I miss the MTD deadline?",                      answer: "Under the new points-based penalty system, each missed quarterly submission earns one penalty point. Four points triggers a £200 financial penalty. Repeat failures increase the penalty." },
-    { question: "Do I need special software for MTD?",                           answer: "Yes. You must use HMRC-approved MTD software. You cannot submit quarterly updates through the HMRC portal. Options include Xero, QuickBooks, FreeAgent and approved bridging software for spreadsheet users." },
-    { question: "Is FreeAgent free for MTD?",                                    answer: "FreeAgent is free indefinitely for NatWest, RBS, Ulster Bank and Mettle business customers. For others it costs from £19/month." },
-    { question: "Can I use Excel for MTD?",                                      answer: "Excel alone is not MTD compliant. You need HMRC-approved bridging software to create a digital link between your spreadsheet and HMRC. Options include TaxCalc and BTCSoftware." },
-    { question: "How do I register for MTD?",                                    answer: "Register at gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax. This is separate from your self-assessment registration. Your accountant can register on your behalf." },
-    { question: "What is the digital links rule?",                               answer: "Every transfer of data in your MTD record-keeping chain must be made by a digital link — no manual copying or re-keying. Copy-paste between systems breaks the digital links rule." },
-    { question: "Is there a grace period for MTD in 2026-27?",                   answer: "HMRC has confirmed a grace period for the first year. Penalty points for late quarterly submissions will not be issued in 2026-27. However, late payment penalties are not waived." },
-    { question: "What replaces the SA100 under MTD?",                            answer: "The SA100 self-assessment tax return is replaced by the MTD final declaration. This must be filed through MTD software by 31 January 2028 for the 2026-27 tax year." },
+    { question: "What is Making Tax Digital for Income Tax?", answer: "MTD ITSA requires self-employed individuals and landlords to keep digital records and submit quarterly updates to HMRC, plus an annual final declaration, using approved software. It replaces the existing once-a-year self assessment process for in-scope taxpayers." },
+    { question: "Am I in scope for MTD ITSA in 2026?", answer: "You are in scope from April 2026 if your combined gross income from self-employment and property exceeds £50,000. The threshold is based on gross income — before expenses. Combined income from multiple sources counts." },
+    { question: "What does a quarterly update actually involve?", answer: "A quarterly update is a brief digital submission summarising your income and expenses for the quarter. It is not a tax calculation or a mini return. HMRC uses the updates to give you an estimate of your tax position during the year. The actual tax calculation happens at the final annual declaration." },
+    { question: "What software do I need?", answer: "You must use HMRC-approved MTD-compatible software. Popular options include QuickBooks, Xero, FreeAgent, and Sage. If you currently use spreadsheets, you need either approved software or a recognised bridging tool that connects your spreadsheet to HMRC's systems." },
+    { question: "What are the penalties for non-compliance?", answer: "HMRC uses a points-based penalty system for late quarterly updates. Each missed update earns a point. At four points you receive a £200 penalty and continue accumulating penalties until the points reset. Failure to use approved software can also trigger penalties." },
+    { question: "Does MTD apply to company directors?", answer: "MTD ITSA applies to self-employment and property income reported through self assessment — not employment income processed through PAYE or company income. A company director who also has self-employment income or rental property above the threshold must comply with MTD for those income sources." },
+    { question: "What if I use an accountant?", answer: "Your accountant can submit MTD updates on your behalf, but the underlying records must be kept in approved software. Your accountant should be guiding you on software choice and compliance — if they have not raised MTD yet, take the questions from this page to your next meeting." },
+    { question: "When are quarterly updates due?", answer: "Quarterly updates are due within one month of the end of each quarter. Quarter 1 (April-June): by 5 August. Quarter 2 (July-September): by 5 November. Quarter 3 (October-December): by 5 February. Quarter 4 (January-March): by 5 May. The final annual declaration is due by 31 January." },
   ],
-
-  // ── ACCOUNTANT QUESTIONS ──────────────────────────────────────────────────────
-  accountantQuestionsH2: "Ask these before 7 August 2026",
+  accountantQuestionsH2: "Ask these at your next meeting",
   accountantQuestions: [
-    { q: "Am I definitely in scope for MTD based on my 2024-25 qualifying income?",      why: "PAYE wages are excluded from qualifying income. Your accountant needs to confirm the correct figure before you act." },
-    { q: "Who is handling my HMRC MTD registration — me or you?",                        why: "The most common reason people miss the deadline is both parties assume the other has registered. Agree explicitly." },
-    { q: "Which MTD-compatible software should we use for my situation?",                 why: "If your accountant uses specific software, using the same system makes collaboration seamless." },
-    { q: "What changes for my January filing under MTD?",                                 why: "The final declaration replaces the SA100 and must be filed through software — not the HMRC portal." },
-    { q: "What is my biggest compliance risk before 7 August?",                           why: "Usually software setup, digital records quality or delayed registration — not the law itself." },
+    { q: "Am I in scope for MTD ITSA in 2026 — and what is my total gross income across all sources?", why: "The threshold is gross income, not profit. If you are close to £50,000 across multiple sources, you need the exact figure. Your accountant can confirm from your last return." },
+    { q: "Is my current software MTD-compatible — or do I need to switch?", why: "Many landlords and sole traders are using spreadsheets or basic software that will not meet MTD requirements. Getting this wrong risks penalties." },
+    { q: "Can you handle my quarterly MTD updates on my behalf — and what will that cost?", why: "Most accountants will charge for quarterly submissions on top of annual fees. Knowing the cost now lets you budget and decide whether to handle updates yourself." },
+    { q: "Do I need separate MTD records for each property?", why: "Landlords with multiple properties need to understand how HMRC expects income to be reported — per property or combined. The rules differ depending on property type." },
+    { q: "Will MTD change my January tax bill — or just the timing of reporting?", why: "MTD changes when you report, not necessarily how much you owe. But quarterly updates may reveal underpayments earlier, which can be useful for cashflow planning." },
   ],
-
-  // ── CROSSLINK ─────────────────────────────────────────────────────────────────
-  crosslink: {
-    title: "Also relevant: 60% Allowance Sniper",
-    body:  "If your income exceeds £100,000, you may also be losing up to £5,028 per year to the personal allowance taper. 2.06 million UK taxpayers are affected.",
-    url:   "/uk/check/allowance-sniper",
-    label: "Check your 60% trap position →",
-  },
-
-  // ── LAW BAR ───────────────────────────────────────────────────────────────────
-  lawBarSummary: "MTD for Income Tax is mandatory from 6 April 2026 for UK self-employed and landlords with qualifying income above £50,000. Qualifying income is gross self-employment plus gross UK rental receipts. Submissions must use HMRC-approved software.",
-  lawBarBadges:  ["HMRC", "GOV.UK", "Finance (No.2) Act 2024", "Machine-readable JSON"],
+  crosslink: { title: "Also paying dividends from your company?", body: "Company directors taking dividends need to check their dividend tax position separately. The dividend trap catches many directors who think they are efficiently structured.", url: "/uk/check/dividend-trap", label: "Check your dividend position →" },
+  lawBarSummary: "MTD ITSA live from 6 April 2026 for gross income over £50,000. Threshold: £30,000 from April 2027, £20,000 from April 2028. Requires HMRC-approved software and four quarterly updates plus annual final declaration. Under Finance Act 2021.",
+  lawBarBadges: ["HMRC", "Finance Act 2021", "MTD ITSA", "Machine-readable JSON"],
   sources: [
-    { title: "GOV.UK — Use Making Tax Digital for Income Tax",              url: "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" },
-    { title: "GOV.UK — Sign up for Making Tax Digital for Income Tax",      url: "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax" },
-    { title: "GOV.UK — Find MTD compatible software",                       url: "https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax" },
-    { title: "Machine-readable JSON rules",                                  url: "/api/rules/mtd.json" },
+    { title: "HMRC — Making Tax Digital for Income Tax", url: "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" },
+    { title: "HMRC — MTD ITSA timeline and thresholds", url: "https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview" },
+    { title: "Machine-readable JSON rules", url: "/api/rules/mtd-scorecard" },
   ],
-
-  // ── PRODUCT FILES ─────────────────────────────────────────────────────────────
-  // Content is the full HTML for each file
-  // COLE injects nav, header, footer, print CSS automatically
   files: [
-    {
-      num:   "01",
-      slug:  "01-scope-assessment",
-      name:  "Your MTD Scope Assessment",
-      desc:  "Your exact compliance position — confirmed in writing.",
-      tier:  1,
-      content: `
-<h2>Your MTD Position — Confirmed</h2>
-<p>Based on your qualifying income bracket, this assessment confirms your Making Tax Digital for Income Tax position for the 2026-27 tax year.</p>
-<div class="action-box">
-  <h3>Your Status: REQUIRED from 6 April 2026</h3>
-  <p>HMRC uses your 2024-25 self-assessment return. If qualifying income exceeded £50,000 you are mandated from 6 April 2026.</p>
-</div>
-<h2>What Counts as Your Qualifying Income</h2>
-<table>
-  <tr><th>Included</th><th>Not Included</th></tr>
-  <tr><td>Gross self-employment receipts</td><td>PAYE wages and salary</td></tr>
-  <tr><td>Gross UK property rental receipts</td><td>Dividends</td></tr>
-  <tr><td></td><td>Savings interest</td></tr>
-  <tr><td></td><td>Pension income</td></tr>
-</table>
-<div class="highlight"><strong>The critical rule:</strong> HMRC uses gross turnover — not profit. A sole trader with £55,000 turnover and £10,000 profit has qualifying income of £55,000.</div>
-<h2>Your Deadlines</h2>
-<table>
-  <tr><th>Quarter</th><th>Period</th><th>Deadline</th></tr>
-  <tr><td><strong>Q1 — URGENT</strong></td><td>6 April – 30 June 2026</td><td><strong>7 August 2026</strong></td></tr>
-  <tr><td>Q2</td><td>1 July – 30 September 2026</td><td>7 November 2026</td></tr>
-  <tr><td>Q3</td><td>1 October – 31 December 2026</td><td>7 February 2027</td></tr>
-  <tr><td>Q4</td><td>1 January – 31 March 2027</td><td>7 May 2027</td></tr>
-  <tr><td>Final declaration</td><td>Full year 2026-27</td><td>31 January 2028</td></tr>
-</table>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">HMRC.gov.uk — Making Tax Digital for Income Tax</a> · Finance (No.2) Act 2024 · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "02",
-      slug:  "02-software-recommendation",
-      name:  "Your Software Recommendation",
-      desc:  "The right MTD software for your specific situation.",
-      tier:  1,
-      content: `
-<h2>The Rule You Cannot Work Around</h2>
-<p>You must keep digital records using HMRC-approved software and submit quarterly updates directly from that software. <strong>You cannot use the HMRC portal.</strong></p>
-<h2>Software Decision Framework</h2>
-<ol>
-  <li><strong>Bank with NatWest, RBS, Mettle?</strong> → FreeAgent. Free. Stop here.</li>
-  <li><strong>Accountant uses specific software?</strong> → Use the same software.</li>
-  <li><strong>Want to keep spreadsheets?</strong> → Bridging software.</li>
-</ol>
-<table>
-  <tr><th>Software</th><th>Price</th><th>Best For</th></tr>
-  <tr><td>FreeAgent</td><td>Free (NatWest/RBS)</td><td>Sole traders, landlords</td></tr>
-  <tr><td>Xero</td><td>From £16/month</td><td>Accountant collaboration</td></tr>
-  <tr><td>QuickBooks</td><td>From £14/month</td><td>Invoicing, mobile app</td></tr>
-  <tr><td>Zoho Books</td><td>Free tier</td><td>Sole traders (free option)</td></tr>
-  <tr><td>TaxCalc Bridging</td><td>From £10/month</td><td>Spreadsheet users</td></tr>
-</table>
-<p>Full approved list: <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax">GOV.UK — Find MTD compatible software</a></p>
-`,
-    },
-    {
-      num:   "03",
-      slug:  "03-registration-steps",
-      name:  "Your HMRC Registration Steps",
-      desc:  "Step-by-step MTD registration walkthrough.",
-      tier:  1,
-      content: `
-<h2>Before You Register</h2>
-<ol>
-  <li>Government Gateway account (your existing SA login)</li>
-  <li>UTR to hand (10-digit number)</li>
-  <li>MTD software chosen (see File 02)</li>
-</ol>
-<div class="action-box">
-  <h3>Go to the MTD sign-up page</h3>
-  <p><a href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax" style="color:#60a5fa;">gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax</a></p>
-  <p>This is separate from your SA registration. Register at least 2 weeks before 7 August 2026.</p>
-</div>
-<h2>Registration Timeline</h2>
-<table>
-  <tr><th>Action</th><th>When</th></tr>
-  <tr><td>Choose software</td><td>Now</td></tr>
-  <tr><td>Register with HMRC</td><td>At least 2 weeks before 7 August</td></tr>
-  <tr><td>Connect software to HMRC</td><td>Before first submission</td></tr>
-  <tr><td><strong>First quarterly submission</strong></td><td><strong>By 7 August 2026</strong></td></tr>
-</table>
-<div class="highlight"><strong>Most common mistake:</strong> assuming your accountant registered you when they have not. Confirm explicitly who is registering and by when.</div>
-`,
-    },
-    {
-      num:   "04",
-      slug:  "04-deadline-calendar",
-      name:  "Your Deadline Calendar",
-      desc:  "Every filing date for 2026-27 — add these now.",
-      tier:  1,
-      content: `
-<div class="action-box">
-  <h3>Q1 — MOST URGENT</h3>
-  <p>Period: 6 April – 30 June 2026 · <strong>Deadline: 7 August 2026</strong></p>
-</div>
-<h2>Full 2026-27 Calendar</h2>
-<table>
-  <tr><th>Obligation</th><th>Covers</th><th>Deadline</th></tr>
-  <tr><td><strong>Q1 submission</strong></td><td>Apr–Jun 2026</td><td><strong>7 Aug 2026</strong></td></tr>
-  <tr><td>Q2 submission</td><td>Jul–Sep 2026</td><td>7 Nov 2026</td></tr>
-  <tr><td>Q3 submission</td><td>Oct–Dec 2026</td><td>7 Feb 2027</td></tr>
-  <tr><td>Q4 submission</td><td>Jan–Mar 2027</td><td>7 May 2027</td></tr>
-  <tr><td>Final declaration</td><td>Full year</td><td>31 Jan 2028</td></tr>
-</table>
-<div class="info-box"><strong>Grace period 2026-27:</strong> No penalty POINTS for late quarterly submissions in the first year. Late payment penalties are NOT waived.</div>
-<h2>Add to Your Calendar Now</h2>
-<ul class="checklist">
-  <li>7 August 2026 — Q1 MTD deadline (URGENT)</li>
-  <li>7 November 2026 — Q2 MTD deadline</li>
-  <li>7 February 2027 — Q3 MTD deadline</li>
-  <li>7 May 2027 — Q4 MTD deadline</li>
-  <li>31 January 2028 — Final declaration</li>
-</ul>
-`,
-    },
-    {
-      num:   "05",
-      slug:  "05-accountant-brief",
-      name:  "Your Accountant Brief",
-      desc:  "Print this and take it to your next meeting.",
-      tier:  1,
-      content: `
-<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your accountant before your next meeting.</div>
-<h2>Client MTD Status</h2>
-<table>
-  <tr><th>Item</th><th>Detail</th></tr>
-  <tr><td>Status</td><td>In scope from 6 April 2026</td></tr>
-  <tr><td>Qualifying income threshold</td><td>£50,000 gross</td></tr>
-  <tr><td>First deadline</td><td><strong>7 August 2026</strong></td></tr>
-</table>
-<h2>Five Questions to Raise</h2>
-<div class="action-box">
-  <h3>Question 1</h3>
-  <p>"Am I definitely in scope based on my qualifying income from my 2024-25 return?"</p>
-</div>
-<h3>Question 2</h3>
-<p>"Who is handling my HMRC MTD registration — me or you?"</p>
-<h3>Question 3</h3>
-<p>"Which MTD software should we use for my situation?"</p>
-<h3>Question 4</h3>
-<p>"What changes for my January filing under MTD?"</p>
-<h3>Question 5</h3>
-<p>"What is my biggest compliance risk before 7 August?"</p>
-<h2>Action Items to Agree</h2>
-<ul class="checklist">
-  <li>Confirm qualifying income figure from 2024-25 return</li>
-  <li>Confirm MTD software to use</li>
-  <li>Agree who registers with HMRC and by when</li>
-  <li>Confirm how quarterly submissions will be handled</li>
-</ul>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">HMRC.gov.uk — Making Tax Digital for Income Tax</a> · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "06",
-      slug:  "06-gap-closure-plan",
-      name:  "Your Gap Closure Plan",
-      desc:  "What to fix, in what order, by when.",
-      tier:  2,
-      content: `
-<h2>Gap 1 — Software (Fix First)</h2>
-<div class="action-box">
-  <h3>This week</h3>
-  <p>1. Choose software (see File 02) · 2. Sign up · 3. Connect bank · 4. Import April 2026 transactions</p>
-</div>
-<h2>Gap 2 — Digital Records (Fix Second)</h2>
-<ul class="checklist">
-  <li>All income recorded digitally from 6 April 2026</li>
-  <li>All allowable expenses recorded digitally</li>
-  <li>Bank transactions reconciled</li>
-</ul>
-<h2>Gap 3 — HMRC Registration (Fix Third)</h2>
-<ul class="checklist">
-  <li>Registered for MTD via GOV.UK</li>
-  <li>Government Gateway connected to software</li>
-  <li>Confirmation email received from HMRC</li>
-</ul>
-<h2>Week-by-Week Plan</h2>
-<table>
-  <tr><th>Week</th><th>Action</th></tr>
-  <tr><td><strong>This week</strong></td><td>Choose software. Sign up. Connect bank.</td></tr>
-  <tr><td><strong>Next week</strong></td><td>Enter April and May transactions. Register with HMRC.</td></tr>
-  <tr><td><strong>Week 3</strong></td><td>Enter June transactions. Reconcile Q1 records.</td></tr>
-  <tr><td><strong>By 7 Aug</strong></td><td>Run Q1 submission. Review. Submit to HMRC.</td></tr>
-</table>
-`,
-    },
-    {
-      num:   "07",
-      slug:  "07-first-submission-checklist",
-      name:  "Your First Submission Checklist",
-      desc:  "Every step before you submit Q1 on 7 August 2026.",
-      tier:  2,
-      content: `
-<div class="action-box">
-  <h3>Q1: 6 April – 30 June 2026 · Deadline: 7 August 2026</h3>
-</div>
-<h2>Part 1 — Software Ready</h2>
-<ul class="checklist">
-  <li>MTD-compatible software installed or accessed online</li>
-  <li>Software connected to HMRC via Government Gateway</li>
-  <li>Bank feed connected and transactions importing</li>
-</ul>
-<h2>Part 2 — Records Complete</h2>
-<ul class="checklist">
-  <li>All self-employment income entered or imported</li>
-  <li>All allowable expenses entered and categorised</li>
-  <li>Bank balance matches statements as at 30 June 2026</li>
-</ul>
-<h2>Part 3 — Digital Links Check</h2>
-<ul class="checklist">
-  <li>No figures manually copied between systems</li>
-  <li>All bank data came through bank feed</li>
-  <li>If using bridging software — link tested and active</li>
-</ul>
-<h2>Part 4 — Submit</h2>
-<ul class="checklist">
-  <li>Log into MTD software</li>
-  <li>Select Q1: 6 April – 30 June 2026</li>
-  <li>Review income and expense summary</li>
-  <li>Submit to HMRC</li>
-  <li>Save confirmation and reference number</li>
-</ul>
-`,
-    },
-    {
-      num:   "08",
-      slug:  "08-digital-records-template",
-      name:  "Your Digital Records Template",
-      desc:  "Exactly what HMRC requires — use from 6 April 2026.",
-      tier:  2,
-      content: `
-<h2>What HMRC Requires Per Transaction</h2>
-<table>
-  <tr><th>Field</th><th>What to Record</th><th>Example</th></tr>
-  <tr><td>Date</td><td>Date income received or expense paid</td><td>15 April 2026</td></tr>
-  <tr><td>Amount</td><td>Gross amount before tax</td><td>£2,500.00</td></tr>
-  <tr><td>Category</td><td>HMRC expense category</td><td>Office costs</td></tr>
-  <tr><td>Description</td><td>Brief description</td><td>Invoice #001</td></tr>
-</table>
-<h2>The Five Golden Rules</h2>
-<ol>
-  <li><strong>Record as you go</strong> — weekly, not at deadline</li>
-  <li><strong>Keep the digital original</strong> — receipt photo counts</li>
-  <li><strong>Separate business and personal</strong> — use a business account</li>
-  <li><strong>Record gross amounts</strong> — before any deductions</li>
-  <li><strong>Reconcile to your bank</strong> — records must tie to statements</li>
-</ol>
-`,
-    },
+    { num: "01", slug: "mtd-01", name: "Your MTD Scope Verdict", desc: "Whether you are in scope, from when, and what it means for your specific income mix.", tier: 1, content: `<h2>Your MTD Position</h2><div class="action-box"><h3>The Thresholds</h3><p>April 2026: gross income over £50,000</p><p>April 2027: over £30,000</p><p>April 2028: over £20,000</p></div><h2>What counts toward the threshold</h2><table><tr><th>Income type</th><th>Counts?</th></tr><tr><td>Self-employment gross</td><td>Yes</td></tr><tr><td>Property gross rental</td><td>Yes</td></tr><tr><td>Employment (PAYE)</td><td>No</td></tr><tr><td>Dividends</td><td>No</td></tr></table><p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">HMRC — MTD ITSA</a></p>` },
+    { num: "02", slug: "mtd-02", name: "MTD Software Comparison", desc: "HMRC-approved software options ranked for your situation.", tier: 1, content: `<h2>HMRC-Approved MTD Software</h2><table><tr><th>Software</th><th>Cost</th><th>Best for</th><th>HMRC approved?</th></tr><tr><td>QuickBooks</td><td>From £10/month</td><td>Self-employed, small landlords</td><td>Yes</td></tr><tr><td>Xero</td><td>From £15/month</td><td>Growing businesses</td><td>Yes</td></tr><tr><td>FreeAgent</td><td>Free–£19/month</td><td>Freelancers, contractors</td><td>Yes</td></tr><tr><td>Sage</td><td>From £12/month</td><td>Established businesses</td><td>Yes</td></tr></table><div class="warning-box"><strong>Spreadsheets alone:</strong> Do not qualify. Must be bridged with approved bridging software.</div>` },
+    { num: "03", slug: "mtd-03", name: "Quarterly Update Calendar", desc: "Exact dates for all four quarterly submissions and your annual declaration.", tier: 1, content: `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td></tr><tr><td>Final declaration</td><td>Full year</td><td>31 January</td></tr></table><div class="info-box"><strong>Penalty system:</strong> Each missed quarterly update = 1 point. At 4 points = £200 penalty. Points reset after 24 months of compliance.</div>` },
+    { num: "04", slug: "mtd-04", name: "Accountant Brief — MTD", desc: "Questions to take to your accountant about MTD compliance.", tier: 1, content: `<div class="info-box"><strong>How to use:</strong> Forward to your accountant or take to your next meeting.</div><h2>MTD Questions for Your Accountant</h2><div class="action-box"><h3>Question 1</h3><p>"Am I in scope for MTD ITSA — and from which April?"</p></div><h3>Question 2</h3><p>"Is my current software MTD-compatible?"</p><h3>Question 3</h3><p>"Will you handle my quarterly updates — and what is the cost?"</p><h3>Question 4</h3><p>"How do I report multiple properties under MTD?"</p><h3>Question 5</h3><p>"Does MTD change my tax bill or just the timing?"</p>` },
+    { num: "05", slug: "mtd-05", name: "MTD Penalty Risk Assessment", desc: "What HMRC can charge and how to avoid it.", tier: 1, content: `<h2>MTD Penalty System</h2><p>HMRC uses a points-based system for late quarterly updates.</p><table><tr><th>Points</th><th>Consequence</th></tr><tr><td>1–3 points</td><td>Warning — no financial penalty</td></tr><tr><td>4 points</td><td>£200 financial penalty</td></tr><tr><td>5+ points</td><td>£200 per additional late update</td></tr></table><div class="warning-box"><strong>Points reset:</strong> After 24 months of full compliance from the point threshold date.</div><h2>Other Penalties</h2><p>Late annual declaration: same penalty regime as current self assessment — £100 immediately, rising to £900+ after 12 months.</p>` },
+    { num: "06", slug: "mtd-06", name: "Multi-Property MTD Guide", desc: "How to handle MTD if you have more than one rental property.", tier: 2, content: `<h2>Multiple Properties Under MTD</h2><p>HMRC requires landlords to report each property separately or combined depending on property type. Residential and furnished holiday let properties are reported separately.</p><table><tr><th>Property type</th><th>MTD treatment</th></tr><tr><td>Residential lets</td><td>Combined as one business</td></tr><tr><td>Furnished holiday lets</td><td>Separate MTD business</td></tr><tr><td>Commercial property</td><td>Not in scope for MTD ITSA</td></tr></table>` },
+    { num: "07", slug: "mtd-07", name: "Self-Employed + Landlord Combined Plan", desc: "Managing MTD across two income sources — self-employment and property.", tier: 2, content: `<h2>Combined Income MTD Strategy</h2><p>If you have both self-employment and rental income, you have two separate MTD businesses and must report each quarterly.</p><div class="action-box"><h3>Key Decisions</h3><p>1. One software for both or separate systems?</p><p>2. Combine with accountant or handle quarterly updates yourself?</p><p>3. Set up automatic bank feeds to reduce quarterly admin?</p></div>` },
+    { num: "08", slug: "mtd-08", name: "MTD Transition Checklist", desc: "Step-by-step to get compliant before your MTD start date.", tier: 2, content: `<h2>MTD Transition Checklist</h2><ul class="checklist"><li>Confirm your gross income total and in-scope date</li><li>Choose HMRC-approved software</li><li>Set up bank feeds or import system</li><li>Register for MTD ITSA with HMRC</li><li>Complete first quarterly update by due date</li><li>Brief your accountant on your software choice</li><li>Set calendar reminders for all four quarterly due dates</li><li>File annual final declaration by 31 January</li></ul>` },
   ],
-
-  // ── CALENDAR ──────────────────────────────────────────────────────────────────
-  calendarTitle: "MTD Compliance Deadlines",
+  calendarTitle: "MTD ITSA — Key Dates",
   tier1Calendar: [
-    { uid: "mtd-q1",   summary: "🔴 MTD Q1 Deadline — 7 August 2026",   description: "File your first MTD quarterly submission for 6 April to 30 June 2026.", date: "20260807" },
-    { uid: "mtd-q2",   summary: "MTD Q2 Deadline — 7 November 2026",    description: "File your second MTD quarterly submission.", date: "20261107" },
-    { uid: "mtd-q3",   summary: "MTD Q3 Deadline — 7 February 2027",    description: "File your third MTD quarterly submission.", date: "20270207" },
-    { uid: "mtd-final",summary: "MTD Final Declaration — 31 January 2028", description: "File your MTD final declaration — replaces SA100.", date: "20280131" },
+    { uid: "mtd-q1", summary: "MTD — Quarter 1 Update Due", description: "First MTD quarterly update covering 6 April to 5 July. Due by 5 August.", date: "20260805" },
+    { uid: "mtd-q2", summary: "MTD — Quarter 2 Update Due", description: "Second quarterly update covering July to October.", date: "20261105" },
+    { uid: "mtd-q3", summary: "MTD — Quarter 3 Update Due", description: "Third quarterly update.", date: "20270205" },
+    { uid: "mtd-final", summary: "MTD — Annual Final Declaration Due", description: "Annual final declaration — equivalent to current self assessment.", date: "20270131" },
   ],
   tier2Calendar: [
-    { uid: "mtd-sw",   summary: "MTD Software — Set up this week",        description: "Choose, sign up and connect your MTD-approved software.", date: "relative:+7days" },
-    { uid: "mtd-reg",  summary: "MTD Registration — Complete at HMRC",   description: "Register at gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax", date: "relative:+14days" },
-    { uid: "mtd-q1",   summary: "🔴 MTD Q1 Deadline — 7 August 2026",   description: "File your first MTD quarterly submission.", date: "20260807" },
-    { uid: "mtd-q2",   summary: "MTD Q2 Deadline — 7 November 2026",    description: "File your second MTD quarterly submission.", date: "20261107" },
-    { uid: "mtd-q3",   summary: "MTD Q3 Deadline — 7 February 2027",    description: "File your third MTD quarterly submission.", date: "20270207" },
-    { uid: "mtd-final",summary: "MTD Final Declaration — 31 January 2028", description: "File your MTD final declaration — replaces SA100.", date: "20280131" },
+    { uid: "mtd-software", summary: "MTD — Confirm software is HMRC-approved", description: "Check your current software against HMRC approved software list.", date: "relative:+7days" },
+    { uid: "mtd-register", summary: "MTD — Register for MTD ITSA with HMRC", description: "Register via your HMRC online services account.", date: "relative:+14days" },
+    { uid: "mtd-q1", summary: "MTD — Quarter 1 Update Due", description: "First quarterly update due 5 August.", date: "20260805" },
+    { uid: "mtd-final", summary: "MTD — Annual Final Declaration", description: "Final annual declaration due 31 January 2027.", date: "20270131" },
   ],
-
-  // ── DELIVERY ──────────────────────────────────────────────────────────────────
-  delivery: {
-    tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_MTD_67",
-    tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_MTD_127",
-  },
-
-  // ── MONITORING ────────────────────────────────────────────────────────────────
-  monitorUrls: [
-    "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax",
-    "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax",
-    "https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax",
-  ],
-
-  // ── SIDEBAR ───────────────────────────────────────────────────────────────────
-  sidebarNumbers: [
-    { label: "Mandate threshold", value: "£50,000" },
-    { label: "First deadline",    value: "7 Aug 2026" },
-    { label: "Threshold 2027",    value: "£30,000" },
-    { label: "Threshold 2028",    value: "£20,000" },
-  ],
-  sidebarMathsTitle:    "What counts as qualifying income",
-  sidebarMathsIncludes: ["Gross self-employment receipts", "Gross UK property rental receipts"],
-  sidebarMathsExcludes: ["PAYE wages and salary", "Dividends", "Savings interest", "Pension income"],
-  sidebarMathsNote:     "Source: GOV.UK — Making Tax Digital for Income Tax",
-
-  // ── JSON-LD HOWTO STEPS ───────────────────────────────────────────────────────
+  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_MTD_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_MTD_147" },
+  monitorUrls: ["https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax"],
+  sidebarNumbers: [{ label: "Phase 1 threshold", value: "£50,000" }, { label: "Quarterly updates", value: "4 per year" }, { label: "Live from", value: "April 2026" }, { label: "Software penalty", value: "Up to £400" }],
+  sidebarMathsTitle: "What counts toward the MTD threshold",
+  sidebarMathsIncludes: ["Self-employment gross income", "Property gross rental income", "All sources combined"],
+  sidebarMathsExcludes: ["NOT PAYE employment income", "NOT dividends", "NOT pension income"],
+  sidebarMathsNote: "Source: HMRC — MTD ITSA · Finance Act 2021",
   howToSteps: [
-    { position: 1, name: "Select your income bracket",  text: "Choose your approximate gross qualifying income from self-employment and UK rental only." },
-    { position: 2, name: "Get your instant verdict",    text: "See immediately whether you are in scope for MTD from 6 April 2026." },
-    { position: 3, name: "Answer compliance questions", text: "Tell us about your software, registration status and accountant arrangement." },
-    { position: 4, name: "Get your compliance plan",   text: "Receive a personalised compliance position and action plan specific to your situation." },
+    { position: 1, name: "Enter your gross income", text: "Choose your total gross income from self-employment and property combined." },
+    { position: 2, name: "Identify your income sources", text: "Specify whether you are self-employed, a landlord, or both." },
+    { position: 3, name: "Check your software", text: "Confirm whether you currently use HMRC-approved MTD-compatible software." },
+    { position: 4, name: "Get your MTD verdict", text: "See immediately whether you are in scope, from when, and what your compliance gap is." },
   ],
-
-  // ── CLAUDE API ────────────────────────────────────────────────────────────────
   successPromptFields: [
-    { key: "mtd_income_bracket", label: "Income bracket",          defaultVal: "£50,001 – £75,000" },
-    { key: "mtd_score",          label: "Compliance score",         defaultVal: "42" },
-    { key: "mtd_income_source",  label: "Income source",           defaultVal: "self-employment" },
-    { key: "mtd_has_software",   label: "Has MTD software",        defaultVal: "false" },
-    { key: "mtd_is_registered",  label: "Registered for MTD",      defaultVal: "false" },
-    { key: "mtd_has_accountant", label: "Accountant confirmed MTD", defaultVal: "false" },
+    { key: "mtd_income", label: "Gross income", defaultVal: "40000" },
+    { key: "mtd_source", label: "Income source", defaultVal: "both" },
+    { key: "mtd_software", label: "Has approved software", defaultVal: "false" },
+    { key: "mtd_status", label: "MTD status", defaultVal: "approaching" },
   ],
-
-  tier1AssessmentFields: [
-    "status", "score", "scoreLabel", "incomeSource", "mandateSummary",
-    "biggestGap", "firstAction", "softwareRec", "accountantQuestions",
-  ],
-
-  tier2AssessmentFields: [
-    "status", "score", "scoreLabel", "incomeSource", "mandateSummary",
-    "gap1", "gap2", "gap3",
-    "actions", "softwareRec", "softwareWhy",
-    "weekPlan", "accountantQuestions",
-  ],
-
+  tier1AssessmentFields: ["status", "inScopeFrom", "softwareGap", "quarterlyDates", "firstAction", "accountantQuestions"],
+  tier2AssessmentFields: ["status", "inScopeFrom", "softwareGap", "quarterlyDates", "multiPropertyPlan", "actions", "weekPlan", "accountantQuestions"],
+  persona: {
+    name: "James",
+    age: 54,
+    occupation: "Director, Hartley Precision Engineering Ltd — 12 employees, West Midlands",
+    location: "Solihull, West Midlands",
+    family: "Wife Helen (part-time teacher). Two kids at university.",
+    financialSnapshot: "£62k salary, £38k dividends. Birmingham rental flat. Same accountant his dad used — once a year in April.",
+    painPoint: "James runs a tight ship on the factory floor. His tax affairs are a different story.",
+    discovery: "James searched after getting an HMRC letter — not threatening, just a reminder that made him realise he had no idea if his numbers were right.",
+    voice: "Plain. Direct. Wants the number and what to do about it. No jargon.",
+  },
+  story: {
+    hook: "James got the HMRC letter on a Tuesday morning. He read it twice and still was not sure what it meant.",
+    setup: [
+    "He runs Hartley Precision Engineering out of a unit in Solihull. Twelve employees. Good order book. The business side he knows inside out. The tax side he leaves to his accountant Dave, who he sees every April for about forty minutes.",
+    "The letter said something about Making Tax Digital and quarterly submissions. James assumed it applied to bigger companies. He makes around £280,000 in annual turnover — nowhere near what he thought the threshold would be.",
+    "He typed the question into Google on his phone while the kettle boiled. The first three results said different things. One said £85,000. One said £50,000. One said it was already live. He gave up and came back to it that evening.",
+    ],
+    revelation: "When he ran the calculator it came back immediately: above the £50,000 threshold. MTD for Income Tax applies from April 2026. His current system — a spreadsheet Dave checks once a year — does not qualify.",
+    resolution: "James called Dave the next morning with a specific question for the first time: am I compliant, and what software do we need? Dave appreciated the preparation.",
+  },
 };

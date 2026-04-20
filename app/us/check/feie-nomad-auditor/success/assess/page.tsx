@@ -12,40 +12,40 @@ const FILES = [
   {
     "num": "01",
     "slug": "feie-01",
-    "name": "Your FEIE Eligibility Verdict",
-    "desc": "Your exact qualification status — day count, abode risk, SE tax exposure.",
+    "name": "Your FEIE Eligibility Report",
+    "desc": "Whether you qualify, which test you meet, and your abode risk level.",
     "tier": 1,
     "start": false
   },
   {
     "num": "02",
     "slug": "feie-02",
-    "name": "Your Abode Neutralizer Checklist",
-    "desc": "Documents the IRS expects and US ties you must eliminate to protect the exclusion.",
+    "name": "US Abode Risk Assessment",
+    "desc": "Your specific abode indicators and how the IRS would assess them.",
     "tier": 1,
     "start": true
   },
   {
     "num": "03",
     "slug": "feie-03",
-    "name": "Your Travel Log Template",
-    "desc": "IRS-compliant travel log for Form 2555 — with midnight rule annotations.",
+    "name": "FEIE vs FTC Comparison",
+    "desc": "Which method saves more for your country and income level.",
     "tier": 1,
     "start": false
   },
   {
     "num": "04",
     "slug": "feie-04",
-    "name": "State Nexus Break Guide",
-    "desc": "How to break state tax nexus — especially for California, New York and Virginia.",
+    "name": "Day Count Calculator and Calendar",
+    "desc": "Track your days outside the US to confirm physical presence test.",
     "tier": 1,
     "start": false
   },
   {
     "num": "05",
     "slug": "feie-05",
-    "name": "Your Accountant Brief",
-    "desc": "Print and take to your next meeting — FEIE questions your CPA must answer.",
+    "name": "CPA Brief — FEIE",
+    "desc": "Questions for your CPA about FEIE compliance and optimisation.",
     "tier": 1,
     "start": false
   }
@@ -55,13 +55,11 @@ const FILES = [
 
 interface Assessment {
   status: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  dayCount: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  feieEligibility: string | string[] | { title: string; deadline: string; steps: string[] }[];
   abodeRisk: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  seTaxExposure: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  criticalInsight: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  exclusionAmount: string | string[] | { title: string; deadline: string; steps: string[] }[];
+  feieVsFtc: string | string[] | { title: string; deadline: string; steps: string[] }[];
   firstAction: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  abodeFixes: string | string[] | { title: string; deadline: string; steps: string[] }[];
-  accountantQuestions: string | string[] | { title: string; deadline: string; steps: string[] }[];
   [key: string]: unknown;
 }
 
@@ -76,7 +74,7 @@ export default function SuccessAssess() {
   const [checked,    setChecked]    = useState<Record<number, boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-04-15T23:59:59.000-05:00").getTime() - Date.now()) / 86_400_000
+    (new Date("2027-06-15T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -99,21 +97,19 @@ export default function SuccessAssess() {
   async function generateAssessment(name: string) {
     setLoading(true);
     try {
-      const feie_days_abroad = sessionStorage.getItem("feie-nomad-auditor_feie_days_abroad") || "340";
-      const feie_us_ties = sessionStorage.getItem("feie-nomad-auditor_feie_us_ties") || "minor";
-      const feie_self_employed = sessionStorage.getItem("feie-nomad-auditor_feie_self_employed") || "false";
-      const feie_status = sessionStorage.getItem("feie-nomad-auditor_feie_status") || "at_risk";
-      const feie_se_tax = sessionStorage.getItem("feie-nomad-auditor_feie_se_tax") || "0";
+      const feie_days = sessionStorage.getItem("feie-nomad-auditor_feie_days") || "350";
+      const feie_abode = sessionStorage.getItem("feie-nomad-auditor_feie_abode") || "false";
+      const feie_income = sessionStorage.getItem("feie-nomad-auditor_feie_income") || "95000";
 
       const prompt = `You are a UK tax expert. Write a personalised assessment for ${name !== "your" ? name : "this taxpayer"}.
 
 Their data:
-- Days abroad: ${feie_days_abroad}\n- US ties: ${feie_us_ties}\n- Self-employed: ${feie_self_employed}\n- FEIE status: ${feie_status}\n- SE tax exposure: ${feie_se_tax}
+- Days abroad: ${feie_days}\n- Has US abode: ${feie_abode}\n- Foreign income: ${feie_income}
 
 Write a personalised, specific assessment. Use their name if provided. Reference their specific numbers. Be direct and actionable — not generic.
 
 Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. Just JSON with these fields:
-"status": "...", "dayCount": "...", "abodeRisk": "...", "seTaxExposure": "...", "criticalInsight": "...", "firstAction": "...", "abodeFixes": "...", "accountantQuestions": "..."
+"status": "...", "feieEligibility": "...", "abodeRisk": "...", "exclusionAmount": "...", "feieVsFtc": "...", "firstAction": "..."
 
 For array fields use actual arrays. For action items use objects with title, deadline, steps array.`;
 
@@ -142,23 +138,19 @@ For array fields use actual arrays. For action items use objects with title, dea
     const displayName = name !== "your" ? name : "Your";
     const result: Record<string, unknown> = {};
     result["status"] = "status — building for " + displayName;
-    result["dayCount"] = "dayCount — building for " + displayName;
+    result["feieEligibility"] = "feieEligibility — building for " + displayName;
     result["abodeRisk"] = "abodeRisk — building for " + displayName;
-    result["seTaxExposure"] = "seTaxExposure — building for " + displayName;
-    result["criticalInsight"] = "criticalInsight — building for " + displayName;
+    result["exclusionAmount"] = "exclusionAmount — building for " + displayName;
+    result["feieVsFtc"] = "feieVsFtc — building for " + displayName;
     result["firstAction"] = "firstAction — building for " + displayName;
-    result["abodeFixes"] = "abodeFixes — building for " + displayName;
-    result["accountantQuestions"] = [];
     return result as Assessment;
   }
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const feie_days_abroad = sessionStorage.getItem("feie-nomad-auditor_feie_days_abroad") || "340";
-    const feie_us_ties = sessionStorage.getItem("feie-nomad-auditor_feie_us_ties") || "minor";
-    const feie_self_employed = sessionStorage.getItem("feie-nomad-auditor_feie_self_employed") || "false";
-    const feie_status = sessionStorage.getItem("feie-nomad-auditor_feie_status") || "at_risk";
-    const feie_se_tax = sessionStorage.getItem("feie-nomad-auditor_feie_se_tax") || "0";
+    const feie_days = sessionStorage.getItem("feie-nomad-auditor_feie_days") || "350";
+    const feie_abode = sessionStorage.getItem("feie-nomad-auditor_feie_abode") || "false";
+    const feie_income = sessionStorage.getItem("feie-nomad-auditor_feie_income") || "95000";
 
     // Helper to format relative dates
     function relativeDate(daysFromNow: number): string {
@@ -174,39 +166,12 @@ For array fields use actual arrays. For action items use objects with title, dea
       "METHOD:PUBLISH",
       `X-WR-CALNAME:FEIE Nomad Auditor — Action Dates`,
       "BEGIN:VEVENT",
-      `UID:feie-q1-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260415"}`,
-      `DTEND;VALUE=DATE:${"20260415"}`,
+      `UID:feie-deadline-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20270615"}`,
+      `DTEND;VALUE=DATE:${"20270615"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:FEIE — Q1 SE Tax Estimated Payment",
-      "DESCRIPTION:Q1 estimated tax payment — include self-employment tax on foreign earned income.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:feie-q2-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260616"}`,
-      `DTEND;VALUE=DATE:${"20260616"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:FEIE — Q2 SE Tax Estimated Payment",
-      "DESCRIPTION:Q2 estimated tax payment.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:feie-q3-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260915"}`,
-      `DTEND;VALUE=DATE:${"20260915"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:FEIE — Q3 SE Tax Estimated Payment",
-      "DESCRIPTION:Q3 estimated tax payment.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:feie-final-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260415"}`,
-      `DTEND;VALUE=DATE:${"20260415"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:FEIE — Form 2555 Filing Deadline",
-      "DESCRIPTION:Annual return with Form 2555 due. Document 330-day count and abode evidence.",
+      "SUMMARY:Expat Tax Return Deadline — June 15",
+      "DESCRIPTION:Automatic 2-month extension for US citizens abroad. File Form 2555 for FEIE claim.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -267,7 +232,7 @@ For array fields use actual arrays. For action items use objects with title, dea
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-                Payment confirmed · Your Proof of Abode Vault · £67
+                Payment confirmed · Your FEIE Eligibility Report · £67
               </p>
               <h1 className="mt-1 font-serif text-2xl font-bold text-neutral-950">
                 {greeting} FEIE Nomad Auditor Assessment
@@ -287,9 +252,9 @@ For array fields use actual arrays. For action items use objects with title, dea
         {/* DEADLINE BAR */}
         <div className="print-section flex items-center justify-between rounded-xl bg-red-700 px-5 py-3">
           <span className="text-sm font-bold text-white">
-            🔴 {daysToDeadline} days to April 15, 2026
+            🔴 {daysToDeadline} days to June 15, 2027
           </span>
-          <span className="font-mono text-sm font-bold text-white">April 15, 2026</span>
+          <span className="font-mono text-sm font-bold text-white">June 15, 2027</span>
         </div>
 
         {/* LOADING */}
@@ -363,20 +328,8 @@ For array fields use actual arrays. For action items use objects with title, dea
               <div className="mb-4 space-y-2">
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">FEIE — Q1 SE Tax Estimated Payment</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">15 Apr 2026</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">FEIE — Q2 SE Tax Estimated Payment</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">16 Jun 2026</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">FEIE — Q3 SE Tax Estimated Payment</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">15 Sep 2026</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-2.5">
-                  <span className="text-sm text-neutral-700">FEIE — Form 2555 Filing Deadline</span>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">15 Apr 2026</span>
+                  <span className="text-sm text-neutral-700">Expat Tax Return Deadline — June 15</span>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">15 Jun 2027</span>
                 </div>
               </div>
               <button onClick={handleCalendar}
@@ -454,7 +407,7 @@ For array fields use actual arrays. For action items use objects with title, dea
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
                 Open File 02 — it has your exact numbers.
                 Forward File 05 to your accountant.
-                Act before April 15, 2026.
+                Act before June 15, 2027.
               </p>
               <div className="mb-4 flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -476,8 +429,8 @@ For array fields use actual arrays. For action items use objects with title, dea
                     style={{ width: `${Math.min(100, Math.max(5, ((365 - daysToDeadline) / 365) * 100))}%` }} />
                 </div>
                 <p className="mt-2 text-xs text-neutral-500">
-                  April 15, 2026 · No backdating after this date ·{" "}
-                  <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer"
+                  June 15, 2027 · No backdating after this date ·{" "}
+                  <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer"
                     className="underline hover:text-neutral-400 transition">
                     IRS source
                   </a>
@@ -492,14 +445,14 @@ For array fields use actual arrays. For action items use objects with title, dea
                 Want the full implementation plan?
               </p>
               <p className="mb-1 font-serif text-lg font-bold text-neutral-950">
-                Upgrade to Your Totalization Bypass System
+                Upgrade to Your FEIE Optimisation Plan
               </p>
               <p className="mb-3 text-sm leading-relaxed text-neutral-600">
-                A personalised FEIE audit built around your travel record, your US ties, and your abode risk — not a generic nomad guide.
+                Full FEIE audit plus FEIE vs Foreign Tax Credit comparison, housing exclusion calculation, and multi-year optimisation plan.
               </p>
               <Link href="/us/check/feie-nomad-auditor"
                 className="font-mono text-xs font-bold text-neutral-700 underline transition hover:text-neutral-950">
-                Get Your Totalization Bypass System — £147 →
+                Get Your FEIE Optimisation Plan — £147 →
               </Link>
             </div>
 
@@ -514,7 +467,7 @@ For array fields use actual arrays. For action items use objects with title, dea
             TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified UK tax adviser before making financial decisions.
             Based on IRS guidance April 2026.{" "}
-            <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">IRS — Foreign Earned Income Exclusion</a> · <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">IRS — Publication 54: Tax Guide for US Citizens Abroad</a>
+            <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">IRS — Publication 54: Tax Guide for US Citizens Abroad</a> · <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer" className="underline hover:text-neutral-700">IRS — Foreign Earned Income Exclusion</a>
           </p>
         </div>
 

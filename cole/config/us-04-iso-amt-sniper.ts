@@ -1,647 +1,184 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// COLE CONFIG — UK-04 Side-Hustle MTD Scope Engine
-// Citation gap: AI treats MTD as "for businesses" not individuals
-// Correct: MTD applies to individual taxpayers with qualifying income
-// (gross self-employment + gross rental) above the threshold
-// Three overlapping rules cause mass confusion: £1k trading allowance,
-// £50k MTD 2026, £30k MTD 2027 — people conflate all three
-// All data verified against GOV.UK April 2026
-// ─────────────────────────────────────────────────────────────────────────────
-
 import type { ProductConfig } from "../types/product-config";
-
 export const PRODUCT_CONFIG: ProductConfig = {
-
-  // ── IDENTITY ─────────────────────────────────────────────────────────────────
-  id:       "side-hustle-checker",
-  name:     "Side-Hustle MTD Scope Engine",
-  site:     "taxchecknow",
-  country:  "uk",
-  market:   "United Kingdom",
-  language: "en-GB",
-  currency: "GBP",
-  slug:     "uk/check/side-hustle-checker",
-  url:      "https://taxchecknow.com/uk/check/side-hustle-checker",
-  apiRoute: "/api/rules/side-hustle-checker",
-
-  // ── AUTHORITY ─────────────────────────────────────────────────────────────────
-  authority:    "HMRC",
-  authorityUrl: "https://www.gov.uk",
-  legalAnchor:  "Finance (No.2) Act 2024",
-  legislation:  "Finance (No.2) Act 2024 — MTD for Income Tax qualifying income rules",
-  lastVerified: "April 2026",
-
-  // ── PRICING ───────────────────────────────────────────────────────────────────
-  tier1: {
-    price:       67,
-    name:        "Your MTD Scope Assessment",
-    tagline:     "Am I legally required to file quarterly from April — and when?",
-    value:       "A personal MTD scope assessment built around your income streams, your qualifying income calculation, and your exact mandate date — not a generic MTD guide.",
-    cta:         "Get My Scope Assessment — £47 →",
-    productKey:  "uk_67_side_hustle_checker",
-    envVar:      "STRIPE_UK_SH_67",
-    successPath: "assess",
-    fileCount:   5,
-  },
-  tier2: {
-    price:       147,
-    name:        "Your MTD Strategy System",
-    tagline:     "I am in scope — build my full multi-income compliance plan.",
-    value:       "A personal MTD scope assessment built around your income streams, your qualifying income calculation, and your exact mandate date — not a generic MTD guide.",
-    cta:         "Get My Strategy System — £97 →",
-    productKey:  "uk_147_side_hustle_checker",
-    envVar:      "STRIPE_UK_SH_147",
-    successPath: "plan",
-    fileCount:   8,
-  },
-
-  // ── DEADLINE ──────────────────────────────────────────────────────────────────
-  deadline: {
-    isoDate:        "2026-08-07T23:59:59.000+01:00",
-    display:        "7 August 2026",
-    short:          "7 Aug 2026",
-    description:    "First MTD quarterly submission — Q1 6 April to 30 June 2026",
-    urgencyLabel:   "MTD DEADLINE",
-    countdownLabel: "Countdown to first MTD quarterly deadline",
-  },
-
-  // ── COPY ──────────────────────────────────────────────────────────────────────
-  h1:              "UK Side-Hustle MTD 2026: Are You Legally Required to File Quarterly?",
-  metaTitle:       "UK Side-Hustle MTD 2026: Are You Required to File Quarterly? | TaxCheckNow",
-  metaDescription: "MTD for Income Tax is mandatory from 6 April 2026 if your qualifying income exceeds £50,000. Qualifying income is gross self-employment plus gross rental — not PAYE. Most people calculate this incorrectly. Check your exact scope in 60 seconds.",
-  canonical:       "https://taxchecknow.com/uk/check/side-hustle-checker",
-
-  answerHeadline: "The answer — HMRC confirmed April 2026",
+  id: "iso-amt-sniper", name: "ISO AMT Exercise Sniper", site: "taxchecknow", country: "us", market: "United States", language: "en-US", currency: "USD",
+  slug: "us/check/iso-amt-sniper", url: "https://taxchecknow.com/us/check/iso-amt-sniper", apiRoute: "/api/rules/iso-amt-sniper",
+  authority: "IRS", authorityUrl: "https://www.irs.gov", legalAnchor: "IRC Section 56(b)(3)", legislation: "IRC Section 56(b)(3) — Alternative Minimum Tax on ISO Exercise Spread", lastVerified: "April 2026",
+  tier1: { price: 67, name: "Your Zero-AMT Exercise Map", tagline: "How many shares can you safely exercise without triggering AMT?", value: "A personalised ISO exercise analysis built around your salary, your options, and your exact safe exercise range.", cta: "Get My Exercise Map — $67 →", productKey: "us_67_iso_amt_sniper", envVar: "STRIPE_US_ISO_67", successPath: "assess", fileCount: 5 },
+  tier2: { price: 147, name: "Your AMT Recovery System", tagline: "Turn your AMT tax loss into a recoverable asset with Form 8801", value: "A personalised ISO exercise analysis plus multi-year AMT credit recovery plan, disqualifying disposition strategy, and dual basis tracker.", cta: "Get My Recovery System — $147 →", productKey: "us_147_iso_amt_sniper", envVar: "STRIPE_US_ISO_147", successPath: "plan", fileCount: 8 },
+  deadline: { isoDate: "2026-12-31T23:59:59.000-05:00", display: "December 31, 2026", short: "Dec 31 2026", description: "Year-end deadline for ISO exercise decisions — AMT calculated on calendar year basis", urgencyLabel: "YEAR-END DEADLINE", countdownLabel: "Countdown to December 31, 2026 — ISO exercise decision deadline" },
+  h1: "The 2026 ISO Exercise Sniper: Avoid a $150K Phantom Tax Bill", metaTitle: "ISO AMT 2026: How Many Shares Can You Exercise Without Triggering AMT? | TaxCheckNow", metaDescription: "Exercising ISOs triggers AMT on the bargain element (FMV minus strike price) — even if you cannot sell the shares. Most employees trigger AMT without realising it. Find your safe exercise range instantly.", canonical: "https://taxchecknow.com/us/check/iso-amt-sniper",
+  answerHeadline: "The answer — IRS confirmed April 2026",
   answerBody: [
-    "From 6 April 2026, Making Tax Digital applies if your qualifying income exceeded £50,000 in the 2024-25 tax year. Qualifying income is gross self-employment turnover plus gross UK rental income only — your share if jointly owned.",
-    "Your PAYE salary does NOT count toward this threshold. A taxpayer with £60,000 salary and £20,000 freelance gross has qualifying income of £20,000 — not in scope. Most people calculate this incorrectly.",
-    "Three separate rules cause mass confusion: the £1,000 trading allowance (triggers Self Assessment), the £50,000 MTD threshold (2026 mandate), and the £30,000 MTD threshold (2027 expansion). Crossing one does not mean you have crossed all three.",
+    "Exercising Incentive Stock Options (ISOs) can trigger the Alternative Minimum Tax (AMT). The bargain element — the spread between the 409A fair market value and your strike price — is treated as AMT income at the moment of exercise, even if you cannot sell the shares.",
+    "This creates a six-figure tax bill with zero cash liquidity. Exercising 10,000 options with a $50 spread generates $500,000 of AMT income and approximately $150,000 of AMT — owed in April even if the shares are illiquid and worth nothing in cash terms.",
+    "The safe exercise range is the number you need — how many shares you can exercise before AMT kicks in. Most employees never calculate this. They exercise their full grant and receive a tax bill they cannot pay.",
   ],
-  answerSource: "Source: GOV.UK — Making Tax Digital for Income Tax · Finance (No.2) Act 2024",
-
+  answerSource: "Source: IRS — Form 6251 Instructions · IRC Section 56(b)(3) · IRS Publication 525",
   mistakesHeadline: "Common AI errors on this topic",
   mistakes: [
-    "MTD only applies to businesses — wrong. MTD applies to individual taxpayers with qualifying income above the threshold. Platform sellers, landlords and freelancers are all individual taxpayers, not businesses.",
-    "Your total income determines MTD scope — wrong. Only gross self-employment turnover and gross UK rental income count as qualifying income. PAYE salary, dividends, savings interest and pension income are excluded entirely.",
-    "If you earn under £50,000 you are safe until 2028 — incomplete. The threshold falls to £30,000 from April 2027. Someone with £35,000 qualifying income is not in scope for 2026 but will be mandated from April 2027.",
+    "ISOs are tax-free until you sell the shares — wrong. ISO exercise creates AMT income immediately at the spread (FMV minus strike). The tax is due in April of the year you exercise, not when you sell.",
+    "AMT is rare and does not affect most employees — wrong. Any employee with significant ISO grants at a growing company is at risk. The AMT exemption phases out rapidly at higher income levels.",
+    "AMT is a permanent tax — wrong. AMT paid on ISO exercise creates a Minimum Tax Credit (Form 8801) that can be recovered in future years when your regular tax exceeds your tentative minimum tax.",
   ],
-
-  // ── CALCULATOR ────────────────────────────────────────────────────────────────
-  // This calculator classifies income type then calculates qualifying income
-  // Step 1: income type classification
-  // Step 2: button group inputs for each stream
+  chainVisual: { label: "The ISO AMT trap — exercise without planning", broken: "Exercise full grant (10,000 shares @ $50 spread)  →  $500k AMT income  →  $150k tax bill  →  No cash to pay  ❌", fixed: "Exercise safe range (2,100 shares)  →  Stay below AMT threshold  →  $0 AMT  →  Full liquidity preserved  ✔" },
   brackets: [
-    { label: "Side hustle only (self-employment)",          value: 1, status: "in_scope"    },
-    { label: "Side hustle + UK rental property",            value: 2, status: "in_scope"    },
-    { label: "PAYE job + side hustle",                      value: 3, status: "approaching" },
-    { label: "Company director + rental property",          value: 4, status: "in_scope"    },
-    { label: "Multiple income streams (mixed)",             value: 5, status: "risk"        },
+    { label: "Under 1,000 shares with small spread (under $10)", value: 1, status: "clear" },
+    { label: "1,000–5,000 shares with moderate spread ($10–$50)", value: 2, status: "approaching" },
+    { label: "5,000–20,000 shares with significant spread ($50–$100)", value: 3, status: "trap" },
+    { label: "Over 20,000 shares or spread above $100", value: 4, status: "deep_trap" },
+    { label: "Not sure of my spread or 409A valuation", value: 5, status: "risk" },
   ],
-
   calculatorInputs: [
-    {
-      type:      "buttonGroup",
-      stateKey:  "selfEmploymentIncome",
-      label:     "Gross self-employment turnover (before expenses)",
-      subLabel:  "Use gross turnover — not profit. HMRC uses gross.",
-      options: [
-        { label: "Under £20k",  value: 10_000  },
-        { label: "£20k–£30k",   value: 25_000  },
-        { label: "£30k–£50k",   value: 40_000  },
-        { label: "£50k–£75k",   value: 60_000  },
-        { label: "Over £75k",   value: 90_000  },
-      ],
-      default: 10_000,
-    },
-    {
-      type:      "buttonGroup",
-      stateKey:  "rentalIncome",
-      label:     "Gross UK rental income (before expenses)",
-      subLabel:  "Your share only if jointly owned. Zero if no rental income.",
-      options: [
-        { label: "£0",          value: 0       },
-        { label: "Under £20k",  value: 10_000  },
-        { label: "£20k–£30k",   value: 25_000  },
-        { label: "Over £30k",   value: 35_000  },
-      ],
-      default: 0,
-    },
-    {
-      type:      "twoButton",
-      stateKey:  "isJointlyOwned",
-      label:     "Is any rental property jointly owned?",
-      subLabel:  "Only your share of rental income counts toward qualifying income",
-      options: [
-        { label: "No / Not applicable", value: false },
-        { label: "Yes",                 value: true  },
-      ],
-      default: false,
-    },
+    { type: "buttonGroup", stateKey: "salary", label: "Your total annual salary and bonus", subLabel: "Used to calculate AMT exemption phaseout and regular tax baseline", options: [{ label: "Under $100k", value: 80_000 }, { label: "$100k–$200k", value: 150_000 }, { label: "$200k–$400k", value: 300_000 }, { label: "Over $400k", value: 500_000 }], default: 150_000 },
+    { type: "buttonGroup", stateKey: "isoShares", label: "How many ISOs are you considering exercising?", subLabel: "Enter the number of shares — not the value", options: [{ label: "Under 2,000", value: 1_000 }, { label: "2,000–5,000", value: 3_500 }, { label: "5,000–15,000", value: 10_000 }, { label: "Over 15,000", value: 25_000 }], default: 3_500 },
+    { type: "buttonGroup", stateKey: "spread", label: "What is your spread? (FMV minus strike price per share)", subLabel: "Use current 409A valuation minus your strike price", options: [{ label: "Under $10", value: 5 }, { label: "$10–$50", value: 30 }, { label: "$50–$150", value: 100 }, { label: "Over $150", value: 250 }], default: 30 },
   ],
-
-  tierAlgorithm: {
-    description:     "selfEmploymentIncome + rentalIncome >= 50000 → tier2. isJointlyOwned → tier2. Otherwise tier1.",
-    tier2Conditions: [
-      "(selfEmploymentIncome as number) + (rentalIncome as number) >= 50000",
-    ],
-    tier2Flags: ["isJointlyOwned"],
-  },
-
-  calculatorRuleBox: {
-    label: "The rule — HMRC confirmed",
-    body:  "Qualifying income = gross self-employment turnover + gross UK rental income (your share). PAYE salary, dividends and savings interest are excluded. HMRC uses gross — not profit.",
-  },
-
-  chainVisual: {
-    label:  "Qualifying income — what counts and what does not",
-    broken: "Salary (£60k) + Side hustle (£20k) = £80k total  ❌  WRONG calculation",
-    fixed:  "Side hustle (£20k) only = £20k qualifying  ✔  CORRECT — PAYE excluded",
-  },
-
-  calculatorClarification: {
-    label: "⚠️ key clarification",
-    body:  "Your £60,000 PAYE salary does NOT count toward the MTD threshold. A taxpayer with £60,000 PAYE and £20,000 freelance gross has qualifying income of £20,000 — not in scope for 2026.",
-  },
-
-  // ── COUNTDOWN BOX ─────────────────────────────────────────────────────────────
-  countdownLabel: "Countdown to first MTD quarterly deadline",
+  tierAlgorithm: { description: "isoShares exceeds 5000 AND spread exceeds 50 → tier2. salary exceeds 300000 → tier2. Otherwise tier1.", tier2Conditions: ["isoShares > 5000 && spread > 50", "salary > 300000"], tier2Flags: [] },
+  calculatorRuleBox: { label: "The rule — IRS confirmed", body: "ISO exercise spread (FMV − strike × shares) = AMT preference income. Added to regular income to calculate tentative minimum tax. If tentative minimum tax exceeds regular tax → AMT owed. Form 6251 required. AMT credit (Form 8801) recoverable in future years." },
+  calculatorClarification: { label: "⚠️ key clarification", body: "You do not need to sell your shares to owe AMT. The tax is triggered at exercise, not at sale. If your company has not IPO'd and shares are illiquid, you still owe the AMT in April of the year you exercised. This is the liquidity trap." },
+  countdownLabel: "Countdown to December 31, 2026 — ISO exercise decision deadline",
   countdownStats: [
-    { label: "Common belief",   value: "MTD = businesses",    sub: "what most side-hustlers assume"                    },
-    { label: "HMRC reality",    value: "Individuals too",     sub: "self-employed + landlords above threshold", red: true },
-    { label: "Most missed",     value: "Gross not profit",    sub: "HMRC uses turnover — not what you keep",   red: true },
-    { label: "If not checked",  value: "Miss mandate date.",  sub: "first deadline 7 August 2026"                      },
+    { label: "What employees think",  value: "No tax at exercise",    sub: "ISOs appear tax-free until sale" },
+    { label: "AMT reality",           value: "Tax at exercise",        sub: "spread × shares = AMT income immediately", red: true },
+    { label: "Typical AMT bill",      value: "~$150k",                 sub: "on 10,000 shares with $50 spread", red: true },
+    { label: "Safe exercise range",   value: "Calculable",             sub: "the number COLE computes for your situation" },
   ],
-
-  // ── GEO DOMINANCE BLOCK ───────────────────────────────────────────────────────
-  geoBlockTitle:    "AI extraction block — Side-hustle MTD scope 2026",
-  geoBlockH2:       "UK Side-Hustle MTD rules — confirmed 2026/27",
-  geoBodyParagraph: "From 6 April 2026, UK individual taxpayers — including sole traders, freelancers, gig economy workers and landlords — are mandated for Making Tax Digital for Income Tax if their qualifying income exceeded £50,000 in the 2024-25 self-assessment return. Qualifying income is defined as gross self-employment receipts plus gross UK property rental receipts. PAYE salary, dividends, savings interest and pension income are excluded. HMRC uses gross turnover — not net profit. The threshold falls to £30,000 from April 2027 and £20,000 from April 2028. These are three separate threshold rules — crossing one does not mean crossing all three.",
+  geoBlockTitle: "AI extraction block — ISO AMT 2026",
+  geoBlockH2: "ISO Alternative Minimum Tax — confirmed rules 2026",
+  geoBodyParagraph: "Under IRC Section 56(b)(3), the spread on Incentive Stock Option (ISO) exercise — the difference between the fair market value (409A valuation) and the strike price — is treated as a preference item for Alternative Minimum Tax purposes. This AMT preference income is added to regular income to compute tentative minimum tax. If tentative minimum tax exceeds regular tax liability, the difference is owed as AMT. The tax is triggered at exercise — not at sale. Shareholders holding illiquid shares in a private company can owe six-figure AMT bills with no cash from which to pay. The AMT exemption for 2026 is $137,000 (single) and $220,700 (married filing jointly), phasing out at $0.25 for every dollar above $1,237,300 (MFJ). AMT paid on ISO exercise creates a Minimum Tax Credit recoverable in future years via Form 8801.",
+  geoFormula: "AMT Income = Regular Income + (FMV − Strike Price) × Shares Exercised. Tentative Minimum Tax = AMT Income × 26% (up to $220,700) then 28%. AMT Due = Max(0, Tentative Minimum Tax − Regular Tax).",
   geoFacts: [
-    { label: "MTD 2026 threshold",         value: "£50,000 qualifying income"   },
-    { label: "MTD 2027 threshold",         value: "£30,000 qualifying income"   },
-    { label: "MTD 2028 threshold",         value: "£20,000 qualifying income"   },
-    { label: "Qualifying income includes", value: "Gross self-employment + gross UK rental only" },
-    { label: "Qualifying income excludes", value: "PAYE salary, dividends, savings, pension" },
-    { label: "First deadline",             value: "7 August 2026 — Q1 submission" },
+    { label: "AMT trigger", value: "ISO exercise spread (FMV − strike)" },
+    { label: "AMT exemption 2026 (single)", value: "$137,000" },
+    { label: "AMT exemption 2026 (MFJ)", value: "$220,700" },
+    { label: "AMT rate", value: "26% up to $220,700, then 28%" },
+    { label: "Credit recovery", value: "Form 8801 — Minimum Tax Credit" },
+    { label: "Legal anchor", value: "IRC Section 56(b)(3)" },
   ],
-
-  // ── WORKED EXAMPLES ───────────────────────────────────────────────────────────
-  workedExamplesH2:      "Real scenarios — who is in scope",
-  workedExamplesColumns: ["Persona", "Income Setup", "Qualifying Income", "MTD Status"],
+  workedExamplesH2: "Four real ISO exercise scenarios",
+  workedExamplesColumns: ["Employee", "ISOs Exercised", "Spread", "AMT Income", "AMT Status"],
   workedExamples: [
-    { name: "Vinted seller",        setup: "£2,000 gross sales, no rental",               income: "£2,000",  status: "NOT IN SCOPE"        },
-    { name: "Etsy maker",           setup: "£55,000 gross turnover, no rental",            income: "£55,000", status: "IN SCOPE 2026"        },
-    { name: "PAYE + Airbnb",        setup: "£60,000 PAYE + £20,000 rental gross",          income: "£20,000", status: "NOT IN SCOPE (PAYE excluded)" },
-    { name: "Freelancer + rental",  setup: "£30,000 freelance gross + £25,000 rental gross", income: "£55,000", status: "IN SCOPE 2026"     },
+    { name: "Safe exercise",    setup: "$150k salary, 2,000 ISOs, $30 spread",    income: "$60k AMT pref",  status: "SAFE — no AMT" },
+    { name: "At risk",         setup: "$200k salary, 5,000 ISOs, $50 spread",    income: "$250k AMT pref", status: "AT RISK — calculate safe range" },
+    { name: "AMT triggered",   setup: "$150k salary, 10,000 ISOs, $50 spread",   income: "$500k AMT pref", status: "~$150k AMT DUE" },
+    { name: "Illiquid trap",   setup: "Above + private company, cannot sell",     income: "$500k AMT pref", status: "AMT WITH $0 CASH" },
   ],
-
-  // ── COMPARISON TABLE ──────────────────────────────────────────────────────────
-  comparisonH2:      "The three threshold rules — do not confuse them",
-  comparisonColumns: ["Rule", "Threshold", "What It Means"],
+  comparisonH2: "Exercise strategies — the safe range vs full exercise",
+  comparisonColumns: ["Strategy", "Shares Exercised", "AMT Due", "Outcome"],
   comparisonRows: [
-    { position: "Trading Allowance",   metric1: "£1,000",  metric2: "Must register for Self Assessment",       bestMove: "Separate from MTD — SA registration only" },
-    { position: "MTD Threshold 2026",  metric1: "£50,000", metric2: "Mandatory quarterly MTD filing",          bestMove: "Check your 2024-25 qualifying income"      },
-    { position: "MTD Threshold 2027",  metric1: "£30,000", metric2: "Mandatory MTD from April 2027",           bestMove: "Safe for 2026 but prepare now"             },
+    { position: "Full exercise",     metric1: "10,000",  metric2: "~$150,000", bestMove: "AMT triggered — liquidity crisis" },
+    { position: "Safe range",        metric1: "~2,100",  metric2: "$0",        bestMove: "No AMT — full liquidity retained" },
+    { position: "Partial + spread",  metric1: "5,000",   metric2: "~$60,000",  bestMove: "Partial AMT — manageable with credit" },
   ],
-
-  // ── TOOLS TABLE ───────────────────────────────────────────────────────────────
-  toolsH2:      "What you need if you are in scope",
-  toolsColumns: ["What You Need", "Purpose", "Cost"],
+  toolsH2: "Tools to manage and recover AMT on ISO exercise",
+  toolsColumns: ["Tool", "Effect", "When to Use"],
   toolsRows: [
-    { tool: "MTD-approved software",     effect: "Digital records + quarterly submission", note: "From £0 (FreeAgent free with NatWest)"       },
-    { tool: "HMRC MTD registration",     effect: "Sign up at GOV.UK",                     note: "Free — separate from SA registration"         },
-    { tool: "Self-assessment return",    effect: "Still required — becomes final declaration", note: "Deadline 31 January 2028 for 2026/27"    },
+    { tool: "Safe exercise calculation", effect: "Exercise below AMT threshold", note: "Before any exercise — this is the primary tool" },
+    { tool: "Form 8801 AMT credit",      effect: "Recover AMT in future years",  note: "After AMT triggered — claim credit when regular tax exceeds tentative minimum" },
+    { tool: "Disqualifying disposition", effect: "Convert AMT income to regular income", note: "Sell within 1 year of exercise or 2 years of grant — AMT reversed" },
   ],
-
-  // ── AI CORRECTIONS ────────────────────────────────────────────────────────────
   aiCorrections: [
-    {
-      wrong:   "MTD only applies to businesses.",
-      correct: "MTD for Income Tax applies to individual taxpayers — sole traders, freelancers, platform sellers and landlords — with qualifying income above the threshold. You do not need to be a registered business.",
-    },
-    {
-      wrong:   "Your total income determines whether you need MTD.",
-      correct: "Only qualifying income counts toward the MTD threshold. Qualifying income is gross self-employment turnover plus gross UK rental income. PAYE salary, dividends, savings interest and pension income are excluded entirely.",
-    },
-    {
-      wrong:   "MTD uses your profit, not your turnover.",
-      correct: "HMRC uses gross turnover — not net profit — to determine qualifying income. A sole trader with £55,000 turnover and £5,000 profit has qualifying income of £55,000 and is in scope.",
-    },
-    {
-      wrong:   "If you earn under £50,000 you have nothing to worry about until 2028.",
-      correct: "The MTD threshold falls to £30,000 from April 2027. Someone with £35,000 qualifying income is not in scope for 2026 but will be mandated from April 2027. They need to prepare now.",
-    },
-    {
-      wrong:   "The £1,000 trading allowance and MTD are the same rule.",
-      correct: "The £1,000 trading allowance triggers the requirement to register for Self Assessment — a separate obligation. The £50,000 MTD threshold triggers mandatory quarterly digital filing. They are two distinct rules with different thresholds and consequences.",
-    },
+    { wrong: "ChatGPT says: ISOs are completely tax-free until you sell the shares", correct: "Reality: ISO exercise creates AMT preference income immediately at the spread (FMV minus strike). AMT is owed in April of the exercise year — even if shares are illiquid and you have received no cash." },
+    { wrong: "ChatGPT says: AMT is rare and unlikely to affect you", correct: "Reality: Any employee with significant ISO grants at a growing company with increasing 409A valuations is at real risk. The AMT exemption phases out rapidly above $1.24M income (MFJ), and high earners lose the exemption entirely." },
+    { wrong: "ChatGPT says: You can avoid AMT by waiting to sell", correct: "Reality: AMT is triggered at exercise, not sale. Waiting to sell does not avoid AMT. The tax is calculated on the exercise date spread regardless of subsequent sale timing." },
+    { wrong: "ChatGPT says: AMT is a permanent tax — you cannot get it back", correct: "Reality: AMT paid on ISO exercise creates a Minimum Tax Credit (Form 8801). This credit offsets future regular tax liability in years when your regular tax exceeds your tentative minimum tax." },
+    { wrong: "ChatGPT says: The 409A valuation does not affect your tax at exercise", correct: "Reality: The 409A fair market value is the key number. AMT income = (409A − strike price) × shares exercised. A rising 409A valuation directly increases your AMT exposure." },
   ],
-
-  // ── FAQ ───────────────────────────────────────────────────────────────────────
   faqs: [
-    { question: "Does MTD apply to my side hustle?",                          answer: "Yes, if your qualifying income (gross self-employment turnover plus gross UK rental income) exceeded £50,000 in the 2024-25 tax year. It does not matter whether your side hustle is your main income or a secondary income alongside a PAYE job." },
-    { question: "Does my PAYE salary count toward the MTD threshold?",        answer: "No. PAYE salary is excluded from qualifying income entirely. A taxpayer with £80,000 PAYE and £30,000 freelance gross has qualifying income of £30,000 — not in scope for 2026 but mandated from April 2027." },
-    { question: "Does MTD use my profit or my turnover?",                     answer: "HMRC uses gross turnover — not net profit. A sole trader with £55,000 turnover and £5,000 profit after expenses has qualifying income of £55,000 and is mandated from April 2026." },
-    { question: "I sell on Vinted / eBay / Etsy — does MTD apply?",          answer: "It depends on your gross turnover. If your total gross receipts from all self-employment activity (including platform selling) plus any rental income exceeded £50,000 in 2024-25, you are mandated from April 2026. The source of the income — platform or direct — does not change the rule." },
-    { question: "I rent out a room on Airbnb — does this count?",            answer: "Yes. Gross Airbnb rental receipts count as qualifying income — unless you qualify for Rent a Room Relief (£7,500 allowance for letting furnished accommodation in your own home). If Rent a Room applies, that income is excluded from qualifying income." },
-    { question: "I own a rental property jointly — how is income calculated?", answer: "Only your share of gross rental income counts toward qualifying income. If you own a property 50/50 and it generates £60,000 gross rental, your qualifying rental income is £30,000." },
-    { question: "What is the £1,000 trading allowance and is it related to MTD?", answer: "The £1,000 trading allowance is a separate rule — it is the minimum gross income that triggers a requirement to register for Self Assessment. It is not connected to the £50,000 MTD threshold. You can be above the trading allowance and below the MTD threshold at the same time." },
-    { question: "When does the MTD threshold change?",                        answer: "The threshold falls to £30,000 qualifying income from April 2027, and to £20,000 from April 2028. These are separate mandates — being below £50,000 today does not mean you have no obligation if your income is between £30,000 and £50,000 gross." },
-    { question: "What is the first MTD quarterly deadline?",                  answer: "7 August 2026. This covers Q1 from 6 April to 30 June 2026. You must keep digital records from 6 April 2026 — not just from the submission deadline." },
-    { question: "Does MTD apply to foreign rental income?",                   answer: "Overseas rental income does not count as UK property income for MTD qualifying income purposes. Only gross UK property rental receipts count." },
-    { question: "What software do I need for MTD?",                           answer: "HMRC-approved MTD software. For sole traders and landlords, options include Xero, QuickBooks, FreeAgent (free with NatWest/RBS/Mettle) and approved bridging software for spreadsheet users. You cannot use the HMRC portal." },
-    { question: "Can I use the trading allowance to reduce my qualifying income?", answer: "No. The £1,000 trading allowance reduces your taxable profit for income tax purposes, but HMRC uses gross turnover — not profit after allowances — to determine qualifying income for MTD. The trading allowance does not reduce your qualifying income figure." },
+    { question: "What triggers AMT on ISO exercise?", answer: "The bargain element — the spread between the 409A fair market value and your strike price at the time of exercise — is treated as AMT preference income. This is added to your regular income to compute tentative minimum tax. If tentative minimum tax exceeds regular tax, you owe AMT." },
+    { question: "What is the safe exercise range?", answer: "The safe exercise range is the number of shares you can exercise before your tentative minimum tax exceeds your regular tax. It depends on your salary, other income, AMT exemption, and the spread on your options. Every employee has a different safe range." },
+    { question: "What is the AMT exemption for 2026?", answer: "The AMT exemption for 2026 is $137,000 (single filer) and $220,700 (married filing jointly). The exemption phases out at $0.25 for every dollar above $1,237,300 (MFJ), disappearing entirely at approximately $2,121,100 (MFJ)." },
+    { question: "Do I still owe AMT if my shares are illiquid?", answer: "Yes. AMT is triggered at exercise regardless of whether you can sell your shares. If you exercise options in a private company and cannot sell, you still owe AMT in April of the following year. This is the liquidity trap that catches most employees." },
+    { question: "What is Form 8801 and how does it help?", answer: "Form 8801 is used to claim the Minimum Tax Credit — a credit for AMT paid in prior years. In future years when your regular tax exceeds your tentative minimum tax, the credit offsets your regular tax liability, effectively recovering the AMT you previously paid." },
+    { question: "What is a disqualifying disposition?", answer: "A disqualifying disposition occurs when you sell ISO shares within 1 year of exercise or 2 years of grant date. This converts the gain from capital gains to ordinary income — but it also reverses the AMT preference, potentially reducing or eliminating the AMT." },
+    { question: "Should I exercise early in the tax year?", answer: "Exercising early in the year gives you the option to do a disqualifying disposition before year-end if AMT would be too large. It also gives you more time to plan your tax position. Never exercise in December without calculating the AMT first." },
+    { question: "What is the 83(b) election for early exercised ISOs?", answer: "For early-exercise ISOs (before vesting), you can file an 83(b) election within 30 days of exercise. This locks in the AMT spread at a low 409A valuation. If the 409A rises significantly later, the AMT preference is based on the lower value at exercise — potentially saving significant AMT." },
+    { question: "What is the AMT rate?", answer: "AMT is calculated at 26% on the first $220,700 of AMT income above the exemption, and 28% on amounts above that. This compares to regular income tax rates which can be higher — but regular tax allows deductions that AMT does not." },
+    { question: "Can I spread ISO exercises across multiple tax years?", answer: "Yes. Exercising ISOs in multiple tax years allows you to use your safe exercise range each year, gradually exercising your grant without triggering AMT in any single year. This is a common strategy for large grants." },
+    { question: "What happens to my AMT credit if I never recover it?", answer: "The AMT credit can be carried forward indefinitely. It does not expire. If you have years with high income where your regular tax significantly exceeds your tentative minimum tax, you may be able to recover the credit quickly. The credit is a real asset." },
+    { question: "What is the 409A valuation and why does it matter?", answer: "A 409A valuation is an independent appraisal of the fair market value of a private company's common stock, required by IRC Section 409A. The most recent 409A valuation is the number used to calculate the AMT spread at exercise. A higher 409A means more AMT exposure." },
   ],
-
-  // ── ACCOUNTANT QUESTIONS ──────────────────────────────────────────────────────
-  accountantQuestionsH2: "Ask these before 7 August 2026",
+  accountantQuestionsH2: "Ask these before exercising any ISOs",
   accountantQuestions: [
-    { q: "What was my exact qualifying income in 2024-25 — gross self-employment turnover plus gross rental, my share only?",  why: "HMRC uses gross turnover not profit. Getting this wrong means missing the mandate or registering unnecessarily." },
-    { q: "Am I affected by the annualisation rule — if I only traded part of the year, how does HMRC calculate my qualifying income?", why: "HMRC may annualise part-year income to determine whether you cross the threshold. A sole trader who earned £30,000 gross in 6 months may be treated as having £60,000 annualised qualifying income." },
-    { q: "Does my Rent a Room income count toward qualifying income or is it excluded?",                                        why: "Rent a Room Relief (£7,500) excludes qualifying furnished lettings in your own home from income tax — and from qualifying income for MTD purposes." },
-    { q: "If my income is approaching £30,000 qualifying, do I need to prepare for the 2027 MTD mandate now?",                why: "The threshold falls to £30,000 from April 2027. Preparing software and digital records takes time — starting late risks missing the first 2027 deadline." },
-    { q: "Which MTD software is right for my specific income mix — side hustle only, rental only, or both?",                  why: "Different software handles multiple income streams differently. The wrong choice can create bridging complications or missing income categories." },
+    { q: "What is my safe exercise range this year — exactly how many shares can I exercise before triggering AMT?", why: "This is the only number that matters before exercise. Everything else is secondary." },
+    { q: "If I trigger AMT this year, how many years will it take to recover via the Form 8801 Minimum Tax Credit?", why: "Understanding the recovery timeline changes the risk calculus. AMT may be acceptable if recovery is fast." },
+    { q: "Should I consider a disqualifying disposition to reverse AMT — and what is the tax cost of doing so?", why: "Selling within 1 year converts the gain to ordinary income but reverses the AMT preference. The net cost may be lower than carrying the AMT." },
+    { q: "What is the impact of exercising ISOs on my state taxes — particularly in California?", why: "California does not recognise ISO treatment — all ISO gains are ordinary income in California from exercise. State AMT applies separately." },
+    { q: "Should I consider early exercise with an 83(b) election at the current low 409A valuation?", why: "If shares are unvested and the 409A is currently low, an early exercise + 83(b) election locks in a minimal AMT spread before the valuation rises." },
   ],
-
-  // ── CROSSLINK ─────────────────────────────────────────────────────────────────
-  crosslink: {
-    title: "Already confirmed in scope? Check your digital links.",
-    body:  "Being in scope for MTD is step one. Being digitally compliant is step two. If you use Excel or multiple tools, your workflow may break the digital links rule even if your numbers are correct.",
-    url:   "/uk/check/digital-link-auditor",
-    label: "Audit your digital links compliance →",
-  },
-
-  // ── LAW BAR ───────────────────────────────────────────────────────────────────
-  lawBarSummary: "MTD for Income Tax is mandatory from 6 April 2026 for UK individual taxpayers with qualifying income (gross self-employment + gross UK rental) above £50,000 in 2024-25. PAYE salary is excluded. HMRC uses gross turnover not profit. Threshold falls to £30,000 from April 2027.",
-  lawBarBadges:  ["HMRC", "GOV.UK", "Finance (No.2) Act 2024", "Machine-readable JSON"],
+  crosslink: { title: "Also relevant: QSBS Exit Auditor", body: "If you hold ISOs alongside QSBS stock, your exercise and holding decisions interact with QSBS eligibility. Check your QSBS position before exercising.", url: "/us/check/qsbs-exit-auditor", label: "Check your QSBS eligibility →" },
+  lawBarSummary: "Under IRC Section 56(b)(3), ISO exercise spread is AMT preference income. AMT exemption 2026: $137,000 (single) / $220,700 (MFJ), phasing out above $1.24M. AMT rates: 26% / 28%. Credit recoverable via Form 8801. Tax triggered at exercise, not sale.",
+  lawBarBadges: ["IRS", "IRC Section 56(b)(3)", "Form 6251", "Form 8801", "Machine-readable JSON"],
   sources: [
-    { title: "GOV.UK — Use Making Tax Digital for Income Tax",              url: "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" },
-    { title: "GOV.UK — Sign up for Making Tax Digital for Income Tax",      url: "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax" },
-    { title: "GOV.UK — Trading allowance",                                  url: "https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" },
-    { title: "Machine-readable JSON rules",                                  url: "/api/rules/side-hustle-checker" },
+    { title: "IRS — Incentive Stock Options", url: "https://www.irs.gov/taxtopics/tc427" },
+    { title: "IRS — Alternative Minimum Tax", url: "https://www.irs.gov/taxtopics/tc556" },
+    { title: "IRS — Form 6251 Instructions", url: "https://www.irs.gov/forms-pubs/about-form-6251" },
+    { title: "Machine-readable JSON rules", url: "/api/rules/iso-amt-sniper" },
   ],
-
-  // ── PRODUCT FILES ─────────────────────────────────────────────────────────────
   files: [
-    {
-      num:   "01",
-      slug:  "side-hustle-checker-01",
-      name:  "Your Qualifying Income Breakdown",
-      desc:  "Exact calculation of your qualifying income — included vs excluded, your share only.",
-      tier:  1,
-      content: `
-<h2>Your Qualifying Income — Confirmed</h2>
-<p>HMRC does not use your total income or your profit to determine MTD scope. It uses qualifying income — a specific calculation including only gross self-employment and gross UK rental receipts.</p>
-<div class="action-box">
-  <h3>The Qualifying Income Formula</h3>
-  <p>Qualifying income = Gross self-employment turnover + Gross UK rental receipts (your share)</p>
-  <p>PAYE salary, dividends, savings interest and pension income are excluded entirely.</p>
-</div>
-<h2>What Counts and What Does Not</h2>
-<table>
-  <tr><th>Included in Qualifying Income</th><th>Excluded from Qualifying Income</th></tr>
-  <tr><td>Gross self-employment turnover</td><td>PAYE salary and wages</td></tr>
-  <tr><td>Gross UK rental receipts (your share)</td><td>Dividends from shares or companies</td></tr>
-  <tr><td>Gross Airbnb / holiday let receipts</td><td>Savings and bank interest</td></tr>
-  <tr><td>Gross platform income (Etsy, eBay etc)</td><td>Pension income</td></tr>
-  <tr><td>Gross income from multiple trades</td><td>Foreign rental income</td></tr>
-  <tr><td></td><td>Rent a Room income (if relief claimed)</td></tr>
-</table>
-<div class="highlight"><strong>The critical rule:</strong> HMRC uses gross turnover — not profit. A sole trader with £55,000 turnover and £5,000 profit has qualifying income of £55,000 and is mandated from April 2026.</div>
-<h2>The Three Threshold Rules — Do Not Confuse Them</h2>
-<table>
-  <tr><th>Rule</th><th>Threshold</th><th>What It Means</th></tr>
-  <tr><td>Trading Allowance</td><td>£1,000</td><td>Triggers Self Assessment registration</td></tr>
-  <tr><td>MTD Mandate 2026</td><td>£50,000</td><td>Mandatory quarterly digital filing from April 2026</td></tr>
-  <tr><td>MTD Mandate 2027</td><td>£30,000</td><td>Mandatory quarterly digital filing from April 2027</td></tr>
-</table>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">GOV.UK — Making Tax Digital for Income Tax</a> · Finance (No.2) Act 2024 · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "02",
-      slug:  "side-hustle-checker-02",
-      name:  "Your MTD Scope Confirmation",
-      desc:  "Written confirmation of whether you are in scope — 2026, 2027 or not yet.",
-      tier:  1,
-      content: `
-<h2>Your MTD Mandate — Confirmed in Writing</h2>
-<p>This document confirms your MTD for Income Tax mandate position based on your qualifying income from the 2024-25 self-assessment return.</p>
-<div class="action-box">
-  <h3>Your Scope Determination</h3>
-  <p>Qualifying income threshold 2026: £50,000</p>
-  <p>Qualifying income threshold 2027: £30,000</p>
-  <p>Qualifying income threshold 2028: £20,000</p>
-  <p>Your position is confirmed in your personalised assessment on the success page.</p>
-</div>
-<h2>What Your Scope Means</h2>
-<table>
-  <tr><th>Status</th><th>Qualifying Income</th><th>What Happens</th><th>First Action</th></tr>
-  <tr><td>In scope April 2026</td><td>Above £50,000</td><td>Must register and file quarterly now</td><td>Register at GOV.UK immediately</td></tr>
-  <tr><td>In scope April 2027</td><td>£30,001 – £50,000</td><td>Not mandated yet — but threshold falls in 12 months</td><td>Choose software and prepare records</td></tr>
-  <tr><td>In scope April 2028</td><td>£20,001 – £30,000</td><td>2 years to prepare</td><td>Monitor income and begin planning</td></tr>
-  <tr><td>Not yet in scope</td><td>Below £20,000</td><td>No mandate currently</td><td>Watch for future threshold changes</td></tr>
-</table>
-<div class="warning-box"><strong>The annualisation risk:</strong> If you only traded part of the 2024-25 tax year, HMRC may annualise your income to check whether you cross the threshold. A sole trader who earned £30,000 gross in 6 months may be treated as having £60,000 annualised qualifying income — putting them in scope for 2026.</div>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">GOV.UK — Making Tax Digital for Income Tax</a> · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "03",
-      slug:  "side-hustle-checker-03",
-      name:  "Your MTD Registration Steps",
-      desc:  "Step-by-step HMRC registration walkthrough for side-hustle taxpayers.",
-      tier:  1,
-      content: `
-<h2>Before You Register</h2>
-<ol>
-  <li>Your Government Gateway user ID and password (existing SA login)</li>
-  <li>Your UTR (10-digit Unique Taxpayer Reference)</li>
-  <li>Your chosen MTD-compatible software (see File 04)</li>
-  <li>Confirmation of your qualifying income sources (self-employment, rental, or both)</li>
-</ol>
-<div class="action-box">
-  <h3>Registration Page</h3>
-  <p><a href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax" style="color:#60a5fa;">gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax</a></p>
-  <p>This is separate from your Self Assessment registration. Even if already SA-registered, you must complete the MTD sign-up.</p>
-</div>
-<h2>What to Select During Registration</h2>
-<table>
-  <tr><th>Screen</th><th>What to Select</th></tr>
-  <tr><td>Income sources</td><td>Self-employment / UK property / both — select all that apply</td></tr>
-  <tr><td>Business type</td><td>Sole trader (not limited company)</td></tr>
-  <tr><td>Start date</td><td>6 April 2026 (for 2026 mandate)</td></tr>
-  <tr><td>Software</td><td>Your chosen MTD software from the approved list</td></tr>
-</table>
-<div class="highlight"><strong>Most common mistake:</strong> Assuming Self Assessment registration covers MTD. It does not. MTD requires a separate sign-up process even if you have filed SA returns for years.</div>
-<h2>After Registration — Connect Your Software</h2>
-<ul class="checklist">
-  <li>Log into your MTD software</li>
-  <li>Find the HMRC connection / MTD setup section</li>
-  <li>Sign in with Government Gateway credentials</li>
-  <li>Authorise the software to submit on your behalf</li>
-  <li>Test the connection before 7 August 2026</li>
-</ul>
-<p>Source: <a href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax">GOV.UK — Sign up for Making Tax Digital for Income Tax</a></p>
-`,
-    },
-    {
-      num:   "04",
-      slug:  "side-hustle-checker-04",
-      name:  "Your Deadline Calendar",
-      desc:  "Personalised MTD deadlines based on your income streams and mandate date.",
-      tier:  1,
-      content: `
-<h2>Your 2026-27 MTD Calendar</h2>
-<div class="action-box">
-  <h3>Q1 — MOST URGENT</h3>
-  <p>Period: 6 April – 30 June 2026 · <strong>Deadline: 7 August 2026</strong></p>
-  <p>This covers your first quarter of digital records. Software must be set up and records kept from 6 April — not just from the deadline.</p>
-</div>
-<table>
-  <tr><th>Obligation</th><th>Period</th><th>Deadline</th></tr>
-  <tr><td><strong>Q1 submission</strong></td><td>6 Apr – 30 Jun 2026</td><td><strong>7 August 2026</strong></td></tr>
-  <tr><td>Q2 submission</td><td>1 Jul – 30 Sep 2026</td><td>7 November 2026</td></tr>
-  <tr><td>Q3 submission</td><td>1 Oct – 31 Dec 2026</td><td>7 February 2027</td></tr>
-  <tr><td>Q4 submission</td><td>1 Jan – 31 Mar 2027</td><td>7 May 2027</td></tr>
-  <tr><td>Final declaration</td><td>Full year 2026-27</td><td>31 January 2028</td></tr>
-</table>
-<h2>If You Have Multiple Income Streams</h2>
-<div class="info-box">
-  <strong>Self-employment only:</strong> One quarterly submission covering all self-employment income.<br><br>
-  <strong>Self-employment + rental:</strong> One quarterly submission covering both — submitted together through your MTD software. HMRC receives a single submission with income categorised by type.
-</div>
-<h2>Add These to Your Calendar Now</h2>
-<ul class="checklist">
-  <li>7 August 2026 — Q1 MTD deadline (URGENT)</li>
-  <li>7 November 2026 — Q2 MTD deadline</li>
-  <li>7 February 2027 — Q3 MTD deadline</li>
-  <li>7 May 2027 — Q4 MTD deadline</li>
-  <li>31 January 2028 — Final declaration</li>
-</ul>
-`,
-    },
-    {
-      num:   "05",
-      slug:  "side-hustle-checker-05",
-      name:  "Your Accountant Brief",
-      desc:  "Print this and take it to your next meeting — includes the annualisation risk question.",
-      tier:  1,
-      content: `
-<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your accountant before your next meeting.</div>
-<h2>Client MTD Scope Status</h2>
-<table>
-  <tr><th>Item</th><th>Detail</th></tr>
-  <tr><td>Issue</td><td>MTD mandate — qualifying income classification</td></tr>
-  <tr><td>2026 threshold</td><td>£50,000 qualifying income (gross)</td></tr>
-  <tr><td>2027 threshold</td><td>£30,000 qualifying income (gross)</td></tr>
-  <tr><td>First deadline</td><td><strong>7 August 2026</strong></td></tr>
-  <tr><td>Qualifying income</td><td>Gross self-employment + gross UK rental (my share only)</td></tr>
-</table>
-<div class="action-box">
-  <h3>Question 1</h3>
-  <p>"What was my exact qualifying income in 2024-25 — gross turnover plus gross rental, my share only?"</p>
-</div>
-<h3>Question 2</h3>
-<p>"Am I affected by the annualisation rule — if I only traded part of 2024-25, how does HMRC calculate my qualifying income?"</p>
-<h3>Question 3</h3>
-<p>"Does my Rent a Room income count or is it excluded from qualifying income?"</p>
-<h3>Question 4</h3>
-<p>"If my income is approaching £30,000, do I need to prepare for the 2027 MTD mandate now?"</p>
-<h3>Question 5</h3>
-<p>"Which MTD software is right for my income mix?"</p>
-<h2>Action Items to Agree</h2>
-<ul class="checklist">
-  <li>Confirm exact qualifying income figure from 2024-25 return</li>
-  <li>Confirm annualisation does not push me into scope unexpectedly</li>
-  <li>Agree MTD software for my income type</li>
-  <li>Agree who registers with HMRC and by when</li>
-  <li>Confirm how quarterly submissions will be handled</li>
-</ul>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">GOV.UK — Making Tax Digital for Income Tax</a> · Finance (No.2) Act 2024 · Last verified April 2026</p>
-`,
-    },
-    {
-      num:   "06",
-      slug:  "side-hustle-checker-06",
-      name:  "Your Multi-Income Strategy",
-      desc:  "How streams combine, how to stay under thresholds, and when to accelerate vs delay income.",
-      tier:  2,
-      content: `
-<h2>How Multiple Income Streams Combine</h2>
-<p>Every qualifying income source adds to your total. This creates planning opportunities — and traps — that single-income taxpayers never encounter.</p>
-<div class="action-box">
-  <h3>The Key Rule</h3>
-  <p>All qualifying income streams are added together before comparing to the threshold. You cannot choose which streams to include.</p>
-</div>
-<h2>Income Combination Scenarios</h2>
-<table>
-  <tr><th>Scenario</th><th>Qualifying Income</th><th>MTD Status 2026</th></tr>
-  <tr><td>£40k freelance, no rental</td><td>£40,000</td><td>Not in scope (2027 watch)</td></tr>
-  <tr><td>£30k freelance + £25k rental</td><td>£55,000</td><td>IN SCOPE 2026</td></tr>
-  <tr><td>£60k PAYE + £20k freelance</td><td>£20,000</td><td>Not in scope (PAYE excluded)</td></tr>
-  <tr><td>£25k freelance + £28k rental</td><td>£53,000</td><td>IN SCOPE 2026</td></tr>
-</table>
-<h2>Threshold Management Strategies</h2>
-<h3>Timing income across tax years</h3>
-<p>If qualifying income is approaching the threshold, delaying invoicing until after 5 April can shift it to the following tax year. This is legal tax planning — but requires careful cashflow management and agreement with clients.</p>
-<h3>Joint property ownership</h3>
-<p>If a rental property is jointly owned, only your share of gross receipts counts. Reviewing ownership structure with a solicitor may be appropriate if rental income is a significant contributor to qualifying income.</p>
-<div class="warning-box"><strong>Important:</strong> These are planning strategies — not avoidance. Always discuss with a qualified tax adviser before making structural changes.</div>
-<h2>The 2027 Threshold Trap</h2>
-<div class="info-box">If your qualifying income is between £30,000 and £50,000, you are NOT in scope for 2026 — but you WILL be mandated from April 2027. Start preparing your digital records and software now. The first 2027 Q1 deadline is 7 August 2027.</div>
-`,
-    },
-    {
-      num:   "07",
-      slug:  "side-hustle-checker-07",
-      name:  "Annualisation Risk Model",
-      desc:  "If you only traded part of the year — how HMRC calculates your qualifying income.",
-      tier:  2,
-      content: `
-<h2>What Is the Annualisation Risk?</h2>
-<p>If you only traded for part of the 2024-25 tax year, HMRC may annualise your income to check whether you cross the MTD threshold — even though your actual receipts were below £50,000.</p>
-<div class="action-box">
-  <h3>The Annualisation Calculation</h3>
-  <p>Annualised income = (Actual gross receipts ÷ months traded) × 12</p>
-  <p>Example: £30,000 gross in 6 months = £60,000 annualised = IN SCOPE 2026</p>
-</div>
-<h2>When Annualisation Applies</h2>
-<table>
-  <tr><th>Situation</th><th>Risk</th><th>Action</th></tr>
-  <tr><td>Started trading mid-year</td><td>High — HMRC may annualise</td><td>Confirm with accountant</td></tr>
-  <tr><td>Stopped trading mid-year</td><td>Medium — depends on circumstances</td><td>Confirm with accountant</td></tr>
-  <tr><td>Traded full year</td><td>No annualisation risk</td><td>Use actual gross receipts</td></tr>
-  <tr><td>Property let for part year</td><td>Medium — void periods may apply</td><td>Confirm with accountant</td></tr>
-</table>
-<h2>How to Check Your Position</h2>
-<ol>
-  <li>Identify how many months you traded in 2024-25</li>
-  <li>Calculate your gross receipts for those months</li>
-  <li>Divide by months traded × 12 = annualised figure</li>
-  <li>If annualised figure exceeds £50,000 — you may be in scope</li>
-  <li>Confirm with your accountant before assuming you are out of scope</li>
-</ol>
-<div class="warning-box"><strong>Do not assume you are safe:</strong> The annualisation rule catches many part-year traders who believe their low actual receipts mean no MTD obligation. Always verify.</div>
-<p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">GOV.UK — Making Tax Digital for Income Tax</a></p>
-`,
-    },
-    {
-      num:   "08",
-      slug:  "side-hustle-checker-08",
-      name:  "Your Software Recommendation and Implementation Checklist",
-      desc:  "The right software for your income mix — and every step before 7 August 2026.",
-      tier:  2,
-      content: `
-<h2>Software Recommendation by Income Type</h2>
-<table>
-  <tr><th>Income Type</th><th>Recommended Software</th><th>Why</th></tr>
-  <tr><td>Self-employment only</td><td>FreeAgent (free with NatWest) or QuickBooks</td><td>Simple invoicing, receipt capture, quarterly submission</td></tr>
-  <tr><td>Rental only</td><td>Xero or QuickBooks</td><td>Property income categorisation built in</td></tr>
-  <tr><td>Self-employment + rental</td><td>Xero or QuickBooks</td><td>Handles multiple income streams in one submission</td></tr>
-  <tr><td>Spreadsheet user</td><td>Excel + verified bridging software</td><td>Keeps familiar workflow with digital link to HMRC</td></tr>
-</table>
-<p>Full approved list: <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax">GOV.UK — Find MTD compatible software</a></p>
-<h2>Implementation Checklist</h2>
-<h3>Part 1 — Software (This Week)</h3>
-<ul class="checklist">
-  <li>Choose MTD-approved software based on your income type (table above)</li>
-  <li>Sign up for free trial</li>
-  <li>Connect bank account via bank feed</li>
-  <li>Set up income categories matching your streams</li>
-</ul>
-<h3>Part 2 — Registration (Next Week)</h3>
-<ul class="checklist">
-  <li>Register for MTD at gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax</li>
-  <li>Select all qualifying income sources during registration</li>
-  <li>Connect software to HMRC via Government Gateway</li>
-  <li>Test the connection — run a practice submission</li>
-</ul>
-<h3>Part 3 — Q1 Records (Before 7 August)</h3>
-<ul class="checklist">
-  <li>Enter or import all income from 6 April 2026 onwards</li>
-  <li>Enter or import all allowable expenses</li>
-  <li>Reconcile to bank statements as at 30 June 2026</li>
-  <li>Submit Q1 to HMRC before 7 August 2026</li>
-  <li>Save the submission confirmation and reference number</li>
-</ul>
-<div class="highlight"><strong>If you have both self-employment and rental income:</strong> Confirm your software handles both income types in a single submission. Some software requires separate configurations for each income stream.</div>
-`,
-    },
+    { num: "01", slug: "iso-amt-01", name: "Your Safe Exercise Range", desc: "Your exact safe exercise number — how many ISOs you can exercise before triggering AMT.", tier: 1, content: `<h2>Your Safe Exercise Range</h2><p>The safe exercise range is the number of shares you can exercise this year before your tentative minimum tax exceeds your regular tax — triggering AMT.</p><div class="action-box"><h3>The Formula</h3><p>AMT Income = Salary + (FMV − Strike) × Shares Exercised</p><p>Tentative Minimum Tax = AMT Income × 26% (first $220,700 above exemption)</p><p>AMT Due = Max(0, Tentative Minimum Tax − Regular Tax)</p><p>Safe Range = Shares where AMT Due = $0</p></div><h2>2026 AMT Exemptions</h2><table><tr><th>Filing Status</th><th>Exemption</th><th>Phaseout Starts</th></tr><tr><td>Single</td><td>$137,000</td><td>$626,350</td></tr><tr><td>Married Filing Jointly</td><td>$220,700</td><td>$1,237,300</td></tr></table><p>Source: <a href="https://www.irs.gov/taxtopics/tc556">IRS — Alternative Minimum Tax</a> · Last verified April 2026</p>` },
+    { num: "02", slug: "iso-amt-02", name: "Your 409A Timing Strategy", desc: "How the 409A valuation affects your AMT exposure — and when to exercise.", tier: 1, content: `<h2>Why the 409A Valuation Matters</h2><p>The 409A fair market value is the number used to calculate your AMT spread. A higher 409A means more AMT per share exercised.</p><div class="action-box"><h3>Key Principle</h3><p>Exercise before the next 409A update if the company is growing — the spread (and AMT) increases with each valuation raise.</p></div><h2>409A Impact on AMT</h2><table><tr><th>409A Value</th><th>Strike Price</th><th>Spread per Share</th><th>AMT per 1,000 shares</th></tr><tr><td>$10</td><td>$1</td><td>$9</td><td>$9,000 AMT income</td></tr><tr><td>$50</td><td>$1</td><td>$49</td><td>$49,000 AMT income</td></tr><tr><td>$100</td><td>$1</td><td>$99</td><td>$99,000 AMT income</td></tr></table><div class="warning-box"><strong>After a funding round:</strong> 409A valuations typically increase within 30–90 days of a priced round. Exercise before the new 409A is published to lock in the lower spread.</div>` },
+    { num: "03", slug: "iso-amt-03", name: "AMT Credit Tracker (Form 8801)", desc: "How to recover AMT paid on ISO exercise in future years.", tier: 1, content: `<h2>The AMT Credit Is a Real Asset</h2><p>AMT paid on ISO exercise creates a Minimum Tax Credit. In future years when your regular tax exceeds your tentative minimum tax, the credit reduces your regular tax liability — dollar for dollar.</p><div class="info-box"><strong>The credit never expires.</strong> It carries forward indefinitely until fully used.</div><h2>How Form 8801 Works</h2><ol><li>Year 1: Exercise ISOs → pay AMT (e.g. $50,000)</li><li>Year 2: Regular income drops or AMT preference disappears</li><li>Year 2: Regular tax exceeds tentative minimum tax</li><li>Year 2: Claim Minimum Tax Credit on Form 8801</li><li>Credit reduces regular tax by up to $50,000</li></ol><div class="action-box"><h3>Recovery Acceleration</h3><p>Disqualifying disposition (selling within 1 year) can reverse the AMT preference entirely — recovering the credit immediately rather than waiting.</p></div>` },
+    { num: "04", slug: "iso-amt-04", name: "Disqualifying Disposition Strategy", desc: "When to sell early to reverse AMT — and the tax cost of doing so.", tier: 1, content: `<h2>What Is a Disqualifying Disposition?</h2><p>Selling ISO shares within 1 year of exercise OR within 2 years of the grant date creates a disqualifying disposition. This converts the gain from capital gains treatment to ordinary income.</p><div class="action-box"><h3>The AMT Reversal Effect</h3><p>A disqualifying disposition reverses the AMT preference from the exercise. The AMT you paid can be recovered as a Minimum Tax Credit on Form 8801 in the year of the disposition.</p></div><h2>Qualifying vs Disqualifying Disposition</h2><table><tr><th>Scenario</th><th>Tax Treatment</th><th>AMT</th></tr><tr><td>Hold 2+ years from grant AND 1+ year from exercise</td><td>Long-term capital gains</td><td>No reversal</td></tr><tr><td>Sell within 1 year of exercise</td><td>Ordinary income on spread</td><td>AMT reversed</td></tr></table><div class="warning-box"><strong>Consider this carefully:</strong> The difference between long-term CGT and ordinary income rates matters. At high income levels, the AMT reversal may not offset the higher income tax rate.</div>` },
+    { num: "05", slug: "iso-amt-05", name: "Your Accountant Brief", desc: "Print and take to your next meeting before exercising any ISOs.", tier: 1, content: `<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your CPA or financial adviser before exercising any options.</div><h2>Client ISO AMT Status</h2><table><tr><th>Item</th><th>Detail</th></tr><tr><td>AMT trigger</td><td>ISO exercise spread (FMV − strike)</td></tr><tr><td>AMT exemption (MFJ 2026)</td><td>$220,700</td></tr><tr><td>Tax owed</td><td>At exercise — not at sale</td></tr><tr><td>Year-end deadline</td><td><strong>December 31, 2026</strong></td></tr></table><div class="action-box"><h3>Question 1</h3><p>"What is my exact safe exercise range this year?"</p></div><h3>Question 2</h3><p>"If I trigger AMT, how long will Form 8801 take to recover it?"</p><h3>Question 3</h3><p>"Should I consider a disqualifying disposition to reverse AMT?"</p><h3>Question 4</h3><p>"What is the California state tax impact of exercising?"</p><h3>Question 5</h3><p>"Should I early exercise with an 83(b) election at the current 409A?"</p>` },
+    { num: "06", slug: "iso-amt-06", name: "Dual Basis Tracker", desc: "Regular tax basis vs AMT basis — why they differ and why it matters.", tier: 2, content: `<h2>Why You Have Two Different Bases</h2><p>When you exercise ISOs and pay AMT, you establish two different bases for your shares — one for regular tax and one for AMT. Ignoring this creates double taxation.</p><div class="action-box"><h3>The Two Bases</h3><p>Regular basis = Strike price (what you paid for the shares)</p><p>AMT basis = 409A value at exercise (strike + spread)</p><p>When you sell, regular tax uses regular basis. AMT uses AMT basis.</p></div><h2>Why This Matters at Sale</h2><table><tr><th>Scenario</th><th>Regular Tax Gain</th><th>AMT Gain</th></tr><tr><td>Strike $1, 409A $50, sell at $100</td><td>$99 per share</td><td>$50 per share</td></tr></table><div class="warning-box"><strong>Double taxation risk:</strong> If you only track your regular basis and pay capital gains on the full $99 gain, you are being taxed twice on the $49 spread you already paid AMT on. Form 8801 and Form 6251 must both be filed correctly.</div>` },
+    { num: "07", slug: "iso-amt-07", name: "State Tax Overlay (California Focus)", desc: "California and other states that do not recognise ISO tax treatment.", tier: 2, content: `<h2>California Does Not Recognise ISO Treatment</h2><p>California treats ISOs the same as Non-Qualified Stock Options (NQSOs). The spread at exercise is ordinary income for California purposes — there is no capital gains rate at sale either.</p><div class="warning-box"><strong>California residents:</strong> You owe California income tax at exercise (up to 13.3%) on the full spread, regardless of federal AMT treatment. This is in addition to federal AMT.</div><h2>States That Do Not Recognise ISO Treatment</h2><table><tr><th>State</th><th>ISO Treatment</th></tr><tr><td>California</td><td>All income — ordinary income at exercise</td></tr><tr><td>Pennsylvania</td><td>All income — ordinary income at exercise</td></tr><tr><td>New Jersey</td><td>All income — ordinary income at exercise</td></tr><tr><td>Most others</td><td>Follow federal ISO treatment</td></tr></table>` },
+    { num: "08", slug: "iso-amt-08", name: "Multi-Year Exercise Plan", desc: "How to exercise a large grant across multiple years without triggering AMT.", tier: 2, content: `<h2>The Multi-Year Strategy</h2><p>For large grants, the most tax-efficient approach is to spread exercises across multiple years — using each year's safe range without ever triggering AMT.</p><div class="action-box"><h3>Example: 20,000 ISO Grant</h3><p>Year 1: Exercise 2,000 shares (safe range) → $0 AMT</p><p>Year 2: Exercise 2,000 shares (safe range) → $0 AMT</p><p>Year 3: Exercise 2,000 shares (safe range) → $0 AMT</p><p>10 years to exercise full grant → $0 AMT total</p></div><h2>Pre-IPO Acceleration Considerations</h2><table><tr><th>Event</th><th>Action</th></tr><tr><td>IPO announced</td><td>Exercise remaining safe range immediately — 409A will jump post-IPO</td></tr><tr><td>Acquisition announced</td><td>Check merger agreement — ISOs may convert or accelerate</td></tr><tr><td>409A increase expected</td><td>Accelerate exercises before new valuation published</td></tr></table>` },
   ],
-
-  // ── CALENDAR ──────────────────────────────────────────────────────────────────
-  calendarTitle: "Side-Hustle MTD — Scope and Deadline Calendar",
+  calendarTitle: "ISO AMT — Exercise Decision Deadlines",
   tier1Calendar: [
-    { uid: "sh-confirm",  summary: "Side-Hustle MTD — Confirm qualifying income",   description: "Confirm exact qualifying income with accountant. Check annualisation risk if part-year trading.", date: "relative:+7days" },
-    { uid: "sh-register", summary: "Side-Hustle MTD — Register with HMRC",          description: "Register at gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax before 7 August 2026.", date: "relative:+14days" },
-    { uid: "sh-q1",       summary: "🔴 MTD Q1 Deadline — 7 August 2026",            description: "First MTD quarterly submission — 6 April to 30 June 2026.", date: "20260807" },
-    { uid: "sh-final",    summary: "MTD Final Declaration — 31 January 2028",        description: "File MTD final declaration through your software. Replaces SA100.", date: "20280131" },
+    { uid: "iso-q2",   summary: "ISO AMT — Q2 Estimated Tax Due (if exercised Q1)", description: "If you exercised ISOs in Q1 and triggered AMT, include in Q2 estimated tax payment.", date: "20260616" },
+    { uid: "iso-q3",   summary: "ISO AMT — Q3 Estimated Tax Due", description: "Q3 estimated tax payment — include AMT if exercised in first half of year.", date: "20260915" },
+    { uid: "iso-year", summary: "🔴 ISO AMT — Year-End Exercise Deadline", description: "Last day to exercise ISOs for 2026 tax year. Calculate safe range before exercising.", date: "20261231" },
   ],
   tier2Calendar: [
-    { uid: "sh-confirm",  summary: "Side-Hustle MTD — Confirm qualifying income",   description: "Confirm qualifying income. Check annualisation risk. Review multi-stream combination.", date: "relative:+7days" },
-    { uid: "sh-software", summary: "Side-Hustle MTD — Set up software",             description: "Choose and set up MTD software for your income type. Connect bank feed.", date: "relative:+14days" },
-    { uid: "sh-register", summary: "Side-Hustle MTD — Register with HMRC",          description: "Complete MTD registration. Select all qualifying income sources.", date: "relative:+21days" },
-    { uid: "sh-q1",       summary: "🔴 MTD Q1 Deadline — 7 August 2026",            description: "First MTD quarterly submission — 6 April to 30 June 2026.", date: "20260807" },
-    { uid: "sh-2027",     summary: "MTD 2027 Threshold — April 2027",               description: "£30,000 threshold comes into force. Review qualifying income for 2025-26 return.", date: "20270401" },
-    { uid: "sh-final",    summary: "MTD Final Declaration — 31 January 2028",        description: "File MTD final declaration through your software.", date: "20280131" },
+    { uid: "iso-plan",  summary: "ISO AMT — Plan your safe exercise range",         description: "Calculate safe exercise range with CPA before any exercise.", date: "relative:+7days" },
+    { uid: "iso-409a",  summary: "ISO AMT — Monitor 409A valuation update",         description: "Exercise before next 409A if company has had funding event.", date: "relative:+14days" },
+    { uid: "iso-q2",    summary: "ISO AMT — Q2 Estimated Tax Due",                  description: "Include AMT from Q1 exercises in estimated tax payment.", date: "20260616" },
+    { uid: "iso-q3",    summary: "ISO AMT — Q3 Estimated Tax Due",                  description: "Q3 estimated tax payment.", date: "20260915" },
+    { uid: "iso-year",  summary: "🔴 ISO AMT — Year-End Exercise Deadline",          description: "Last day to exercise for 2026 tax year. Do not exercise without calculating safe range.", date: "20261231" },
+    { uid: "iso-file",  summary: "ISO AMT — File Form 6251 + Form 8801",            description: "AMT calculation (Form 6251) and Minimum Tax Credit (Form 8801) due with annual return.", date: "20270415" },
   ],
-
-  // ── DELIVERY ──────────────────────────────────────────────────────────────────
-  delivery: {
-    tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_SH_47",
-    tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_SH_97",
-  },
-
-  // ── MONITORING ────────────────────────────────────────────────────────────────
-  monitorUrls: [
-    "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax",
-    "https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax",
-    "https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income",
-  ],
-
-  // ── SIDEBAR ───────────────────────────────────────────────────────────────────
-  sidebarNumbers: [
-    { label: "MTD threshold 2026", value: "£50,000" },
-    { label: "MTD threshold 2027", value: "£30,000" },
-    { label: "MTD threshold 2028", value: "£20,000" },
-    { label: "First deadline",     value: "7 Aug 2026" },
-  ],
-  sidebarMathsTitle:    "Qualifying income includes",
-  sidebarMathsIncludes: ["Gross self-employment turnover", "Gross UK rental receipts (your share)"],
-  sidebarMathsExcludes: ["PAYE salary and wages", "Dividends", "Savings and bank interest", "Pension income", "Foreign rental income"],
-  sidebarMathsNote:     "Source: GOV.UK — Making Tax Digital for Income Tax · Finance (No.2) Act 2024",
-
-  // ── JSON-LD HOWTO STEPS ───────────────────────────────────────────────────────
+  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_ISO_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_ISO_147" },
+  monitorUrls: ["https://www.irs.gov/taxtopics/tc427", "https://www.irs.gov/taxtopics/tc556"],
+  sidebarNumbers: [{ label: "AMT exemption (MFJ)", value: "$220,700" }, { label: "AMT rate", value: "26% / 28%" }, { label: "Typical AMT bill", value: "~$150k" }, { label: "Credit recovery", value: "Form 8801" }],
+  sidebarMathsTitle: "AMT is triggered at exercise",
+  sidebarMathsIncludes: ["Spread (FMV − strike) × shares = AMT income", "Tax owed in April of exercise year", "No liquidity required to owe AMT"],
+  sidebarMathsExcludes: ["AMT is NOT triggered at sale", "QSBS stock is separate from ISO", "Regular tax basis ≠ AMT basis"],
+  sidebarMathsNote: "Source: IRS Topic 427 · IRC Section 56(b)(3) · Form 6251",
   howToSteps: [
-    { position: 1, name: "Identify your income streams",         text: "Select whether you have self-employment only, rental only, or both. Do not include PAYE salary — it is excluded from qualifying income." },
-    { position: 2, name: "Enter your gross qualifying income",   text: "Enter gross self-employment turnover and gross rental receipts separately. Use your share only for jointly owned property. Do not deduct expenses — HMRC uses gross." },
-    { position: 3, name: "Get your MTD scope verdict",           text: "See immediately whether you are in scope for 2026 (above £50,000), in scope for 2027 (£30,000–£50,000), or approaching the threshold." },
-    { position: 4, name: "Get your personalised scope plan",    text: "Receive a personalised assessment confirming your qualifying income, your mandate date, your first deadline and your next steps." },
+    { position: 1, name: "Select your ISO situation", text: "Choose your approximate number of options and spread. This determines your AMT exposure bracket." },
+    { position: 2, name: "Enter salary and spread", text: "Your salary and the spread (409A minus strike) determine the safe exercise range." },
+    { position: 3, name: "Get your safe exercise number", text: "See exactly how many shares you can exercise before triggering AMT — your personalised safe range." },
+    { position: 4, name: "Get your exercise plan", text: "Receive a personalised multi-year exercise plan and AMT recovery strategy." },
   ],
-
-  // ── CLAUDE API ────────────────────────────────────────────────────────────────
   successPromptFields: [
-    { key: "sh_income_type",        label: "Income type selected",          defaultVal: "side hustle + rental" },
-    { key: "sh_self_employment",    label: "Gross self-employment income",   defaultVal: "40000" },
-    { key: "sh_rental",             label: "Gross rental income",           defaultVal: "15000" },
-    { key: "sh_jointly_owned",      label: "Jointly owned property",        defaultVal: "false" },
-    { key: "sh_qualifying_income",  label: "Total qualifying income",       defaultVal: "55000" },
-    { key: "sh_status",             label: "MTD scope status",              defaultVal: "in_scope_2026" },
-    { key: "sh_answers",            label: "Questionnaire answers",         defaultVal: "{}" },
+    { key: "iso_salary", label: "Annual salary", defaultVal: "150000" },
+    { key: "iso_shares", label: "ISOs considering", defaultVal: "5000" },
+    { key: "iso_spread", label: "Spread per share", defaultVal: "50" },
+    { key: "iso_status", label: "AMT status", defaultVal: "at_risk" },
   ],
-
-  tier1AssessmentFields: [
-    "status", "qualifyingIncome", "mandateDate", "firstDeadline",
-    "hiddenInsight", "riskFlags", "firstAction",
-    "softwareRec", "accountantQuestions",
-  ],
-
-  tier2AssessmentFields: [
-    "status", "qualifyingIncome", "mandateDate", "firstDeadline",
-    "hiddenInsight", "riskFlags", "annualisationRisk",
-    "streamBreakdown", "actions", "softwareRec", "softwareWhy",
-    "weekPlan", "accountantQuestions",
-  ],
-
+  tier1AssessmentFields: ["status", "safeExerciseRange", "amtExposure", "liquidityRisk", "firstAction", "timingStrategy", "accountantQuestions"],
+  tier2AssessmentFields: ["status", "safeExerciseRange", "amtExposure", "liquidityRisk", "creditRecovery", "dualBasis", "actions", "weekPlan", "accountantQuestions"],
+  persona: {
+    name: "Tyler",
+    age: 36,
+    occupation: "Co-founder and CEO, Stackform Inc — B2B SaaS, Austin TX, Series A",
+    location: "Austin, Texas",
+    family: "Partner Maya (UX designer). No kids. Dog named Kernel.",
+    financialSnapshot: "$800k engineering payroll — 8 US engineers, 4 India offshore. $2.1M ARR. ISO options. QSBS qualified. Sells into 18 states.",
+    painPoint: "Tyler is meticulous about product. His tax situation has grown faster than his attention to it.",
+    discovery: "Tyler found the gap when an AI tool gave him three different answers on Section 174 before a board meeting.",
+    voice: "Precise. Data-driven. Shares good tools immediately. Respects speed and specificity.",
+  },
+  story: {
+    hook: "Tyler's option grant said 800,000 shares at $0.12 exercise price. It looked like free money. It was more complicated.",
+    setup: [
+    "The options were granted when Stackform was worth almost nothing. The Series A was priced at $2.40 — a 20x increase. Tyler knew the spread was valuable. He did not know exactly how it interacted with the Alternative Minimum Tax.",
+    "He had read enough to know that exercising ISOs created an AMT adjustment equal to the spread. On 800,000 options at a $2.28 spread, that was $1.824M of AMT income.",
+    "What he had not modelled was the AMT rate, his existing regular tax liability, and whether the AMT credit would be usable in future years. He had also not considered the timing.",
+    ],
+    revelation: "Exercising all 800,000 options in one year would create $1.824M of AMT income. At the 28% AMT rate, his additional tax bill could reach $340,000 in cash he needed before the tax deadline.",
+    resolution: "Rachel designed a staged exercise plan: 200,000 options this year, 200,000 after the Series B, the remainder modelled at exit. Tyler paid $0 additional AMT in year one.",
+  },
 };
