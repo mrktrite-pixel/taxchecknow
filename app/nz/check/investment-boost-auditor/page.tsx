@@ -497,26 +497,6 @@ export default function InvestmentBoostAuditorPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: IRD — Investment Boost · Income Tax Act 2007 s EE 31B</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">Aroha had ordered a new heat pump for the Glen Eden Airbnb in June 2025. It arrived in August. She had not thought about the tax implications.</strong></p>
-                <p>The old heat pump had been limping. She finally ordered a new Mitsubishi system — $6,800 including installation. She paid the deposit in June. The unit arrived and was commissioned on 14 August 2025.</p>
-                <p>Mike had mentioned something about an investment boost for business assets. He had read about it in an industry newsletter related to his construction work. Aroha was not sure whether a heat pump in an Airbnb qualified.</p>
-                <p>She mentioned it to David at the September meeting. He looked it up. The Investment Boost allowed an optional 20% upfront deduction on eligible depreciable business assets first available for use on or after 22 May 2025.</p>
-                <p><strong className="text-neutral-950">The heat pump qualified. New business asset. First available for use on 14 August 2025 — after the 22 May 2025 threshold. The Airbnb was a taxable activity. At Aroha's marginal rate, the first-year tax benefit was around $449.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> David claimed the Investment Boost in the 2025/26 return and disclosed it in IR10 Box 60. Aroha asked about the carpet replacement from March 2025 — before the threshold. It did not qualify. The heat pump did. Small detail, meaningful difference.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -548,29 +528,6 @@ export default function InvestmentBoostAuditorPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Aroha had ordered a new heat pump for the Glen Eden Airbnb in June 2025. It arrived in August. She had not thought about the tax implications.</p>
-            <p>The old heat pump had been limping. She finally ordered a new Mitsubishi system — $6,800 including installation. She paid the deposit in June. The unit arrived and was commissioned on 14 August 2025.</p>
-            <p>Mike had mentioned something about an investment boost for business assets. He had read about it in an industry newsletter related to his construction work. Aroha was not sure whether a heat pump in an Airbnb qualified.</p>
-            <p>She mentioned it to David at the September meeting. He looked it up. The Investment Boost allowed an optional 20% upfront deduction on eligible depreciable business assets first available for use on or after 22 May 2025.</p>
-            <p className="font-semibold text-neutral-900">The heat pump qualified. New business asset. First available for use on 14 August 2025 — after the 22 May 2025 threshold. The Airbnb was a taxable activity. At Aroha's marginal rate, the first-year tax benefit was around $449.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> David claimed the Investment Boost in the 2025/26 return and disclosed it in IR10 Box 60. Aroha asked about the carpet replacement from March 2025 — before the threshold. It did not qualify. The heat pump did. Small detail, meaningful difference.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -668,6 +625,30 @@ export default function InvestmentBoostAuditorPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Aroha had ordered a new heat pump for the Glen Eden Airbnb in June 2025. It arrived in August. She had not thought about the tax implications.</p>
+            <p>The old heat pump had been limping. She finally ordered a new Mitsubishi system — $6,800 including installation. She paid the deposit in June. The unit arrived and was commissioned on 14 August 2025.</p>
+            <p>Mike had mentioned something about an investment boost for business assets. He had read about it in an industry newsletter related to his construction work. Aroha was not sure whether a heat pump in an Airbnb qualified.</p>
+            <p>She mentioned it to David at the September meeting. He looked it up. The Investment Boost allowed an optional 20% upfront deduction on eligible depreciable business assets first available for use on or after 22 May 2025.</p>
+            <p className="font-semibold text-neutral-900">The heat pump qualified. New business asset. First available for use on 14 August 2025 — after the 22 May 2025 threshold. The Airbnb was a taxable activity. At Aroha's marginal rate, the first-year tax benefit was around $449.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> David claimed the Investment Boost in the 2025/26 return and disclosed it in IR10 Box 60. Aroha asked about the carpet replacement from March 2025 — before the threshold. It did not qualify. The heat pump did. Small detail, meaningful difference.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -987,7 +968,7 @@ export default function InvestmentBoostAuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          5 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

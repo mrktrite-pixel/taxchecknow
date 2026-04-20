@@ -436,26 +436,6 @@ export default function GstRegistrationTrapPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — GST registration · GST Act 1999</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">Gary's company had been leasing the Rockingham storage unit to a small logistics business for three years. $8,500 per month. Regular as clockwork.</strong></p>
-                <p>It had never occurred to Gary to think about GST. The rent came in, the company paid rates and insurance, and the net income went into the accounts. His accountant reviewed the company accounts once a year in April.</p>
-                <p>When the accountant asked at their last meeting whether the company was registered for GST, Gary said he did not think so. The accountant looked at the turnover figure — $102,000 — and then looked at the lease terms. Commercial property. Taxable supply.</p>
-                <p>Gary had crossed the $75,000 threshold in year one of the lease. That was three years ago.</p>
-                <p><strong className="text-neutral-950">The calculator showed the backdate exposure immediately. Three years of $102,000 revenue. The ATO would treat that as GST-inclusive — meaning $9,272 of each year's revenue was GST. Total GST liability: $27,818 over three years. Minus input tax credits on rates and insurance. Net exposure: approximately $24,500.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> Gary's accountant recommended voluntary disclosure to the ATO before any audit was triggered. The company registered for GST that week. The accountant prepared retrospective BAS for the three years. Gary negotiated a payment plan with the ATO for the net liability of $22,800. The penalty exposure was reduced significantly through voluntary disclosure. Gary asked why the accountant had not flagged this three years ago — a fair question that did not have a comfortable answer.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -487,29 +467,6 @@ export default function GstRegistrationTrapPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Gary's company had been leasing the Rockingham storage unit to a small logistics business for three years. $8,500 per month. Regular as clockwork.</p>
-            <p>It had never occurred to Gary to think about GST. The rent came in, the company paid rates and insurance, and the net income went into the accounts. His accountant reviewed the company accounts once a year in April.</p>
-            <p>When the accountant asked at their last meeting whether the company was registered for GST, Gary said he did not think so. The accountant looked at the turnover figure — $102,000 — and then looked at the lease terms. Commercial property. Taxable supply.</p>
-            <p>Gary had crossed the $75,000 threshold in year one of the lease. That was three years ago.</p>
-            <p className="font-semibold text-neutral-900">The calculator showed the backdate exposure immediately. Three years of $102,000 revenue. The ATO would treat that as GST-inclusive — meaning $9,272 of each year's revenue was GST. Total GST liability: $27,818 over three years. Minus input tax credits on rates and insurance. Net exposure: approximately $24,500.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Gary's accountant recommended voluntary disclosure to the ATO before any audit was triggered. The company registered for GST that week. The accountant prepared retrospective BAS for the three years. Gary negotiated a payment plan with the ATO for the net liability of $22,800. The penalty exposure was reduced significantly through voluntary disclosure. Gary asked why the accountant had not flagged this three years ago — a fair question that did not have a comfortable answer.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -595,6 +552,30 @@ export default function GstRegistrationTrapPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Gary's company had been leasing the Rockingham storage unit to a small logistics business for three years. $8,500 per month. Regular as clockwork.</p>
+            <p>It had never occurred to Gary to think about GST. The rent came in, the company paid rates and insurance, and the net income went into the accounts. His accountant reviewed the company accounts once a year in April.</p>
+            <p>When the accountant asked at their last meeting whether the company was registered for GST, Gary said he did not think so. The accountant looked at the turnover figure — $102,000 — and then looked at the lease terms. Commercial property. Taxable supply.</p>
+            <p>Gary had crossed the $75,000 threshold in year one of the lease. That was three years ago.</p>
+            <p className="font-semibold text-neutral-900">The calculator showed the backdate exposure immediately. Three years of $102,000 revenue. The ATO would treat that as GST-inclusive — meaning $9,272 of each year's revenue was GST. Total GST liability: $27,818 over three years. Minus input tax credits on rates and insurance. Net exposure: approximately $24,500.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary's accountant recommended voluntary disclosure to the ATO before any audit was triggered. The company registered for GST that week. The accountant prepared retrospective BAS for the three years. Gary negotiated a payment plan with the ATO for the net liability of $22,800. The penalty exposure was reduced significantly through voluntary disclosure. Gary asked why the accountant had not flagged this three years ago — a fair question that did not have a comfortable answer.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -902,7 +883,7 @@ export default function GstRegistrationTrapPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          3 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

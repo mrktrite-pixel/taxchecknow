@@ -444,26 +444,6 @@ export default function Division7aLoanTrapPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Division 7A · ITAA 1936</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">Gary had been drawing money from his company account for as long as he could remember. Small amounts mostly — $3,000 here, $5,000 there. The accountant had set up a loan years ago.</strong></p>
-                <p>The company was a simple structure. He and Sandra owned it. It held one investment property in Rockingham and managed a few smaller assets. When they needed money for personal things — a holiday, some house repairs, helping Jess with her first car — they had transferred it from the company account. The accountant had always sorted it in the annual accounts.</p>
-                <p>At their last meeting in September, the accountant had said something about Division 7A and the benchmark rate going up. Gary had nodded. He had not really followed the detail. The accountant was good — he trusted her. But he had not asked the follow-up questions he probably should have.</p>
-                <p>After the meeting Gary looked at the company account online. The loan balance was showing $87,000. He had not realised it had grown that much. He typed Division 7A into Google that evening.</p>
-                <p><strong className="text-neutral-950">When Gary ran the calculator, it flagged the $87,000 balance as medium-to-high risk. The key question was whether the loan agreement was still current and whether the minimum repayments had been made every June. Gary realised he did not actually know the answer to either question. He assumed his accountant had handled it — but he had never specifically confirmed it.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> Gary called the accountant the next morning and asked directly: is the Div 7A agreement current, and have the minimum repayments been made for 2024/25? The answer was yes on both counts — but the 2025/26 minimum repayment of $19,800 was due before 30 June and had not been scheduled yet. They set up the transfer that week. Gary also asked whether restructuring the loan as a property-secured facility would reduce the annual minimum — it would, by about $11,000 a year. That conversation was scheduled for August.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -495,29 +475,6 @@ export default function Division7aLoanTrapPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Gary had been drawing money from his company account for as long as he could remember. Small amounts mostly — $3,000 here, $5,000 there. The accountant had set up a loan years ago.</p>
-            <p>The company was a simple structure. He and Sandra owned it. It held one investment property in Rockingham and managed a few smaller assets. When they needed money for personal things — a holiday, some house repairs, helping Jess with her first car — they had transferred it from the company account. The accountant had always sorted it in the annual accounts.</p>
-            <p>At their last meeting in September, the accountant had said something about Division 7A and the benchmark rate going up. Gary had nodded. He had not really followed the detail. The accountant was good — he trusted her. But he had not asked the follow-up questions he probably should have.</p>
-            <p>After the meeting Gary looked at the company account online. The loan balance was showing $87,000. He had not realised it had grown that much. He typed Division 7A into Google that evening.</p>
-            <p className="font-semibold text-neutral-900">When Gary ran the calculator, it flagged the $87,000 balance as medium-to-high risk. The key question was whether the loan agreement was still current and whether the minimum repayments had been made every June. Gary realised he did not actually know the answer to either question. He assumed his accountant had handled it — but he had never specifically confirmed it.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Gary called the accountant the next morning and asked directly: is the Div 7A agreement current, and have the minimum repayments been made for 2024/25? The answer was yes on both counts — but the 2025/26 minimum repayment of $19,800 was due before 30 June and had not been scheduled yet. They set up the transfer that week. Gary also asked whether restructuring the loan as a property-secured facility would reduce the annual minimum — it would, by about $11,000 a year. That conversation was scheduled for August.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -603,6 +560,30 @@ export default function Division7aLoanTrapPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Gary had been drawing money from his company account for as long as he could remember. Small amounts mostly — $3,000 here, $5,000 there. The accountant had set up a loan years ago.</p>
+            <p>The company was a simple structure. He and Sandra owned it. It held one investment property in Rockingham and managed a few smaller assets. When they needed money for personal things — a holiday, some house repairs, helping Jess with her first car — they had transferred it from the company account. The accountant had always sorted it in the annual accounts.</p>
+            <p>At their last meeting in September, the accountant had said something about Division 7A and the benchmark rate going up. Gary had nodded. He had not really followed the detail. The accountant was good — he trusted her. But he had not asked the follow-up questions he probably should have.</p>
+            <p>After the meeting Gary looked at the company account online. The loan balance was showing $87,000. He had not realised it had grown that much. He typed Division 7A into Google that evening.</p>
+            <p className="font-semibold text-neutral-900">When Gary ran the calculator, it flagged the $87,000 balance as medium-to-high risk. The key question was whether the loan agreement was still current and whether the minimum repayments had been made every June. Gary realised he did not actually know the answer to either question. He assumed his accountant had handled it — but he had never specifically confirmed it.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary called the accountant the next morning and asked directly: is the Div 7A agreement current, and have the minimum repayments been made for 2024/25? The answer was yes on both counts — but the 2025/26 minimum repayment of $19,800 was due before 30 June and had not been scheduled yet. They set up the transfer that week. Gary also asked whether restructuring the loan as a property-secured facility would reduce the annual minimum — it would, by about $11,000 a year. That conversation was scheduled for August.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -911,7 +892,7 @@ export default function Division7aLoanTrapPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          3 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

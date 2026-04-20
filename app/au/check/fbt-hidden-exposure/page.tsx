@@ -424,26 +424,6 @@ export default function FbtHiddenExposurePage() {
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Fringe benefits tax · FBTAA 1986</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">The ute had been in the company name for four years. Gary used it for everything — inspecting the Rockingham property, picking up materials, weekend trips down to Mandurah with Sandra.</strong></p>
-                <p>He had not thought of it as a taxable benefit. It was a work vehicle. That was how it had always felt. The company needed a vehicle, he drove it, that was the end of the analysis.</p>
-                <p>When his accountant mentioned FBT in passing at their September meeting, Gary had assumed it did not apply to him. Small setup, retired bloke, one vehicle. Surely there was a threshold.</p>
-                <p>There was not. When Gary looked into it properly, the statutory formula method applied 20% of the ute's $62,000 purchase price regardless of how much business driving he actually did. The number came out at $12,400 of taxable value. At 47% FBT, that was $5,828 per year — for four years.</p>
-                <p><strong className="text-neutral-950">The calculator showed Gary's estimated FBT liability for the current year at $5,828 and flagged that a logbook had never been kept. Without a logbook, the statutory method applied and there was no way to reduce the liability. It also showed that if Gary had maintained a logbook showing 70% business use, his liability would have been $1,748 — a difference of $4,080 per year.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant the next day. The news was that prior years would need to be reviewed — FBT returns had not been lodged. His accountant advised voluntary disclosure to the ATO to reduce penalties. Going forward, Gary started a logbook immediately. He also asked whether switching to an electric ute would eliminate the FBT issue entirely. It would — if the vehicle was under the luxury car tax threshold. That conversation was added to the agenda for their next meeting.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -475,29 +455,6 @@ export default function FbtHiddenExposurePage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">The ute had been in the company name for four years. Gary used it for everything — inspecting the Rockingham property, picking up materials, weekend trips down to Mandurah with Sandra.</p>
-            <p>He had not thought of it as a taxable benefit. It was a work vehicle. That was how it had always felt. The company needed a vehicle, he drove it, that was the end of the analysis.</p>
-            <p>When his accountant mentioned FBT in passing at their September meeting, Gary had assumed it did not apply to him. Small setup, retired bloke, one vehicle. Surely there was a threshold.</p>
-            <p>There was not. When Gary looked into it properly, the statutory formula method applied 20% of the ute's $62,000 purchase price regardless of how much business driving he actually did. The number came out at $12,400 of taxable value. At 47% FBT, that was $5,828 per year — for four years.</p>
-            <p className="font-semibold text-neutral-900">The calculator showed Gary's estimated FBT liability for the current year at $5,828 and flagged that a logbook had never been kept. Without a logbook, the statutory method applied and there was no way to reduce the liability. It also showed that if Gary had maintained a logbook showing 70% business use, his liability would have been $1,748 — a difference of $4,080 per year.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant the next day. The news was that prior years would need to be reviewed — FBT returns had not been lodged. His accountant advised voluntary disclosure to the ATO to reduce penalties. Going forward, Gary started a logbook immediately. He also asked whether switching to an electric ute would eliminate the FBT issue entirely. It would — if the vehicle was under the luxury car tax threshold. That conversation was added to the agenda for their next meeting.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -584,6 +541,30 @@ export default function FbtHiddenExposurePage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">The ute had been in the company name for four years. Gary used it for everything — inspecting the Rockingham property, picking up materials, weekend trips down to Mandurah with Sandra.</p>
+            <p>He had not thought of it as a taxable benefit. It was a work vehicle. That was how it had always felt. The company needed a vehicle, he drove it, that was the end of the analysis.</p>
+            <p>When his accountant mentioned FBT in passing at their September meeting, Gary had assumed it did not apply to him. Small setup, retired bloke, one vehicle. Surely there was a threshold.</p>
+            <p>There was not. When Gary looked into it properly, the statutory formula method applied 20% of the ute's $62,000 purchase price regardless of how much business driving he actually did. The number came out at $12,400 of taxable value. At 47% FBT, that was $5,828 per year — for four years.</p>
+            <p className="font-semibold text-neutral-900">The calculator showed Gary's estimated FBT liability for the current year at $5,828 and flagged that a logbook had never been kept. Without a logbook, the statutory method applied and there was no way to reduce the liability. It also showed that if Gary had maintained a logbook showing 70% business use, his liability would have been $1,748 — a difference of $4,080 per year.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant the next day. The news was that prior years would need to be reviewed — FBT returns had not been lodged. His accountant advised voluntary disclosure to the ATO to reduce penalties. Going forward, Gary started a logbook immediately. He also asked whether switching to an electric ute would eliminate the FBT issue entirely. It would — if the vehicle was under the luxury car tax threshold. That conversation was added to the agenda for their next meeting.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -879,7 +860,7 @@ export default function FbtHiddenExposurePage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          3 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

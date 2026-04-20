@@ -129,7 +129,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/digital-link-auditor",
     "api_endpoint": "/api/rules/digital-link-auditor",
-    "generated_at": "2026-04-20T06:41:49.665Z"
+    "generated_at": "2026-04-20T07:08:56.365Z"
 };
 
   return NextResponse.json(rules, {

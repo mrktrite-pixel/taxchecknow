@@ -477,26 +477,6 @@ export default function QsbsExitAuditorPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC Section 1202 · IRS Publication 550</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">Tyler's lawyer had mentioned QSBS when they incorporated. That was three years ago. Tyler had filed it away.</strong></p>
-                <p>Stackform was incorporated as a Delaware C-Corp from day one. The QSBS exclusion — up to $10M of gain excluded from federal tax — was mentioned in the incorporation docs. Tyler had assumed it applied automatically.</p>
-                <p>At the Series A the cap table got more complex. Tyler's ISO options were repriced. A small secondary transaction allowed an early angel to sell some shares. Everything happened quickly.</p>
-                <p>Tyler was preparing for a potential Series B and had started thinking about an eventual exit. A founder friend who had sold a company mentioned his QSBS exclusion had saved him $2.4M in federal tax.</p>
-                <p><strong className="text-neutral-950">ISO options are not stock — they become stock on exercise. Tyler had not yet exercised. The five-year holding period clock starts on exercise, not grant. He had been counting from the wrong date.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> Tyler exercised 200,000 ISOs immediately — starting the five-year clock. Rachel confirmed Stackform met the gross asset test. The remaining options were modelled against Series B valuation and AMT exposure.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -528,29 +508,6 @@ export default function QsbsExitAuditorPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Tyler's lawyer had mentioned QSBS when they incorporated. That was three years ago. Tyler had filed it away.</p>
-            <p>Stackform was incorporated as a Delaware C-Corp from day one. The QSBS exclusion — up to $10M of gain excluded from federal tax — was mentioned in the incorporation docs. Tyler had assumed it applied automatically.</p>
-            <p>At the Series A the cap table got more complex. Tyler's ISO options were repriced. A small secondary transaction allowed an early angel to sell some shares. Everything happened quickly.</p>
-            <p>Tyler was preparing for a potential Series B and had started thinking about an eventual exit. A founder friend who had sold a company mentioned his QSBS exclusion had saved him $2.4M in federal tax.</p>
-            <p className="font-semibold text-neutral-900">ISO options are not stock — they become stock on exercise. Tyler had not yet exercised. The five-year holding period clock starts on exercise, not grant. He had been counting from the wrong date.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Tyler exercised 200,000 ISOs immediately — starting the five-year clock. Rachel confirmed Stackform met the gross asset test. The remaining options were modelled against Series B valuation and AMT exposure.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -650,6 +607,30 @@ export default function QsbsExitAuditorPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Tyler's lawyer had mentioned QSBS when they incorporated. That was three years ago. Tyler had filed it away.</p>
+            <p>Stackform was incorporated as a Delaware C-Corp from day one. The QSBS exclusion — up to $10M of gain excluded from federal tax — was mentioned in the incorporation docs. Tyler had assumed it applied automatically.</p>
+            <p>At the Series A the cap table got more complex. Tyler's ISO options were repriced. A small secondary transaction allowed an early angel to sell some shares. Everything happened quickly.</p>
+            <p>Tyler was preparing for a potential Series B and had started thinking about an eventual exit. A founder friend who had sold a company mentioned his QSBS exclusion had saved him $2.4M in federal tax.</p>
+            <p className="font-semibold text-neutral-900">ISO options are not stock — they become stock on exercise. Tyler had not yet exercised. The five-year holding period clock starts on exercise, not grant. He had been counting from the wrong date.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Tyler exercised 200,000 ISOs immediately — starting the five-year clock. Rachel confirmed Stackform met the gross asset test. The remaining options were modelled against Series B valuation and AMT exposure.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -947,7 +928,7 @@ export default function QsbsExitAuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          5 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

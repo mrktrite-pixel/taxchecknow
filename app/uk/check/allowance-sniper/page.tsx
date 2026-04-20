@@ -443,26 +443,6 @@ export default function AllowanceSniperPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Income Tax personal allowance · Income Tax Act 2007 s.35</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">James had been paying himself £62,000 a year for six years. His accountant set it up that way. He had never asked why.</strong></p>
-                <p>The salary and dividend split made sense when Dave explained it years ago — pay up to the personal allowance, take the rest as dividends, pay less National Insurance. James understood it well enough at the time and then forgot about it.</p>
-                <p>What James did not know was that his total income — salary plus dividends plus the rental flat — had crept over £100,000 in the 2024/25 year. He had no idea what that meant. The rental had done better than expected.</p>
-                <p>His daughter mentioned something at Easter about a 60% tax trap she had read about. James dismissed it. She was studying economics and liked showing off. But the phrase stuck with him.</p>
-                <p><strong className="text-neutral-950">The calculator showed his total income at £103,400. The personal allowance taper had started. He was paying an effective 60% on the slice between £100,000 and £103,400 — completely avoidable with a pension contribution.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> He called Dave and asked one question: am I in the taper? Dave confirmed he was. They made a £3,400 pension contribution before year end. Saved £2,040. Took twenty minutes.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -494,29 +474,6 @@ export default function AllowanceSniperPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">James had been paying himself £62,000 a year for six years. His accountant set it up that way. He had never asked why.</p>
-            <p>The salary and dividend split made sense when Dave explained it years ago — pay up to the personal allowance, take the rest as dividends, pay less National Insurance. James understood it well enough at the time and then forgot about it.</p>
-            <p>What James did not know was that his total income — salary plus dividends plus the rental flat — had crept over £100,000 in the 2024/25 year. He had no idea what that meant. The rental had done better than expected.</p>
-            <p>His daughter mentioned something at Easter about a 60% tax trap she had read about. James dismissed it. She was studying economics and liked showing off. But the phrase stuck with him.</p>
-            <p className="font-semibold text-neutral-900">The calculator showed his total income at £103,400. The personal allowance taper had started. He was paying an effective 60% on the slice between £100,000 and £103,400 — completely avoidable with a pension contribution.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> He called Dave and asked one question: am I in the taper? Dave confirmed he was. They made a £3,400 pension contribution before year end. Saved £2,040. Took twenty minutes.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -608,6 +565,30 @@ export default function AllowanceSniperPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">James had been paying himself £62,000 a year for six years. His accountant set it up that way. He had never asked why.</p>
+            <p>The salary and dividend split made sense when Dave explained it years ago — pay up to the personal allowance, take the rest as dividends, pay less National Insurance. James understood it well enough at the time and then forgot about it.</p>
+            <p>What James did not know was that his total income — salary plus dividends plus the rental flat — had crept over £100,000 in the 2024/25 year. He had no idea what that meant. The rental had done better than expected.</p>
+            <p>His daughter mentioned something at Easter about a 60% tax trap she had read about. James dismissed it. She was studying economics and liked showing off. But the phrase stuck with him.</p>
+            <p className="font-semibold text-neutral-900">The calculator showed his total income at £103,400. The personal allowance taper had started. He was paying an effective 60% on the slice between £100,000 and £103,400 — completely avoidable with a pension contribution.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> He called Dave and asked one question: am I in the taper? Dave confirmed he was. They made a £3,400 pension contribution before year end. Saved £2,040. Took twenty minutes.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -915,7 +896,7 @@ export default function AllowanceSniperPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          3 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

@@ -429,26 +429,6 @@ export default function DividendTrapPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Dividend tax rates and allowances · Income Tax Act 2007</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">James had always taken £38,000 in dividends. Same number every year. It had never occurred to him to question it.</strong></p>
-                <p>The company had a decent year. Retained profits sat in the business account. Dave had suggested leaving it there rather than extracting it — something about corporation tax and timing. The retained profits kept building.</p>
-                <p>In 2024/25 the dividend allowance dropped to £500. James did not notice. He had not tracked these changes. When he took his usual £38,000 dividend in March, the allowance that used to shelter £2,000 of it now only sheltered £500.</p>
-                <p>He also did not know the dividend rate for higher-rate taxpayers had gone up. The rate on dividends above the basic band was now 33.75%. Small difference. Meaningful on £38,000.</p>
-                <p><strong className="text-neutral-950">The calculator showed his dividend tax bill had increased by £490 compared to the prior year — purely from the allowance reduction and rate change, with no change in his behaviour.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> Dave outlined three options: more salary, reinvest in equipment, or leave profits building. For the first time James had a structured choice rather than a default.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -480,29 +460,6 @@ export default function DividendTrapPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">James had always taken £38,000 in dividends. Same number every year. It had never occurred to him to question it.</p>
-            <p>The company had a decent year. Retained profits sat in the business account. Dave had suggested leaving it there rather than extracting it — something about corporation tax and timing. The retained profits kept building.</p>
-            <p>In 2024/25 the dividend allowance dropped to £500. James did not notice. He had not tracked these changes. When he took his usual £38,000 dividend in March, the allowance that used to shelter £2,000 of it now only sheltered £500.</p>
-            <p>He also did not know the dividend rate for higher-rate taxpayers had gone up. The rate on dividends above the basic band was now 33.75%. Small difference. Meaningful on £38,000.</p>
-            <p className="font-semibold text-neutral-900">The calculator showed his dividend tax bill had increased by £490 compared to the prior year — purely from the allowance reduction and rate change, with no change in his behaviour.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Dave outlined three options: more salary, reinvest in equipment, or leave profits building. For the first time James had a structured choice rather than a default.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -594,6 +551,30 @@ export default function DividendTrapPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">James had always taken £38,000 in dividends. Same number every year. It had never occurred to him to question it.</p>
+            <p>The company had a decent year. Retained profits sat in the business account. Dave had suggested leaving it there rather than extracting it — something about corporation tax and timing. The retained profits kept building.</p>
+            <p>In 2024/25 the dividend allowance dropped to £500. James did not notice. He had not tracked these changes. When he took his usual £38,000 dividend in March, the allowance that used to shelter £2,000 of it now only sheltered £500.</p>
+            <p>He also did not know the dividend rate for higher-rate taxpayers had gone up. The rate on dividends above the basic band was now 33.75%. Small difference. Meaningful on £38,000.</p>
+            <p className="font-semibold text-neutral-900">The calculator showed his dividend tax bill had increased by £490 compared to the prior year — purely from the allowance reduction and rate change, with no change in his behaviour.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Dave outlined three options: more salary, reinvest in equipment, or leave profits building. For the first time James had a structured choice rather than a default.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -891,7 +872,7 @@ export default function DividendTrapPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          3 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

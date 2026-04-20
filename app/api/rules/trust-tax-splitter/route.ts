@@ -178,7 +178,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nz/check/trust-tax-splitter",
     "api_endpoint": "/api/rules/trust-tax-splitter",
-    "generated_at": "2026-04-20T06:42:18.804Z"
+    "generated_at": "2026-04-20T07:09:25.829Z"
 };
 
   return NextResponse.json(rules, {

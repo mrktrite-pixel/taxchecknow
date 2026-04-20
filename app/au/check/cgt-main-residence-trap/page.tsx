@@ -464,26 +464,6 @@ export default function CgtMainResidenceTrapPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Main residence exemption · ITAA 1997 s.118-110</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">Gary sold the Mandurah unit in February. He had owned it since 2011 — fourteen years. He assumed the sale would be tax-free.</strong></p>
-                <p>He had lived there for the first eight months after he bought it. Moved in straight after settlement, before the FIFO roster kicked in properly. After that he had rented it out — first to a young couple, then to a series of different tenants. The rental income had been going into a separate account and declared every year. Gary had been organised about that much.</p>
-                <p>What Gary had not thought about was the main residence side of things. He knew about the 50% CGT discount — his accountant had mentioned it years ago. But he assumed that because he had lived there at the start, it qualified as his home and would be exempt.</p>
-                <p>The unit had gone up substantially. He bought it for $285,000 in 2011. It sold for $580,000 in February 2026. A gain of $295,000. Gary had told Sandra it would be a clean $295,000. No tax.</p>
-                <p><strong className="text-neutral-950">When Gary ran the calculator, the numbers came back differently. He had owned the property for approximately 5,110 days. He had lived there for 243 days. The 6-year rule did not help — he had never moved back in and had nominated the family home as his main residence the whole time. His exempt fraction was 243 divided by 5,110 — about 4.75%. The taxable portion of his gain was $280,000. After the 50% CGT discount, he had $140,000 of taxable income to declare.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant the next morning. The news was not great but it was manageable. They worked through the cost base — stamp duty, agent fees, a new hot water system and the repaint in 2019. The gain came down to $261,000. After the discount, $130,500 added to Gary's income for the year. His accountant also checked whether any capital losses from other disposals could offset it. Gary had one — a small parcel of shares that had dropped. It helped a little. The conversation Gary needed to have with Sandra was going to be different from the one he had planned. But at least he knew the number before the return was due.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -515,29 +495,6 @@ export default function CgtMainResidenceTrapPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Gary sold the Mandurah unit in February. He had owned it since 2011 — fourteen years. He assumed the sale would be tax-free.</p>
-            <p>He had lived there for the first eight months after he bought it. Moved in straight after settlement, before the FIFO roster kicked in properly. After that he had rented it out — first to a young couple, then to a series of different tenants. The rental income had been going into a separate account and declared every year. Gary had been organised about that much.</p>
-            <p>What Gary had not thought about was the main residence side of things. He knew about the 50% CGT discount — his accountant had mentioned it years ago. But he assumed that because he had lived there at the start, it qualified as his home and would be exempt.</p>
-            <p>The unit had gone up substantially. He bought it for $285,000 in 2011. It sold for $580,000 in February 2026. A gain of $295,000. Gary had told Sandra it would be a clean $295,000. No tax.</p>
-            <p className="font-semibold text-neutral-900">When Gary ran the calculator, the numbers came back differently. He had owned the property for approximately 5,110 days. He had lived there for 243 days. The 6-year rule did not help — he had never moved back in and had nominated the family home as his main residence the whole time. His exempt fraction was 243 divided by 5,110 — about 4.75%. The taxable portion of his gain was $280,000. After the 50% CGT discount, he had $140,000 of taxable income to declare.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant the next morning. The news was not great but it was manageable. They worked through the cost base — stamp duty, agent fees, a new hot water system and the repaint in 2019. The gain came down to $261,000. After the discount, $130,500 added to Gary's income for the year. His accountant also checked whether any capital losses from other disposals could offset it. Gary had one — a small parcel of shares that had dropped. It helped a little. The conversation Gary needed to have with Sandra was going to be different from the one he had planned. But at least he knew the number before the return was due.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -629,6 +586,30 @@ export default function CgtMainResidenceTrapPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Gary sold the Mandurah unit in February. He had owned it since 2011 — fourteen years. He assumed the sale would be tax-free.</p>
+            <p>He had lived there for the first eight months after he bought it. Moved in straight after settlement, before the FIFO roster kicked in properly. After that he had rented it out — first to a young couple, then to a series of different tenants. The rental income had been going into a separate account and declared every year. Gary had been organised about that much.</p>
+            <p>What Gary had not thought about was the main residence side of things. He knew about the 50% CGT discount — his accountant had mentioned it years ago. But he assumed that because he had lived there at the start, it qualified as his home and would be exempt.</p>
+            <p>The unit had gone up substantially. He bought it for $285,000 in 2011. It sold for $580,000 in February 2026. A gain of $295,000. Gary had told Sandra it would be a clean $295,000. No tax.</p>
+            <p className="font-semibold text-neutral-900">When Gary ran the calculator, the numbers came back differently. He had owned the property for approximately 5,110 days. He had lived there for 243 days. The 6-year rule did not help — he had never moved back in and had nominated the family home as his main residence the whole time. His exempt fraction was 243 divided by 5,110 — about 4.75%. The taxable portion of his gain was $280,000. After the 50% CGT discount, he had $140,000 of taxable income to declare.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary called his accountant the next morning. The news was not great but it was manageable. They worked through the cost base — stamp duty, agent fees, a new hot water system and the repaint in 2019. The gain came down to $261,000. After the discount, $130,500 added to Gary's income for the year. His accountant also checked whether any capital losses from other disposals could offset it. Gary had one — a small parcel of shares that had dropped. It helped a little. The conversation Gary needed to have with Sandra was going to be different from the one he had planned. But at least he knew the number before the return was due.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -937,7 +918,7 @@ export default function CgtMainResidenceTrapPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

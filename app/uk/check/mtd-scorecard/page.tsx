@@ -468,26 +468,6 @@ export default function MtdScorecardPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Making Tax Digital for Income Tax · Finance Act 2021</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">James got the HMRC letter on a Tuesday morning. He read it twice and still was not sure what it meant.</strong></p>
-                <p>He runs Hartley Precision Engineering out of a unit in Solihull. Twelve employees. Good order book. The business side he knows inside out. The tax side he leaves to his accountant Dave, who he sees every April for about forty minutes.</p>
-                <p>The letter said something about Making Tax Digital and quarterly submissions. James assumed it applied to bigger companies. He makes around £280,000 in annual turnover — nowhere near what he thought the threshold would be.</p>
-                <p>He typed the question into Google on his phone while the kettle boiled. The first three results said different things. One said £85,000. One said £50,000. One said it was already live. He gave up and came back to it that evening.</p>
-                <p><strong className="text-neutral-950">When he ran the calculator it came back immediately: above the £50,000 threshold. MTD for Income Tax applies from April 2026. His current system — a spreadsheet Dave checks once a year — does not qualify.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> James called Dave the next morning with a specific question for the first time: am I compliant, and what software do we need? Dave appreciated the preparation.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -519,29 +499,6 @@ export default function MtdScorecardPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">James got the HMRC letter on a Tuesday morning. He read it twice and still was not sure what it meant.</p>
-            <p>He runs Hartley Precision Engineering out of a unit in Solihull. Twelve employees. Good order book. The business side he knows inside out. The tax side he leaves to his accountant Dave, who he sees every April for about forty minutes.</p>
-            <p>The letter said something about Making Tax Digital and quarterly submissions. James assumed it applied to bigger companies. He makes around £280,000 in annual turnover — nowhere near what he thought the threshold would be.</p>
-            <p>He typed the question into Google on his phone while the kettle boiled. The first three results said different things. One said £85,000. One said £50,000. One said it was already live. He gave up and came back to it that evening.</p>
-            <p className="font-semibold text-neutral-900">When he ran the calculator it came back immediately: above the £50,000 threshold. MTD for Income Tax applies from April 2026. His current system — a spreadsheet Dave checks once a year — does not qualify.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> James called Dave the next morning with a specific question for the first time: am I compliant, and what software do we need? Dave appreciated the preparation.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -639,6 +596,30 @@ export default function MtdScorecardPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">James got the HMRC letter on a Tuesday morning. He read it twice and still was not sure what it meant.</p>
+            <p>He runs Hartley Precision Engineering out of a unit in Solihull. Twelve employees. Good order book. The business side he knows inside out. The tax side he leaves to his accountant Dave, who he sees every April for about forty minutes.</p>
+            <p>The letter said something about Making Tax Digital and quarterly submissions. James assumed it applied to bigger companies. He makes around £280,000 in annual turnover — nowhere near what he thought the threshold would be.</p>
+            <p>He typed the question into Google on his phone while the kettle boiled. The first three results said different things. One said £85,000. One said £50,000. One said it was already live. He gave up and came back to it that evening.</p>
+            <p className="font-semibold text-neutral-900">When he ran the calculator it came back immediately: above the £50,000 threshold. MTD for Income Tax applies from April 2026. His current system — a spreadsheet Dave checks once a year — does not qualify.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> James called Dave the next morning with a specific question for the first time: am I compliant, and what software do we need? Dave appreciated the preparation.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -945,7 +926,7 @@ export default function MtdScorecardPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

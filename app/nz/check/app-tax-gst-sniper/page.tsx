@@ -480,26 +480,6 @@ export default function AppTaxGstSniperPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: IRD — GST for marketplace sellers · GST Act 1985</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">Aroha had been running the Glen Eden property on Airbnb for two years. She had never thought about GST.</strong></p>
-                <p>The property earned around $3,200 per month when occupied. Aroha managed it herself. She was below the $60,000 GST threshold and had assumed GST simply did not apply to her.</p>
-                <p>What she had not understood was the App Tax. From 2023, Airbnb had been required to collect and remit 15% GST on her earnings regardless of her registration status. The platform took the GST. She received a flat-rate credit of only 8.5%.</p>
-                <p>She had also been running significant costs through the property: a new heat pump ($4,200), replacement carpet ($2,800), regular cleaning. None of the GST on those expenses was recoverable as an unregistered person.</p>
-                <p><strong className="text-neutral-950">The heat pump alone — $4,200 GST-inclusive — contained $547 of recoverable GST she had walked away from. The ongoing registration calculation did not support registering. But large purchases changed the maths.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> Aroha did not register for GST. The ongoing numbers did not support it. But she now asks David before any major purchase whether voluntary registration for that year would be beneficial.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -531,29 +511,6 @@ export default function AppTaxGstSniperPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Aroha had been running the Glen Eden property on Airbnb for two years. She had never thought about GST.</p>
-            <p>The property earned around $3,200 per month when occupied. Aroha managed it herself. She was below the $60,000 GST threshold and had assumed GST simply did not apply to her.</p>
-            <p>What she had not understood was the App Tax. From 2023, Airbnb had been required to collect and remit 15% GST on her earnings regardless of her registration status. The platform took the GST. She received a flat-rate credit of only 8.5%.</p>
-            <p>She had also been running significant costs through the property: a new heat pump ($4,200), replacement carpet ($2,800), regular cleaning. None of the GST on those expenses was recoverable as an unregistered person.</p>
-            <p className="font-semibold text-neutral-900">The heat pump alone — $4,200 GST-inclusive — contained $547 of recoverable GST she had walked away from. The ongoing registration calculation did not support registering. But large purchases changed the maths.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Aroha did not register for GST. The ongoing numbers did not support it. But she now asks David before any major purchase whether voluntary registration for that year would be beneficial.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -650,6 +607,30 @@ export default function AppTaxGstSniperPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Aroha had been running the Glen Eden property on Airbnb for two years. She had never thought about GST.</p>
+            <p>The property earned around $3,200 per month when occupied. Aroha managed it herself. She was below the $60,000 GST threshold and had assumed GST simply did not apply to her.</p>
+            <p>What she had not understood was the App Tax. From 2023, Airbnb had been required to collect and remit 15% GST on her earnings regardless of her registration status. The platform took the GST. She received a flat-rate credit of only 8.5%.</p>
+            <p>She had also been running significant costs through the property: a new heat pump ($4,200), replacement carpet ($2,800), regular cleaning. None of the GST on those expenses was recoverable as an unregistered person.</p>
+            <p className="font-semibold text-neutral-900">The heat pump alone — $4,200 GST-inclusive — contained $547 of recoverable GST she had walked away from. The ongoing registration calculation did not support registering. But large purchases changed the maths.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Aroha did not register for GST. The ongoing numbers did not support it. But she now asks David before any major purchase whether voluntary registration for that year would be beneficial.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -957,7 +938,7 @@ export default function AppTaxGstSniperPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          5 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

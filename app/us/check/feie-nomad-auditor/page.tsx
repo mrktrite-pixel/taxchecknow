@@ -429,26 +429,6 @@ export default function FeieNomadAuditorPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: IRS — Publication 54 · IRC Section 911 · IRS Form 2555</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">Tyler spent four months in Lisbon. He worked the whole time. He assumed that was fine for taxes.</strong></p>
-                <p>After the Series A closed, Tyler and Maya based themselves in Lisbon for a quarter — good timezone overlap with Austin, excellent food, the visa was easy. Stackform kept running.</p>
-                <p>Tyler had heard about the Foreign Earned Income Exclusion from a founder friend who had lived abroad for three years. He mentioned it to Rachel before leaving. She said it was worth tracking the days.</p>
-                <p>What Tyler had not fully understood was the difference between the physical presence test and the bona fide residence test. He spent 118 days in Portugal — not 330. He also maintained his Austin apartment, Texas driver's licence, and filed as a Texas resident.</p>
-                <p><strong className="text-neutral-950">The physical presence test requires 330 qualifying days outside the US in a 12-month period. Tyler had 118. His Austin lease, Texas ID, and bank accounts argued against bona fide residence. He did not qualify for FEIE.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> Tyler did not owe additional tax — he had not claimed the exclusion. But he nearly had. Rachel updated the policy: any founder travel over 30 days now gets a tax residency review before departure.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -480,29 +460,6 @@ export default function FeieNomadAuditorPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Tyler spent four months in Lisbon. He worked the whole time. He assumed that was fine for taxes.</p>
-            <p>After the Series A closed, Tyler and Maya based themselves in Lisbon for a quarter — good timezone overlap with Austin, excellent food, the visa was easy. Stackform kept running.</p>
-            <p>Tyler had heard about the Foreign Earned Income Exclusion from a founder friend who had lived abroad for three years. He mentioned it to Rachel before leaving. She said it was worth tracking the days.</p>
-            <p>What Tyler had not fully understood was the difference between the physical presence test and the bona fide residence test. He spent 118 days in Portugal — not 330. He also maintained his Austin apartment, Texas driver's licence, and filed as a Texas resident.</p>
-            <p className="font-semibold text-neutral-900">The physical presence test requires 330 qualifying days outside the US in a 12-month period. Tyler had 118. His Austin lease, Texas ID, and bank accounts argued against bona fide residence. He did not qualify for FEIE.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Tyler did not owe additional tax — he had not claimed the exclusion. But he nearly had. Rachel updated the policy: any founder travel over 30 days now gets a tax residency review before departure.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -600,6 +557,30 @@ export default function FeieNomadAuditorPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Tyler spent four months in Lisbon. He worked the whole time. He assumed that was fine for taxes.</p>
+            <p>After the Series A closed, Tyler and Maya based themselves in Lisbon for a quarter — good timezone overlap with Austin, excellent food, the visa was easy. Stackform kept running.</p>
+            <p>Tyler had heard about the Foreign Earned Income Exclusion from a founder friend who had lived abroad for three years. He mentioned it to Rachel before leaving. She said it was worth tracking the days.</p>
+            <p>What Tyler had not fully understood was the difference between the physical presence test and the bona fide residence test. He spent 118 days in Portugal — not 330. He also maintained his Austin apartment, Texas driver's licence, and filed as a Texas resident.</p>
+            <p className="font-semibold text-neutral-900">The physical presence test requires 330 qualifying days outside the US in a 12-month period. Tyler had 118. His Austin lease, Texas ID, and bank accounts argued against bona fide residence. He did not qualify for FEIE.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Tyler did not owe additional tax — he had not claimed the exclusion. But he nearly had. Rachel updated the policy: any founder travel over 30 days now gets a tax residency review before departure.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -903,7 +884,7 @@ export default function FeieNomadAuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          3 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (

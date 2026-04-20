@@ -178,7 +178,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nz/check/app-tax-gst-sniper",
     "api_endpoint": "/api/rules/app-tax-gst-sniper",
-    "generated_at": "2026-04-20T06:42:13.309Z"
+    "generated_at": "2026-04-20T07:09:20.325Z"
 };
 
   return NextResponse.json(rules, {

@@ -419,26 +419,6 @@ export default function Section174AuditorPage() {
           <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC Section 174 · TCJA 2017 amendment</p>
 
 
-          {/* ── PERSONA STORY SECTION ────────────────────────────────────── */}
-          <section className="mt-10">
-            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Plain English — what this means for you</p>
-              <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-                Here is the situation — explained without the jargon.
-              </h2>
-              <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-                <p><strong className="text-neutral-950">Tyler had built his engineering team carefully. He had not built his tax strategy around them at all.</strong></p>
-                <p>Stackform runs eight engineers in Austin and four contractors in Bangalore through a vendor agreement. The India team handles API integrations and QA. Tyler brought them on eighteen months ago when the Series A closed.</p>
-                <p>His CPA Rachel had flagged something about R&D tax credits at the last quarterly. Tyler had nodded and moved on. The Section 174 change from 2022 had not come up directly. He assumed software development costs were still fully deductible in year one.</p>
-                <p>They were not. Since January 2022, Section 174 required domestic R&D to be amortised over five years and foreign R&D — the Bangalore team — over fifteen years. Tyler had been booking the India spend as an operating expense.</p>
-                <p><strong className="text-neutral-950">The audit showed $240,000 of the India team's annual cost classified incorrectly. Under the 15-year amortisation rule, only $16,000 was deductible in year one. The remaining $224,000 created a phantom tax liability Tyler had not modelled in his Series A projections.</strong></p>
-                <p className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
-                  <strong className="text-neutral-950">The bottom line:</strong> Rachel reclassified the spend and filed an amended return. Going forward Tyler restructured the India engagement to maximise which portion qualified as domestic versus foreign development.
-                </p>
-              </div>
-              
-            </div>
-          </section>
 
         </div>
 
@@ -470,29 +450,6 @@ export default function Section174AuditorPage() {
           </ul>
         </div>
 
-
-        
-        {/* ── STORY SECTION — plain English persona scenario ── */}
-        <div className="my-10 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
-          </p>
-          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
-          </h2>
-          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Tyler had built his engineering team carefully. He had not built his tax strategy around them at all.</p>
-            <p>Stackform runs eight engineers in Austin and four contractors in Bangalore through a vendor agreement. The India team handles API integrations and QA. Tyler brought them on eighteen months ago when the Series A closed.</p>
-            <p>His CPA Rachel had flagged something about R&D tax credits at the last quarterly. Tyler had nodded and moved on. The Section 174 change from 2022 had not come up directly. He assumed software development costs were still fully deductible in year one.</p>
-            <p>They were not. Since January 2022, Section 174 required domestic R&D to be amortised over five years and foreign R&D — the Bangalore team — over fifteen years. Tyler had been booking the India spend as an operating expense.</p>
-            <p className="font-semibold text-neutral-900">The audit showed $240,000 of the India team's annual cost classified incorrectly. Under the 15-year amortisation rule, only $16,000 was deductible in year one. The remaining $224,000 created a phantom tax liability Tyler had not modelled in his Series A projections.</p>
-            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Rachel reclassified the spend and filed an amended return. Going forward Tyler restructured the India engagement to maximise which portion qualified as domestic versus foreign development.</p>
-            </div>
-          </div>
-          
-        </div>
-        
 
         {/* Calculator + Sidebar grid */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
@@ -583,6 +540,30 @@ export default function Section174AuditorPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ── STORY SECTION — plain English persona scenario ── */}
+      
+      <section className="mx-auto mb-12 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
+            Plain English — what this means for you
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
+            Here is the situation — explained without the jargon.
+          </h2>
+          <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
+            <p className="text-base font-medium text-neutral-900">Tyler had built his engineering team carefully. He had not built his tax strategy around them at all.</p>
+            <p>Stackform runs eight engineers in Austin and four contractors in Bangalore through a vendor agreement. The India team handles API integrations and QA. Tyler brought them on eighteen months ago when the Series A closed.</p>
+            <p>His CPA Rachel had flagged something about R&D tax credits at the last quarterly. Tyler had nodded and moved on. The Section 174 change from 2022 had not come up directly. He assumed software development costs were still fully deductible in year one.</p>
+            <p>They were not. Since January 2022, Section 174 required domestic R&D to be amortised over five years and foreign R&D — the Bangalore team — over fifteen years. Tyler had been booking the India spend as an operating expense.</p>
+            <p className="font-semibold text-neutral-900">The audit showed $240,000 of the India team's annual cost classified incorrectly. Under the 15-year amortisation rule, only $16,000 was deductible in year one. The remaining $224,000 created a phantom tax liability Tyler had not modelled in his Series A projections.</p>
+            <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
+              <p><strong className="text-neutral-950">The bottom line:</strong> Rachel reclassified the spend and filed an amended return. Going forward Tyler restructured the India engagement to maximise which portion qualified as domestic versus foreign development.</p>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -874,7 +855,7 @@ export default function Section174AuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Five corrections for AI-generated answers
+          3 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
