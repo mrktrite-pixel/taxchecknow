@@ -3,10 +3,8 @@
 // Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id]
 // Example: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-03
 // ─────────────────────────────────────────────────────────────────────────────
-
 import * as fs   from "fs";
 import * as path from "path";
-
 // Load .env.local automatically if it exists
 const envPath = path.join(__dirname, "../../.env.local");
 if (fs.existsSync(envPath)) {
@@ -21,37 +19,35 @@ if (fs.existsSync(envPath)) {
     if (!process.env[key]) process.env[key] = val;
   }
 }
-
 import { generateGatePage,      getGatePagePath      } from "../generators/generate-gate-page";
 import { generateCalculator,    getCalculatorPath     } from "../generators/generate-calculator";
 import { generateSuccessAssess, getSuccessAssessPath,
          generateSuccessPlan,   getSuccessPlanPath   } from "../generators/generate-success-pages";
 import { generateAllProductFiles                      } from "../generators/generate-product-files";
 import { generateRulesRoute,    getRulesRoutePath     } from "../generators/generate-rules-route";
-
 import type { ProductConfig } from "../types/product-config";
-
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const APP_ROOT        = path.join(__dirname, "../../app");
+const CONFIG_DIR      = path.join(__dirname, "../config");
+const CALCULATORS_DIR = path.join(__dirname, "../calculators"); // hand-built calculators live here
+const SUPABASE_URL    = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_KEY    = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const APP_ROOT     = path.join(__dirname, "../../app");
-const CONFIG_DIR   = path.join(__dirname, "../config");
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// ── PASCAL HELPER (mirrors generate-calculator.ts) ────────────────────────────
+function toPascal(str: string): string {
+  return str.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("");
+}
 
 // ── MAIN ──────────────────────────────────────────────────────────────────────
-
 async function cole(productId: string) {
   const startTime      = Date.now();
   const filesGenerated: string[] = [];
   const errors:         string[] = [];
-
   console.log(`\n🤖 COLE starting: ${productId}`);
   console.log(`   ${new Date().toISOString()}\n`);
-
   // ── STEP 1: Load config ───────────────────────────────────────────────────
   let config: ProductConfig;
   try {
-    // Accept short form (uk-03) or full form (uk-03-digital-link-auditor)
     let configPath = path.join(CONFIG_DIR, `${productId}.ts`);
     if (!fs.existsSync(configPath)) {
       const allConfigs = fs.readdirSync(CONFIG_DIR).filter(f => f.endsWith(".ts"));
@@ -68,11 +64,10 @@ async function cole(productId: string) {
     config    = mod.PRODUCT_CONFIG;
     if (!config) throw new Error("Config file must export PRODUCT_CONFIG");
     console.log(`   ✅ Config loaded: ${config.name}`);
-
     // ── VALIDATE: no JSX-breaking < > in string fields ────────────────────
     const jsxFields = [
       ...config.brackets.map(b => b.label),
-      ...(config.calculatorInputs || []).flatMap(i => 
+      ...(config.calculatorInputs || []).flatMap(i =>
         "options" in i ? i.options.map((o: {label: string}) => o.label) : []
       ),
       ...config.workedExamples.map(e => e.status),
@@ -90,7 +85,6 @@ async function cole(productId: string) {
     console.error(`   ❌ Config error: ${err}`);
     process.exit(1);
   }
-
   // ── STEP 2: Generate gate page ────────────────────────────────────────────
   try {
     const filePath = getGatePagePath(config, APP_ROOT);
@@ -102,19 +96,32 @@ async function cole(productId: string) {
     errors.push(msg);
     console.error(`   ❌ ${msg}`);
   }
-
-  // ── STEP 3: Generate calculator ───────────────────────────────────────────
+  // ── STEP 3: Calculator ────────────────────────────────────────────────────
+  // RULE: If a hand-built calculator exists in cole/calculators/, copy it.
+  //       Never overwrite hand-built calculators with generated ones.
+  //       If no hand-built version exists, generate from config as normal.
   try {
-    const filePath = getCalculatorPath(config, APP_ROOT);
-    writeFile(filePath, generateCalculator(config));
-    filesGenerated.push(filePath);
-    console.log(`   ✅ Calculator\n      → ${relativePath(filePath)}`);
+    const calculatorName = toPascal(config.id) + "Calculator";
+    const handBuiltPath  = path.join(CALCULATORS_DIR, `${calculatorName}.tsx`);
+    const outputPath     = getCalculatorPath(config, APP_ROOT);
+
+    if (fs.existsSync(handBuiltPath)) {
+      // Hand-built exists — copy it, do not generate
+      const content = fs.readFileSync(handBuiltPath, "utf8");
+      writeFile(outputPath, content);
+      filesGenerated.push(outputPath);
+      console.log(`   ✅ Calculator (hand-built ✋ — preserved from cole/calculators/)\n      → ${relativePath(outputPath)}`);
+    } else {
+      // No hand-built — generate from config
+      writeFile(outputPath, generateCalculator(config));
+      filesGenerated.push(outputPath);
+      console.log(`   ✅ Calculator (generated 🤖)\n      → ${relativePath(outputPath)}`);
+    }
   } catch (err) {
     const msg = `Calculator: ${err}`;
     errors.push(msg);
     console.error(`   ❌ ${msg}`);
   }
-
   // ── STEP 4: Generate success pages ────────────────────────────────────────
   try {
     const p = getSuccessAssessPath(config, APP_ROOT);
@@ -125,7 +132,6 @@ async function cole(productId: string) {
     errors.push(`Success assess: ${err}`);
     console.error(`   ❌ Success assess: ${err}`);
   }
-
   try {
     const p = getSuccessPlanPath(config, APP_ROOT);
     writeFile(p, generateSuccessPlan(config));
@@ -135,7 +141,6 @@ async function cole(productId: string) {
     errors.push(`Success plan: ${err}`);
     console.error(`   ❌ Success plan: ${err}`);
   }
-
   // ── STEP 5: Generate product files ────────────────────────────────────────
   try {
     const productFiles = generateAllProductFiles(config);
@@ -152,7 +157,6 @@ async function cole(productId: string) {
     errors.push(`Product files: ${err}`);
     console.error(`   ❌ Product files: ${err}`);
   }
-
   // ── STEP 6: Generate rules route ──────────────────────────────────────────
   try {
     const filePath = getRulesRoutePath(config, APP_ROOT);
@@ -163,11 +167,9 @@ async function cole(productId: string) {
     errors.push(`Rules route: ${err}`);
     console.error(`   ❌ Rules route: ${err}`);
   }
-
   // ── STEP 7: Log to Supabase ───────────────────────────────────────────────
   const duration = Date.now() - startTime;
   const success  = errors.length === 0;
-
   if (SUPABASE_URL && SUPABASE_KEY) {
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/cole_log`, {
@@ -199,10 +201,8 @@ async function cole(productId: string) {
   } else {
     console.log(`   ⚠️  Supabase not configured — add keys to .env.local to enable logging`);
   }
-
   // ── STEP 8: Summary ───────────────────────────────────────────────────────
   console.log(`\n${"─".repeat(60)}`);
-
   if (!success) {
     console.log(`\n⚠️  COLE completed with ${errors.length} error(s):`);
     errors.forEach(e => console.log(`   • ${e}`));
@@ -210,7 +210,6 @@ async function cole(productId: string) {
     console.log(`\n✅ COLE complete: ${productId}`);
     console.log(`   ${filesGenerated.length} files generated in ${duration}ms`);
   }
-
   console.log(`\n${"─".repeat(60)}`);
   console.log(`\n📋 NEXT STEPS:\n`);
   console.log(`1. Add to app/api/create-checkout-session/route.ts:`);
@@ -243,22 +242,16 @@ async function cole(productId: string) {
   });
   console.log(`\n${"─".repeat(60)}\n`);
 }
-
 // ── HELPERS ───────────────────────────────────────────────────────────────────
-
 function writeFile(filePath: string, content: string): void {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, content, "utf8");
 }
-
 function relativePath(absolutePath: string): string {
   return absolutePath.replace(path.join(__dirname, "../../"), "");
 }
-
 // ── ENTRY POINT ───────────────────────────────────────────────────────────────
-
 const productId = process.argv[2];
-
 if (!productId) {
   console.error("\n❌ Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id]");
   console.error("   Example: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-03\n");
@@ -270,7 +263,6 @@ if (!productId) {
   } catch { /* ignore */ }
   process.exit(1);
 }
-
 cole(productId).catch(err => {
   console.error(`\n❌ COLE fatal error: ${err}\n`);
   process.exit(1);

@@ -426,15 +426,15 @@ export default function MedicareLevySurchargeTrapPage() {
         </h1>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
-        <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
+        <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
 
           {/* Left — Calculator (client component) */}
-          <div id="calculator">
+          <div id="calculator" className="min-w-0">
             <MedicareLevySurchargeTrapCalculator />
           </div>
 
           {/* Right — Sidebar (server rendered) */}
-          <aside className="space-y-4 self-start lg:sticky lg:top-24">
+          <aside className="space-y-4 lg:sticky lg:top-24">
 
             {/* Numbers panel */}
             <div className="border border-neutral-200 bg-white p-4">
@@ -484,14 +484,18 @@ export default function MedicareLevySurchargeTrapPage() {
               <h3 className="mb-1 text-lg font-bold">Medicare Levy Surcharge Trap Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised MLS analysis — surcharge calculation, cover timing strategy, and cost vs tax comparison.</p>
               <div className="space-y-2">
-                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
+                <a href="#calculator"
+                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                  className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition cursor-pointer">
                   $67 · MLS Avoidance Plan
                 </a>
-                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
+                <a href="#calculator"
+                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                  className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition cursor-pointer">
                   $147 · Income and Insurance Optimisation System
                 </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
             </div>
 
             {/* Sources panel */}
@@ -509,6 +513,63 @@ export default function MedicareLevySurchargeTrapPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* COUNTDOWN BOX — just below calculator, above answer content            */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto mb-8 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
+          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
+            Countdown to 31 October 2026 — tax return due
+          </p>
+          <div className="mb-4 flex items-baseline gap-4">
+            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
+            <span className="text-lg text-neutral-300">days until 31 October 2026</span>
+          </div>
+          <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
+            <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+            
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                MLS — income $100k, no cover
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                $1,000
+              </p>
+              <p className="text-xs text-neutral-400">extra tax at 1% rate</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                MLS — income $150k, no cover
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                $2,250
+              </p>
+              <p className="text-xs text-neutral-400">extra tax at 1.5% rate</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Basic hospital cover cost
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                $1,200-$1,800
+              </p>
+              <p className="text-xs text-neutral-400">per year — hospital only</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                Threshold 2025/26
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                $93,001
+              </p>
+              <p className="text-xs text-neutral-400">singles — 1% surcharge applies above this</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -569,10 +630,10 @@ export default function MedicareLevySurchargeTrapPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
+            If your result showed a risk — here is why it happens
           </p>
           <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
+            A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
             <p className="text-base font-medium text-neutral-900">Sandra had seen an ad for private health insurance on the television. She had mentioned it at dinner — maybe they should look into it. Gary had not given it much thought.</p>
@@ -585,63 +646,6 @@ export default function MedicareLevySurchargeTrapPage() {
             </div>
           </div>
           
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* SECTION 3 — COUNTDOWN BOX (desktop only)                              */}
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      <section className="mx-auto mb-12 hidden max-w-6xl px-4 lg:block">
-        <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-8 text-white">
-          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 31 October 2026 — tax return due
-          </p>
-          <div className="mb-4 flex items-baseline gap-4">
-            <span className="text-6xl font-bold tabular-nums">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 31 October 2026</span>
-          </div>
-          <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
-            <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
-          </div>
-          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-            
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                MLS — income $100k, no cover
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $1,000
-              </p>
-              <p className="text-xs text-neutral-400">extra tax at 1% rate</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                MLS — income $150k, no cover
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                $2,250
-              </p>
-              <p className="text-xs text-neutral-400">extra tax at 1.5% rate</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Basic hospital cover cost
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $1,200-$1,800
-              </p>
-              <p className="text-xs text-neutral-400">per year — hospital only</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Threshold 2025/26
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                $93,001
-              </p>
-              <p className="text-xs text-neutral-400">singles — 1% surcharge applies above this</p>
-            </div>
-          </div>
         </div>
       </section>
 

@@ -487,15 +487,15 @@ export default function InvestmentBoostAuditorPage() {
         </h1>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
-        <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
+        <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
 
           {/* Left — Calculator (client component) */}
-          <div id="calculator">
+          <div id="calculator" className="min-w-0">
             <InvestmentBoostAuditorCalculator />
           </div>
 
           {/* Right — Sidebar (server rendered) */}
-          <aside className="space-y-4 self-start lg:sticky lg:top-24">
+          <aside className="space-y-4 lg:sticky lg:top-24">
 
             {/* Numbers panel */}
             <div className="border border-neutral-200 bg-white p-4">
@@ -545,14 +545,18 @@ export default function InvestmentBoostAuditorPage() {
               <h3 className="mb-1 text-lg font-bold">Investment Boost Auditor</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised Investment Boost audit built around your asset, your purchase date, and your available-for-use evidence — not a generic depreciation guide.</p>
               <div className="space-y-2">
-                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
+                <a href="#calculator"
+                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                  className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition cursor-pointer">
                   $67 · New to NZ Asset Log
                 </a>
-                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
+                <a href="#calculator"
+                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                  className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition cursor-pointer">
                   $147 · Change-of-Use and Stage Claim Audit
                 </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
             </div>
 
             {/* Sources panel */}
@@ -582,6 +586,63 @@ export default function InvestmentBoostAuditorPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* COUNTDOWN BOX — just below calculator, above answer content            */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto mb-8 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
+          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
+            Countdown to 7 July 2026 — file your 2025/26 return and claim the Investment Boost
+          </p>
+          <div className="mb-4 flex items-baseline gap-4">
+            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
+            <span className="text-lg text-neutral-300">days until 7 July 2026</span>
+          </div>
+          <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
+            <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+            
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Upfront deduction
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                20%
+              </p>
+              <p className="text-xs text-neutral-400">of eligible asset cost in year one</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                On $500k asset
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                $100k
+              </p>
+              <p className="text-xs text-neutral-400">immediate deduction in year one</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Tax saving at 28%
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                $28,000
+              </p>
+              <p className="text-xs text-neutral-400">on $100k deduction at company rate</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Trigger test
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                Use date
+              </p>
+              <p className="text-xs text-neutral-400">first available for use — not invoice date</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -642,10 +703,10 @@ export default function InvestmentBoostAuditorPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
+            If your result showed a risk — here is why it happens
           </p>
           <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
+            A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
             <p className="text-base font-medium text-neutral-900">Aroha had ordered a new heat pump for the Glen Eden Airbnb in June 2025. It arrived in August. She had not thought about the tax implications.</p>
@@ -658,63 +719,6 @@ export default function InvestmentBoostAuditorPage() {
             </div>
           </div>
           
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* SECTION 3 — COUNTDOWN BOX (desktop only)                              */}
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      <section className="mx-auto mb-12 hidden max-w-6xl px-4 lg:block">
-        <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-8 text-white">
-          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 7 July 2026 — file your 2025/26 return and claim the Investment Boost
-          </p>
-          <div className="mb-4 flex items-baseline gap-4">
-            <span className="text-6xl font-bold tabular-nums">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 7 July 2026</span>
-          </div>
-          <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
-            <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
-          </div>
-          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-            
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Upfront deduction
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                20%
-              </p>
-              <p className="text-xs text-neutral-400">of eligible asset cost in year one</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                On $500k asset
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $100k
-              </p>
-              <p className="text-xs text-neutral-400">immediate deduction in year one</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Tax saving at 28%
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $28,000
-              </p>
-              <p className="text-xs text-neutral-400">on $100k deduction at company rate</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Trigger test
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Use date
-              </p>
-              <p className="text-xs text-neutral-400">first available for use — not invoice date</p>
-            </div>
-          </div>
         </div>
       </section>
 

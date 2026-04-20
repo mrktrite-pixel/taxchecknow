@@ -130,7 +130,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/fbt-hidden-exposure",
     "api_endpoint": "/api/rules/fbt-hidden-exposure",
-    "generated_at": "2026-04-20T08:04:21.882Z"
+    "generated_at": "2026-04-20T23:51:43.143Z"
 };
 
   return NextResponse.json(rules, {

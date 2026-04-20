@@ -159,7 +159,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/cgt-main-residence-trap",
     "api_endpoint": "/api/rules/cgt-main-residence-trap",
-    "generated_at": "2026-04-20T08:04:16.070Z"
+    "generated_at": "2026-04-20T23:51:38.575Z"
 };
 
   return NextResponse.json(rules, {

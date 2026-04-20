@@ -434,15 +434,15 @@ export default function Division7aLoanTrapPage() {
         </h1>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
-        <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
+        <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
 
           {/* Left — Calculator (client component) */}
-          <div id="calculator">
+          <div id="calculator" className="min-w-0">
             <Division7aLoanTrapCalculator />
           </div>
 
           {/* Right — Sidebar (server rendered) */}
-          <aside className="space-y-4 self-start lg:sticky lg:top-24">
+          <aside className="space-y-4 lg:sticky lg:top-24">
 
             {/* Numbers panel */}
             <div className="border border-neutral-200 bg-white p-4">
@@ -492,14 +492,18 @@ export default function Division7aLoanTrapPage() {
               <h3 className="mb-1 text-lg font-bold">Division 7A Loan Trap Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised Div 7A audit — minimum repayment calculation, loan compliance check, and risk classification.</p>
               <div className="space-y-2">
-                <a href="#calculator" className="block w-full bg-white py-2 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
+                <a href="#calculator"
+                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                  className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition cursor-pointer">
                   $67 · Division 7A Loan Fix Plan
                 </a>
-                <a href="#calculator" className="block w-full border border-white py-2 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
+                <a href="#calculator"
+                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                  className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition cursor-pointer">
                   $147 · Division 7A Loan Restructure System
                 </a>
               </div>
-              <p className="mt-3 text-center text-xs text-neutral-500">↑ Select your situation above</p>
+              <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
             </div>
 
             {/* Sources panel */}
@@ -517,6 +521,63 @@ export default function Division7aLoanTrapPage() {
             </div>
 
           </aside>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* COUNTDOWN BOX — just below calculator, above answer content            */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto mb-8 max-w-6xl px-4">
+        <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
+          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
+            Countdown to 30 June 2026 — Div 7A minimum repayments due
+          </p>
+          <div className="mb-4 flex items-baseline gap-4">
+            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
+            <span className="text-lg text-neutral-300">days until 30 June 2026</span>
+          </div>
+          <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
+            <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+            
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Benchmark rate 2025/26
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                8.27%
+              </p>
+              <p className="text-xs text-neutral-400">interest rate for Div 7A loans</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Max loan term (unsecured)
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                7 years
+              </p>
+              <p className="text-xs text-neutral-400">secured by property: 25 years</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                On $200k at 47%
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                $94,000
+              </p>
+              <p className="text-xs text-neutral-400">deemed dividend tax if no agreement</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                Repayment deadline
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                30 June
+              </p>
+              <p className="text-xs text-neutral-400">minimum repayment due each EOFY</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -577,10 +638,10 @@ export default function Division7aLoanTrapPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 sm:p-8">
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">
-            Plain English — what this means for you
+            If your result showed a risk — here is why it happens
           </p>
           <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-6">
-            Here is the situation — explained without the jargon.
+            A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
             <p className="text-base font-medium text-neutral-900">Gary had been drawing money from his company account for as long as he could remember. Small amounts mostly — $3,000 here, $5,000 there. The accountant had set up a loan years ago.</p>
@@ -593,63 +654,6 @@ export default function Division7aLoanTrapPage() {
             </div>
           </div>
           
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* SECTION 3 — COUNTDOWN BOX (desktop only)                              */}
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      <section className="mx-auto mb-12 hidden max-w-6xl px-4 lg:block">
-        <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-8 text-white">
-          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 30 June 2026 — Div 7A minimum repayments due
-          </p>
-          <div className="mb-4 flex items-baseline gap-4">
-            <span className="text-6xl font-bold tabular-nums">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 30 June 2026</span>
-          </div>
-          <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
-            <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
-          </div>
-          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-            
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Benchmark rate 2025/26
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                8.27%
-              </p>
-              <p className="text-xs text-neutral-400">interest rate for Div 7A loans</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Max loan term (unsecured)
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                7 years
-              </p>
-              <p className="text-xs text-neutral-400">secured by property: 25 years</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                On $200k at 47%
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                $94,000
-              </p>
-              <p className="text-xs text-neutral-400">deemed dividend tax if no agreement</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Repayment deadline
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                30 June
-              </p>
-              <p className="text-xs text-neutral-400">minimum repayment due each EOFY</p>
-            </div>
-          </div>
         </div>
       </section>
 
