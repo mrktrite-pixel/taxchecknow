@@ -129,7 +129,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/dividend-trap",
     "api_endpoint": "/api/rules/dividend-trap",
-    "generated_at": "2026-04-20T07:09:01.708Z"
+    "generated_at": "2026-04-20T07:41:30.233Z"
 };
 
   return NextResponse.json(rules, {
