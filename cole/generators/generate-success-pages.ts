@@ -80,12 +80,10 @@ const FILES = ${JSON.stringify(visibleFiles.map(f => ({
   })), null, 2)};
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: string;`).join("\n  ")}
-  accountantQuestions: string[];
-  ${isTier2 ? "actions: Action[];" : ""}
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & {
+  accountantQuestions?: string[];
+  actions?: Action[];
+};
 
 export default function Success${isTier2 ? "Plan" : "Assess"}() {
   const [firstName,  setFirstName]  = useState("there");
@@ -175,7 +173,7 @@ ${inputsObj}
           "Are there any planning opportunities specific to my situation?",
         ],
         ${isTier2 ? 'actions: [],' : ''}
-      } as Assessment);
+      } as unknown as Assessment);
     } finally {
       setLoading(false);
     }
@@ -290,7 +288,7 @@ ${calReads}
                   return (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/_/g," ")}
+                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
                     </div>

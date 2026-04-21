@@ -64,23 +64,10 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  gstStatus: string;
-  registrationObligation: string;
-  triggerDateEstimate: string;
-  backdatingExposure: string;
-  invoiceCleanupRequired: string;
-  projectedTurnoverAnalysis: string;
-  basSetupRecommendation: string;
-  pricingTransitionGuide: string;
-  bookkeepingClassification: string;
-  retroBASPlan: string;
-  inputTaxCredits: string;
-  strongestRiskTrigger: string;
-  accountantQuestions: string[];
-  actions: Action[];
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & {
+  accountantQuestions?: string[];
+  actions?: Action[];
+};
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -193,7 +180,7 @@ export default function SuccessPlan() {
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
-      } as Assessment);
+      } as unknown as Assessment);
     } finally {
       setLoading(false);
     }
@@ -328,7 +315,7 @@ export default function SuccessPlan() {
                   return (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/_/g," ")}
+                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
                     </div>
