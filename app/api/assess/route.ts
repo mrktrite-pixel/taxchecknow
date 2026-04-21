@@ -72,7 +72,7 @@ Write a personalised, specific assessment for this exact person based on their a
 CRITICAL: Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. Just JSON.
 
 Required JSON fields:
-${fields.map(f => `"${f}": "2-3 sentence personalised value referencing their specific inputs"`).join(",\n")}${isTier2 ? `,
+${(fields as string[]).map((f: string) => `"${f}": "2-3 sentence personalised value referencing their specific inputs"`).join(",\n")}${isTier2 ? `,
 "actions": [
   {
     "title": "Specific action title for ${displayName}",
