@@ -122,7 +122,7 @@ async function generateAndStoreAssessment(
       .from("decision_sessions")
       .select("inputs, questionnaire_payload")
       .eq("id", decisionSessionId)
-      .single();
+      .single() as { data: { inputs: Record<string, unknown>; questionnaire_payload: Record<string, unknown> } | null };
 
     const inputs = {
       ...(ds?.inputs || {}),
