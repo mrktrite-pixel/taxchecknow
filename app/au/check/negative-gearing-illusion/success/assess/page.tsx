@@ -43,18 +43,10 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  status: string;
-  netRentalLoss: string;
-  taxSaving: string;
-  realAfterTaxCost: string;
-  breakEvenGrowth: string;
-  depreciation: string;
-  firstAction: string;
-  accountantQuestions: string[];
-  
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & {
+  accountantQuestions?: string[];
+  actions?: Action[];
+};
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -108,16 +100,24 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const annual_rent = sessionStorage.getItem("negative-gearing-illusion_annual_rent") || "32000";
-      const annual_expenses = sessionStorage.getItem("negative-gearing-illusion_annual_expenses") || "37000";
-      const marginal_rate = sessionStorage.getItem("negative-gearing-illusion_marginal_rate") || "37";
+      const income_band = sessionStorage.getItem("negative-gearing-illusion_income_band") || "45k_120k";
+      const illusion_type = sessionStorage.getItem("negative-gearing-illusion_illusion_type") || "moderate";
+      const real_cost = sessionStorage.getItem("negative-gearing-illusion_real_cost") || "9000";
+      const tax_benefit = sessionStorage.getItem("negative-gearing-illusion_tax_benefit") || "4500";
+      const break_even_rent = sessionStorage.getItem("negative-gearing-illusion_break_even_rent") || "38000";
+      const status = sessionStorage.getItem("negative-gearing-illusion_status") || "MODERATE ILLUSION";
+      const tier = sessionStorage.getItem("negative-gearing-illusion_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "annual_rent": annual_rent,
-        "annual_expenses": annual_expenses,
-        "marginal_rate": marginal_rate,
-      }).some(v => v && v !== "32000");
+        "income_band": income_band,
+        "illusion_type": illusion_type,
+        "real_cost": real_cost,
+        "tax_benefit": tax_benefit,
+        "break_even_rent": break_even_rent,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "45k_120k");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -129,11 +129,15 @@ export default function SuccessAssess() {
           tier:       1,
           name,
           inputs: {
-        "Annual rent": annual_rent,
-        "Annual expenses": annual_expenses,
-        "Marginal rate": marginal_rate,
+        "Marginal tax rate band": income_band,
+        "Negative gearing illusion type": illusion_type,
+        "Real after-tax annual cost": real_cost,
+        "Annual tax benefit": tax_benefit,
+        "Break-even rent required": break_even_rent,
+        "Negative gearing verdict": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","netRentalLoss","taxSaving","realAfterTaxCost","breakEvenGrowth","depreciation","firstAction"],
+          fields: ["cashflowSummary","taxBenefitReality","realAfterTaxCost","illusionGapExplained","breakEvenRentRequired","vacancyImpact","growthRequiredToBreakEven","depreciationOpportunity","firstAction"],
         }),
       });
       const data = await res.json();
@@ -143,12 +147,14 @@ export default function SuccessAssess() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        netRentalLoss: "Your personalised netRentalLoss is being prepared — please refresh in a moment.",
-        taxSaving: "Your personalised taxSaving is being prepared — please refresh in a moment.",
+        cashflowSummary: "Your personalised cashflowSummary is being prepared — please refresh in a moment.",
+        taxBenefitReality: "Your personalised taxBenefitReality is being prepared — please refresh in a moment.",
         realAfterTaxCost: "Your personalised realAfterTaxCost is being prepared — please refresh in a moment.",
-        breakEvenGrowth: "Your personalised breakEvenGrowth is being prepared — please refresh in a moment.",
-        depreciation: "Your personalised depreciation is being prepared — please refresh in a moment.",
+        illusionGapExplained: "Your personalised illusionGapExplained is being prepared — please refresh in a moment.",
+        breakEvenRentRequired: "Your personalised breakEvenRentRequired is being prepared — please refresh in a moment.",
+        vacancyImpact: "Your personalised vacancyImpact is being prepared — please refresh in a moment.",
+        growthRequiredToBreakEven: "Your personalised growthRequiredToBreakEven is being prepared — please refresh in a moment.",
+        depreciationOpportunity: "Your personalised depreciationOpportunity is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
@@ -156,7 +162,7 @@ export default function SuccessAssess() {
           "Are there any planning opportunities specific to my situation?",
         ],
         
-      } as Assessment);
+      } as unknown as Assessment);
     } finally {
       setLoading(false);
     }
@@ -164,9 +170,13 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const annual_rent = sessionStorage.getItem("negative-gearing-illusion_annual_rent") || "32000";
-    const annual_expenses = sessionStorage.getItem("negative-gearing-illusion_annual_expenses") || "37000";
-    const marginal_rate = sessionStorage.getItem("negative-gearing-illusion_marginal_rate") || "37";
+    const income_band = sessionStorage.getItem("negative-gearing-illusion_income_band") || "45k_120k";
+    const illusion_type = sessionStorage.getItem("negative-gearing-illusion_illusion_type") || "moderate";
+    const real_cost = sessionStorage.getItem("negative-gearing-illusion_real_cost") || "9000";
+    const tax_benefit = sessionStorage.getItem("negative-gearing-illusion_tax_benefit") || "4500";
+    const break_even_rent = sessionStorage.getItem("negative-gearing-illusion_break_even_rent") || "38000";
+    const status = sessionStorage.getItem("negative-gearing-illusion_status") || "MODERATE ILLUSION";
+    const tier = sessionStorage.getItem("negative-gearing-illusion_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -274,13 +284,13 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","netRentalLoss","taxSaving","realAfterTaxCost","breakEvenGrowth","depreciation"] as string[]).map(key => {
+                {(["cashflowSummary","taxBenefitReality","realAfterTaxCost","illusionGapExplained","breakEvenRentRequired","vacancyImpact"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/_/g," ")}
+                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
                     </div>

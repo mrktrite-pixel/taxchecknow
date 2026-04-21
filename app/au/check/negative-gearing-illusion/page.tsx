@@ -306,23 +306,23 @@ export default function NegativeGearingIllusionPage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter annual rent",
-            "text": "Select your total annual rental income before expenses."
+            "name": "Select your income band",
+            "text": "Your marginal tax rate determines how much of the rental loss is offset by the tax benefit."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter annual expenses",
-            "text": "Include all costs — interest, rates, insurance, management, depreciation."
+            "name": "Enter rent and costs",
+            "text": "Select your rent band, interest cost, and holding cost level."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your real cashflow",
-            "text": "See your real after-tax cashflow, not just the gross tax saving."
+            "name": "Add vacancy and repair risk",
+            "text": "Vacancy reduces income but not costs — this is where the illusion most often hides."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your strategy",
-            "text": "Receive a cashflow improvement plan and break-even capital growth calculation."
+            "name": "Get your real after-tax position",
+            "text": "See your real cash loss, tax benefit, illusion gap, and break-even rent."
       }
 ],
   };
@@ -546,23 +546,26 @@ export default function NegativeGearingIllusionPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The real negative gearing calculation
+            The real negative gearing cashflow model
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ All deductible expenses including depreciation</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Tax saving = loss × marginal rate</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Real cash cost = loss × (1 - marginal rate)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Tax saving = rental loss × marginal rate (not the full loss)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Real after-tax cost = loss × (1 − marginal rate)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Building depreciation: 2.5%/yr (post Sept 1987 construction)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Vacancy reduces income — costs continue regardless</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Break-even rent = (interest + costs) ÷ (1 − marginal rate)</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT the full loss saved in tax</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT land or purchase price deductible</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT capital improvements immediately deductible</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT the full loss saved in tax — only marginal rate × loss</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT land — never deductible or depreciable</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT capital improvements — depreciated over time, not immediate</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT second-hand assets post 9 May 2017 (Div 40 rule)</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Rental properties · ITAA 1997</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Rental properties · ITAA 1997 s26-19 · TR 97/23</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -595,12 +598,13 @@ export default function NegativeGearingIllusionPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about negative gearing
+            What most property investors (and AI) get wrong about negative gearing
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Negative gearing saves me the full amount of my loss in tax — wrong. The tax saving is your marginal rate multiplied by the loss. At 37%, a $15,000 loss saves you $5,550 — not $15,000. You are still $9,450 out of pocket every year. The property must grow in value to compensate for this ongoing cash outflow.</li>
-            <li>✗ All rental expenses are immediately deductible — wrong. Repairs and maintenance are immediately deductible. Capital improvements are not — they are depreciated over their effective life. Confusing capital improvements with repairs is one of the most common ATO audit triggers on rental properties.</li>
-            <li>✗ I can deduct the full purchase price through depreciation — wrong. Depreciation is available on the building (if built after September 1987) at 2.5% per year, and on plant and equipment items at their effective life rate. The land component of the purchase price is never deductible.</li>
+            <li>✗ Negative gearing saves me the full amount of my loss in tax — wrong. The tax saving is your marginal rate multiplied by the loss — not the loss itself. At 37%, a $15,000 rental loss saves you $5,550 in tax. You are still $9,450 out of pocket every year in real cash. The property must generate enough capital growth to justify this ongoing cost.</li>
+            <li>✗ Capital improvements are immediately deductible — wrong. Only genuine repairs and maintenance are immediately deductible. Capital improvements — work that upgrades or enhances the property beyond its original condition — must be depreciated over time. Misclassifying improvements as repairs is one of the most common ATO rental audit triggers.</li>
+            <li>✗ I can depreciate the land component — wrong. Land is never deductible or depreciable under any circumstances. Only the building structure (at 2.5% per year for post-September 1987 construction) and qualifying plant and equipment items are depreciable. The land portion of your purchase price produces no tax deduction at any point.</li>
+            <li>✗ Vacancy does not affect my negative gearing position — wrong. Vacancy directly reduces rental income but does not reduce your ongoing interest and holding costs. Your tax benefit is based on actual income and deductions — a vacancy gap widens your real cash loss without any proportional tax offset.</li>
           </ul>
         </div>
 
