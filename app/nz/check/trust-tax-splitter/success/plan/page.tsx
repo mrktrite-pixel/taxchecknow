@@ -64,7 +64,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  trustTaxRate: string;
+  taxLeakage: string;
+  distributionOpportunity: string;
+  companyComparison: string;
+  imputationCredits: string;
+  accountantQuestions: string[];
+  actions: Action[];
+  [key: string]: unknown;
+}
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -122,6 +132,15 @@ export default function SuccessPlan() {
       const tt_beneficiaries = sessionStorage.getItem("trust-tax-splitter_tt_beneficiaries") || "adults";
       const tt_company_compare = sessionStorage.getItem("trust-tax-splitter_tt_company_compare") || "false";
       const tt_status = sessionStorage.getItem("trust-tax-splitter_tt_status") || "approaching";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "tt_income": tt_income,
+        "tt_beneficiaries": tt_beneficiaries,
+        "tt_company_compare": tt_company_compare,
+        "tt_status": tt_status,
+      }).some(v => v && v !== "20000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -263,7 +282,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your Trust vs Company Pivot Audit · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Beneficiary Distribution Pack"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Trust vs Company Pivot Audit
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

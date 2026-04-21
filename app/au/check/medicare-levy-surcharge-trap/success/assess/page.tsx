@@ -43,7 +43,22 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  mlsStatus: string;
+  incomeForMLSPurposes: string;
+  surchargeRateTier: string;
+  estimatedMLSPayable: string;
+  coverCostEstimate: string;
+  netSavingFromCover: string;
+  coverTimingStrategy: string;
+  thresholdPosition: string;
+  strongestRiskTrigger: string;
+  confidenceLevel: string;
+  firstAction: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -103,6 +118,17 @@ export default function SuccessAssess() {
       const status = sessionStorage.getItem("medicare-levy-surcharge-trap_status") || "SURCHARGE APPLIES";
       const mls_annual = sessionStorage.getItem("medicare-levy-surcharge-trap_mls_annual") || "1000";
       const tier = sessionStorage.getItem("medicare-levy-surcharge-trap_tier") || "67";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "annual_income": annual_income,
+        "has_hospital_cover": has_hospital_cover,
+        "is_family": is_family,
+        "status": status,
+        "mls_annual": mls_annual,
+        "tier": tier,
+      }).some(v => v && v !== "band_93_108");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -235,7 +261,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your MLS Avoidance Plan · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your MLS Avoidance Plan"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your MLS Avoidance Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

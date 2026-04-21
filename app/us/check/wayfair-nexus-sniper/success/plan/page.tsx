@@ -64,7 +64,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  nexusStates: string;
+  estimatedLiability: string;
+  biggestRisk: string;
+  vdaStrategy: string;
+  penaltySavings: string;
+  accountantQuestions: string[];
+  actions: Action[];
+  [key: string]: unknown;
+}
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -122,6 +132,15 @@ export default function SuccessPlan() {
       const nexus_channels = sessionStorage.getItem("wayfair-nexus-sniper_nexus_channels") || "multi";
       const nexus_fba = sessionStorage.getItem("wayfair-nexus-sniper_nexus_fba") || "false";
       const nexus_status = sessionStorage.getItem("wayfair-nexus-sniper_nexus_status") || "at_risk";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "nexus_sales": nexus_sales,
+        "nexus_channels": nexus_channels,
+        "nexus_fba": nexus_fba,
+        "nexus_status": nexus_status,
+      }).some(v => v && v !== "150000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -281,7 +300,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your VDA Shield System · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Nexus Heatmap Action Plan"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your VDA Shield System
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

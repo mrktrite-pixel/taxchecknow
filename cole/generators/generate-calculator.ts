@@ -128,6 +128,7 @@ function getStatusStyle(status: BracketStatus): {
 
 // ── TIER ALGORITHM ────────────────────────────────────────────────────────────
 // COLE decides the tier — the buyer never chooses in the popup
+// Rule: $67 only for SAFE/CLEAR outcomes. ANY risk = $147.
 
 function recommendedTier(
   bracketStatus: BracketStatus,
@@ -135,7 +136,10 @@ ${stateKeys.map(k => `  ${k}: ${inferType(config, k)},`).join("\n")}
 ): PackTier {
   // ${config.tierAlgorithm.description}
   ${buildTierLogic(config)}
-  return ${config.tier1.price};
+  // Default: safe = $${config.tier1.price}, any risk = $${config.tier2.price}
+  return (bracketStatus === "clear" || bracketStatus === "out_of_scope" || bracketStatus === "pass")
+    ? ${config.tier1.price}
+    : ${config.tier2.price};
 }
 
 // ── COMPONENT ─────────────────────────────────────────────────────────────────

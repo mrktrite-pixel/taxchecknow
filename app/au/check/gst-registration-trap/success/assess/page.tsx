@@ -43,7 +43,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  registrationRequired: string;
+  backdateExposure: string;
+  registrationDeadline: string;
+  voluntaryDisclosureOption: string;
+  firstAction: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -100,6 +110,14 @@ export default function SuccessAssess() {
       const annual_turnover = sessionStorage.getItem("gst-registration-trap_annual_turnover") || "62000";
       const is_registered = sessionStorage.getItem("gst-registration-trap_is_registered") || "false";
       const crossed_before = sessionStorage.getItem("gst-registration-trap_crossed_before") || "false";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "annual_turnover": annual_turnover,
+        "is_registered": is_registered,
+        "crossed_before": crossed_before,
+      }).some(v => v && v !== "62000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -212,7 +230,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your GST Registration Fix Plan · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your GST Registration Fix Plan"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your GST Registration Fix Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

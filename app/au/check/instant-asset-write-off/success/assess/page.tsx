@@ -43,7 +43,18 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  eligible: string;
+  immediateDeduction: string;
+  taxSaving: string;
+  timingRisk: string;
+  vsPoolComparison: string;
+  firstAction: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -100,6 +111,14 @@ export default function SuccessAssess() {
       const asset_cost = sessionStorage.getItem("instant-asset-write-off_asset_cost") || "15000";
       const turnover = sessionStorage.getItem("instant-asset-write-off_turnover") || "2500000";
       const ready_june30 = sessionStorage.getItem("instant-asset-write-off_ready_june30") || "true";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "asset_cost": asset_cost,
+        "turnover": turnover,
+        "ready_june30": ready_june30,
+      }).some(v => v && v !== "15000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -222,7 +241,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Instant Asset Write-Off Plan · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Instant Asset Write-Off Plan"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Instant Asset Write-Off Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

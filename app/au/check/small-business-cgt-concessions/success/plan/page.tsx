@@ -64,7 +64,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  eligibleConcessions: string;
+  optimalStack: string;
+  retirementExemptionPlan: string;
+  ageTiming: string;
+  entityStructure: string;
+  accountantQuestions: string[];
+  actions: Action[];
+  [key: string]: unknown;
+}
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -121,6 +131,14 @@ export default function SuccessPlan() {
       const turnover = sessionStorage.getItem("small-business-cgt-concessions_turnover") || "1500000";
       const ownership_years = sessionStorage.getItem("small-business-cgt-concessions_ownership_years") || "10";
       const actively_used = sessionStorage.getItem("small-business-cgt-concessions_actively_used") || "true";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "turnover": turnover,
+        "ownership_years": ownership_years,
+        "actively_used": actively_used,
+      }).some(v => v && v !== "1500000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -242,7 +260,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your Small Business Exit Tax Strategy · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Small Business CGT Eligibility Check"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Small Business Exit Tax Strategy
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

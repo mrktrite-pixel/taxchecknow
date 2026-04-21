@@ -134,6 +134,7 @@ function getStatusStyle(status: BracketStatus): {
 
 // ── TIER ALGORITHM ────────────────────────────────────────────────────────────
 // COLE decides the tier — the buyer never chooses in the popup
+// Rule: $67 only for SAFE/CLEAR outcomes. ANY risk = $147.
 
 function recommendedTier(
   bracketStatus: BracketStatus,
@@ -143,7 +144,10 @@ function recommendedTier(
 ): PackTier {
   // rentalPeriod over 18 OR claimedOffice → tier2. rentalPeriod 0 → tier1. Otherwise tier2.
     if ((rentalPeriod as number) > 18 || claimedOffice === true) return 147;
-  return 67;
+  // Default: safe = $67, any risk = $147
+  return (bracketStatus === "clear" || bracketStatus === "out_of_scope" || bracketStatus === "pass")
+    ? 67
+    : 147;
 }
 
 // ── COMPONENT ─────────────────────────────────────────────────────────────────

@@ -130,7 +130,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/gst-registration-trap",
     "api_endpoint": "/api/rules/gst-registration-trap",
-    "generated_at": "2026-04-21T06:03:32.036Z"
+    "generated_at": "2026-04-21T07:26:03.783Z"
 };
 
   return NextResponse.json(rules, {

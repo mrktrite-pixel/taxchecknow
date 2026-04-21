@@ -43,7 +43,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  eligibleConcessions: string;
+  estimatedCGTSaving: string;
+  retirementExemptionRemaining: string;
+  activeAssetStatus: string;
+  firstAction: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -100,6 +110,14 @@ export default function SuccessAssess() {
       const turnover = sessionStorage.getItem("small-business-cgt-concessions_turnover") || "1500000";
       const ownership_years = sessionStorage.getItem("small-business-cgt-concessions_ownership_years") || "10";
       const actively_used = sessionStorage.getItem("small-business-cgt-concessions_actively_used") || "true";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "turnover": turnover,
+        "ownership_years": ownership_years,
+        "actively_used": actively_used,
+      }).some(v => v && v !== "1500000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -212,7 +230,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Small Business CGT Eligibility Check · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Small Business CGT Eligibility Check"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Small Business CGT Eligibility Check
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

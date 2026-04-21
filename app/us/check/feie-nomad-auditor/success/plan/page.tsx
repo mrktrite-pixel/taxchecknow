@@ -64,7 +64,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  feieEligibility: string;
+  abodeRisk: string;
+  exclusionAmount: string;
+  housingExclusion: string;
+  multiYearPlan: string;
+  accountantQuestions: string[];
+  actions: Action[];
+  [key: string]: unknown;
+}
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -121,6 +131,14 @@ export default function SuccessPlan() {
       const feie_days = sessionStorage.getItem("feie-nomad-auditor_feie_days") || "350";
       const feie_abode = sessionStorage.getItem("feie-nomad-auditor_feie_abode") || "false";
       const feie_income = sessionStorage.getItem("feie-nomad-auditor_feie_income") || "95000";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "feie_days": feie_days,
+        "feie_abode": feie_abode,
+        "feie_income": feie_income,
+      }).some(v => v && v !== "350");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -242,7 +260,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your FEIE Optimisation Plan · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your FEIE Eligibility Report"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your FEIE Optimisation Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

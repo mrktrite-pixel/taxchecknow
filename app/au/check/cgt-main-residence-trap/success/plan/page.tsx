@@ -64,7 +64,18 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  exemptFraction: string;
+  taxableGain: string;
+  estimatedCGT: string;
+  minimisationStrategies: string;
+  saleTiming: string;
+  structuringOptions: string;
+  accountantQuestions: string[];
+  actions: Action[];
+  [key: string]: unknown;
+}
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -121,6 +132,14 @@ export default function SuccessPlan() {
       const rental_period = sessionStorage.getItem("cgt-main-residence-trap_rental_period") || "0";
       const ownership_years = sessionStorage.getItem("cgt-main-residence-trap_ownership_years") || "7";
       const claimed_office = sessionStorage.getItem("cgt-main-residence-trap_claimed_office") || "false";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "rental_period": rental_period,
+        "ownership_years": ownership_years,
+        "claimed_office": claimed_office,
+      }).some(v => v && v !== "0");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -243,7 +262,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your CGT Minimisation System · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Main Residence CGT Fix Plan"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your CGT Minimisation System
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

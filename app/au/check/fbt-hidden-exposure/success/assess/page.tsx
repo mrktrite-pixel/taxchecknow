@@ -43,7 +43,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  estimatedFBT: string;
+  carBenefitAmount: string;
+  entertainmentExposure: string;
+  logbookRecommendation: string;
+  firstAction: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -100,6 +110,14 @@ export default function SuccessAssess() {
       const car_value = sessionStorage.getItem("fbt-hidden-exposure_car_value") || "0";
       const entertainment = sessionStorage.getItem("fbt-hidden-exposure_entertainment") || "2500";
       const logbook = sessionStorage.getItem("fbt-hidden-exposure_logbook") || "false";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "car_value": car_value,
+        "entertainment": entertainment,
+        "logbook": logbook,
+      }).some(v => v && v !== "0");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -212,7 +230,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your FBT Risk Fix Plan · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your FBT Risk Fix Plan"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your FBT Risk Fix Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

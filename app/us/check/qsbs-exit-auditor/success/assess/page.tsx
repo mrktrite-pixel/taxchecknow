@@ -43,7 +43,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  eligibilityVerdict: string;
+  exclusionAmount: string;
+  taxSaving: string;
+  failureRisk: string;
+  firstAction: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -101,6 +111,15 @@ export default function SuccessAssess() {
       const qsbs_acquisition = sessionStorage.getItem("qsbs-exit-auditor_qsbs_acquisition") || "original";
       const qsbs_hold = sessionStorage.getItem("qsbs-exit-auditor_qsbs_hold") || "6";
       const qsbs_status = sessionStorage.getItem("qsbs-exit-auditor_qsbs_status") || "qualified";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "qsbs_entity": qsbs_entity,
+        "qsbs_acquisition": qsbs_acquisition,
+        "qsbs_hold": qsbs_hold,
+        "qsbs_status": qsbs_status,
+      }).some(v => v && v !== "ccorp");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -224,7 +243,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Original Issuance Audit · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Original Issuance Audit"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Original Issuance Audit
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

@@ -64,7 +64,16 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  inScopeFrom: string;
+  softwareGap: string;
+  quarterlyDates: string;
+  multiPropertyPlan: string;
+  accountantQuestions: string[];
+  actions: Action[];
+  [key: string]: unknown;
+}
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -122,6 +131,15 @@ export default function SuccessPlan() {
       const mtd_source = sessionStorage.getItem("mtd-scorecard_mtd_source") || "both";
       const mtd_software = sessionStorage.getItem("mtd-scorecard_mtd_software") || "false";
       const mtd_status = sessionStorage.getItem("mtd-scorecard_mtd_status") || "approaching";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "mtd_income": mtd_income,
+        "mtd_source": mtd_source,
+        "mtd_software": mtd_software,
+        "mtd_status": mtd_status,
+      }).some(v => v && v !== "40000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -262,7 +280,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your MTD Implementation Plan · £147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your MTD Readiness Pack"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your MTD Implementation Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

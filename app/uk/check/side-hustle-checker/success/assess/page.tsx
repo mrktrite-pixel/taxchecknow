@@ -43,7 +43,16 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  declarationRequired: string;
+  taxExposure: string;
+  registrationDeadline: string;
+  firstAction: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -100,6 +109,14 @@ export default function SuccessAssess() {
       const sh_income = sessionStorage.getItem("side-hustle-checker_sh_income") || "3000";
       const sh_registered = sessionStorage.getItem("side-hustle-checker_sh_registered") || "false";
       const sh_platform = sessionStorage.getItem("side-hustle-checker_sh_platform") || "true";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "sh_income": sh_income,
+        "sh_registered": sh_registered,
+        "sh_platform": sh_platform,
+      }).some(v => v && v !== "3000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -220,7 +237,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Side Hustle Tax Pack · £67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Side Hustle Tax Pack"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Side Hustle Tax Pack
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

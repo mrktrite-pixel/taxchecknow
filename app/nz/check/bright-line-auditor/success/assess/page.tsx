@@ -43,7 +43,18 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  daysHeld: string;
+  brightLineVerdict: string;
+  mainHomeRisk: string;
+  taxExposure: string;
+  firstAction: string;
+  documentationNeeded: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -101,6 +112,15 @@ export default function SuccessAssess() {
       const bl_use = sessionStorage.getItem("bright-line-auditor_bl_use") || "mixed";
       const bl_transferred = sessionStorage.getItem("bright-line-auditor_bl_transferred") || "false";
       const bl_status = sessionStorage.getItem("bright-line-auditor_bl_status") || "at_risk";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "bl_days": bl_days,
+        "bl_use": bl_use,
+        "bl_transferred": bl_transferred,
+        "bl_status": bl_status,
+      }).some(v => v && v !== "548");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -225,7 +245,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Main Home Proof Kit · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Main Home Proof Kit"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Main Home Proof Kit
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

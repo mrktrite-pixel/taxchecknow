@@ -64,7 +64,18 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  overclaims: string;
+  missedDeductions: string;
+  auditRisk: string;
+  multiYearDeductionPlan: string;
+  documentationSystem: string;
+  portfolioReview: string;
+  accountantQuestions: string[];
+  actions: Action[];
+  [key: string]: unknown;
+}
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -121,6 +132,14 @@ export default function SuccessPlan() {
       const property_type = sessionStorage.getItem("rental-property-deduction-audit_property_type") || "residential";
       const has_qs_report = sessionStorage.getItem("rental-property-deduction-audit_has_qs_report") || "false";
       const recent_renovation = sessionStorage.getItem("rental-property-deduction-audit_recent_renovation") || "false";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "property_type": property_type,
+        "has_qs_report": has_qs_report,
+        "recent_renovation": recent_renovation,
+      }).some(v => v && v !== "residential");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -243,7 +262,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your Property Tax Optimisation System · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Rental Deduction Audit Pack"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Property Tax Optimisation System
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

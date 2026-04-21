@@ -134,6 +134,7 @@ function getStatusStyle(status: BracketStatus): {
 
 // ── TIER ALGORITHM ────────────────────────────────────────────────────────────
 // COLE decides the tier — the buyer never chooses in the popup
+// Rule: $67 only for SAFE/CLEAR outcomes. ANY risk = $147.
 
 function recommendedTier(
   bracketStatus: BracketStatus,
@@ -143,7 +144,10 @@ function recommendedTier(
 ): PackTier {
   // offshoreRD over 0 OR usDomesticRD over 500000 → tier2. Not filed correctly → tier2.
     if ((offshoreRD as number) > 0 || (usDomesticRD as number) > 500000 || hasFiledCorrectly === true) return 147;
-  return 67;
+  // Default: safe = $67, any risk = $147
+  return (bracketStatus === "clear" || bracketStatus === "out_of_scope" || bracketStatus === "pass")
+    ? 67
+    : 147;
 }
 
 // ── COMPONENT ─────────────────────────────────────────────────────────────────

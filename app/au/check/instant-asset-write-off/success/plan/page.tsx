@@ -64,7 +64,18 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  eligible: string;
+  immediateDeduction: string;
+  taxSaving: string;
+  multiYearPlan: string;
+  taxTimingStrategy: string;
+  depreciationMethods: string;
+  accountantQuestions: string[];
+  actions: Action[];
+  [key: string]: unknown;
+}
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -121,6 +132,14 @@ export default function SuccessPlan() {
       const asset_cost = sessionStorage.getItem("instant-asset-write-off_asset_cost") || "15000";
       const turnover = sessionStorage.getItem("instant-asset-write-off_turnover") || "2500000";
       const ready_june30 = sessionStorage.getItem("instant-asset-write-off_ready_june30") || "true";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "asset_cost": asset_cost,
+        "turnover": turnover,
+        "ready_june30": ready_june30,
+      }).some(v => v && v !== "15000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -252,7 +271,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your Full Depreciation System · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Instant Asset Write-Off Plan"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Full Depreciation System
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

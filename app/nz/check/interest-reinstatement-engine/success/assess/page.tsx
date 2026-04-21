@@ -43,7 +43,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  annualTaxSaving: string;
+  cashflowShift: string;
+  tracingRisk: string;
+  firstAction: string;
+  documentationNeeded: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -101,6 +111,15 @@ export default function SuccessAssess() {
       const ir_rate = sessionStorage.getItem("interest-reinstatement-engine_ir_rate") || "33";
       const ir_refinanced = sessionStorage.getItem("interest-reinstatement-engine_ir_refinanced") || "false";
       const ir_status = sessionStorage.getItem("interest-reinstatement-engine_ir_status") || "clear";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "ir_interest": ir_interest,
+        "ir_rate": ir_rate,
+        "ir_refinanced": ir_refinanced,
+        "ir_status": ir_status,
+      }).some(v => v && v !== "17000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -224,7 +243,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Refinance Tracing System · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Refinance Tracing System"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Refinance Tracing System
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

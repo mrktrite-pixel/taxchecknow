@@ -43,7 +43,17 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  year1Deduction: string;
+  phantomIncome: string;
+  taxHit: string;
+  firstAction: string;
+  cpaQuestions: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -100,6 +110,14 @@ export default function SuccessAssess() {
       const s174_us = sessionStorage.getItem("section-174-auditor_s174_us") || "300000";
       const s174_offshore = sessionStorage.getItem("section-174-auditor_s174_offshore") || "300000";
       const s174_filed = sessionStorage.getItem("section-174-auditor_s174_filed") || "false";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "s174_us": s174_us,
+        "s174_offshore": s174_offshore,
+        "s174_filed": s174_filed,
+      }).some(v => v && v !== "300000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -212,7 +230,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Section 174 Exposure Report · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Section 174 Exposure Report"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Section 174 Exposure Report
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

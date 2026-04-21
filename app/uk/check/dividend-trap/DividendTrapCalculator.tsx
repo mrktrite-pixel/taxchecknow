@@ -129,6 +129,7 @@ function getStatusStyle(status: BracketStatus): {
 
 // ── TIER ALGORITHM ────────────────────────────────────────────────────────────
 // COLE decides the tier — the buyer never chooses in the popup
+// Rule: $67 only for SAFE/CLEAR outcomes. ANY risk = $147.
 
 function recommendedTier(
   bracketStatus: BracketStatus,
@@ -138,7 +139,10 @@ function recommendedTier(
 ): PackTier {
   // totalIncome over £50270 OR dividendAmount over £20000 → tier2. partnerHasShares opportunity → tier2.
     if ((totalIncome as number) > 50270 || (dividendAmount as number) > 20000 || partnerHasShares === true) return 147;
-  return 67;
+  // Default: safe = $67, any risk = $147
+  return (bracketStatus === "clear" || bracketStatus === "out_of_scope" || bracketStatus === "pass")
+    ? 67
+    : 147;
 }
 
 // ── COMPONENT ─────────────────────────────────────────────────────────────────

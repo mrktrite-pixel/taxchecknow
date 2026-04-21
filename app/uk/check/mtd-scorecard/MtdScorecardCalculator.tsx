@@ -134,6 +134,7 @@ function getStatusStyle(status: BracketStatus): {
 
 // ── TIER ALGORITHM ────────────────────────────────────────────────────────────
 // COLE decides the tier — the buyer never chooses in the popup
+// Rule: $67 only for SAFE/CLEAR outcomes. ANY risk = $147.
 
 function recommendedTier(
   bracketStatus: BracketStatus,
@@ -143,7 +144,10 @@ function recommendedTier(
 ): PackTier {
   // grossIncome over £50k OR no approved software → tier2. Otherwise tier1.
     if ((grossIncome as number) >= 50000 || hasApprovedSoftware === true) return 147;
-  return 67;
+  // Default: safe = $67, any risk = $147
+  return (bracketStatus === "clear" || bracketStatus === "out_of_scope" || bracketStatus === "pass")
+    ? 67
+    : 147;
 }
 
 // ── COMPONENT ─────────────────────────────────────────────────────────────────

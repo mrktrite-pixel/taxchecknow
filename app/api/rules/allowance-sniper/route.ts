@@ -139,7 +139,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/allowance-sniper",
     "api_endpoint": "/api/rules/allowance-sniper",
-    "generated_at": "2026-04-21T06:02:41.569Z"
+    "generated_at": "2026-04-21T07:25:06.995Z"
 };
 
   return NextResponse.json(rules, {

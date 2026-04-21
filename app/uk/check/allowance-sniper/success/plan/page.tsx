@@ -64,7 +64,16 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  allowanceLost: string;
+  extraTax: string;
+  pensionNeeded: string;
+  salaryStrategy: string;
+  accountantQuestions: string[];
+  actions: Action[];
+  [key: string]: unknown;
+}
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -120,6 +129,13 @@ export default function SuccessPlan() {
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
       const as_income = sessionStorage.getItem("allowance-sniper_as_income") || "106000";
       const as_pension = sessionStorage.getItem("allowance-sniper_as_pension") || "false";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "as_income": as_income,
+        "as_pension": as_pension,
+      }).some(v => v && v !== "106000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -238,7 +254,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your 60% Tax Escape Plan · £147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Allowance Recovery Pack"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your 60% Tax Escape Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

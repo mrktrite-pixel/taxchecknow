@@ -43,7 +43,18 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  trustTaxRate: string;
+  taxLeakage: string;
+  distributionOpportunity: string;
+  minorBeneficiaryRisk: string;
+  firstAction: string;
+  resolutionDeadline: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -101,6 +112,15 @@ export default function SuccessAssess() {
       const tt_beneficiaries = sessionStorage.getItem("trust-tax-splitter_tt_beneficiaries") || "adults";
       const tt_company_compare = sessionStorage.getItem("trust-tax-splitter_tt_company_compare") || "false";
       const tt_status = sessionStorage.getItem("trust-tax-splitter_tt_status") || "approaching";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "tt_income": tt_income,
+        "tt_beneficiaries": tt_beneficiaries,
+        "tt_company_compare": tt_company_compare,
+        "tt_status": tt_status,
+      }).some(v => v && v !== "20000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -234,7 +254,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Beneficiary Distribution Pack · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Beneficiary Distribution Pack"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Beneficiary Distribution Pack
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

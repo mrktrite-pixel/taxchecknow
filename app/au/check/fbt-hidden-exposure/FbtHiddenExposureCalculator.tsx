@@ -134,6 +134,7 @@ function getStatusStyle(status: BracketStatus): {
 
 // ── TIER ALGORITHM ────────────────────────────────────────────────────────────
 // COLE decides the tier — the buyer never chooses in the popup
+// Rule: $67 only for SAFE/CLEAR outcomes. ANY risk = $147.
 
 function recommendedTier(
   bracketStatus: BracketStatus,
@@ -143,7 +144,10 @@ function recommendedTier(
 ): PackTier {
   // carValue over 30000 OR entertainmentSpend over 5000 OR hasLogbook false with carValue → tier2. Otherwise tier1.
     if ((carValue as number) > 30000 || (entertainmentSpend as number) > 5000) return 147;
-  return 67;
+  // Default: safe = $67, any risk = $147
+  return (bracketStatus === "clear" || bracketStatus === "out_of_scope" || bracketStatus === "pass")
+    ? 67
+    : 147;
 }
 
 // ── COMPONENT ─────────────────────────────────────────────────────────────────

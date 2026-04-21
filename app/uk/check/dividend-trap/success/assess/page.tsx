@@ -43,7 +43,16 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  dividendRate: string;
+  taxBill: string;
+  allowanceUsed: string;
+  firstAction: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -100,6 +109,14 @@ export default function SuccessAssess() {
       const dt_income = sessionStorage.getItem("dividend-trap_dt_income") || "85000";
       const dt_dividends = sessionStorage.getItem("dividend-trap_dt_dividends") || "12000";
       const dt_partner = sessionStorage.getItem("dividend-trap_dt_partner") || "false";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "dt_income": dt_income,
+        "dt_dividends": dt_dividends,
+        "dt_partner": dt_partner,
+      }).some(v => v && v !== "85000");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -220,7 +237,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Dividend Tax Audit · £67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Dividend Tax Audit"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Dividend Tax Audit
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

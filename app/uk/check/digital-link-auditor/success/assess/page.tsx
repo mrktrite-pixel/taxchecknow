@@ -43,7 +43,16 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
+interface Assessment {
+  status: string;
+  breachPoints: string;
+  fixRequired: string;
+  bridgingOption: string;
+  firstAction: string;
+  accountantQuestions: string[];
+  
+  [key: string]: unknown;
+}
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -99,6 +108,13 @@ export default function SuccessAssess() {
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
       const dl_process = sessionStorage.getItem("digital-link-auditor_dl_process") || "copypaste";
       const dl_software = sessionStorage.getItem("digital-link-auditor_dl_software") || "true";
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+        "dl_process": dl_process,
+        "dl_software": dl_software,
+      }).some(v => v && v !== "copypaste");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -208,7 +224,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Digital Link Audit Pack · £67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Digital Link Audit Pack"
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Digital Link Audit Pack
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.
