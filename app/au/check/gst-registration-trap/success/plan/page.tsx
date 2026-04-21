@@ -65,12 +65,18 @@ const FILES = [
 
 interface Action { title: string; deadline: string; steps: string[]; }
 interface Assessment {
-  status: string;
-  registrationRequired: string;
-  backdateExposure: string;
+  gstStatus: string;
+  registrationObligation: string;
+  triggerDateEstimate: string;
+  backdatingExposure: string;
+  invoiceCleanupRequired: string;
+  projectedTurnoverAnalysis: string;
+  basSetupRecommendation: string;
+  pricingTransitionGuide: string;
+  bookkeepingClassification: string;
   retroBASPlan: string;
   inputTaxCredits: string;
-  ongoingSystem: string;
+  strongestRiskTrigger: string;
   accountantQuestions: string[];
   actions: Action[];
   [key: string]: unknown;
@@ -128,16 +134,20 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const annual_turnover = sessionStorage.getItem("gst-registration-trap_annual_turnover") || "62000";
-      const is_registered = sessionStorage.getItem("gst-registration-trap_is_registered") || "false";
-      const crossed_before = sessionStorage.getItem("gst-registration-trap_crossed_before") || "false";
+      const business_type = sessionStorage.getItem("gst-registration-trap_business_type") || "general";
+      const current_turnover = sessionStorage.getItem("gst-registration-trap_current_turnover") || "band_75_150";
+      const backdating = sessionStorage.getItem("gst-registration-trap_backdating") || "true";
+      const status = sessionStorage.getItem("gst-registration-trap_status") || "REGISTRATION REQUIRED";
+      const tier = sessionStorage.getItem("gst-registration-trap_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "annual_turnover": annual_turnover,
-        "is_registered": is_registered,
-        "crossed_before": crossed_before,
-      }).some(v => v && v !== "62000");
+        "business_type": business_type,
+        "current_turnover": current_turnover,
+        "backdating": backdating,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "general");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -149,11 +159,13 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "Annual turnover": annual_turnover,
-        "Registered for GST": is_registered,
-        "Crossed threshold before": crossed_before,
+        "Business type": business_type,
+        "Current GST turnover band": current_turnover,
+        "Backdating risk identified": backdating,
+        "GST registration verdict": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","registrationRequired","backdateExposure","retroBASPlan","inputTaxCredits","ongoingSystem","weekPlan"],
+          fields: ["gstStatus","registrationObligation","triggerDateEstimate","backdatingExposure","invoiceCleanupRequired","projectedTurnoverAnalysis","basSetupRecommendation","pricingTransitionGuide","bookkeepingClassification","retroBASPlan","inputTaxCredits","strongestRiskTrigger"],
         }),
       });
       const data = await res.json();
@@ -163,12 +175,18 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        registrationRequired: "Your personalised registrationRequired is being prepared — please refresh in a moment.",
-        backdateExposure: "Your personalised backdateExposure is being prepared — please refresh in a moment.",
+        gstStatus: "Your personalised gstStatus is being prepared — please refresh in a moment.",
+        registrationObligation: "Your personalised registrationObligation is being prepared — please refresh in a moment.",
+        triggerDateEstimate: "Your personalised triggerDateEstimate is being prepared — please refresh in a moment.",
+        backdatingExposure: "Your personalised backdatingExposure is being prepared — please refresh in a moment.",
+        invoiceCleanupRequired: "Your personalised invoiceCleanupRequired is being prepared — please refresh in a moment.",
+        projectedTurnoverAnalysis: "Your personalised projectedTurnoverAnalysis is being prepared — please refresh in a moment.",
+        basSetupRecommendation: "Your personalised basSetupRecommendation is being prepared — please refresh in a moment.",
+        pricingTransitionGuide: "Your personalised pricingTransitionGuide is being prepared — please refresh in a moment.",
+        bookkeepingClassification: "Your personalised bookkeepingClassification is being prepared — please refresh in a moment.",
         retroBASPlan: "Your personalised retroBASPlan is being prepared — please refresh in a moment.",
         inputTaxCredits: "Your personalised inputTaxCredits is being prepared — please refresh in a moment.",
-        ongoingSystem: "Your personalised ongoingSystem is being prepared — please refresh in a moment.",
+        strongestRiskTrigger: "Your personalised strongestRiskTrigger is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before 28 July 2026?",
@@ -183,9 +201,11 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const annual_turnover = sessionStorage.getItem("gst-registration-trap_annual_turnover") || "62000";
-    const is_registered = sessionStorage.getItem("gst-registration-trap_is_registered") || "false";
-    const crossed_before = sessionStorage.getItem("gst-registration-trap_crossed_before") || "false";
+    const business_type = sessionStorage.getItem("gst-registration-trap_business_type") || "general";
+    const current_turnover = sessionStorage.getItem("gst-registration-trap_current_turnover") || "band_75_150";
+    const backdating = sessionStorage.getItem("gst-registration-trap_backdating") || "true";
+    const status = sessionStorage.getItem("gst-registration-trap_status") || "REGISTRATION REQUIRED";
+    const tier = sessionStorage.getItem("gst-registration-trap_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -302,7 +322,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","registrationRequired","backdateExposure","retroBASPlan","inputTaxCredits","ongoingSystem"] as string[]).map(key => {
+                {(["gstStatus","registrationObligation","triggerDateEstimate","backdatingExposure","invoiceCleanupRequired","projectedTurnoverAnalysis"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
