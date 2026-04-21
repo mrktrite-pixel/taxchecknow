@@ -165,7 +165,6 @@ export default function SuccessPlan() {
         multiPropertyPlan: "Your personalised multiPropertyPlan is being prepared — please refresh in a moment.",
         actions: "Your personalised actions is being prepared — please refresh in a moment.",
         weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
-        accountantQuestions: "Your personalised accountantQuestions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
           "What is the single most important action I should take before 5 April 2026?",

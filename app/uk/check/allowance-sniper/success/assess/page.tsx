@@ -136,7 +136,6 @@ export default function SuccessAssess() {
         extraTax: "Your personalised extraTax is being prepared — please refresh in a moment.",
         pensionNeeded: "Your personalised pensionNeeded is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
-        accountantQuestions: "Your personalised accountantQuestions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
           "What is the single most important action I should take before 5 April 2027?",

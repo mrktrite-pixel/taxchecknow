@@ -167,7 +167,6 @@ export default function SuccessPlan() {
         rolloverEligibility: "Your personalised rolloverEligibility is being prepared — please refresh in a moment.",
         actions: "Your personalised actions is being prepared — please refresh in a moment.",
         weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
-        accountantQuestions: "Your personalised accountantQuestions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRD position based on my answers?",
           "What is the single most important action I should take before 31 March 2027?",

@@ -142,7 +142,6 @@ export default function SuccessAssess() {
         availabilityRisk: "Your personalised availabilityRisk is being prepared — please refresh in a moment.",
         documentationNeeded: "Your personalised documentationNeeded is being prepared — please refresh in a moment.",
         ir10Disclosure: "Your personalised ir10Disclosure is being prepared — please refresh in a moment.",
-        accountantQuestions: "Your personalised accountantQuestions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRD position based on my answers?",
           "What is the single most important action I should take before 7 July 2026?",

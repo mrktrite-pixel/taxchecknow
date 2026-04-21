@@ -142,7 +142,6 @@ export default function SuccessAssess() {
         liquidityRisk: "Your personalised liquidityRisk is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         timingStrategy: "Your personalised timingStrategy is being prepared — please refresh in a moment.",
-        accountantQuestions: "Your personalised accountantQuestions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRS position based on my answers?",
           "What is the single most important action I should take before December 31, 2026?",

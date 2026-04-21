@@ -142,7 +142,6 @@ export default function SuccessAssess() {
         breakEvenPoint: "Your personalised breakEvenPoint is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         bigPurchaseOpportunity: "Your personalised bigPurchaseOpportunity is being prepared — please refresh in a moment.",
-        accountantQuestions: "Your personalised accountantQuestions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRD position based on my answers?",
           "What is the single most important action I should take before 31 March 2027?",

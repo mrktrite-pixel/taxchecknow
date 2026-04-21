@@ -138,7 +138,6 @@ export default function SuccessAssess() {
         taxBill: "Your personalised taxBill is being prepared — please refresh in a moment.",
         allowanceUsed: "Your personalised allowanceUsed is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
-        accountantQuestions: "Your personalised accountantQuestions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
           "What is the single most important action I should take before 31 January 2027?",
