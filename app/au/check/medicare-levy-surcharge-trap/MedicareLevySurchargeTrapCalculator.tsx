@@ -504,9 +504,16 @@ export default function MedicareLevySurchargeTrapCalculator() {
     }
 
     try {
+      const successPath = popupTier === 67 ? "assess" : "plan";
       const res = await fetch("/api/create-checkout-session", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ decision_session_id: sid, tier: popupTier, product_key: key }),
+        body: JSON.stringify({
+          decision_session_id: sid,
+          tier: popupTier,
+          product_key: key,
+          success_url: `${window.location.origin}/au/check/medicare-levy-surcharge-trap/success/${successPath}`,
+          cancel_url: `${window.location.origin}/au/check/medicare-levy-surcharge-trap`,
+        }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
