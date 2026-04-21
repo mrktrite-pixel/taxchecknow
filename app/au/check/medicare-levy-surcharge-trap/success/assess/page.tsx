@@ -43,22 +43,7 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  mlsStatus: string;
-  incomeForMLSPurposes: string;
-  surchargeRateTier: string;
-  estimatedMLSPayable: string;
-  coverCostEstimate: string;
-  netSavingFromCover: string;
-  coverTimingStrategy: string;
-  thresholdPosition: string;
-  strongestRiskTrigger: string;
-  confidenceLevel: string;
-  firstAction: string;
-  accountantQuestions: string[];
-  
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");

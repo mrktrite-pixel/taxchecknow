@@ -43,17 +43,7 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  status: string;
-  eligibilityVerdict: string;
-  exclusionAmount: string;
-  taxSaving: string;
-  failureRisk: string;
-  firstAction: string;
-  accountantQuestions: string[];
-  
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & { accountantQuestions?: string[]; actions?: Action[]; };
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
