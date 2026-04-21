@@ -270,8 +270,8 @@ const QUESTIONS: Q[] = [
   // Step 2: Current turnover
   {
     id: "current_turnover", step: 2, type: "band_input",
-    label: "What is your current GST turnover in the last 12 months?",
-    subLabel: "GST turnover = gross income from sales — exclude input-taxed supplies like residential rent",
+    label: "What is your GST turnover in the last 12 months?",
+    subLabel: "Rolling 12 months — NOT financial year. GST turnover = gross revenue, not profit. Include all business income.",
     options: [
       { label: "Under $50,000", value: "under_50k", subLabel: "Well below the $75k threshold" },
       { label: "$50,000 – $75,000", value: "band_50_75", subLabel: "Approaching the threshold" },
@@ -282,11 +282,10 @@ const QUESTIONS: Q[] = [
     required: true,
   },
 
-  // Step 3: Projected turnover — the real legal test
   {
     id: "projected_turnover", step: 3, type: "button_group",
-    label: "What do you expect your turnover to be in the next 12 months?",
-    subLabel: "The ATO tests PROJECTED GST turnover — if you expect to cross $75,000, registration is required now",
+    label: "What do you EXPECT your turnover to be in the next 12 months?",
+    subLabel: "The ATO tests EXPECTED turnover — if you expect to cross $75,000, you must register NOW before you hit it",
     options: [
       { label: "Under $75,000", value: "under_75k", subLabel: "Not expecting to cross the threshold" },
       { label: "Will likely cross $75,000", value: "will_cross", subLabel: "Growing — expect to hit threshold" },
@@ -397,7 +396,7 @@ function VerdictBlock({ verdict, onCheckout, loading }: {
 
       <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
         <p className="text-sm text-neutral-700 leading-relaxed">
-          Most business owners either register too late and face backdated GST liability — or don't know the projected turnover test applies before they cross the threshold.
+          Most people don't realise they needed to register until it's too late — and end up paying GST on money they've already spent.
           <strong className="text-neutral-950"> This check shows your exact position.</strong>
         </p>
       </div>

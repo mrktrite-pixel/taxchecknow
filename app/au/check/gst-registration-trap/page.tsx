@@ -552,23 +552,26 @@ export default function GstRegistrationTrapPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What counts toward the GST threshold
+            GST registration — rule vs reality
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ All taxable supplies</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ GST-free supplies (e.g. fresh food, exports)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Commercial property rental</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Threshold: $75,000 (not profit — total revenue)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Timing: rolling 12 months (not financial year)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Trigger: expected OR actual turnover</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Deadline: 21 days from crossing threshold</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Ride-share / taxi: register from day one — no threshold</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT residential rental income</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT input-taxed supplies</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT wages or salary income</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT based on profit — gross revenue is the test</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT just July–June — any 12-month window counts</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT safe because you didn't charge GST — you still owe it</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT only full-time businesses — all taxable supplies count</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — GST registration · GST Act 1999</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — GST registration · GST Act 1999 s23-5</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -601,12 +604,13 @@ export default function GstRegistrationTrapPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about GST registration
+            What most people (and AI) get wrong about GST registration
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ I only need to register once my annual turnover exceeds $75,000 — wrong. The $75,000 threshold applies to any rolling 12-month period — not just a financial year. If your turnover in the last 12 months has exceeded $75,000 at any point, you are required to register. The test is continuous — not annual.</li>
-            <li>✗ If I didn't charge GST, I don't owe it — wrong. If you should have been registered but were not, the ATO treats your sales as GST-inclusive. If you charged $1,000 and should have been registered, $90.91 of that was GST. You owe the GST component whether or not you collected it from customers.</li>
-            <li>✗ Casual or one-off income does not count toward the threshold — wrong. All taxable supplies and GST-free supplies count toward the GST turnover threshold. This includes cash income, consulting, online sales, Airbnb, and services provided overseas to Australian clients.</li>
+            <li>✗ I haven't hit $75,000 yet so I'm safe — wrong. The test is EXPECTED turnover, not actual. If you can reasonably expect your turnover to reach $75,000 in the next 12 months, you must register now — before you cross the threshold. Waiting until you actually hit $75,000 means you are already late.</li>
+            <li>✗ The $75,000 test is based on the financial year — wrong. It's a rolling 12-month window — any 12-month period, not just July to June. If your combined turnover across any 12 consecutive months reaches $75,000, the registration obligation is triggered. The ATO does not reset the clock on 1 July.</li>
+            <li>✗ I didn't charge GST so I don't owe it — wrong. If you should have been registered but weren't, the ATO treats your prices as GST-inclusive. A $1,000 invoice contained $90.91 of GST you owe — out of your own pocket. Not charging customers GST is not a defence — it is your problem, not theirs.</li>
+            <li>✗ I'm just a freelancer or side hustle — that's not a real business — wrong. GST registration applies to all entities making taxable supplies — sole traders, freelancers, Airbnb hosts, online sellers, and contractors all count. If your combined income from all sources reaches $75,000, registration is required regardless of whether it feels like a business.</li>
           </ul>
         </div>
 
