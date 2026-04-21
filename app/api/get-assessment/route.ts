@@ -23,11 +23,11 @@ export async function GET(req: Request) {
     }
 
     const supabase = getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from("assessments")
       .select("assessment_json, customer_name, product_id, tier, created_at")
       .eq("stripe_session_id", sessionId)
-      .single();
+      .single() as { data: { assessment_json: Record<string,unknown>; customer_name: string; product_id: string; tier: number; created_at: string } | null; error: unknown };
 
     if (error || !data) {
       // Not ready yet — webhook may still be processing

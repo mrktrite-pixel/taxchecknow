@@ -150,7 +150,7 @@ async function generateAndStoreAssessment(
 
     const { assessment } = await res.json();
 
-    await supabase.from("assessments").upsert({
+    await (supabase as any).from("assessments").upsert({
       stripe_session_id:   stripeSessionId,
       decision_session_id: decisionSessionId,
       product_id:          delivery.productId,
@@ -199,7 +199,7 @@ async function queueReminders(
       };
     });
 
-    const { error } = await supabase.from("email_queue").insert(rows);
+    const { error } = await (supabase as any).from("email_queue").insert(rows);
     if (error) console.error("[webhook] Queue error:", error.message);
     else console.log("[webhook] Queued", rows.length, "reminders for", customerEmail);
   } catch (err) {
@@ -309,7 +309,7 @@ export async function POST(req: Request) {
   if (purchaseId) {
     try {
       const supabase2 = getSupabase();
-      await supabase2.from("email_log").insert({
+      await (supabase2 as any).from("email_log").insert({
         purchase_id:     purchaseId,
         recipient_email: customerEmail,
         email_type:      "delivery",
