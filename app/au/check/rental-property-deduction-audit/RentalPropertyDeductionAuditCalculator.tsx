@@ -103,6 +103,11 @@ function calcVerdict(answers: AnswerMap): VerdictResult {
     missedOpportunities.push("Depreciation schedule — assets in the property may be depreciable under Div 40 — QS report recommended");
   }
 
+  // Post-2017 depreciation flag — massive compliance gap
+  if (expenseTypes.includes("depreciation")) {
+    riskFlags.push("Post-9-May-2017 rule — second-hand assets in residential investment properties cannot be depreciated under Div 40. Only NEW assets installed after purchase qualify. Existing carpet, curtains, and appliances are excluded.");
+  }
+
   // ── Confidence ───────────────────────────────────────────────────────────
   let confidence: ConfidenceLevel = "HIGH";
   let confidenceNote = "Records appear complete — position is reliable for your accountant.";

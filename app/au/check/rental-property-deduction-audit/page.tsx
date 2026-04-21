@@ -552,23 +552,26 @@ export default function RentalPropertyDeductionAuditPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            Rental deduction rules in plain English
+            Deductibility — the ATO classification
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Interest, rates, insurance, management — immediate</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Ongoing repairs — immediate</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Depreciation on building and plant — QS report</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Repair (part only, during rental) → IMMEDIATE deduction</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Capital works (Div 43, built-in) → 2.5% over 40 years</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Plant & equipment new (Div 40) → effective life schedule</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Borrowing costs → 5 years or loan term</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Interest, rates, insurance, management → IMMEDIATE</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT capital improvements as repairs</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT travel to inspect residential property</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT initial repairs at purchase</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Initial repair (defect at purchase) → NOT deductible — adds to cost base</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Whole item replacement → capital, NOT a repair</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Second-hand assets post 9 May 2017 → NOT depreciable (Div 40)</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Travel to inspect residential property → NOT deductible since 2017</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Rental properties · ITAA 1997</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Rental properties · ITAA 1997 s25-10 · TR 97/23</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -604,9 +607,10 @@ export default function RentalPropertyDeductionAuditPage() {
             What most rental property owners get wrong
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Repairs and maintenance are always immediately deductible — wrong. Initial repairs — work done to fix a defect that existed when you purchased the property — are capital expenditure, not immediately deductible. Ongoing repairs to maintain the property's condition are immediately deductible. The distinction is whether the work restores the property to its condition when you purchased it, or merely maintains it.</li>
-            <li>✗ I can deduct all expenses for my holiday home — wrong. A property must be genuinely available for rent to generate deductible expenses. If your holiday property is locked out for personal use during peak periods, or not advertised at market rates, the ATO may deny or proportion the deductions. Many holiday home deduction claims are substantially reduced or disallowed on audit.</li>
-            <li>✗ Travel to inspect my rental property is tax deductible — wrong. Since 1 July 2017, travel expenses (including flights, accommodation, and car costs) to inspect, maintain, or collect rent from a residential investment property are not deductible. This applies to individuals and trusts — it does not apply to companies.</li>
+            <li>✗ Fixing something before you rent it is deductible — wrong. Initial repairs — work done to fix a defect that existed when you purchased the property — are capital, not immediately deductible. The ATO is explicit: if the defect was there at purchase, the repair is treated as part of your cost base, not a current-year deduction. This is the single most common audit trigger in rental property returns.</li>
+            <li>✗ Replacing the whole item is the same as repairing part of it — wrong. Fixing part of a fence is a repair — deductible. Replacing the entire fence is capital works — depreciated over 40 years at 2.5% per year. The ATO draws this line precisely: if you restored a part, it is a repair; if you replaced the whole, it is capital. Misclassification here is where most audit adjustments originate.</li>
+            <li>✗ I can depreciate the existing assets in my investment property — wrong. Since 9 May 2017, second-hand depreciating assets in residential investment properties are no longer deductible under Division 40. If you purchased an existing property with carpet, curtains, or appliances already installed, you cannot claim depreciation on those items. Only new assets installed after purchase qualify. This rule catches thousands of investors who rely on outdated depreciation schedules.</li>
+            <li>✗ My property must be deductible — I own it as an investment — wrong. Deductions only apply when the property is genuinely available for rent at market rates. A holiday property blocked out for personal use, a property sitting vacant without being advertised, or a property rented below market value to a family member can all lose some or all deductions. Genuine availability is an ATO compliance priority.</li>
           </ul>
         </div>
 
