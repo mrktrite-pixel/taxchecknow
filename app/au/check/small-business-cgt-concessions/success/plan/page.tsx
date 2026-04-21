@@ -64,17 +64,10 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  status: string;
-  eligibleConcessions: string;
-  optimalStack: string;
-  retirementExemptionPlan: string;
-  ageTiming: string;
-  entityStructure: string;
-  accountantQuestions: string[];
-  actions: Action[];
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & {
+  accountantQuestions?: string[];
+  actions?: Action[];
+};
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -128,16 +121,22 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const turnover = sessionStorage.getItem("small-business-cgt-concessions_turnover") || "1500000";
-      const ownership_years = sessionStorage.getItem("small-business-cgt-concessions_ownership_years") || "10";
-      const actively_used = sessionStorage.getItem("small-business-cgt-concessions_actively_used") || "true";
+      const entity_type = sessionStorage.getItem("small-business-cgt-concessions_entity_type") || "individual";
+      const failing_gate = sessionStorage.getItem("small-business-cgt-concessions_failing_gate") || "None detected";
+      const status = sessionStorage.getItem("small-business-cgt-concessions_status") || "PARTIAL ELIGIBILITY";
+      const ownership_years = sessionStorage.getItem("small-business-cgt-concessions_ownership_years") || "7_to_15";
+      const estimated_saving = sessionStorage.getItem("small-business-cgt-concessions_estimated_saving") || "Potentially significant";
+      const tier = sessionStorage.getItem("small-business-cgt-concessions_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "turnover": turnover,
+        "entity_type": entity_type,
+        "failing_gate": failing_gate,
+        "status": status,
         "ownership_years": ownership_years,
-        "actively_used": actively_used,
-      }).some(v => v && v !== "1500000");
+        "estimated_saving": estimated_saving,
+        "tier": tier,
+      }).some(v => v && v !== "individual");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -149,11 +148,14 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "Annual turnover": turnover,
-        "Ownership years": ownership_years,
-        "Active asset": actively_used,
+        "Entity type that owns the asset": entity_type,
+        "Strongest failing eligibility gate": failing_gate,
+        "CGT concession eligibility verdict": status,
+        "Ownership duration": ownership_years,
+        "Estimated tax saving": estimated_saving,
+        "Product tier purchased": tier,
           },
-          fields: ["status","eligibleConcessions","optimalStack","retirementExemptionPlan","ageTiming","entityStructure","weekPlan"],
+          fields: ["eligibilityVerdict","sizeGateResult","activeAssetResult","significantIndividualStatus","availableConcessions","applicationOrder","optimalConcessionStack","retirementExemptionAnalysis","fifteenYearExemptionAnalysis","preSaleCleanupIssues","stakeholderMapping","estimatedTaxSaving","strongestRiskTrigger"],
         }),
       });
       const data = await res.json();
@@ -163,19 +165,26 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        eligibleConcessions: "Your personalised eligibleConcessions is being prepared — please refresh in a moment.",
-        optimalStack: "Your personalised optimalStack is being prepared — please refresh in a moment.",
-        retirementExemptionPlan: "Your personalised retirementExemptionPlan is being prepared — please refresh in a moment.",
-        ageTiming: "Your personalised ageTiming is being prepared — please refresh in a moment.",
-        entityStructure: "Your personalised entityStructure is being prepared — please refresh in a moment.",
+        eligibilityVerdict: "Your personalised eligibilityVerdict is being prepared — please refresh in a moment.",
+        sizeGateResult: "Your personalised sizeGateResult is being prepared — please refresh in a moment.",
+        activeAssetResult: "Your personalised activeAssetResult is being prepared — please refresh in a moment.",
+        significantIndividualStatus: "Your personalised significantIndividualStatus is being prepared — please refresh in a moment.",
+        availableConcessions: "Your personalised availableConcessions is being prepared — please refresh in a moment.",
+        applicationOrder: "Your personalised applicationOrder is being prepared — please refresh in a moment.",
+        optimalConcessionStack: "Your personalised optimalConcessionStack is being prepared — please refresh in a moment.",
+        retirementExemptionAnalysis: "Your personalised retirementExemptionAnalysis is being prepared — please refresh in a moment.",
+        fifteenYearExemptionAnalysis: "Your personalised fifteenYearExemptionAnalysis is being prepared — please refresh in a moment.",
+        preSaleCleanupIssues: "Your personalised preSaleCleanupIssues is being prepared — please refresh in a moment.",
+        stakeholderMapping: "Your personalised stakeholderMapping is being prepared — please refresh in a moment.",
+        estimatedTaxSaving: "Your personalised estimatedTaxSaving is being prepared — please refresh in a moment.",
+        strongestRiskTrigger: "Your personalised strongestRiskTrigger is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before 31 October 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
-      } as Assessment);
+      } as unknown as Assessment);
     } finally {
       setLoading(false);
     }
@@ -183,9 +192,12 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const turnover = sessionStorage.getItem("small-business-cgt-concessions_turnover") || "1500000";
-    const ownership_years = sessionStorage.getItem("small-business-cgt-concessions_ownership_years") || "10";
-    const actively_used = sessionStorage.getItem("small-business-cgt-concessions_actively_used") || "true";
+    const entity_type = sessionStorage.getItem("small-business-cgt-concessions_entity_type") || "individual";
+    const failing_gate = sessionStorage.getItem("small-business-cgt-concessions_failing_gate") || "None detected";
+    const status = sessionStorage.getItem("small-business-cgt-concessions_status") || "PARTIAL ELIGIBILITY";
+    const ownership_years = sessionStorage.getItem("small-business-cgt-concessions_ownership_years") || "7_to_15";
+    const estimated_saving = sessionStorage.getItem("small-business-cgt-concessions_estimated_saving") || "Potentially significant";
+    const tier = sessionStorage.getItem("small-business-cgt-concessions_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -302,13 +314,13 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","eligibleConcessions","optimalStack","retirementExemptionPlan","ageTiming","entityStructure"] as string[]).map(key => {
+                {(["eligibilityVerdict","sizeGateResult","activeAssetResult","significantIndividualStatus","availableConcessions","applicationOrder"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/_/g," ")}
+                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
                     </div>

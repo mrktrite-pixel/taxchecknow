@@ -130,7 +130,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/small-business-cgt-concessions",
     "api_endpoint": "/api/rules/small-business-cgt-concessions",
-    "generated_at": "2026-04-21T07:28:44.273Z"
+    "generated_at": "2026-04-21T11:26:59.058Z"
 };
 
   return NextResponse.json(rules, {

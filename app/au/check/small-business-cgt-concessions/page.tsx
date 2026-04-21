@@ -310,23 +310,23 @@ export default function SmallBusinessCgtConcessionsPage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter business turnover",
-            "text": "Select your aggregate annual turnover including connected entities."
+            "name": "Select entity type",
+            "text": "Who owns the asset — individual, company, trust, or partnership affects which concessions apply."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter ownership period",
-            "text": "Select how long you have owned the business or business asset."
+            "name": "Pass the size gate",
+            "text": "Turnover under $2M or net assets under $6M — both tests are available."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your eligibility verdict",
-            "text": "See which of the four concessions may apply to your situation."
+            "name": "Confirm active asset",
+            "text": "The asset must have been used in the business for at least 50% of your ownership period."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your strategy",
-            "text": "Receive a personalised concession stacking plan and pre-sale checklist."
+            "name": "Get your concession path",
+            "text": "See which of the 4 concessions apply in the correct order for your situation."
       }
 ],
   };
@@ -550,24 +550,26 @@ export default function SmallBusinessCgtConcessionsPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What the four concessions can do
+            The 4 concessions — applied in order
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ 15-year exemption — full gain eliminated</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 50% active asset reduction</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ $500k lifetime retirement exemption</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 2-year rollover deferral</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Step 1: General 50% CGT discount (12+ months ownership)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Step 2: 50% active asset reduction — halves remaining gain</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Step 3: Retirement exemption — up to $500k lifetime</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Step 4: Rollover — defer into replacement active asset</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 15-year exemption — entire gain eliminated (strongest path)</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic — must be elected in return</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT available on passive investments</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT available on $6M+ net assets</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic — must be elected in the tax return</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT available if size test fails (over $2M turnover AND $6M net assets)</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT for passive investments — active asset test required</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT stackable in any order — ATO sequence is mandatory</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Division 152 small business CGT concessions · ITAA 1997</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Division 152 ITAA 1997 · Small business CGT concessions</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -600,12 +602,13 @@ export default function SmallBusinessCgtConcessionsPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about small business CGT
+            What most people (and AI) get wrong about small business CGT concessions
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ You automatically qualify if your turnover is under $2 million — wrong. The turnover test is just one of two threshold tests. You must also satisfy the active asset test for the specific asset being sold. A property that was not actively used in the business for at least half the ownership period fails the active asset test regardless of turnover.</li>
-            <li>✗ The $500,000 retirement exemption applies per sale — wrong. The $500,000 retirement exemption is a lifetime limit across all eligible capital gains across all disposals. If you have used $300,000 on a prior sale, only $200,000 remains for future sales.</li>
-            <li>✗ The concessions are automatic if you qualify — wrong. The concessions must be elected in the tax return for the year the CGT event occurred. Missing the election means losing the concession — even if all the eligibility conditions were met.</li>
+            <li>✗ Selling your business automatically qualifies you — wrong. Eligibility requires passing strict tests in sequence: size gate (turnover under $2M or net assets under $6M), active asset test (50% of ownership period or 7.5 years), and entity/significant individual conditions. Most business sales fail at least one test without pre-sale planning.</li>
+            <li>✗ Everyone gets the $500,000 retirement exemption — wrong. The retirement exemption has strict conditions — you must be retiring or aged 55+, and if under 55 the amount must be paid into superannuation. It is also a lifetime cap across all disposals. If you used $300,000 on a prior sale, only $200,000 remains. It is not a blanket entitlement.</li>
+            <li>✗ Property used in the business qualifies — wrong. Commercial or residential property often fails the active asset test. For real property to qualify, the business must have been conducted on the premises and the property must pass the 50% active use test. Property held as a passive investment by a related entity almost always fails.</li>
+            <li>✗ Order of application does not matter — wrong. The ATO requires concessions to be applied in a specific sequence: first the general 50% CGT discount, then the 50% active asset reduction, then the retirement exemption or rollover. Applying in the wrong order reduces the tax benefit and can trigger ATO adjustments.</li>
           </ul>
         </div>
 
