@@ -135,7 +135,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/division-7a-loan-trap",
     "api_endpoint": "/api/rules/division-7a-loan-trap",
-    "generated_at": "2026-04-21T07:28:33.613Z"
+    "generated_at": "2026-04-21T13:50:40.877Z"
 };
 
   return NextResponse.json(rules, {

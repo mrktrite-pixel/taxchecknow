@@ -43,17 +43,10 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  status: string;
-  deemedDividendRisk: string;
-  minimumRepayment: string;
-  agreementStatus: string;
-  eoFyDeadline: string;
-  firstAction: string;
-  accountantQuestions: string[];
-  
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & {
+  accountantQuestions?: string[];
+  actions?: Action[];
+};
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -107,16 +100,24 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const loan_balance = sessionStorage.getItem("division-7a-loan-trap_loan_balance") || "100000";
-      const loan_status = sessionStorage.getItem("division-7a-loan-trap_loan_status") || "unsure";
-      const secured = sessionStorage.getItem("division-7a-loan-trap_secured") || "false";
+      const transaction_type = sessionStorage.getItem("division-7a-loan-trap_transaction_type") || "loan";
+      const has_agreement = sessionStorage.getItem("division-7a-loan-trap_has_agreement") || "false";
+      const is_deemed_dividend = sessionStorage.getItem("division-7a-loan-trap_is_deemed_dividend") || "false";
+      const status = sessionStorage.getItem("division-7a-loan-trap_status") || "HIGH RISK";
+      const strongest_risk = sessionStorage.getItem("division-7a-loan-trap_strongest_risk") || "No complying loan agreement";
+      const income_year = sessionStorage.getItem("division-7a-loan-trap_income_year") || "current_year";
+      const tier = sessionStorage.getItem("division-7a-loan-trap_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "loan_balance": loan_balance,
-        "loan_status": loan_status,
-        "secured": secured,
-      }).some(v => v && v !== "100000");
+        "transaction_type": transaction_type,
+        "has_agreement": has_agreement,
+        "is_deemed_dividend": is_deemed_dividend,
+        "status": status,
+        "strongest_risk": strongest_risk,
+        "income_year": income_year,
+        "tier": tier,
+      }).some(v => v && v !== "loan");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -128,11 +129,15 @@ export default function SuccessAssess() {
           tier:       1,
           name,
           inputs: {
-        "Loan balance": loan_balance,
-        "Loan status": loan_status,
-        "Secured by property": secured,
+        "Division 7A transaction type": transaction_type,
+        "Written loan agreement in place": has_agreement,
+        "Deemed dividend triggered": is_deemed_dividend,
+        "Division 7A verdict": status,
+        "Strongest risk trigger": strongest_risk,
+        "Income year of loan": income_year,
+        "Product tier purchased": tier,
           },
-          fields: ["status","deemedDividendRisk","minimumRepayment","agreementStatus","eoFyDeadline","firstAction"],
+          fields: ["division7aStatus","loanClassification","lodgementDayRisk","agreementGapSummary","minimumRepaymentRequired","deemedDividendExposure","remediationChecklist","evidenceRequired","firstAction"],
         }),
       });
       const data = await res.json();
@@ -142,11 +147,14 @@ export default function SuccessAssess() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        deemedDividendRisk: "Your personalised deemedDividendRisk is being prepared — please refresh in a moment.",
-        minimumRepayment: "Your personalised minimumRepayment is being prepared — please refresh in a moment.",
-        agreementStatus: "Your personalised agreementStatus is being prepared — please refresh in a moment.",
-        eoFyDeadline: "Your personalised eoFyDeadline is being prepared — please refresh in a moment.",
+        division7aStatus: "Your personalised division7aStatus is being prepared — please refresh in a moment.",
+        loanClassification: "Your personalised loanClassification is being prepared — please refresh in a moment.",
+        lodgementDayRisk: "Your personalised lodgementDayRisk is being prepared — please refresh in a moment.",
+        agreementGapSummary: "Your personalised agreementGapSummary is being prepared — please refresh in a moment.",
+        minimumRepaymentRequired: "Your personalised minimumRepaymentRequired is being prepared — please refresh in a moment.",
+        deemedDividendExposure: "Your personalised deemedDividendExposure is being prepared — please refresh in a moment.",
+        remediationChecklist: "Your personalised remediationChecklist is being prepared — please refresh in a moment.",
+        evidenceRequired: "Your personalised evidenceRequired is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
@@ -154,7 +162,7 @@ export default function SuccessAssess() {
           "Are there any planning opportunities specific to my situation?",
         ],
         
-      } as Assessment);
+      } as unknown as Assessment);
     } finally {
       setLoading(false);
     }
@@ -162,9 +170,13 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const loan_balance = sessionStorage.getItem("division-7a-loan-trap_loan_balance") || "100000";
-    const loan_status = sessionStorage.getItem("division-7a-loan-trap_loan_status") || "unsure";
-    const secured = sessionStorage.getItem("division-7a-loan-trap_secured") || "false";
+    const transaction_type = sessionStorage.getItem("division-7a-loan-trap_transaction_type") || "loan";
+    const has_agreement = sessionStorage.getItem("division-7a-loan-trap_has_agreement") || "false";
+    const is_deemed_dividend = sessionStorage.getItem("division-7a-loan-trap_is_deemed_dividend") || "false";
+    const status = sessionStorage.getItem("division-7a-loan-trap_status") || "HIGH RISK";
+    const strongest_risk = sessionStorage.getItem("division-7a-loan-trap_strongest_risk") || "No complying loan agreement";
+    const income_year = sessionStorage.getItem("division-7a-loan-trap_income_year") || "current_year";
+    const tier = sessionStorage.getItem("division-7a-loan-trap_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -272,13 +284,13 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","deemedDividendRisk","minimumRepayment","agreementStatus","eoFyDeadline","firstAction"] as string[]).map(key => {
+                {(["division7aStatus","loanClassification","lodgementDayRisk","agreementGapSummary","minimumRepaymentRequired","deemedDividendExposure"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/_/g," ")}
+                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
                     </div>

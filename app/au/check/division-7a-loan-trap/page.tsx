@@ -320,23 +320,23 @@ export default function Division7aLoanTrapPage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter loan balance",
-            "text": "Select your current outstanding loan balance from the company."
+            "name": "Select your relationship",
+            "text": "Shareholder, associate, or trust linked to a private company — Division 7A only applies to connected parties."
       },
       {
             "@type": "HowToStep",
-            "name": "Check agreement status",
-            "text": "Select whether a written Div 7A loan agreement is in place."
+            "name": "Select transaction type",
+            "text": "Cash withdrawal, private expense, asset use, debt forgiveness, or trust UPE — each has different rules."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your risk assessment",
-            "text": "See immediately whether your loan is compliant and what action is needed."
+            "name": "Check lodgement day and agreement",
+            "text": "The critical question — has lodgement day passed without a complying agreement?"
       },
       {
             "@type": "HowToStep",
-            "name": "Get your fix plan",
-            "text": "Receive minimum repayment calculation and compliance checklist."
+            "name": "Get your Division 7A verdict",
+            "text": "Compliant / at risk / deemed dividend — with specific action steps and accountant questions."
       }
 ],
   };
@@ -560,23 +560,26 @@ export default function Division7aLoanTrapPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What keeps your Div 7A loan compliant
+            Division 7A — the rules that decide everything
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Written agreement before lodgement day</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Benchmark interest rate charged</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Minimum repayment made before 30 June every year</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Agreement: written, signed BEFORE lodgement day</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Lodgement day: earlier of due date or actual lodge date</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Repayments: minimum amount before 30 June every year</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Interest: at ATO benchmark rate (8.27% for 2025-26)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Terms: unsecured max 7 years, secured max 25 years</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatically compliant each year</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT covered by franking credits</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT fixed by repaying after lodgement day</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT covered by franking credits — unfranked dividend</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT the same as 30 June — lodgement day is earlier</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT exempt because it was used for business</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Division 7A · ITAA 1936</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Division 7A · ITAA 1936 s109D · ATO guidance 2025-26</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -609,12 +612,13 @@ export default function Division7aLoanTrapPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about Division 7A
+            What most people (and AI) get wrong about Division 7A
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ I can just repay the loan before tax time and avoid the issue — wrong. The loan agreement must be in place before the company's lodgement day (the earlier of the due date and the date the return is lodged). A loan repaid after lodgement day without a proper agreement is still a deemed dividend.</li>
-            <li>✗ Division 7A only applies to large companies — wrong. Division 7A applies to all private companies regardless of size. It affects small family companies, professional practices, and property holding companies equally. The ATO actively targets unprepared small business owners.</li>
-            <li>✗ My accountant handles it so I don't need to understand it — wrong. Many directors do not know their loan balance or whether minimum repayments are being made. A missed minimum repayment converts that year's shortfall into a deemed dividend — even if the loan agreement exists.</li>
+            <li>✗ It's just a loan — I'll pay it back later — wrong. Division 7A does not care about your intention to repay. If a complying loan agreement is not in place before lodgement day, the loan is reclassified as an unfranked deemed dividend on that date — retroactively. You cannot fix it after lodgement day by repaying the money.</li>
+            <li>✗ The deadline is 30 June — wrong. The critical deadline is lodgement day — the earlier of the date the company return is due and the date it is actually lodged. Many taxpayers who lodge early accidentally trigger Division 7A earlier than they expected. 30 June is the minimum repayment deadline, not the agreement deadline.</li>
+            <li>✗ Small withdrawals don't matter — wrong. The ATO specifically targets repeated small drawings from private companies because they are a common way owners extract profits tax-free. Even $5,000 withdrawals across a year can accumulate into a significant deemed dividend if not documented.</li>
+            <li>✗ I used the money for the business so it's fine — wrong. The use of the funds is irrelevant for Division 7A purposes. Even if the money went back into a related business, the company-to-shareholder payment is still caught unless it is properly documented as a complying loan.</li>
           </ul>
         </div>
 
