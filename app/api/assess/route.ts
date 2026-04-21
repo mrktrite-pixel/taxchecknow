@@ -109,7 +109,7 @@ If their name is provided, use it. Reference their income band, cover status, fa
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: "claude-opus-4-5",
         max_tokens: isTier2 ? 2500 : 1500,
         messages: [{ role: "user", content: prompt }],
       }),
@@ -126,7 +126,18 @@ If their name is provided, use it. Reference their income band, cover status, fa
 
     const data = await res.json();
     const text = data.content?.[0]?.text ?? "";
-    const clean = text.replace(/```json|```/g, "").trim();
+
+    // Extract JSON more robustly — find first { and last }
+    const firstBrace = text.indexOf("{");
+    const lastBrace  = text.lastIndexOf("}");
+    if (firstBrace === -1 || lastBrace === -1) {
+      console.error("No JSON object found in response:", text.slice(0, 200));
+      return NextResponse.json(
+        { error: "No JSON found in Claude response", raw: text.slice(0, 500) },
+        { status: 500 }
+      );
+    }
+    const clean = text.slice(firstBrace, lastBrace + 1);
 
     let assessment: Record<string, unknown>;
     try {
