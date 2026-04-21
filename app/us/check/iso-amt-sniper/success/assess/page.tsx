@@ -50,7 +50,6 @@ interface Assessment {
   liquidityRisk: string;
   firstAction: string;
   timingStrategy: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

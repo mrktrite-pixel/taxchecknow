@@ -50,7 +50,6 @@ interface Assessment {
   breakEvenPoint: string;
   firstAction: string;
   bigPurchaseOpportunity: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

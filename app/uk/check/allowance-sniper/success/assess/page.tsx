@@ -49,7 +49,6 @@ interface Assessment {
   extraTax: string;
   pensionNeeded: string;
   firstAction: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

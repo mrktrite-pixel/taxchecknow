@@ -50,7 +50,6 @@ interface Assessment {
   biggestRisk: string;
   firstAction: string;
   registrationPriority: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

@@ -49,7 +49,6 @@ interface Assessment {
   taxBill: string;
   allowanceUsed: string;
   firstAction: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

@@ -51,7 +51,6 @@ interface Assessment {
   minorBeneficiaryRisk: string;
   firstAction: string;
   resolutionDeadline: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

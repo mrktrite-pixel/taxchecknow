@@ -50,7 +50,6 @@ interface Assessment {
   taxSaving: string;
   failureRisk: string;
   firstAction: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

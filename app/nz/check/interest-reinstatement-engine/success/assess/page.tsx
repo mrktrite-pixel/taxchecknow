@@ -50,7 +50,6 @@ interface Assessment {
   tracingRisk: string;
   firstAction: string;
   documentationNeeded: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

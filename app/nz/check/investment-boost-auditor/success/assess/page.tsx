@@ -50,7 +50,6 @@ interface Assessment {
   availabilityRisk: string;
   documentationNeeded: string;
   ir10Disclosure: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

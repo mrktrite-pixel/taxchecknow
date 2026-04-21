@@ -49,7 +49,6 @@ interface Assessment {
   softwareGap: string;
   quarterlyDates: string;
   firstAction: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   
   [key: string]: unknown;

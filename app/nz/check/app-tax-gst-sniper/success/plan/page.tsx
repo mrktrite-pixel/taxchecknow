@@ -73,7 +73,6 @@ interface Assessment {
   apportionmentNeeded: string;
   actions: string;
   weekPlan: string;
-  accountantQuestions: string;
   accountantQuestions: string[];
   actions: Action[];
   [key: string]: unknown;
