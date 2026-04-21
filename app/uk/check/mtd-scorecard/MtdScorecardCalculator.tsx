@@ -545,14 +545,37 @@ export default function MtdScorecardCalculator() {
               )}
             </div>
 
+            {/* Conversion line — GOAT */}
+            <div className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+              <p className="text-sm text-neutral-700 leading-relaxed">
+                Most people in your situation either overpay tax every year — or pay for cover they don't actually need.
+                <strong className="text-neutral-950"> This check shows which side you're on.</strong>
+                The personalised plan below tells you exactly what to do about it.
+              </p>
+            </div>
+
+            {/* What you get — closes loop between answers and product */}
+            <div className="mt-3 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                What's in your personalised plan
+              </p>
+              <ul className="space-y-1 text-xs text-neutral-700">
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Your MTD Scope Verdict — Whether you are in scope, from when, and what it means for your specific income mix.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>MTD Software Comparison — HMRC-approved software options ranked for your situation.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Quarterly Update Calendar — Exact dates for all four quarterly submissions and your annual declaration.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Accountant Brief — MTD — Questions to take to your accountant about MTD compliance.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>MTD Penalty Risk Assessment — What HMRC can charge and how to avoid it.</span></li>
+              </ul>
+            </div>
+
             {/* CTA — GOAT Block 9 */}
             <button
               onClick={() => { setShowPopup(true); setPopupStep("intro"); }}
               className="mt-4 w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800">
-              Check my exact position →
+              Get My MTD Readiness Pack →
             </button>
             <p className="mt-2 text-center text-xs text-neutral-500">
-              £{effectiveTier} · One-time · No subscription
+              £{effectiveTier} · One-time · Built around your answers above
             </p>
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
           </div>

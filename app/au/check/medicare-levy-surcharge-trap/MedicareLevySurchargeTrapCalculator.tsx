@@ -617,13 +617,36 @@ export default function MedicareLevySurchargeTrapCalculator() {
                 ) : <p className="text-sm font-semibold text-emerald-700">✓ Saved — check your inbox.</p>}
               </div>
 
+              {/* Conversion line */}
+              <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  Most people in your situation either overpay tax every year — or pay for cover they don't actually need.
+                  <strong className="text-neutral-950"> This check shows which side you're on.</strong>
+                  The personalised plan below tells you exactly what to do about it.
+                </p>
+              </div>
+
+              {/* What you get */}
+              <div className="mb-3 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+                <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                  What's in your personalised plan
+                </p>
+                <ul className="space-y-1 text-xs text-neutral-700">
+                  <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Your exact MLS liability — calculated to the dollar</span></li>
+                  <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Cover timing strategy built around your income and family status</span></li>
+                  <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Cost vs tax comparison — hospital cover vs MLS for your income band</span></li>
+                  <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Threshold optimisation — strategies to reduce or eliminate your MLS</span></li>
+                  <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>3 accountant questions written for your exact situation</span></li>
+                </ul>
+              </div>
+
               {/* Single CTA — algorithm-recommended tier */}
               <button onClick={() => openPopup(verdict.tier)}
                 className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800">
                 {verdict.ctaLabel}
               </button>
               <p className="mt-2 text-center text-xs text-neutral-400">
-                ${verdict.tier} · One-time · No subscription
+                ${verdict.tier} · One-time · Built around your answers above
               </p>
 
               {/* Alt tier option */}

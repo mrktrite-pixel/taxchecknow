@@ -138,7 +138,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/feie-nomad-auditor",
     "api_endpoint": "/api/rules/feie-nomad-auditor",
-    "generated_at": "2026-04-21T00:51:46.282Z"
+    "generated_at": "2026-04-21T06:02:53.976Z"
 };
 
   return NextResponse.json(rules, {

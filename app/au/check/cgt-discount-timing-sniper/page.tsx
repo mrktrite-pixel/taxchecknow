@@ -425,9 +425,14 @@ export default function CgtDiscountTimingSniperPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           CGT Discount 2026: Did You Hold Long Enough for the 50% Discount?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          The 50% CGT discount applies to capital gains made by individuals and trusts on assets held for more than 12 months. For companies, the discount is not available — companies pay CGT at their corporate tax rate on the full gain. Superannuation funds receive a one-third discount (33.33%).
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1040,6 +1045,8 @@ export default function CgtDiscountTimingSniperPage() {
             <Link href="/au/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/au/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/cgt-discount-timing-sniper" className="font-mono text-xs hover:text-neutral-900">/api/rules/cgt-discount-timing-sniper</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

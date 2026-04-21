@@ -414,9 +414,14 @@ export default function DividendTrapPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           UK Dividend Tax 2026: Are You Paying 39.35% When You Should Pay 8.75%?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          The UK dividend tax allowance is £500 for 2024/25 and 2025/26 — down from £2,000 in 2022/23 and £1,000 in 2023/24. Dividends above this allowance are taxed at 8.75% (basic rate), 33.75% (higher rate), or 39.35% (additional rate).
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1024,6 +1029,8 @@ export default function DividendTrapPage() {
             <Link href="/uk/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/uk/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/dividend-trap" className="font-mono text-xs hover:text-neutral-900">/api/rules/dividend-trap</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

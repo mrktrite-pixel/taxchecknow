@@ -409,9 +409,14 @@ export default function FbtHiddenExposurePage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           FBT 2026: What Benefits Are Costing Your Business 47% Tax?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          Fringe benefits tax is charged at 47% on the taxable value of non-cash benefits provided to employees or their associates. FBT is paid by the employer — not the employee — and is separate from income tax. The FBT year runs from 1 April to 31 March, with the return and payment due by 21 May.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1013,6 +1018,8 @@ export default function FbtHiddenExposurePage() {
             <Link href="/au/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/au/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/fbt-hidden-exposure" className="font-mono text-xs hover:text-neutral-900">/api/rules/fbt-hidden-exposure</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

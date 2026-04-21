@@ -535,14 +535,37 @@ export default function FeieNomadAuditorCalculator() {
               )}
             </div>
 
+            {/* Conversion line — GOAT */}
+            <div className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+              <p className="text-sm text-neutral-700 leading-relaxed">
+                Most people in your situation either overpay tax every year — or pay for cover they don't actually need.
+                <strong className="text-neutral-950"> This check shows which side you're on.</strong>
+                The personalised plan below tells you exactly what to do about it.
+              </p>
+            </div>
+
+            {/* What you get — closes loop between answers and product */}
+            <div className="mt-3 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                What's in your personalised plan
+              </p>
+              <ul className="space-y-1 text-xs text-neutral-700">
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Your FEIE Eligibility Report — Whether you qualify, which test you meet, and your abode risk level.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>US Abode Risk Assessment — Your specific abode indicators and how the IRS would assess them.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>FEIE vs FTC Comparison — Which method saves more for your country and income level.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Day Count Calculator and Calendar — Track your days outside the US to confirm physical presence test.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>CPA Brief — FEIE — Questions for your CPA about FEIE compliance and optimisation.</span></li>
+              </ul>
+            </div>
+
             {/* CTA — GOAT Block 9 */}
             <button
               onClick={() => { setShowPopup(true); setPopupStep("intro"); }}
               className="mt-4 w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800">
-              Check my exact position →
+              Get My FEIE Eligibility Report →
             </button>
             <p className="mt-2 text-center text-xs text-neutral-500">
-              ${effectiveTier} · One-time · No subscription
+              ${effectiveTier} · One-time · Built around your answers above
             </p>
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
           </div>

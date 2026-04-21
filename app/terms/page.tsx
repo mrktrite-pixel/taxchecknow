@@ -1,72 +1,155 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Terms of Use | SuperTaxCheck",
-  description: "Terms and conditions for using SuperTaxCheck decision-support tools.",
+export const metadata: Metadata = {
+  title: "Terms of Service — TaxCheckNow",
+  description: "Terms of service for TaxCheckNow — tax position check tools and personalised reports.",
+  robots: { index: true, follow: true },
 };
 
-export default function TermsPage() {
+export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <nav className="border-b border-neutral-200 bg-white px-6 py-3.5">
+    <div className="min-h-screen bg-white">
+      <nav className="border-b border-neutral-200 px-6 py-4">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <Link href="/" className="font-serif text-lg font-bold text-neutral-950">SuperTaxCheck</Link>
-          <Link href="/" className="font-mono text-xs text-neutral-400 hover:text-neutral-700 transition">← Home</Link>
+          <Link href="/" className="font-serif text-lg font-bold text-neutral-950">TaxCheckNow</Link>
+          <span className="font-mono text-xs text-neutral-400">Last updated: April 2026</span>
         </div>
       </nav>
+
       <main className="mx-auto max-w-3xl px-6 py-12 space-y-8">
         <div>
-          <p className="font-mono text-xs uppercase tracking-widest text-neutral-400">Last updated: April 2026</p>
-          <h1 className="mt-2 font-serif text-4xl font-bold text-neutral-950">Terms of Use</h1>
+          <p className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-2">Legal</p>
+          <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">Terms of Service</h1>
+          <p className="text-sm text-neutral-500">Effective date: 1 April 2026 · Last updated: 21 April 2026</p>
         </div>
+
+        <p className="text-neutral-700 leading-relaxed">
+          By using TaxCheckNow (&quot;Service&quot;) at taxchecknow.com, you agree to these terms.
+          Please read them carefully. If you do not agree, do not use the Service.
+        </p>
 
         {[
           {
-            title: "General advice warning",
-            body: "The information on this website is general in nature and does not constitute personal financial, tax, or legal advice. SuperTaxCheck provides decision-support tools based on publicly available legislation. The output of our calculators is an estimate only. You should always engage a qualified SMSF specialist, tax agent, or financial adviser before making any decision regarding your superannuation, including the cost-base reset election.",
+            title: "1. What TaxCheckNow is",
+            items: [
+              "TaxCheckNow provides free tax position calculators and paid personalised tax reference documents.",
+              "Our tools help you understand your position relative to published tax rules from HMRC (UK), ATO (Australia), IRD (New Zealand), and IRS (USA).",
+              "TaxCheckNow is an information service. We are not a tax adviser, accountant, financial adviser, or law firm.",
+              "Nothing on this site or in our products constitutes tax, financial, or legal advice.",
+            ],
           },
           {
-            title: "Not a financial services provider",
-            body: "SuperTaxCheck does not hold an Australian Financial Services Licence (AFSL). We do not provide personal financial advice as defined under the Corporations Act 2001 (Cth). Our tools are decision-support aids based on publicly available legislation — specifically the Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act, enacted 10 March 2026.",
+            title: "2. Not professional advice",
+            items: [
+              "Our calculators produce estimates based on the information you provide and published authority guidance.",
+              "Results are indicative only. Your actual tax position depends on facts specific to your circumstances that our calculator cannot fully assess.",
+              "Always consult a qualified tax adviser or accountant before making financial decisions.",
+              "TaxCheckNow is not liable for any financial loss arising from reliance on our calculators or reports.",
+            ],
           },
           {
-            title: "Accuracy of information",
-            body: "We make every effort to ensure the information on this site reflects the enacted legislation as at 10 March 2026. However, regulations, ATO guidance, and administrative practice may change after publication. We last verified our content in April 2026. You should verify any time-sensitive information against current ATO guidance before acting.",
+            title: "3. Purchased products",
+            items: [
+              "Paid products are digital documents delivered by email and/or accessible via a link.",
+              "Products are personalised reference documents — not professional advice.",
+              "Delivery is by email within minutes of confirmed payment. If you do not receive your product within 1 hour, contact hello@taxchecknow.com.",
+              "Products are licensed for personal use only. You may not resell, redistribute, or publish our documents.",
+            ],
           },
           {
-            title: "Products and payment",
-            body: "Our paid products ($67 and $147) are document packs and decision-support guides. They are not financial advice, legal opinions, or tax agent services. Payments are processed securely via Stripe. All prices are in Australian dollars (AUD) and include GST where applicable.",
+            title: "4. Refund policy",
+            items: [
+              "Because our products are digital and personalised, we do not offer refunds once the document has been generated and delivered.",
+              "If you have not received your product due to a technical error, contact us within 48 hours and we will resolve it.",
+              "If the product contains a material error (factually incorrect information), we will provide a corrected version or refund at our discretion.",
+              "Contact: hello@taxchecknow.com",
+            ],
           },
           {
-            title: "Refund policy",
-            body: "Because our products are delivered digitally and immediately upon payment, we do not offer refunds once a document pack has been accessed. If you have a technical issue preventing access to your purchased documents, contact us at hello@supertaxcheck.com.au and we will resolve it promptly.",
+            title: "5. Accuracy and currency of information",
+            items: [
+              "We verify our content against published authority sources and display the last verified date on every page.",
+              "Tax rules change. We update our content regularly but cannot guarantee real-time accuracy.",
+              "Always verify thresholds and rates directly with HMRC, ATO, IRD, or IRS before taking action.",
+              "The last verified date on each page indicates when we last reviewed the content.",
+            ],
           },
           {
-            title: "Consumer guarantees",
-            body: "Nothing in these terms limits any rights you may have under the Australian Consumer Law (ACL), including consumer guarantees that cannot be excluded by contract.",
+            title: "6. Intellectual property",
+            items: [
+              "All content on TaxCheckNow — including calculators, reports, templates, and copy — is owned by TaxCheckNow.",
+              "You may not copy, reproduce, or publish our content without written permission.",
+              "Purchased documents are licensed for your personal use only.",
+            ],
           },
           {
-            title: "Intellectual property",
-            body: "All content on this website, including calculators, document templates, and written content, is the intellectual property of SuperTaxCheck. You may not reproduce, distribute, or resell our content without written permission.",
+            title: "7. Acceptable use",
+            items: [
+              "You must not use TaxCheckNow for unlawful purposes.",
+              "You must not attempt to reverse-engineer, scrape, or automate our calculators.",
+              "You must not submit false information to our calculators.",
+              "We reserve the right to refuse service to anyone at any time.",
+            ],
           },
           {
-            title: "Limitation of liability",
-            body: "To the maximum extent permitted by law, SuperTaxCheck is not liable for any loss or damage arising from your use of, or reliance on, information or tools provided on this site. This includes but is not limited to tax assessments, penalties, or missed elections resulting from reliance on our calculators.",
+            title: "8. Limitation of liability",
+            items: [
+              "To the maximum extent permitted by law, TaxCheckNow is not liable for any indirect, incidental, or consequential loss arising from use of the Service.",
+              "Our total liability to you for any claim is limited to the amount you paid for the relevant product.",
+              "Nothing in these terms limits liability for fraud, death, or personal injury caused by negligence.",
+            ],
           },
           {
-            title: "Governing law",
-            body: "These terms are governed by the laws of New South Wales, Australia. Any disputes are subject to the exclusive jurisdiction of the courts of New South Wales.",
+            title: "9. Payments",
+            items: [
+              "Payments are processed by Stripe. By purchasing, you agree to Stripe's terms of service.",
+              "Prices are displayed in the currency relevant to your market (AUD, GBP, USD, NZD).",
+              "All prices include applicable taxes where required.",
+            ],
           },
           {
-            title: "Contact",
-            body: "For terms enquiries: hello@supertaxcheck.com.au",
+            title: "10. Changes to these terms",
+            items: [
+              "We may update these terms from time to time.",
+              "Continued use of the Service after changes constitutes acceptance of the new terms.",
+              "Material changes will be communicated by email to registered users.",
+            ],
+          },
+          {
+            title: "11. Governing law",
+            items: [
+              "For Australian users: these terms are governed by the laws of Western Australia, Australia.",
+              "For UK users: these terms are governed by the laws of England and Wales.",
+              "For US users: these terms are governed by the laws of Delaware, USA.",
+              "For all users: you agree to the exclusive jurisdiction of the relevant courts.",
+            ],
+          },
+          {
+            title: "12. Contact",
+            items: [
+              "For any questions about these terms: hello@taxchecknow.com",
+              "For privacy matters: privacy@taxchecknow.com",
+            ],
           },
         ].map((section) => (
-          <div key={section.title}>
-            <h2 className="font-serif text-xl font-bold text-neutral-950">{section.title}</h2>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-600">{section.body}</p>
+          <div key={section.title} className="border-t border-neutral-100 pt-6">
+            <h2 className="font-serif text-xl font-bold text-neutral-950 mb-3">{section.title}</h2>
+            <ul className="space-y-2">
+              {section.items.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-neutral-700 leading-relaxed">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-400" />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
+
+        <div className="border-t border-neutral-200 pt-6 flex gap-6 text-xs text-neutral-500">
+          <Link href="/privacy" className="hover:text-neutral-950 transition">Privacy Policy</Link>
+          <Link href="/" className="hover:text-neutral-950 transition">← Back to TaxCheckNow</Link>
+        </div>
       </main>
     </div>
   );

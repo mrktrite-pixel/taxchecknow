@@ -421,9 +421,14 @@ export default function MedicareLevySurchargeTrapPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           Medicare Levy Surcharge 2026: Are You Paying Extra Tax Without Private Hospital Cover?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $93,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1037,6 +1042,8 @@ export default function MedicareLevySurchargeTrapPage() {
             <Link href="/au/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/au/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/medicare-levy-surcharge-trap" className="font-mono text-xs hover:text-neutral-900">/api/rules/medicare-levy-surcharge-trap</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

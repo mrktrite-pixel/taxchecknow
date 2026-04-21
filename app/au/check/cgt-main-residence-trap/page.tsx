@@ -449,9 +449,14 @@ export default function CgtMainResidenceTrapPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           CGT Main Residence 2026: Is Your Tax-Free Home Actually Taxable?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          The main residence exemption removes CGT on your home — but only if you meet the conditions. If you rented your home at any point, used it for business, or were absent for more than six years, part of your gain may be taxable. The exemption is proportional, not all-or-nothing.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1070,6 +1075,8 @@ export default function CgtMainResidenceTrapPage() {
             <Link href="/au/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/au/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/cgt-main-residence-trap" className="font-mono text-xs hover:text-neutral-900">/api/rules/cgt-main-residence-trap</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

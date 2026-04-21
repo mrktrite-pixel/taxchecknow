@@ -408,9 +408,14 @@ export default function SideHustleCheckerPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           Side Hustle Tax UK 2026: Does HMRC Already Know?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          From January 2026, digital platforms including eBay, Etsy, Airbnb, Fiverr, Vinted, and Uber are legally required to report your earnings to HMRC. This means HMRC receives your platform income data automatically — whether you have declared it or not.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1020,6 +1025,8 @@ export default function SideHustleCheckerPage() {
             <Link href="/uk/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/uk/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/side-hustle-checker" className="font-mono text-xs hover:text-neutral-900">/api/rules/side-hustle-checker</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

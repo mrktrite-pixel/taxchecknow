@@ -429,9 +429,14 @@ export default function Division7aLoanTrapPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           Division 7A 2026: Is Your Director Loan About to Become Taxable Income?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          Under Division 7A of ITAA 1936, if a private company lends money to a shareholder or their associate without a complying loan agreement, the loan is treated as an unfranked dividend — fully taxable at the shareholder's marginal rate. This applies even if the loan was never intended to be a dividend and even if the company never formally declared one.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1045,6 +1050,8 @@ export default function Division7aLoanTrapPage() {
             <Link href="/au/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/au/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/division-7a-loan-trap" className="font-mono text-xs hover:text-neutral-900">/api/rules/division-7a-loan-trap</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

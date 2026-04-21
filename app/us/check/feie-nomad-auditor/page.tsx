@@ -414,9 +414,14 @@ export default function FeieNomadAuditorPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           FEIE 2026: Do You Actually Qualify — or Is Your Abode Still in the US?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          The Foreign Earned Income Exclusion (FEIE) allows qualifying US citizens to exclude up to $126,500 of foreign earned income from US federal tax in 2026. To qualify, you must meet either the Physical Presence Test (330 full days outside the US in a 12-month period) or the Bona Fide Residence Test (genuine resident of a foreign country for a full calendar year).
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1038,6 +1043,8 @@ export default function FeieNomadAuditorPage() {
             <Link href="/us/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/us/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/feie-nomad-auditor" className="font-mono text-xs hover:text-neutral-900">/api/rules/feie-nomad-auditor</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

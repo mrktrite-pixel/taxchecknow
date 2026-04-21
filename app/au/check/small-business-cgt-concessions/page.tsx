@@ -419,9 +419,14 @@ export default function SmallBusinessCgtConcessionsPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           Small Business CGT 2026: Do You Qualify for the $500K Lifetime Exemption?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          Division 152 of ITAA 1997 provides four CGT concessions specifically for small businesses: the 15-year exemption (eliminates the gain entirely after 15 years), the 50% active asset reduction, the retirement exemption (up to $500,000 lifetime, tax-free), and the rollover (defer the gain for two years). These can be combined — potentially eliminating CGT entirely on a business sale.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1035,6 +1040,8 @@ export default function SmallBusinessCgtConcessionsPage() {
             <Link href="/au/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/au/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/small-business-cgt-concessions" className="font-mono text-xs hover:text-neutral-900">/api/rules/small-business-cgt-concessions</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

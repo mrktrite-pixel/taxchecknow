@@ -421,9 +421,14 @@ export default function GstRegistrationTrapPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           GST Registration 2026: Are You Required to Register Already?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          You must register for GST if your current or projected GST turnover meets or exceeds $75,000 in any 12-month period. Once you cross the threshold, you must register within 21 days. Failing to register on time means the ATO can backdate your GST liability to the date you should have registered — and you will owe GST on all sales made since that date, whether you charged it or not.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1036,6 +1041,8 @@ export default function GstRegistrationTrapPage() {
             <Link href="/au/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/au/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/gst-registration-trap" className="font-mono text-xs hover:text-neutral-900">/api/rules/gst-registration-trap</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

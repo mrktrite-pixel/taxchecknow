@@ -466,9 +466,14 @@ export default function WayfairNexusSniperPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           The 2026 Wayfair Nexus Sniper: Are You Already Non-Compliant?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          Following South Dakota v. Wayfair (2018), most US states enforce economic nexus based on $100,000 in gross sales or 200 transactions in the prior 12 months. In 2026, several states including Illinois have removed the transaction threshold — gross sales alone trigger nexus.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1091,6 +1096,8 @@ export default function WayfairNexusSniperPage() {
             <Link href="/us/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/us/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/wayfair-nexus-sniper" className="font-mono text-xs hover:text-neutral-900">/api/rules/wayfair-nexus-sniper</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

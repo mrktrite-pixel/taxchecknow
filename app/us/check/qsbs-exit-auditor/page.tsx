@@ -462,9 +462,14 @@ export default function QsbsExitAuditorPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           The 2026 QSBS Exit Auditor: Will Your $15M Exit Be Tax-Free?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          Under IRC Section 1202, Qualified Small Business Stock allows up to $15,000,000 in tax-free capital gains — or 10× your original investment, whichever is greater. To qualify, your stock must be issued by a C-Corporation, acquired at original issuance, held for at least 5 years, and the company must pass the active business test throughout the holding period.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1079,6 +1084,8 @@ export default function QsbsExitAuditorPage() {
             <Link href="/us/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/us/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/qsbs-exit-auditor" className="font-mono text-xs hover:text-neutral-900">/api/rules/qsbs-exit-auditor</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

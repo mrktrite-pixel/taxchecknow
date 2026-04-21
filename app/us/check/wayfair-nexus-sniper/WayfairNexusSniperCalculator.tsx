@@ -545,14 +545,37 @@ export default function WayfairNexusSniperCalculator() {
               )}
             </div>
 
+            {/* Conversion line — GOAT */}
+            <div className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+              <p className="text-sm text-neutral-700 leading-relaxed">
+                Most people in your situation either overpay tax every year — or pay for cover they don't actually need.
+                <strong className="text-neutral-950"> This check shows which side you're on.</strong>
+                The personalised plan below tells you exactly what to do about it.
+              </p>
+            </div>
+
+            {/* What you get — closes loop between answers and product */}
+            <div className="mt-3 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                What's in your personalised plan
+              </p>
+              <ul className="space-y-1 text-xs text-neutral-700">
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Your Nexus Exposure Report — Which states you have nexus in — and your estimated liability.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Big 5 State Playbooks — California, Texas, New York, Illinois, Pennsylvania — your highest-risk states.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>FBA Inventory Nexus Audit — Which Amazon fulfilment centres create nexus — and your registration priority.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Filing Sequence Roadmap — The order to register across states — minimise compliance cost and complexity.</span></li>
+                <li className="flex items-start gap-2"><span className="mt-0.5 text-emerald-600 shrink-0">✓</span><span>Your Accountant Brief — Print and take to your next meeting — nexus questions your CPA must answer.</span></li>
+              </ul>
+            </div>
+
             {/* CTA — GOAT Block 9 */}
             <button
               onClick={() => { setShowPopup(true); setPopupStep("intro"); }}
               className="mt-4 w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800">
-              Check my exact position →
+              Get My Nexus Heatmap Action Plan →
             </button>
             <p className="mt-2 text-center text-xs text-neutral-500">
-              ${effectiveTier} · One-time · No subscription
+              ${effectiveTier} · One-time · Built around your answers above
             </p>
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
           </div>

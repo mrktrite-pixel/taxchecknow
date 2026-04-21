@@ -404,9 +404,14 @@ export default function Section174AuditorPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           Section 174 2026: Is Your Engineering Spend Creating a Phantom Tax Bill?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          Since January 1, 2022, Section 174 requires all research and experimental (R&E) expenditures — including software development costs — to be amortized rather than expensed immediately. US-based R&D is amortized over 5 years. Foreign (offshore) R&D is amortized over 15 years.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1007,6 +1012,8 @@ export default function Section174AuditorPage() {
             <Link href="/us/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/us/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/section-174-auditor" className="font-mono text-xs hover:text-neutral-900">/api/rules/section-174-auditor</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>

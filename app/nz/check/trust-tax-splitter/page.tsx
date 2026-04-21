@@ -471,9 +471,14 @@ export default function TrustTaxSplitterPage() {
         </div>
 
         {/* H1 */}
-        <h1 className="mb-6 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
+        <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
           NZ Trust Tax 2026: Are You Paying 39% When You Don't Have To?
         </h1>
+
+        {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
+        <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
+          The default trustee tax rate in New Zealand is 39%. But many trusts are paying this rate unnecessarily. Trust income of $10,000 or less in a year is taxed at 33% under the de minimis rule. And income distributed to adult beneficiaries is taxed at their personal rate — which can be as low as 10.5%.
+        </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
@@ -1103,6 +1108,8 @@ export default function TrustTaxSplitterPage() {
             <Link href="/nz/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/nz/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
             <a href="/api/rules/trust-tax-splitter" className="font-mono text-xs hover:text-neutral-900">/api/rules/trust-tax-splitter</a>
+            <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
+            <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>
         </div>
       </footer>
