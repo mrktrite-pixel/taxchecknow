@@ -494,22 +494,6 @@ export default function MtdScorecardPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                What counts toward the MTD threshold
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Self-employment gross income</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Property gross rental income</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ All sources combined</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT PAYE employment income</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT dividends</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT pension income</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: HMRC — MTD ITSA · Finance Act 2021</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -526,32 +510,6 @@ export default function MtdScorecardPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    HMRC — Making Tax Digital for Income Tax ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    HMRC — MTD ITSA timeline and thresholds ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/mtd-scorecard" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -617,6 +575,28 @@ export default function MtdScorecardPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            What counts toward the MTD threshold
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ Self-employment gross income</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Property gross rental income</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ All sources combined</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT PAYE employment income</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT dividends</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT pension income</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC — MTD ITSA · Finance Act 2021</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

@@ -490,22 +490,6 @@ export default function CgtMainResidenceTrapPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                What makes your home exempt
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Main residence entire ownership period</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 6-year absence rule — no other home</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 50% CGT discount if held 12+ months</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if rented beyond 6-year rule</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if held in company or trust</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if home office deductions claimed on dedicated room</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: ATO — Main residence exemption · ITAA 1997 s.118-110</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -522,26 +506,6 @@ export default function CgtMainResidenceTrapPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    ATO — Main residence exemption ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/treating-former-home-as-main-residence" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    ATO — 6-year absence rule ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -607,6 +571,28 @@ export default function CgtMainResidenceTrapPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            What makes your home exempt
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ Main residence entire ownership period</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 6-year absence rule — no other home</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 50% CGT discount if held 12+ months</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT if rented beyond 6-year rule</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT if held in company or trust</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT if home office deductions claimed on dedicated room</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Main residence exemption · ITAA 1997 s.118-110</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

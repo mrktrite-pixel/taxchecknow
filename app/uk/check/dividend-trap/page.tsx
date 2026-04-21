@@ -455,22 +455,6 @@ export default function DividendTrapPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                Which dividend rate applies
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 8.75% if total income under £50,270</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 33.75% if total income £50,271-£125,140</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 39.35% if total income over £125,140</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT flat 8.75% for everyone</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT based on dividends alone</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Dividends sit on top of other income</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: HMRC — Tax on dividends · Income Tax Act 2007</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -487,26 +471,6 @@ export default function DividendTrapPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.gov.uk/tax-on-dividends" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    HMRC — Tax on dividends ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/dividend-trap" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -572,6 +536,28 @@ export default function DividendTrapPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            Which dividend rate applies
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ 8.75% if total income under £50,270</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 33.75% if total income £50,271-£125,140</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 39.35% if total income over £125,140</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT flat 8.75% for everyone</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT based on dividends alone</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Dividends sit on top of other income</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC — Tax on dividends · Income Tax Act 2007</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

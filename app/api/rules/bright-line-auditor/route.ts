@@ -188,7 +188,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nz/check/bright-line-auditor",
     "api_endpoint": "/api/rules/bright-line-auditor",
-    "generated_at": "2026-04-21T00:03:24.987Z"
+    "generated_at": "2026-04-21T00:51:55.553Z"
 };
 
   return NextResponse.json(rules, {

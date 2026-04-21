@@ -445,21 +445,6 @@ export default function Section174AuditorPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                Section 174 amortization rates
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ US domestic: 5 years (10% year 1)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Foreign/offshore: 15 years (3.33% year 1)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Software development included</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT immediate expensing — removed 2022</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT choice — mandatory amortization</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: IRS — IRC Section 174 · TCJA 2017</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -476,26 +461,6 @@ export default function Section174AuditorPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRS — Section 174 research and experimental expenditures ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/section-174-auditor" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -561,6 +526,27 @@ export default function Section174AuditorPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            Section 174 amortization rates
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ US domestic: 5 years (10% year 1)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Foreign/offshore: 15 years (3.33% year 1)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Software development included</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT immediate expensing — removed 2022</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT choice — mandatory amortization</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRS — IRC Section 174 · TCJA 2017</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

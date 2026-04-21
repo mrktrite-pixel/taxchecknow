@@ -455,22 +455,6 @@ export default function InstantAssetWriteOffPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                What qualifies for instant write-off
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Asset cost under $20,000 per asset</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Turnover under $10M aggregate</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Installed and ready for use before 30 June</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if only ordered or paid for</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if delivered after 30 June</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT trading stock or capital works</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: ATO — Instant asset write-off · ITAA 1997 s.328-180</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -487,20 +471,6 @@ export default function InstantAssetWriteOffPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/depreciation-and-capital-expenses-and-allowances/simpler-depreciation-for-small-business/instant-asset-write-off" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    ATO — Instant asset write-off ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -566,6 +536,28 @@ export default function InstantAssetWriteOffPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            What qualifies for instant write-off
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ Asset cost under $20,000 per asset</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Turnover under $10M aggregate</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Installed and ready for use before 30 June</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT if only ordered or paid for</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT if delivered after 30 June</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT trading stock or capital works</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Instant asset write-off · ITAA 1997 s.328-180</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

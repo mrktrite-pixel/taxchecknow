@@ -503,24 +503,6 @@ export default function QsbsExitAuditorPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                QSBS — all four tests required
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ C-Corporation entity</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Original issuance only</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 5+ year hold</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Active business ≥80%</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ S-Corps and LLCs</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Secondary market purchases</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Service businesses (law, finance, consulting)</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Companies with over $50M assets at issuance</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: IRS — IRC Section 1202</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -537,32 +519,6 @@ export default function QsbsExitAuditorPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRS — Qualified Small Business Stock (Section 1202) ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.irs.gov/publications/p550" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRS — Publication 550: Investment Income and Expenses ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/qsbs-exit-auditor" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -628,6 +584,30 @@ export default function QsbsExitAuditorPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            QSBS — all four tests required
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ C-Corporation entity</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Original issuance only</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 5+ year hold</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Active business ≥80%</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ S-Corps and LLCs</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Secondary market purchases</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Service businesses (law, finance, consulting)</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Companies with over $50M assets at issuance</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRS — IRC Section 1202</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

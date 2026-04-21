@@ -523,22 +523,6 @@ export default function InvestmentBoostAuditorPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                What qualifies for Investment Boost
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ New business assets (machinery, equipment)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ New commercial and industrial buildings</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ New to NZ imported assets</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT residential rental buildings</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT second-hand NZ assets</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT assets available before 22 May 2025</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: IRD — Investment Boost · Income Tax Act 2007 s EE 31B</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -555,32 +539,6 @@ export default function InvestmentBoostAuditorPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRD — Investment Boost ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ird.govt.nz/forms-and-guides/ir10" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRD — IR10 Form Guide ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/investment-boost-auditor" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -646,6 +604,28 @@ export default function InvestmentBoostAuditorPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            What qualifies for Investment Boost
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ New business assets (machinery, equipment)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ New commercial and industrial buildings</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ New to NZ imported assets</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT residential rental buildings</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT second-hand NZ assets</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT assets available before 22 May 2025</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRD — Investment Boost · Income Tax Act 2007 s EE 31B</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

@@ -455,22 +455,6 @@ export default function FeieNomadAuditorPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                FEIE — the three requirements
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 330 days abroad (or bona fide resident)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Foreign tax home</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ No US abode</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT day count alone</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT just having a foreign address</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic for all Americans abroad</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: IRS — IRC Section 911 · Publication 54</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -487,32 +471,6 @@ export default function FeieNomadAuditorPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRS — Publication 54: Tax Guide for US Citizens Abroad ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRS — Foreign Earned Income Exclusion ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/feie-nomad-auditor" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -578,6 +536,28 @@ export default function FeieNomadAuditorPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            FEIE — the three requirements
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ 330 days abroad (or bona fide resident)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Foreign tax home</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ No US abode</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT day count alone</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT just having a foreign address</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic for all Americans abroad</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRS — IRC Section 911 · Publication 54</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

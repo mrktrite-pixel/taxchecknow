@@ -259,22 +259,6 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                ${config.sidebarMathsTitle}
-              </p>
-              ${config.sidebarMathsIncludes.map(item =>
-                `<p className="mb-1 text-xs text-neutral-800">✓ ${item}</p>`
-              ).join("\n              ")}
-              ${config.sidebarMathsExcludes.length > 0 ? `
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              ${config.sidebarMathsExcludes.map(item =>
-                `<p className="mb-1 text-xs text-neutral-800">✗ ${item}</p>`
-              ).join("\n              ")}` : ""}
-              ${config.sidebarMathsNote ? `<p className="mt-2 text-[10px] text-neutral-500">${config.sidebarMathsNote}</p>` : ""}
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -291,20 +275,6 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                ${config.sources.map(s => `
-                <li>
-                  <a href="${s.url}" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    ${s.title} ↗
-                  </a>
-                </li>`).join("")}
-              </ul>
             </div>
 
           </aside>
@@ -343,6 +313,28 @@ export default function ${calculatorName.replace("Calculator", "")}Page() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            ${config.sidebarMathsTitle}
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              ${config.sidebarMathsIncludes.map(item =>
+                `<p className="mb-1 text-xs text-neutral-800">✓ ${item}</p>`
+              ).join("\n              ")}
+            </div>
+            ${config.sidebarMathsExcludes.length > 0 ? `
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              ${config.sidebarMathsExcludes.map(item =>
+                `<p className="mb-1 text-xs text-neutral-800">✗ ${item}</p>`
+              ).join("\n              ")}
+            </div>` : ""}
+          </div>
+          ${config.sidebarMathsNote ? `<p className="mt-3 text-[10px] text-neutral-500">${config.sidebarMathsNote}</p>` : ""}
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

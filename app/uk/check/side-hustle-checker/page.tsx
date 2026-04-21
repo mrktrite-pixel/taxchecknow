@@ -449,22 +449,6 @@ export default function SideHustleCheckerPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                The trading allowance — what it covers
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ All trading income from all sources combined</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Platform income (Etsy, eBay, Fiverr etc.)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Gross — before any expenses</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT per platform — total combined</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT profit — gross income</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT employment income</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: HMRC — Trading Allowance · ITTOIA 2005</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -481,32 +465,6 @@ export default function SideHustleCheckerPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    HMRC — Trading Allowance ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.gov.uk/guidance/digital-platform-reporting" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    HMRC — Digital platform reporting ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/side-hustle-checker" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -572,6 +530,28 @@ export default function SideHustleCheckerPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The trading allowance — what it covers
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ All trading income from all sources combined</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Platform income (Etsy, eBay, Fiverr etc.)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gross — before any expenses</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT per platform — total combined</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT profit — gross income</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT employment income</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC — Trading Allowance · ITTOIA 2005</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

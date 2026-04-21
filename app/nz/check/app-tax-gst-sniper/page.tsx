@@ -506,21 +506,6 @@ export default function AppTaxGstSniperPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                What App Tax means for you
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 15% GST charged by platform always</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 8.5% flat-rate credit if not registered</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Full 15% recovery on costs if registered</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT safe just because under $60k</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT equivalent — 8.5% is NOT 15%</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: IRD — GST marketplace rules · GST Act 1985</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -537,32 +522,6 @@ export default function AppTaxGstSniperPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRD — GST for marketplace sellers ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers/flat-rate-credit" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRD — Flat-rate credit ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/app-tax-gst-sniper" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -628,6 +587,27 @@ export default function AppTaxGstSniperPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            What App Tax means for you
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ 15% GST charged by platform always</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 8.5% flat-rate credit if not registered</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Full 15% recovery on costs if registered</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT safe just because under $60k</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT equivalent — 8.5% is NOT 15%</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRD — GST marketplace rules · GST Act 1985</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

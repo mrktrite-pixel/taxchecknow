@@ -130,7 +130,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/instant-asset-write-off",
     "api_endpoint": "/api/rules/instant-asset-write-off",
-    "generated_at": "2026-04-21T00:03:51.044Z"
+    "generated_at": "2026-04-21T00:52:21.805Z"
 };
 
   return NextResponse.json(rules, {

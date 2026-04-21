@@ -450,23 +450,6 @@ export default function FbtHiddenExposurePage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                What triggers FBT
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Company car with private use</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Entertainment and meals with employees</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Loans below benchmark rate</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Non-cash benefits to employees</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT minor benefits under $300 — infrequent</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT work-related portable devices</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT exempt EVs under LCT threshold</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: ATO — FBT · FBTAA 1986</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -483,20 +466,6 @@ export default function FbtHiddenExposurePage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    ATO — Fringe benefits tax ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -562,6 +531,29 @@ export default function FbtHiddenExposurePage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            What triggers FBT
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ Company car with private use</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Entertainment and meals with employees</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Loans below benchmark rate</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Non-cash benefits to employees</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT minor benefits under $300 — infrequent</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT work-related portable devices</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT exempt EVs under LCT threshold</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — FBT · FBTAA 1986</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

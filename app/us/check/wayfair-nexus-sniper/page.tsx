@@ -507,24 +507,6 @@ export default function WayfairNexusSniperPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                What counts toward nexus threshold
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Direct website sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Amazon marketplace sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Etsy / Walmart sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Exempt product sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ FBA states: all sales from $1</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT just taxable sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT just direct sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT safe if marketplace collects</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: South Dakota v. Wayfair (2018) · Sales Tax Institute 2026</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -541,38 +523,6 @@ export default function WayfairNexusSniperPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Sales Tax Institute — Nexus State-by-State Guide 2026 ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.irs.gov/businesses/small-businesses-self-employed/state-and-local-taxes" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRS — State and Local Taxes ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.supremecourt.gov/opinions/17pdf/17-494_j4el.pdf" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Supreme Court — South Dakota v. Wayfair Inc. ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/wayfair-nexus-sniper" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -638,6 +588,30 @@ export default function WayfairNexusSniperPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            What counts toward nexus threshold
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ Direct website sales</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Amazon marketplace sales</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Etsy / Walmart sales</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Exempt product sales</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ FBA states: all sales from $1</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT just taxable sales</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT just direct sales</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT safe if marketplace collects</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: South Dakota v. Wayfair (2018) · Sales Tax Institute 2026</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

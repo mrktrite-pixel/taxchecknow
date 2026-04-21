@@ -512,22 +512,6 @@ export default function TrustTaxSplitterPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                Trust tax by distribution strategy
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Adult beneficiary (16+) at personal rate</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ De minimis income under $10,000 at 33%</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Company structure at 28%</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT minor under 16 — still 39%</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT backdated distributions</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT undocumented arrangements</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: IRD — Trust income · Income Tax Act 2007</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -544,32 +528,6 @@ export default function TrustTaxSplitterPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRD — Trust and estate income ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ird.govt.nz/income-tax/income-tax-for-individuals/types-of-individual-income/trust-income" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRD — Minor beneficiary rule ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/trust-tax-splitter" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -635,6 +593,28 @@ export default function TrustTaxSplitterPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            Trust tax by distribution strategy
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ Adult beneficiary (16+) at personal rate</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ De minimis income under $10,000 at 33%</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Company structure at 28%</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT minor under 16 — still 39%</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT backdated distributions</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT undocumented arrangements</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRD — Trust income · Income Tax Act 2007</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

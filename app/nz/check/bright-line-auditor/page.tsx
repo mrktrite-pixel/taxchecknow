@@ -508,21 +508,6 @@ export default function BrightLineAuditorPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                What starts the bright-line clock
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Title registration date (start)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Binding sale agreement (end)</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT purchase agreement date</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT settlement date</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT possession date</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: IRD — Bright-line property rule · Income Tax Act 2007</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -539,32 +524,6 @@ export default function BrightLineAuditorPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRD — Bright-line property rule ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ird.govt.nz/property/buying-and-selling/bright-line-test/main-home" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRD — Main home exclusion ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/bright-line-auditor" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -630,6 +589,27 @@ export default function BrightLineAuditorPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            What starts the bright-line clock
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ Title registration date (start)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Binding sale agreement (end)</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT purchase agreement date</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT settlement date</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT possession date</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRD — Bright-line property rule · Income Tax Act 2007</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

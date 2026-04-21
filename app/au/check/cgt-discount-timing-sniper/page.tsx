@@ -466,21 +466,6 @@ export default function CgtDiscountTimingSniperPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                What qualifies for the 50% discount
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Individuals and trusts — held over 12 months</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ From purchase contract date to sale contract date</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT company-held assets — zero discount</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT assets held under 12 months</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT applied before capital losses are offset</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: ATO — CGT discount · ITAA 1997 s.115-10</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -497,20 +482,6 @@ export default function CgtDiscountTimingSniperPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-discount" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    ATO — CGT discount ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -576,6 +547,27 @@ export default function CgtDiscountTimingSniperPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            What qualifies for the 50% discount
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ Individuals and trusts — held over 12 months</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ From purchase contract date to sale contract date</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT company-held assets — zero discount</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT assets held under 12 months</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT applied before capital losses are offset</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — CGT discount · ITAA 1997 s.115-10</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

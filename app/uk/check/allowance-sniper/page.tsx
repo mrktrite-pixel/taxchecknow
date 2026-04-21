@@ -469,22 +469,6 @@ export default function AllowanceSniperPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                The 60% trap calculation
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 40% income tax on taper income</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Plus losing £1 allowance per £2 income</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ = 60% effective marginal rate</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT shown on your tax code</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT visible on P60</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT explained by HMRC proactively</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: HMRC · Income Tax Act 2007 s.35</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -501,26 +485,6 @@ export default function AllowanceSniperPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    HMRC — Personal Allowance taper ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/allowance-sniper" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -586,6 +550,28 @@ export default function AllowanceSniperPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            The 60% trap calculation
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ 40% income tax on taper income</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Plus losing £1 allowance per £2 income</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ = 60% effective marginal rate</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT shown on your tax code</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT visible on P60</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT explained by HMRC proactively</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC · Income Tax Act 2007 s.35</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">

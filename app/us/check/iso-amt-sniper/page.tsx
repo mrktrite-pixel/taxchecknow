@@ -507,22 +507,6 @@ export default function IsoAmtSniperPage() {
               </dl>
             </div>
 
-            {/* Maths panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-                AMT is triggered at exercise
-              </p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Spread (FMV − strike) × shares = AMT income</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Tax owed in April of exercise year</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ No liquidity required to owe AMT</p>
-              
-              <p className="mb-1 mt-2 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ AMT is NOT triggered at sale</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ QSBS stock is separate from ISO</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Regular tax basis ≠ AMT basis</p>
-              <p className="mt-2 text-[10px] text-neutral-500">Source: IRS Topic 427 · IRC Section 56(b)(3) · Form 6251</p>
-            </div>
-
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
@@ -539,38 +523,6 @@ export default function IsoAmtSniperPage() {
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
-            </div>
-
-            {/* Sources panel */}
-            <div className="border border-blue-200 bg-blue-50 p-4">
-              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">Sources</p>
-              <ul className="space-y-1.5 text-xs">
-                
-                <li>
-                  <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRS — Incentive Stock Options ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRS — Alternative Minimum Tax ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.irs.gov/forms-pubs/about-form-6251" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    IRS — Form 6251 Instructions ↗
-                  </a>
-                </li>
-                <li>
-                  <a href="/api/rules/iso-amt-sniper" target="_blank" rel="noopener noreferrer"
-                    className="text-blue-700 hover:underline">
-                    Machine-readable JSON rules ↗
-                  </a>
-                </li>
-              </ul>
             </div>
 
           </aside>
@@ -636,6 +588,28 @@ export default function IsoAmtSniperPage() {
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
+
+        {/* Maths panel — moved from sidebar, full width in main content */}
+        <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
+            AMT is triggered at exercise
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs text-neutral-800">✓ Spread (FMV − strike) × shares = AMT income</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Tax owed in April of exercise year</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ No liquidity required to owe AMT</p>
+            </div>
+            
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ AMT is NOT triggered at sale</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ QSBS stock is separate from ISO</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Regular tax basis ≠ AMT basis</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRS Topic 427 · IRC Section 56(b)(3) · Form 6251</p>
+        </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
