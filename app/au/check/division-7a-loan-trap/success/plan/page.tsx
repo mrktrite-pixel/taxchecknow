@@ -162,7 +162,6 @@ export default function SuccessPlan() {
         restructureOptions: "Your personalised restructureOptions is being prepared — please refresh in a moment.",
         frankingStrategy: "Your personalised frankingStrategy is being prepared — please refresh in a moment.",
         multiYearPlan: "Your personalised multiYearPlan is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before 30 June 2026?",

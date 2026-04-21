@@ -71,7 +71,6 @@ interface Assessment {
   liquidityRisk: string;
   creditRecovery: string;
   dualBasis: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -165,8 +164,6 @@ export default function SuccessPlan() {
         liquidityRisk: "Your personalised liquidityRisk is being prepared — please refresh in a moment.",
         creditRecovery: "Your personalised creditRecovery is being prepared — please refresh in a moment.",
         dualBasis: "Your personalised dualBasis is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRS position based on my answers?",
           "What is the single most important action I should take before December 31, 2026?",

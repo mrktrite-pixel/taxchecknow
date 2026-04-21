@@ -162,7 +162,6 @@ export default function SuccessPlan() {
         retroBASPlan: "Your personalised retroBASPlan is being prepared — please refresh in a moment.",
         inputTaxCredits: "Your personalised inputTaxCredits is being prepared — please refresh in a moment.",
         ongoingSystem: "Your personalised ongoingSystem is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before 28 July 2026?",

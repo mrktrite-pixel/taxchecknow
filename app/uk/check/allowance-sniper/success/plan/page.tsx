@@ -70,7 +70,6 @@ interface Assessment {
   extraTax: string;
   pensionNeeded: string;
   salaryStrategy: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -159,8 +158,6 @@ export default function SuccessPlan() {
         extraTax: "Your personalised extraTax is being prepared — please refresh in a moment.",
         pensionNeeded: "Your personalised pensionNeeded is being prepared — please refresh in a moment.",
         salaryStrategy: "Your personalised salaryStrategy is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
           "What is the single most important action I should take before 5 April 2027?",

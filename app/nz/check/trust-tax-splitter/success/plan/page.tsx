@@ -71,7 +71,6 @@ interface Assessment {
   distributionOpportunity: string;
   companyComparison: string;
   imputationCredits: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -165,8 +164,6 @@ export default function SuccessPlan() {
         distributionOpportunity: "Your personalised distributionOpportunity is being prepared — please refresh in a moment.",
         companyComparison: "Your personalised companyComparison is being prepared — please refresh in a moment.",
         imputationCredits: "Your personalised imputationCredits is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRD position based on my answers?",
           "What is the single most important action I should take before 31 March 2027?",

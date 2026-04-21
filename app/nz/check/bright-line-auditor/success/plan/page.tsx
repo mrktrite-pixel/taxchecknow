@@ -71,7 +71,6 @@ interface Assessment {
   mainHomeRisk: string;
   transferRisk: string;
   rolloverEligibility: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -165,8 +164,6 @@ export default function SuccessPlan() {
         mainHomeRisk: "Your personalised mainHomeRisk is being prepared — please refresh in a moment.",
         transferRisk: "Your personalised transferRisk is being prepared — please refresh in a moment.",
         rolloverEligibility: "Your personalised rolloverEligibility is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRD position based on my answers?",
           "What is the single most important action I should take before 31 March 2027?",

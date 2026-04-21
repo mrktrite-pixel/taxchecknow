@@ -70,7 +70,6 @@ interface Assessment {
   fixRequired: string;
   bridgingOption: string;
   migrationOption: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -159,8 +158,6 @@ export default function SuccessPlan() {
         fixRequired: "Your personalised fixRequired is being prepared — please refresh in a moment.",
         bridgingOption: "Your personalised bridgingOption is being prepared — please refresh in a moment.",
         migrationOption: "Your personalised migrationOption is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
           "What is the single most important action I should take before 7 August 2026?",

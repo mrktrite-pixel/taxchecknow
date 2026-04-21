@@ -70,7 +70,6 @@ interface Assessment {
   taxBill: string;
   pensionOpportunity: string;
   spousalStrategy: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -161,8 +160,6 @@ export default function SuccessPlan() {
         taxBill: "Your personalised taxBill is being prepared — please refresh in a moment.",
         pensionOpportunity: "Your personalised pensionOpportunity is being prepared — please refresh in a moment.",
         spousalStrategy: "Your personalised spousalStrategy is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
           "What is the single most important action I should take before 31 January 2027?",

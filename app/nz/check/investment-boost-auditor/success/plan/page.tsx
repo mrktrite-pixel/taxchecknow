@@ -71,7 +71,6 @@ interface Assessment {
   changeOfUseRisk: string;
   stageClaimOpportunity: string;
   disposalRecovery: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -165,8 +164,6 @@ export default function SuccessPlan() {
         changeOfUseRisk: "Your personalised changeOfUseRisk is being prepared — please refresh in a moment.",
         stageClaimOpportunity: "Your personalised stageClaimOpportunity is being prepared — please refresh in a moment.",
         disposalRecovery: "Your personalised disposalRecovery is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRD position based on my answers?",
           "What is the single most important action I should take before 7 July 2026?",

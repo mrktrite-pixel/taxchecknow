@@ -71,7 +71,6 @@ interface Assessment {
   taxSaving: string;
   stackingOpportunity: string;
   entityRisk: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -165,8 +164,6 @@ export default function SuccessPlan() {
         taxSaving: "Your personalised taxSaving is being prepared — please refresh in a moment.",
         stackingOpportunity: "Your personalised stackingOpportunity is being prepared — please refresh in a moment.",
         entityRisk: "Your personalised entityRisk is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRS position based on my answers?",
           "What is the single most important action I should take before April 15, 2026?",

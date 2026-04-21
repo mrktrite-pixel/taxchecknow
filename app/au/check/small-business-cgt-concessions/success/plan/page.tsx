@@ -162,7 +162,6 @@ export default function SuccessPlan() {
         retirementExemptionPlan: "Your personalised retirementExemptionPlan is being prepared — please refresh in a moment.",
         ageTiming: "Your personalised ageTiming is being prepared — please refresh in a moment.",
         entityStructure: "Your personalised entityStructure is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before 31 October 2026?",

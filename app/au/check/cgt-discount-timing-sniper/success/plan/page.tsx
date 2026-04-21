@@ -162,7 +162,6 @@ export default function SuccessPlan() {
         lossOffsetOpportunity: "Your personalised lossOffsetOpportunity is being prepared — please refresh in a moment.",
         entityOptimisation: "Your personalised entityOptimisation is being prepared — please refresh in a moment.",
         exitSequence: "Your personalised exitSequence is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before 30 June 2026?",

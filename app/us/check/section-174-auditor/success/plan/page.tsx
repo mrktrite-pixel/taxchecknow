@@ -70,7 +70,6 @@ interface Assessment {
   phantomIncome: string;
   reclassOpportunity: string;
   priorYearRisk: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -161,8 +160,6 @@ export default function SuccessPlan() {
         phantomIncome: "Your personalised phantomIncome is being prepared — please refresh in a moment.",
         reclassOpportunity: "Your personalised reclassOpportunity is being prepared — please refresh in a moment.",
         priorYearRisk: "Your personalised priorYearRisk is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRS position based on my answers?",
           "What is the single most important action I should take before April 15, 2026?",

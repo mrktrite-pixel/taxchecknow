@@ -71,7 +71,6 @@ interface Assessment {
   exclusionAmount: string;
   housingExclusion: string;
   multiYearPlan: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -163,8 +162,6 @@ export default function SuccessPlan() {
         exclusionAmount: "Your personalised exclusionAmount is being prepared — please refresh in a moment.",
         housingExclusion: "Your personalised housingExclusion is being prepared — please refresh in a moment.",
         multiYearPlan: "Your personalised multiYearPlan is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRS position based on my answers?",
           "What is the single most important action I should take before June 15, 2027?",

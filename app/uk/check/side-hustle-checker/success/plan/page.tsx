@@ -70,7 +70,6 @@ interface Assessment {
   taxExposure: string;
   priorYearsRisk: string;
   disclosureOption: string;
-  actions: string;
   weekPlan: string;
   accountantQuestions: string[];
   actions: Action[];
@@ -161,8 +160,6 @@ export default function SuccessPlan() {
         taxExposure: "Your personalised taxExposure is being prepared — please refresh in a moment.",
         priorYearsRisk: "Your personalised priorYearsRisk is being prepared — please refresh in a moment.",
         disclosureOption: "Your personalised disclosureOption is being prepared — please refresh in a moment.",
-        actions: "Your personalised actions is being prepared — please refresh in a moment.",
-        weekPlan: "Your personalised weekPlan is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
           "What is the single most important action I should take before 5 October 2026?",
