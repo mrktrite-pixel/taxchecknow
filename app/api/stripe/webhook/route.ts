@@ -108,7 +108,7 @@ function getSupabase() {
 
 // ── GENERATE + STORE ASSESSMENT ──────────────────────────────────────────────
 async function generateAndStoreAssessment(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   stripeSessionId: string,
   decisionSessionId: string,
   productKey: string,
@@ -170,7 +170,7 @@ async function generateAndStoreAssessment(
 
 // ── QUEUE REMINDER EMAILS ────────────────────────────────────────────────────
 async function queueReminders(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   stripeSessionId: string,
   productKey: string,
   customerEmail: string,
