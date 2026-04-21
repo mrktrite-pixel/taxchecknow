@@ -484,13 +484,11 @@ export default function SmallBusinessCgtConcessionsPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised small business CGT concessions eligibility check — active asset test, turnover test, and retirement exemption analysis.</p>
               <div className="space-y-2">
                 <a href="#calculator"
-                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                  className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition cursor-pointer">
+                  className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · Small Business CGT Eligibility Check
                 </a>
                 <a href="#calculator"
-                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                  className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition cursor-pointer">
+                  className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Small Business Exit Tax Strategy
                 </a>
               </div>

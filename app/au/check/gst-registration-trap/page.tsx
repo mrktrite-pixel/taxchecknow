@@ -485,13 +485,11 @@ export default function GstRegistrationTrapPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised GST registration check — threshold analysis, backdating risk assessment, and registration strategy.</p>
               <div className="space-y-2">
                 <a href="#calculator"
-                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                  className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition cursor-pointer">
+                  className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · GST Registration Fix Plan
                 </a>
                 <a href="#calculator"
-                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                  className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition cursor-pointer">
+                  className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · GST Compliance System
                 </a>
               </div>

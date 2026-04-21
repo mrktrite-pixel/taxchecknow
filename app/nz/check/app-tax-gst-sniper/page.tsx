@@ -528,13 +528,11 @@ export default function AppTaxGstSniperPage() {
               <p className="mb-3 text-sm text-neutral-300">A personalised GST decision built around your platform income, your expenses, and your break-even point — not a generic GST guide.</p>
               <div className="space-y-2">
                 <a href="#calculator"
-                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                  className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition cursor-pointer">
+                  className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
                   $67 · GST Registration Logic Pack
                 </a>
                 <a href="#calculator"
-                  onClick={(e) => { e.preventDefault(); document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                  className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition cursor-pointer">
+                  className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
                   $147 · Mixed-Use GST Audit
                 </a>
               </div>
