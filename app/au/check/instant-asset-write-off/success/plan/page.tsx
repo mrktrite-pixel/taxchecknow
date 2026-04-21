@@ -64,18 +64,10 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  status: string;
-  eligible: string;
-  immediateDeduction: string;
-  taxSaving: string;
-  multiYearPlan: string;
-  taxTimingStrategy: string;
-  depreciationMethods: string;
-  accountantQuestions: string[];
-  actions: Action[];
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & {
+  accountantQuestions?: string[];
+  actions?: Action[];
+};
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -129,16 +121,24 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const asset_cost = sessionStorage.getItem("instant-asset-write-off_asset_cost") || "15000";
-      const turnover = sessionStorage.getItem("instant-asset-write-off_turnover") || "2500000";
-      const ready_june30 = sessionStorage.getItem("instant-asset-write-off_ready_june30") || "true";
+      const asset_cost = sessionStorage.getItem("instant-asset-write-off_asset_cost") || "under_20k";
+      const business_use = sessionStorage.getItem("instant-asset-write-off_business_use") || "100";
+      const readiness_date = sessionStorage.getItem("instant-asset-write-off_readiness_date") || "before_eofy";
+      const cliff_risk = sessionStorage.getItem("instant-asset-write-off_cliff_risk") || "false";
+      const deduction_amount = sessionStorage.getItem("instant-asset-write-off_deduction_amount") || "15000";
+      const status = sessionStorage.getItem("instant-asset-write-off_status") || "ELIGIBLE";
+      const tier = sessionStorage.getItem("instant-asset-write-off_tier") || "67";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
         "asset_cost": asset_cost,
-        "turnover": turnover,
-        "ready_june30": ready_june30,
-      }).some(v => v && v !== "15000");
+        "business_use": business_use,
+        "readiness_date": readiness_date,
+        "cliff_risk": cliff_risk,
+        "deduction_amount": deduction_amount,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "under_20k");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -150,11 +150,15 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "Asset cost": asset_cost,
-        "Annual turnover": turnover,
-        "Ready by 30 June": ready_june30,
+        "Asset cost band": asset_cost,
+        "Business use percentage": business_use,
+        "Installation readiness": readiness_date,
+        "Deadline cliff risk": cliff_risk,
+        "Estimated deduction": deduction_amount,
+        "IAWO verdict status": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","eligible","immediateDeduction","taxSaving","multiYearPlan","taxTimingStrategy","depreciationMethods"],
+          fields: ["iawoStatus","eligibilityConfirmation","deductionCalculation","installReadyRequirement","supplierTimingRisk","gstTreatment","cliffExposure","multiAssetSequencing","poolInteraction","fallbackDepreciationStrategy","buyNowVsDeferAnalysis","carLimitCheck"],
         }),
       });
       const data = await res.json();
@@ -164,20 +168,25 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        eligible: "Your personalised eligible is being prepared — please refresh in a moment.",
-        immediateDeduction: "Your personalised immediateDeduction is being prepared — please refresh in a moment.",
-        taxSaving: "Your personalised taxSaving is being prepared — please refresh in a moment.",
-        multiYearPlan: "Your personalised multiYearPlan is being prepared — please refresh in a moment.",
-        taxTimingStrategy: "Your personalised taxTimingStrategy is being prepared — please refresh in a moment.",
-        depreciationMethods: "Your personalised depreciationMethods is being prepared — please refresh in a moment.",
+        iawoStatus: "Your personalised iawoStatus is being prepared — please refresh in a moment.",
+        eligibilityConfirmation: "Your personalised eligibilityConfirmation is being prepared — please refresh in a moment.",
+        deductionCalculation: "Your personalised deductionCalculation is being prepared — please refresh in a moment.",
+        installReadyRequirement: "Your personalised installReadyRequirement is being prepared — please refresh in a moment.",
+        supplierTimingRisk: "Your personalised supplierTimingRisk is being prepared — please refresh in a moment.",
+        gstTreatment: "Your personalised gstTreatment is being prepared — please refresh in a moment.",
+        cliffExposure: "Your personalised cliffExposure is being prepared — please refresh in a moment.",
+        multiAssetSequencing: "Your personalised multiAssetSequencing is being prepared — please refresh in a moment.",
+        poolInteraction: "Your personalised poolInteraction is being prepared — please refresh in a moment.",
+        fallbackDepreciationStrategy: "Your personalised fallbackDepreciationStrategy is being prepared — please refresh in a moment.",
+        buyNowVsDeferAnalysis: "Your personalised buyNowVsDeferAnalysis is being prepared — please refresh in a moment.",
+        carLimitCheck: "Your personalised carLimitCheck is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before 30 June 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
-      } as Assessment);
+      } as unknown as Assessment);
     } finally {
       setLoading(false);
     }
@@ -185,9 +194,13 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const asset_cost = sessionStorage.getItem("instant-asset-write-off_asset_cost") || "15000";
-    const turnover = sessionStorage.getItem("instant-asset-write-off_turnover") || "2500000";
-    const ready_june30 = sessionStorage.getItem("instant-asset-write-off_ready_june30") || "true";
+    const asset_cost = sessionStorage.getItem("instant-asset-write-off_asset_cost") || "under_20k";
+    const business_use = sessionStorage.getItem("instant-asset-write-off_business_use") || "100";
+    const readiness_date = sessionStorage.getItem("instant-asset-write-off_readiness_date") || "before_eofy";
+    const cliff_risk = sessionStorage.getItem("instant-asset-write-off_cliff_risk") || "false";
+    const deduction_amount = sessionStorage.getItem("instant-asset-write-off_deduction_amount") || "15000";
+    const status = sessionStorage.getItem("instant-asset-write-off_status") || "ELIGIBLE";
+    const tier = sessionStorage.getItem("instant-asset-write-off_tier") || "67";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -313,13 +326,13 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","eligible","immediateDeduction","taxSaving","multiYearPlan","taxTimingStrategy"] as string[]).map(key => {
+                {(["iawoStatus","eligibilityConfirmation","deductionCalculation","installReadyRequirement","supplierTimingRisk","gstTreatment"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/_/g," ")}
+                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
                     </div>

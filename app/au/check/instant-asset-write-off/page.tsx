@@ -305,23 +305,23 @@ export default function InstantAssetWriteOffPage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter asset cost",
-            "text": "Select the cost of the asset you are considering."
+            "name": "Check business eligibility",
+            "text": "Confirm you are using simplified depreciation with turnover under $10 million."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter business turnover",
-            "text": "Choose your aggregate annual turnover including connected entities."
+            "name": "Enter asset cost and use",
+            "text": "Select the asset cost band and your business-use percentage."
       },
       {
             "@type": "HowToStep",
-            "name": "Confirm timing",
-            "text": "Indicate whether the asset will be installed and ready for use before 30 June."
+            "name": "Confirm installation date",
+            "text": "The asset must be installed and ready for use — not just ordered — before 30 June 2026."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your write-off plan",
-            "text": "See your immediate tax saving and timing strategy."
+            "name": "Get your EOFY deadline plan",
+            "text": "See your exact deduction, timing risk, and what to do before 30 June."
       }
 ],
   };
@@ -545,23 +545,26 @@ export default function InstantAssetWriteOffPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What qualifies for instant write-off
+            Instant write-off — rule vs reality
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Asset cost under $20,000 per asset</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Turnover under $10M aggregate</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Installed and ready for use before 30 June</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Per asset (not total) — $20,000 per item</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Must be installed ready for use — not just ordered</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Threshold drops to ~$1,000 from 1 July 2026</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Business-use portion only — private use excluded</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ New AND second-hand assets qualify (2025–26)</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if only ordered or paid for</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if delivered after 30 June</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT trading stock or capital works</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT ordering or paying before 30 June — must be operational</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a total spend cap — each asset assessed separately</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT full car price — car limit $69,674 applies to passenger vehicles</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT deposit = claimable — installation date is the test</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Instant asset write-off · ITAA 1997 s.328-180</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Instant asset write-off · ITAA 1997 s328-180</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -594,12 +597,13 @@ export default function InstantAssetWriteOffPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about the instant asset write-off
+            What most people (and AI) get wrong about the instant asset write-off
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ I can claim the write-off if I order the asset before 30 June — wrong. The asset must be installed and ready for use before 30 June. An order placed in June but delivered in July cannot be claimed in the current year. Physical installation and readiness for use is the test — not the order or payment date.</li>
-            <li>✗ The $20,000 threshold is the total spend across all assets — wrong. The $20,000 threshold applies per asset. You can buy multiple assets each under $20,000 and claim an immediate write-off for each one. There is no cap on the total number of eligible assets.</li>
-            <li>✗ All businesses can use the instant asset write-off — wrong. The instant asset write-off at the $20,000 threshold applies to small businesses with aggregate annual turnover under $10 million. Businesses above this threshold use different depreciation rules. The turnover includes turnover of connected entities and affiliates.</li>
+            <li>✗ Buying or paying before 30 June is enough — wrong. The asset must be first used or installed ready for use by 30 June. An asset ordered in June but delivered on 2 July cannot be claimed. The ATO's test is operational readiness — not purchase date, not payment date, not deposit date. Written confirmation from your supplier of the installation date is your audit evidence.</li>
+            <li>✗ The $20,000 is a total spend limit — wrong. The $20,000 threshold applies per asset, not total. You can buy 10 different assets each under $20,000 and claim an immediate write-off for each one independently. There is no cap on the number of eligible assets — only on the cost of each individual asset.</li>
+            <li>✗ All cars qualify for the full write-off — wrong. Passenger vehicles are subject to the car limit — $69,674 for 2025–26. Even if your car costs more, the deductible amount is capped at the car limit multiplied by your business-use percentage. Commercial vehicles like utes and vans are generally not subject to this cap.</li>
+            <li>✗ A deposit before 30 June locks in the deduction — wrong. A deposit does not qualify as installation. If delivery or installation slips past 30 June, the write-off is lost entirely — and the threshold drops to approximately $1,000 from 1 July 2026.</li>
           </ul>
         </div>
 
