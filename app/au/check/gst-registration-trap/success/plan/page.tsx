@@ -254,7 +254,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your GST Compliance System · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your GST Compliance System" : "Your GST Registration Fix Plan"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your GST Registration Fix Plan"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

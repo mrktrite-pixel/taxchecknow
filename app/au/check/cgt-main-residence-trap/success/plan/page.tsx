@@ -256,7 +256,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your CGT Minimisation System · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your CGT Minimisation System" : "Your Main Residence CGT Fix Plan"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Main Residence CGT Fix Plan"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

@@ -247,7 +247,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Beneficiary Distribution Pack · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your Trust vs Company Pivot Audit" : "Your Beneficiary Distribution Pack"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Beneficiary Distribution Pack"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

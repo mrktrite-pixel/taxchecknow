@@ -279,7 +279,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your Mixed-Use GST Audit · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your Mixed-Use GST Audit" : "Your GST Registration Logic Pack"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your GST Registration Logic Pack"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

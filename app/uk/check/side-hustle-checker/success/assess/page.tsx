@@ -229,7 +229,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Side Hustle Tax Pack · £67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your Side Hustle Registration Plan" : "Your Side Hustle Tax Pack"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Side Hustle Tax Pack"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

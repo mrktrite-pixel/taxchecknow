@@ -251,7 +251,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your MTD VAT Compliance Plan · £147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your MTD VAT Compliance Plan" : "Your Digital Link Audit Pack"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Digital Link Audit Pack"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

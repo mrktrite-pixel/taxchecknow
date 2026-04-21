@@ -279,7 +279,7 @@ export default function SuccessPlan() {
             Payment confirmed · Your Trust vs Company Pivot Audit · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your Trust vs Company Pivot Audit" : "Your Beneficiary Distribution Pack"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Beneficiary Distribution Pack"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

@@ -222,7 +222,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Small Business CGT Eligibility Check · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your Small Business Exit Tax Strategy" : "Your Small Business CGT Eligibility Check"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Small Business CGT Eligibility Check"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

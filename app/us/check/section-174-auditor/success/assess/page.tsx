@@ -222,7 +222,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Section 174 Exposure Report · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your Section 174 Recovery Plan" : "Your Section 174 Exposure Report"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Section 174 Exposure Report"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.

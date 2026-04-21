@@ -236,7 +236,7 @@ export default function SuccessAssess() {
             Payment confirmed · Your Refinance Tracing System · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}{isTier2 ? "Your Portfolio Re-Leverage Strategy" : "Your Refinance Tracing System"}
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}"Your Refinance Tracing System"
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.
