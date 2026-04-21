@@ -531,10 +531,11 @@ function VerdictBlock({ verdict, onCheckout, loading }: {
 // QUESTION BLOCK
 // ─────────────────────────────────────────────────────────────────────────────
 
-function QuestionBlock({ q, value, onAnswer }: {
+function QuestionBlock({ q, value, onAnswer, onContinue }: {
   q: Q;
   value: AnswerMap[string];
   onAnswer: (id: string, v: string | boolean | string[]) => void;
+  onContinue?: () => void;
 }) {
   const sel = (v: string | boolean) => value === v || String(value) === String(v);
   const base = "rounded-xl border px-4 py-3 text-left transition";
@@ -566,7 +567,7 @@ function QuestionBlock({ q, value, onAnswer }: {
             );
           })}
           {Array.isArray(value) && (value as string[]).length > 0 && (
-            <button onClick={() => onAnswer(q.id, value as string[])}
+            <button onClick={() => onContinue?.()}
               className="mt-2 w-full rounded-xl bg-neutral-950 py-3 text-sm font-bold text-white hover:bg-neutral-800 transition">
               Continue with {(value as string[]).length} selected →
             </button>
@@ -623,10 +624,12 @@ export default function FbtHiddenExposureCalculator() {
   const verdict   = useMemo(() => showVerdict ? calcVerdict(answers) : null, [showVerdict, answers]);
   const visibleQs = QUESTIONS.filter(q => q.step === step && (!q.showIf || q.showIf(answers)));
   const isMultiSelect = visibleQs.some(q => q.type === "multi_select");
-  const stepComplete = !visibleQs.length || visibleQs.filter(q => q.required !== false && q.type !== "multi_select").every(q => {
-    const v = answers[q.id];
-    return v !== undefined && v !== "" && v !== null;
-  });
+  const stepComplete = isMultiSelect
+    ? false  // multi-select steps always advance via Continue button only
+    : !visibleQs.length || visibleQs.filter(q => q.required !== false).every(q => {
+        const v = answers[q.id];
+        return v !== undefined && v !== "" && v !== null;
+      });
 
   useEffect(() => {
     if (!stepComplete || isMultiSelect) return;
@@ -663,15 +666,16 @@ export default function FbtHiddenExposureCalculator() {
     }).then(r => r.json()).then(d => { if (d.id) setSessionId(d.id); }).catch(() => {});
   }, [showVerdict]);
 
+  function advanceStep() {
+    const next = step + 1;
+    if (next <= TOTAL_STEPS) setStep(next);
+    else setVerdict(true);
+  }
+
   function answer(id: string, v: string | boolean | string[]) {
     setAnswers(p => ({ ...p, [id]: v }));
-    if (Array.isArray(v) && QUESTIONS.find(q => q.id === id)?.type === "multi_select") {
-      const next = step + 1;
-      setTimeout(() => {
-        if (next <= TOTAL_STEPS) setStep(next);
-        else setVerdict(true);
-      }, 300);
-    }
+    // Multi-select: only advance via Continue button (onContinue)
+    // All other types: advance via stepComplete useEffect
   }
 
   function back() {
@@ -756,7 +760,7 @@ export default function FbtHiddenExposureCalculator() {
               <div className="h-full bg-neutral-950 transition-all duration-300" style={{ width: `${((step - 1) / maxStep) * 100}%` }} />
             </div>
             <div className="space-y-6">
-              {visibleQs.map(q => <QuestionBlock key={q.id} q={q} value={answers[q.id]} onAnswer={answer} />)}
+              {visibleQs.map(q => <QuestionBlock key={q.id} q={q} value={answers[q.id]} onAnswer={answer} onContinue={advanceStep} />)}
             </div>
           </div>
         )}
