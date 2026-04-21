@@ -64,18 +64,10 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  status: string;
-  estimatedFBT: string;
-  carBenefitAmount: string;
-  methodComparison: string;
-  evOpportunity: string;
-  payrollIntegration: string;
-  complianceCalendar: string;
-  accountantQuestions: string[];
-  actions: Action[];
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & {
+  accountantQuestions?: string[];
+  actions?: Action[];
+};
 
 export default function SuccessPlan() {
   const [firstName,  setFirstName]  = useState("there");
@@ -129,16 +121,22 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const car_value = sessionStorage.getItem("fbt-hidden-exposure_car_value") || "0";
-      const entertainment = sessionStorage.getItem("fbt-hidden-exposure_entertainment") || "2500";
-      const logbook = sessionStorage.getItem("fbt-hidden-exposure_logbook") || "false";
+      const benefit_types = sessionStorage.getItem("fbt-hidden-exposure_benefit_types") || "car";
+      const high_risks = sessionStorage.getItem("fbt-hidden-exposure_high_risks") || "1";
+      const status = sessionStorage.getItem("fbt-hidden-exposure_status") || "HIGH FBT EXPOSURE";
+      const strongest_risk = sessionStorage.getItem("fbt-hidden-exposure_strongest_risk") || "No logbook — statutory method applies";
+      const record_quality = sessionStorage.getItem("fbt-hidden-exposure_record_quality") || "some";
+      const tier = sessionStorage.getItem("fbt-hidden-exposure_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "car_value": car_value,
-        "entertainment": entertainment,
-        "logbook": logbook,
-      }).some(v => v && v !== "0");
+        "benefit_types": benefit_types,
+        "high_risks": high_risks,
+        "status": status,
+        "strongest_risk": strongest_risk,
+        "record_quality": record_quality,
+        "tier": tier,
+      }).some(v => v && v !== "car");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -150,11 +148,14 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "Car value": car_value,
-        "Entertainment spend": entertainment,
-        "Has logbook": logbook,
+        "Benefit types provided": benefit_types,
+        "Number of high-risk benefits": high_risks,
+        "FBT exposure verdict": status,
+        "Strongest FBT risk trigger": strongest_risk,
+        "Record quality": record_quality,
+        "Product tier purchased": tier,
           },
-          fields: ["status","estimatedFBT","carBenefitAmount","methodComparison","evOpportunity","payrollIntegration","complianceCalendar"],
+          fields: ["fbtExposureSummary","benefitByBenefitClassification","carMethodComparison","entertainmentTreatment","evExemptionAnalysis","minorBenefitExemptions","recordGapsList","annualFBTWorkflow","entertainmentPolicySettings","evidenceTemplates","payrollReportingFlags","remediationPlan","strongestRiskTrigger"],
         }),
       });
       const data = await res.json();
@@ -164,20 +165,26 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        estimatedFBT: "Your personalised estimatedFBT is being prepared — please refresh in a moment.",
-        carBenefitAmount: "Your personalised carBenefitAmount is being prepared — please refresh in a moment.",
-        methodComparison: "Your personalised methodComparison is being prepared — please refresh in a moment.",
-        evOpportunity: "Your personalised evOpportunity is being prepared — please refresh in a moment.",
-        payrollIntegration: "Your personalised payrollIntegration is being prepared — please refresh in a moment.",
-        complianceCalendar: "Your personalised complianceCalendar is being prepared — please refresh in a moment.",
+        fbtExposureSummary: "Your personalised fbtExposureSummary is being prepared — please refresh in a moment.",
+        benefitByBenefitClassification: "Your personalised benefitByBenefitClassification is being prepared — please refresh in a moment.",
+        carMethodComparison: "Your personalised carMethodComparison is being prepared — please refresh in a moment.",
+        entertainmentTreatment: "Your personalised entertainmentTreatment is being prepared — please refresh in a moment.",
+        evExemptionAnalysis: "Your personalised evExemptionAnalysis is being prepared — please refresh in a moment.",
+        minorBenefitExemptions: "Your personalised minorBenefitExemptions is being prepared — please refresh in a moment.",
+        recordGapsList: "Your personalised recordGapsList is being prepared — please refresh in a moment.",
+        annualFBTWorkflow: "Your personalised annualFBTWorkflow is being prepared — please refresh in a moment.",
+        entertainmentPolicySettings: "Your personalised entertainmentPolicySettings is being prepared — please refresh in a moment.",
+        evidenceTemplates: "Your personalised evidenceTemplates is being prepared — please refresh in a moment.",
+        payrollReportingFlags: "Your personalised payrollReportingFlags is being prepared — please refresh in a moment.",
+        remediationPlan: "Your personalised remediationPlan is being prepared — please refresh in a moment.",
+        strongestRiskTrigger: "Your personalised strongestRiskTrigger is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before 21 May 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
-      } as Assessment);
+      } as unknown as Assessment);
     } finally {
       setLoading(false);
     }
@@ -185,9 +192,12 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const car_value = sessionStorage.getItem("fbt-hidden-exposure_car_value") || "0";
-    const entertainment = sessionStorage.getItem("fbt-hidden-exposure_entertainment") || "2500";
-    const logbook = sessionStorage.getItem("fbt-hidden-exposure_logbook") || "false";
+    const benefit_types = sessionStorage.getItem("fbt-hidden-exposure_benefit_types") || "car";
+    const high_risks = sessionStorage.getItem("fbt-hidden-exposure_high_risks") || "1";
+    const status = sessionStorage.getItem("fbt-hidden-exposure_status") || "HIGH FBT EXPOSURE";
+    const strongest_risk = sessionStorage.getItem("fbt-hidden-exposure_strongest_risk") || "No logbook — statutory method applies";
+    const record_quality = sessionStorage.getItem("fbt-hidden-exposure_record_quality") || "some";
+    const tier = sessionStorage.getItem("fbt-hidden-exposure_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -304,13 +314,13 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","estimatedFBT","carBenefitAmount","methodComparison","evOpportunity","payrollIntegration"] as string[]).map(key => {
+                {(["fbtExposureSummary","benefitByBenefitClassification","carMethodComparison","entertainmentTreatment","evExemptionAnalysis","minorBenefitExemptions"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/_/g," ")}
+                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
                     </div>

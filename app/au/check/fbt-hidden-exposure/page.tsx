@@ -300,23 +300,23 @@ export default function FbtHiddenExposurePage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter vehicle value",
-            "text": "Select the base value of company vehicles used privately."
+            "name": "Select benefit types",
+            "text": "Select all benefits provided — car, meals, loans, reimbursements, housing."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter entertainment spend",
-            "text": "Choose your annual entertainment and meals expenditure."
+            "name": "Answer routing questions",
+            "text": "Private use, logbook, EV status, entertainment type — each routes to correct treatment."
       },
       {
             "@type": "HowToStep",
-            "name": "Get FBT exposure",
-            "text": "See your estimated FBT liability and highest-risk benefits."
+            "name": "Get benefit-by-benefit exposure",
+            "text": "See each benefit classified as high/medium/low risk with the specific ATO rule."
       },
       {
             "@type": "HowToStep",
             "name": "Get your fix plan",
-            "text": "Receive car method comparison, minor benefit guide, and logbook strategy."
+            "text": "Receive classification memo, method comparison, record gaps, and accountant questions."
       }
 ],
   };
@@ -540,24 +540,26 @@ export default function FbtHiddenExposurePage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What triggers FBT
+            FBT — what triggers it and what doesn't
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Company car with private use</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Entertainment and meals with employees</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Loans below benchmark rate</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Non-cash benefits to employees</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Car with private use — statutory: 20% of base value</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Car with logbook — operating cost: actual private use %</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Meals/entertainment over $300/person — taxable at 47%</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Loans below ATO benchmark rate — interest shortfall taxable</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Housing, property, expense reimbursements — if private benefit</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT minor benefits under $300 — infrequent</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT work-related portable devices</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT exempt EVs under LCT threshold</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT minor benefits under $300/occasion — infrequent only</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT work-related portable devices — one per employee</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT eligible EVs (post 1 Jul 2022, under LCT threshold)</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT work-only car use — if genuinely no private access</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — FBT · FBTAA 1986</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — FBT · FBTAA 1986 · s8, s9, s40, s58P</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -590,12 +592,13 @@ export default function FbtHiddenExposurePage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about FBT
+            What most employers (and AI) get wrong about FBT
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ FBT only applies to large companies — wrong. FBT applies to any employer that provides benefits to employees — including small businesses and sole directors who are also employees of their own company. Many small business owners unknowingly trigger FBT on car benefits and entertainment.</li>
-            <li>✗ If the employee pays for the benefit, there is no FBT — wrong. If the employee contributes toward the cost of a benefit, the contribution reduces the taxable value but does not eliminate FBT. The benefit must be specifically structured as an employee contribution to have effect.</li>
-            <li>✗ Work Christmas parties and client lunches are fully FBT-exempt — wrong. Entertainment expenditure is complex. Minor benefits under $300 per employee may qualify for the minor benefit exemption. But regular entertainment, client functions, and Christmas parties above the threshold attract FBT.</li>
+            <li>✗ FBT only applies to large companies — wrong. FBT applies to any employer providing benefits to employees — including sole-director companies, small businesses, and partnerships. A sole director who uses the company car privately is an employee for FBT purposes. Many small business owners unknowingly create FBT liability and miss the lodgement deadline.</li>
+            <li>✗ No logbook means I estimate business use — wrong. No logbook means the ATO forces the statutory method — 20% of the car's base value, regardless of actual business use. A car worth $50,000 with no logbook generates $10,000 of taxable value × gross-up × 47% FBT payable every year. A valid logbook can reduce this significantly if business use is high.</li>
+            <li>✗ Client lunches are just a business expense — wrong. Client entertainment is simultaneously not deductible for income tax AND may be subject to FBT — the worst of both worlds. Most taxpayers either over-claim the deduction or under-report the FBT. Entertainment classification (meal vs travel vs event) determines the treatment.</li>
+            <li>✗ The EV exemption applies to all electric cars — wrong. The exemption requires: (1) zero or low-emission vehicle, (2) first held and used on or after 1 July 2022, (3) value below the luxury car threshold. Cars that miss any of these criteria are fully taxable. Plug-in hybrid vehicles have additional conditions from 1 April 2025.</li>
           </ul>
         </div>
 
