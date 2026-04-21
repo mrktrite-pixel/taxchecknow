@@ -65,13 +65,18 @@ const FILES = [
 
 interface Action { title: string; deadline: string; steps: string[]; }
 interface Assessment {
-  status: string;
+  deductionStatus: string;
+  expenseClassification: string;
+  initialRepairRisk: string;
   overclaims: string;
   missedDeductions: string;
-  auditRisk: string;
+  capitalWorksAnalysis: string;
+  depreciationOpportunity: string;
+  recordQualityAssessment: string;
+  evidenceRegister: string;
   multiYearDeductionPlan: string;
-  documentationSystem: string;
-  portfolioReview: string;
+  auditRiskRating: string;
+  strongestRiskTrigger: string;
   accountantQuestions: string[];
   actions: Action[];
   [key: string]: unknown;
@@ -129,16 +134,20 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const property_type = sessionStorage.getItem("rental-property-deduction-audit_property_type") || "residential";
-      const has_qs_report = sessionStorage.getItem("rental-property-deduction-audit_has_qs_report") || "false";
-      const recent_renovation = sessionStorage.getItem("rental-property-deduction-audit_recent_renovation") || "false";
+      const expense_types = sessionStorage.getItem("rental-property-deduction-audit_expense_types") || "repairs";
+      const risk_flags = sessionStorage.getItem("rental-property-deduction-audit_risk_flags") || "0";
+      const status = sessionStorage.getItem("rental-property-deduction-audit_status") || "CLASSIFICATION ISSUES DETECTED";
+      const confidence = sessionStorage.getItem("rental-property-deduction-audit_confidence") || "MEDIUM";
+      const tier = sessionStorage.getItem("rental-property-deduction-audit_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "property_type": property_type,
-        "has_qs_report": has_qs_report,
-        "recent_renovation": recent_renovation,
-      }).some(v => v && v !== "residential");
+        "expense_types": expense_types,
+        "risk_flags": risk_flags,
+        "status": status,
+        "confidence": confidence,
+        "tier": tier,
+      }).some(v => v && v !== "repairs");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -150,11 +159,13 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "Property type": property_type,
-        "Has QS report": has_qs_report,
-        "Recent renovation": recent_renovation,
+        "Expense types incurred": expense_types,
+        "Number of classification risks": risk_flags,
+        "Deduction audit verdict": status,
+        "Record quality confidence": confidence,
+        "Product tier purchased": tier,
           },
-          fields: ["status","overclaims","missedDeductions","auditRisk","multiYearDeductionPlan","documentationSystem","portfolioReview"],
+          fields: ["deductionStatus","expenseClassification","initialRepairRisk","overclaims","missedDeductions","capitalWorksAnalysis","depreciationOpportunity","recordQualityAssessment","evidenceRegister","multiYearDeductionPlan","auditRiskRating","strongestRiskTrigger"],
         }),
       });
       const data = await res.json();
@@ -164,13 +175,18 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
+        deductionStatus: "Your personalised deductionStatus is being prepared — please refresh in a moment.",
+        expenseClassification: "Your personalised expenseClassification is being prepared — please refresh in a moment.",
+        initialRepairRisk: "Your personalised initialRepairRisk is being prepared — please refresh in a moment.",
         overclaims: "Your personalised overclaims is being prepared — please refresh in a moment.",
         missedDeductions: "Your personalised missedDeductions is being prepared — please refresh in a moment.",
-        auditRisk: "Your personalised auditRisk is being prepared — please refresh in a moment.",
+        capitalWorksAnalysis: "Your personalised capitalWorksAnalysis is being prepared — please refresh in a moment.",
+        depreciationOpportunity: "Your personalised depreciationOpportunity is being prepared — please refresh in a moment.",
+        recordQualityAssessment: "Your personalised recordQualityAssessment is being prepared — please refresh in a moment.",
+        evidenceRegister: "Your personalised evidenceRegister is being prepared — please refresh in a moment.",
         multiYearDeductionPlan: "Your personalised multiYearDeductionPlan is being prepared — please refresh in a moment.",
-        documentationSystem: "Your personalised documentationSystem is being prepared — please refresh in a moment.",
-        portfolioReview: "Your personalised portfolioReview is being prepared — please refresh in a moment.",
+        auditRiskRating: "Your personalised auditRiskRating is being prepared — please refresh in a moment.",
+        strongestRiskTrigger: "Your personalised strongestRiskTrigger is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before 31 October 2026?",
@@ -185,9 +201,11 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const property_type = sessionStorage.getItem("rental-property-deduction-audit_property_type") || "residential";
-    const has_qs_report = sessionStorage.getItem("rental-property-deduction-audit_has_qs_report") || "false";
-    const recent_renovation = sessionStorage.getItem("rental-property-deduction-audit_recent_renovation") || "false";
+    const expense_types = sessionStorage.getItem("rental-property-deduction-audit_expense_types") || "repairs";
+    const risk_flags = sessionStorage.getItem("rental-property-deduction-audit_risk_flags") || "0";
+    const status = sessionStorage.getItem("rental-property-deduction-audit_status") || "CLASSIFICATION ISSUES DETECTED";
+    const confidence = sessionStorage.getItem("rental-property-deduction-audit_confidence") || "MEDIUM";
+    const tier = sessionStorage.getItem("rental-property-deduction-audit_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -304,7 +322,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","overclaims","missedDeductions","auditRisk","multiYearDeductionPlan","documentationSystem"] as string[]).map(key => {
+                {(["deductionStatus","expenseClassification","initialRepairRisk","overclaims","missedDeductions","capitalWorksAnalysis"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (

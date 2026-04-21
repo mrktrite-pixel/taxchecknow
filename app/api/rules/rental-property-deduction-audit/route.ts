@@ -130,7 +130,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/rental-property-deduction-audit",
     "api_endpoint": "/api/rules/rental-property-deduction-audit",
-    "generated_at": "2026-04-21T07:28:52.431Z"
+    "generated_at": "2026-04-21T07:44:52.507Z"
 };
 
   return NextResponse.json(rules, {
