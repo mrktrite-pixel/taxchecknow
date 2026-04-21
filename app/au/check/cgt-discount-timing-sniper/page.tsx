@@ -316,23 +316,23 @@ export default function CgtDiscountTimingSniperPage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter holding period",
-            "text": "Select how long you have held the asset from purchase contract date."
+            "name": "Select entity type",
+            "text": "Who owns the asset — company gets zero discount, SMSF gets 33%, individual/trust gets 50%."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter capital gain",
-            "text": "Choose your estimated capital gain (sale price minus cost base)."
+            "name": "Enter contract dates",
+            "text": "Acquisition contract date and disposal contract date — not settlement dates."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Get your exact holding period",
+            "text": "See the exact day count with ATO counting rules applied — exclude both contract days."
       },
       {
             "@type": "HowToStep",
             "name": "Get your discount verdict",
-            "text": "See immediately whether the 50% discount applies and your tax saving."
-      },
-      {
-            "@type": "HowToStep",
-            "name": "Get your timing plan",
-            "text": "Receive a personalised contract date strategy and capital loss offset plan."
+            "text": "Immediate eligibility result with tax delta and timing analysis."
       }
 ],
   };
@@ -556,22 +556,26 @@ export default function CgtDiscountTimingSniperPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What qualifies for the 50% discount
+            CGT discount — rule vs reality
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Individuals and trusts — held over 12 months</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ From purchase contract date to sale contract date</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Measured: acquisition CONTRACT date → disposal CONTRACT date</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ ATO counting rule: exclude both acquisition day and disposal day</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Minimum: 365 days held (not 12 calendar months)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Individual and trust: 50% discount</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ SMSF: 33.33% discount (not 50%)</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT company-held assets — zero discount</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT assets held under 12 months</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT applied before capital losses are offset</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT settlement to settlement — contract dates only</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT companies — zero discount under any circumstances</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT applied before losses — offset losses first, then discount</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT non-residents (most assets post-8 May 2012)</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — CGT discount · ITAA 1997 s.115-10</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — CGT discount · ITAA 1997 Div 115 · s115-10</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -604,12 +608,13 @@ export default function CgtDiscountTimingSniperPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about the CGT discount
+            What most people (and AI) get wrong about the CGT discount
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The 12 months is measured from settlement to settlement — wrong. The holding period is measured from acquisition date to disposal date — both being the contract date, not settlement date. For off-the-plan purchases, the acquisition date may be the contract date even if settlement is years later.</li>
-            <li>✗ The CGT discount applies to all asset sales — wrong. The CGT discount does not apply to assets held by companies, assets acquired before 20 September 1985 (pre-CGT), or assets that are revenue assets (trading stock). It also does not apply to foreign residents on taxable Australian property in most cases.</li>
-            <li>✗ The discount applies to the gain before any capital losses — wrong. Capital losses must be offset against capital gains before applying the CGT discount. If you have $100,000 gain and $30,000 loss, the net gain is $70,000 and the discount applies to that — not to the $100,000.</li>
+            <li>✗ The 12-month clock runs from settlement to settlement — wrong. The holding period is measured from the date of the acquisition CONTRACT to the date of the disposal CONTRACT. Settlement is irrelevant. For off-the-plan properties, the acquisition contract date can be years before settlement — and the 12-month clock starts ticking from that contract date.</li>
+            <li>✗ Close enough to 12 months is fine — wrong. The ATO applies an exact counting rule: exclude the acquisition day and exclude the disposal day. A property contracted on 1 July 2024 and sold on 30 June 2025 is held for exactly 363 days — still 2 days short. Miss by one day and you pay tax on 100% of the gain instead of 50%.</li>
+            <li>✗ All entities get the 50% discount — wrong. Companies receive zero CGT discount regardless of how long the asset was held. Individuals and trusts get 50%. SMSFs get only 33.33%. The entity type determines the discount rate entirely — and choosing the wrong structure before purchase can cost hundreds of thousands in CGT.</li>
+            <li>✗ Apply the discount before offsetting losses — wrong. Capital losses must be applied against the full capital gain first. Then the 50% discount applies to the remaining net gain. Apply in the wrong order and you waste the discount, significantly increasing your tax.</li>
           </ul>
         </div>
 

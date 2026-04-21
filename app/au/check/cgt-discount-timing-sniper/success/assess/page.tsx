@@ -43,18 +43,10 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  status: string;
-  discountEligible: string;
-  taxWithDiscount: string;
-  taxWithoutDiscount: string;
-  taxSaving: string;
-  optimalContractDate: string;
-  firstAction: string;
-  accountantQuestions: string[];
-  
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & {
+  accountantQuestions?: string[];
+  actions?: Action[];
+};
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -108,16 +100,24 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const holding_months = sessionStorage.getItem("cgt-discount-timing-sniper_holding_months") || "15";
-      const gain_amount = sessionStorage.getItem("cgt-discount-timing-sniper_gain_amount") || "200000";
-      const held_in_company = sessionStorage.getItem("cgt-discount-timing-sniper_held_in_company") || "false";
+      const entity_type = sessionStorage.getItem("cgt-discount-timing-sniper_entity_type") || "individual";
+      const days_held = sessionStorage.getItem("cgt-discount-timing-sniper_days_held") || "380";
+      const qualifies = sessionStorage.getItem("cgt-discount-timing-sniper_qualifies") || "true";
+      const days_short = sessionStorage.getItem("cgt-discount-timing-sniper_days_short") || "0";
+      const status = sessionStorage.getItem("cgt-discount-timing-sniper_status") || "ELIGIBLE — 50% DISCOUNT CONFIRMED";
+      const asset_type = sessionStorage.getItem("cgt-discount-timing-sniper_asset_type") || "property";
+      const tier = sessionStorage.getItem("cgt-discount-timing-sniper_tier") || "67";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "holding_months": holding_months,
-        "gain_amount": gain_amount,
-        "held_in_company": held_in_company,
-      }).some(v => v && v !== "15");
+        "entity_type": entity_type,
+        "days_held": days_held,
+        "qualifies": qualifies,
+        "days_short": days_short,
+        "status": status,
+        "asset_type": asset_type,
+        "tier": tier,
+      }).some(v => v && v !== "individual");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -129,11 +129,15 @@ export default function SuccessAssess() {
           tier:       1,
           name,
           inputs: {
-        "Holding months": holding_months,
-        "Capital gain": gain_amount,
-        "Held in company": held_in_company,
+        "Entity type that owns the asset": entity_type,
+        "Exact holding period in days": days_held,
+        "CGT discount eligibility": qualifies,
+        "Days short of qualifying": days_short,
+        "CGT discount verdict": status,
+        "Asset type": asset_type,
+        "Product tier purchased": tier,
           },
-          fields: ["status","discountEligible","taxWithDiscount","taxWithoutDiscount","taxSaving","optimalContractDate","firstAction"],
+          fields: ["discountEligibility","holdingPeriodCalculation","contractDateRule","entityDiscountRate","residencyImpact","lossSequencingOrder","rollerOverImpact","taxDeltaEstimate","firstAction"],
         }),
       });
       const data = await res.json();
@@ -143,12 +147,14 @@ export default function SuccessAssess() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        discountEligible: "Your personalised discountEligible is being prepared — please refresh in a moment.",
-        taxWithDiscount: "Your personalised taxWithDiscount is being prepared — please refresh in a moment.",
-        taxWithoutDiscount: "Your personalised taxWithoutDiscount is being prepared — please refresh in a moment.",
-        taxSaving: "Your personalised taxSaving is being prepared — please refresh in a moment.",
-        optimalContractDate: "Your personalised optimalContractDate is being prepared — please refresh in a moment.",
+        discountEligibility: "Your personalised discountEligibility is being prepared — please refresh in a moment.",
+        holdingPeriodCalculation: "Your personalised holdingPeriodCalculation is being prepared — please refresh in a moment.",
+        contractDateRule: "Your personalised contractDateRule is being prepared — please refresh in a moment.",
+        entityDiscountRate: "Your personalised entityDiscountRate is being prepared — please refresh in a moment.",
+        residencyImpact: "Your personalised residencyImpact is being prepared — please refresh in a moment.",
+        lossSequencingOrder: "Your personalised lossSequencingOrder is being prepared — please refresh in a moment.",
+        rollerOverImpact: "Your personalised rollerOverImpact is being prepared — please refresh in a moment.",
+        taxDeltaEstimate: "Your personalised taxDeltaEstimate is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
@@ -156,7 +162,7 @@ export default function SuccessAssess() {
           "Are there any planning opportunities specific to my situation?",
         ],
         
-      } as Assessment);
+      } as unknown as Assessment);
     } finally {
       setLoading(false);
     }
@@ -164,9 +170,13 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const holding_months = sessionStorage.getItem("cgt-discount-timing-sniper_holding_months") || "15";
-    const gain_amount = sessionStorage.getItem("cgt-discount-timing-sniper_gain_amount") || "200000";
-    const held_in_company = sessionStorage.getItem("cgt-discount-timing-sniper_held_in_company") || "false";
+    const entity_type = sessionStorage.getItem("cgt-discount-timing-sniper_entity_type") || "individual";
+    const days_held = sessionStorage.getItem("cgt-discount-timing-sniper_days_held") || "380";
+    const qualifies = sessionStorage.getItem("cgt-discount-timing-sniper_qualifies") || "true";
+    const days_short = sessionStorage.getItem("cgt-discount-timing-sniper_days_short") || "0";
+    const status = sessionStorage.getItem("cgt-discount-timing-sniper_status") || "ELIGIBLE — 50% DISCOUNT CONFIRMED";
+    const asset_type = sessionStorage.getItem("cgt-discount-timing-sniper_asset_type") || "property";
+    const tier = sessionStorage.getItem("cgt-discount-timing-sniper_tier") || "67";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -274,13 +284,13 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","discountEligible","taxWithDiscount","taxWithoutDiscount","taxSaving","optimalContractDate"] as string[]).map(key => {
+                {(["discountEligibility","holdingPeriodCalculation","contractDateRule","entityDiscountRate","residencyImpact","lossSequencingOrder"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/_/g," ")}
+                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
                     </div>
