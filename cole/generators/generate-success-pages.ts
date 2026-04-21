@@ -81,7 +81,7 @@ const FILES = ${JSON.stringify(visibleFiles.map(f => ({
 
 interface Action { title: string; deadline: string; steps: string[]; }
 interface Assessment {
-  ${assessFields.map(f => `${f}: string;`).join("\n  ")}
+  ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: string;`).join("\n  ")}
   accountantQuestions: string[];
   ${isTier2 ? "actions: Action[];" : ""}
   [key: string]: unknown;
@@ -140,6 +140,12 @@ export default function Success${isTier2 ? "Plan" : "Assess"}() {
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
 ${ssReads}
+
+      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
+      const hasInputs = Object.values({
+${promptFields.map(f => `        "${f.key}": ${f.key},`).join("\n")}
+      }).some(v => v && v !== "${promptFields[0]?.defaultVal || ""}");
+
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -162,7 +168,7 @@ ${inputsObj}
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        ${assessFields.map(f => `${f}: "Your personalised ${f.replace(/_/g," ")} is being prepared — please refresh in a moment.",`).join("\n        ")}
+        ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: "Your personalised ${f.replace(/_/g," ")} is being prepared — please refresh in a moment.",`).join("\n        ")}
         accountantQuestions: [
           "What is my exact ${config.authority} position based on my answers?",
           "What is the single most important action I should take before ${config.deadline.display}?",
@@ -234,7 +240,7 @@ ${calReads}
             Payment confirmed · ${packName} · ${currency}${price}
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? \`\${hi}, here is your \` : "Your "}{isTier2 ? "${config.tier2.name}" : "${config.tier1.name}"}
+            {hi !== "there" ? \`\${hi}, here is your \` : "Your "}${isTier2 ? config.tier2.name : config.tier1.name}
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             ${isTier2
