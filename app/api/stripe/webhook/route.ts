@@ -3,41 +3,95 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { sendDeliveryEmail } from "@/lib/cole-email";
 
-// ── PRODUCT DELIVERY MAP ─────────────────────────────────────────────────
-// Add each new product here as gates go live.
-// driveUrl pulls from env var set in Vercel.
+// ── PRODUCT DELIVERY MAP — all 25 TaxCheckNow + 5 SuperTaxCheck ─────────────
 const DELIVERY_MAP: Record<string, {
   subject: string;
   productName: string;
   driveUrl: string;
   tierLabel: string;
+  market: string;
+  authority: string;
+  productId: string;
 }> = {
-  // UK-01 MTD Scorecard
-  "uk_67_mtd_scorecard": {
-    subject: "Your MTD Compliance Assessment — TaxCheckNow",
-    productName: "Your MTD Compliance Assessment",
-    driveUrl: process.env.DRIVE_UK_MTD_67 || "",
-    tierLabel: "£67",
-  },
-  "uk_127_mtd_scorecard": {
-    subject: "Your MTD Action Plan — TaxCheckNow",
-    productName: "Your MTD Action Plan",
-    driveUrl: process.env.DRIVE_UK_MTD_127 || "",
-    tierLabel: "£127",
-  },
-
-  // UK-02 Allowance Sniper (add when built)
-  // "uk_97_allowance_sniper": {
-  //   subject: "Your 60% Tax Trap Assessment — TaxCheckNow",
-  //   productName: "Your Allowance Sniper Assessment",
-  //   driveUrl: process.env.DRIVE_UK_ALLOWANCE_97 || "",
-  //   tierLabel: "£97",
-  // },
-
-  // UK-03 Digital Link Auditor (add when built)
-  // UK-04 Side-Hustle Checker (add when built)
-  // UK-05 Dividend Trap (add when built)
+  // ── UK ────────────────────────────────────────────────────────────────────
+  "uk_67_mtd_scorecard":            { subject: "Your MTD Compliance Assessment — TaxCheckNow",           productName: "Your MTD Compliance Assessment",           driveUrl: process.env.DRIVE_UK_MTD_67 || "",                        tierLabel: "£67",  market: "United Kingdom", authority: "HMRC", productId: "mtd-scorecard" },
+  "uk_127_mtd_scorecard":           { subject: "Your MTD Action Plan — TaxCheckNow",                     productName: "Your MTD Action Plan",                     driveUrl: process.env.DRIVE_UK_MTD_127 || "",                       tierLabel: "£127", market: "United Kingdom", authority: "HMRC", productId: "mtd-scorecard" },
+  "uk_67_allowance_sniper":         { subject: "Your Allowance Recovery Pack — TaxCheckNow",             productName: "Your Allowance Recovery Pack",             driveUrl: process.env.NEXT_PUBLIC_DRIVE_UK_ALLOWANCE_67 || "",      tierLabel: "£67",  market: "United Kingdom", authority: "HMRC", productId: "allowance-sniper" },
+  "uk_147_allowance_sniper":        { subject: "Your Allowance Recovery System — TaxCheckNow",           productName: "Your Allowance Recovery System",           driveUrl: process.env.NEXT_PUBLIC_DRIVE_UK_ALLOWANCE_147 || "",     tierLabel: "£147", market: "United Kingdom", authority: "HMRC", productId: "allowance-sniper" },
+  "uk_67_digital_link_auditor":     { subject: "Your Digital Link Audit Pack — TaxCheckNow",             productName: "Your Digital Link Audit Pack",             driveUrl: process.env.NEXT_PUBLIC_DRIVE_UK_DLA_67 || "",            tierLabel: "£67",  market: "United Kingdom", authority: "HMRC", productId: "digital-link-auditor" },
+  "uk_147_digital_link_auditor":    { subject: "Your Digital Link Control System — TaxCheckNow",         productName: "Your Digital Link Control System",         driveUrl: process.env.NEXT_PUBLIC_DRIVE_UK_DLA_147 || "",           tierLabel: "£147", market: "United Kingdom", authority: "HMRC", productId: "digital-link-auditor" },
+  "uk_67_side_hustle_checker":      { subject: "Your Side Hustle Tax Pack — TaxCheckNow",                productName: "Your Side Hustle Tax Pack",                driveUrl: process.env.NEXT_PUBLIC_DRIVE_UK_SH_67 || "",             tierLabel: "£67",  market: "United Kingdom", authority: "HMRC", productId: "side-hustle-checker" },
+  "uk_147_side_hustle_checker":     { subject: "Your Side Hustle Tax System — TaxCheckNow",              productName: "Your Side Hustle Tax System",              driveUrl: process.env.NEXT_PUBLIC_DRIVE_UK_SH_147 || "",            tierLabel: "£147", market: "United Kingdom", authority: "HMRC", productId: "side-hustle-checker" },
+  "uk_67_dividend_trap":            { subject: "Your Dividend Tax Pack — TaxCheckNow",                   productName: "Your Dividend Tax Pack",                   driveUrl: process.env.NEXT_PUBLIC_DRIVE_UK_DIV_67 || "",            tierLabel: "£67",  market: "United Kingdom", authority: "HMRC", productId: "dividend-trap" },
+  "uk_147_dividend_trap":           { subject: "Your Dividend Optimisation System — TaxCheckNow",        productName: "Your Dividend Optimisation System",        driveUrl: process.env.NEXT_PUBLIC_DRIVE_UK_DIV_147 || "",           tierLabel: "£147", market: "United Kingdom", authority: "HMRC", productId: "dividend-trap" },
+  // ── US ────────────────────────────────────────────────────────────────────
+  "us_67_section_174_auditor":      { subject: "Your Section 174 Audit Pack — TaxCheckNow",              productName: "Your Section 174 Audit Pack",              driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_174_67 || "",            tierLabel: "$67",  market: "United States",  authority: "IRS", productId: "section-174-auditor" },
+  "us_147_section_174_auditor":     { subject: "Your Section 174 Recovery System — TaxCheckNow",         productName: "Your Section 174 Recovery System",         driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_174_147 || "",           tierLabel: "$147", market: "United States",  authority: "IRS", productId: "section-174-auditor" },
+  "us_67_feie_nomad_auditor":       { subject: "Your FEIE Audit Pack — TaxCheckNow",                     productName: "Your FEIE Audit Pack",                     driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_FEIE_67 || "",           tierLabel: "$67",  market: "United States",  authority: "IRS", productId: "feie-nomad-auditor" },
+  "us_147_feie_nomad_auditor":      { subject: "Your FEIE Optimisation System — TaxCheckNow",            productName: "Your FEIE Optimisation System",            driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_FEIE_147 || "",          tierLabel: "$147", market: "United States",  authority: "IRS", productId: "feie-nomad-auditor" },
+  "us_67_qsbs_exit_auditor":        { subject: "Your QSBS Eligibility Pack — TaxCheckNow",               productName: "Your QSBS Eligibility Pack",               driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_QSBS_67 || "",           tierLabel: "$67",  market: "United States",  authority: "IRS", productId: "qsbs-exit-auditor" },
+  "us_147_qsbs_exit_auditor":       { subject: "Your Exclusion Stacker Blueprint — TaxCheckNow",         productName: "Your Exclusion Stacker Blueprint",         driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_QSBS_147 || "",          tierLabel: "$147", market: "United States",  authority: "IRS", productId: "qsbs-exit-auditor" },
+  "us_67_iso_amt_sniper":           { subject: "Your Zero-AMT Exercise Map — TaxCheckNow",               productName: "Your Zero-AMT Exercise Map",               driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_ISO_67 || "",            tierLabel: "$67",  market: "United States",  authority: "IRS", productId: "iso-amt-sniper" },
+  "us_147_iso_amt_sniper":          { subject: "Your ISO Exercise System — TaxCheckNow",                 productName: "Your ISO Exercise System",                 driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_ISO_147 || "",           tierLabel: "$147", market: "United States",  authority: "IRS", productId: "iso-amt-sniper" },
+  "us_67_wayfair_nexus_sniper":     { subject: "Your Nexus Exposure Pack — TaxCheckNow",                 productName: "Your Nexus Exposure Pack",                 driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_NEXUS_67 || "",          tierLabel: "$67",  market: "United States",  authority: "IRS", productId: "wayfair-nexus-sniper" },
+  "us_147_wayfair_nexus_sniper":    { subject: "Your Nexus Compliance System — TaxCheckNow",             productName: "Your Nexus Compliance System",             driveUrl: process.env.NEXT_PUBLIC_DRIVE_US_NEXUS_147 || "",         tierLabel: "$147", market: "United States",  authority: "IRS", productId: "wayfair-nexus-sniper" },
+  // ── NZ ────────────────────────────────────────────────────────────────────
+  "nz_67_bright_line_auditor":      { subject: "Your Main Home Proof Kit — TaxCheckNow",                 productName: "Your Main Home Proof Kit",                 driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_BL_67 || "",             tierLabel: "$67",  market: "New Zealand",    authority: "IRD", productId: "bright-line-auditor" },
+  "nz_147_bright_line_auditor":     { subject: "Your Bright-Line Shield System — TaxCheckNow",           productName: "Your Bright-Line Shield System",           driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_BL_147 || "",            tierLabel: "$147", market: "New Zealand",    authority: "IRD", productId: "bright-line-auditor" },
+  "nz_67_app_tax_gst_sniper":       { subject: "Your GST Registration Logic Pack — TaxCheckNow",         productName: "Your GST Registration Logic Pack",         driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_GST_67 || "",            tierLabel: "$67",  market: "New Zealand",    authority: "IRD", productId: "app-tax-gst-sniper" },
+  "nz_147_app_tax_gst_sniper":      { subject: "Your GST Compliance System — TaxCheckNow",               productName: "Your GST Compliance System",               driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_GST_147 || "",           tierLabel: "$147", market: "New Zealand",    authority: "IRD", productId: "app-tax-gst-sniper" },
+  "nz_67_interest_reinstatement_engine": { subject: "Your Interest Reinstatement Pack — TaxCheckNow",   productName: "Your Interest Reinstatement Pack",         driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_IR_67 || "",             tierLabel: "$67",  market: "New Zealand",    authority: "IRD", productId: "interest-reinstatement-engine" },
+  "nz_147_interest_reinstatement_engine": { subject: "Your Interest Reinstatement System — TaxCheckNow", productName: "Your Interest Reinstatement System",      driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_IR_147 || "",            tierLabel: "$147", market: "New Zealand",    authority: "IRD", productId: "interest-reinstatement-engine" },
+  "nz_67_trust_tax_splitter":       { subject: "Your Beneficiary Distribution Pack — TaxCheckNow",       productName: "Your Beneficiary Distribution Pack",       driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_TT_67 || "",             tierLabel: "$67",  market: "New Zealand",    authority: "IRD", productId: "trust-tax-splitter" },
+  "nz_147_trust_tax_splitter":      { subject: "Your Trust Tax Optimisation System — TaxCheckNow",       productName: "Your Trust Tax Optimisation System",       driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_TT_147 || "",            tierLabel: "$147", market: "New Zealand",    authority: "IRD", productId: "trust-tax-splitter" },
+  "nz_67_investment_boost_auditor": { subject: "Your New to NZ Asset Log — TaxCheckNow",                 productName: "Your New to NZ Asset Log",                 driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_IB_67 || "",             tierLabel: "$67",  market: "New Zealand",    authority: "IRD", productId: "investment-boost-auditor" },
+  "nz_147_investment_boost_auditor": { subject: "Your Investment Boost Compliance System — TaxCheckNow", productName: "Your Investment Boost Compliance System",  driveUrl: process.env.NEXT_PUBLIC_DRIVE_NZ_IB_147 || "",            tierLabel: "$147", market: "New Zealand",    authority: "IRD", productId: "investment-boost-auditor" },
+  // ── AU ────────────────────────────────────────────────────────────────────
+  "au_67_cgt_main_residence_trap":         { subject: "Your CGT Exposure Plan — TaxCheckNow",                    productName: "Your CGT Exposure Plan",                    driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_CGT_MR_67 || "",    tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "cgt-main-residence-trap" },
+  "au_147_cgt_main_residence_trap":        { subject: "Your Main Residence Shield System — TaxCheckNow",         productName: "Your Main Residence Shield System",         driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_CGT_MR_147 || "",   tierLabel: "$147", market: "Australia", authority: "ATO", productId: "cgt-main-residence-trap" },
+  "au_67_division_7a_loan_trap":           { subject: "Your Division 7A Rescue Plan — TaxCheckNow",              productName: "Your Division 7A Rescue Plan",              driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_DIV7A_67 || "",     tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "division-7a-loan-trap" },
+  "au_147_division_7a_loan_trap":          { subject: "Your Director Loan Shield System — TaxCheckNow",          productName: "Your Director Loan Shield System",          driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_DIV7A_147 || "",    tierLabel: "$147", market: "Australia", authority: "ATO", productId: "division-7a-loan-trap" },
+  "au_67_fbt_hidden_exposure":             { subject: "Your FBT Exposure Fix Plan — TaxCheckNow",                productName: "Your FBT Exposure Fix Plan",                driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_FBT_67 || "",       tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "fbt-hidden-exposure" },
+  "au_147_fbt_hidden_exposure":            { subject: "Your FBT Control System — TaxCheckNow",                   productName: "Your FBT Control System",                   driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_FBT_147 || "",      tierLabel: "$147", market: "Australia", authority: "ATO", productId: "fbt-hidden-exposure" },
+  "au_67_cgt_discount_timing_sniper":      { subject: "Your CGT Timing Fix Plan — TaxCheckNow",                  productName: "Your CGT Timing Fix Plan",                  driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_CGT_DT_67 || "",    tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "cgt-discount-timing-sniper" },
+  "au_147_cgt_discount_timing_sniper":     { subject: "Your CGT Exit Timing System — TaxCheckNow",               productName: "Your CGT Exit Timing System",               driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_CGT_DT_147 || "",   tierLabel: "$147", market: "Australia", authority: "ATO", productId: "cgt-discount-timing-sniper" },
+  "au_67_negative_gearing_illusion":       { subject: "Your Negative Gearing Reality Plan — TaxCheckNow",        productName: "Your Negative Gearing Reality Plan",        driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_NG_67 || "",         tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "negative-gearing-illusion" },
+  "au_147_negative_gearing_illusion":      { subject: "Your Property Cashflow Control System — TaxCheckNow",     productName: "Your Property Cashflow Control System",     driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_NG_147 || "",        tierLabel: "$147", market: "Australia", authority: "ATO", productId: "negative-gearing-illusion" },
+  "au_67_small_business_cgt_concessions":  { subject: "Your CGT Concession Eligibility Memo — TaxCheckNow",      productName: "Your CGT Concession Eligibility Memo",      driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_SBCGT_67 || "",      tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "small-business-cgt-concessions" },
+  "au_147_small_business_cgt_concessions": { subject: "Your Exit Concession Blueprint — TaxCheckNow",            productName: "Your Exit Concession Blueprint",            driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_SBCGT_147 || "",     tierLabel: "$147", market: "Australia", authority: "ATO", productId: "small-business-cgt-concessions" },
+  "au_67_instant_asset_write_off":         { subject: "Your EOFY Asset Deadline Plan — TaxCheckNow",             productName: "Your EOFY Asset Deadline Plan",             driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_IAWO_67 || "",       tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "instant-asset-write-off" },
+  "au_147_instant_asset_write_off":        { subject: "Your Asset Timing & Depreciation System — TaxCheckNow",   productName: "Your Asset Timing & Depreciation System",   driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_IAWO_147 || "",      tierLabel: "$147", market: "Australia", authority: "ATO", productId: "instant-asset-write-off" },
+  "au_67_gst_registration_trap":           { subject: "Your GST Catch-Up Plan — TaxCheckNow",                    productName: "Your GST Catch-Up Plan",                    driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_GST_67 || "",        tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "gst-registration-trap" },
+  "au_147_gst_registration_trap":          { subject: "Your GST Compliance Launch System — TaxCheckNow",         productName: "Your GST Compliance Launch System",         driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_GST_147 || "",       tierLabel: "$147", market: "Australia", authority: "ATO", productId: "gst-registration-trap" },
+  "au_67_rental_property_deduction_audit": { subject: "Your Rental Deduction Repair Pack — TaxCheckNow",         productName: "Your Rental Deduction Repair Pack",         driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_RENTAL_67 || "",     tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "rental-property-deduction-audit" },
+  "au_147_rental_property_deduction_audit":{ subject: "Your ATO Audit-Ready Rental System — TaxCheckNow",        productName: "Your ATO Audit-Ready Rental System",        driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_RENTAL_147 || "",    tierLabel: "$147", market: "Australia", authority: "ATO", productId: "rental-property-deduction-audit" },
+  "au_67_medicare_levy_surcharge_trap":    { subject: "Your MLS Avoidance Plan — TaxCheckNow",                   productName: "Your MLS Avoidance Plan",                   driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_MLS_67 || "",        tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "medicare-levy-surcharge-trap" },
+  "au_147_medicare_levy_surcharge_trap":   { subject: "Your Income & Insurance Optimisation System — TaxCheckNow", productName: "Your Income & Insurance Optimisation System", driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_MLS_147 || "",    tierLabel: "$147", market: "Australia", authority: "ATO", productId: "medicare-levy-surcharge-trap" },
+  // ── SUPERTAXCHECK ─────────────────────────────────────────────────────────
+  "supertax_67_div296_wealth_eraser":  { subject: "Your Div 296 Wealth Eraser — SuperTaxCheck",  productName: "Your Div 296 Wealth Eraser",  driveUrl: process.env.DRIVE_DIV296_67 || "",  tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "div296-wealth-eraser" },
+  "supertax_147_div296_wealth_eraser": { subject: "Your Div 296 Strategy System — SuperTaxCheck", productName: "Your Div 296 Strategy System", driveUrl: process.env.DRIVE_DIV296_147 || "", tierLabel: "$147", market: "Australia", authority: "ATO", productId: "div296-wealth-eraser" },
 };
+
+// ── DEADLINES PER PRODUCT ────────────────────────────────────────────────────
+const PRODUCT_DEADLINES: Record<string, string> = {
+  "mtd-scorecard":                    "2026-08-07T00:00:00.000+01:00",
+  "allowance-sniper":                 "2027-01-31T23:59:59.000+00:00",
+  "digital-link-auditor":             "2026-08-07T00:00:00.000+01:00",
+  "side-hustle-checker":              "2027-01-31T23:59:59.000+00:00",
+  "dividend-trap":                    "2027-01-31T23:59:59.000+00:00",
+  "medicare-levy-surcharge-trap":     "2026-10-31T23:59:59.000+11:00",
+  "instant-asset-write-off":          "2026-06-30T23:59:59.000+10:00",
+  "gst-registration-trap":            "2026-06-30T23:59:59.000+10:00",
+  "cgt-main-residence-trap":          "2026-10-31T23:59:59.000+11:00",
+  "cgt-discount-timing-sniper":       "2026-10-31T23:59:59.000+11:00",
+  "negative-gearing-illusion":        "2026-10-31T23:59:59.000+11:00",
+  "rental-property-deduction-audit":  "2026-10-31T23:59:59.000+11:00",
+  "division-7a-loan-trap":            "2026-10-31T23:59:59.000+11:00",
+  "fbt-hidden-exposure":              "2026-03-31T23:59:59.000+11:00",
+  "small-business-cgt-concessions":   "2026-10-31T23:59:59.000+11:00",
+};
+
+const REMINDER_DAYS = [30, 7, 1];
 
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -52,44 +106,146 @@ function getSupabase() {
   return createClient(url, key);
 }
 
-export async function POST(req: Request) {
-  const body = await req.text();
-  const signature = req.headers.get("stripe-signature");
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+// ── GENERATE + STORE ASSESSMENT ──────────────────────────────────────────────
+async function generateAndStoreAssessment(
+  supabase: ReturnType<typeof createClient>,
+  stripeSessionId: string,
+  decisionSessionId: string,
+  productKey: string,
+  tier: number,
+  delivery: typeof DELIVERY_MAP[string],
+  customerEmail: string,
+  customerName: string,
+): Promise<void> {
+  try {
+    const { data: ds } = await supabase
+      .from("decision_sessions")
+      .select("inputs, questionnaire_payload")
+      .eq("id", decisionSessionId)
+      .single();
 
-  if (!signature || !webhookSecret) {
+    const inputs = {
+      ...(ds?.inputs || {}),
+      ...(ds?.questionnaire_payload || {}),
+    };
+
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
+    const res = await fetch(`${baseUrl}/api/assess`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        product_id: delivery.productId,
+        market:     delivery.market,
+        authority:  delivery.authority,
+        tier:       tier >= 147 ? 2 : 1,
+        name:       customerName,
+        inputs,
+        fields:     tier >= 147
+          ? ["status","keyFinding","exposureAmount","mainRiskTrigger","recommendedAction","confidenceLevel","implementationPlan","scenarioAnalysis","evidenceRequired","timelineStrategy"]
+          : ["status","keyFinding","exposureAmount","mainRiskTrigger","recommendedAction","confidenceLevel","firstAction"],
+      }),
+    });
+
+    if (!res.ok) { console.error("[webhook] /api/assess failed:", res.status); return; }
+
+    const { assessment } = await res.json();
+
+    await supabase.from("assessments").upsert({
+      stripe_session_id:   stripeSessionId,
+      decision_session_id: decisionSessionId,
+      product_id:          delivery.productId,
+      product_key:         productKey,
+      tier,
+      customer_email:      customerEmail,
+      customer_name:       customerName,
+      assessment_json:     assessment,
+      created_at:          new Date().toISOString(),
+    }, { onConflict: "stripe_session_id" });
+
+    console.log("[webhook] Assessment stored:", stripeSessionId);
+  } catch (err) {
+    console.error("[webhook] Assessment failed (non-blocking):", err);
+  }
+}
+
+// ── QUEUE REMINDER EMAILS ────────────────────────────────────────────────────
+async function queueReminders(
+  supabase: ReturnType<typeof createClient>,
+  stripeSessionId: string,
+  productKey: string,
+  customerEmail: string,
+  customerName: string,
+  delivery: typeof DELIVERY_MAP[string],
+): Promise<void> {
+  try {
+    const deadlineIso = PRODUCT_DEADLINES[delivery.productId];
+    if (!deadlineIso) return;
+
+    const deadline = new Date(deadlineIso);
+    const rows = REMINDER_DAYS.map(days => {
+      const trigger = new Date(deadline);
+      trigger.setDate(trigger.getDate() - days);
+      return {
+        stripe_session_id:    stripeSessionId,
+        product_key:          productKey,
+        product_id:           delivery.productId,
+        customer_email:       customerEmail,
+        customer_name:        customerName,
+        trigger_date:         trigger.toISOString().split("T")[0],
+        days_before_deadline: days,
+        subject:              `${days === 1 ? "Tomorrow" : `${days} days`} — ${delivery.productName}`,
+        status:               "queued",
+        created_at:           new Date().toISOString(),
+      };
+    });
+
+    const { error } = await supabase.from("email_queue").insert(rows);
+    if (error) console.error("[webhook] Queue error:", error.message);
+    else console.log("[webhook] Queued", rows.length, "reminders for", customerEmail);
+  } catch (err) {
+    console.error("[webhook] Queue failed (non-blocking):", err);
+  }
+}
+
+// ── MAIN HANDLER ─────────────────────────────────────────────────────────────
+export async function POST(req: Request) {
+  const body      = await req.text();
+  const signature = req.headers.get("stripe-signature");
+  const secret    = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!signature || !secret) {
     return NextResponse.json({ error: "Missing signature" }, { status: 400 });
   }
 
-  // ── VERIFY STRIPE SIGNATURE ───────────────────────────────────────────
   let event: Stripe.Event;
   try {
-    const stripe = getStripe();
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    event = getStripe().webhooks.constructEvent(body, signature, secret);
   } catch (err) {
     console.error("[webhook] Signature failed:", err);
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
   console.log("[webhook] Received:", event.type);
-
   if (event.type !== "checkout.session.completed") {
     return NextResponse.json({ received: true });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
-  const productKey    = session.metadata?.product_key     || "";
-  const tier          = Number(session.metadata?.tier     || 0);
-  const decisionSid   = session.metadata?.decision_session_id || "";
-  const customerEmail = session.customer_details?.email   || "";
-  const amountGbp     = (session.amount_total || 0) / 100;
+  const session       = event.data.object as Stripe.Checkout.Session;
+  const productKey    = session.metadata?.product_key           || "";
+  const tier          = Number(session.metadata?.tier           || 0);
+  const decisionSid   = session.metadata?.decision_session_id   || "";
+  const customerEmail = session.customer_details?.email          || "";
+  const customerName  = session.customer_details?.name           || "there";
+  const amountPaid    = (session.amount_total || 0) / 100;
 
-  console.log("[webhook] Purchase:", { productKey, tier, customerEmail, amountGbp });
+  console.log("[webhook] Purchase:", { productKey, tier, customerEmail });
 
-  // ── 1. RECORD PURCHASE IN SUPABASE ───────────────────────────────────
+  const delivery = DELIVERY_MAP[productKey];
+  const supabase = getSupabase();
+
+  // 1. Record purchase
   let purchaseId: string | null = null;
   try {
-    const supabase = getSupabase();
     const { data, error } = await supabase
       .from("purchases")
       .insert({
@@ -98,37 +254,45 @@ export async function POST(req: Request) {
         decision_session_id:   decisionSid,
         product_key:           productKey,
         tier,
-        amount_gbp:            amountGbp,
-        currency:              session.currency || "gbp",
+        amount_gbp:            amountPaid,
+        currency:              session.currency || "aud",
         customer_email:        customerEmail,
+        customer_name:         customerName,
         site:                  "taxchecknow",
-        country_code:          "UK",
+        country_code:          delivery?.market?.slice(0,2).toUpperCase() || "AU",
         delivery_status:       "pending",
         metadata:              session.metadata,
       })
       .select("id")
       .single();
 
-    if (error) {
-      console.error("[webhook] Supabase insert error:", error.message);
-    } else {
-      purchaseId = data?.id || null;
-      console.log("[webhook] Purchase recorded:", purchaseId);
-    }
+    if (error) console.error("[webhook] Purchase insert error:", error.message);
+    else { purchaseId = data?.id || null; }
   } catch (err) {
-    console.error("[webhook] Supabase error — continuing to email:", err);
+    console.error("[webhook] Supabase purchase error:", err);
   }
 
-  // ── 2. DELIVER FILES VIA RESEND ───────────────────────────────────────
-  const delivery = DELIVERY_MAP[productKey];
+  // 2. Generate + store assessment (non-blocking — fires and continues)
+  if (delivery && decisionSid && customerEmail) {
+    generateAndStoreAssessment(
+      supabase, session.id, decisionSid, productKey,
+      tier, delivery, customerEmail, customerName
+    ).catch(() => {});
+  }
 
+  // 3. Queue reminder emails (non-blocking)
+  if (delivery && customerEmail) {
+    queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery)
+      .catch(() => {});
+  }
+
+  // 4. Send delivery email
   if (!delivery) {
-    console.error("[webhook] No delivery config for product:", productKey);
+    console.error("[webhook] No delivery config for:", productKey);
     return NextResponse.json({ received: true });
   }
-
   if (!customerEmail) {
-    console.error("[webhook] No customer email for session:", session.id);
+    console.error("[webhook] No customer email:", session.id);
     return NextResponse.json({ received: true });
   }
 
@@ -141,13 +305,11 @@ export async function POST(req: Request) {
     subject:     delivery.subject,
   });
 
-  // ── 3. LOG EMAIL + UPDATE PURCHASE STATUS ─────────────────────────────
+  // 5. Log email status
   if (purchaseId) {
     try {
-      const supabase = getSupabase();
-
-      // Log email
-      await supabase.from("email_log").insert({
+      const supabase2 = getSupabase();
+      await supabase2.from("email_log").insert({
         purchase_id:     purchaseId,
         recipient_email: customerEmail,
         email_type:      "delivery",
@@ -155,22 +317,15 @@ export async function POST(req: Request) {
         resend_id:       emailResult.resendId || null,
         status:          emailResult.success ? "sent" : "failed",
       });
-
-      // Update delivery status on purchase
-      await supabase
-        .from("purchases")
-        .update({
-          delivery_status:  emailResult.success ? "sent" : "failed",
-          delivery_sent_at: emailResult.success ? new Date().toISOString() : null,
-        })
-        .eq("id", purchaseId);
-
+      await supabase2.from("purchases").update({
+        delivery_status:  emailResult.success ? "sent" : "failed",
+        delivery_sent_at: emailResult.success ? new Date().toISOString() : null,
+      }).eq("id", purchaseId);
     } catch (err) {
-      console.error("[webhook] Logging error:", err);
+      console.error("[webhook] Log error:", err);
     }
   }
 
-  console.log("[webhook] Complete. Email success:", emailResult.success);
-  // Always return 200 — Stripe retries on non-200
+  console.log("[webhook] Complete. Email:", emailResult.success);
   return NextResponse.json({ received: true });
 }
