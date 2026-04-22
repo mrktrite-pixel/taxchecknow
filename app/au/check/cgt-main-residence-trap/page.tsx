@@ -74,11 +74,11 @@ const faqs = [
   },
   {
     "question": "What records do I need?",
-    "answer": "Keep evidence of the dates you moved in and out, any rental agreements and income records, utility bills and bank statements showing your address, records of any home office claims, and invoices for capital improvements (these increase your cost base). ATO can audit CGT positions for up to four years after the tax return is lodged."
+    "answer": "Keep evidence of the dates you moved in and out, any rental agreements and income records, utility bills and bank statements showing your address, records of any home office claims, and invoices for capital improvements (these increase your cost base). Keep all records for at least 5 years after disposal, and longer where CGT calculations span multiple years or involve market value resets."
   },
   {
     "question": "Does the exemption apply to properties held in a company or trust?",
-    "answer": "No. The main residence CGT exemption applies only to individuals and certain trusts (not unit trusts or companies). If your home is held in a company or discretionary trust, the exemption does not apply and the full gain is taxable."
+    "answer": "Companies cannot access the main residence exemption — the full gain is taxable. Trusts have limited access under strict conditions — certain types of trusts (such as some fixed trusts) may be eligible, but discretionary trusts and unit trusts generally cannot claim the exemption. Get professional advice before assuming a trust structure is covered."
   }
 ];
 
@@ -231,19 +231,19 @@ const geoFacts = [
 const sidebarNumbers = [
   {
     "label": "Full exemption",
-    "value": "Main home only"
+    "value": "All conditions met"
   },
   {
     "label": "6-year rule",
-    "value": "Max absence"
+    "value": "Per absence — not total"
   },
   {
     "label": "CGT discount",
     "value": "50% if 12mo+"
   },
   {
-    "label": "Audit window",
-    "value": "4 years"
+    "label": "Records",
+    "value": "5 years after disposal"
   }
 ];
 
@@ -340,23 +340,23 @@ export default function CgtMainResidenceTrapPage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter rental period",
-            "text": "Choose how long the property was rented during your ownership."
+            "name": "Select property pathway",
+            "text": "Full residence, moved out, investment-first, mixed use, or never lived there — routes to the correct legal analysis."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter ownership period",
-            "text": "Select your total ownership duration from settlement to today."
+            "name": "Answer usage questions",
+            "text": "Income use, absence duration, business use, and overlap with another property each affect the exemption."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your CGT verdict",
-            "text": "See your exempt fraction and estimated taxable gain immediately."
+            "name": "Get your exemption verdict",
+            "text": "Full / partial / no exemption — with the taxable fraction formula and strongest risk trigger."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your fix plan",
-            "text": "Receive a personalised CGT minimisation strategy for your situation."
+            "name": "Get your plan",
+            "text": "Personalised exemption memo, timeline map, 6-year rule check, and accountant questions for your situation."
       }
 ],
   };
@@ -455,7 +455,7 @@ export default function CgtMainResidenceTrapPage() {
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          The main residence exemption removes CGT on your home — but only if you meet the conditions. If you rented your home at any point, used it for business, or were absent for more than six years, part of your gain may be taxable. The exemption is proportional, not all-or-nothing.
+          You only get a full CGT exemption if all of these are true: you lived in the property as your main residence the entire time; you did not use it to produce income; you did not treat another property as your main residence at the same time; and you were an Australian resident at the time of sale. Break any one of these and part — or all — of your gain becomes taxable.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -478,19 +478,19 @@ export default function CgtMainResidenceTrapPage() {
                 
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Full exemption</dt>
-                  <dd className="font-bold">Main home only</dd>
+                  <dd className="font-bold">All conditions met</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">6-year rule</dt>
-                  <dd className="font-bold">Max absence</dd>
+                  <dd className="font-bold">Per absence — not total</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">CGT discount</dt>
                   <dd className="font-bold">50% if 12mo+</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Audit window</dt>
-                  <dd className="font-bold">4 years</dd>
+                  <dt className="text-neutral-600">Records</dt>
+                  <dd className="font-bold">5 years after disposal</dd>
                 </div>
               </dl>
             </div>
@@ -580,34 +580,38 @@ export default function CgtMainResidenceTrapPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What makes your home exempt
+            Main residence exemption — what breaks it
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Main residence entire ownership period</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 6-year absence rule — no other home</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 50% CGT discount if held 12+ months</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Full exemption: lived there entire ownership, no income use</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Partial: income use or absence → taxable = non-exempt days / total days</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 6-year rule: rented during absence, max 6 years per absence period</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ First used to produce income: market value reset (s118-192)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 50% CGT discount applies to taxable portion if held 12+ months</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if rented beyond 6-year rule</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if held in company or trust</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT if home office deductions claimed on dedicated room</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT available to foreign residents at time of sale (post-2020)</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT if property never used as main residence</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT occupancy expense claims — partial reduction applies</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT overlap with another main residence — nomination required</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Usually NOT available to companies or most trusts</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Main residence exemption · ITAA 1997 s.118-110</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — ITAA 1997 s118-110 (exemption) · s118-145 (6-year rule) · s118-192 (first income use) · ATO guidance 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — ATO confirmed April 2026
+            Is your home sale tax-free in Australia? Not always.
           </p>
-          <p className="mb-2 text-neutral-900">The main residence exemption removes CGT on your home — but only if you meet the conditions. If you rented your home at any point, used it for business, or were absent for more than six years, part of your gain may be taxable. The exemption is proportional, not all-or-nothing.</p>
-          <p className="mb-2 text-neutral-900">The 6-year rule allows you to treat a property as your main residence for up to six years while renting it out — but only if you do not treat another property as your main residence at the same time, and only if you moved back in or sold within six years of moving out.</p>
-          <p className="mb-2 text-neutral-900">The most common mistake: people assume that because a property was their main residence at some point, the full sale is tax-free. It is not. The taxable portion is calculated as the number of non-exempt days divided by the total ownership days, multiplied by the capital gain.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Main residence exemption · ITAA 1997 s.118-110</p>
+          <p className="mb-2 text-neutral-900">You only get a full CGT exemption if all of these are true: you lived in the property as your main residence the entire time; you did not use it to produce income; you did not treat another property as your main residence at the same time; and you were an Australian resident at the time of sale. Break any one of these and part — or all — of your gain becomes taxable.</p>
+          <p className="mb-2 text-neutral-900">Critical exceptions most people and AI miss: you may still pay CGT if you were a foreign resident at the time of sale; if you rented the property out (the 6-year rule applies but has strict limits); if you first used the property to produce income before moving in (market value reset rules apply); if you used part of the home as a dedicated place of business or claimed occupancy expenses; or if you owned multiple properties and nominated another as your main residence.</p>
+          <p className="mb-2 text-neutral-900">The taxable portion is calculated as: non-exempt days ÷ total ownership days × capital gain. Apply the 50% CGT discount if held for more than 12 months, then adjust for any market value reset under s118-192 if the property was first used to produce income. These are the rules where most unexpected tax bills come from.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — ITAA 1997 s118-110 (exemption) · s118-145 (6-year rule) · s118-190 (income use) · s118-192 (first income use) · ATO foreign resident guidance 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -629,12 +633,13 @@ export default function CgtMainResidenceTrapPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about the main residence exemption
+            What most people (and AI) get wrong about the main residence exemption
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The main residence exemption is all-or-nothing — wrong. The exemption is proportional. If you rented your home for 2 of the 10 years you owned it, 20% of the gain is taxable regardless of whether you qualify for the 6-year rule.</li>
-            <li>✗ The 6-year rule makes all rental periods tax-free — wrong. The 6-year absence rule applies from the date you moved out, not from any rental period. And it resets only if you move back in as your main residence before moving out again.</li>
-            <li>✗ Using the property for a home office does not affect the exemption — wrong. If you claim a deduction for a dedicated home office area, that area may be excluded from the main residence exemption, creating a partial taxable gain on sale.</li>
+            <li>✗ My home is always tax-free — wrong. You only get a full CGT exemption if all of these are true: you lived there as your main residence the entire time, you did not use it to produce income, you did not treat another property as your main residence simultaneously, and you were an Australian resident at time of sale. Break any one of these and part or all of your gain becomes taxable.</li>
+            <li>✗ Renting it for a bit doesn't matter — wrong. Any rental period outside the 6-year absence rule creates a taxable fraction. The formula is: taxable portion = (days NOT covered by exemption ÷ total days owned) × capital gain. A property owned for 10 years and rented for 3 years has a 30% taxable fraction — even if it was genuinely your home for the other 7 years.</li>
+            <li>✗ Working from home has no CGT impact — wrong. Claiming occupancy expenses (not just running costs like phone or internet) or using a dedicated part of the home as a place of business can reduce the main residence exemption for that portion of the property. This is frequently overlooked — a deduction claimed years ago can create a partial CGT liability on sale.</li>
+            <li>✗ Foreign residents just lose the 50% discount — wrong. Foreign residents at the time of sale generally lose the entire main residence exemption — not just the CGT discount. Under rules that took effect from 1 July 2020, most foreign residents cannot access the exemption at all, regardless of how long they previously lived in the property.</li>
           </ul>
         </div>
 

@@ -43,18 +43,10 @@ const FILES = [
 ];
 
 interface Action { title: string; deadline: string; steps: string[]; }
-interface Assessment {
-  status: string;
-  exemptFraction: string;
-  taxableGain: string;
-  estimatedCGT: string;
-  sixYearRuleEligible: string;
-  costBaseItems: string;
-  firstAction: string;
-  accountantQuestions: string[];
-  
-  [key: string]: unknown;
-}
+type Assessment = Record<string, unknown> & {
+  accountantQuestions?: string[];
+  actions?: Action[];
+};
 
 export default function SuccessAssess() {
   const [firstName,  setFirstName]  = useState("there");
@@ -108,16 +100,22 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const rental_period = sessionStorage.getItem("cgt-main-residence-trap_rental_period") || "0";
-      const ownership_years = sessionStorage.getItem("cgt-main-residence-trap_ownership_years") || "7";
-      const claimed_office = sessionStorage.getItem("cgt-main-residence-trap_claimed_office") || "false";
+      const pathway = sessionStorage.getItem("cgt-main-residence-trap_pathway") || "moved_out";
+      const exemption_status = sessionStorage.getItem("cgt-main-residence-trap_exemption_status") || "partial";
+      const taxable_fraction = sessionStorage.getItem("cgt-main-residence-trap_taxable_fraction") || "0.3";
+      const strongest_trigger = sessionStorage.getItem("cgt-main-residence-trap_strongest_trigger") || "Rented during absence";
+      const status = sessionStorage.getItem("cgt-main-residence-trap_status") || "PARTIAL EXEMPTION";
+      const tier = sessionStorage.getItem("cgt-main-residence-trap_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "rental_period": rental_period,
-        "ownership_years": ownership_years,
-        "claimed_office": claimed_office,
-      }).some(v => v && v !== "0");
+        "pathway": pathway,
+        "exemption_status": exemption_status,
+        "taxable_fraction": taxable_fraction,
+        "strongest_trigger": strongest_trigger,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "moved_out");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -129,11 +127,14 @@ export default function SuccessAssess() {
           tier:       1,
           name,
           inputs: {
-        "Rental period months": rental_period,
-        "Ownership years": ownership_years,
-        "Claimed home office": claimed_office,
+        "Property pathway": pathway,
+        "Exemption status": exemption_status,
+        "Estimated taxable fraction": taxable_fraction,
+        "Strongest exemption risk trigger": strongest_trigger,
+        "CGT main residence verdict": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","exemptFraction","taxableGain","estimatedCGT","sixYearRuleEligible","costBaseItems","firstAction"],
+          fields: ["exemptionStatus","taxableFractionCalculation","sixYearRuleAnalysis","incomeUseImpact","foreignResidencyCheck","businessUseImpact","overlapPropertyIssue","evidenceChecklist","firstAction"],
         }),
       });
       const data = await res.json();
@@ -143,12 +144,14 @@ export default function SuccessAssess() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        exemptFraction: "Your personalised exemptFraction is being prepared — please refresh in a moment.",
-        taxableGain: "Your personalised taxableGain is being prepared — please refresh in a moment.",
-        estimatedCGT: "Your personalised estimatedCGT is being prepared — please refresh in a moment.",
-        sixYearRuleEligible: "Your personalised sixYearRuleEligible is being prepared — please refresh in a moment.",
-        costBaseItems: "Your personalised costBaseItems is being prepared — please refresh in a moment.",
+        exemptionStatus: "Your personalised exemptionStatus is being prepared — please refresh in a moment.",
+        taxableFractionCalculation: "Your personalised taxableFractionCalculation is being prepared — please refresh in a moment.",
+        sixYearRuleAnalysis: "Your personalised sixYearRuleAnalysis is being prepared — please refresh in a moment.",
+        incomeUseImpact: "Your personalised incomeUseImpact is being prepared — please refresh in a moment.",
+        foreignResidencyCheck: "Your personalised foreignResidencyCheck is being prepared — please refresh in a moment.",
+        businessUseImpact: "Your personalised businessUseImpact is being prepared — please refresh in a moment.",
+        overlapPropertyIssue: "Your personalised overlapPropertyIssue is being prepared — please refresh in a moment.",
+        evidenceChecklist: "Your personalised evidenceChecklist is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
@@ -156,7 +159,7 @@ export default function SuccessAssess() {
           "Are there any planning opportunities specific to my situation?",
         ],
         
-      } as Assessment);
+      } as unknown as Assessment);
     } finally {
       setLoading(false);
     }
@@ -164,9 +167,12 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const rental_period = sessionStorage.getItem("cgt-main-residence-trap_rental_period") || "0";
-    const ownership_years = sessionStorage.getItem("cgt-main-residence-trap_ownership_years") || "7";
-    const claimed_office = sessionStorage.getItem("cgt-main-residence-trap_claimed_office") || "false";
+    const pathway = sessionStorage.getItem("cgt-main-residence-trap_pathway") || "moved_out";
+    const exemption_status = sessionStorage.getItem("cgt-main-residence-trap_exemption_status") || "partial";
+    const taxable_fraction = sessionStorage.getItem("cgt-main-residence-trap_taxable_fraction") || "0.3";
+    const strongest_trigger = sessionStorage.getItem("cgt-main-residence-trap_strongest_trigger") || "Rented during absence";
+    const status = sessionStorage.getItem("cgt-main-residence-trap_status") || "PARTIAL EXEMPTION";
+    const tier = sessionStorage.getItem("cgt-main-residence-trap_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -274,13 +280,13 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","exemptFraction","taxableGain","estimatedCGT","sixYearRuleEligible","costBaseItems"] as string[]).map(key => {
+                {(["exemptionStatus","taxableFractionCalculation","sixYearRuleAnalysis","incomeUseImpact","foreignResidencyCheck","businessUseImpact"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/_/g," ")}
+                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
                     </div>

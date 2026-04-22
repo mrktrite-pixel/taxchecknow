@@ -120,12 +120,12 @@ export async function GET() {
         {
             "id": 7,
             "question": "What records do I need?",
-            "answer": "Keep evidence of the dates you moved in and out, any rental agreements and income records, utility bills and bank statements showing your address, records of any home office claims, and invoices for capital improvements (these increase your cost base). ATO can audit CGT positions for up to four years after the tax return is lodged."
+            "answer": "Keep evidence of the dates you moved in and out, any rental agreements and income records, utility bills and bank statements showing your address, records of any home office claims, and invoices for capital improvements (these increase your cost base). Keep all records for at least 5 years after disposal, and longer where CGT calculations span multiple years or involve market value resets."
         },
         {
             "id": 8,
             "question": "Does the exemption apply to properties held in a company or trust?",
-            "answer": "No. The main residence CGT exemption applies only to individuals and certain trusts (not unit trusts or companies). If your home is held in a company or discretionary trust, the exemption does not apply and the full gain is taxable."
+            "answer": "Companies cannot access the main residence exemption — the full gain is taxable. Trusts have limited access under strict conditions — certain types of trusts (such as some fixed trusts) may be eligible, but discretionary trusts and unit trusts generally cannot claim the exemption. Get professional advice before assuming a trust structure is covered."
         }
     ],
     "sources": [
@@ -159,7 +159,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/cgt-main-residence-trap",
     "api_endpoint": "/api/rules/cgt-main-residence-trap",
-    "generated_at": "2026-04-21T07:28:31.221Z"
+    "generated_at": "2026-04-22T00:06:07.783Z"
 };
 
   return NextResponse.json(rules, {
