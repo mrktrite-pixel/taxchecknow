@@ -109,7 +109,6 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calendarTitle: "Super bring-forward window — key dates",
   tier1Calendar: [{ uid: "bfw-june30", summary: "Super — 30 June NCC sequencing deadline", description: "Last day to contribute $120,000 under 2025-26 annual cap for sequencing strategy.", date: "20260630" }],
   tier2Calendar: [{ uid: "bfw-prepare", summary: "Super — confirm TSB projection with accountant", description: "Review projected TSB at 30 June 2026 to confirm sequencing eligibility.", date: "20260601" }, { uid: "bfw-june30", summary: "Super — contribute $120,000 before 30 June", description: "Contribute annual NCC cap under 2025-26 rules for sequencing.", date: "20260625" }, { uid: "bfw-july1", summary: "Super — trigger $390,000 bring-forward from 1 July", description: "New indexed bring-forward available from 1 July under 2026-27 rules.", date: "20260702" }],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_AU_BFW_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_AU_BFW_147" },
   monitorUrls: ["https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/growing-and-keeping-track-of-your-super/caps-limits-and-tax-on-super-contributions/non-concessional-contributions-cap"],
   sidebarNumbers: [{ label: "NCC cap from 1 July 2026", value: "$130,000" }, { label: "Bring-forward from 1 July", value: "$390,000" }, { label: "Sequencing maximum", value: "$510,000" }, { label: "Decision gap", value: "$150,000" }],
   sidebarMathsTitle: "30 June bring-forward window — rule vs reality",
