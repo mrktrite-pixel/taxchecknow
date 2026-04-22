@@ -112,7 +112,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calendarTitle: "Dividend Tax — Key Dates",
   tier1Calendar: [{ uid: "dt-review", summary: "Dividend Tax — Annual salary and dividend review", description: "Review optimal salary and dividend split for 2026/27 with your accountant.", date: "relative:+30days" }, { uid: "dt-sa", summary: "Self Assessment Deadline — Dividend tax due", description: "File 2025/26 return and pay dividend tax by 31 January 2027.", date: "20270131" }],
   tier2Calendar: [{ uid: "dt-structure", summary: "Dividend — Review shareholding structure", description: "Review spousal shareholding and pension contribution interaction.", date: "relative:+14days" }, { uid: "dt-review", summary: "Dividend — Salary and dividend split review", description: "Optimise split for 2026/27.", date: "relative:+30days" }, { uid: "dt-sa", summary: "Self Assessment Deadline", description: "31 January 2027.", date: "20270131" }],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DIV_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DIV_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.gov.uk/tax-on-dividends"],
   sidebarNumbers: [{ label: "Dividend allowance", value: "£500" }, { label: "Basic rate", value: "8.75%" }, { label: "Higher rate", value: "33.75%" }, { label: "Additional rate", value: "39.35%" }],
   sidebarMathsTitle: "Which dividend rate applies",

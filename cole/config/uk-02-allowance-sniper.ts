@@ -115,7 +115,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calendarTitle: "Allowance Taper — Key Dates",
   tier1Calendar: [{ uid: "as-yearend", summary: "Tax Year End — Make pension contribution", description: "Pension contributions must be made before 5 April to count in current tax year and reduce taper exposure.", date: "20270405" }],
   tier2Calendar: [{ uid: "as-review", summary: "Taper — Review adjusted income mid-year", description: "Check adjusted net income now and model pension contribution needed.", date: "relative:+14days" }, { uid: "as-yearend", summary: "Tax Year End — Final pension deadline", description: "Last chance to make pension contributions for 2026/27.", date: "20270405" }],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_ALLOWANCE_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_ALLOWANCE_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.gov.uk/income-tax-rates/income-over-100000"],
   sidebarNumbers: [{ label: "Taper starts", value: "£100,000" }, { label: "Effective rate", value: "60%" }, { label: "Taper ends", value: "£125,140" }, { label: "Pension relief in band", value: "Up to 60%" }],
   sidebarMathsTitle: "The 60% trap calculation",

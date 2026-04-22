@@ -111,7 +111,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calendarTitle: "Side Hustle — Key Tax Dates",
   tier1Calendar: [{ uid: "sh-reg", summary: "Self Assessment Registration Deadline", description: "Register for self assessment by 5 October 2026 for 2025/26 side income.", date: "20261005" }, { uid: "sh-file", summary: "Self Assessment Filing Deadline", description: "File your 2025/26 return and pay tax by 31 January 2027.", date: "20270131" }],
   tier2Calendar: [{ uid: "sh-review", summary: "Side Hustle — Review all platform income", description: "Calculate total gross income from all platforms for 2025/26.", date: "relative:+7days" }, { uid: "sh-reg", summary: "Self Assessment Registration Deadline", description: "Register by 5 October 2026.", date: "20261005" }, { uid: "sh-file", summary: "Filing and Payment Deadline", description: "31 January 2027.", date: "20270131" }],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_SH_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_SH_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income"],
   sidebarNumbers: [{ label: "Trading allowance", value: "£1,000 gross" }, { label: "Registration deadline", value: "5 October" }, { label: "Late penalty", value: "£100" }, { label: "VAT threshold", value: "£90,000" }],
   sidebarMathsTitle: "The trading allowance — what it covers",

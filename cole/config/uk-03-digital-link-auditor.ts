@@ -112,7 +112,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calendarTitle: "Digital Link — VAT Return Dates",
   tier1Calendar: [{ uid: "dl-vat1", summary: "VAT Return — Digital Link Check", description: "Before submitting your next VAT return, confirm your digital link chain is complete.", date: "relative:+7days" }],
   tier2Calendar: [{ uid: "dl-audit", summary: "Digital Link — Full Process Audit", description: "Complete digital link audit and implement any bridging software needed.", date: "relative:+14days" }, { uid: "dl-vat1", summary: "VAT Return — Digital Link Confirmed", description: "Submit next VAT return with confirmed compliant digital link chain.", date: "relative:+30days" }],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DLA_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_DLA_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat"],
   sidebarNumbers: [{ label: "Most common breach", value: "Copy-paste" }, { label: "Bridging tool cost", value: "From £40/yr" }, { label: "Soft landing ended", value: "April 2021" }, { label: "VAT returns per year", value: "4 (quarterly)" }],
   sidebarMathsTitle: "What makes a digital link",
