@@ -136,7 +136,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "mtd-q1", summary: "MTD — Quarter 1 Update Due", description: "First quarterly update due 5 August.", date: "20260805" },
     { uid: "mtd-final", summary: "MTD — Annual Final Declaration", description: "Final annual declaration due 31 January 2027.", date: "20270131" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_MTD_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_UK_MTD_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax"],
   sidebarNumbers: [{ label: "Phase 1 threshold", value: "£50,000" }, { label: "Quarterly updates", value: "4 per year" }, { label: "Live from", value: "April 2026" }, { label: "Software penalty", value: "Up to £400" }],
   sidebarMathsTitle: "What counts toward the MTD threshold",
