@@ -135,30 +135,10 @@ function getPriceId(tier: number, productKey: string): string | undefined {
     if (tier === 67)  return process.env.STRIPE_AU_BFW_67;
     if (tier === 147) return process.env.STRIPE_AU_BFW_147;
   }
-  // AU-12 Division 296 Wealth Eraser
-  if (key.includes("au_") && key.includes("div296")) {
-    if (tier === 67)  return process.env.STRIPE_AU_DIV296_67;
-    if (tier === 147) return process.env.STRIPE_AU_DIV296_147;
-  }
-  // AU-13 Death Benefit Tax-Wall
-  if (key.includes("au_") && key.includes("death_benefit")) {
-    if (tier === 67)  return process.env.STRIPE_AU_DBTW_67;
-    if (tier === 147) return process.env.STRIPE_AU_DBTW_147;
-  }
-  // AU-14 Super-to-Trust Exit
-  if (key.includes("au_") && key.includes("super_to_trust")) {
-    if (tier === 67)  return process.env.STRIPE_AU_STREXIT_67;
-    if (tier === 147) return process.env.STRIPE_AU_STREXIT_147;
-  }
-  // AU-15 Transfer Balance Cap
-  if (key.includes("au_") && key.includes("transfer_balance")) {
-    if (tier === 67)  return process.env.STRIPE_AU_TBC_67;
-    if (tier === 147) return process.env.STRIPE_AU_TBC_147;
-  }
-  // AU-16 Cost-Base Reset
-  if (key.includes("au_") && key.includes("cost_base")) {
-    if (tier === 67)  return process.env.STRIPE_AU_COSTRESET_67;
-    if (tier === 147) return process.env.STRIPE_AU_COSTRESET_147;
+  // AU-12 Super Death Tax Trap (death benefit tax + Div 296 double-tax engine)
+  if (key.includes("au_") && key.includes("super_death_tax_trap")) {
+    if (tier === 67)  return process.env.STRIPE_AU_SDTT_67;
+    if (tier === 147) return process.env.STRIPE_AU_SDTT_147;
   }
   // ADD NEW AU PRODUCTS ABOVE THIS LINE
   // Pattern: if (key.includes("au_") && key.includes("[slug_fragment]")) { ... }
