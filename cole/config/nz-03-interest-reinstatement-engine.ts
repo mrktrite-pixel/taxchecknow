@@ -135,7 +135,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "ir-return",  summary: "NZ Tax Return — Claim 100% interest",       description: "File 2025/26 return with full interest deduction.", date: "20261007" },
     { uid: "ir-yearend", summary: "NZ Tax Year End — 31 March 2027",           description: "Plan final interest claims for 2026/27 year.", date: "20270331" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_IR_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_IR_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/deductions-for-residential-rental-property/interest"],
   sidebarNumbers: [{ label: "Deductibility (2026)", value: "100%" }, { label: "Restored from", value: "1 Apr 2025" }, { label: "On $30k interest at 33%", value: "$9,900 saved" }, { label: "Audit focus", value: "Loan tracing" }],
   sidebarMathsTitle: "What makes interest deductible",

@@ -139,7 +139,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "ib-return",  summary: "Investment Boost — 2025/26 Tax Return Due",   description: "File return with Investment Boost claimed in IR10 Box 60.", date: "20260707" },
     { uid: "ib-review",  summary: "Investment Boost — 2026 new assets review",   description: "Review all new assets acquired in 2026 for Investment Boost eligibility.", date: "20270301" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_IB_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_IB_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost"],
   sidebarNumbers: [{ label: "Upfront deduction", value: "20%" }, { label: "Eligible from", value: "22 May 2025" }, { label: "Trigger test", value: "Available-for-use" }, { label: "On $500k asset at 28%", value: "$28k saved" }],
   sidebarMathsTitle: "What qualifies for Investment Boost",

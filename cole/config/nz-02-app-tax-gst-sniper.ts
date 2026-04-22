@@ -137,7 +137,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "gst-q1", summary: "GST — Period 1 Return Due", description: "First GST return due.", date: "20260430" },
     { uid: "gst-annual", summary: "GST — Annual adjustment due", description: "Annual GST adjustment for mixed-use assets and apportionment.", date: "20270331" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_GST_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_GST_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.ird.govt.nz/gst/gst-for-marketplace-sellers"],
   sidebarNumbers: [{ label: "GST rate", value: "15%" }, { label: "Flat-rate credit", value: "8.5%" }, { label: "Registration threshold", value: "$60,000" }, { label: "Gap per $1k income", value: "$65" }],
   sidebarMathsTitle: "What App Tax means for you",

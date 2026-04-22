@@ -137,7 +137,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "tt-resolution",    summary: "Trust — Pass trustee resolutions by 20 March", description: "Sign all distribution resolutions. Allow buffer before 31 March deadline.", date: "20270320" },
     { uid: "tt-yearend",       summary: "NZ Tax Year End — 31 March 2027", description: "Last day for trust distributions to be effective for 2026/27.", date: "20270331" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_TT_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_TT_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income"],
   sidebarNumbers: [{ label: "Trustee rate", value: "39%" }, { label: "De minimis rate", value: "33%" }, { label: "Adult beneficiary", value: "10.5-33%" }, { label: "Company rate", value: "28%" }],
   sidebarMathsTitle: "Trust tax by distribution strategy",

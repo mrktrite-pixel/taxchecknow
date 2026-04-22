@@ -135,7 +135,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "bl-transfer", summary: "Bright-Line — Review transfer history",           description: "Confirm whether any trust or family transfer affects your start date.", date: "relative:+14days" },
     { uid: "bl-yearend", summary: "NZ Tax Year End — 31 March 2027",                  description: "Declare bright-line income in 2026/27 return.", date: "20270331" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_BL_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_NZ_BL_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test"],
   sidebarNumbers: [{ label: "Bright-line period", value: "2 years" }, { label: "Start date", value: "Title registration" }, { label: "Main home tests", value: "2 required" }, { label: "Tax year end", value: "31 March" }],
   sidebarMathsTitle: "What starts the bright-line clock",
