@@ -20,8 +20,8 @@ export async function GET() {
     "language": "en-AU",
     "currency": "AUD",
     "last_verified": "April 2026",
-    "legislation": "Income Tax Assessment Act 1997 s292-85 (NCC cap and bring-forward) · Division 291 (concessional contributions and carry-forward) · Subdivision 296-B (Division 296 tax on large super balances, from 1 July 2026) · Superannuation Industry (Supervision) Act 1993 · Indexation confirmed via ATO April 2026",
-    "legal_anchor": "ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule",
+    "legislation": "Income Tax Assessment Act 1997 Division 292 (non-concessional contributions cap, bring-forward rule, s292-85 indexation) · Division 291 (concessional contributions and 5-year carry-forward) · Subdivision 296-B (Division 296 tax on large super balances, from 1 July 2026) · Superannuation Industry (Supervision) Act 1993 · Indexation confirmed via ATO April 2026",
+    "legal_anchor": "ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation",
     "deadline": {
         "iso_date": "2026-06-30T23:59:59.000+10:00",
         "display": "30 June 2026",
@@ -69,18 +69,18 @@ export async function GET() {
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "AI says: You can contribute $390,000 from 1 July 2026 automatically",
-            "correct": "Reality: Only if TSB is under $1.84M at 30 June 2026, bring-forward has NOT been triggered in a prior year, you are under 75, and the work test is met if 67-74. All conditions must be satisfied — a single fail blocks the $390k."
+            "ai_says": "ChatGPT says: Just wait until 1 July 2026 — you automatically get $390,000",
+            "correct": "Reality: Waiting only for 1 July gives you $390,000. Sequencing — $120k before 30 June + $390k from 1 July — gives you $510,000. Waiting costs you up to $150,000 of permanent contribution capacity. The window closes once the financial year ends."
         },
         {
             "error_id": 2,
-            "ai_says": "AI says: Just wait until 1 July 2026 for the higher caps",
-            "correct": "Reality: Waiting costs the sequencing window. $120,000 before 30 June + $390,000 from 1 July = $510,000. Waiting only for 1 July = $390,000. The $150,000 gap is permanent — the window closes once the financial year ends."
+            "ai_says": "ChatGPT says: The new $390,000 bring-forward applies to everyone under 75 from 1 July 2026",
+            "correct": "Reality: Only if you have NOT already triggered the bring-forward in 2024-25 or 2025-26. If you have, you are LOCKED into the $360,000 cap for three years. Indexation does not lift your cap mid-schedule — the ATO is explicit on this."
         },
         {
             "error_id": 3,
-            "ai_says": "AI says: Indexation benefits everyone who was planning to contribute",
-            "correct": "Reality: Indexation benefits ONLY people who have not yet triggered a bring-forward. If you triggered a bring-forward in 2024-25 or 2025-26, you are locked into the old $360,000 cap until that period expires — no indexation benefit during the schedule."
+            "ai_says": "ChatGPT says: This is just a routine indexation — no action needed",
+            "correct": "Reality: This is a lock-in decision with a $150,000 outcome gap. Trigger the bring-forward at the wrong moment and you are stuck at $360,000 for three years. The decision is irreversible — non-concessional contributions cannot be undone once made."
         }
     ],
     "faq": [
@@ -145,7 +145,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/bring-forward-window",
     "api_endpoint": "/api/rules/bring-forward-window",
-    "generated_at": "2026-04-22T07:27:31.949Z"
+    "generated_at": "2026-04-22T08:27:05.149Z"
 };
 
   return NextResponse.json(rules, {

@@ -299,22 +299,22 @@ function calcVerdict(answers: AnswerMap): VerdictResult {
   // ── Bring-forward already triggered ───────────────────────────────────────
   if (bringForwardTriggered === true) {
     return {
-      status: "LOCKED IN OLD SCHEDULE — BRING-FORWARD ALREADY TRIGGERED",
+      status: "LOCKED IN OLD SCHEDULE — 3 YEARS AT $360,000",
       statusClass: "text-red-700",
       panelClass: "border-red-200 bg-red-50",
-      headline: "You triggered a bring-forward in a prior year — you are locked into the 2025-26 caps at $360,000 maximum for the remainder of the schedule. Indexation does not apply mid-schedule.",
+      headline: "You triggered a bring-forward in a prior year — you are LOCKED into the 2025-26 caps at $360,000 maximum for THREE YEARS. Indexation does not apply during the schedule. The $390,000 indexed cap is unavailable until your existing bring-forward expires.",
       stats: [
         { label: "Locked cap", value: formatAUD(LOCKED_OLD_MAX), highlight: true },
         { label: "Missed new cap", value: formatAUD(WAIT_ONLY_MAX) },
         { label: "Decision gap", value: formatAUD(DECISION_GAP) + " permanent", highlight: true },
       ],
       consequences: [
-        "The ATO rule is explicit: the bring-forward cap is fixed at the year of trigger — indexation during the schedule does not lift your cap",
-        "A bring-forward triggered in 2024-25 or 2025-26 keeps you at the $360,000 maximum until the 3-year period expires",
-        "Once the existing schedule expires, a new bring-forward becomes available under whatever caps apply at that time",
-        "If your bring-forward triggered in 2024-25, it expires 30 June 2027 — you can trigger a fresh bring-forward from 1 July 2027",
-        "If your bring-forward triggered in 2025-26, it expires 30 June 2028 — you can trigger a fresh bring-forward from 1 July 2028",
-        div296Flagged ? "Division 296 may apply from 1 July 2026 — contributing more super may increase your Division 296 liability" : "",
+        "🔒 You are locked into the $360,000 cap for THREE YEARS — indexation does not apply during an active bring-forward schedule. The ATO is explicit on this (ITAA 1997 Division 292).",
+        "The $390,000 indexed cap is unavailable to you until your current bring-forward expires — even though everyone else can access it from 1 July 2026",
+        "A bring-forward triggered in 2024-25 keeps you locked through 30 June 2027 — you can trigger a fresh bring-forward under new caps from 1 July 2027",
+        "A bring-forward triggered in 2025-26 keeps you locked through 30 June 2028 — fresh bring-forward available from 1 July 2028",
+        "NCC decisions are irreversible once made — you cannot withdraw the contribution to unlock the new cap",
+        div296Flagged ? "Division 296 may apply from 1 July 2026 — contributing more super may increase your Division 296 liability. Consider this before any additional action." : "",
       ].filter(Boolean),
       confidence: "HIGH",
       confidenceNote: "Bring-forward already triggered — the schedule must expire before new caps apply. Confirm expiry date with your accountant.",
@@ -417,23 +417,23 @@ function calcVerdict(answers: AnswerMap): VerdictResult {
   // ── TSB under $1.84M: full 3-year bring-forward — THE $510K WINDOW ────────
   if (tsbBand === "under_1_84m") {
     return {
-      status: "SEQUENCING WINDOW OPEN — $510,000 AVAILABLE",
+      status: "SEQUENCING WINDOW OPEN — $510,000 vs LOCKED AT $360,000",
       statusClass: "text-emerald-700",
       panelClass: "border-emerald-200 bg-emerald-50",
-      headline: `With TSB under $1.84M at 30 June 2026, the full sequencing window is open: contribute $120,000 before 30 June, then trigger the new $390,000 bring-forward from 1 July — $510,000 total across two financial years.`,
+      headline: `Your sequencing window is open. Contribute $120,000 before 30 June under 2025-26 rules, then trigger the new $390,000 bring-forward from 1 July — $510,000 total. Trigger at the wrong moment and you're locked at $360,000 for three years. Same person, same money, different outcome.`,
       stats: [
         { label: "Before 30 June", value: formatAUD(timing.maxBeforeJune30) },
         { label: "From 1 July (3-yr)", value: formatAUD(timing.maxAfterJuly1) },
         { label: "Sequencing total", value: formatAUD(timing.totalPossible) + " ✓" },
       ],
       consequences: [
-        `Step 1: Contribute ${formatAUD(CAP_2025_26.ncc)} before 30 June 2026 as a standard annual NCC under 2025-26 rules. Do NOT trigger the bring-forward in June — that locks you into the old $360,000 cap.`,
-        `Step 2: From 1 July 2026, trigger the 3-year bring-forward by contributing ${formatAUD(CAP_2026_27.bringForward3Year)} under the new 2026-27 caps. The 3-year period starts from this trigger.`,
-        "Waiting until 1 July for everything means you get $390,000, not $510,000 — a $120,000 difference that cannot be recovered later",
-        "Once triggered in July 2026, the 3-year bring-forward runs through 30 June 2029 — you cannot trigger a new bring-forward until it expires",
-        "The indexation benefit is a one-time sequencing window — it does not repeat next year",
+        `🔒 LOCK-IN WARNING: If you trigger the bring-forward before 30 June 2026 (by contributing more than ${formatAUD(CAP_2025_26.ncc)}), you are stuck at $360,000 for three years. The indexed $390,000 cap is unavailable during the schedule. This decision is irreversible.`,
+        `Step 1: Contribute ${formatAUD(CAP_2025_26.ncc)} before 30 June 2026 as a standard annual NCC under 2025-26 rules. Do NOT go over — that accidentally triggers the bring-forward and locks you into the old $360,000 cap.`,
+        `Step 2: From 1 July 2026, trigger the 3-year bring-forward by contributing ${formatAUD(CAP_2026_27.bringForward3Year)} under the new 2026-27 caps. The 3-year period starts from this trigger — you cannot trigger another until 30 June 2029.`,
+        "Waiting until 1 July for everything gives you $390,000 — you miss the $120,000 sequencing opportunity permanently",
+        "The indexation benefit is a one-time sequencing window — it does not repeat next year. Same-year trigger lock applies.",
         div296Flagged ? "Division 296 applies from 1 July 2026 to balances above $3M — at this TSB level the impact is likely minimal, but model the projection with your accountant" : "",
-        carryForwardIntent === true ? "You have unused carry-forward concessional cap — note that 2020-21 unused cap expires 30 June 2026 and cannot be recovered afterwards" : "",
+        carryForwardIntent === true ? "You have unused carry-forward concessional cap under Division 291 — note that 2020-21 unused cap expires 30 June 2026 and cannot be recovered afterwards" : "",
       ].filter(Boolean),
       confidence: "HIGH",
       confidenceNote: "TSB under $1.84M confirmed — full 3-year bring-forward available at the new indexed cap from 1 July 2026.",
@@ -608,11 +608,16 @@ function VerdictBlock({ verdict, onCheckout, loading }: {
         </div>
       )}
 
-      {/* Decision gap — the conversion weapon */}
+      {/* Decision gap — the conversion weapon (ACTIVE FRAMING per GOAT audit) */}
       {verdict.decisionGap > 0 && (
-        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-red-700 mb-1">Decision gap</p>
-          <p className="text-xs text-red-900">→ Getting this wrong costs up to {formatAUD(verdict.decisionGap)} of permanent contribution capacity.</p>
+        <div className="mb-4 rounded-xl border-2 border-red-300 bg-red-50 px-4 py-4 text-sm">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-red-700 mb-1.5">⚠ The lock-in trap</p>
+          <p className="text-base font-bold text-red-900 leading-tight mb-1">
+            You lose up to {formatAUD(verdict.decisionGap)} of permanent contribution capacity if you act incorrectly.
+          </p>
+          <p className="text-xs text-red-800 leading-relaxed">
+            Trigger the bring-forward before 30 June 2026 and you're stuck at $360,000 for three years — the indexed $390,000 cap is unavailable. This decision is irreversible once made.
+          </p>
         </div>
       )}
 
@@ -640,8 +645,8 @@ function VerdictBlock({ verdict, onCheckout, loading }: {
       </div>
 
       <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
-        <p className="text-sm text-neutral-700 leading-relaxed">
-          This is not about how much you can contribute. It is about <strong className="text-neutral-950">when.</strong> Same person, same money — the sequencing decision is worth up to {formatAUD(DECISION_GAP)}.
+        <p className="text-sm text-neutral-800 leading-relaxed">
+          <strong className="text-neutral-950">This is not about how much you can contribute.</strong> It is about whether you lock yourself out of the higher cap — permanently. Trigger the bring-forward at the wrong moment and you are stuck at $360,000 for three years. Get the sequencing right and you access $510,000. Same person, same money, different outcome.
         </p>
       </div>
 

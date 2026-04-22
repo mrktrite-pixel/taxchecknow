@@ -72,16 +72,16 @@ const faqs = [
 
 const aiCorrections = [
   {
-    "wrong": "AI says: You can contribute $390,000 from 1 July 2026 automatically",
-    "correct": "Reality: Only if TSB is under $1.84M at 30 June 2026, bring-forward has NOT been triggered in a prior year, you are under 75, and the work test is met if 67-74. All conditions must be satisfied — a single fail blocks the $390k."
+    "wrong": "ChatGPT says: Just wait until 1 July 2026 — you automatically get $390,000",
+    "correct": "Reality: Waiting only for 1 July gives you $390,000. Sequencing — $120k before 30 June + $390k from 1 July — gives you $510,000. Waiting costs you up to $150,000 of permanent contribution capacity. The window closes once the financial year ends."
   },
   {
-    "wrong": "AI says: Just wait until 1 July 2026 for the higher caps",
-    "correct": "Reality: Waiting costs the sequencing window. $120,000 before 30 June + $390,000 from 1 July = $510,000. Waiting only for 1 July = $390,000. The $150,000 gap is permanent — the window closes once the financial year ends."
+    "wrong": "ChatGPT says: The new $390,000 bring-forward applies to everyone under 75 from 1 July 2026",
+    "correct": "Reality: Only if you have NOT already triggered the bring-forward in 2024-25 or 2025-26. If you have, you are LOCKED into the $360,000 cap for three years. Indexation does not lift your cap mid-schedule — the ATO is explicit on this."
   },
   {
-    "wrong": "AI says: Indexation benefits everyone who was planning to contribute",
-    "correct": "Reality: Indexation benefits ONLY people who have not yet triggered a bring-forward. If you triggered a bring-forward in 2024-25 or 2025-26, you are locked into the old $360,000 cap until that period expires — no indexation benefit during the schedule."
+    "wrong": "ChatGPT says: This is just a routine indexation — no action needed",
+    "correct": "Reality: This is a lock-in decision with a $150,000 outcome gap. Trigger the bring-forward at the wrong moment and you are stuck at $360,000 for three years. The decision is irreversible — non-concessional contributions cannot be undone once made."
   }
 ];
 
@@ -432,7 +432,7 @@ export default function BringForwardWindowPage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/growing-and-keeping-track-of-your-super/caps-limits-and-tax-on-super-contributions/non-concessional-contributions-cap" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇦🇺 ATO Verified · ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule ↗
+            🇦🇺 ATO Verified · ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-AU
@@ -446,7 +446,7 @@ export default function BringForwardWindowPage() {
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          From 1 July 2026, the non-concessional contribution (NCC) annual cap rises from $120,000 to $130,000, and the 3-year bring-forward maximum rises from $360,000 to $390,000. These are not new laws — they are scheduled indexation adjustments under ITAA 1997 s292-85, indexed to AWOTE in $2,500 increments for the concessional cap (which drives the NCC cap at 4× the concessional). No announcement moment. No media coverage. Most people are behind.
+          This is not about how much you can contribute — it is about whether you lock yourself out of the higher cap permanently. Trigger the 3-year bring-forward at the wrong moment and you are stuck at $360,000 for three years, unable to access the indexed $390,000 cap even though it is available to everyone else from 1 July 2026. The decision is irreversible once the trigger is made. Same person, same money, different timing — up to $150,000 of permanent contribution capacity.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -575,11 +575,11 @@ export default function BringForwardWindowPage() {
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 1: NCC cap rises $120k → $130k from 1 July 2026 (AWOTE indexation, not new law)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 2: 3-year bring-forward rises $360k → $390k from 1 July 2026 (ITAA 1997 s292-85)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 3: Sequencing $120k before 30 June + $390k from 1 July = $510k total</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 4: TSB threshold for full bring-forward is $1.84M at 30 June 2026 (scaled TBC)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 5: Measurement date is 30 June 2026 — not today's balance</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 1: NCC cap rises $120k → $130k from 1 July 2026 (AWOTE indexation under ITAA 1997 Division 292, not new law)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 2: 3-year bring-forward rises $360k → $390k from 1 July 2026 (ITAA 1997 Division 292)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 3: Carry-forward concessional sits under ITAA 1997 Division 291 — 2020-21 unused cap expires 30 June 2026</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 4: Sequencing $120k before 30 June + $390k from 1 July = $510k total across two financial years</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 5: Lock-in trap — triggering bring-forward before 30 June 2026 locks you into $360k cap for three years</p>
             </div>
             
             <div>
@@ -590,7 +590,7 @@ export default function BringForwardWindowPage() {
               <p className="mb-1 text-xs text-neutral-800">✗ NOT new legislation — indexation under existing ITAA 1997 s292-85</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Non-concessional contributions cap · ITAA 1997 s292-85 · ATO indexation confirmed April 2026</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Non-concessional contributions cap · ITAA 1997 Division 292 · ATO indexation confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -598,10 +598,10 @@ export default function BringForwardWindowPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The June 30 super bring-forward sequencing window — ATO confirmed April 2026
           </p>
-          <p className="mb-2 text-neutral-900">From 1 July 2026, the non-concessional contribution (NCC) annual cap rises from $120,000 to $130,000, and the 3-year bring-forward maximum rises from $360,000 to $390,000. These are not new laws — they are scheduled indexation adjustments under ITAA 1997 s292-85, indexed to AWOTE in $2,500 increments for the concessional cap (which drives the NCC cap at 4× the concessional). No announcement moment. No media coverage. Most people are behind.</p>
-          <p className="mb-2 text-neutral-900">The real decision is not how much you can contribute — it is when. Someone who contributes $120,000 before 30 June 2026 under 2025-26 rules and then triggers the new $390,000 bring-forward from 1 July 2026 can get $510,000 into super across the two financial years. Someone who simply waits until 1 July 2026 gets $390,000. Same person, same money — a $150,000 difference from sequencing alone.</p>
-          <p className="mb-2 text-neutral-900">Your eligibility depends on your Total Super Balance at 30 June 2026. Under $1.84M: full 3-year bring-forward available ($390,000). $1.84M to $1.97M: 2-year bring-forward only ($260,000). $1.97M to $2.1M: annual cap only ($130,000). At or above $2.1M: nil — locked out of non-concessional contributions entirely. The TSB is measured at 30 June 2026, not today's balance. Age also matters — 75+ cannot make NCCs at all; 67-74 must meet the work test.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Non-concessional contributions cap · ITAA 1997 s292-85 · Indexation confirmed via ATO April 2026</p>
+          <p className="mb-2 text-neutral-900">This is not about how much you can contribute — it is about whether you lock yourself out of the higher cap permanently. Trigger the 3-year bring-forward at the wrong moment and you are stuck at $360,000 for three years, unable to access the indexed $390,000 cap even though it is available to everyone else from 1 July 2026. The decision is irreversible once the trigger is made. Same person, same money, different timing — up to $150,000 of permanent contribution capacity.</p>
+          <p className="mb-2 text-neutral-900">From 1 July 2026, the non-concessional contribution (NCC) annual cap rises from $120,000 to $130,000, and the 3-year bring-forward maximum rises from $360,000 to $390,000. These are not new laws — they are scheduled indexation adjustments under ITAA 1997 Division 292, indexed to AWOTE in $2,500 increments for the concessional cap (which drives the NCC cap at 4× the concessional). No announcement moment. No media coverage. Most people are behind.</p>
+          <p className="mb-2 text-neutral-900">Your eligibility depends on your Total Super Balance at 30 June 2026. Under $1.84M: full 3-year bring-forward available ($390,000). $1.84M to $1.97M: 2-year bring-forward only ($260,000). $1.97M to $2.1M: annual cap only ($130,000). At or above $2.1M: nil — locked out of non-concessional contributions entirely. The TSB is measured at 30 June 2026, not today's balance. Age also matters — 75+ cannot make NCCs at all; 67-74 must meet the work test. Someone who contributes $120,000 before 30 June under 2025-26 rules and then triggers the new $390,000 bring-forward from 1 July can get $510,000 into super across two financial years. Someone who waits or triggers incorrectly gets $360,000 — locked for three years.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: ATO — Non-concessional contributions cap · ITAA 1997 Division 292 · Indexation confirmed via ATO April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -626,9 +626,9 @@ export default function BringForwardWindowPage() {
             What most people (and AI) get wrong about the June 30 bring-forward window
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ You can just contribute $390,000 from 1 July 2026 — wrong. The $390,000 bring-forward is only available from 1 July if your TSB is under $1.84M at 30 June 2026, you have NOT already triggered the bring-forward rule, and you are under 75 (with the work test met if 67-74). An existing bring-forward schedule in progress locks you into the old $360,000 cap for the remainder of the period. Many people discover this only after acting — too late to fix.</li>
+            <li>✗ You can just contribute $390,000 from 1 July 2026 — wrong. The $390,000 bring-forward is only available from 1 July if your TSB is under $1.84M at 30 June 2026, you have NOT already triggered the bring-forward rule, and you are under 75 (with the work test met if 67-74). If you triggered a bring-forward in 2024-25 or 2025-26, you are LOCKED INTO the $360,000 cap for three years — you cannot access the indexed $390,000 cap during the schedule. Many people discover this only after acting — too late to fix.</li>
             <li>✗ Wait until 1 July for the higher caps — wrong. Waiting exclusively for 1 July gives you $390,000. Contributing $120,000 before 30 June 2026 under the 2025-26 rules first, then triggering the new $390,000 bring-forward from 1 July 2026 under the 2026-27 rules, gives you $510,000. The 30 June sequencing window is a one-time opportunity that closes permanently at the end of the 2025-26 financial year — the bring-forward then resets under the new caps.</li>
-            <li>✗ This is just a routine cap increase — wrong. The difference between sequencing correctly and waiting is up to $150,000 of contribution capacity — permanently. NCC decisions are irreversible. Contributions above your cap are excess contributions, taxed at the top marginal rate (47%). The window to sequence across the 30 June / 1 July boundary exists exactly once — in this financial year — before the bring-forward resets under the new caps.</li>
+            <li>✗ This is just a routine cap increase — wrong. This is a lock-in event with irreversible consequences. Trigger the bring-forward at the wrong moment (before 30 June 2026 with more than $120,000) and you are stuck at the $360,000 cap for THREE YEARS. You cannot access the indexed $390,000 cap during the schedule — even though everyone else can from 1 July. The difference between sequencing correctly and locking yourself in is up to $150,000 of permanent contribution capacity. NCC decisions cannot be undone.</li>
             <li>✗ My current TSB determines my contribution limit — wrong. Your TSB at 30 June 2026 determines your 2026-27 limits — not your current TSB. If your balance will be lower at 30 June 2026 than it is today (due to pension drawdowns, withdrawals, or market movement), your eligibility may be better than it appears right now. And if a bring-forward has already been triggered, even a low TSB cannot unlock the new higher caps mid-schedule.</li>
           </ul>
         </div>
@@ -698,42 +698,42 @@ export default function BringForwardWindowPage() {
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">NCC cap 2025-26</td>
                   <td className="p-2">$120,000</td>
-                  <td className="p-2 text-neutral-500">ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">NCC cap 2026-27 (indexed)</td>
                   <td className="p-2">$130,000</td>
-                  <td className="p-2 text-neutral-500">ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">3-year bring-forward 2025-26</td>
                   <td className="p-2">$360,000</td>
-                  <td className="p-2 text-neutral-500">ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">3-year bring-forward 2026-27 (indexed)</td>
                   <td className="p-2">$390,000</td>
-                  <td className="p-2 text-neutral-500">ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">TSB threshold for full 3-year bring-forward</td>
                   <td className="p-2">Under $1.84M at 30 June 2026</td>
-                  <td className="p-2 text-neutral-500">ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">TSB lockout threshold from 1 July 2026</td>
                   <td className="p-2">$2.1M (indexed TBC)</td>
-                  <td className="p-2 text-neutral-500">ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Sequencing window maximum</td>
                   <td className="p-2">$510,000 ($120k + $390k)</td>
-                  <td className="p-2 text-neutral-500">ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Legislative anchor</td>
                   <td className="p-2">ITAA 1997 s292-85</td>
-                  <td className="p-2 text-neutral-500">ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation</td>
                 </tr>
               </tbody>
             </table>
@@ -1020,7 +1020,7 @@ export default function BringForwardWindowPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Super bring-forward window 30 June 2026: NCC cap rises from $120,000 to $130,000 from 1 July (indexed). 3-year bring-forward rises from $360,000 to $390,000. TSB threshold for full bring-forward eligibility is $1.84M (at 30 June 2026). Transfer Balance Cap lockout threshold rises to $2.1M. Sequencing: $120k before 30 June 2026 + $390k from 1 July 2026 = $510,000 across two financial years. Indexation under ITAA 1997 s292-85 — no new legislation.
+            Super bring-forward window 30 June 2026: NCC cap rises from $120,000 to $130,000 from 1 July (indexed under ITAA 1997 Division 292). 3-year bring-forward rises from $360,000 to $390,000. TSB threshold for full bring-forward is $1.84M (at 30 June 2026). Transfer Balance Cap lockout threshold rises to $2.1M. Sequencing opportunity: $120k before 30 June 2026 + $390k from 1 July 2026 = $510,000 across two financial years. LOCK-IN TRAP: triggering the bring-forward before 30 June 2026 locks you into the $360,000 cap for three years — the indexed $390,000 cap is unavailable during that period. Decision is irreversible once triggered.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1028,16 +1028,16 @@ export default function BringForwardWindowPage() {
               ATO
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              ITAA 1997 s292-85
+              ITAA 1997 Div 292
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
               Indexation (Not New Law)
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              NCC Cap 2026-27
+              $510k vs $360k Lock-In
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              $390k Bring-Forward
+              3-Year Lock Warning
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
               30 June Deadline

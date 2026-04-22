@@ -74,7 +74,7 @@ export default function BringForwardWindowFile04() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 ATO · ITAA 1997 s292-85 — Non-concessional contributions and bring-forward rule
+              🇬🇧 ATO · ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
