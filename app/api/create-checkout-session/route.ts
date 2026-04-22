@@ -140,6 +140,11 @@ function getPriceId(tier: number, productKey: string): string | undefined {
     if (tier === 67)  return process.env.STRIPE_AU_SDTT_67;
     if (tier === 147) return process.env.STRIPE_AU_SDTT_147;
   }
+  // AU-13 Division 296 Wealth Eraser (SMSF cost-base reset election)
+  if (key.includes("au_") && key.includes("div296_wealth_eraser")) {
+    if (tier === 67)  return process.env.STRIPE_AU_DIV296_67;
+    if (tier === 147) return process.env.STRIPE_AU_DIV296_147;
+  }
   // ADD NEW AU PRODUCTS ABOVE THIS LINE
   // Pattern: if (key.includes("au_") && key.includes("[slug_fragment]")) { ... }
 
