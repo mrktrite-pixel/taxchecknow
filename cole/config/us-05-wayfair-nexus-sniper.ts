@@ -140,7 +140,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "nexus-amnesty", summary: "Nexus — Check State Amnesty Programmes", description: "Review current state amnesty programmes — better terms than VDA in some states.", date: "20261001" },
     { uid: "nexus-year",  summary: "Nexus — Year-End Compliance Review",      description: "Full gross sales by state review. File all outstanding VDAs before year-end.", date: "20261231" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_NEXUS_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_NEXUS_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide", "https://www.streamlinedsalestax.org"],
   sidebarNumbers: [{ label: "Economic nexus threshold", value: "$100k gross" }, { label: "FBA nexus", value: "Immediate" }, { label: "Marketplace sales", value: "Count toward threshold" }, { label: "Lookback risk", value: "Unlimited (some states)" }],
   sidebarMathsTitle: "What counts toward nexus threshold",

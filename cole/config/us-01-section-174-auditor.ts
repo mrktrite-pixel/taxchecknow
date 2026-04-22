@@ -111,7 +111,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calendarTitle: "Section 174 — Tax Filing Dates",
   tier1Calendar: [{ uid: "s174-federal", summary: "Federal Tax Return Due — Section 174 Amortization", description: "Ensure Section 174 amortization is correctly reflected in 2025 federal return.", date: "20260415" }],
   tier2Calendar: [{ uid: "s174-review", summary: "Section 174 — Prior year compliance review", description: "Review 2022, 2023, 2024 returns for Section 174 compliance.", date: "relative:+14days" }, { uid: "s174-federal", summary: "Federal Tax Return Due", description: "April 15, 2026.", date: "20260415" }],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_174_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_174_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174"],
   sidebarNumbers: [{ label: "US R&D year 1 deduction", value: "10%" }, { label: "Offshore year 1 deduction", value: "3.33%" }, { label: "US amortization period", value: "5 years" }, { label: "Offshore amortization", value: "15 years" }],
   sidebarMathsTitle: "Section 174 amortization rates",

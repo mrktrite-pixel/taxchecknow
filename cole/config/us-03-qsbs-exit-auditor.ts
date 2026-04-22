@@ -126,7 +126,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "qsbs-stack",  summary: "QSBS — Trust stacking review",    description: "Plan spouse and trust shareholding for maximum exclusion.", date: "relative:+30days" },
     { uid: "qsbs-final",  summary: "QSBS — Tax return deadline",      description: "Report exit gain. Claim Section 1202 exclusion.", date: "20260415" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_QSBS_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_QSBS_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock"],
   sidebarNumbers: [{ label: "Exclusion cap", value: "$15M" }, { label: "Minimum hold", value: "5 years" }, { label: "Entity type", value: "C-Corp" }, { label: "Tax without QSBS", value: "~$3.5M" }],
   sidebarMathsTitle: "QSBS — all four tests required",

@@ -112,7 +112,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calendarTitle: "FEIE — Expat Tax Filing Dates",
   tier1Calendar: [{ uid: "feie-deadline", summary: "Expat Tax Return Deadline — June 15", description: "Automatic 2-month extension for US citizens abroad. File Form 2555 for FEIE claim.", date: "20270615" }],
   tier2Calendar: [{ uid: "feie-daycount", summary: "FEIE — Confirm 330-day count", description: "Verify full day count for physical presence test.", date: "relative:+7days" }, { uid: "feie-deadline", summary: "Expat Tax Return Deadline", description: "June 15, 2027.", date: "20270615" }],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_FEIE_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_FEIE_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion"],
   sidebarNumbers: [{ label: "FEIE limit 2026", value: "$126,500" }, { label: "Physical presence", value: "330 days" }, { label: "Abode test", value: "Critical" }, { label: "Revocation lockout", value: "5 years" }],
   sidebarMathsTitle: "FEIE — the three requirements",

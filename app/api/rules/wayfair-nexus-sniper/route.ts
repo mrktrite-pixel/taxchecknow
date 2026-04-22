@@ -193,7 +193,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/wayfair-nexus-sniper",
     "api_endpoint": "/api/rules/wayfair-nexus-sniper",
-    "generated_at": "2026-04-21T07:28:15.668Z"
+    "generated_at": "2026-04-22T15:02:37.440Z"
 };
 
   return NextResponse.json(rules, {

@@ -139,7 +139,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "iso-year",  summary: "🔴 ISO AMT — Year-End Exercise Deadline",          description: "Last day to exercise for 2026 tax year. Do not exercise without calculating safe range.", date: "20261231" },
     { uid: "iso-file",  summary: "ISO AMT — File Form 6251 + Form 8801",            description: "AMT calculation (Form 6251) and Minimum Tax Credit (Form 8801) due with annual return.", date: "20270415" },
   ],
-  delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_ISO_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_US_ISO_147" },
+  delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.irs.gov/taxtopics/tc427", "https://www.irs.gov/taxtopics/tc556"],
   sidebarNumbers: [{ label: "AMT exemption (MFJ)", value: "$220,700" }, { label: "AMT rate", value: "26% / 28%" }, { label: "Typical AMT bill", value: "~$150k" }, { label: "Credit recovery", value: "Form 8801" }],
   sidebarMathsTitle: "AMT is triggered at exercise",
