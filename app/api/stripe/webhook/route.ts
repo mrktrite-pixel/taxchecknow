@@ -67,6 +67,8 @@ const DELIVERY_MAP: Record<string, {
   "au_147_rental_property_deduction_audit":{ subject: "Your ATO Audit-Ready Rental System — TaxCheckNow",        productName: "Your ATO Audit-Ready Rental System",        driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_RENTAL_147 || "",    tierLabel: "$147", market: "Australia", authority: "ATO", productId: "rental-property-deduction-audit" },
   "au_67_medicare_levy_surcharge_trap":    { subject: "Your MLS Avoidance Plan — TaxCheckNow",                   productName: "Your MLS Avoidance Plan",                   driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_MLS_67 || "",        tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "medicare-levy-surcharge-trap" },
   "au_147_medicare_levy_surcharge_trap":   { subject: "Your Income & Insurance Optimisation System — TaxCheckNow", productName: "Your Income & Insurance Optimisation System", driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_MLS_147 || "",    tierLabel: "$147", market: "Australia", authority: "ATO", productId: "medicare-levy-surcharge-trap" },
+  "au_67_bring_forward_window":            { subject: "Your June 30 Decision Pack — TaxCheckNow",                productName: "Your June 30 Decision Pack",                driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_BFW_67 || "",        tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "bring-forward-window" },
+  "au_147_bring_forward_window":           { subject: "Your June 30 Execution Plan — TaxCheckNow",               productName: "Your June 30 Execution Plan",               driveUrl: process.env.NEXT_PUBLIC_DRIVE_AU_BFW_147 || "",       tierLabel: "$147", market: "Australia", authority: "ATO", productId: "bring-forward-window" },
   // ── SUPERTAXCHECK ─────────────────────────────────────────────────────────
   "supertax_67_div296_wealth_eraser":  { subject: "Your Div 296 Wealth Eraser — SuperTaxCheck",  productName: "Your Div 296 Wealth Eraser",  driveUrl: process.env.DRIVE_DIV296_67 || "",  tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "div296-wealth-eraser" },
   "supertax_147_div296_wealth_eraser": { subject: "Your Div 296 Strategy System — SuperTaxCheck", productName: "Your Div 296 Strategy System", driveUrl: process.env.DRIVE_DIV296_147 || "", tierLabel: "$147", market: "Australia", authority: "ATO", productId: "div296-wealth-eraser" },
@@ -89,6 +91,7 @@ const PRODUCT_DEADLINES: Record<string, string> = {
   "division-7a-loan-trap":            "2026-10-31T23:59:59.000+11:00",
   "fbt-hidden-exposure":              "2026-03-31T23:59:59.000+11:00",
   "small-business-cgt-concessions":   "2026-10-31T23:59:59.000+11:00",
+  "bring-forward-window":             "2026-06-30T23:59:59.000+10:00",
 };
 
 const REMINDER_DAYS = [30, 7, 1];
