@@ -219,7 +219,7 @@ export interface ProductConfig {
   tier2Calendar: Array<{ uid: string; summary: string; description: string; date: string }>;
 
   // ─── DELIVERY ──────────────────────────────────────────────────────────
-  delivery: { tier1DriveEnvVar: string; tier2DriveEnvVar: string };
+  delivery?: { tier1DriveEnvVar: string; tier2DriveEnvVar: string };
 
   // ─── MONITORING ────────────────────────────────────────────────────────
   monitorUrls: string[];

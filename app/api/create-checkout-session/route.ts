@@ -145,6 +145,11 @@ function getPriceId(tier: number, productKey: string): string | undefined {
     if (tier === 67)  return process.env.STRIPE_AU_DIV296_67;
     if (tier === 147) return process.env.STRIPE_AU_DIV296_147;
   }
+  // AU-14 Super-to-Trust Exit Engine (Div 296 exit break-even decision)
+  if (key.includes("au_") && key.includes("super_to_trust")) {
+    if (tier === 67)  return process.env.STRIPE_AU_STREXIT_67;
+    if (tier === 147) return process.env.STRIPE_AU_STREXIT_147;
+  }
   // ADD NEW AU PRODUCTS ABOVE THIS LINE
   // Pattern: if (key.includes("au_") && key.includes("[slug_fragment]")) { ... }
 

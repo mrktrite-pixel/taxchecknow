@@ -147,7 +147,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/div296-wealth-eraser",
     "api_endpoint": "/api/rules/div296-wealth-eraser",
-    "generated_at": "2026-04-22T11:46:43.995Z"
+    "generated_at": "2026-04-22T13:02:43.105Z"
 };
 
   return NextResponse.json(rules, {
