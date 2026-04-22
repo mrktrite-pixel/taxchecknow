@@ -150,6 +150,11 @@ function getPriceId(tier: number, productKey: string): string | undefined {
     if (tier === 67)  return process.env.STRIPE_AU_STREXIT_67;
     if (tier === 147) return process.env.STRIPE_AU_STREXIT_147;
   }
+  // AU-15 Transfer Balance Cap Optimiser (personal TBC vs general cap)
+  if (key.includes("au_") && key.includes("transfer_balance")) {
+    if (tier === 67)  return process.env.STRIPE_AU_TBC_67;
+    if (tier === 147) return process.env.STRIPE_AU_TBC_147;
+  }
   // ADD NEW AU PRODUCTS ABOVE THIS LINE
   // Pattern: if (key.includes("au_") && key.includes("[slug_fragment]")) { ... }
 
