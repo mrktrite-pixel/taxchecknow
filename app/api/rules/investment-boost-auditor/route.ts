@@ -12,16 +12,16 @@ export async function GET() {
     "schema_version": "1.0",
     "generated_by": "COLE — Citation Operations & Legal Engine",
     "product_id": "investment-boost-auditor",
-    "title": "Investment Boost Auditor",
+    "title": "Investment Boost Timing Engine",
     "site": "https://taxchecknow.com/nz/check/investment-boost-auditor",
-    "authority": "IRD",
+    "authority": "Inland Revenue Department (IRD)",
     "authority_url": "https://www.ird.govt.nz",
     "jurisdiction": "New Zealand",
     "language": "en-NZ",
     "currency": "NZD",
     "last_verified": "April 2026",
-    "legislation": "Income Tax Act 2007 s EE 31B — Investment Boost (effective 22 May 2025)",
-    "legal_anchor": "Income Tax Act 2007 — Investment Boost (s EE 31B)",
+    "legislation": "Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025) — 20% upfront deduction on qualifying depreciable business assets first available for use on or after 22 May 2025; cashflow acceleration (not additional deduction) — total lifetime deductions unchanged",
+    "legal_anchor": "Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)",
     "deadline": {
         "iso_date": "2026-07-07T23:59:59.000+12:00",
         "display": "7 July 2026",
@@ -29,14 +29,18 @@ export async function GET() {
         "urgency_label": "TAX RETURN DEADLINE"
     },
     "key_facts": {
-        "upfront_deduction": "20% of cost",
-        "remaining_base_depreciation": "Normal rate on 80% of cost",
-        "eligible_from": "First available for use on or after 22 May 2025",
-        "optional_or_mandatory": "Optional — taxpayer elects",
-        "ir10_disclosure": "Box 60 — total Investment Boost value",
-        "excludes": "Residential rental buildings"
+        "upfront_deduction": "20% of cost in year 1",
+        "remaining_depreciation": "Normal rate on 80% of cost over asset life",
+        "effect_on_total_lifetime_tax": "UNCHANGED — cashflow acceleration only",
+        "trigger_date": "First available for use ON OR AFTER 22 May 2025",
+        "legal_anchor": "Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)",
+        "eligible": "New business assets · new-to-NZ imports · depreciable tangible property",
+        "excluded": "Residential rental · second-hand NZ assets · land · intangibles · pre-22-May availability",
+        "example_100k_30_dv_28": "$3,920 year 1 cashflow boost",
+        "example_500k_qualifying_assets": "$19,600 year 1 cashflow boost",
+        "ir10_disclosure": "Box 60 (total boost value) and Box 52 (depreciation including boost)"
     },
-    "formula": "Year 1 Deduction = (Asset Cost × 20%) + (Asset Cost × 80% × Standard Depreciation Rate). Tax Saving = Year 1 Deduction × Tax Rate. Example: $500,000 asset, 10% dep rate. Year 1 = ($500k × 20%) + ($400k × 10%) = $100k + $40k = $140k deduction. Tax saving at 28% = $39,200.",
+    "formula": "Year 1 Deduction WITH Boost = (Asset Cost × 20%) + (Asset Cost × 80% × Normal Depreciation Rate). Year 1 Deduction WITHOUT Boost = Asset Cost × Normal Depreciation Rate. Additional Year 1 Tax Relief = 0.20 × Asset Cost × Tax Rate × (1 − Normal Depreciation Rate). Example: $100,000 × 28% × (1 − 30%) = $3,920 of year 1 tax relief brought forward. Total lifetime tax on the asset is UNCHANGED — this is cashflow acceleration only.",
     "thresholds": [
         {
             "label": "New machinery or equipment available for use from 22 May 2025",
@@ -67,28 +71,23 @@ export async function GET() {
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "ChatGPT says: Commercial buildings do not qualify for the Investment Boost in NZ",
-            "correct": "Reality: New commercial and industrial buildings can qualify for the 20% Investment Boost deduction under s EE 31B. IRD has confirmed this. The confusion arises because normal building depreciation was previously set near zero — but the Investment Boost is a separate, additional deduction."
+            "ai_says": "ChatGPT says: Investment Boost reduces my total tax",
+            "correct": "Reality: Investment Boost accelerates when deductions are claimed — it does not increase the total deductions available. A $100,000 asset has the same total deductions with or without the boost. The difference is that more deduction is claimed in year one and less in later years. Total tax over the asset's life is the same. The benefit is cashflow — more tax relief arrives earlier."
         },
         {
             "error_id": 2,
-            "ai_says": "ChatGPT says: Used assets imported from overseas do not qualify for Investment Boost",
-            "correct": "Reality: Assets that are new to New Zealand can qualify for the Investment Boost even if they were previously used overseas. The test is whether the asset has been used in New Zealand before. Shipping documents and customs records are needed to support the claim."
+            "ai_says": "ChatGPT says: My asset qualifies because I bought it after 22 May 2025",
+            "correct": "Reality: Wrong if it was available for use before that date. The test is when the asset is first AVAILABLE FOR USE — not when it was purchased, invoiced, or paid for. An asset purchased in March 2025 and installed and commissioned in June 2025 qualifies (first available for use after 22 May 2025). An asset purchased in June 2025 but available for use since April 2025 does not qualify. The commissioned date is the trigger."
         },
         {
             "error_id": 3,
-            "ai_says": "ChatGPT says: The purchase date is the key test for Investment Boost",
-            "correct": "Reality: The critical test is the first available-for-use date. An asset purchased in December 2024 but not available for use until June 2025 qualifies. An asset purchased in June 2025 but available before 22 May 2025 does not qualify."
+            "ai_says": "ChatGPT says: My rental property qualifies for Investment Boost",
+            "correct": "Reality: Wrong. Residential rental property is explicitly excluded from Investment Boost under the Budget 2025 legislation. The boost applies to business assets used in income-earning activities other than residential rental. Commercial property used in a business may qualify — residential rental property does not."
         },
         {
             "error_id": 4,
-            "ai_says": "ChatGPT says: The Investment Boost is compulsory if you qualify",
-            "correct": "Reality: The Investment Boost is optional under s EE 31B. You elect whether to claim it. In most cases claiming is beneficial, but your accountant may advise a different approach depending on your income pattern."
-        },
-        {
-            "error_id": 5,
-            "ai_says": "ChatGPT says: Only fully completed projects qualify for Investment Boost",
-            "correct": "Reality: IRD confirms that an improvement may qualify for Investment Boost once it is complete to an identifiable stage that increases the capital value of the asset and is available for use at that stage. Full project completion is not required."
+            "ai_says": "ChatGPT says: Second-hand equipment I bought qualifies",
+            "correct": "Reality: Wrong if the asset was already in New Zealand. The Investment Boost applies to new assets and assets new to New Zealand. Second-hand assets already in New Zealand do not qualify regardless of who previously owned them. Equipment imported from overseas that is new to New Zealand may qualify — equipment purchased from another NZ business does not."
         }
     ],
     "faq": [
@@ -188,7 +187,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nz/check/investment-boost-auditor",
     "api_endpoint": "/api/rules/investment-boost-auditor",
-    "generated_at": "2026-04-22T23:34:52.039Z"
+    "generated_at": "2026-04-23T06:37:48.463Z"
 };
 
   return NextResponse.json(rules, {

@@ -49,7 +49,7 @@ export default function InvestmentBoostAuditorFile06() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">New Zealand · Investment Boost Auditor</span>
+            <span className="hidden sm:block">New Zealand · Investment Boost Timing Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -74,7 +74,7 @@ export default function InvestmentBoostAuditorFile06() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 IRD · Income Tax Act 2007 — Investment Boost (s EE 31B)
+              🇬🇧 Inland Revenue Department (IRD) · Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -96,7 +96,7 @@ export default function InvestmentBoostAuditorFile06() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Investment Boost Auditor · File 06 of 8
+            Investment Boost Timing Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
             Commercial-to-Residential Risk Map
@@ -205,7 +205,7 @@ export default function InvestmentBoostAuditorFile06() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on IRD guidance April 2026.
+            Based on Inland Revenue Department (IRD) guidance April 2026.
           </p>
         </div>
 
@@ -222,7 +222,7 @@ export default function InvestmentBoostAuditorFile06() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/nz/check/investment-boost-auditor" className="hover:text-neutral-900 transition">
-              ← Back to Investment Boost Auditor
+              ← Back to Investment Boost Timing Engine
             </a>
             <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — Investment Boost ↗</a>
             <a href="https://www.ird.govt.nz/forms-and-guides/ir10" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — IR10 Form Guide ↗</a>

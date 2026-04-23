@@ -121,18 +121,24 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const ib_cost = sessionStorage.getItem("investment-boost-auditor_ib_cost") || "125000";
-      const ib_type = sessionStorage.getItem("investment-boost-auditor_ib_type") || "machinery";
-      const ib_available = sessionStorage.getItem("investment-boost-auditor_ib_available") || "true";
-      const ib_status = sessionStorage.getItem("investment-boost-auditor_ib_status") || "clear";
+      const ib_availability = sessionStorage.getItem("investment-boost-auditor_ib_availability") || "post_may";
+      const ib_asset_type = sessionStorage.getItem("investment-boost-auditor_ib_asset_type") || "machinery";
+      const ib_asset_cost = sessionStorage.getItem("investment-boost-auditor_ib_asset_cost") || "50k_200k";
+      const ib_dep_rate = sessionStorage.getItem("investment-boost-auditor_ib_dep_rate") || "15_30";
+      const ib_tax_rate = sessionStorage.getItem("investment-boost-auditor_ib_tax_rate") || "28";
+      const ib_cashflow_importance = sessionStorage.getItem("investment-boost-auditor_ib_cashflow_importance") || "yes";
+      const ib_status = sessionStorage.getItem("investment-boost-auditor_ib_status") || "eligible_post_22_may";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "ib_cost": ib_cost,
-        "ib_type": ib_type,
-        "ib_available": ib_available,
+        "ib_availability": ib_availability,
+        "ib_asset_type": ib_asset_type,
+        "ib_asset_cost": ib_asset_cost,
+        "ib_dep_rate": ib_dep_rate,
+        "ib_tax_rate": ib_tax_rate,
+        "ib_cashflow_importance": ib_cashflow_importance,
         "ib_status": ib_status,
-      }).some(v => v && v !== "125000");
+      }).some(v => v && v !== "post_may");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -140,16 +146,19 @@ export default function SuccessPlan() {
         body: JSON.stringify({
           product_id: "investment-boost-auditor",
           market:     "New Zealand",
-          authority:  "IRD",
+          authority:  "Inland Revenue Department (IRD)",
           tier:       2,
           name,
           inputs: {
-        "Asset cost": ib_cost,
-        "Asset type": ib_type,
-        "Available from 22 May 2025": ib_available,
-        "Status": ib_status,
+        "Available-for-use window": ib_availability,
+        "Asset type": ib_asset_type,
+        "Asset cost band": ib_asset_cost,
+        "Normal depreciation rate": ib_dep_rate,
+        "Business entity rate": ib_tax_rate,
+        "Cashflow timing importance": ib_cashflow_importance,
+        "Eligibility status": ib_status,
           },
-          fields: ["status","boostDeduction","taxSaving","changeOfUseRisk","stageClaimOpportunity","disposalRecovery","actions","weekPlan","accountantQuestions"],
+          fields: ["status","eligibility","year1DeductionWithBoost","year1DeductionWithoutBoost","additionalYear1Relief","totalTaxImpact","stagedClaimOpportunity","disposalRecoveryPlan","portfolioTimingStrategy","accountantQuestions"],
         }),
       });
       const data = await res.json();
@@ -160,13 +169,16 @@ export default function SuccessPlan() {
       // Graceful fallback — page still shows files and calendar
       setAssessment({
         status: "Your personalised status is being prepared — please refresh in a moment.",
-        boostDeduction: "Your personalised boostDeduction is being prepared — please refresh in a moment.",
-        taxSaving: "Your personalised taxSaving is being prepared — please refresh in a moment.",
-        changeOfUseRisk: "Your personalised changeOfUseRisk is being prepared — please refresh in a moment.",
-        stageClaimOpportunity: "Your personalised stageClaimOpportunity is being prepared — please refresh in a moment.",
-        disposalRecovery: "Your personalised disposalRecovery is being prepared — please refresh in a moment.",
+        eligibility: "Your personalised eligibility is being prepared — please refresh in a moment.",
+        year1DeductionWithBoost: "Your personalised year1DeductionWithBoost is being prepared — please refresh in a moment.",
+        year1DeductionWithoutBoost: "Your personalised year1DeductionWithoutBoost is being prepared — please refresh in a moment.",
+        additionalYear1Relief: "Your personalised additionalYear1Relief is being prepared — please refresh in a moment.",
+        totalTaxImpact: "Your personalised totalTaxImpact is being prepared — please refresh in a moment.",
+        stagedClaimOpportunity: "Your personalised stagedClaimOpportunity is being prepared — please refresh in a moment.",
+        disposalRecoveryPlan: "Your personalised disposalRecoveryPlan is being prepared — please refresh in a moment.",
+        portfolioTimingStrategy: "Your personalised portfolioTimingStrategy is being prepared — please refresh in a moment.",
         accountantQuestions: [
-          "What is my exact IRD position based on my answers?",
+          "What is my exact Inland Revenue Department (IRD) position based on my answers?",
           "What is the single most important action I should take before 7 July 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
@@ -179,10 +191,13 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const ib_cost = sessionStorage.getItem("investment-boost-auditor_ib_cost") || "125000";
-    const ib_type = sessionStorage.getItem("investment-boost-auditor_ib_type") || "machinery";
-    const ib_available = sessionStorage.getItem("investment-boost-auditor_ib_available") || "true";
-    const ib_status = sessionStorage.getItem("investment-boost-auditor_ib_status") || "clear";
+    const ib_availability = sessionStorage.getItem("investment-boost-auditor_ib_availability") || "post_may";
+    const ib_asset_type = sessionStorage.getItem("investment-boost-auditor_ib_asset_type") || "machinery";
+    const ib_asset_cost = sessionStorage.getItem("investment-boost-auditor_ib_asset_cost") || "50k_200k";
+    const ib_dep_rate = sessionStorage.getItem("investment-boost-auditor_ib_dep_rate") || "15_30";
+    const ib_tax_rate = sessionStorage.getItem("investment-boost-auditor_ib_tax_rate") || "28";
+    const ib_cashflow_importance = sessionStorage.getItem("investment-boost-auditor_ib_cashflow_importance") || "yes";
+    const ib_status = sessionStorage.getItem("investment-boost-auditor_ib_status") || "eligible_post_22_may";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -190,7 +205,7 @@ export default function SuccessPlan() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Investment Boost Auditor — Deadlines`,
+      `X-WR-CALNAME:Investment Boost Timing Engine — Deadlines`,
       "BEGIN:VEVENT",
       `UID:ib-proof-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${relativeDate(14)}`,
@@ -291,7 +306,7 @@ export default function SuccessPlan() {
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
             <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against IRD rules</p>
+            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against Inland Revenue Department (IRD) rules</p>
           </div>
         )}
 
@@ -311,13 +326,13 @@ export default function SuccessPlan() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your New Zealand IRD position
+                Your New Zealand Inland Revenue Department (IRD) position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","boostDeduction","taxSaving","changeOfUseRisk","stageClaimOpportunity","disposalRecovery"] as string[]).map(key => {
+                {(["status","eligibility","year1DeductionWithBoost","year1DeductionWithoutBoost","additionalYear1Relief","totalTaxImpact"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -465,7 +480,7 @@ export default function SuccessPlan() {
                 Everything you need — in one place
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
-                Each document is built around your specific IRD position.
+                Each document is built around your specific Inland Revenue Department (IRD) position.
                 Start with File 02 — it has your exact numbers.
                 Files 06–08 are exclusive to this plan.
               </p>
@@ -542,7 +557,7 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified New Zealand tax adviser before making financial decisions.
-            Based on IRD guidance April 2026.{" "}
+            Based on Inland Revenue Department (IRD) guidance April 2026.{" "}
             <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost" target="_blank" rel="noopener noreferrer" className="underline">IRD — Investment Boost</a> · <a href="https://www.ird.govt.nz/forms-and-guides/ir10" target="_blank" rel="noopener noreferrer" className="underline">IRD — IR10 Form Guide</a>
           </p>
         </div>

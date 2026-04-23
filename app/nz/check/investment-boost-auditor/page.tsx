@@ -10,12 +10,12 @@ import InvestmentBoostAuditorCalculator from "./InvestmentBoostAuditorCalculator
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "NZ Investment Boost 2026: 20% Instant Asset Deduction — Do You Qualify? | TaxCheckNow",
-  description: "From 22 May 2025, eligible NZ business assets get a 20% upfront deduction plus normal depreciation on the remaining 80%. Commercial buildings qualify. Residential rentals do not. The trigger is 'first available for use' — not invoice date. Check your asset now.",
+  title: "NZ Investment Boost Timing Engine — Year 1 Cashflow Accelerator | TaxCheckNow",
+  description: "From 22 May 2025, NZ businesses can claim a 20% upfront deduction on qualifying depreciable assets in year 1. Remaining 80% depreciated at normal rate. Total lifetime deductions are UNCHANGED — this is cashflow acceleration, not a tax saving. $100k asset at 28% company rate brings $5,600 of tax relief forward. Available-for-use date (not purchase date) is the trigger.",
   alternates: { canonical: "https://taxchecknow.com/nz/check/investment-boost-auditor" },
   openGraph: {
-    title: "NZ Investment Boost 2026: 20% Instant Asset Deduction — Do You Qualify? | TaxCheckNow",
-    description: "From 22 May 2025, eligible NZ business assets get a 20% upfront deduction plus normal depreciation on the remaining 80%. Commercial buildings qualify. Residential rentals do not. The trigger is 'first available for use' — not invoice date. Check your asset now.",
+    title: "NZ Investment Boost Timing Engine — Year 1 Cashflow Accelerator | TaxCheckNow",
+    description: "From 22 May 2025, NZ businesses can claim a 20% upfront deduction on qualifying depreciable assets in year 1. Remaining 80% depreciated at normal rate. Total lifetime deductions are UNCHANGED — this is cashflow acceleration, not a tax saving. $100k asset at 28% company rate brings $5,600 of tax relief forward. Available-for-use date (not purchase date) is the trigger.",
     url: "https://taxchecknow.com/nz/check/investment-boost-auditor",
     siteName: "TaxCheckNow",
     type: "website",
@@ -100,24 +100,20 @@ const faqs = [
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: Commercial buildings do not qualify for the Investment Boost in NZ",
-    "correct": "Reality: New commercial and industrial buildings can qualify for the 20% Investment Boost deduction under s EE 31B. IRD has confirmed this. The confusion arises because normal building depreciation was previously set near zero — but the Investment Boost is a separate, additional deduction."
+    "wrong": "ChatGPT says: Investment Boost reduces my total tax",
+    "correct": "Reality: Investment Boost accelerates when deductions are claimed — it does not increase the total deductions available. A $100,000 asset has the same total deductions with or without the boost. The difference is that more deduction is claimed in year one and less in later years. Total tax over the asset's life is the same. The benefit is cashflow — more tax relief arrives earlier."
   },
   {
-    "wrong": "ChatGPT says: Used assets imported from overseas do not qualify for Investment Boost",
-    "correct": "Reality: Assets that are new to New Zealand can qualify for the Investment Boost even if they were previously used overseas. The test is whether the asset has been used in New Zealand before. Shipping documents and customs records are needed to support the claim."
+    "wrong": "ChatGPT says: My asset qualifies because I bought it after 22 May 2025",
+    "correct": "Reality: Wrong if it was available for use before that date. The test is when the asset is first AVAILABLE FOR USE — not when it was purchased, invoiced, or paid for. An asset purchased in March 2025 and installed and commissioned in June 2025 qualifies (first available for use after 22 May 2025). An asset purchased in June 2025 but available for use since April 2025 does not qualify. The commissioned date is the trigger."
   },
   {
-    "wrong": "ChatGPT says: The purchase date is the key test for Investment Boost",
-    "correct": "Reality: The critical test is the first available-for-use date. An asset purchased in December 2024 but not available for use until June 2025 qualifies. An asset purchased in June 2025 but available before 22 May 2025 does not qualify."
+    "wrong": "ChatGPT says: My rental property qualifies for Investment Boost",
+    "correct": "Reality: Wrong. Residential rental property is explicitly excluded from Investment Boost under the Budget 2025 legislation. The boost applies to business assets used in income-earning activities other than residential rental. Commercial property used in a business may qualify — residential rental property does not."
   },
   {
-    "wrong": "ChatGPT says: The Investment Boost is compulsory if you qualify",
-    "correct": "Reality: The Investment Boost is optional under s EE 31B. You elect whether to claim it. In most cases claiming is beneficial, but your accountant may advise a different approach depending on your income pattern."
-  },
-  {
-    "wrong": "ChatGPT says: Only fully completed projects qualify for Investment Boost",
-    "correct": "Reality: IRD confirms that an improvement may qualify for Investment Boost once it is complete to an identifiable stage that increases the capital value of the asset and is available for use at that stage. Full project completion is not required."
+    "wrong": "ChatGPT says: Second-hand equipment I bought qualifies",
+    "correct": "Reality: Wrong if the asset was already in New Zealand. The Investment Boost applies to new assets and assets new to New Zealand. Second-hand assets already in New Zealand do not qualify regardless of who previously owned them. Equipment imported from overseas that is new to New Zealand may qualify — equipment purchased from another NZ business does not."
   }
 ];
 
@@ -146,61 +142,67 @@ const accountantQuestions = [
 
 const workedExamples = [
   {
-    "name": "New digger",
-    "setup": "Purchased and received April 2025, used from June 2025",
-    "income": "$120k",
-    "status": "ELIGIBLE — $24k boost"
+    "name": "$100k machinery, 28% company, 30% DV",
+    "setup": "Available 15 June 2025",
+    "income": "$12,320 (boost) vs $8,400 (standard) = +$3,920 year 1",
+    "status": "ELIGIBLE — cashflow accelerated"
   },
   {
-    "name": "Warehouse fit-out",
-    "setup": "New commercial fit-out complete 1 June 2025",
-    "income": "$500k",
-    "status": "ELIGIBLE — $100k boost"
+    "name": "$500k fit-out portfolio, 28% company",
+    "setup": "All available post-22 May 2025, mixed DV rates",
+    "income": "~$19,600 additional year 1 cashflow",
+    "status": "ELIGIBLE — material year 1 benefit"
   },
   {
-    "name": "Imported machine",
-    "setup": "Used in Germany, imported to NZ, first used August 2025",
-    "income": "$200k",
-    "status": "ELIGIBLE — new to NZ"
+    "name": "$100k machine available 10 May 2025",
+    "setup": "Purchased post-22 May but commissioned earlier",
+    "income": "$8,400 (standard only)",
+    "status": "NOT ELIGIBLE — pre-22 May availability"
   },
   {
-    "name": "Residential rental",
-    "setup": "New rental property completed July 2025",
-    "income": "$600k",
-    "status": "NOT ELIGIBLE — residential"
+    "name": "Residential rental new build",
+    "setup": "Completed July 2025",
+    "income": "$0 boost available",
+    "status": "NOT ELIGIBLE — residential excluded"
+  },
+  {
+    "name": "Second-hand NZ forklift",
+    "setup": "Previously used in another NZ business",
+    "income": "$0 boost; standard depreciation from acquisition",
+    "status": "NOT ELIGIBLE — must be new or new-to-NZ"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "New machinery",
-    "metric1": "Yes",
-    "metric2": "Available from 22 May 2025",
-    "bestMove": "Most business plant and equipment"
+    "position": "10% DV (long life)",
+    "metric1": "$10,000 dep · $2,800 tax",
+    "metric2": "$28,000 dep · $7,840 tax",
+    "bestMove": "+$5,040 year 1"
   },
   {
-    "position": "New commercial building",
-    "metric1": "Yes",
-    "metric2": "Available from 22 May 2025",
-    "bestMove": "Warehouse, office, factory"
+    "position": "22.5% DV (mid)",
+    "metric1": "$22,500 dep · $6,300 tax",
+    "metric2": "$38,000 dep · $10,640 tax",
+    "bestMove": "+$4,340 year 1"
   },
   {
-    "position": "New to NZ imported used asset",
-    "metric1": "Yes",
-    "metric2": "Not previously used in NZ",
-    "bestMove": "Customs entry proves NZ arrival"
+    "position": "30% DV (typical)",
+    "metric1": "$30,000 dep · $8,400 tax",
+    "metric2": "$44,000 dep · $12,320 tax",
+    "bestMove": "+$3,920 year 1"
   },
   {
-    "position": "Residential rental building",
-    "metric1": "No",
-    "metric2": "Explicitly excluded",
-    "bestMove": "Cannot claim"
+    "position": "45% DV (short life)",
+    "metric1": "$45,000 dep · $12,600 tax",
+    "metric2": "$56,000 dep · $15,680 tax",
+    "bestMove": "+$3,080 year 1"
   },
   {
-    "position": "Second-hand NZ asset",
-    "metric1": "No",
-    "metric2": "Must be new or new to NZ",
-    "bestMove": "Cannot claim"
+    "position": "Total lifetime tax",
+    "metric1": "Same",
+    "metric2": "Same",
+    "bestMove": "Boost shifts timing only"
   }
 ];
 
@@ -235,46 +237,62 @@ const toolsRows = [
 const geoFacts = [
   {
     "label": "Upfront deduction",
-    "value": "20% of cost"
+    "value": "20% of cost in year 1"
   },
   {
-    "label": "Remaining base depreciation",
-    "value": "Normal rate on 80% of cost"
+    "label": "Remaining depreciation",
+    "value": "Normal rate on 80% of cost over asset life"
   },
   {
-    "label": "Eligible from",
-    "value": "First available for use on or after 22 May 2025"
+    "label": "Effect on total lifetime tax",
+    "value": "UNCHANGED — cashflow acceleration only"
   },
   {
-    "label": "Optional or mandatory",
-    "value": "Optional — taxpayer elects"
+    "label": "Trigger date",
+    "value": "First available for use ON OR AFTER 22 May 2025"
+  },
+  {
+    "label": "Legal anchor",
+    "value": "Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)"
+  },
+  {
+    "label": "Eligible",
+    "value": "New business assets · new-to-NZ imports · depreciable tangible property"
+  },
+  {
+    "label": "Excluded",
+    "value": "Residential rental · second-hand NZ assets · land · intangibles · pre-22-May availability"
+  },
+  {
+    "label": "Example ($100k, 30% DV, 28%)",
+    "value": "$3,920 year 1 cashflow boost"
+  },
+  {
+    "label": "Example ($500k qualifying assets)",
+    "value": "$19,600 year 1 cashflow boost"
   },
   {
     "label": "IR10 disclosure",
-    "value": "Box 60 — total Investment Boost value"
-  },
-  {
-    "label": "Excludes",
-    "value": "Residential rental buildings"
+    "value": "Box 60 (total boost value) and Box 52 (depreciation including boost)"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "Upfront deduction",
+    "label": "Upfront deduction (year 1)",
     "value": "20%"
   },
   {
-    "label": "Eligible from",
-    "value": "22 May 2025"
+    "label": "Trigger (available for use)",
+    "value": "On or after 22 May 2025"
   },
   {
-    "label": "Trigger test",
-    "value": "Available-for-use"
+    "label": "$100k at 28%",
+    "value": "$3,920/yr1"
   },
   {
-    "label": "On $500k asset at 28%",
-    "value": "$28k saved"
+    "label": "Total lifetime tax",
+    "value": "UNCHANGED"
   }
 ];
 
@@ -297,22 +315,22 @@ const countdownStats = [
   {
     "label": "Upfront deduction",
     "value": "20%",
-    "sub": "of eligible asset cost in year one"
+    "sub": "of qualifying asset cost in year 1"
   },
   {
-    "label": "On $500k asset",
-    "value": "$100k",
-    "sub": "immediate deduction in year one"
+    "label": "$100k asset at 28%",
+    "value": "$3,920/yr1",
+    "sub": "tax relief brought forward (not additional)"
   },
   {
-    "label": "Tax saving at 28%",
-    "value": "$28,000",
-    "sub": "on $100k deduction at company rate"
+    "label": "Total lifetime tax",
+    "value": "UNCHANGED",
+    "sub": "cashflow acceleration only"
   },
   {
-    "label": "Trigger test",
-    "value": "Use date",
-    "sub": "first available for use — not invoice date"
+    "label": "Trigger",
+    "value": "Available 22 May",
+    "sub": "first available for use — not purchase date"
   }
 ];
 
@@ -336,8 +354,8 @@ export default function InvestmentBoostAuditorPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Investment Boost Auditor — Rules April 2026",
-    description: "From 22 May 2025, eligible NZ business assets get a 20% upfront deduction plus normal depreciation on the remaining 80%. Commercial buildings qualify. Residential rentals do not. The trigger is 'first available for use' — not invoice date. Check your asset now.",
+    name: "Investment Boost Timing Engine — Rules April 2026",
+    description: "From 22 May 2025, NZ businesses can claim a 20% upfront deduction on qualifying depreciable assets in year 1. Remaining 80% depreciated at normal rate. Total lifetime deductions are UNCHANGED — this is cashflow acceleration, not a tax saving. $100k asset at 28% company rate brings $5,600 of tax relief forward. Available-for-use date (not purchase date) is the trigger.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -352,8 +370,8 @@ export default function InvestmentBoostAuditorPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Investment Boost Auditor",
-    description: "From 22 May 2025, eligible NZ business assets get a 20% upfront deduction plus normal depreciation on the remaining 80%. Commercial buildings qualify. Residential rentals do not. The trigger is 'first available for use' — not invoice date. Check your asset now.",
+    name: "Investment Boost Timing Engine",
+    description: "From 22 May 2025, NZ businesses can claim a 20% upfront deduction on qualifying depreciable assets in year 1. Remaining 80% depreciated at normal rate. Total lifetime deductions are UNCHANGED — this is cashflow acceleration, not a tax saving. $100k asset at 28% company rate brings $5,600 of tax relief forward. Available-for-use date (not purchase date) is the trigger.",
     url: "https://taxchecknow.com/nz/check/investment-boost-auditor",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -368,28 +386,38 @@ export default function InvestmentBoostAuditorPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Investment Boost Auditor",
+    name: "How to use the Investment Boost Timing Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Select your asset cost",
-            "text": "Choose the approximate cost of your eligible business asset."
-      },
-      {
-            "@type": "HowToStep",
-            "name": "Identify asset type",
-            "text": "Specify whether it is machinery, a commercial building, an imported asset, or a residential rental."
-      },
-      {
-            "@type": "HowToStep",
             "name": "Confirm available-for-use date",
-            "text": "Confirm the asset was first available for use on or after 22 May 2025 — the critical IRD test."
+            "text": "Was the asset first available for use before or on/after 22 May 2025? This is the sole eligibility trigger."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your cashflow jolt calculation",
-            "text": "See your 20% upfront deduction amount and estimated tax saving in year one."
+            "name": "Specify asset type",
+            "text": "Machinery, technology, vehicles, fit-out are eligible. Residential rental, second-hand NZ, land, and intangibles are excluded."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Enter asset cost",
+            "text": "GST-exclusive cost; business-use proportion only for mixed-use assets."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Select normal depreciation rate",
+            "text": "From the IRD depreciation schedule — typical bands are under 15% / 15-30% / 30-67%."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Select business tax rate",
+            "text": "28% company / 33% trust / 17.5% individual lower. Higher rate = larger year 1 cashflow impact."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Indicate cashflow importance",
+            "text": "Framing — remember total tax is unchanged over asset life; the boost is year 1 cashflow only."
       }
 ],
   };
@@ -397,18 +425,18 @@ export default function InvestmentBoostAuditorPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Investment Boost Auditor — Free Check",
+    "name": "Investment Boost Timing Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nz/check/investment-boost-auditor#calculator",
-    "description": "From 22 May 2025, eligible NZ business assets get a 20% upfront deduction plus normal depreciation on the remaining 80%. Commercial buildings qualify. Residential rentals do not. The trigger is 'first available for use' — not invoice date. Check your asset now.",
+    "description": "From 22 May 2025, NZ businesses can claim a 20% upfront deduction on qualifying depreciable assets in year 1. Remaining 80% depreciated at normal rate. Total lifetime deductions are UNCHANGED — this is cashflow acceleration, not a tax saving. $100k asset at 28% company rate brings $5,600 of tax relief forward. Available-for-use date (not purchase date) is the trigger.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on IRD guidance April 2026"
+      "Based on Inland Revenue Department (IRD) guidance April 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -429,7 +457,7 @@ export default function InvestmentBoostAuditorPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "New Zealand", item: "https://taxchecknow.com/nz" },
-      { "@type": "ListItem", position: 3, name: "Investment Boost Auditor", item: "https://taxchecknow.com/nz/check/investment-boost-auditor" },
+      { "@type": "ListItem", position: 3, name: "Investment Boost Timing Engine", item: "https://taxchecknow.com/nz/check/investment-boost-auditor" },
     ],
   };
 
@@ -474,7 +502,7 @@ export default function InvestmentBoostAuditorPage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇳🇿 IRD Verified · Income Tax Act 2007 — Investment Boost (s EE 31B) ↗
+            🇳🇿 Inland Revenue Department (IRD) Verified · Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025) ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-NZ
@@ -483,12 +511,12 @@ export default function InvestmentBoostAuditorPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          NZ Investment Boost 2026: Claim Your 20% Instant Asset Deduction
+          NZ Investment Boost: 20% Upfront Deduction on Qualifying Assets From 22 May 2025. On a $100,000 Asset That Is $5,600 Less Tax in Year One — Same Total Tax, Better Cashflow Now.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          Under NZ's Investment Boost (Income Tax Act 2007 s EE 31B), eligible business assets that are first available for use on or after 22 May 2025 can claim an optional 20% upfront deduction in year one, plus normal depreciation on the remaining 80%. This is not just paper depreciation — it is an immediate cashflow jolt.
+          New Zealand's Investment Boost allows businesses to claim a 20% upfront deduction on qualifying depreciable assets in the year they are first available for use. The remaining 80% is depreciated at the normal rate over the asset's life. Total deductions across the asset's life are unchanged — Investment Boost does not reduce the total tax paid on income. It accelerates when the tax relief arrives. For a business with a $100,000 asset at a 28% tax rate, the boost delivers $3,920 more tax relief in year one compared to standard depreciation — the same money, paid later rather than sooner. This is a cashflow benefit, not a permanent tax saving.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -510,20 +538,20 @@ export default function InvestmentBoostAuditorPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Upfront deduction</dt>
+                  <dt className="text-neutral-600">Upfront deduction (year 1)</dt>
                   <dd className="font-bold">20%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Eligible from</dt>
-                  <dd className="font-bold">22 May 2025</dd>
+                  <dt className="text-neutral-600">Trigger (available for use)</dt>
+                  <dd className="font-bold">On or after 22 May 2025</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Trigger test</dt>
-                  <dd className="font-bold">Available-for-use</dd>
+                  <dt className="text-neutral-600">$100k at 28%</dt>
+                  <dd className="font-bold">$3,920/yr1</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">On $500k asset at 28%</dt>
-                  <dd className="font-bold">$28k saved</dd>
+                  <dt className="text-neutral-600">Total lifetime tax</dt>
+                  <dd className="font-bold">UNCHANGED</dd>
                 </div>
               </dl>
             </div>
@@ -531,7 +559,7 @@ export default function InvestmentBoostAuditorPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Investment Boost Auditor</h3>
+              <h3 className="mb-1 text-lg font-bold">Investment Boost Timing Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised Investment Boost audit built around your asset, your purchase date, and your available-for-use evidence — not a generic depreciation guide.</p>
               <div className="space-y-2">
                 <a href="#calculator"
@@ -574,34 +602,34 @@ export default function InvestmentBoostAuditorPage() {
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 20%
               </p>
-              <p className="text-xs text-neutral-400">of eligible asset cost in year one</p>
+              <p className="text-xs text-neutral-400">of qualifying asset cost in year 1</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                On $500k asset
+                $100k asset at 28%
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $100k
+                $3,920/yr1
               </p>
-              <p className="text-xs text-neutral-400">immediate deduction in year one</p>
+              <p className="text-xs text-neutral-400">tax relief brought forward (not additional)</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Tax saving at 28%
+                Total lifetime tax
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $28,000
+                UNCHANGED
               </p>
-              <p className="text-xs text-neutral-400">on $100k deduction at company rate</p>
+              <p className="text-xs text-neutral-400">cashflow acceleration only</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Trigger test
+                Trigger
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Use date
+                Available 22 May
               </p>
-              <p className="text-xs text-neutral-400">first available for use — not invoice date</p>
+              <p className="text-xs text-neutral-400">first available for use — not purchase date</p>
             </div>
           </div>
         </div>
@@ -613,23 +641,27 @@ export default function InvestmentBoostAuditorPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What qualifies for Investment Boost
+            Cashflow acceleration (not tax saving)
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ New business assets (machinery, equipment)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ New commercial and industrial buildings</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ New to NZ imported assets</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 20% upfront deduction in year 1</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 80% depreciated normally over remaining life</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Eligible: new assets + new-to-NZ imports</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Qualifying: machinery · equipment · vehicles · computers · fit-out · plant · tools · hardware</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Trigger: available-for-use date (not purchase)</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT residential rental buildings</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a permanent tax saving — total tax unchanged</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT residential rental property</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT second-hand NZ assets</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT land or intangibles</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT assets available before 22 May 2025</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: IRD — Investment Boost · Income Tax Act 2007 s EE 31B</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025) · IRD Investment Boost guidance · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -637,24 +669,24 @@ export default function InvestmentBoostAuditorPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The answer — IRD confirmed April 2026
           </p>
-          <p className="mb-2 text-neutral-900">Under NZ's Investment Boost (Income Tax Act 2007 s EE 31B), eligible business assets that are first available for use on or after 22 May 2025 can claim an optional 20% upfront deduction in year one, plus normal depreciation on the remaining 80%. This is not just paper depreciation — it is an immediate cashflow jolt.</p>
-          <p className="mb-2 text-neutral-900">The key test is when the asset was first available for use — not the invoice date, not the build start date, and not the date you paid for it. A $500,000 warehouse fit-out that became available for use on 23 May 2025 generates a $100,000 upfront deduction and an estimated $28,000 tax saving at the 28% company rate.</p>
-          <p className="mb-2 text-neutral-900">Commercial and industrial buildings qualify. Residential rental buildings do not. New to New Zealand imported assets qualify even if previously used overseas. The claim is optional — you choose whether to use it. And you must disclose the claim in IR10 Box 60.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Investment Boost · Income Tax Act 2007 s EE 31B</p>
+          <p className="mb-2 text-neutral-900">New Zealand's Investment Boost allows businesses to claim a 20% upfront deduction on qualifying depreciable assets in the year they are first available for use. The remaining 80% is depreciated at the normal rate over the asset's life. Total deductions across the asset's life are unchanged — Investment Boost does not reduce the total tax paid on income. It accelerates when the tax relief arrives. For a business with a $100,000 asset at a 28% tax rate, the boost delivers $3,920 more tax relief in year one compared to standard depreciation — the same money, paid later rather than sooner. This is a cashflow benefit, not a permanent tax saving.</p>
+          <p className="mb-2 text-neutral-900">The boost applies only to assets first available for use on or after 22 May 2025. For businesses planning capital expenditure, the timing of when an asset is commissioned and available for use determines whether the boost applies. An asset ordered but not yet commissioned at 22 May 2025 qualifies if it becomes available for use after that date. The distinction between purchased and available for use is the operative test — not invoice date or payment date.</p>
+          <p className="mb-2 text-neutral-900">Residential rental property is explicitly excluded from Investment Boost. Second-hand assets already in New Zealand also do not qualify — the asset must be new to New Zealand. Land, goodwill, and intangible assets are not depreciable under NZ tax law and are outside the boost entirely. For businesses with mixed asset types, the boost applies asset-by-asset — some assets in a purchase may qualify while others do not.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025) · IRD — Investment Boost guidance · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The Investment Boost trigger — what matters and what does not
+            Timing decision — the 22 May 2025 threshold is hard
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Invoice date / purchase date  ❌  NOT the test — many miss eligibility using this
+              ❌ $100,000 asset available April 2025  →  no Investment Boost  →  standard depreciation only  →  $8,400 year 1 tax saving  →  normal cashflow  ❌ (missed the date)
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ First available for use on or after 22 May 2025  ✔  CORRECT IRD trigger
+              ✔ $100,000 asset available June 2025  →  Investment Boost applies  →  $12,320 year 1 tax saving  →  $3,920 more cash in year 1  →  same total tax  ✔
             </div>
           </div>
         </div>
@@ -665,9 +697,10 @@ export default function InvestmentBoostAuditorPage() {
             Common AI errors on this topic
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Commercial buildings do not qualify for the Investment Boost — wrong. New commercial and industrial buildings can qualify for the 20% upfront deduction even though their standard depreciation rate is low. This is one of the most commonly missed eligibility categories.</li>
-            <li>✗ The purchase date is the key test for Investment Boost eligibility — wrong. The key test is the first available-for-use date. An asset purchased in February 2025 but not available for use until June 2025 qualifies. An asset purchased in June 2025 but used before 22 May 2025 does not qualify.</li>
-            <li>✗ Used imported assets do not qualify for Investment Boost — wrong. Assets that are new to New Zealand can qualify even if they were previously used overseas. What matters is that they have not been used in New Zealand before. Shipping documents and customs records prove this.</li>
+            <li>✗ Investment Boost reduces my total tax — wrong. Investment Boost accelerates when deductions are claimed — it does not increase the total deductions available. A $100,000 asset has the same total deductions with or without the boost. The difference is that more deduction is claimed in year one and less in later years. Total tax over the asset's life is the same. The benefit is cashflow — more tax relief arrives earlier.</li>
+            <li>✗ My asset qualifies because I bought it after 22 May 2025 — wrong if it was available for use before that date. The test is when the asset is first available for use — not when it was purchased, invoiced, or paid for. An asset purchased in March 2025 and installed and commissioned in June 2025 qualifies (first available for use after 22 May 2025). An asset purchased in June 2025 but available for use since April 2025 does not qualify. The commissioned date is the trigger.</li>
+            <li>✗ My rental property qualifies for Investment Boost — wrong. Residential rental property is explicitly excluded from Investment Boost under the Budget 2025 legislation. The boost applies to business assets used in income-earning activities other than residential rental. Commercial property used in a business may qualify — residential rental property does not.</li>
+            <li>✗ Second-hand equipment I bought qualifies — wrong if the asset was already in New Zealand. The Investment Boost applies to new assets and assets new to New Zealand. Second-hand assets already in New Zealand do not qualify regardless of who previously owned them. Equipment imported from overseas that is new to New Zealand may qualify — equipment purchased from another NZ business does not.</li>
           </ul>
         </div>
 
@@ -692,13 +725,13 @@ export default function InvestmentBoostAuditorPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Aroha had ordered a new heat pump for the Glen Eden Airbnb in June 2025. It arrived in August. She had not thought about the tax implications.</p>
-            <p>The old heat pump had been limping. She finally ordered a new Mitsubishi system — $6,800 including installation. She paid the deposit in June. The unit arrived and was commissioned on 14 August 2025.</p>
-            <p>Mike had mentioned something about an investment boost for business assets. He had read about it in an industry newsletter related to his construction work. Aroha was not sure whether a heat pump in an Airbnb qualified.</p>
-            <p>She mentioned it to David at the September meeting. He looked it up. The Investment Boost allowed an optional 20% upfront deduction on eligible depreciable business assets first available for use on or after 22 May 2025.</p>
-            <p className="font-semibold text-neutral-900">The heat pump qualified. New business asset. First available for use on 14 August 2025 — after the 22 May 2025 threshold. The Airbnb was a taxable activity. At Aroha's marginal rate, the first-year tax benefit was around $449.</p>
+            <p className="text-base font-medium text-neutral-900">Mike's construction company had ordered a $140,000 CNC machine in February 2025. Delivery delayed twice. Finally commissioned on 3 June 2025 — eleven days after the 22 May 2025 threshold.</p>
+            <p>Mike had initially been disappointed by the delay. The machine was meant to be running by April. When Aroha asked about the tax angle over dinner, he shrugged — he had assumed it was just a late capital purchase.</p>
+            <p>At their September meeting, David asked about the commissioning date. The date was 3 June 2025 — after 22 May 2025. Investment Boost applied. 20% upfront deduction = $28,000. At 28% company tax, that was $7,840 of tax relief brought forward into year 1.</p>
+            <p>David was careful about the framing: this was not 'tax saved'. Total deductions over the CNC machine's life were unchanged. The boost shifted more of the deduction into year 1 and less into years 2-10. Over the machine's depreciation life, total tax would be identical with or without the boost.</p>
+            <p className="font-semibold text-neutral-900">The value was year 1 cashflow, not total tax. Mike's business was mid-growth — year 1 cash was disproportionately valuable compared to year 5 cash. Bringing $7,840 of tax relief forward from later years into the 2025/26 return improved working capital right when the business was financing the next equipment expansion. Same total tax; better timing.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> David claimed the Investment Boost in the 2025/26 return and disclosed it in IR10 Box 60. Aroha asked about the carpet replacement from March 2025 — before the threshold. It did not qualify. The heat pump did. Small detail, meaningful difference.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> David claimed the Investment Boost in the 2025/26 return, disclosed it in IR10 Box 60 for the full $140,000 (business use 100%). Aroha asked about another piece of equipment acquired in March 2025 — installed but available for use 1 April 2025. Before the threshold. Not eligible. Eleven days on the wrong side of the date wouldn't have mattered either way — the threshold is hard.</p>
             </div>
           </div>
           
@@ -716,11 +749,11 @@ export default function InvestmentBoostAuditorPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             NZ Investment Boost — confirmed rules 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Under Income Tax Act 2007 s EE 31B, New Zealand businesses can claim an optional 20% upfront deduction on eligible depreciable business assets that are first available for use on or after 22 May 2025. Normal depreciation is then calculated on the remaining 80% of the cost base. Eligible assets include new business assets, assets that are new to New Zealand (even if previously used overseas), and new commercial and industrial buildings. Residential rental buildings are explicitly excluded. The trigger is the first available-for-use date — not the purchase date, invoice date, or payment date. The Investment Boost is optional and must be disclosed in IR10 Box 60 (total value of Investment Boost assets claimed) and Box 52 (depreciation including the boost amount). Year 1 deduction equals (Asset Cost × 20%) plus standard depreciation on the remaining 80% of cost.</p>
+          <p className="mb-4 text-neutral-800">New Zealand's Investment Boost is a tax policy introduced in Budget 2025, enacted through amendments to the Income Tax Act 2007. It allows businesses to claim a 20% upfront deduction on qualifying depreciable assets in the income year the asset is first available for use, provided that date is on or after 22 May 2025. The remaining 80% of the asset's cost continues to be depreciated at the normal diminishing value or straight-line rate applicable to that asset class under the IRD depreciation schedule. Total deductions over the asset's life are unchanged — Investment Boost is an acceleration mechanism, not an additional deduction. For a business asset costing $100,000 with a 30% diminishing value rate and a 28% company tax rate, Investment Boost delivers approximately $3,920 more tax relief in year one compared to standard depreciation. The boost does not apply to residential rental property, second-hand assets already in New Zealand, land, or intangible assets. The operative trigger is the date the asset is first available for use — not the purchase date, invoice date, or payment date.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Year 1 Deduction = (Asset Cost × 20%) + (Asset Cost × 80% × Standard Depreciation Rate). Tax Saving = Year 1 Deduction × Tax Rate. Example: $500,000 asset, 10% dep rate. Year 1 = ($500k × 20%) + ($400k × 10%) = $100k + $40k = $140k deduction. Tax saving at 28% = $39,200.
+            Year 1 Deduction WITH Boost = (Asset Cost × 20%) + (Asset Cost × 80% × Normal Depreciation Rate). Year 1 Deduction WITHOUT Boost = Asset Cost × Normal Depreciation Rate. Additional Year 1 Tax Relief = 0.20 × Asset Cost × Tax Rate × (1 − Normal Depreciation Rate). Example: $100,000 × 28% × (1 − 30%) = $3,920 of year 1 tax relief brought forward. Total lifetime tax on the asset is UNCHANGED — this is cashflow acceleration only.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -735,33 +768,53 @@ export default function InvestmentBoostAuditorPage() {
                 
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Upfront deduction</td>
-                  <td className="p-2">20% of cost</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Investment Boost (s EE 31B)</td>
+                  <td className="p-2">20% of cost in year 1</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Remaining base depreciation</td>
-                  <td className="p-2">Normal rate on 80% of cost</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Investment Boost (s EE 31B)</td>
+                  <td className="p-2">Remaining depreciation</td>
+                  <td className="p-2">Normal rate on 80% of cost over asset life</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Eligible from</td>
-                  <td className="p-2">First available for use on or after 22 May 2025</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Investment Boost (s EE 31B)</td>
+                  <td className="p-2">Effect on total lifetime tax</td>
+                  <td className="p-2">UNCHANGED — cashflow acceleration only</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Optional or mandatory</td>
-                  <td className="p-2">Optional — taxpayer elects</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Investment Boost (s EE 31B)</td>
+                  <td className="p-2">Trigger date</td>
+                  <td className="p-2">First available for use ON OR AFTER 22 May 2025</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Legal anchor</td>
+                  <td className="p-2">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Eligible</td>
+                  <td className="p-2">New business assets · new-to-NZ imports · depreciable tangible property</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Excluded</td>
+                  <td className="p-2">Residential rental · second-hand NZ assets · land · intangibles · pre-22-May availability</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Example ($100k, 30% DV, 28%)</td>
+                  <td className="p-2">$3,920 year 1 cashflow boost</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Example ($500k qualifying assets)</td>
+                  <td className="p-2">$19,600 year 1 cashflow boost</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">IR10 disclosure</td>
-                  <td className="p-2">Box 60 — total Investment Boost value</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Investment Boost (s EE 31B)</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">Excludes</td>
-                  <td className="p-2">Residential rental buildings</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Investment Boost (s EE 31B)</td>
+                  <td className="p-2">Box 60 (total boost value) and Box 52 (depreciation including boost)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025)</td>
                 </tr>
               </tbody>
             </table>
@@ -788,58 +841,67 @@ export default function InvestmentBoostAuditorPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four asset scenarios — eligible or not?
+          Five cashflow scenarios — same total tax, different year 1
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Asset</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Cost</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Available Date</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Eligible?</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Year 1 Deduction</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Setup</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Year 1 relief</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Verdict</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">New digger</td>
-                <td className="p-3 text-neutral-700">Purchased and received April 2025, used from June 2025</td>
-                <td className="p-3 font-mono">$120k</td>
+                <td className="p-3 font-bold">$100k machinery, 28% company, 30% DV</td>
+                <td className="p-3 text-neutral-700">Available 15 June 2025</td>
+                <td className="p-3 font-mono">$12,320 (boost) vs $8,400 (standard) = +$3,920 year 1</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    ELIGIBLE — $24k boost
+                    ELIGIBLE — cashflow accelerated
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Warehouse fit-out</td>
-                <td className="p-3 text-neutral-700">New commercial fit-out complete 1 June 2025</td>
-                <td className="p-3 font-mono">$500k</td>
+                <td className="p-3 font-bold">$500k fit-out portfolio, 28% company</td>
+                <td className="p-3 text-neutral-700">All available post-22 May 2025, mixed DV rates</td>
+                <td className="p-3 font-mono">~$19,600 additional year 1 cashflow</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    ELIGIBLE — $100k boost
+                    ELIGIBLE — material year 1 benefit
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Imported machine</td>
-                <td className="p-3 text-neutral-700">Used in Germany, imported to NZ, first used August 2025</td>
-                <td className="p-3 font-mono">$200k</td>
+                <td className="p-3 font-bold">$100k machine available 10 May 2025</td>
+                <td className="p-3 text-neutral-700">Purchased post-22 May but commissioned earlier</td>
+                <td className="p-3 font-mono">$8,400 (standard only)</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    ELIGIBLE — new to NZ
+                    NOT ELIGIBLE — pre-22 May availability
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Residential rental</td>
-                <td className="p-3 text-neutral-700">New rental property completed July 2025</td>
-                <td className="p-3 font-mono">$600k</td>
+                <td className="p-3 font-bold">Residential rental new build</td>
+                <td className="p-3 text-neutral-700">Completed July 2025</td>
+                <td className="p-3 font-mono">$0 boost available</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NOT ELIGIBLE — residential
+                    NOT ELIGIBLE — residential excluded
+                  </span>
+                </td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Second-hand NZ forklift</td>
+                <td className="p-3 text-neutral-700">Previously used in another NZ business</td>
+                <td className="p-3 font-mono">$0 boost; standard depreciation from acquisition</td>
+                <td className="p-3">
+                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
+                    NOT ELIGIBLE — must be new or new-to-NZ
                   </span>
                 </td>
               </tr>
@@ -856,49 +918,49 @@ export default function InvestmentBoostAuditorPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Investment Boost eligibility — what qualifies
+          Year 1 cashflow — $100k asset at 28% company rate (total tax unchanged over asset life)
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Asset Type</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Eligible?</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Key Condition</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Notes</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Depreciation rate</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Year 1 without boost</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Year 1 with boost</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Additional year 1 cashflow</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">New machinery</td>
-                <td className="p-3 font-mono text-xs">Yes</td>
-                <td className="p-3 text-xs">Available from 22 May 2025</td>
-                <td className="p-3 text-xs text-neutral-700">Most business plant and equipment</td>
+                <td className="p-3 font-bold">10% DV (long life)</td>
+                <td className="p-3 font-mono text-xs">$10,000 dep · $2,800 tax</td>
+                <td className="p-3 text-xs">$28,000 dep · $7,840 tax</td>
+                <td className="p-3 text-xs text-neutral-700">+$5,040 year 1</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">New commercial building</td>
-                <td className="p-3 font-mono text-xs">Yes</td>
-                <td className="p-3 text-xs">Available from 22 May 2025</td>
-                <td className="p-3 text-xs text-neutral-700">Warehouse, office, factory</td>
+                <td className="p-3 font-bold">22.5% DV (mid)</td>
+                <td className="p-3 font-mono text-xs">$22,500 dep · $6,300 tax</td>
+                <td className="p-3 text-xs">$38,000 dep · $10,640 tax</td>
+                <td className="p-3 text-xs text-neutral-700">+$4,340 year 1</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">New to NZ imported used asset</td>
-                <td className="p-3 font-mono text-xs">Yes</td>
-                <td className="p-3 text-xs">Not previously used in NZ</td>
-                <td className="p-3 text-xs text-neutral-700">Customs entry proves NZ arrival</td>
+                <td className="p-3 font-bold">30% DV (typical)</td>
+                <td className="p-3 font-mono text-xs">$30,000 dep · $8,400 tax</td>
+                <td className="p-3 text-xs">$44,000 dep · $12,320 tax</td>
+                <td className="p-3 text-xs text-neutral-700">+$3,920 year 1</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Residential rental building</td>
-                <td className="p-3 font-mono text-xs">No</td>
-                <td className="p-3 text-xs">Explicitly excluded</td>
-                <td className="p-3 text-xs text-neutral-700">Cannot claim</td>
+                <td className="p-3 font-bold">45% DV (short life)</td>
+                <td className="p-3 font-mono text-xs">$45,000 dep · $12,600 tax</td>
+                <td className="p-3 text-xs">$56,000 dep · $15,680 tax</td>
+                <td className="p-3 text-xs text-neutral-700">+$3,080 year 1</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Second-hand NZ asset</td>
-                <td className="p-3 font-mono text-xs">No</td>
-                <td className="p-3 text-xs">Must be new or new to NZ</td>
-                <td className="p-3 text-xs text-neutral-700">Cannot claim</td>
+                <td className="p-3 font-bold">Total lifetime tax</td>
+                <td className="p-3 font-mono text-xs">Same</td>
+                <td className="p-3 text-xs">Same</td>
+                <td className="p-3 text-xs text-neutral-700">Boost shifts timing only</td>
               </tr>
             </tbody>
           </table>
@@ -964,7 +1026,7 @@ export default function InvestmentBoostAuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          5 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -1059,7 +1121,7 @@ export default function InvestmentBoostAuditorPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            NZ Investment Boost: optional 20% upfront deduction on eligible business assets first available for use on or after 22 May 2025. Normal depreciation on remaining 80%. Commercial buildings qualify. Residential rental buildings excluded. Disclosure required in IR10 Box 60. Under Income Tax Act 2007 s EE 31B.
+            NZ Investment Boost — Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025). 20% upfront deduction in year 1 on qualifying depreciable assets; remaining 80% depreciated at normal rate. TOTAL LIFETIME DEDUCTIONS UNCHANGED — cashflow acceleration, not tax saving. Trigger: first available for use on or after 22 May 2025 (not purchase date). Excluded: residential rental, second-hand NZ assets, land, intangibles. IR10 Box 60 disclosure required.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1070,13 +1132,16 @@ export default function InvestmentBoostAuditorPage() {
               Income Tax Act 2007
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              s EE 31B
+              Budget 2025
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              IR10 Box 60
+              22 May 2025 Trigger
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              Accelerated Not Additional
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Residential Property Excluded
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
@@ -1106,7 +1171,7 @@ export default function InvestmentBoostAuditorPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from IRD and GOV.UK guidance for April 2026.
+          built from Inland Revenue Department (IRD) and GOV.UK guidance for April 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
