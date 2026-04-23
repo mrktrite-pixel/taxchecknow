@@ -133,6 +133,12 @@ function getPriceId(tier: number, productKey: string): string | undefined {
     if (tier === 147) return process.env.STRIPE_NOMAD_BECK_147;
   }
 
+  // ─── TAXCHECKNOW CAN ───────────────────────────────────────────────────────
+  if (key.includes("can_") && key.includes("departure_tax")) {
+    if (tier === 67)  return process.env.STRIPE_CAN_DTT_67;
+    if (tier === 147) return process.env.STRIPE_CAN_DTT_147;
+  }
+
   // ─── TAXCHECKNOW AU ────────────────────────────────────────────────────────
   // All AU product keys start with "au_" — always check au_ prefix first.
   // Never let legacy supertaxcheck blocks below catch these.
