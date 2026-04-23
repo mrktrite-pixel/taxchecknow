@@ -12,16 +12,16 @@ export async function GET() {
     "schema_version": "1.0",
     "generated_by": "COLE — Citation Operations & Legal Engine",
     "product_id": "trust-tax-splitter",
-    "title": "Trust Tax Splitter",
+    "title": "Trust Income Allocation Decision Engine",
     "site": "https://taxchecknow.com/nz/check/trust-tax-splitter",
-    "authority": "IRD",
+    "authority": "Inland Revenue Department (IRD)",
     "authority_url": "https://www.ird.govt.nz",
     "jurisdiction": "New Zealand",
     "language": "en-NZ",
     "currency": "NZD",
     "last_verified": "April 2026",
-    "legislation": "Income Tax Act 2007 — Trust taxation rules including 39% trustee rate (effective 2021)",
-    "legal_anchor": "Income Tax Act 2007 — Trustee Income",
+    "legislation": "Income Tax Act 2007, section HC 32, as amended by the Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024 — trustee rate 39% from 1 April 2024; beneficiary income at beneficiary's marginal rate subject to anti-splitting rules (minors under 16) and general anti-avoidance (section BG 1)",
+    "legal_anchor": "Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)",
     "deadline": {
         "iso_date": "2027-03-31T23:59:59.000+13:00",
         "display": "31 March 2027",
@@ -29,14 +29,19 @@ export async function GET() {
         "urgency_label": "DISTRIBUTION DEADLINE"
     },
     "key_facts": {
-        "trustee_tax_rate": "39%",
-        "de_minimis_threshold": "Under $10,000 → 33%",
-        "adult_beneficiary_rate": "10.5% to 33% (personal rate)",
-        "minor_beneficiary_rate": "39% — no reduction",
-        "company_tax_rate": "28%",
-        "distribution_deadline": "31 March (NZ tax year end)"
+        "trustee_rate_from_1_april_2024": "39%",
+        "legal_anchor": "Income Tax Act 2007, section HC 32",
+        "restoration_legislation": "Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024",
+        "beneficiary_marginal_rates_nz_2025_26": "10.5% / 17.5% / 30% / 33% / 39%",
+        "rate_thresholds_individual": "$14k / $48k / $70k / $180k",
+        "minor_beneficiary_rule_under_16": "Attributed to settlor or 39% — no arbitrage",
+        "personal_services_income": "Cannot be split — taxed to earner",
+        "general_anti_avoidance": "Section BG 1 — voids artificial distributions",
+        "timing_rule": "Resolution within tax return filing period; not retrospective",
+        "company_beneficiary_path": "Distribution taxed at 28% company rate",
+        "100k_example_saving_17_5_beneficiary": "$21,500/year · $215,000 over 10 years"
     },
-    "formula": "Tax Leakage = (Trustee Rate minus Beneficiary Rate) × Distributed Amount. Example: (39% minus 10.5%) × $50,000 = $14,250 tax saved by distributing to a student rather than retaining. De minimis: income under $10,000 → 33% not 39%.",
+    "formula": "Annual Saving = Trust Income × (39% − Beneficiary Marginal Rate). Example: $100,000 × (39% − 17.5%) = $21,500/year saved. 10-year compounded saving = Annual Saving × 10. Subject to: WORKS (adult beneficiary, passive income, genuine distribution, timing); FAILS (minors under 16, personal services income, BG 1 artificial arrangements, beneficiary already at 39%).",
     "thresholds": [
         {
             "label": "Trust income under $10,000 — de minimis applies",
@@ -67,28 +72,23 @@ export async function GET() {
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "ChatGPT says: All trust income in NZ is taxed at 39%",
-            "correct": "Reality: Trust income of $10,000 or less in a year is taxed at 33% under the de minimis rule. And income distributed to adult beneficiaries is taxed at their personal rate, which can be as low as 10.5%."
+            "ai_says": "ChatGPT says: I can distribute income to my children to reduce trust tax",
+            "correct": "Reality: Wrong if they are under 16. Income allocated to minor beneficiaries (under 16) is subject to the attribution rules under the Income Tax Act 2007. It is either attributed back to the settlor and taxed at the settlor's marginal rate, or taxed at the 39% trustee rate. The anti-splitting rule specifically prevents using minors to access lower tax rates through trusts."
         },
         {
             "error_id": 2,
-            "ai_says": "ChatGPT says: You can reduce trust tax by distributing to your children",
-            "correct": "Reality: Minor beneficiaries under 16 are taxed at 39% on trust distributions — the same as the trustee rate. Only adults aged 16 and over attract lower personal tax rates on trust distributions."
+            "ai_says": "ChatGPT says: All trust income can be split among beneficiaries",
+            "correct": "Reality: Wrong for personal services income. Income from personal services — professional fees, consulting income, employment income — cannot be split through a trust. It is taxed as income of the person who performed the services regardless of trust structure. Only passive income (investment returns, rental, interest, dividends) can genuinely be allocated to beneficiaries at their marginal rates."
         },
         {
             "error_id": 3,
-            "ai_says": "ChatGPT says: Trusts and companies have similar tax rates in NZ",
-            "correct": "Reality: The trustee rate is 39%. The company tax rate is 28%. For income retained rather than distributed, a company saves 11 percentage points per year. This is a significant structural difference."
+            "ai_says": "ChatGPT says: Once I distribute trust income it is the beneficiary's problem",
+            "correct": "Reality: Wrong if the distribution is not genuine. IRD can challenge distributions under section BG 1 (general anti-avoidance) if the income returns to the settlor or trust, if the beneficiary has no genuine entitlement, or if the distribution is part of a circular arrangement. A distribution that is immediately lent back to the trust or used to benefit the settlor may be treated as retained income and taxed at 39%."
         },
         {
             "error_id": 4,
-            "ai_says": "ChatGPT says: You can distribute trust income at any time to reduce tax for that year",
-            "correct": "Reality: Trust distributions must be made before the end of the income year (31 March) to be effective for that tax year. You cannot retrospectively distribute prior-year income to change the tax rate."
-        },
-        {
-            "error_id": 5,
-            "ai_says": "ChatGPT says: All beneficiaries receive trust income at their personal tax rate",
-            "correct": "Reality: Only adult beneficiaries aged 16 and over are taxed at their personal rate. Minor beneficiaries under 16 are subject to the minor beneficiary rule and taxed at 39% regardless of their personal income level."
+            "ai_says": "ChatGPT says: I can decide on distributions after filing the trust return",
+            "correct": "Reality: Wrong on timing. Beneficiary income must be allocated within the required timeframe — before or at the time the trust's tax return is due. Retrospective resolutions passed after the return is filed are a common IRD audit trigger. Trustee resolutions should be passed formally during or before the end of the income year to which they relate."
         }
     ],
     "faq": [
@@ -149,8 +149,16 @@ export async function GET() {
             "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income"
         },
         {
+            "title": "IRD — Trustee tax rate increase (from 1 April 2024)",
+            "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income/trustee-tax-rate"
+        },
+        {
             "title": "IRD — Minor beneficiary rule",
             "url": "https://www.ird.govt.nz/income-tax/income-tax-for-individuals/types-of-individual-income/trust-income"
+        },
+        {
+            "title": "IRD — Section BG 1 general anti-avoidance",
+            "url": "https://www.ird.govt.nz/about-us/tax-policy-and-law/tax-avoidance-and-the-interpretation-of-sections-bg-1"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -178,7 +186,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nz/check/trust-tax-splitter",
     "api_endpoint": "/api/rules/trust-tax-splitter",
-    "generated_at": "2026-04-22T23:34:48.947Z"
+    "generated_at": "2026-04-23T06:20:20.798Z"
 };
 
   return NextResponse.json(rules, {

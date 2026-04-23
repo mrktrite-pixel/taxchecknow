@@ -10,12 +10,12 @@ import TrustTaxSplitterCalculator from "./TrustTaxSplitterCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "NZ Trust Tax 2026: Are You Overpaying 39% Trustee Rate? | TaxCheckNow",
-  description: "Default NZ trustee tax rate is 39%. But trust income under $10,000 stays at 33%. Distributions to adult beneficiaries can be as low as 10.5%. Many Kiwi trusts are overpaying tax unnecessarily. Check your trust position now.",
+  title: "NZ Trust Income Allocation Decision Engine 2026 | TaxCheckNow",
+  description: "From 1 April 2024, NZ trustee rate is 39% (Income Tax Act 2007 HC 32). Adult beneficiaries taxed at marginal rate (10.5-39%). On $100k trust income with 17.5% beneficiary: $21,500/year saved. Minors (under 16), personal services income, and artificial distributions fail under anti-splitting and BG 1 rules. Check your 7-path decision.",
   alternates: { canonical: "https://taxchecknow.com/nz/check/trust-tax-splitter" },
   openGraph: {
-    title: "NZ Trust Tax 2026: Are You Overpaying 39% Trustee Rate? | TaxCheckNow",
-    description: "Default NZ trustee tax rate is 39%. But trust income under $10,000 stays at 33%. Distributions to adult beneficiaries can be as low as 10.5%. Many Kiwi trusts are overpaying tax unnecessarily. Check your trust position now.",
+    title: "NZ Trust Income Allocation Decision Engine 2026 | TaxCheckNow",
+    description: "From 1 April 2024, NZ trustee rate is 39% (Income Tax Act 2007 HC 32). Adult beneficiaries taxed at marginal rate (10.5-39%). On $100k trust income with 17.5% beneficiary: $21,500/year saved. Minors (under 16), personal services income, and artificial distributions fail under anti-splitting and BG 1 rules. Check your 7-path decision.",
     url: "https://taxchecknow.com/nz/check/trust-tax-splitter",
     siteName: "TaxCheckNow",
     type: "website",
@@ -92,24 +92,20 @@ const faqs = [
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: All trust income in NZ is taxed at 39%",
-    "correct": "Reality: Trust income of $10,000 or less in a year is taxed at 33% under the de minimis rule. And income distributed to adult beneficiaries is taxed at their personal rate, which can be as low as 10.5%."
+    "wrong": "ChatGPT says: I can distribute income to my children to reduce trust tax",
+    "correct": "Reality: Wrong if they are under 16. Income allocated to minor beneficiaries (under 16) is subject to the attribution rules under the Income Tax Act 2007. It is either attributed back to the settlor and taxed at the settlor's marginal rate, or taxed at the 39% trustee rate. The anti-splitting rule specifically prevents using minors to access lower tax rates through trusts."
   },
   {
-    "wrong": "ChatGPT says: You can reduce trust tax by distributing to your children",
-    "correct": "Reality: Minor beneficiaries under 16 are taxed at 39% on trust distributions — the same as the trustee rate. Only adults aged 16 and over attract lower personal tax rates on trust distributions."
+    "wrong": "ChatGPT says: All trust income can be split among beneficiaries",
+    "correct": "Reality: Wrong for personal services income. Income from personal services — professional fees, consulting income, employment income — cannot be split through a trust. It is taxed as income of the person who performed the services regardless of trust structure. Only passive income (investment returns, rental, interest, dividends) can genuinely be allocated to beneficiaries at their marginal rates."
   },
   {
-    "wrong": "ChatGPT says: Trusts and companies have similar tax rates in NZ",
-    "correct": "Reality: The trustee rate is 39%. The company tax rate is 28%. For income retained rather than distributed, a company saves 11 percentage points per year. This is a significant structural difference."
+    "wrong": "ChatGPT says: Once I distribute trust income it is the beneficiary's problem",
+    "correct": "Reality: Wrong if the distribution is not genuine. IRD can challenge distributions under section BG 1 (general anti-avoidance) if the income returns to the settlor or trust, if the beneficiary has no genuine entitlement, or if the distribution is part of a circular arrangement. A distribution that is immediately lent back to the trust or used to benefit the settlor may be treated as retained income and taxed at 39%."
   },
   {
-    "wrong": "ChatGPT says: You can distribute trust income at any time to reduce tax for that year",
-    "correct": "Reality: Trust distributions must be made before the end of the income year (31 March) to be effective for that tax year. You cannot retrospectively distribute prior-year income to change the tax rate."
-  },
-  {
-    "wrong": "ChatGPT says: All beneficiaries receive trust income at their personal tax rate",
-    "correct": "Reality: Only adult beneficiaries aged 16 and over are taxed at their personal rate. Minor beneficiaries under 16 are subject to the minor beneficiary rule and taxed at 39% regardless of their personal income level."
+    "wrong": "ChatGPT says: I can decide on distributions after filing the trust return",
+    "correct": "Reality: Wrong on timing. Beneficiary income must be allocated within the required timeframe — before or at the time the trust's tax return is due. Retrospective resolutions passed after the return is filed are a common IRD audit trigger. Trustee resolutions should be passed formally during or before the end of the income year to which they relate."
   }
 ];
 
@@ -138,61 +134,91 @@ const accountantQuestions = [
 
 const workedExamples = [
   {
-    "name": "Small trust retained",
-    "setup": "$8,000 trust income — retained",
-    "income": "$8k",
-    "status": "$2,640 (33% — de minimis applies)"
+    "name": "A. OPTIMAL — adult at 17.5%",
+    "setup": "$100k investment income, adult at 17.5%, distributing, clean IRD",
+    "income": "$21,500/yr saved",
+    "status": "RATE ARBITRAGE WORKS"
   },
   {
-    "name": "Adult distribution",
-    "setup": "$50,000 — distributed to student (10.5%)",
-    "income": "$50k",
-    "status": "$5,250 vs $19,500 — SAVE $14,250"
+    "name": "B. RETAINING SUBOPTIMAL",
+    "setup": "$100k investment, adult at 17.5%, NOT distributing",
+    "income": "$21,500/yr available",
+    "status": "LEVER UNUSED"
   },
   {
-    "name": "Minor distribution",
-    "setup": "$50,000 — distributed to 14-year-old",
-    "income": "$50k",
-    "status": "$19,500 — 39% STILL APPLIES — TRAP"
+    "name": "C. BLOCKED — minors only",
+    "setup": "$100k investment, minor beneficiaries only",
+    "income": "$0 saving possible",
+    "status": "ANTI-SPLITTING"
   },
   {
-    "name": "Company comparison",
-    "setup": "$100,000 retained vs company at 28%",
-    "income": "$100k",
-    "status": "$39k (trust) vs $28k (company) — REVIEW"
+    "name": "D. BLOCKED — personal services",
+    "setup": "$100k consulting fees, adult at 17.5%",
+    "income": "$0 saving possible",
+    "status": "PSI CANNOT SPLIT"
+  },
+  {
+    "name": "E. BLOCKED — beneficiary at 39%",
+    "setup": "$100k investment, adult already over $180k income",
+    "income": "$0 saving (rate equal)",
+    "status": "NO ARBITRAGE"
+  },
+  {
+    "name": "F. IRD HIGH RISK",
+    "setup": "$100k, prior IRD issues raised, continuing same pattern",
+    "income": "Theoretical $21,500 ",
+    "status": "AUDIT LIKELY"
+  },
+  {
+    "name": "G. COMPANY BENEFICIARY — 28% path",
+    "setup": "$100k distributed to corporate beneficiary",
+    "income": "$11,000/yr saved (28% vs 39%)",
+    "status": "SEPARATE PATH"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "Retain in trust",
-    "metric1": "39%",
-    "metric2": "$19,500",
-    "bestMove": "Baseline — most expensive"
+    "position": "Retained (trustee 39%)",
+    "metric1": "$39,000",
+    "metric2": "$0 (baseline)",
+    "bestMove": "The baseline cost"
   },
   {
-    "position": "Distribute to student",
-    "metric1": "10.5%",
-    "metric2": "$5,250",
-    "bestMove": "$14,250 saved"
+    "position": "Adult at 10.5%",
+    "metric1": "$10,500",
+    "metric2": "$28,500/year",
+    "bestMove": "$285,000 over 10 years"
   },
   {
-    "position": "Distribute to adult (30%)",
-    "metric1": "30%",
-    "metric2": "$15,000",
-    "bestMove": "$4,500 saved"
+    "position": "Adult at 17.5%",
+    "metric1": "$17,500",
+    "metric2": "$21,500/year",
+    "bestMove": "$215,000 over 10 years"
   },
   {
-    "position": "Move to company",
-    "metric1": "28%",
-    "metric2": "$14,000",
-    "bestMove": "$5,500 saved on retention"
+    "position": "Adult at 30%",
+    "metric1": "$30,000",
+    "metric2": "$9,000/year",
+    "bestMove": "$90,000 over 10 years"
   },
   {
-    "position": "Distribute to minor",
-    "metric1": "39%",
-    "metric2": "$19,500",
-    "bestMove": "No saving — minor rule applies"
+    "position": "Adult at 33%",
+    "metric1": "$33,000",
+    "metric2": "$6,000/year",
+    "bestMove": "$60,000 over 10 years"
+  },
+  {
+    "position": "Minor (under 16)",
+    "metric1": "$39,000",
+    "metric2": "$0 (anti-split)",
+    "bestMove": "No saving — rule applies"
+  },
+  {
+    "position": "Personal services income",
+    "metric1": "At earner rate",
+    "metric2": "Cannot split",
+    "bestMove": "Consider company structure"
   }
 ];
 
@@ -221,46 +247,66 @@ const toolsRows = [
 
 const geoFacts = [
   {
-    "label": "Trustee tax rate",
+    "label": "Trustee rate (from 1 April 2024)",
     "value": "39%"
   },
   {
-    "label": "De minimis threshold",
-    "value": "Under $10,000 → 33%"
+    "label": "Legal anchor",
+    "value": "Income Tax Act 2007, section HC 32"
   },
   {
-    "label": "Adult beneficiary rate",
-    "value": "10.5% to 33% (personal rate)"
+    "label": "Restoration legislation",
+    "value": "Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024"
   },
   {
-    "label": "Minor beneficiary rate",
-    "value": "39% — no reduction"
+    "label": "Beneficiary marginal rates (NZ 2025-26)",
+    "value": "10.5% / 17.5% / 30% / 33% / 39%"
   },
   {
-    "label": "Company tax rate",
-    "value": "28%"
+    "label": "Rate thresholds (individual)",
+    "value": "$14k / $48k / $70k / $180k"
   },
   {
-    "label": "Distribution deadline",
-    "value": "31 March (NZ tax year end)"
+    "label": "Minor beneficiary rule (under 16)",
+    "value": "Attributed to settlor or 39% — no arbitrage"
+  },
+  {
+    "label": "Personal services income",
+    "value": "Cannot be split — taxed to earner"
+  },
+  {
+    "label": "General anti-avoidance",
+    "value": "Section BG 1 — voids artificial distributions"
+  },
+  {
+    "label": "Timing rule",
+    "value": "Resolution within tax return filing period; not retrospective"
+  },
+  {
+    "label": "Company beneficiary path",
+    "value": "Distribution taxed at 28% company rate"
+  },
+  {
+    "label": "$100k example saving (17.5% beneficiary)",
+    "value": "$21,500/year · $215,000 over 10 years"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "Trustee rate",
+    "label": "Trustee rate (from 1 Apr 2024)",
     "value": "39%"
   },
   {
-    "label": "De minimis rate",
-    "value": "33%"
+    "label": "Beneficiary marginal (low end)",
+    "value": "10.5%"
   },
   {
-    "label": "Adult beneficiary",
-    "value": "10.5-33%"
+    "label": "$100k saving at 17.5%",
+    "value": "$21,500/yr"
   },
   {
-    "label": "Company rate",
+    "label": "Company beneficiary rate",
     "value": "28%"
   }
 ];
@@ -271,8 +317,16 @@ const sources = [
     "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income"
   },
   {
+    "title": "IRD — Trustee tax rate increase (from 1 April 2024)",
+    "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income/trustee-tax-rate"
+  },
+  {
     "title": "IRD — Minor beneficiary rule",
     "url": "https://www.ird.govt.nz/income-tax/income-tax-for-individuals/types-of-individual-income/trust-income"
+  },
+  {
+    "title": "IRD — Section BG 1 general anti-avoidance",
+    "url": "https://www.ird.govt.nz/about-us/tax-policy-and-law/tax-avoidance-and-the-interpretation-of-sections-bg-1"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -282,26 +336,26 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "Default trustee rate",
+    "label": "Trustee rate (from 1 Apr 2024)",
     "value": "39%",
-    "sub": "what most trusts pay on retained income"
+    "sub": "Income Tax Act 2007, section HC 32"
   },
   {
-    "label": "Adult distribution",
-    "value": "10.5-33%",
-    "sub": "personal rate — up to 28.5% saving",
+    "label": "$100k saving (17.5% beneficiary)",
+    "value": "$21,500/yr back",
+    "sub": "compounded 10-year: $215,000",
     "red": true
   },
   {
-    "label": "Minor distribution",
-    "value": "39%",
-    "sub": "same as trustee rate — no benefit",
+    "label": "Minors (under 16)",
+    "value": "39% regardless",
+    "sub": "anti-splitting rule — no arbitrage",
     "red": true
   },
   {
-    "label": "Company comparison",
-    "value": "28%",
-    "sub": "11% less than trustee rate on retention"
+    "label": "Timing window",
+    "value": "Within return period",
+    "sub": "retrospective = BG 1 audit trigger"
   }
 ];
 
@@ -325,8 +379,8 @@ export default function TrustTaxSplitterPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Trust Tax Splitter — Rules April 2026",
-    description: "Default NZ trustee tax rate is 39%. But trust income under $10,000 stays at 33%. Distributions to adult beneficiaries can be as low as 10.5%. Many Kiwi trusts are overpaying tax unnecessarily. Check your trust position now.",
+    name: "Trust Income Allocation Decision Engine — Rules April 2026",
+    description: "From 1 April 2024, NZ trustee rate is 39% (Income Tax Act 2007 HC 32). Adult beneficiaries taxed at marginal rate (10.5-39%). On $100k trust income with 17.5% beneficiary: $21,500/year saved. Minors (under 16), personal services income, and artificial distributions fail under anti-splitting and BG 1 rules. Check your 7-path decision.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -341,8 +395,8 @@ export default function TrustTaxSplitterPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Trust Tax Splitter",
-    description: "Default NZ trustee tax rate is 39%. But trust income under $10,000 stays at 33%. Distributions to adult beneficiaries can be as low as 10.5%. Many Kiwi trusts are overpaying tax unnecessarily. Check your trust position now.",
+    name: "Trust Income Allocation Decision Engine",
+    description: "From 1 April 2024, NZ trustee rate is 39% (Income Tax Act 2007 HC 32). Adult beneficiaries taxed at marginal rate (10.5-39%). On $100k trust income with 17.5% beneficiary: $21,500/year saved. Minors (under 16), personal services income, and artificial distributions fail under anti-splitting and BG 1 rules. Check your 7-path decision.",
     url: "https://taxchecknow.com/nz/check/trust-tax-splitter",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -357,28 +411,38 @@ export default function TrustTaxSplitterPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Trust Tax Splitter",
+    name: "How to use the Trust Income Allocation Decision Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter your trust income",
-            "text": "Choose the trust's approximate annual net income."
+            "name": "Enter total trust income this year",
+            "text": "Trust net income (after deductions) for the current income year."
       },
       {
             "@type": "HowToStep",
-            "name": "Identify your beneficiaries",
-            "text": "Specify whether you have adult beneficiaries aged 16 and over who could receive distributions."
+            "name": "Specify income type",
+            "text": "Investment / rental / business pass-through / personal services / mixed."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your tax leakage number",
-            "text": "See how much extra tax your trust is paying compared to the optimised distribution strategy."
+            "name": "Identify beneficiary composition",
+            "text": "Adults only / adults + minors / minors only / company or trust beneficiary."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your distribution plan",
-            "text": "Receive a personalised trustee resolution guide and distribution strategy before 31 March."
+            "name": "Lowest adult marginal rate",
+            "text": "Based on the beneficiary's total income excluding any trust distribution."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Current distribution pattern",
+            "text": "Regularly distributing / retaining / partial / not sure."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "IRD review history",
+            "text": "Any past review — issues raised or no issues — affects audit risk going forward."
       }
 ],
   };
@@ -386,18 +450,18 @@ export default function TrustTaxSplitterPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Trust Tax Splitter — Free Check",
+    "name": "Trust Income Allocation Decision Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nz/check/trust-tax-splitter#calculator",
-    "description": "Default NZ trustee tax rate is 39%. But trust income under $10,000 stays at 33%. Distributions to adult beneficiaries can be as low as 10.5%. Many Kiwi trusts are overpaying tax unnecessarily. Check your trust position now.",
+    "description": "From 1 April 2024, NZ trustee rate is 39% (Income Tax Act 2007 HC 32). Adult beneficiaries taxed at marginal rate (10.5-39%). On $100k trust income with 17.5% beneficiary: $21,500/year saved. Minors (under 16), personal services income, and artificial distributions fail under anti-splitting and BG 1 rules. Check your 7-path decision.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on IRD guidance April 2026"
+      "Based on Inland Revenue Department (IRD) guidance April 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -418,7 +482,7 @@ export default function TrustTaxSplitterPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "New Zealand", item: "https://taxchecknow.com/nz" },
-      { "@type": "ListItem", position: 3, name: "Trust Tax Splitter", item: "https://taxchecknow.com/nz/check/trust-tax-splitter" },
+      { "@type": "ListItem", position: 3, name: "Trust Income Allocation Decision Engine", item: "https://taxchecknow.com/nz/check/trust-tax-splitter" },
     ],
   };
 
@@ -463,7 +527,7 @@ export default function TrustTaxSplitterPage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇳🇿 IRD Verified · Income Tax Act 2007 — Trustee Income ↗
+            🇳🇿 Inland Revenue Department (IRD) Verified · Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024) ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-NZ
@@ -472,12 +536,12 @@ export default function TrustTaxSplitterPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          NZ Trust Tax 2026: Are You Paying 39% When You Don't Have To?
+          NZ Trust Income Retained at 39%. Distributed to the Right Beneficiary: 17.5%. On $100,000 of Trust Income That Is $21,500 Saved — or Lost — Depending on One Decision.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          The default trustee tax rate in New Zealand is 39%. But many trusts are paying this rate unnecessarily. Trust income of $10,000 or less in a year is taxed at 33% under the de minimis rule. And income distributed to adult beneficiaries is taxed at their personal rate — which can be as low as 10.5%.
+          New Zealand trust law allows trustees to allocate income to beneficiaries who are then taxed at their own marginal rates. From 1 April 2024, the trustee rate increased to 39% under the Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024. Income retained in the trust is taxed at 39%. Income distributed to an adult beneficiary with lower income is taxed at that beneficiary's marginal rate — potentially as low as 17.5%. On $100,000 of trust income distributed to a beneficiary in the 17.5% band, the tax saving is $21,500 per year. Over 10 years that is $215,000 — from one annual distribution decision.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -499,19 +563,19 @@ export default function TrustTaxSplitterPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Trustee rate</dt>
+                  <dt className="text-neutral-600">Trustee rate (from 1 Apr 2024)</dt>
                   <dd className="font-bold">39%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">De minimis rate</dt>
-                  <dd className="font-bold">33%</dd>
+                  <dt className="text-neutral-600">Beneficiary marginal (low end)</dt>
+                  <dd className="font-bold">10.5%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Adult beneficiary</dt>
-                  <dd className="font-bold">10.5-33%</dd>
+                  <dt className="text-neutral-600">$100k saving at 17.5%</dt>
+                  <dd className="font-bold">$21,500/yr</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Company rate</dt>
+                  <dt className="text-neutral-600">Company beneficiary rate</dt>
                   <dd className="font-bold">28%</dd>
                 </div>
               </dl>
@@ -520,7 +584,7 @@ export default function TrustTaxSplitterPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Trust Tax Splitter</h3>
+              <h3 className="mb-1 text-lg font-bold">Trust Income Allocation Decision Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised trust tax audit built around your trust income, your beneficiaries, and your distribution strategy — not a generic trust guide.</p>
               <div className="space-y-2">
                 <a href="#calculator"
@@ -558,39 +622,39 @@ export default function TrustTaxSplitterPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Default trustee rate
+                Trustee rate (from 1 Apr 2024)
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 39%
               </p>
-              <p className="text-xs text-neutral-400">what most trusts pay on retained income</p>
+              <p className="text-xs text-neutral-400">Income Tax Act 2007, section HC 32</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Adult distribution
+                $100k saving (17.5% beneficiary)
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                10.5-33%
+                $21,500/yr back
               </p>
-              <p className="text-xs text-neutral-400">personal rate — up to 28.5% saving</p>
+              <p className="text-xs text-neutral-400">compounded 10-year: $215,000</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Minor distribution
+                Minors (under 16)
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                39%
+                39% regardless
               </p>
-              <p className="text-xs text-neutral-400">same as trustee rate — no benefit</p>
+              <p className="text-xs text-neutral-400">anti-splitting rule — no arbitrage</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Company comparison
+                Timing window
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                28%
+                Within return period
               </p>
-              <p className="text-xs text-neutral-400">11% less than trustee rate on retention</p>
+              <p className="text-xs text-neutral-400">retrospective = BG 1 audit trigger</p>
             </div>
           </div>
         </div>
@@ -602,23 +666,26 @@ export default function TrustTaxSplitterPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            Trust tax by distribution strategy
+            The 7 decision paths
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Adult beneficiary (16+) at personal rate</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ De minimis income under $10,000 at 33%</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Company structure at 28%</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Adult beneficiary at lower marginal = arbitrage works</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Passive income (investment / rental / dividends) can be split</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Genuine benefit + in-time resolution required</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Company beneficiary path: 28% instead of 39%</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Every 11% of rate differential on $100k = $11,000/year</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT minor under 16 — still 39%</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT backdated distributions</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT undocumented arrangements</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT minors under 16 — attributed back or 39%</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT personal services income — taxed to earner</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT retrospective resolutions — BG 1 audit flag</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT circular / artificial arrangements</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: IRD — Trust income · Income Tax Act 2007</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: Income Tax Act 2007, section HC 32 (as amended 2024) · IRD — Trust and estate income · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -626,24 +693,24 @@ export default function TrustTaxSplitterPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The answer — IRD confirmed April 2026
           </p>
-          <p className="mb-2 text-neutral-900">The default trustee tax rate in New Zealand is 39%. But many trusts are paying this rate unnecessarily. Trust income of $10,000 or less in a year is taxed at 33% under the de minimis rule. And income distributed to adult beneficiaries is taxed at their personal rate — which can be as low as 10.5%.</p>
-          <p className="mb-2 text-neutral-900">The minor beneficiary rule is the trap most Kiwis miss. Distributing trust income to children under 16 does NOT reduce tax — minors are taxed at 39% on trust distributions. Only distributions to beneficiaries aged 16 and over attract personal tax rates.</p>
-          <p className="mb-2 text-neutral-900">For trusts with significant retained income, the comparison with a company structure matters. A company is taxed at 28% — 11 percentage points less than the 39% trustee rate. Many trust structures that made sense five years ago are now significantly less efficient than a company.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Trust and estate income · Income Tax Act 2007</p>
+          <p className="mb-2 text-neutral-900">New Zealand trust law allows trustees to allocate income to beneficiaries who are then taxed at their own marginal rates. From 1 April 2024, the trustee rate increased to 39% under the Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024. Income retained in the trust is taxed at 39%. Income distributed to an adult beneficiary with lower income is taxed at that beneficiary's marginal rate — potentially as low as 17.5%. On $100,000 of trust income distributed to a beneficiary in the 17.5% band, the tax saving is $21,500 per year. Over 10 years that is $215,000 — from one annual distribution decision.</p>
+          <p className="mb-2 text-neutral-900">The saving is not available in all situations. Income allocated to minor beneficiaries (under 16) is attributed back to the settlor or taxed at 39% — the anti-splitting rule prevents this path. Personal services income — fees earned by a professional or consultant — cannot be split through a trust regardless of who receives it. And IRD actively scrutinises trust distributions under the general anti-avoidance provision (section BG 1 of the Income Tax Act 2007). Distributions must be genuine — income must truly belong to the beneficiary and they must genuinely receive the benefit. Circular flows and retrospective resolutions are audit triggers.</p>
+          <p className="mb-2 text-neutral-900">The timing of the distribution resolution matters. Beneficiary income must be allocated by the due date of the trust's tax return for the income year. Trustees who wait until after the return is filed to decide on distributions risk IRD challenge. The optimal approach is a formal trustee resolution during or before the end of the income year — not after filing. This is one of the areas IRD most commonly finds in trust audits.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: Income Tax Act 2007, section HC 32 (as amended by the Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024) · IRD — Trust and estate income · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            Where trust income tax rate depends on what you do with it
+            The 7-path annual allocation decision — $100k income at stake
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Leave income in trust → 39% trustee rate → significant overcharge  ❌
+              ❌ $100,000 trust income  →  retained at trustee rate  →  39% tax  →  $39,000 to IRD  →  $61,000 left  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Distribute to adult beneficiary at low income → 10.5% personal rate → 28.5% saving  ✔
+              ✔ $100,000  →  distributed to adult beneficiary at 17.5%  →  $17,500 tax  →  $82,500 retained  →  $21,500 saved  ✔
             </div>
           </div>
         </div>
@@ -654,9 +721,10 @@ export default function TrustTaxSplitterPage() {
             Common AI errors on this topic
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ All trust income in NZ is taxed at 39% — wrong. Trust income of $10,000 or less in a year is taxed at 33% under the de minimis threshold. And income distributed to adult beneficiaries is taxed at their personal marginal rate, which can be significantly lower than 39%.</li>
-            <li>✗ You can reduce trust tax by distributing to your children — wrong. Minor beneficiaries under 16 are taxed at 39% on trust distributions — the same as the trustee rate. This is the minor beneficiary anti-avoidance rule. Only distributions to adults aged 16 and over attract the lower personal rates.</li>
-            <li>✗ Trusts and companies are taxed similarly in NZ — wrong. The trustee rate is 39%. The company rate is 28%. For retained income, a company structure saves 11 percentage points per year. This difference is substantial for trusts holding income-generating assets.</li>
+            <li>✗ I can distribute income to my children to reduce trust tax — wrong if they are under 16. Income allocated to minor beneficiaries (under 16) is subject to the attribution rules under the Income Tax Act 2007. It is either attributed back to the settlor and taxed at the settlor's marginal rate, or taxed at the 39% trustee rate. The anti-splitting rule specifically prevents using minors to access lower tax rates through trusts.</li>
+            <li>✗ All trust income can be split among beneficiaries — wrong for personal services income. Income from personal services — professional fees, consulting income, employment income — cannot be split through a trust. It is taxed as income of the person who performed the services regardless of trust structure. Only passive income (investment returns, rental, interest, dividends) can genuinely be allocated to beneficiaries at their marginal rates.</li>
+            <li>✗ Once I distribute trust income it is the beneficiary's problem — wrong if the distribution is not genuine. IRD can challenge distributions under section BG 1 (general anti-avoidance) if the income returns to the settlor or trust, if the beneficiary has no genuine entitlement, or if the distribution is part of a circular arrangement. A distribution that is immediately lent back to the trust or used to benefit the settlor may be treated as retained income and taxed at 39%.</li>
+            <li>✗ I can decide on distributions after filing the trust return — wrong on timing. Beneficiary income must be allocated within the required timeframe — before or at the time the trust's tax return is due. Retrospective resolutions passed after the return is filed are a common IRD audit trigger. Trustee resolutions should be passed formally during or before the end of the income year to which they relate.</li>
           </ul>
         </div>
 
@@ -681,13 +749,13 @@ export default function TrustTaxSplitterPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">The family trust had been sitting at 39% tax on retained income for two years. Nobody had suggested changing it.</p>
-            <p>The trust earned net rental income of $22,000 in the 2025/26 year. David had left it retained in the trust. Tax: $8,580 at 39%.</p>
-            <p>Aroha knew the trust had beneficiaries — herself, Mike, and the two children. She had assumed the children could receive distributions and that this would reduce tax. She had not thought through the age implications.</p>
-            <p>At 39% retained in the trust she was paying the same rate as the top personal rate. She raised it with David in passing at the end of their meeting.</p>
-            <p className="font-semibold text-neutral-900">Tama at 16 could receive distributions at his personal rate — zero other income meant 10.5% on the first $15,600. That was a saving of 28.5 percentage points. Hana at 14 was different: the minor beneficiary rule meant 39% regardless. Two kids. Two completely different tax outcomes. One year apart.</p>
+            <p className="text-base font-medium text-neutral-900">The family trust had been sitting at 39% tax on retained investment income for three years. No one had modelled distribution alternatives against the April 2024 trustee rate change.</p>
+            <p>The trust earned $95,000 of investment income in the 2025/26 year — mostly dividends from an NZX share portfolio and interest from a term deposit. David had been retaining it in the trust by default. At the 39% trustee rate that was $37,050 per year in tax.</p>
+            <p>Aroha knew the trust had beneficiaries — herself, Mike, their son Tama (now 18), and daughter Hana (now 16). Mike's income was solid at $105k in the 33% band. Aroha herself was at 30%. The trust income could theoretically be allocated to any of them.</p>
+            <p>Tama was in his first year of university. Part-time work income of about $8,000. Marginal rate: 10.5%. Hana was still at school, no employment income, but at 16 she crossed the minor-beneficiary threshold — her distributions would now be taxed at HER marginal rate (10.5%), not attributed back.</p>
+            <p className="font-semibold text-neutral-900">Allocating $30,000 to Tama (10.5%) + $30,000 to Hana (10.5%) + $35,000 to Aroha (30%) would result in total tax of approximately $16,800 — a saving of $20,250 vs the $37,050 retained scenario. The saving was not from any new benefit or aggressive structure. It was the basic rate arbitrage between 39% trustee and adult beneficiaries at 10.5-30%. No one had run the numbers since the trustee rate moved from 33% to 39% on 1 April 2024.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> The trust distributed $10,000 to Tama before 31 March 2027. Tax: $1,050 instead of $3,900. Saving: $2,850. Aroha added Hana's 16th birthday to the calendar.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> David drafted trustee resolutions before the income year ended. Formal allocations signed and dated. Distributions paid to each beneficiary's own bank account. Beneficiaries filed their own returns declaring the income. 10-year projected saving if the pattern continues and rates stay the same: approximately $200,000 of family wealth retained rather than sent to IRD. Aroha now has an annual calendar reminder: 'Trust distribution resolution — before year end'.</p>
             </div>
           </div>
           
@@ -705,11 +773,11 @@ export default function TrustTaxSplitterPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             NZ Trust Taxation Rules — confirmed 2026
           </h2>
-          <p className="mb-4 text-neutral-800">In New Zealand, trust income retained as trustee income is taxed at 39% under the Income Tax Act 2007. A de minimis threshold applies: if total trustee income does not exceed $10,000 in the income year, it is taxed at 33%. Trust income distributed to beneficiaries is taxed at the beneficiary's personal tax rate if the beneficiary is aged 16 or over. Minor beneficiaries under 16 are subject to the minor beneficiary rule and are taxed at 39% on distributions — the same as the trustee rate — preventing income splitting with children. The corporate tax rate is 28%, creating an 11 percentage point differential versus the trustee rate for retained income. Distributions must be made before the end of the income year (31 March) to be effective for that year.</p>
+          <p className="mb-4 text-neutral-800">New Zealand trusts are taxed under the Income Tax Act 2007, with trustee income taxed at the trustee rate of 39% from 1 April 2024 (section HC 32, as amended by the Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024). Income distributed to beneficiaries is taxed at the beneficiary's own marginal rate, which ranges from 10.5% to 39% depending on total income. The rate arbitrage between the 39% trustee rate and a lower beneficiary rate creates a tax saving on distributed income — up to $21,500 per year on $100,000 of income distributed to a beneficiary in the 17.5% band. This mechanism is limited by several rules: income allocated to minor beneficiaries (under 16) is attributed back to the settlor or taxed at 39% under the anti-splitting rules; personal services income cannot be allocated to other beneficiaries regardless of trust structure; and the general anti-avoidance provision (section BG 1) applies where distributions lack genuine commercial purpose. Beneficiary income must be formally allocated within the trust's tax return filing period — retrospective allocations risk IRD challenge. From 1 April 2024, the higher trustee rate has increased the financial significance of distribution decisions for trusts with adult beneficiaries in lower income bands.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Tax Leakage = (Trustee Rate minus Beneficiary Rate) × Distributed Amount. Example: (39% minus 10.5%) × $50,000 = $14,250 tax saved by distributing to a student rather than retaining. De minimis: income under $10,000 → 33% not 39%.
+            Annual Saving = Trust Income × (39% − Beneficiary Marginal Rate). Example: $100,000 × (39% − 17.5%) = $21,500/year saved. 10-year compounded saving = Annual Saving × 10. Subject to: WORKS (adult beneficiary, passive income, genuine distribution, timing); FAILS (minors under 16, personal services income, BG 1 artificial arrangements, beneficiary already at 39%).
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -723,34 +791,59 @@ export default function TrustTaxSplitterPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Trustee tax rate</td>
+                  <td className="p-2">Trustee rate (from 1 April 2024)</td>
                   <td className="p-2">39%</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Trustee Income</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">De minimis threshold</td>
-                  <td className="p-2">Under $10,000 → 33%</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Trustee Income</td>
+                  <td className="p-2">Legal anchor</td>
+                  <td className="p-2">Income Tax Act 2007, section HC 32</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Adult beneficiary rate</td>
-                  <td className="p-2">10.5% to 33% (personal rate)</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Trustee Income</td>
+                  <td className="p-2">Restoration legislation</td>
+                  <td className="p-2">Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Minor beneficiary rate</td>
-                  <td className="p-2">39% — no reduction</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Trustee Income</td>
+                  <td className="p-2">Beneficiary marginal rates (NZ 2025-26)</td>
+                  <td className="p-2">10.5% / 17.5% / 30% / 33% / 39%</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Company tax rate</td>
-                  <td className="p-2">28%</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Trustee Income</td>
+                  <td className="p-2">Rate thresholds (individual)</td>
+                  <td className="p-2">$14k / $48k / $70k / $180k</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Distribution deadline</td>
-                  <td className="p-2">31 March (NZ tax year end)</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Trustee Income</td>
+                  <td className="p-2">Minor beneficiary rule (under 16)</td>
+                  <td className="p-2">Attributed to settlor or 39% — no arbitrage</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Personal services income</td>
+                  <td className="p-2">Cannot be split — taxed to earner</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">General anti-avoidance</td>
+                  <td className="p-2">Section BG 1 — voids artificial distributions</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Timing rule</td>
+                  <td className="p-2">Resolution within tax return filing period; not retrospective</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Company beneficiary path</td>
+                  <td className="p-2">Distribution taxed at 28% company rate</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">$100k example saving (17.5% beneficiary)</td>
+                  <td className="p-2">$21,500/year · $215,000 over 10 years</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)</td>
                 </tr>
               </tbody>
             </table>
@@ -777,58 +870,87 @@ export default function TrustTaxSplitterPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four trust scenarios — tax leakage detected
+          Seven decision paths — when it works, when it fails
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Trust Scenario</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Income</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Current Tax</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Optimised Tax</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Path</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Setup</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Annual outcome</th>
                 <th className="border-b border-neutral-300 p-3 text-left">Status</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Small trust retained</td>
-                <td className="p-3 text-neutral-700">$8,000 trust income — retained</td>
-                <td className="p-3 font-mono">$8k</td>
+                <td className="p-3 font-bold">A. OPTIMAL — adult at 17.5%</td>
+                <td className="p-3 text-neutral-700">$100k investment income, adult at 17.5%, distributing, clean IRD</td>
+                <td className="p-3 font-mono">$21,500/yr saved</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $2,640 (33% — de minimis applies)
+                    RATE ARBITRAGE WORKS
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Adult distribution</td>
-                <td className="p-3 text-neutral-700">$50,000 — distributed to student (10.5%)</td>
-                <td className="p-3 font-mono">$50k</td>
+                <td className="p-3 font-bold">B. RETAINING SUBOPTIMAL</td>
+                <td className="p-3 text-neutral-700">$100k investment, adult at 17.5%, NOT distributing</td>
+                <td className="p-3 font-mono">$21,500/yr available</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $5,250 vs $19,500 — SAVE $14,250
+                    LEVER UNUSED
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Minor distribution</td>
-                <td className="p-3 text-neutral-700">$50,000 — distributed to 14-year-old</td>
-                <td className="p-3 font-mono">$50k</td>
+                <td className="p-3 font-bold">C. BLOCKED — minors only</td>
+                <td className="p-3 text-neutral-700">$100k investment, minor beneficiaries only</td>
+                <td className="p-3 font-mono">$0 saving possible</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $19,500 — 39% STILL APPLIES — TRAP
+                    ANTI-SPLITTING
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Company comparison</td>
-                <td className="p-3 text-neutral-700">$100,000 retained vs company at 28%</td>
-                <td className="p-3 font-mono">$100k</td>
+                <td className="p-3 font-bold">D. BLOCKED — personal services</td>
+                <td className="p-3 text-neutral-700">$100k consulting fees, adult at 17.5%</td>
+                <td className="p-3 font-mono">$0 saving possible</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $39k (trust) vs $28k (company) — REVIEW
+                    PSI CANNOT SPLIT
+                  </span>
+                </td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">E. BLOCKED — beneficiary at 39%</td>
+                <td className="p-3 text-neutral-700">$100k investment, adult already over $180k income</td>
+                <td className="p-3 font-mono">$0 saving (rate equal)</td>
+                <td className="p-3">
+                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
+                    NO ARBITRAGE
+                  </span>
+                </td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">F. IRD HIGH RISK</td>
+                <td className="p-3 text-neutral-700">$100k, prior IRD issues raised, continuing same pattern</td>
+                <td className="p-3 font-mono">Theoretical $21,500 </td>
+                <td className="p-3">
+                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
+                    AUDIT LIKELY
+                  </span>
+                </td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">G. COMPANY BENEFICIARY — 28% path</td>
+                <td className="p-3 text-neutral-700">$100k distributed to corporate beneficiary</td>
+                <td className="p-3 font-mono">$11,000/yr saved (28% vs 39%)</td>
+                <td className="p-3">
+                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
+                    SEPARATE PATH
                   </span>
                 </td>
               </tr>
@@ -845,49 +967,61 @@ export default function TrustTaxSplitterPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Tax rates by distribution strategy
+          Annual saving by beneficiary rate — $100k income
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Strategy</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Tax Rate</th>
-                <th className="border-b border-neutral-300 p-3 text-left">On $50,000</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Annual Saving vs 39%</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Beneficiary marginal rate</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax on $100k</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Annual saving vs 39%</th>
+                <th className="border-b border-neutral-300 p-3 text-left">10-year compounded</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Retain in trust</td>
-                <td className="p-3 font-mono text-xs">39%</td>
-                <td className="p-3 text-xs">$19,500</td>
-                <td className="p-3 text-xs text-neutral-700">Baseline — most expensive</td>
+                <td className="p-3 font-bold">Retained (trustee 39%)</td>
+                <td className="p-3 font-mono text-xs">$39,000</td>
+                <td className="p-3 text-xs">$0 (baseline)</td>
+                <td className="p-3 text-xs text-neutral-700">The baseline cost</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Distribute to student</td>
-                <td className="p-3 font-mono text-xs">10.5%</td>
-                <td className="p-3 text-xs">$5,250</td>
-                <td className="p-3 text-xs text-neutral-700">$14,250 saved</td>
+                <td className="p-3 font-bold">Adult at 10.5%</td>
+                <td className="p-3 font-mono text-xs">$10,500</td>
+                <td className="p-3 text-xs">$28,500/year</td>
+                <td className="p-3 text-xs text-neutral-700">$285,000 over 10 years</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Distribute to adult (30%)</td>
-                <td className="p-3 font-mono text-xs">30%</td>
-                <td className="p-3 text-xs">$15,000</td>
-                <td className="p-3 text-xs text-neutral-700">$4,500 saved</td>
+                <td className="p-3 font-bold">Adult at 17.5%</td>
+                <td className="p-3 font-mono text-xs">$17,500</td>
+                <td className="p-3 text-xs">$21,500/year</td>
+                <td className="p-3 text-xs text-neutral-700">$215,000 over 10 years</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Move to company</td>
-                <td className="p-3 font-mono text-xs">28%</td>
-                <td className="p-3 text-xs">$14,000</td>
-                <td className="p-3 text-xs text-neutral-700">$5,500 saved on retention</td>
+                <td className="p-3 font-bold">Adult at 30%</td>
+                <td className="p-3 font-mono text-xs">$30,000</td>
+                <td className="p-3 text-xs">$9,000/year</td>
+                <td className="p-3 text-xs text-neutral-700">$90,000 over 10 years</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Distribute to minor</td>
-                <td className="p-3 font-mono text-xs">39%</td>
-                <td className="p-3 text-xs">$19,500</td>
-                <td className="p-3 text-xs text-neutral-700">No saving — minor rule applies</td>
+                <td className="p-3 font-bold">Adult at 33%</td>
+                <td className="p-3 font-mono text-xs">$33,000</td>
+                <td className="p-3 text-xs">$6,000/year</td>
+                <td className="p-3 text-xs text-neutral-700">$60,000 over 10 years</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Minor (under 16)</td>
+                <td className="p-3 font-mono text-xs">$39,000</td>
+                <td className="p-3 text-xs">$0 (anti-split)</td>
+                <td className="p-3 text-xs text-neutral-700">No saving — rule applies</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Personal services income</td>
+                <td className="p-3 font-mono text-xs">At earner rate</td>
+                <td className="p-3 text-xs">Cannot split</td>
+                <td className="p-3 text-xs text-neutral-700">Consider company structure</td>
               </tr>
             </tbody>
           </table>
@@ -948,7 +1082,7 @@ export default function TrustTaxSplitterPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          5 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -1043,7 +1177,7 @@ export default function TrustTaxSplitterPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            NZ trust tax 2026: trustee rate 39%, de minimis under $10k at 33%, adult beneficiary distributions at personal rate (10.5%-33%), minor beneficiaries taxed at 39%, company rate 28%. Distributions must be made before 31 March. Under Income Tax Act 2007.
+            NZ trust income — Income Tax Act 2007, section HC 32 as amended by Taxation Act 2024. Trustee rate 39% from 1 April 2024. Beneficiary income taxed at beneficiary's marginal rate (10.5% / 17.5% / 30% / 33% / 39%). Anti-splitting rule for minors under 16 (attributed or 39%). Personal services income cannot be split. General anti-avoidance (BG 1) voids artificial distributions. Resolutions required within tax return filing period. Company beneficiary path: 28% company rate.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1051,13 +1185,19 @@ export default function TrustTaxSplitterPage() {
               IRD
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Income Tax Act 2007
+              Income Tax Act 2007 HC 32
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Trustee Rate
+              39% Trustee Rate from April 2024
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              Beneficiary Rate Arbitrage
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Anti-Splitting Rules Apply
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              BG 1 Scrutiny Risk
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
@@ -1067,10 +1207,20 @@ export default function TrustTaxSplitterPage() {
               <p className="font-bold text-neutral-900">IRD — Trust and estate income ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income</p>
             </a>
+            <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income/trustee-tax-rate" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRD — Trustee tax rate increase (from 1 April 2024) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income/trustee-tax-rate</p>
+            </a>
             <a href="https://www.ird.govt.nz/income-tax/income-tax-for-individuals/types-of-individual-income/trust-income" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">IRD — Minor beneficiary rule ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ird.govt.nz/income-tax/income-tax-for-individuals/types-of-individual-income/trust-income</p>
+            </a>
+            <a href="https://www.ird.govt.nz/about-us/tax-policy-and-law/tax-avoidance-and-the-interpretation-of-sections-bg-1" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRD — Section BG 1 general anti-avoidance ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ird.govt.nz/about-us/tax-policy-and-law/tax-avoidance-and-the-interpretation-of-sections-bg-1</p>
             </a>
             <a href="/api/rules/trust-tax-splitter" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
@@ -1087,7 +1237,7 @@ export default function TrustTaxSplitterPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from IRD and GOV.UK guidance for April 2026.
+          built from Inland Revenue Department (IRD) and GOV.UK guidance for April 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.

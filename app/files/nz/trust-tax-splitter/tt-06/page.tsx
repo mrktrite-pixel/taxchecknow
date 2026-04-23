@@ -49,7 +49,7 @@ export default function TrustTaxSplitterFile06() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">New Zealand · Trust Tax Splitter</span>
+            <span className="hidden sm:block">New Zealand · Trust Income Allocation Decision Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -74,7 +74,7 @@ export default function TrustTaxSplitterFile06() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 IRD · Income Tax Act 2007 — Trustee Income
+              🇬🇧 Inland Revenue Department (IRD) · Income Tax Act 2007, section HC 32 — Trustee Income (39% from 1 April 2024)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -96,7 +96,7 @@ export default function TrustTaxSplitterFile06() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Trust Tax Splitter · File 06 of 8
+            Trust Income Allocation Decision Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
             Trust vs Company Comparison
@@ -205,7 +205,7 @@ export default function TrustTaxSplitterFile06() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on IRD guidance April 2026.
+            Based on Inland Revenue Department (IRD) guidance April 2026.
           </p>
         </div>
 
@@ -222,10 +222,10 @@ export default function TrustTaxSplitterFile06() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/nz/check/trust-tax-splitter" className="hover:text-neutral-900 transition">
-              ← Back to Trust Tax Splitter
+              ← Back to Trust Income Allocation Decision Engine
             </a>
             <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — Trust and estate income ↗</a>
-            <a href="https://www.ird.govt.nz/income-tax/income-tax-for-individuals/types-of-individual-income/trust-income" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — Minor beneficiary rule ↗</a>
+            <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income/trustee-tax-rate" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — Trustee tax rate increase (from 1 April 2024) ↗</a>
           </div>
         </div>
       </footer>
