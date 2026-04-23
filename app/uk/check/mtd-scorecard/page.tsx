@@ -10,12 +10,12 @@ import MtdScorecardCalculator from "./MtdScorecardCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "MTD ITSA 2026: Are You In Scope and Actually Ready? | TaxCheckNow",
-  description: "MTD for Income Tax is live from April 2026 for self-employed and landlords earning over £50,000. Most people think quarterly updates mean four full tax returns. They do not. Check your MTD position in 2 minutes.",
+  title: "MTD ITSA 2026: Are You Mandated and What Does It Cost if You Miss It | TaxCheckNow",
+  description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/mtd-scorecard" },
   openGraph: {
-    title: "MTD ITSA 2026: Are You In Scope and Actually Ready? | TaxCheckNow",
-    description: "MTD for Income Tax is live from April 2026 for self-employed and landlords earning over £50,000. Most people think quarterly updates mean four full tax returns. They do not. Check your MTD position in 2 minutes.",
+    title: "MTD ITSA 2026: Are You Mandated and What Does It Cost if You Miss It | TaxCheckNow",
+    description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/mtd-scorecard",
     siteName: "TaxCheckNow",
     type: "website",
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "5 April 2026";
-const DEADLINE_ISO   = "2026-04-05T23:59:59.000Z";
+const DEADLINE_LABEL = "6 April 2026";
+const DEADLINE_ISO   = "2026-04-06T00:00:00.000+01:00";
 
 function daysToDeadline(): number {
   if (!DEADLINE_ISO) return 0;
@@ -49,161 +49,178 @@ function progressPct(): number {
 
 const faqs = [
   {
-    "question": "What is Making Tax Digital for Income Tax?",
-    "answer": "MTD ITSA requires self-employed individuals and landlords to keep digital records and submit quarterly updates to HMRC, plus an annual final declaration, using approved software. It replaces the existing once-a-year self assessment process for in-scope taxpayers."
-  },
-  {
-    "question": "Am I in scope for MTD ITSA in 2026?",
-    "answer": "You are in scope from April 2026 if your combined gross income from self-employment and property exceeds £50,000. The threshold is based on gross income — before expenses. Combined income from multiple sources counts."
+    "question": "Am I mandated under MTD ITSA?",
+    "answer": "You are mandated if your combined gross income from self-employment and property exceeds the threshold at the phase date. Phase 1: over £50,000 from 6 April 2026. Phase 2: over £30,000 from 6 April 2027. Phase 3: over £20,000 from 6 April 2028. The threshold is based on GROSS income (before expenses) aggregated across all sources. PAYE salary and dividends do not count."
   },
   {
     "question": "What does a quarterly update actually involve?",
-    "answer": "A quarterly update is a brief digital submission summarising your income and expenses for the quarter. It is not a tax calculation or a mini return. HMRC uses the updates to give you an estimate of your tax position during the year. The actual tax calculation happens at the final annual declaration."
+    "answer": "A quarterly update is a brief digital submission summarising your income and expenses for the quarter — NOT a mini tax return or tax calculation. You submit it via HMRC-approved software within one month of the end of each quarter. The quarterly updates feed into a final annual declaration (due 31 January) which is the equivalent of your current self-assessment return."
   },
   {
-    "question": "What software do I need?",
-    "answer": "You must use HMRC-approved MTD-compatible software. Popular options include QuickBooks, Xero, FreeAgent, and Sage. If you currently use spreadsheets, you need either approved software or a recognised bridging tool that connects your spreadsheet to HMRC's systems."
+    "question": "What software do I actually need?",
+    "answer": "HMRC-approved software is mandatory. Popular options: QuickBooks (from £10/month), Xero (from £15/month), FreeAgent (free with some business bank accounts), Sage (from £12/month). If you currently use spreadsheets, you need either approved software or a recognised bridging tool that connects your spreadsheet to HMRC's systems. The HMRC website maintains the current list of approved software."
   },
   {
-    "question": "What are the penalties for non-compliance?",
-    "answer": "HMRC uses a points-based penalty system for late quarterly updates. Each missed update earns a point. At four points you receive a £200 penalty and continue accumulating penalties until the points reset. Failure to use approved software can also trigger penalties."
+    "question": "What are the penalties if I miss a quarterly update?",
+    "answer": "Each missed quarterly update triggers £200 initial penalty plus £10 per day up to 90 days = up to £1,100 per missed quarter. Missing all four quarterly updates in a year = up to £4,400 in penalties alone. HMRC also operates a points-based late-submission penalty system — each missed update earns a point, with an additional £200 financial penalty at 4 points. Points reset after 24 months of compliance."
+  },
+  {
+    "question": "Does MTD change when I pay my tax bill?",
+    "answer": "No. MTD changes REPORTING cadence, not payment dates. Balance payment is still due 31 January following the tax year. Payments on account remain due 31 January and 31 July. Quarterly updates are informational filings — they don't create new tax liabilities or payment obligations. What they do is give HMRC (and you) a running view of your tax position during the year."
   },
   {
     "question": "Does MTD apply to company directors?",
-    "answer": "MTD ITSA applies to self-employment and property income reported through self assessment — not employment income processed through PAYE or company income. A company director who also has self-employment income or rental property above the threshold must comply with MTD for those income sources."
+    "answer": "MTD ITSA applies to self-employment and property income reported through self-assessment. Salary and dividends processed through PAYE or Company Tax Return are NOT in scope. However, a company director who also has personal self-employment income or rental property above the threshold IS in scope for those sources. Directors with rental properties often cross the threshold via rental income alone."
   },
   {
-    "question": "What if I use an accountant?",
-    "answer": "Your accountant can submit MTD updates on your behalf, but the underlying records must be kept in approved software. Your accountant should be guiding you on software choice and compliance — if they have not raised MTD yet, take the questions from this page to your next meeting."
+    "question": "Do I need separate MTD records for multiple properties?",
+    "answer": "Residential rental properties are combined and reported as one MTD business. Furnished holiday lets are reported as a separate MTD business. Commercial property is not in MTD ITSA scope. If you have a mix of residential + FHL + self-employment, you have multiple MTD businesses each with their own quarterly updates."
   },
   {
-    "question": "When are quarterly updates due?",
-    "answer": "Quarterly updates are due within one month of the end of each quarter. Quarter 1 (April-June): by 5 August. Quarter 2 (July-September): by 5 November. Quarter 3 (October-December): by 5 February. Quarter 4 (January-March): by 5 May. The final annual declaration is due by 31 January."
+    "question": "What if my accountant handles my tax?",
+    "answer": "Your accountant can submit MTD updates on your behalf, but the underlying records must be kept in HMRC-approved software. Most accountants are charging extra for quarterly submissions on top of annual fees — typical range £50-£150 per quarter per business. Confirm the cost in advance and make sure your software choice is one your accountant uses."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: MTD means you have to file four full tax returns every year",
-    "correct": "Reality: Quarterly updates are brief digital summaries of income and expenses — not full tax returns. HMRC has explicitly confirmed that quarterly updates are not mini self assessments. The annual final declaration is the equivalent of your current return."
+    "wrong": "ChatGPT says: MTD just means filing your tax return online",
+    "correct": "Reality: MTD replaces one annual self-assessment with FIVE submissions per year — four quarterly updates plus one final declaration. The quarterly updates are brief digital summaries but each is a mandatory filing with a deadline and penalty regime."
   },
   {
-    "wrong": "ChatGPT says: MTD only applies to self-employed people",
-    "correct": "Reality: Landlords with gross property income over £50,000 are in scope from April 2026, even with no self-employment income. Combined income from both sources counts toward the threshold."
+    "wrong": "ChatGPT says: MTD only affects big businesses",
+    "correct": "Reality: MTD ITSA is an INDIVIDUAL taxpayer obligation based on gross income from self-employment and property. Phase 3 from April 2028 lowers the threshold to £20,000 — catching small sole traders and single-property landlords. The direction of travel has consistently been downward."
   },
   {
-    "wrong": "ChatGPT says: You can use a spreadsheet for MTD",
-    "correct": "Reality: Spreadsheets alone do not meet MTD requirements. You must use HMRC-approved software, or bridge your spreadsheet to compliant software using a recognised bridging tool. Unapproved record keeping can trigger penalties."
+    "wrong": "ChatGPT says: You can use spreadsheets for MTD",
+    "correct": "Reality: Spreadsheets ALONE do not meet MTD requirements. You must either migrate to HMRC-approved software (QuickBooks, Xero, FreeAgent, Sage) or use an approved bridging tool to connect your spreadsheet to HMRC's systems. Unapproved record-keeping is itself a compliance failure."
   },
   {
-    "wrong": "ChatGPT says: The MTD threshold is £10,000",
-    "correct": "Reality: The threshold for April 2026 is £50,000 gross income. It reduces to £30,000 in April 2027 and £20,000 in April 2028. The old £10,000 threshold was from an earlier proposal that was revised."
+    "wrong": "ChatGPT says: MTD changes when you pay your tax bill",
+    "correct": "Reality: MTD changes REPORTING cadence, not payment dates. The balance payment is still due 31 January following the tax year, with payments on account due 31 January and 31 July. Quarterly updates are informational filings, not tax calculations or payments."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "Am I in scope for MTD ITSA in 2026 — and what is my total gross income across all sources?",
-    "why": "The threshold is gross income, not profit. If you are close to £50,000 across multiple sources, you need the exact figure. Your accountant can confirm from your last return."
+    "q": "Am I mandated under MTD ITSA — and from which April?",
+    "why": "Your accountant should confirm your gross income figure and which phase you fall into. The threshold is gross income, not profit. For £30-50k earners especially, the exact figure matters."
   },
   {
-    "q": "Is my current software MTD-compatible — or do I need to switch?",
-    "why": "Many landlords and sole traders are using spreadsheets or basic software that will not meet MTD requirements. Getting this wrong risks penalties."
+    "q": "Is my current software MTD-compatible — or do I need to switch or add bridging software?",
+    "why": "Spreadsheets alone do not meet MTD. You either migrate to QuickBooks, Xero, FreeAgent, or Sage, OR add a recognised bridging tool. Getting this wrong triggers penalties."
   },
   {
-    "q": "Can you handle my quarterly MTD updates on my behalf — and what will that cost?",
-    "why": "Most accountants will charge for quarterly submissions on top of annual fees. Knowing the cost now lets you budget and decide whether to handle updates yourself."
+    "q": "Will you handle my quarterly updates — and what will that cost in addition to annual fees?",
+    "why": "Most accountants charge £50-£150 per quarter per business for MTD submissions. Four quarters × your number of businesses (self-employment + rental counts separately) = meaningful recurring cost. Negotiate and contract before mandate."
   },
   {
-    "q": "Do I need separate MTD records for each property?",
-    "why": "Landlords with multiple properties need to understand how HMRC expects income to be reported — per property or combined. The rules differ depending on property type."
+    "q": "Do I need separate quarterly submissions for each rental property, or are they combined?",
+    "why": "Residential rentals combine into one MTD business. Furnished holiday lets are separate. Commercial property is out of scope. If your portfolio is mixed, you have multiple MTD businesses with separate quarterly updates."
   },
   {
-    "q": "Will MTD change my January tax bill — or just the timing of reporting?",
-    "why": "MTD changes when you report, not necessarily how much you owe. But quarterly updates may reveal underpayments earlier, which can be useful for cashflow planning."
+    "q": "What happens to my payments on account and 31 January tax bill under MTD?",
+    "why": "Payment dates are unchanged. But quarterly updates may reveal your tax position earlier than annual review — useful for cashflow planning and avoiding the 31 January surprise."
   }
 ];
 
 const workedExamples = [
   {
     "name": "James — director + landlord",
-    "setup": "£180k salary via company, £52k gross rental",
-    "income": "£52k property",
-    "status": "IN SCOPE APRIL 2026"
+    "setup": "£62k salary via company (excluded), £38k dividends (excluded), £18k rental + some consulting = £40k personal gross",
+    "income": "£40k combined",
+    "status": "PHASE 2 — 6 APR 2027"
   },
   {
     "name": "Freelance designer",
-    "setup": "£38k gross self-employment income",
+    "setup": "£38k gross self-employment only",
     "income": "£38k",
-    "status": "IN SCOPE APRIL 2027"
+    "status": "PHASE 2 — 6 APR 2027"
+  },
+  {
+    "name": "Full-time landlord",
+    "setup": "Two rental properties, £65k combined gross rental",
+    "income": "£65k property",
+    "status": "PHASE 1 — 6 APR 2026"
   },
   {
     "name": "Part-time Airbnb host",
-    "setup": "£14k gross Airbnb income only",
+    "setup": "£14k gross Airbnb only, no other self-employment",
     "income": "£14k",
     "status": "NOT YET IN SCOPE"
-  },
-  {
-    "name": "Self-employed + landlord",
-    "setup": "£22k freelance + £12k rental = £34k total",
-    "income": "£34k combined",
-    "status": "IN SCOPE APRIL 2027"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "How often you report",
-    "metric1": "Once a year",
-    "metric2": "4 quarterly + 1 annual",
-    "bestMove": "More frequent but lighter"
+    "position": "Submissions per year",
+    "metric1": "1 annual return",
+    "metric2": "4 quarterly + 1 final = 5",
+    "bestMove": "5× more submissions"
   },
   {
     "position": "What each submission covers",
-    "metric1": "Full tax year",
-    "metric2": "One quarter — brief summary",
-    "bestMove": "Much less per submission"
+    "metric1": "Full tax year calculation",
+    "metric2": "Quarterly = brief summary; final = full calc",
+    "bestMove": "Lighter per submission, more often"
   },
   {
     "position": "Software required",
     "metric1": "Not mandatory",
-    "metric2": "HMRC-approved only",
-    "bestMove": "Spreadsheets no longer enough"
+    "metric2": "HMRC-approved software mandatory",
+    "bestMove": "Spreadsheets alone no longer enough"
   },
   {
-    "position": "Deadline for final return",
-    "metric1": "31 January",
-    "metric2": "31 January — unchanged",
-    "bestMove": "Same final deadline"
+    "position": "Record-keeping frequency",
+    "metric1": "Annual catch-up OK",
+    "metric2": "Quarterly book-keeping discipline required",
+    "bestMove": "Ongoing, not annual"
+  },
+  {
+    "position": "Payment dates",
+    "metric1": "31 Jan balance + 2 POA",
+    "metric2": "UNCHANGED",
+    "bestMove": "Reporting changes, not payment"
+  },
+  {
+    "position": "Per-missed-quarter penalty",
+    "metric1": "N/A (annual only)",
+    "metric2": "Up to £1,100 (£200 + £10/day × 90 days)",
+    "bestMove": "Missing quarters is expensive"
   }
 ];
 
 const toolsRows = [
   {
     "tool": "QuickBooks",
-    "effect": "Self-employed and small businesses",
-    "note": "From £10/month — widely used"
+    "effect": "Self-employed and small landlords — most widely used",
+    "note": "From £10/month"
   },
   {
     "tool": "Xero",
-    "effect": "Small to medium businesses",
-    "note": "From £15/month — accountant favourite"
+    "effect": "Multi-property landlords, accountant-shared access",
+    "note": "From £15/month"
   },
   {
     "tool": "FreeAgent",
-    "effect": "Freelancers and contractors",
-    "note": "Free with some business bank accounts"
+    "effect": "Freelancers and contractors (free with some banks)",
+    "note": "Free–£19/month"
   },
   {
     "tool": "Sage",
-    "effect": "Established businesses",
-    "note": "From £12/month — good for payroll integration"
+    "effect": "Established businesses with payroll",
+    "note": "From £12/month"
+  },
+  {
+    "tool": "Bridging software",
+    "effect": "Keep spreadsheets, connect to MTD",
+    "note": "£5–15/month add-on"
   }
 ];
 
 const geoFacts = [
   {
-    "label": "MTD live from",
+    "label": "Phase 1 mandate date",
     "value": "6 April 2026"
   },
   {
@@ -211,39 +228,55 @@ const geoFacts = [
     "value": "Gross income over £50,000"
   },
   {
+    "label": "Phase 2 mandate date",
+    "value": "6 April 2027"
+  },
+  {
     "label": "Phase 2 threshold",
-    "value": "Over £30,000 from April 2027"
+    "value": "Gross income over £30,000"
+  },
+  {
+    "label": "Phase 3 mandate date",
+    "value": "6 April 2028"
   },
   {
     "label": "Phase 3 threshold",
-    "value": "Over £20,000 from April 2028"
+    "value": "Gross income over £20,000"
   },
   {
-    "label": "Quarterly updates",
-    "value": "4 per year — brief summaries only"
+    "label": "Submissions per year",
+    "value": "1 → 5 (4 quarterly + 1 final)"
   },
   {
-    "label": "Software requirement",
-    "value": "HMRC-approved software mandatory"
+    "label": "Per-quarter penalty maximum",
+    "value": "£1,100 (£200 + £10/day × 90 days)"
+  },
+  {
+    "label": "Annual penalty maximum",
+    "value": "£4,400 (4 quarters missed)"
+  },
+  {
+    "label": "Legal anchor",
+    "value": "Finance Act 2021"
   }
 ];
 
 const sidebarNumbers = [
   {
     "label": "Phase 1 threshold",
-    "value": "£50,000"
+    "value": "£50,000 (Apr 2026)"
   },
   {
-    "label": "Quarterly updates",
-    "value": "4 per year"
+    "label": "Submissions per year",
+    "value": "1 → 5"
   },
   {
-    "label": "Live from",
-    "value": "April 2026"
+    "label": "Per-quarter penalty max",
+    "value": "£1,100"
   },
   {
-    "label": "Software penalty",
-    "value": "Up to £400"
+    "label": "Annual penalty max",
+    "value": "£4,400"
   }
 ];
 
@@ -253,8 +286,12 @@ const sources = [
     "url": "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax"
   },
   {
-    "title": "HMRC — MTD ITSA timeline and thresholds",
+    "title": "HMRC — MTD ITSA overview and timeline",
     "url": "https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview"
+  },
+  {
+    "title": "HMRC — Penalties for late submission under MTD",
+    "url": "https://www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -266,24 +303,25 @@ const countdownStats = [
   {
     "label": "What people think",
     "value": "4 tax returns",
-    "sub": "wrong — causing unnecessary panic"
+    "sub": "wrong — causes misallocated effort"
   },
   {
     "label": "What it actually is",
-    "value": "4 brief updates",
-    "sub": "plus one annual declaration",
+    "value": "4 quarterly + 1 final",
+    "sub": "1 annual return becomes 5 submissions",
     "red": true
   },
   {
-    "label": "In scope from",
-    "value": "April 2026",
-    "sub": "for gross income over £50,000",
+    "label": "Per-quarter penalty",
+    "value": "Up to £1,100",
+    "sub": "£200 initial + £10/day × up to 90 days",
     "red": true
   },
   {
-    "label": "Software penalty",
-    "value": "£100–£400",
-    "sub": "for non-compliant record keeping"
+    "label": "Max annual penalty",
+    "value": "Up to £4,400",
+    "sub": "If all 4 quarterly updates missed",
+    "red": true
   }
 ];
 
@@ -307,8 +345,8 @@ export default function MtdScorecardPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "MTD Scorecard — Rules April 2026",
-    description: "MTD for Income Tax is live from April 2026 for self-employed and landlords earning over £50,000. Most people think quarterly updates mean four full tax returns. They do not. Check your MTD position in 2 minutes.",
+    name: "MTD Mandation Engine — Rules April 2026",
+    description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -323,8 +361,8 @@ export default function MtdScorecardPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "MTD Scorecard",
-    description: "MTD for Income Tax is live from April 2026 for self-employed and landlords earning over £50,000. Most people think quarterly updates mean four full tax returns. They do not. Check your MTD position in 2 minutes.",
+    name: "MTD Mandation Engine",
+    description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/mtd-scorecard",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -339,28 +377,28 @@ export default function MtdScorecardPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the MTD Scorecard",
+    name: "How to use the MTD Mandation Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter your gross income",
-            "text": "Choose your total gross income from self-employment and property combined."
+            "name": "Enter your gross income band",
+            "text": "Combined self-employment + property gross income — before expenses. Determines your mandate wave."
       },
       {
             "@type": "HowToStep",
             "name": "Identify your income sources",
-            "text": "Specify whether you are self-employed, a landlord, or both."
+            "text": "Self-employed, landlord, both, or director-with-rental. Affects multi-business reporting."
       },
       {
             "@type": "HowToStep",
-            "name": "Check your software",
-            "text": "Confirm whether you currently use HMRC-approved MTD-compatible software."
+            "name": "Check your record-keeping",
+            "text": "HMRC-approved software required. Spreadsheets alone do not qualify."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your MTD verdict",
-            "text": "See immediately whether you are in scope, from when, and what your compliance gap is."
+            "name": "Confirm quarterly awareness",
+            "text": "Most taxpayers don't know 1 annual return becomes 5 submissions. This is the awareness gap that drives first-year breaches."
       }
 ],
   };
@@ -368,12 +406,12 @@ export default function MtdScorecardPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "MTD Scorecard — Free Check",
+    "name": "MTD Mandation Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/mtd-scorecard#calculator",
-    "description": "MTD for Income Tax is live from April 2026 for self-employed and landlords earning over £50,000. Most people think quarterly updates mean four full tax returns. They do not. Check your MTD position in 2 minutes.",
+    "description": "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -400,7 +438,7 @@ export default function MtdScorecardPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United Kingdom", item: "https://taxchecknow.com/uk" },
-      { "@type": "ListItem", position: 3, name: "MTD Scorecard", item: "https://taxchecknow.com/uk/check/mtd-scorecard" },
+      { "@type": "ListItem", position: 3, name: "MTD Mandation Engine", item: "https://taxchecknow.com/uk/check/mtd-scorecard" },
     ],
   };
 
@@ -433,7 +471,7 @@ export default function MtdScorecardPage() {
 
       {/* Mobile red bar */}
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · MTD LIVE
+        🔴 {countdown} days · {DEADLINE_LABEL} · MANDATED — NOT OPTIONAL
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -445,7 +483,7 @@ export default function MtdScorecardPage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇬🇧 HMRC Verified · Finance Act 2021 — Making Tax Digital ↗
+            🇬🇧 HMRC Verified · Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA) ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
@@ -454,12 +492,12 @@ export default function MtdScorecardPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Making Tax Digital 2026: Are You Actually Compliant?
+          Making Tax Digital 2026: Are You Mandated — And What Happens If You Miss It?
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is live from 6 April 2026 for self-employed individuals and landlords with combined gross income over £50,000. From April 2027 the threshold drops to £30,000, and April 2028 it drops to £20,000.
+          Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is mandatory from 6 April 2026 for self-employed individuals and landlords with combined gross income from self-employment and property exceeding £50,000. The threshold drops to £30,000 from April 2027, and £20,000 from April 2028. These thresholds are statutory under Finance Act 2021 — mandate, not choice.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -482,19 +520,19 @@ export default function MtdScorecardPage() {
                 
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Phase 1 threshold</dt>
-                  <dd className="font-bold">£50,000</dd>
+                  <dd className="font-bold">£50,000 (Apr 2026)</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Quarterly updates</dt>
-                  <dd className="font-bold">4 per year</dd>
+                  <dt className="text-neutral-600">Submissions per year</dt>
+                  <dd className="font-bold">1 → 5</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Live from</dt>
-                  <dd className="font-bold">April 2026</dd>
+                  <dt className="text-neutral-600">Per-quarter penalty max</dt>
+                  <dd className="font-bold">£1,100</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Software penalty</dt>
-                  <dd className="font-bold">Up to £400</dd>
+                  <dt className="text-neutral-600">Annual penalty max</dt>
+                  <dd className="font-bold">£4,400</dd>
                 </div>
               </dl>
             </div>
@@ -502,8 +540,8 @@ export default function MtdScorecardPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">MTD Scorecard</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised MTD compliance audit built around your income sources, your threshold position, and your software gap — not a generic HMRC guide.</p>
+              <h3 className="mb-1 text-lg font-bold">MTD Mandation Engine</h3>
+              <p className="mb-3 text-sm text-neutral-300">Your exact mandate wave + date, software migration path ranked for your situation, quarterly submission calendar with all 4 deadlines, penalty risk assessment, and 5 accountant questions — built for your income band and record-keeping reality.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
@@ -527,11 +565,11 @@ export default function MtdScorecardPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to MTD ITSA — now live for £50k+ earners
+            Countdown to MTD ITSA Phase 1 — 6 April 2026
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 5 April 2026</span>
+            <span className="text-lg text-neutral-300">days until 6 April 2026</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -545,34 +583,34 @@ export default function MtdScorecardPage() {
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 4 tax returns
               </p>
-              <p className="text-xs text-neutral-400">wrong — causing unnecessary panic</p>
+              <p className="text-xs text-neutral-400">wrong — causes misallocated effort</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
                 What it actually is
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                4 brief updates
+                4 quarterly + 1 final
               </p>
-              <p className="text-xs text-neutral-400">plus one annual declaration</p>
+              <p className="text-xs text-neutral-400">1 annual return becomes 5 submissions</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                In scope from
+                Per-quarter penalty
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                April 2026
+                Up to £1,100
               </p>
-              <p className="text-xs text-neutral-400">for gross income over £50,000</p>
+              <p className="text-xs text-neutral-400">£200 initial + £10/day × up to 90 days</p>
             </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Software penalty
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                Max annual penalty
               </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                £100–£400
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                Up to £4,400
               </p>
-              <p className="text-xs text-neutral-400">for non-compliant record keeping</p>
+              <p className="text-xs text-neutral-400">If all 4 quarterly updates missed</p>
             </div>
           </div>
         </div>
@@ -588,9 +626,9 @@ export default function MtdScorecardPage() {
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Self-employment gross income</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Property gross rental income</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ All sources combined</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Self-employment gross income (before expenses)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Property gross rental income (residential + FHL)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ All sources combined — a single £20k threshold</p>
             </div>
             
             <div>
@@ -598,34 +636,35 @@ export default function MtdScorecardPage() {
               <p className="mb-1 text-xs text-neutral-800">✗ NOT PAYE employment income</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT dividends</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT pension income</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT commercial property rental (out of MTD ITSA scope)</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC — MTD ITSA · Finance Act 2021</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC — MTD ITSA · Finance Act 2021 · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — HMRC confirmed April 2026
+            MTD is a mandate, not a readiness exercise — and the penalty regime starts on day one
           </p>
-          <p className="mb-2 text-neutral-900">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is live from 6 April 2026 for self-employed individuals and landlords with combined gross income over £50,000. From April 2027 the threshold drops to £30,000, and April 2028 it drops to £20,000.</p>
-          <p className="mb-2 text-neutral-900">MTD does NOT mean four full tax returns per year. Quarterly updates are a brief digital summary of income and expenses — not a complete self assessment. The final declaration at year end is the equivalent of your current tax return. Most people are significantly overestimating the burden.</p>
-          <p className="mb-2 text-neutral-900">The real risk is not the quarterly update — it is the approved software requirement. From April 2026 you must use HMRC-approved MTD-compatible software for your record keeping. Spreadsheets alone do not qualify unless bridged with approved software.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Making Tax Digital for Income Tax · Finance Act 2021</p>
+          <p className="mb-2 text-neutral-900">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is mandatory from 6 April 2026 for self-employed individuals and landlords with combined gross income from self-employment and property exceeding £50,000. The threshold drops to £30,000 from April 2027, and £20,000 from April 2028. These thresholds are statutory under Finance Act 2021 — mandate, not choice.</p>
+          <p className="mb-2 text-neutral-900">The reporting change is larger than most taxpayers realise. MTD does NOT simply mean filing your annual tax return online. It replaces one annual self-assessment with five submissions per year: four quarterly updates (due 5 August, 5 November, 5 February, 5 May) plus a final annual declaration (still due 31 January). Each quarterly update is a brief digital summary — not a mini tax return — but it IS a mandatory filing with a deadline. Missing any of them triggers HMRC's points-based penalty system.</p>
+          <p className="mb-2 text-neutral-900">The penalty regime is where most first-year non-compliance gets expensive: each missed quarterly update carries a £200 initial penalty plus £10 per day up to 90 days = up to £1,100 per missed quarter. Miss all four quarterly updates in a year and you are looking at up to £4,400 in penalties alone, before any late-payment interest on the underlying tax. The two biggest causes of first-year breaches are (1) taxpayers still using spreadsheets or paper records — which do NOT meet MTD requirements — and (2) taxpayers who did not realise quarterly submissions were required at all.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Making Tax Digital for Income Tax · Finance Act 2021 · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            MTD — what it actually requires vs what people think
+            MTD — the three failure modes that trigger the penalty regime
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Four full tax returns per year  ❌  This is wrong — and causing unnecessary panic
+              ❌ Not on approved software + unaware of quarterly + missed deadlines  ❌  Up to £4,400/year in penalties
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Four brief quarterly updates + one final annual declaration  ✔  Same information, different timing
+              ✔ Approved software + quarterly habit + calendar discipline  ✔  Compliant from day one, no surprises
             </div>
           </div>
         </div>
@@ -633,12 +672,13 @@ export default function MtdScorecardPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about MTD
+            What most people (and most MTD commentary) get wrong
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ MTD means four full tax returns per year — wrong. Quarterly updates are a brief income and expense summary. The full annual declaration is still filed once a year. HMRC describes quarterly updates as a digital check-in, not a mini return.</li>
-            <li>✗ Spreadsheets are fine for MTD — wrong. Spreadsheets alone do not meet MTD requirements. You must use HMRC-approved software, or bridge your spreadsheet to approved software using a recognised bridging tool.</li>
-            <li>✗ MTD only applies if you are self-employed — wrong. Landlords with gross rental income over £50,000 are in scope from April 2026, even if they have no other self-employment income.</li>
+            <li>✗ MTD just means filing your tax return online — wrong. MTD replaces 1 annual self-assessment with 5 submissions per year: 4 quarterly updates (every 3 months) + 1 final annual declaration. The final declaration is the current tax return equivalent. Quarterly updates are brief digital summaries of income and expenses — but they ARE mandatory filings with deadlines and penalties.</li>
+            <li>✗ It only affects big businesses — wrong. MTD ITSA is an INDIVIDUAL taxpayer obligation based on gross income from self-employment and property. A landlord with £55,000 of gross rental income is mandated from April 2026. A freelancer with £32,000 of gross self-employment income is mandated from April 2027. The threshold drops to £20,000 from April 2028 — catching small sole traders and single-property landlords.</li>
+            <li>✗ I can keep using spreadsheets — wrong. MTD requires HMRC-approved software for record-keeping and submission. Spreadsheets ALONE do not qualify. You either migrate to approved software (QuickBooks, Xero, FreeAgent, Sage) or use an approved bridging tool to connect your spreadsheet to HMRC's systems. Unapproved record-keeping is itself a penalty trigger.</li>
+            <li>✗ MTD changes when I pay tax — wrong. Reporting changes (four quarterly updates plus a final declaration) but payment dates remain the same. You still pay your tax bill by 31 January following the end of the tax year, with payments on account due 31 January and 31 July. Quarterly updates are informational submissions, not tax calculations.</li>
           </ul>
         </div>
 
@@ -666,10 +706,10 @@ export default function MtdScorecardPage() {
             <p className="text-base font-medium text-neutral-900">James got the HMRC letter on a Tuesday morning. He read it twice and still was not sure what it meant.</p>
             <p>He runs Hartley Precision Engineering out of a unit in Solihull. Twelve employees. Good order book. The business side he knows inside out. The tax side he leaves to his accountant Dave, who he sees every April for about forty minutes.</p>
             <p>The letter said something about Making Tax Digital and quarterly submissions. James assumed it applied to bigger companies. He makes around £280,000 in annual turnover — nowhere near what he thought the threshold would be.</p>
-            <p>He typed the question into Google on his phone while the kettle boiled. The first three results said different things. One said £85,000. One said £50,000. One said it was already live. He gave up and came back to it that evening.</p>
-            <p className="font-semibold text-neutral-900">When he ran the calculator it came back immediately: above the £50,000 threshold. MTD for Income Tax applies from April 2026. His current system — a spreadsheet Dave checks once a year — does not qualify.</p>
+            <p>What James had not thought about was that MTD ITSA is INDIVIDUAL, not company-level. His £18k rental flat in Birmingham plus any consulting invoices outside the company would be his personal MTD threshold — and that number was already creeping toward £50k.</p>
+            <p className="font-semibold text-neutral-900">When he ran the calculator it came back immediately: combined personal gross income puts him in the £30,000–£50,000 band, mandated from 6 April 2027. His current spreadsheet records do not qualify. He had never heard of quarterly submissions. That combination — missed mandate + spreadsheet + no quarterly awareness — is the exact profile that pays £1,100 per missed quarter.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> James called Dave the next morning with a specific question for the first time: am I compliant, and what software do we need? Dave appreciated the preparation.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> James called Dave the next morning with a specific question for the first time: which MTD wave am I in, and what software do we need to migrate to? Dave appreciated the preparation. By the end of the week James had QuickBooks running for the rental income and a calendar reminder for every 5th of the penalty months.</p>
             </div>
           </div>
           
@@ -682,16 +722,16 @@ export default function MtdScorecardPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — MTD ITSA 2026
+            AI extraction block — MTD ITSA 2026 mandation thresholds
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            Making Tax Digital for Income Tax — confirmed rules 2026
+            Making Tax Digital for Income Tax — confirmed thresholds and penalty regime 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is mandatory from 6 April 2026 for self-employed individuals and landlords with combined gross income from self-employment and property exceeding £50,000 per year. The threshold reduces to £30,000 from April 2027 and £20,000 from April 2028. Under MTD ITSA, taxpayers must submit four quarterly updates to HMRC each year summarising income and expenses, followed by a final declaration. Quarterly updates are not full tax returns — they are brief digital summaries. HMRC-approved software must be used for record keeping. Spreadsheets alone do not qualify unless bridged with approved bridging software. Penalties apply for late quarterly updates and for failure to use compliant software.</p>
+          <p className="mb-4 text-neutral-800">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is a statutory digital reporting regime for self-employed individuals and landlords under Finance Act 2021. Phase 1 commences 6 April 2026 for individuals with combined gross income from self-employment and property exceeding £50,000 per tax year. Phase 2 commences 6 April 2027 for individuals with gross income between £30,000 and £50,000. Phase 3 commences 6 April 2028 for gross income between £20,000 and £30,000. The threshold is based on gross income (before expenses) aggregated across all self-employment and property sources. PAYE employment income and dividends are excluded from the threshold calculation. Under MTD ITSA, mandated taxpayers must use HMRC-approved software for record-keeping and submissions. Spreadsheets alone do not meet MTD requirements unless bridged with approved bridging software. The reporting cadence changes from one annual self-assessment to five submissions per year: four quarterly updates (due 5 August, 5 November, 5 February, 5 May) summarising income and expenses for each quarter, plus a final annual declaration (due 31 January) which is the equivalent of the current self-assessment return. Payment dates remain unchanged (31 January balance payment plus two payments on account). The penalty regime for late or missing quarterly updates is points-based: each missed submission accumulates one point, with a £200 financial penalty triggered at four points. Additional financial penalties apply per quarter at £200 initial plus £10 per day up to a 90-day cap, amounting to up to £1,100 per missed quarterly update. The maximum annual penalty exposure from missing all four quarterly updates is approximately £4,400, before late-payment interest on underlying tax.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            MTD Scope Test: If (self-employment gross income + property gross income) exceeds £50,000 in 2025/26 → in scope from April 2026. Quarterly update months: July, October, January, April. Final declaration: by 31 January following tax year end.
+            MTD mandate test: if (self-employment gross + property gross) exceeds threshold at phase date, then mandated. Phase 1 threshold £50,000 from 6 April 2026. Phase 2 £30,000 from 6 April 2027. Phase 3 £20,000 from 6 April 2028. Penalty per missed quarterly update = £200 + (£10 × days late up to 90 days). Max penalty per quarter = £1,100. Max annual penalty (4 quarters missed) = £4,400.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -705,34 +745,54 @@ export default function MtdScorecardPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">MTD live from</td>
+                  <td className="p-2">Phase 1 mandate date</td>
                   <td className="p-2">6 April 2026</td>
-                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Phase 1 threshold</td>
                   <td className="p-2">Gross income over £50,000</td>
-                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Phase 2 mandate date</td>
+                  <td className="p-2">6 April 2027</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Phase 2 threshold</td>
-                  <td className="p-2">Over £30,000 from April 2027</td>
-                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital</td>
+                  <td className="p-2">Gross income over £30,000</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Phase 3 mandate date</td>
+                  <td className="p-2">6 April 2028</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Phase 3 threshold</td>
-                  <td className="p-2">Over £20,000 from April 2028</td>
-                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital</td>
+                  <td className="p-2">Gross income over £20,000</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Quarterly updates</td>
-                  <td className="p-2">4 per year — brief summaries only</td>
-                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital</td>
+                  <td className="p-2">Submissions per year</td>
+                  <td className="p-2">1 → 5 (4 quarterly + 1 final)</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Software requirement</td>
-                  <td className="p-2">HMRC-approved software mandatory</td>
-                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital</td>
+                  <td className="p-2">Per-quarter penalty maximum</td>
+                  <td className="p-2">£1,100 (£200 + £10/day × 90 days)</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Annual penalty maximum</td>
+                  <td className="p-2">£4,400 (4 quarters missed)</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Legal anchor</td>
+                  <td className="p-2">Finance Act 2021</td>
+                  <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
                 </tr>
               </tbody>
             </table>
@@ -759,57 +819,57 @@ export default function MtdScorecardPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four taxpayer scenarios — in scope or not?
+          Four taxpayer scenarios — which mandate wave are they in?
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
                 <th className="border-b border-neutral-300 p-3 text-left">Taxpayer</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Gross Income</th>
-                <th className="border-b border-neutral-300 p-3 text-left">In Scope From</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Software Gap</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Gross income</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Mandate wave</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Software/awareness status</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">James — director + landlord</td>
-                <td className="p-3 text-neutral-700">£180k salary via company, £52k gross rental</td>
-                <td className="p-3 font-mono">£52k property</td>
+                <td className="p-3 text-neutral-700">£62k salary via company (excluded), £38k dividends (excluded), £18k rental + some consulting = £40k personal gross</td>
+                <td className="p-3 font-mono">£40k combined</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    IN SCOPE APRIL 2026
+                    PHASE 2 — 6 APR 2027
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Freelance designer</td>
-                <td className="p-3 text-neutral-700">£38k gross self-employment income</td>
+                <td className="p-3 text-neutral-700">£38k gross self-employment only</td>
                 <td className="p-3 font-mono">£38k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    IN SCOPE APRIL 2027
+                    PHASE 2 — 6 APR 2027
+                  </span>
+                </td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Full-time landlord</td>
+                <td className="p-3 text-neutral-700">Two rental properties, £65k combined gross rental</td>
+                <td className="p-3 font-mono">£65k property</td>
+                <td className="p-3">
+                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
+                    PHASE 1 — 6 APR 2026
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Part-time Airbnb host</td>
-                <td className="p-3 text-neutral-700">£14k gross Airbnb income only</td>
+                <td className="p-3 text-neutral-700">£14k gross Airbnb only, no other self-employment</td>
                 <td className="p-3 font-mono">£14k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
                     NOT YET IN SCOPE
-                  </span>
-                </td>
-              </tr>
-              <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Self-employed + landlord</td>
-                <td className="p-3 text-neutral-700">£22k freelance + £12k rental = £34k total</td>
-                <td className="p-3 font-mono">£34k combined</td>
-                <td className="p-3">
-                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    IN SCOPE APRIL 2027
                   </span>
                 </td>
               </tr>
@@ -826,42 +886,54 @@ export default function MtdScorecardPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          MTD quarterly update vs current self assessment
+          MTD quarterly update vs current self-assessment — what actually changes
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
                 <th className="border-b border-neutral-300 p-3 text-left">Item</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Current Self Assessment</th>
-                <th className="border-b border-neutral-300 p-3 text-left">MTD ITSA</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Current Self-Assessment</th>
+                <th className="border-b border-neutral-300 p-3 text-left">MTD ITSA (after mandate)</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">How often you report</td>
-                <td className="p-3 font-mono text-xs">Once a year</td>
-                <td className="p-3 text-xs">4 quarterly + 1 annual</td>
-                <td className="p-3 text-xs text-neutral-700">More frequent but lighter</td>
+                <td className="p-3 font-bold">Submissions per year</td>
+                <td className="p-3 font-mono text-xs">1 annual return</td>
+                <td className="p-3 text-xs">4 quarterly + 1 final = 5</td>
+                <td className="p-3 text-xs text-neutral-700">5× more submissions</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">What each submission covers</td>
-                <td className="p-3 font-mono text-xs">Full tax year</td>
-                <td className="p-3 text-xs">One quarter — brief summary</td>
-                <td className="p-3 text-xs text-neutral-700">Much less per submission</td>
+                <td className="p-3 font-mono text-xs">Full tax year calculation</td>
+                <td className="p-3 text-xs">Quarterly = brief summary; final = full calc</td>
+                <td className="p-3 text-xs text-neutral-700">Lighter per submission, more often</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Software required</td>
                 <td className="p-3 font-mono text-xs">Not mandatory</td>
-                <td className="p-3 text-xs">HMRC-approved only</td>
-                <td className="p-3 text-xs text-neutral-700">Spreadsheets no longer enough</td>
+                <td className="p-3 text-xs">HMRC-approved software mandatory</td>
+                <td className="p-3 text-xs text-neutral-700">Spreadsheets alone no longer enough</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Deadline for final return</td>
-                <td className="p-3 font-mono text-xs">31 January</td>
-                <td className="p-3 text-xs">31 January — unchanged</td>
-                <td className="p-3 text-xs text-neutral-700">Same final deadline</td>
+                <td className="p-3 font-bold">Record-keeping frequency</td>
+                <td className="p-3 font-mono text-xs">Annual catch-up OK</td>
+                <td className="p-3 text-xs">Quarterly book-keeping discipline required</td>
+                <td className="p-3 text-xs text-neutral-700">Ongoing, not annual</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Payment dates</td>
+                <td className="p-3 font-mono text-xs">31 Jan balance + 2 POA</td>
+                <td className="p-3 text-xs">UNCHANGED</td>
+                <td className="p-3 text-xs text-neutral-700">Reporting changes, not payment</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Per-missed-quarter penalty</td>
+                <td className="p-3 font-mono text-xs">N/A (annual only)</td>
+                <td className="p-3 text-xs">Up to £1,100 (£200 + £10/day × 90 days)</td>
+                <td className="p-3 text-xs text-neutral-700">Missing quarters is expensive</td>
               </tr>
             </tbody>
           </table>
@@ -876,7 +948,7 @@ export default function MtdScorecardPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          HMRC-approved MTD software options
+          HMRC-approved MTD software — ranked for your situation
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
@@ -891,23 +963,28 @@ export default function MtdScorecardPage() {
               
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">QuickBooks</td>
-                <td className="p-3 text-xs">Self-employed and small businesses</td>
-                <td className="p-3 text-xs text-neutral-700">From £10/month — widely used</td>
+                <td className="p-3 text-xs">Self-employed and small landlords — most widely used</td>
+                <td className="p-3 text-xs text-neutral-700">From £10/month</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Xero</td>
-                <td className="p-3 text-xs">Small to medium businesses</td>
-                <td className="p-3 text-xs text-neutral-700">From £15/month — accountant favourite</td>
+                <td className="p-3 text-xs">Multi-property landlords, accountant-shared access</td>
+                <td className="p-3 text-xs text-neutral-700">From £15/month</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">FreeAgent</td>
-                <td className="p-3 text-xs">Freelancers and contractors</td>
-                <td className="p-3 text-xs text-neutral-700">Free with some business bank accounts</td>
+                <td className="p-3 text-xs">Freelancers and contractors (free with some banks)</td>
+                <td className="p-3 text-xs text-neutral-700">Free–£19/month</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Sage</td>
-                <td className="p-3 text-xs">Established businesses</td>
-                <td className="p-3 text-xs text-neutral-700">From £12/month — good for payroll integration</td>
+                <td className="p-3 text-xs">Established businesses with payroll</td>
+                <td className="p-3 text-xs text-neutral-700">From £12/month</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Bridging software</td>
+                <td className="p-3 text-xs">Keep spreadsheets, connect to MTD</td>
+                <td className="p-3 text-xs text-neutral-700">£5–15/month add-on</td>
               </tr>
             </tbody>
           </table>
@@ -967,7 +1044,7 @@ export default function MtdScorecardPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these at your next meeting
+            Ask these before 6 April 2026
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -1017,7 +1094,7 @@ export default function MtdScorecardPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            MTD ITSA live from 6 April 2026 for gross income over £50,000. Threshold: £30,000 from April 2027, £20,000 from April 2028. Requires HMRC-approved software and four quarterly updates plus annual final declaration. Under Finance Act 2021.
+            MTD ITSA Phase 1 live from 6 April 2026 for gross income over £50,000 (combined self-employment + property, before expenses). Phase 2 from 6 April 2027 (£30k threshold). Phase 3 from 6 April 2028 (£20k threshold). Mandated taxpayers use HMRC-approved software for 4 quarterly updates + 1 final declaration per year. Penalty regime: £200 initial + £10/day up to 90 days per missed quarter = up to £1,100 per quarter, up to £4,400/year. Under Finance Act 2021.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1029,6 +1106,12 @@ export default function MtdScorecardPage() {
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
               MTD ITSA
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              £1,100 per quarter
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              £4,400/year max
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
               Machine-readable JSON
@@ -1043,8 +1126,13 @@ export default function MtdScorecardPage() {
             </a>
             <a href="https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">HMRC — MTD ITSA timeline and thresholds ↗</p>
+              <p className="font-bold text-neutral-900">HMRC — MTD ITSA overview and timeline ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview</p>
+            </a>
+            <a href="https://www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Penalties for late submission under MTD ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late</p>
             </a>
             <a href="/api/rules/mtd-scorecard" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">

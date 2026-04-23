@@ -49,7 +49,7 @@ export default function MtdScorecardFile05() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">United Kingdom · MTD Scorecard</span>
+            <span className="hidden sm:block">United Kingdom · MTD Mandation Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function MtdScorecardFile05() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/uk/mtd-scorecard/mtd-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 04: Accountant Brief — MTD</a></div>
+          <div><a href="/files/uk/mtd-scorecard/mtd-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 04: Accountant Brief — MTD Mandation</a></div>
           <span className="font-mono">File 05 of 8</span>
-          <div><a href="/files/uk/mtd-scorecard/mtd-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 06: Multi-Property MTD Guide →</a></div>
+          <div><a href="/files/uk/mtd-scorecard/mtd-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 06: Multi-Property MTD Execution Guide →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function MtdScorecardFile05() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 HMRC · Finance Act 2021 — Making Tax Digital
+              🇬🇧 HMRC · Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -87,7 +87,7 @@ export default function MtdScorecardFile05() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 MTD LIVE: 5 April 2026
+              🔴 MANDATED — NOT OPTIONAL: 6 April 2026
             </span>
             <a href="/uk/check/mtd-scorecard"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -96,12 +96,12 @@ export default function MtdScorecardFile05() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            MTD Scorecard · File 05 of 8
+            MTD Mandation Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
             MTD Penalty Risk Assessment
           </h1>
-          <p className="text-neutral-500 text-sm">What HMRC can charge and how to avoid it.</p>
+          <p className="text-neutral-500 text-sm">What HMRC can charge and how to stay out of the penalty path.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function MtdScorecardFile05() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>MTD Penalty System</h2><p>HMRC uses a points-based system for late quarterly updates.</p><table><tr><th>Points</th><th>Consequence</th></tr><tr><td>1–3 points</td><td>Warning — no financial penalty</td></tr><tr><td>4 points</td><td>£200 financial penalty</td></tr><tr><td>5+ points</td><td>£200 per additional late update</td></tr></table><div class="warning-box"><strong>Points reset:</strong> After 24 months of full compliance from the point threshold date.</div><h2>Other Penalties</h2><p>Late annual declaration: same penalty regime as current self assessment — £100 immediately, rising to £900+ after 12 months.</p>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>MTD Penalty Regime — Full Calculation</h2><h3>Per-Quarter Penalty</h3><p>£200 initial fixed penalty<br>PLUS £10 per day up to 90 days<br>= up to £1,100 per missed quarterly update</p><h3>Annual Maximum</h3><p>£1,100 per quarter × 4 quarters = up to £4,400/year in quarterly penalties alone.</p><h3>Points System</h3><table><tr><th>Points</th><th>Consequence</th></tr><tr><td>1–3 points</td><td>Warning — no financial penalty yet</td></tr><tr><td>4 points</td><td>£200 additional financial penalty</td></tr><tr><td>5+ points</td><td>£200 per additional late update</td></tr></table><h3>Points reset</h3><p>Requires 24 months of full compliance from the point threshold date. In practice, one bad year locks you into the penalty track for two years.</p><div class="warning-box"><strong>Late annual declaration:</strong> Same penalty regime as current self-assessment — £100 immediate, rising to £900+ after 12 months. ON TOP of quarterly penalties.</div>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function MtdScorecardFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your MTD Scope Verdict</span>
+                <span className="text-sm font-semibold text-neutral-950">Your MTD Mandation Verdict</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function MtdScorecardFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">MTD Software Comparison</span>
+                <span className="text-sm font-semibold text-neutral-950">MTD Software Migration Path</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function MtdScorecardFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Quarterly Update Calendar</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Quarterly Submission Calendar</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +157,7 @@ export default function MtdScorecardFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Accountant Brief — MTD</span>
+                <span className="text-sm font-semibold text-neutral-950">Accountant Brief — MTD Mandation</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -174,7 +174,7 @@ export default function MtdScorecardFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Property MTD Guide<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Multi-Property MTD Execution Guide<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +183,7 @@ export default function MtdScorecardFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Self-Employed + Landlord Combined Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Self-Employed + Landlord Combined MTD Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -222,10 +222,10 @@ export default function MtdScorecardFile05() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/uk/check/mtd-scorecard" className="hover:text-neutral-900 transition">
-              ← Back to MTD Scorecard
+              ← Back to MTD Mandation Engine
             </a>
             <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Making Tax Digital for Income Tax ↗</a>
-            <a href="https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — MTD ITSA timeline and thresholds ↗</a>
+            <a href="https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — MTD ITSA overview and timeline ↗</a>
           </div>
         </div>
       </footer>

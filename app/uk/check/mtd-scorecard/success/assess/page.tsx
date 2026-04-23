@@ -8,36 +8,36 @@ const FILES = [
   {
     "num": "01",
     "slug": "mtd-01",
-    "name": "Your MTD Scope Verdict",
-    "desc": "Whether you are in scope, from when, and what it means for your specific income mix.",
+    "name": "Your MTD Mandation Verdict",
+    "desc": "Which MTD phase applies to you, the exact mandate date, and what your gross income position means.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "mtd-02",
-    "name": "MTD Software Comparison",
-    "desc": "HMRC-approved software options ranked for your situation.",
+    "name": "MTD Software Migration Path",
+    "desc": "HMRC-approved software ranked for your situation, migration sequencing, and bridging options.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "mtd-03",
-    "name": "Quarterly Update Calendar",
-    "desc": "Exact dates for all four quarterly submissions and your annual declaration.",
+    "name": "Your Quarterly Submission Calendar",
+    "desc": "Exact dates for all 4 quarterly updates + final declaration, with penalty windows.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "mtd-04",
-    "name": "Accountant Brief — MTD",
-    "desc": "Questions to take to your accountant about MTD compliance.",
+    "name": "Accountant Brief — MTD Mandation",
+    "desc": "5 questions to ask your accountant BEFORE mandate day.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "mtd-05",
     "name": "MTD Penalty Risk Assessment",
-    "desc": "What HMRC can charge and how to avoid it.",
+    "desc": "What HMRC can charge and how to stay out of the penalty path.",
     "tier": 1
   }
 ];
@@ -58,7 +58,7 @@ export default function SuccessAssess() {
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-04-05T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
+    (new Date("2026-04-06T00:00:00.000+01:00").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -100,18 +100,30 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const mtd_income = sessionStorage.getItem("mtd-scorecard_mtd_income") || "40000";
-      const mtd_source = sessionStorage.getItem("mtd-scorecard_mtd_source") || "both";
-      const mtd_software = sessionStorage.getItem("mtd-scorecard_mtd_software") || "false";
-      const mtd_status = sessionStorage.getItem("mtd-scorecard_mtd_status") || "approaching";
+      const income_band = sessionStorage.getItem("mtd-scorecard_income_band") || "30k_to_50k";
+      const income_source = sessionStorage.getItem("mtd-scorecard_income_source") || "both";
+      const record_keeping = sessionStorage.getItem("mtd-scorecard_record_keeping") || "spreadsheets";
+      const quarterly_aware = sessionStorage.getItem("mtd-scorecard_quarterly_aware") || "false";
+      const mandated = sessionStorage.getItem("mtd-scorecard_mandated") || "true";
+      const mandate_date = sessionStorage.getItem("mtd-scorecard_mandate_date") || "6 April 2027";
+      const mandate_wave = sessionStorage.getItem("mtd-scorecard_mandate_wave") || "2";
+      const software_gap = sessionStorage.getItem("mtd-scorecard_software_gap") || "true";
+      const status = sessionStorage.getItem("mtd-scorecard_status") || "YOU ARE IN NEXT WAVE";
+      const tier = sessionStorage.getItem("mtd-scorecard_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "mtd_income": mtd_income,
-        "mtd_source": mtd_source,
-        "mtd_software": mtd_software,
-        "mtd_status": mtd_status,
-      }).some(v => v && v !== "40000");
+        "income_band": income_band,
+        "income_source": income_source,
+        "record_keeping": record_keeping,
+        "quarterly_aware": quarterly_aware,
+        "mandated": mandated,
+        "mandate_date": mandate_date,
+        "mandate_wave": mandate_wave,
+        "software_gap": software_gap,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "30k_to_50k");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -123,12 +135,18 @@ export default function SuccessAssess() {
           tier:       1,
           name,
           inputs: {
-        "Gross income": mtd_income,
-        "Income source": mtd_source,
-        "Has approved software": mtd_software,
-        "MTD status": mtd_status,
+        "Income band": income_band,
+        "Income source": income_source,
+        "Record keeping method": record_keeping,
+        "Aware of quarterly requirement": quarterly_aware,
+        "Mandated under MTD": mandated,
+        "Exact mandate date": mandate_date,
+        "Mandate wave (1/2/3/null)": mandate_wave,
+        "Software gap detected": software_gap,
+        "Verdict status": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","inScopeFrom","softwareGap","quarterlyDates","firstAction","accountantQuestions"],
+          fields: ["mandationStatus","exactMandateDate","mandateWaveAnalysis","incomeSourceImpact","softwareGapAssessment","awarenessGapAssessment","quarterlyCalendar","penaltyExposure","firstAction"],
         }),
       });
       const data = await res.json();
@@ -138,14 +156,18 @@ export default function SuccessAssess() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        inScopeFrom: "Your personalised inScopeFrom is being prepared — please refresh in a moment.",
-        softwareGap: "Your personalised softwareGap is being prepared — please refresh in a moment.",
-        quarterlyDates: "Your personalised quarterlyDates is being prepared — please refresh in a moment.",
+        mandationStatus: "Your personalised mandationStatus is being prepared — please refresh in a moment.",
+        exactMandateDate: "Your personalised exactMandateDate is being prepared — please refresh in a moment.",
+        mandateWaveAnalysis: "Your personalised mandateWaveAnalysis is being prepared — please refresh in a moment.",
+        incomeSourceImpact: "Your personalised incomeSourceImpact is being prepared — please refresh in a moment.",
+        softwareGapAssessment: "Your personalised softwareGapAssessment is being prepared — please refresh in a moment.",
+        awarenessGapAssessment: "Your personalised awarenessGapAssessment is being prepared — please refresh in a moment.",
+        quarterlyCalendar: "Your personalised quarterlyCalendar is being prepared — please refresh in a moment.",
+        penaltyExposure: "Your personalised penaltyExposure is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
-          "What is the single most important action I should take before 5 April 2026?",
+          "What is the single most important action I should take before 6 April 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
@@ -157,10 +179,16 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const mtd_income = sessionStorage.getItem("mtd-scorecard_mtd_income") || "40000";
-    const mtd_source = sessionStorage.getItem("mtd-scorecard_mtd_source") || "both";
-    const mtd_software = sessionStorage.getItem("mtd-scorecard_mtd_software") || "false";
-    const mtd_status = sessionStorage.getItem("mtd-scorecard_mtd_status") || "approaching";
+    const income_band = sessionStorage.getItem("mtd-scorecard_income_band") || "30k_to_50k";
+    const income_source = sessionStorage.getItem("mtd-scorecard_income_source") || "both";
+    const record_keeping = sessionStorage.getItem("mtd-scorecard_record_keeping") || "spreadsheets";
+    const quarterly_aware = sessionStorage.getItem("mtd-scorecard_quarterly_aware") || "false";
+    const mandated = sessionStorage.getItem("mtd-scorecard_mandated") || "true";
+    const mandate_date = sessionStorage.getItem("mtd-scorecard_mandate_date") || "6 April 2027";
+    const mandate_wave = sessionStorage.getItem("mtd-scorecard_mandate_wave") || "2";
+    const software_gap = sessionStorage.getItem("mtd-scorecard_software_gap") || "true";
+    const status = sessionStorage.getItem("mtd-scorecard_status") || "YOU ARE IN NEXT WAVE";
+    const tier = sessionStorage.getItem("mtd-scorecard_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -168,14 +196,14 @@ export default function SuccessAssess() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:MTD Scorecard — Deadlines`,
+      `X-WR-CALNAME:MTD Mandation Engine — Deadlines`,
       "BEGIN:VEVENT",
       `UID:mtd-q1-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${"20260805"}`,
       `DTEND;VALUE=DATE:${"20260805"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Quarter 1 Update Due",
-      "DESCRIPTION:First MTD quarterly update covering 6 April to 5 July. Due by 5 August.",
+      "SUMMARY:MTD — Q1 Quarterly Update Due (5 Aug)",
+      "DESCRIPTION:First MTD quarterly update covering 6 April to 5 July. Penalty clock starts if late.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -183,8 +211,8 @@ export default function SuccessAssess() {
       `DTSTART;VALUE=DATE:${"20261105"}`,
       `DTEND;VALUE=DATE:${"20261105"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Quarter 2 Update Due",
-      "DESCRIPTION:Second quarterly update covering July to October.",
+      "SUMMARY:MTD — Q2 Quarterly Update Due (5 Nov)",
+      "DESCRIPTION:Second quarterly update covering 6 July to 5 October.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -192,8 +220,8 @@ export default function SuccessAssess() {
       `DTSTART;VALUE=DATE:${"20270205"}`,
       `DTEND;VALUE=DATE:${"20270205"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Quarter 3 Update Due",
-      "DESCRIPTION:Third quarterly update.",
+      "SUMMARY:MTD — Q3 Quarterly Update Due (5 Feb)",
+      "DESCRIPTION:Third quarterly update covering 6 October to 5 January.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -202,7 +230,7 @@ export default function SuccessAssess() {
       `DTEND;VALUE=DATE:${"20270131"}`,
       `DTSTAMP:${now}`,
       "SUMMARY:MTD — Annual Final Declaration Due",
-      "DESCRIPTION:Annual final declaration — equivalent to current self assessment.",
+      "DESCRIPTION:Annual final declaration — equivalent to current self-assessment return.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -259,8 +287,8 @@ export default function SuccessAssess() {
             This is your personalised assessment — built around your exact answers, not a generic guide.
           </p>
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 5 April 2026</span>
-            <span className="font-mono text-sm font-bold text-white">5 Apr 2026</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 6 April 2026</span>
+            <span className="font-mono text-sm font-bold text-white">6 Apr 2026</span>
           </div>
         </div>
 
@@ -295,7 +323,7 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","inScopeFrom","softwareGap","quarterlyDates","firstAction","accountantQuestions"] as string[]).map(key => {
+                {(["mandationStatus","exactMandateDate","mandateWaveAnalysis","incomeSourceImpact","softwareGapAssessment","awarenessGapAssessment"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -363,8 +391,8 @@ export default function SuccessAssess() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Quarter 1 Update Due</p>
-                    <p className="text-xs text-neutral-500">First MTD quarterly update covering 6 April to 5 July. Due by 5 August.</p>
+                    <p className="text-sm font-semibold text-neutral-900">MTD — Q1 Quarterly Update Due (5 Aug)</p>
+                    <p className="text-xs text-neutral-500">First MTD quarterly update covering 6 April to 5 July. Penalty clock starts if late.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     5 Aug 2026
@@ -372,8 +400,8 @@ export default function SuccessAssess() {
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Quarter 2 Update Due</p>
-                    <p className="text-xs text-neutral-500">Second quarterly update covering July to October.</p>
+                    <p className="text-sm font-semibold text-neutral-900">MTD — Q2 Quarterly Update Due (5 Nov)</p>
+                    <p className="text-xs text-neutral-500">Second quarterly update covering 6 July to 5 October.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     5 Nov 2026
@@ -381,8 +409,8 @@ export default function SuccessAssess() {
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Quarter 3 Update Due</p>
-                    <p className="text-xs text-neutral-500">Third quarterly update.</p>
+                    <p className="text-sm font-semibold text-neutral-900">MTD — Q3 Quarterly Update Due (5 Feb)</p>
+                    <p className="text-xs text-neutral-500">Third quarterly update covering 6 October to 5 January.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     5 Feb 2027
@@ -391,7 +419,7 @@ export default function SuccessAssess() {
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold text-neutral-900">MTD — Annual Final Declaration Due</p>
-                    <p className="text-xs text-neutral-500">Annual final declaration — equivalent to current self assessment.</p>
+                    <p className="text-xs text-neutral-500">Annual final declaration — equivalent to current self-assessment return.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     31 Jan 2027
@@ -450,7 +478,7 @@ export default function SuccessAssess() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 
-                {daysToDeadline} days to 5 April 2026.
+                {daysToDeadline} days to 6 April 2026.
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -473,7 +501,7 @@ export default function SuccessAssess() {
             <div className="no-print rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Want the full implementation plan?</p>
               <p className="mb-1 font-serif text-lg font-bold text-neutral-950">Your MTD Implementation Plan</p>
-              <p className="mb-3 text-sm text-neutral-600">A personalised MTD audit plus quarterly submission schedule, approved software comparison, and penalty risk assessment.</p>
+              <p className="mb-3 text-sm text-neutral-600">Full implementation plan: software selection + migration sequencing, quarterly book-keeping setup, penalty risk mitigation strategy, multi-property reporting plan if relevant, accountant coordination brief, and first-year quarterly dry-run schedule.</p>
               <Link href="/uk/check/mtd-scorecard"
                 className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950 transition">
                 Upgrade — £147 →
@@ -501,7 +529,7 @@ export default function SuccessAssess() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United Kingdom tax adviser before making financial decisions.
             Based on HMRC guidance April 2026.{" "}
-            <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Making Tax Digital for Income Tax</a> · <a href="https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview" target="_blank" rel="noopener noreferrer" className="underline">HMRC — MTD ITSA timeline and thresholds</a>
+            <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Making Tax Digital for Income Tax</a> · <a href="https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview" target="_blank" rel="noopener noreferrer" className="underline">HMRC — MTD ITSA overview and timeline</a>
           </p>
         </div>
 
