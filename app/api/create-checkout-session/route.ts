@@ -42,6 +42,10 @@ function getPriceId(tier: number, productKey: string): string | undefined {
     if (tier === 67)  return process.env.STRIPE_UK_DIV_67;
     if (tier === 147) return process.env.STRIPE_UK_DIV_147;
   }
+  if (key.includes("uk_") && key.includes("pension_iht")) {
+    if (tier === 67)  return process.env.STRIPE_UK_PIHT_67;
+    if (tier === 147) return process.env.STRIPE_UK_PIHT_147;
+  }
 
   // ─── TAXCHECKNOW US ────────────────────────────────────────────────────────
   if (key.includes("us_") && key.includes("174")) {
