@@ -49,7 +49,7 @@ export default function AppTaxGstSniperFile08() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">New Zealand · App Tax GST Sniper</span>
+            <span className="hidden sm:block">New Zealand · Platform GST Decision Engine (NZ)</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -64,7 +64,7 @@ export default function AppTaxGstSniperFile08() {
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
           <div><a href="/files/nz/app-tax-gst-sniper/gst-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Apportionment Engine</a></div>
           <span className="font-mono">File 08 of 8</span>
-          <div><a href="/nz/check/app-tax-gst-sniper" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to App Tax GST Sniper →</a></div>
+          <div><a href="/nz/check/app-tax-gst-sniper" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to Platform GST Decision Engine (NZ) →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function AppTaxGstSniperFile08() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 IRD · Goods and Services Tax Act 1985 — Marketplace Rules
+              🇬🇧 Inland Revenue Department (IRD) · Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -96,7 +96,7 @@ export default function AppTaxGstSniperFile08() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            App Tax GST Sniper · File 08 of 8
+            Platform GST Decision Engine (NZ) · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
             Property GST Exposure Tool
@@ -205,7 +205,7 @@ export default function AppTaxGstSniperFile08() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on IRD guidance April 2026.
+            Based on Inland Revenue Department (IRD) guidance April 2026.
           </p>
         </div>
 
@@ -222,10 +222,10 @@ export default function AppTaxGstSniperFile08() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/nz/check/app-tax-gst-sniper" className="hover:text-neutral-900 transition">
-              ← Back to App Tax GST Sniper
+              ← Back to Platform GST Decision Engine (NZ)
             </a>
-            <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — GST for marketplace sellers ↗</a>
-            <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers/flat-rate-credit" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — Flat-rate credit ↗</a>
+            <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — GST on listed services (operative 1 April 2024) ↗</a>
+            <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers/flat-rate-credit" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — Flat-rate credit scheme (8.5%) ↗</a>
           </div>
         </div>
       </footer>

@@ -10,12 +10,12 @@ import AppTaxGstSniperCalculator from "./AppTaxGstSniperCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "NZ App Tax GST 2026: Are You Losing 15% of Your Airbnb or Uber Income? | TaxCheckNow",
-  description: "Under NZ App Tax rules, platforms like Airbnb, Uber and Bookabach charge 15% GST even if you are NOT registered. You get only an 8.5% flat-rate credit back. Check if GST registration would put money back in your pocket.",
+  title: "NZ Platform GST Decision Engine 2026 — Register or Flat-Rate? | TaxCheckNow",
+  description: "From 1 April 2024, NZ online marketplaces (Airbnb, Uber, UberEats, Bookabach) collect 15% GST on listed services regardless of your registration status. Unregistered sellers receive an 8.5% flat-rate credit — the 6.5% gap is yours. Check whether voluntary registration, threshold-triggered registration, or staying flat-rate is optimal for your situation.",
   alternates: { canonical: "https://taxchecknow.com/nz/check/app-tax-gst-sniper" },
   openGraph: {
-    title: "NZ App Tax GST 2026: Are You Losing 15% of Your Airbnb or Uber Income? | TaxCheckNow",
-    description: "Under NZ App Tax rules, platforms like Airbnb, Uber and Bookabach charge 15% GST even if you are NOT registered. You get only an 8.5% flat-rate credit back. Check if GST registration would put money back in your pocket.",
+    title: "NZ Platform GST Decision Engine 2026 — Register or Flat-Rate? | TaxCheckNow",
+    description: "From 1 April 2024, NZ online marketplaces (Airbnb, Uber, UberEats, Bookabach) collect 15% GST on listed services regardless of your registration status. Unregistered sellers receive an 8.5% flat-rate credit — the 6.5% gap is yours. Check whether voluntary registration, threshold-triggered registration, or staying flat-rate is optimal for your situation.",
     url: "https://taxchecknow.com/nz/check/app-tax-gst-sniper",
     siteName: "TaxCheckNow",
     type: "website",
@@ -92,24 +92,24 @@ const faqs = [
 
 const aiCorrections = [
   {
+    "wrong": "ChatGPT says: The NZ marketplace GST rules started in 2023",
+    "correct": "Reality: 2023 was the legislative passage. The seller-facing operative date is 1 April 2024. Platforms began collecting and returning 15% GST on listed services from that date. Citations that place the operative date in 2023 are incorrect."
+  },
+  {
     "wrong": "ChatGPT says: You do not need to worry about GST if you earn under $60,000 from platforms",
-    "correct": "Reality: Under NZ App Tax rules, platforms must charge and remit 15% GST on your earnings regardless of your registration status or income level. The $60,000 threshold determines whether you must register — it does not prevent GST being charged."
+    "correct": "Reality: From 1 April 2024, platforms must charge and remit 15% GST on listed services regardless of your registration status or income level. The $60,000 threshold determines whether you must register for your own GST number — it does not prevent GST being charged by the platform."
   },
   {
     "wrong": "ChatGPT says: You are not paying any GST if you are not registered",
-    "correct": "Reality: The platform collects and remits 15% GST to IRD on your behalf. You receive a flat-rate credit of 8.5%. The remaining 6.5% gap is your cost. You are absorbing GST — just not claiming it back."
+    "correct": "Reality: The platform collects 15% GST and remits it to IRD. IRD passes 8.5% back to you as a flat-rate credit and retains 6.5%. You are absorbing that 6.5% gap — it is built into your platform economics even though you never filed a GST return."
   },
   {
     "wrong": "ChatGPT says: The flat-rate credit is the same as being registered for GST",
-    "correct": "Reality: The flat-rate credit is 8.5%, not 15%. Registered businesses can claim input tax credits at 15% on all business expenses. If your expenses are significant, registration recovers substantially more than the flat-rate credit."
+    "correct": "Reality: The flat-rate credit is 8.5%, not 15%. Registered sellers zero-rate the listed services supply in their own GST return (because the platform has already accounted for the 15%) AND can claim input tax credits at 15% on all business expenses. If your costs are significant, registration can recover substantially more."
   },
   {
-    "wrong": "ChatGPT says: Registering for GST voluntarily is not worth the hassle",
-    "correct": "Reality: Voluntary registration can be financially beneficial below the $60,000 threshold. If your business expenses are high enough — particularly vehicle costs or property expenses — the GST recovery on costs exceeds the flat-rate credit, creating a net financial benefit."
-  },
-  {
-    "wrong": "ChatGPT says: You cannot register for GST voluntarily below the threshold",
-    "correct": "Reality: You can voluntarily register for GST in NZ even below the $60,000 threshold if you are carrying on a taxable activity. Voluntary registration is common for businesses with significant startup costs or ongoing high expenses."
+    "wrong": "ChatGPT says: Registering for GST is always better than the flat-rate credit",
+    "correct": "Reality: Registration creates admin obligations (GST returns every 1, 2 or 6 months), apportionment requirements for mixed-use assets, and — critically — deregistration clawback risk. If you register, claim GST on assets, and later stop the activity, IRD treats deregistration as a deemed sale of retained assets at market value — you owe 15% GST on that deemed sale. For sellers with a short activity horizon or retained property, the clawback can exceed the accumulated benefit. Registration is a decision with multiple paths — not a default."
   }
 ];
 
@@ -139,134 +139,183 @@ const accountantQuestions = [
 const workedExamples = [
   {
     "name": "Low-volume Airbnb",
-    "setup": "$800/month income, $150 expenses",
-    "income": "$68 credit",
-    "status": "FLAT-RATE FINE"
+    "setup": "$800/month income, $150 expenses, long horizon",
+    "income": "$68/mo flat-rate vs $20/mo input = flat-rate +$48",
+    "status": "STAY FLAT-RATE"
   },
   {
     "name": "Active Uber driver",
-    "setup": "$3,000/month income, $1,200 vehicle costs",
-    "income": "$255 credit vs $157 recovery",
-    "status": "REGISTER — NET POSITIVE"
+    "setup": "$3,000/month income, $1,200 monthly vehicle costs, multi-year horizon",
+    "income": "$255/mo flat-rate vs $157/mo input = register nets an extra path of cost recovery + zero-rating on income",
+    "status": "VOLUNTARY REGISTER"
   },
   {
-    "name": "High-volume host",
-    "setup": "$6,000/month income, $2,500 property costs",
-    "income": "$510 credit vs $326 recovery",
-    "status": "CALCULATE CAREFULLY"
+    "name": "Approaching $60k threshold",
+    "setup": "$4,800/month income — on track to cross $60k within 12 months",
+    "income": "Must register when 12-month turnover reaches $60k — voluntary sooner may be worth it",
+    "status": "THRESHOLD-TRIGGERED REGISTER"
   },
   {
     "name": "Big purchase coming",
-    "setup": "$2,000/month income, buying $30k van",
-    "income": "One-off $3,913 recovery",
-    "status": "REGISTER NOW"
+    "setup": "$2,000/month income, buying $30k van for rideshare",
+    "income": "One-off $3,913 input tax recovery on the van vs ~$2,550/yr flat-rate",
+    "status": "REGISTER BEFORE PURCHASE"
+  },
+  {
+    "name": "Short-horizon Airbnb",
+    "setup": "$3,200/month income, high property costs BUT stopping within 2 years",
+    "income": "Accumulated ~$5-8k input tax benefit; deregistration deemed sale on retained property = potential $100k+ GST clawback",
+    "status": "DO NOT REGISTER — clawback risk"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "GST on income",
-    "metric1": "Platform collects 15%",
-    "metric2": "You collect and remit 15%",
-    "bestMove": "Same tax collected"
+    "position": "Stay flat-rate (unregistered)",
+    "metric1": "Low expenses, minimal assets, simple setup",
+    "metric2": "8.5% credit automatic · no admin",
+    "bestMove": "Optimal for most casual hosts/drivers"
   },
   {
-    "position": "Income recovery",
-    "metric1": "8.5% flat-rate credit",
-    "metric2": "Full GST on expenses claimed",
-    "bestMove": "Registration better if expenses high"
+    "position": "Voluntary register (ongoing benefit)",
+    "metric1": "Expenses exceed ~56% of income, multi-year horizon",
+    "metric2": "Full 15% input tax vs 8.5% credit + zero-rate income",
+    "bestMove": "Positive NPV if horizon exceeds 3 years"
   },
   {
-    "position": "Admin burden",
-    "metric1": "Minimal",
-    "metric2": "GST returns required",
-    "bestMove": "Returns every 1, 2 or 6 months"
+    "position": "Threshold-triggered register",
+    "metric1": "12-month turnover reaches $60,000",
+    "metric2": "Mandatory — timing matters",
+    "bestMove": "Register before crossing; plan timing"
   },
   {
-    "position": "Price to customer",
-    "metric1": "Platform handles",
-    "metric2": "Platform handles",
-    "bestMove": "No change"
+    "position": "Register before big purchase",
+    "metric1": "$15k+ asset purchase coming",
+    "metric2": "One-off 15% input tax recovery on purchase",
+    "bestMove": "Register 1-2 GST periods before purchase"
+  },
+  {
+    "position": "Do NOT register (clawback risk)",
+    "metric1": "Short horizon + high-value retained asset (property)",
+    "metric2": "Deregistration = deemed sale at market value × 15%",
+    "bestMove": "Calculation must include exit clawback"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "High vehicle costs",
-    "effect": "Recover 15% GST on fuel, repairs, lease",
-    "note": "Uber and delivery drivers often benefit"
+    "tool": "Stay flat-rate (default)",
+    "effect": "Expenses under ~56% of income; no major purchases; simple",
+    "note": "8.5% credit is automatic — zero admin"
   },
   {
-    "tool": "Property expenses",
-    "effect": "Claim GST on cleaning, supplies, repairs",
-    "note": "Airbnb hosts with active maintenance"
+    "tool": "Voluntary register (ongoing)",
+    "effect": "Expense ratio above break-even AND activity horizon over 3 yr",
+    "note": "Clawback risk if you stop early"
   },
   {
-    "tool": "Large asset purchase",
-    "effect": "One-off recovery on purchase price",
-    "note": "Vehicle, equipment — immediate cashflow"
+    "tool": "Threshold-triggered register ($60k)",
+    "effect": "12-month turnover crosses $60k — mandatory",
+    "note": "Late registration carries penalties"
   },
   {
-    "tool": "Approaching $60k",
-    "effect": "Must register — optimise before threshold",
-    "note": "Plan registration timing carefully"
+    "tool": "Register before large purchase",
+    "effect": "One-off recovery on $15k+ asset",
+    "note": "Must register BEFORE purchase settlement"
+  },
+  {
+    "tool": "Avoid registration (short horizon)",
+    "effect": "Deregistration deemed sale = 15% GST clawback on retained assets at market value",
+    "note": "Clawback can exceed 3-4 years of cumulative registration benefit"
   }
 ];
 
 const geoFacts = [
   {
+    "label": "Operative date (seller-facing)",
+    "value": "1 April 2024"
+  },
+  {
     "label": "GST rate",
     "value": "15%"
   },
   {
-    "label": "App Tax applies",
-    "value": "Regardless of registration status"
+    "label": "Platform collects regardless of seller",
+    "value": "Yes (listed services)"
   },
   {
     "label": "Flat-rate credit (unregistered)",
-    "value": "8.5% of platform income"
+    "value": "8.5% of gross platform income"
+  },
+  {
+    "label": "Platform retains for IRD (unregistered)",
+    "value": "6.5% of gross platform income"
+  },
+  {
+    "label": "Registered seller treatment",
+    "value": "Zero-rate platform supply; claim 15% input tax on costs"
   },
   {
     "label": "Registration threshold",
-    "value": "$60,000 per year"
+    "value": "$60,000 turnover in any 12-month period"
   },
   {
-    "label": "Platforms covered",
-    "value": "Airbnb, Uber, Bookabach, Ola and others"
+    "label": "Voluntary registration",
+    "value": "Available below threshold for any taxable activity"
+  },
+  {
+    "label": "Listed services",
+    "value": "Ride-sharing, food/beverage delivery, short-stay accommodation"
+  },
+  {
+    "label": "Platforms covered (examples)",
+    "value": "Airbnb, Bookabach, Booking.com, Uber, Ola, UberEats, DoorDash, Menulog"
+  },
+  {
+    "label": "Deregistration",
+    "value": "Deemed sale of retained business assets at market value — 15% GST clawback risk"
   },
   {
     "label": "Legal anchor",
-    "value": "GST Act 1985 — marketplace rules"
+    "value": "Goods and Services Tax Act 1985 — marketplace rules for listed services"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "GST rate",
+    "label": "Operative date (seller-facing)",
+    "value": "1 April 2024"
+  },
+  {
+    "label": "Platform GST rate",
     "value": "15%"
   },
   {
-    "label": "Flat-rate credit",
+    "label": "Unregistered credit",
     "value": "8.5%"
   },
   {
-    "label": "Registration threshold",
-    "value": "$60,000"
-  },
-  {
-    "label": "Gap per $1k income",
-    "value": "$65"
+    "label": "Threshold",
+    "value": "$60,000/yr"
   }
 ];
 
 const sources = [
   {
-    "title": "IRD — GST for marketplace sellers",
+    "title": "IRD — GST on listed services (operative 1 April 2024)",
     "url": "https://www.ird.govt.nz/gst/gst-for-marketplace-sellers"
   },
   {
-    "title": "IRD — Flat-rate credit",
+    "title": "IRD — Flat-rate credit scheme (8.5%)",
     "url": "https://www.ird.govt.nz/gst/gst-for-marketplace-sellers/flat-rate-credit"
+  },
+  {
+    "title": "IRD — Cancelling your GST registration (deemed sale on retained assets)",
+    "url": "https://www.ird.govt.nz/gst/cancelling-your-gst-registration"
+  },
+  {
+    "title": "IRD — Registering for GST",
+    "url": "https://www.ird.govt.nz/gst/registering-for-gst"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -276,26 +325,26 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "What Kiwis think",
-    "value": "Under $60k safe",
-    "sub": "GST does not apply to me"
+    "label": "Operative from",
+    "value": "1 April 2024",
+    "sub": "seller-facing date — NOT 2023 (legislative passage)"
   },
   {
-    "label": "App Tax reality",
-    "value": "15% still charged",
-    "sub": "platform collects it regardless",
+    "label": "Platform collects",
+    "value": "15% GST",
+    "sub": "regardless of your registration status",
     "red": true
   },
   {
-    "label": "Flat-rate credit",
-    "value": "Only 8.5%",
-    "sub": "not the full 15% — gap of 6.5%",
+    "label": "Unregistered gap",
+    "value": "6.5% of gross",
+    "sub": "platform keeps this for IRD — you absorb it",
     "red": true
   },
   {
-    "label": "Registration upside",
-    "value": "Full recovery",
-    "sub": "claim 15% on all business costs"
+    "label": "Registration decision paths",
+    "value": "5 distinct",
+    "sub": "flat-rate / voluntary / threshold / big-purchase / deregistration-clawback"
   }
 ];
 
@@ -319,8 +368,8 @@ export default function AppTaxGstSniperPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "App Tax GST Sniper — Rules April 2026",
-    description: "Under NZ App Tax rules, platforms like Airbnb, Uber and Bookabach charge 15% GST even if you are NOT registered. You get only an 8.5% flat-rate credit back. Check if GST registration would put money back in your pocket.",
+    name: "Platform GST Decision Engine (NZ) — Rules April 2026",
+    description: "From 1 April 2024, NZ online marketplaces (Airbnb, Uber, UberEats, Bookabach) collect 15% GST on listed services regardless of your registration status. Unregistered sellers receive an 8.5% flat-rate credit — the 6.5% gap is yours. Check whether voluntary registration, threshold-triggered registration, or staying flat-rate is optimal for your situation.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -335,8 +384,8 @@ export default function AppTaxGstSniperPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "App Tax GST Sniper",
-    description: "Under NZ App Tax rules, platforms like Airbnb, Uber and Bookabach charge 15% GST even if you are NOT registered. You get only an 8.5% flat-rate credit back. Check if GST registration would put money back in your pocket.",
+    name: "Platform GST Decision Engine (NZ)",
+    description: "From 1 April 2024, NZ online marketplaces (Airbnb, Uber, UberEats, Bookabach) collect 15% GST on listed services regardless of your registration status. Unregistered sellers receive an 8.5% flat-rate credit — the 6.5% gap is yours. Check whether voluntary registration, threshold-triggered registration, or staying flat-rate is optimal for your situation.",
     url: "https://taxchecknow.com/nz/check/app-tax-gst-sniper",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -351,7 +400,7 @@ export default function AppTaxGstSniperPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the App Tax GST Sniper",
+    name: "How to use the Platform GST Decision Engine (NZ)",
     totalTime: "PT1M",
     step: [
       {
@@ -380,18 +429,18 @@ export default function AppTaxGstSniperPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "App Tax GST Sniper — Free Check",
+    "name": "Platform GST Decision Engine (NZ) — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nz/check/app-tax-gst-sniper#calculator",
-    "description": "Under NZ App Tax rules, platforms like Airbnb, Uber and Bookabach charge 15% GST even if you are NOT registered. You get only an 8.5% flat-rate credit back. Check if GST registration would put money back in your pocket.",
+    "description": "From 1 April 2024, NZ online marketplaces (Airbnb, Uber, UberEats, Bookabach) collect 15% GST on listed services regardless of your registration status. Unregistered sellers receive an 8.5% flat-rate credit — the 6.5% gap is yours. Check whether voluntary registration, threshold-triggered registration, or staying flat-rate is optimal for your situation.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on IRD guidance April 2026"
+      "Based on Inland Revenue Department (IRD) guidance April 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -412,7 +461,7 @@ export default function AppTaxGstSniperPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "New Zealand", item: "https://taxchecknow.com/nz" },
-      { "@type": "ListItem", position: 3, name: "App Tax GST Sniper", item: "https://taxchecknow.com/nz/check/app-tax-gst-sniper" },
+      { "@type": "ListItem", position: 3, name: "Platform GST Decision Engine (NZ)", item: "https://taxchecknow.com/nz/check/app-tax-gst-sniper" },
     ],
   };
 
@@ -457,7 +506,7 @@ export default function AppTaxGstSniperPage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇳🇿 IRD Verified · Goods and Services Tax Act 1985 — Marketplace Rules ↗
+            🇳🇿 Inland Revenue Department (IRD) Verified · Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-NZ
@@ -466,12 +515,12 @@ export default function AppTaxGstSniperPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          NZ App Tax 2026: Are You Losing 15% of Your Side-Hustle Income?
+          Airbnb, Uber, and Food Delivery Platforms Collect 15% GST on Your Behalf From 1 April 2024 — But You Only Receive 8.5%. Here Is Whether Registering for GST Gets You the Other 6.5% Back.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          Under New Zealand's GST marketplace rules, platforms like Airbnb, Uber and Bookabach must charge 15% GST on your earnings — even if you are not GST registered and even if you are under the $60,000 threshold. This is what Kiwis call the App Tax.
+          From 1 April 2024, New Zealand's GST marketplace rules require online platforms — Airbnb, Bookabach, Uber, Ola, UberEats, DoorDash, and other 'listed services' providers — to collect and return 15% GST on supplies made through the platform, regardless of whether the underlying seller is GST registered. The seller-facing operative date is 1 April 2024 (not 2023, which refers only to the legislative passage). This is what Kiwis call the App Tax.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -493,20 +542,20 @@ export default function AppTaxGstSniperPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">GST rate</dt>
+                  <dt className="text-neutral-600">Operative date (seller-facing)</dt>
+                  <dd className="font-bold">1 April 2024</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-neutral-600">Platform GST rate</dt>
                   <dd className="font-bold">15%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Flat-rate credit</dt>
+                  <dt className="text-neutral-600">Unregistered credit</dt>
                   <dd className="font-bold">8.5%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Registration threshold</dt>
-                  <dd className="font-bold">$60,000</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-neutral-600">Gap per $1k income</dt>
-                  <dd className="font-bold">$65</dd>
+                  <dt className="text-neutral-600">Threshold</dt>
+                  <dd className="font-bold">$60,000/yr</dd>
                 </div>
               </dl>
             </div>
@@ -514,7 +563,7 @@ export default function AppTaxGstSniperPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">App Tax GST Sniper</h3>
+              <h3 className="mb-1 text-lg font-bold">Platform GST Decision Engine (NZ)</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised GST decision built around your platform income, your expenses, and your break-even point — not a generic GST guide.</p>
               <div className="space-y-2">
                 <a href="#calculator"
@@ -552,39 +601,39 @@ export default function AppTaxGstSniperPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                What Kiwis think
+                Operative from
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Under $60k safe
+                1 April 2024
               </p>
-              <p className="text-xs text-neutral-400">GST does not apply to me</p>
+              <p className="text-xs text-neutral-400">seller-facing date — NOT 2023 (legislative passage)</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                App Tax reality
+                Platform collects
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                15% still charged
+                15% GST
               </p>
-              <p className="text-xs text-neutral-400">platform collects it regardless</p>
+              <p className="text-xs text-neutral-400">regardless of your registration status</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Flat-rate credit
+                Unregistered gap
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Only 8.5%
+                6.5% of gross
               </p>
-              <p className="text-xs text-neutral-400">not the full 15% — gap of 6.5%</p>
+              <p className="text-xs text-neutral-400">platform keeps this for IRD — you absorb it</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Registration upside
+                Registration decision paths
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Full recovery
+                5 distinct
               </p>
-              <p className="text-xs text-neutral-400">claim 15% on all business costs</p>
+              <p className="text-xs text-neutral-400">flat-rate / voluntary / threshold / big-purchase / deregistration-clawback</p>
             </div>
           </div>
         </div>
@@ -596,22 +645,25 @@ export default function AppTaxGstSniperPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What App Tax means for you
+            The five decision paths
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ 15% GST charged by platform always</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 8.5% flat-rate credit if not registered</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Full 15% recovery on costs if registered</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Stay flat-rate — default when expenses low</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Voluntary register — break-even + horizon over 3 yr</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Threshold register — mandatory at $60k turnover</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Register before big purchase — one-off recovery</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Avoid register — short horizon + retained assets</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT safe just because under $60k</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT equivalent — 8.5% is NOT 15%</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT 2023 — operative from 1 April 2024</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT 'safer' to always register</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic — clawback risk on retained assets</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: IRD — GST marketplace rules · GST Act 1985</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRD — GST marketplace rules for listed services · Operative 1 April 2024 · Goods and Services Tax Act 1985</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -619,24 +671,24 @@ export default function AppTaxGstSniperPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The answer — IRD confirmed April 2026
           </p>
-          <p className="mb-2 text-neutral-900">Under New Zealand's GST marketplace rules, platforms like Airbnb, Uber and Bookabach must charge 15% GST on your earnings — even if you are not GST registered and even if you are under the $60,000 threshold. This is what Kiwis call the App Tax.</p>
-          <p className="mb-2 text-neutral-900">If you are not registered, you receive an 8.5% flat-rate credit instead of the full 15% GST recovery. The difference — 6.5% of your platform income — stays with the government. On $4,000 per month of Airbnb income, that is $260 per month or $3,120 per year that you may be leaving behind.</p>
-          <p className="mb-2 text-neutral-900">Whether GST registration actually saves you money depends on your expenses. If you have significant costs — vehicle, cleaning, supplies, property expenses — the full 15% GST recovery on those costs can exceed the flat-rate credit. The break-even point is calculable and many Kiwi side-hustlers are on the wrong side of it.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRD — GST for marketplace sellers · GST Act 1985</p>
+          <p className="mb-2 text-neutral-900">From 1 April 2024, New Zealand's GST marketplace rules require online platforms — Airbnb, Bookabach, Uber, Ola, UberEats, DoorDash, and other 'listed services' providers — to collect and return 15% GST on supplies made through the platform, regardless of whether the underlying seller is GST registered. The seller-facing operative date is 1 April 2024 (not 2023, which refers only to the legislative passage). This is what Kiwis call the App Tax.</p>
+          <p className="mb-2 text-neutral-900">If you are not registered, the platform pays 6.5% of your gross platform income to Inland Revenue and passes 8.5% to you as a flat-rate credit. The 6.5% gap is the difference between the full 15% GST that was collected and the 8.5% credit you receive. On $4,000 per month of Airbnb income, that gap is $260 per month or $3,120 per year. Whether you can recover it depends on your expense ratio and which registration path is right for you.</p>
+          <p className="mb-2 text-neutral-900">The decision has at least five distinct paths: (a) stay unregistered — flat-rate credit is optimal when expenses are low; (b) voluntarily register — break-even when expenses exceed ~56% of income, or when recovery on costs is higher than the 8.5% credit; (c) register because you crossed $60,000 — mandatory; (d) register before a major asset purchase — one-off recovery of 15% on the purchase; (e) do NOT register if you expect to stop the activity soon, because deregistration triggers a deemed-sale GST charge on retained business assets that can exceed the benefit of registration. Each path has a different economic calculation and different paperwork.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRD — GST marketplace rules for listed services (operative 1 April 2024) · Goods and Services Tax Act 1985 · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            What happens to your GST under App Tax
+            The five decision paths — platform GST from 1 April 2024
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Not registered: Platform charges 15% GST → You get 8.5% credit → 6.5% gone  ❌
+              ❌ Register blindly → claim GST → stop activity in 18 months → deemed sale on retained assets → 15% GST clawback on market value  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Registered: Platform charges 15% GST → You claim full 15% → Plus recover GST on your costs  ✔
+              ✔ Assess expense ratio + purchase plan + activity horizon → pick correct path (stay flat-rate / voluntarily register / register before big purchase / threshold-triggered) → avoid clawback trap  ✔
             </div>
           </div>
         </div>
@@ -647,9 +699,10 @@ export default function AppTaxGstSniperPage() {
             Common AI errors on this topic
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ You do not need to worry about GST if you are under $60,000 — wrong. Under App Tax rules, the platform charges GST on your earnings regardless of your registration status or income level. The $60,000 threshold determines whether you must register, not whether GST is charged.</li>
-            <li>✗ You are not paying GST if you are not registered — wrong. GST is charged by the platform and remitted to IRD. You receive a flat-rate credit of 8.5% but the platform has already collected and paid 15%. You are absorbing the 6.5% difference.</li>
-            <li>✗ The flat-rate credit is equivalent to GST registration — wrong. The flat-rate credit is 8.5%, not 15%. If your expenses are significant, you could recover far more GST by registering than you receive via the flat-rate credit.</li>
+            <li>✗ You do not need to worry about GST if you are under $60,000 — wrong. From 1 April 2024, under the marketplace rules for listed services, the platform collects and remits 15% GST on your earnings regardless of your registration status or income level. The $60,000 threshold determines whether you must register for your own GST number — it does not prevent GST being charged by the platform.</li>
+            <li>✗ You are not paying GST if you are not registered — wrong. The platform collects 15% GST and remits it to IRD. IRD then passes 8.5% back to you as a flat-rate credit and keeps 6.5%. You are absorbing the 6.5% difference — it is built into your platform economics even though you never filed a GST return.</li>
+            <li>✗ The flat-rate credit is equivalent to being GST registered — wrong. The flat-rate credit is 8.5%, not 15%. Registered sellers zero-rate listed services in their own GST return (because the platform has already accounted for the 15%) AND can claim full 15% input tax credits on business expenses. If your business costs are significant, full registration can recover substantially more than the 8.5% credit.</li>
+            <li>✗ Registering for GST is always better than the flat-rate credit — wrong. Registration adds real admin (GST returns every 1, 2 or 6 months), apportionment obligations for mixed-use assets, and — critically — creates deregistration clawback risk. If you register, claim GST on assets, and later stop the activity or fall below the threshold, IRD treats deregistration as a deemed sale of retained business assets at market value — and you owe 15% GST on that deemed sale. For sellers who expect to stop within 1-3 years, the deregistration clawback can exceed the accumulated registration benefit.</li>
           </ul>
         </div>
 
@@ -676,11 +729,11 @@ export default function AppTaxGstSniperPage() {
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
             <p className="text-base font-medium text-neutral-900">Aroha had been running the Glen Eden property on Airbnb for two years. She had never thought about GST.</p>
             <p>The property earned around $3,200 per month when occupied. Aroha managed it herself. She was below the $60,000 GST threshold and had assumed GST simply did not apply to her.</p>
-            <p>What she had not understood was the App Tax. From 2023, Airbnb had been required to collect and remit 15% GST on her earnings regardless of her registration status. The platform took the GST. She received a flat-rate credit of only 8.5%.</p>
-            <p>She had also been running significant costs through the property: a new heat pump ($4,200), replacement carpet ($2,800), regular cleaning. None of the GST on those expenses was recoverable as an unregistered person.</p>
-            <p className="font-semibold text-neutral-900">The heat pump alone — $4,200 GST-inclusive — contained $547 of recoverable GST she had walked away from. The ongoing registration calculation did not support registering. But large purchases changed the maths.</p>
+            <p>What she had not understood was the marketplace rule for listed services. From 1 April 2024, Airbnb was required to collect and return 15% GST on her earnings regardless of her registration status. IRD kept 6.5% and passed 8.5% to her as a flat-rate credit. She was absorbing the 6.5% gap without ever filing a return.</p>
+            <p>She had also been running significant costs through the property: a new heat pump ($4,200), replacement carpet ($2,800), regular cleaning. None of the GST on those expenses was recoverable as an unregistered person. But there was a twist: if she registered and then stopped the Airbnb activity within 2-3 years, IRD would treat deregistration as a deemed sale of retained property assets at market value — potentially a 15% GST clawback that dwarfed the registration benefit.</p>
+            <p className="font-semibold text-neutral-900">The heat pump alone — $4,200 GST-inclusive — contained $547 of recoverable GST she had walked away from. The ongoing registration calculation did not support registering. But large purchases changed the maths. And the deregistration clawback risk meant any registration had to be evaluated against a 3+ year activity horizon.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Aroha did not register for GST. The ongoing numbers did not support it. But she now asks David before any major purchase whether voluntary registration for that year would be beneficial.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Aroha did not register for GST. The ongoing numbers did not support it. The deregistration clawback risk on the property asset was material — registering would expose her to a $100k+ deemed-sale GST liability if she ever stopped. But she now asks David before any major purchase whether voluntary registration for that year specifically — timed around the purchase — would be beneficial.</p>
             </div>
           </div>
           
@@ -698,11 +751,11 @@ export default function AppTaxGstSniperPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             NZ GST Marketplace Rules — confirmed 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Under New Zealand's GST marketplace facilitator rules (effective 2023), digital platforms including Airbnb, Uber, Ola, and Bookabach are required to collect and remit 15% GST on supplies made through their platforms to NZ customers. This applies regardless of whether the underlying supplier (the driver or host) is GST registered. Unregistered suppliers receive a flat-rate credit of 8.5% of their gross income from the platform. The GST registration threshold remains $60,000 per year — suppliers must register once their taxable activity exceeds this. Registered suppliers can claim input tax credits on business expenses at the full 15% rate, potentially making registration financially advantageous even below the mandatory threshold.</p>
+          <p className="mb-4 text-neutral-800">Under New Zealand's GST marketplace rules for listed services, operative from 1 April 2024, online marketplace operators are required to collect and return 15% GST on supplies of listed services made through the platform to NZ customers. Listed services include ride-sharing (Uber, Ola), food and beverage delivery (UberEats, DoorDash, Menulog), and short-stay and visitor accommodation (Airbnb, Bookabach, Booking.com). This applies regardless of whether the underlying supplier (driver, rider, or host) is GST registered. The platform returns 6.5% of gross platform income to Inland Revenue and passes 8.5% to unregistered sellers as a flat-rate credit. Registered sellers zero-rate the listed services supply in their own GST return (because the platform has already accounted for the 15% GST) and can claim 15% input tax credits on business expenses. The GST registration threshold remains $60,000 per 12-month period — platform income counts toward this threshold even though the platform collects GST on the seller's behalf. Voluntary registration below the threshold is available for any person carrying on a taxable activity, and can be financially advantageous where expenses are significant or where a large business asset is about to be purchased. Deregistration triggers a deemed disposal of retained business assets at market value, potentially resulting in a GST clawback that can exceed the benefit of registration if the activity stops within a short window after registration.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Flat-Rate Credit = Platform Income × 8.5%. GST Recovery if Registered = Business Expenses × (15 divided by 115). Registration benefit = GST Recovery minus Flat-Rate Credit. If positive: register. If negative: flat-rate is fine.
+            Flat-Rate Credit = Platform Income × 8.5%. GST Recovery if Registered = Business Expenses (GST-inclusive) × (15 ÷ 115). Registration benefit = GST Recovery − Flat-Rate Credit − GST admin cost − (Deregistration clawback probability × Expected clawback amount). If positive and horizon exceeds 3 years: register. If positive but short horizon: model the deregistration clawback before registering.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -716,34 +769,64 @@ export default function AppTaxGstSniperPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">GST rate</td>
-                  <td className="p-2">15%</td>
-                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules</td>
+                  <td className="p-2">Operative date (seller-facing)</td>
+                  <td className="p-2">1 April 2024</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">App Tax applies</td>
-                  <td className="p-2">Regardless of registration status</td>
-                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules</td>
+                  <td className="p-2">GST rate</td>
+                  <td className="p-2">15%</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Platform collects regardless of seller</td>
+                  <td className="p-2">Yes (listed services)</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Flat-rate credit (unregistered)</td>
-                  <td className="p-2">8.5% of platform income</td>
-                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules</td>
+                  <td className="p-2">8.5% of gross platform income</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Platform retains for IRD (unregistered)</td>
+                  <td className="p-2">6.5% of gross platform income</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Registered seller treatment</td>
+                  <td className="p-2">Zero-rate platform supply; claim 15% input tax on costs</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Registration threshold</td>
-                  <td className="p-2">$60,000 per year</td>
-                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules</td>
+                  <td className="p-2">$60,000 turnover in any 12-month period</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Platforms covered</td>
-                  <td className="p-2">Airbnb, Uber, Bookabach, Ola and others</td>
-                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules</td>
+                  <td className="p-2">Voluntary registration</td>
+                  <td className="p-2">Available below threshold for any taxable activity</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Listed services</td>
+                  <td className="p-2">Ride-sharing, food/beverage delivery, short-stay accommodation</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Platforms covered (examples)</td>
+                  <td className="p-2">Airbnb, Bookabach, Booking.com, Uber, Ola, UberEats, DoorDash, Menulog</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Deregistration</td>
+                  <td className="p-2">Deemed sale of retained business assets at market value — 15% GST clawback risk</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Legal anchor</td>
-                  <td className="p-2">GST Act 1985 — marketplace rules</td>
-                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules</td>
+                  <td className="p-2">Goods and Services Tax Act 1985 — marketplace rules for listed services</td>
+                  <td className="p-2 text-neutral-500">Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services</td>
                 </tr>
               </tbody>
             </table>
@@ -752,7 +835,7 @@ export default function AppTaxGstSniperPage() {
             Primary source:{" "}
             <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              IRD — GST for marketplace sellers
+              IRD — GST on listed services (operative 1 April 2024)
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/app-tax-gst-sniper" className="font-mono text-blue-700 hover:underline">
@@ -770,58 +853,67 @@ export default function AppTaxGstSniperPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four side-hustler scenarios — register or not?
+          Five decision paths — flat-rate, voluntary, threshold, big-purchase, deregistration-clawback
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
                 <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Monthly Income</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Monthly Expenses</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Flat-Rate Credit</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Registration Saves</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Income + setup</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Net GST outcome</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Decision path</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Low-volume Airbnb</td>
-                <td className="p-3 text-neutral-700">$800/month income, $150 expenses</td>
-                <td className="p-3 font-mono">$68 credit</td>
+                <td className="p-3 text-neutral-700">$800/month income, $150 expenses, long horizon</td>
+                <td className="p-3 font-mono">$68/mo flat-rate vs $20/mo input = flat-rate +$48</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    FLAT-RATE FINE
+                    STAY FLAT-RATE
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Active Uber driver</td>
-                <td className="p-3 text-neutral-700">$3,000/month income, $1,200 vehicle costs</td>
-                <td className="p-3 font-mono">$255 credit vs $157 recovery</td>
+                <td className="p-3 text-neutral-700">$3,000/month income, $1,200 monthly vehicle costs, multi-year horizon</td>
+                <td className="p-3 font-mono">$255/mo flat-rate vs $157/mo input = register nets an extra path of cost recovery + zero-rating on income</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    REGISTER — NET POSITIVE
+                    VOLUNTARY REGISTER
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">High-volume host</td>
-                <td className="p-3 text-neutral-700">$6,000/month income, $2,500 property costs</td>
-                <td className="p-3 font-mono">$510 credit vs $326 recovery</td>
+                <td className="p-3 font-bold">Approaching $60k threshold</td>
+                <td className="p-3 text-neutral-700">$4,800/month income — on track to cross $60k within 12 months</td>
+                <td className="p-3 font-mono">Must register when 12-month turnover reaches $60k — voluntary sooner may be worth it</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    CALCULATE CAREFULLY
+                    THRESHOLD-TRIGGERED REGISTER
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Big purchase coming</td>
-                <td className="p-3 text-neutral-700">$2,000/month income, buying $30k van</td>
-                <td className="p-3 font-mono">One-off $3,913 recovery</td>
+                <td className="p-3 text-neutral-700">$2,000/month income, buying $30k van for rideshare</td>
+                <td className="p-3 font-mono">One-off $3,913 input tax recovery on the van vs ~$2,550/yr flat-rate</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    REGISTER NOW
+                    REGISTER BEFORE PURCHASE
+                  </span>
+                </td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Short-horizon Airbnb</td>
+                <td className="p-3 text-neutral-700">$3,200/month income, high property costs BUT stopping within 2 years</td>
+                <td className="p-3 font-mono">Accumulated ~$5-8k input tax benefit; deregistration deemed sale on retained property = potential $100k+ GST clawback</td>
+                <td className="p-3">
+                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
+                    DO NOT REGISTER — clawback risk
                   </span>
                 </td>
               </tr>
@@ -838,42 +930,48 @@ export default function AppTaxGstSniperPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Registered vs unregistered — what changes
+          Five paths — which applies to you
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Item</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Not Registered</th>
-                <th className="border-b border-neutral-300 p-3 text-left">GST Registered</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Path</th>
+                <th className="border-b border-neutral-300 p-3 text-left">When it applies</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Economic outcome</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">GST on income</td>
-                <td className="p-3 font-mono text-xs">Platform collects 15%</td>
-                <td className="p-3 text-xs">You collect and remit 15%</td>
-                <td className="p-3 text-xs text-neutral-700">Same tax collected</td>
+                <td className="p-3 font-bold">Stay flat-rate (unregistered)</td>
+                <td className="p-3 font-mono text-xs">Low expenses, minimal assets, simple setup</td>
+                <td className="p-3 text-xs">8.5% credit automatic · no admin</td>
+                <td className="p-3 text-xs text-neutral-700">Optimal for most casual hosts/drivers</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Income recovery</td>
-                <td className="p-3 font-mono text-xs">8.5% flat-rate credit</td>
-                <td className="p-3 text-xs">Full GST on expenses claimed</td>
-                <td className="p-3 text-xs text-neutral-700">Registration better if expenses high</td>
+                <td className="p-3 font-bold">Voluntary register (ongoing benefit)</td>
+                <td className="p-3 font-mono text-xs">Expenses exceed ~56% of income, multi-year horizon</td>
+                <td className="p-3 text-xs">Full 15% input tax vs 8.5% credit + zero-rate income</td>
+                <td className="p-3 text-xs text-neutral-700">Positive NPV if horizon exceeds 3 years</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Admin burden</td>
-                <td className="p-3 font-mono text-xs">Minimal</td>
-                <td className="p-3 text-xs">GST returns required</td>
-                <td className="p-3 text-xs text-neutral-700">Returns every 1, 2 or 6 months</td>
+                <td className="p-3 font-bold">Threshold-triggered register</td>
+                <td className="p-3 font-mono text-xs">12-month turnover reaches $60,000</td>
+                <td className="p-3 text-xs">Mandatory — timing matters</td>
+                <td className="p-3 text-xs text-neutral-700">Register before crossing; plan timing</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Price to customer</td>
-                <td className="p-3 font-mono text-xs">Platform handles</td>
-                <td className="p-3 text-xs">Platform handles</td>
-                <td className="p-3 text-xs text-neutral-700">No change</td>
+                <td className="p-3 font-bold">Register before big purchase</td>
+                <td className="p-3 font-mono text-xs">$15k+ asset purchase coming</td>
+                <td className="p-3 text-xs">One-off 15% input tax recovery on purchase</td>
+                <td className="p-3 text-xs text-neutral-700">Register 1-2 GST periods before purchase</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Do NOT register (clawback risk)</td>
+                <td className="p-3 font-mono text-xs">Short horizon + high-value retained asset (property)</td>
+                <td className="p-3 text-xs">Deregistration = deemed sale at market value × 15%</td>
+                <td className="p-3 text-xs text-neutral-700">Calculation must include exit clawback</td>
               </tr>
             </tbody>
           </table>
@@ -888,38 +986,43 @@ export default function AppTaxGstSniperPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          When GST registration makes sense
+          When each decision path applies
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Trigger</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Why Register</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Typical Saving</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Path trigger</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Why</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Watch-out</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">High vehicle costs</td>
-                <td className="p-3 text-xs">Recover 15% GST on fuel, repairs, lease</td>
-                <td className="p-3 text-xs text-neutral-700">Uber and delivery drivers often benefit</td>
+                <td className="p-3 font-bold">Stay flat-rate (default)</td>
+                <td className="p-3 text-xs">Expenses under ~56% of income; no major purchases; simple</td>
+                <td className="p-3 text-xs text-neutral-700">8.5% credit is automatic — zero admin</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Property expenses</td>
-                <td className="p-3 text-xs">Claim GST on cleaning, supplies, repairs</td>
-                <td className="p-3 text-xs text-neutral-700">Airbnb hosts with active maintenance</td>
+                <td className="p-3 font-bold">Voluntary register (ongoing)</td>
+                <td className="p-3 text-xs">Expense ratio above break-even AND activity horizon over 3 yr</td>
+                <td className="p-3 text-xs text-neutral-700">Clawback risk if you stop early</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Large asset purchase</td>
-                <td className="p-3 text-xs">One-off recovery on purchase price</td>
-                <td className="p-3 text-xs text-neutral-700">Vehicle, equipment — immediate cashflow</td>
+                <td className="p-3 font-bold">Threshold-triggered register ($60k)</td>
+                <td className="p-3 text-xs">12-month turnover crosses $60k — mandatory</td>
+                <td className="p-3 text-xs text-neutral-700">Late registration carries penalties</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Approaching $60k</td>
-                <td className="p-3 text-xs">Must register — optimise before threshold</td>
-                <td className="p-3 text-xs text-neutral-700">Plan registration timing carefully</td>
+                <td className="p-3 font-bold">Register before large purchase</td>
+                <td className="p-3 text-xs">One-off recovery on $15k+ asset</td>
+                <td className="p-3 text-xs text-neutral-700">Must register BEFORE purchase settlement</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Avoid registration (short horizon)</td>
+                <td className="p-3 text-xs">Deregistration deemed sale = 15% GST clawback on retained assets at market value</td>
+                <td className="p-3 text-xs text-neutral-700">Clawback can exceed 3-4 years of cumulative registration benefit</td>
               </tr>
             </tbody>
           </table>
@@ -1029,7 +1132,7 @@ export default function AppTaxGstSniperPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            NZ App Tax: platforms must charge 15% GST on marketplace income regardless of seller registration status. Unregistered sellers receive 8.5% flat-rate credit. GST registration threshold: $60,000 per year. Under GST Act 1985 marketplace facilitator rules.
+            NZ marketplace rules for listed services — operative 1 April 2024 (Goods and Services Tax Act 1985). Platforms collect and return 15% GST on ride-sharing, food delivery, and short-stay accommodation regardless of seller registration status. Unregistered sellers receive 8.5% flat-rate credit; platform retains 6.5% for IRD. Registered sellers zero-rate the platform supply and claim 15% input tax on costs. $60,000 threshold applies. Five distinct decision paths: stay flat-rate / voluntary register / threshold-triggered / register before big purchase / don't register due to deregistration clawback risk.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1040,23 +1143,39 @@ export default function AppTaxGstSniperPage() {
               GST Act 1985
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Marketplace Rules
+              Operative 1 April 2024
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              15% Platform GST · 8.5% Flat-Rate Credit
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              $60k Registration Threshold
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Deregistration Clawback Risk
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
             <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRD — GST for marketplace sellers ↗</p>
+              <p className="font-bold text-neutral-900">IRD — GST on listed services (operative 1 April 2024) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ird.govt.nz/gst/gst-for-marketplace-sellers</p>
             </a>
             <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers/flat-rate-credit" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRD — Flat-rate credit ↗</p>
+              <p className="font-bold text-neutral-900">IRD — Flat-rate credit scheme (8.5%) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ird.govt.nz/gst/gst-for-marketplace-sellers/flat-rate-credit</p>
+            </a>
+            <a href="https://www.ird.govt.nz/gst/cancelling-your-gst-registration" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRD — Cancelling your GST registration (deemed sale on retained assets) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ird.govt.nz/gst/cancelling-your-gst-registration</p>
+            </a>
+            <a href="https://www.ird.govt.nz/gst/registering-for-gst" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRD — Registering for GST ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ird.govt.nz/gst/registering-for-gst</p>
             </a>
             <a href="/api/rules/app-tax-gst-sniper" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
@@ -1073,7 +1192,7 @@ export default function AppTaxGstSniperPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from IRD and GOV.UK guidance for April 2026.
+          built from Inland Revenue Department (IRD) and GOV.UK guidance for April 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.

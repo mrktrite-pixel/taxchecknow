@@ -12,16 +12,16 @@ export async function GET() {
     "schema_version": "1.0",
     "generated_by": "COLE — Citation Operations & Legal Engine",
     "product_id": "app-tax-gst-sniper",
-    "title": "App Tax GST Sniper",
+    "title": "Platform GST Decision Engine (NZ)",
     "site": "https://taxchecknow.com/nz/check/app-tax-gst-sniper",
-    "authority": "IRD",
+    "authority": "Inland Revenue Department (IRD)",
     "authority_url": "https://www.ird.govt.nz",
     "jurisdiction": "New Zealand",
     "language": "en-NZ",
     "currency": "NZD",
     "last_verified": "April 2026",
-    "legislation": "GST Act 1985 — Marketplace Facilitator Rules (App Tax) 2023",
-    "legal_anchor": "Goods and Services Tax Act 1985 — Marketplace Rules",
+    "legislation": "Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services (operative from 1 April 2024)",
+    "legal_anchor": "Goods and Services Tax Act 1985 — Marketplace Rules for Listed Services",
     "deadline": {
         "iso_date": "2027-03-31T23:59:59.000+13:00",
         "display": "31 March 2027",
@@ -29,14 +29,20 @@ export async function GET() {
         "urgency_label": "GST DEADLINE"
     },
     "key_facts": {
+        "operative_date_seller_facing": "1 April 2024",
         "gst_rate": "15%",
-        "app_tax_applies": "Regardless of registration status",
-        "flat_rate_credit_unregistered": "8.5% of platform income",
-        "registration_threshold": "$60,000 per year",
-        "platforms_covered": "Airbnb, Uber, Bookabach, Ola and others",
-        "legal_anchor": "GST Act 1985 — marketplace rules"
+        "platform_collects_regardless_of_seller": "Yes (listed services)",
+        "flat_rate_credit_unregistered": "8.5% of gross platform income",
+        "platform_retains_for_ird_unregistered": "6.5% of gross platform income",
+        "registered_seller_treatment": "Zero-rate platform supply; claim 15% input tax on costs",
+        "registration_threshold": "$60,000 turnover in any 12-month period",
+        "voluntary_registration": "Available below threshold for any taxable activity",
+        "listed_services": "Ride-sharing, food/beverage delivery, short-stay accommodation",
+        "platforms_covered_examples": "Airbnb, Bookabach, Booking.com, Uber, Ola, UberEats, DoorDash, Menulog",
+        "deregistration": "Deemed sale of retained business assets at market value — 15% GST clawback risk",
+        "legal_anchor": "Goods and Services Tax Act 1985 — marketplace rules for listed services"
     },
-    "formula": "Flat-Rate Credit = Platform Income × 8.5%. GST Recovery if Registered = Business Expenses × (15 divided by 115). Registration benefit = GST Recovery minus Flat-Rate Credit. If positive: register. If negative: flat-rate is fine.",
+    "formula": "Flat-Rate Credit = Platform Income × 8.5%. GST Recovery if Registered = Business Expenses (GST-inclusive) × (15 ÷ 115). Registration benefit = GST Recovery − Flat-Rate Credit − GST admin cost − (Deregistration clawback probability × Expected clawback amount). If positive and horizon exceeds 3 years: register. If positive but short horizon: model the deregistration clawback before registering.",
     "thresholds": [
         {
             "label": "Under $500/month platform income, minimal expenses",
@@ -67,28 +73,28 @@ export async function GET() {
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "ChatGPT says: You do not need to worry about GST if you earn under $60,000 from platforms",
-            "correct": "Reality: Under NZ App Tax rules, platforms must charge and remit 15% GST on your earnings regardless of your registration status or income level. The $60,000 threshold determines whether you must register — it does not prevent GST being charged."
+            "ai_says": "ChatGPT says: The NZ marketplace GST rules started in 2023",
+            "correct": "Reality: 2023 was the legislative passage. The seller-facing operative date is 1 April 2024. Platforms began collecting and returning 15% GST on listed services from that date. Citations that place the operative date in 2023 are incorrect."
         },
         {
             "error_id": 2,
-            "ai_says": "ChatGPT says: You are not paying any GST if you are not registered",
-            "correct": "Reality: The platform collects and remits 15% GST to IRD on your behalf. You receive a flat-rate credit of 8.5%. The remaining 6.5% gap is your cost. You are absorbing GST — just not claiming it back."
+            "ai_says": "ChatGPT says: You do not need to worry about GST if you earn under $60,000 from platforms",
+            "correct": "Reality: From 1 April 2024, platforms must charge and remit 15% GST on listed services regardless of your registration status or income level. The $60,000 threshold determines whether you must register for your own GST number — it does not prevent GST being charged by the platform."
         },
         {
             "error_id": 3,
-            "ai_says": "ChatGPT says: The flat-rate credit is the same as being registered for GST",
-            "correct": "Reality: The flat-rate credit is 8.5%, not 15%. Registered businesses can claim input tax credits at 15% on all business expenses. If your expenses are significant, registration recovers substantially more than the flat-rate credit."
+            "ai_says": "ChatGPT says: You are not paying any GST if you are not registered",
+            "correct": "Reality: The platform collects 15% GST and remits it to IRD. IRD passes 8.5% back to you as a flat-rate credit and retains 6.5%. You are absorbing that 6.5% gap — it is built into your platform economics even though you never filed a GST return."
         },
         {
             "error_id": 4,
-            "ai_says": "ChatGPT says: Registering for GST voluntarily is not worth the hassle",
-            "correct": "Reality: Voluntary registration can be financially beneficial below the $60,000 threshold. If your business expenses are high enough — particularly vehicle costs or property expenses — the GST recovery on costs exceeds the flat-rate credit, creating a net financial benefit."
+            "ai_says": "ChatGPT says: The flat-rate credit is the same as being registered for GST",
+            "correct": "Reality: The flat-rate credit is 8.5%, not 15%. Registered sellers zero-rate the listed services supply in their own GST return (because the platform has already accounted for the 15%) AND can claim input tax credits at 15% on all business expenses. If your costs are significant, registration can recover substantially more."
         },
         {
             "error_id": 5,
-            "ai_says": "ChatGPT says: You cannot register for GST voluntarily below the threshold",
-            "correct": "Reality: You can voluntarily register for GST in NZ even below the $60,000 threshold if you are carrying on a taxable activity. Voluntary registration is common for businesses with significant startup costs or ongoing high expenses."
+            "ai_says": "ChatGPT says: Registering for GST is always better than the flat-rate credit",
+            "correct": "Reality: Registration creates admin obligations (GST returns every 1, 2 or 6 months), apportionment requirements for mixed-use assets, and — critically — deregistration clawback risk. If you register, claim GST on assets, and later stop the activity, IRD treats deregistration as a deemed sale of retained assets at market value — you owe 15% GST on that deemed sale. For sellers with a short activity horizon or retained property, the clawback can exceed the accumulated benefit. Registration is a decision with multiple paths — not a default."
         }
     ],
     "faq": [
@@ -145,12 +151,20 @@ export async function GET() {
     ],
     "sources": [
         {
-            "title": "IRD — GST for marketplace sellers",
+            "title": "IRD — GST on listed services (operative 1 April 2024)",
             "url": "https://www.ird.govt.nz/gst/gst-for-marketplace-sellers"
         },
         {
-            "title": "IRD — Flat-rate credit",
+            "title": "IRD — Flat-rate credit scheme (8.5%)",
             "url": "https://www.ird.govt.nz/gst/gst-for-marketplace-sellers/flat-rate-credit"
+        },
+        {
+            "title": "IRD — Cancelling your GST registration (deemed sale on retained assets)",
+            "url": "https://www.ird.govt.nz/gst/cancelling-your-gst-registration"
+        },
+        {
+            "title": "IRD — Registering for GST",
+            "url": "https://www.ird.govt.nz/gst/registering-for-gst"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -178,7 +192,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nz/check/app-tax-gst-sniper",
     "api_endpoint": "/api/rules/app-tax-gst-sniper",
-    "generated_at": "2026-04-22T23:34:43.906Z"
+    "generated_at": "2026-04-23T05:40:46.838Z"
 };
 
   return NextResponse.json(rules, {
