@@ -208,7 +208,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad",
     "api_endpoint": "/api/rules/residency-risk-index",
-    "generated_at": "2026-04-23T07:07:46.369Z"
+    "generated_at": "2026-04-23T07:12:22.577Z"
 };
 
   return NextResponse.json(rules, {
