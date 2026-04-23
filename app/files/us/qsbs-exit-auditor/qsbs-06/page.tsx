@@ -49,7 +49,7 @@ export default function QsbsExitAuditorFile06() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">United States · QSBS Exit Auditor</span>
+            <span className="hidden sm:block">United States · QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function QsbsExitAuditorFile06() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/us/qsbs-exit-auditor/qsbs-05" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 05: Your Accountant Brief</a></div>
+          <div><a href="/files/us/qsbs-exit-auditor/qsbs-05" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 05: Your Tax Attorney Brief — QSBS</a></div>
           <span className="font-mono">File 06 of 8</span>
-          <div><a href="/files/us/qsbs-exit-auditor/qsbs-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 07: Entity Repair Plan →</a></div>
+          <div><a href="/files/us/qsbs-exit-auditor/qsbs-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 07: Multi-Shareholder Cap Stacking →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function QsbsExitAuditorFile06() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 IRS · IRC Section 1202
+              🇬🇧 IRS · IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -87,7 +87,7 @@ export default function QsbsExitAuditorFile06() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 TAX DEADLINE: April 15, 2026
+              🔴 FILING + EXIT PLANNING: April 15, 2026
             </span>
             <a href="/us/check/qsbs-exit-auditor"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -96,12 +96,12 @@ export default function QsbsExitAuditorFile06() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            QSBS Exit Auditor · File 06 of 8
+            QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Trust Stacking Strategy
+            Exit Timing Optimisation (Post-2025)
           </h1>
-          <p className="text-neutral-500 text-sm">Multiply your QSBS exclusion beyond $15M using spouse and trust strategies.</p>
+          <p className="text-neutral-500 text-sm">When to exit for maximum QSBS benefit under the new partial exclusion rules.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function QsbsExitAuditorFile06() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>QSBS Stacking — How It Works</h2><p>Each taxpayer gets their own QSBS exclusion. By having multiple taxpayers hold qualifying shares, you multiply the total tax-free exit value.</p><div class="action-box"><h3>Stacking Example</h3><p>Founder: $15M exclusion</p><p>Spouse (qualifying shares): $15M exclusion</p><p>Irrevocable trust 1: $15M exclusion</p><p>Total: $45M+ tax-free exit</p></div><div class="warning-box"><strong>Timing is critical:</strong> Shares must be transferred to trusts before exit. Transfers during due diligence or after term sheet signing may not qualify. Plan 12+ months in advance.</div>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Exit Timing Optimisation — Post-July 2025 Stock</h2><p>For stock acquired on or after July 4, 2025, holding period milestones are high-value:</p><table><tr><th>Holding</th><th>Exclusion</th><th>Tax on $5M gain</th><th>Savings vs selling earlier</th></tr><tr><td>Under 3 years</td><td>0%</td><td>$1,190,000</td><td>—</td></tr><tr><td>3 years</td><td>50%</td><td>$595,000</td><td>Save $595k by waiting to 3yr</td></tr><tr><td>4 years</td><td>75%</td><td>$297,500</td><td>Save $297k more by waiting to 4yr</td></tr><tr><td>5 years</td><td>100%</td><td>$0</td><td>Save $297k more by waiting to 5yr</td></tr></table><h3>Decision Framework</h3><ul><li>Consider opportunity cost of waiting vs tax savings</li><li>Company-specific risk (deal certainty, market conditions) — waiting is not always better</li><li>Partial sale possibility — sell some now at current %, hold rest to next milestone</li><li>Personal liquidity needs — immediate cash may outweigh tax optimisation</li></ul><h3>Partial Sale Strategy</h3><p>If you need some liquidity before 5 years, consider selling the minimum required. Hold the rest to hit higher exclusion % at 4 or 5 years. Model: sell 30% at year 3 (50% exclusion), hold 70% to year 5 (100% exclusion). Blended tax rate dramatically lower than selling all at year 3.</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function QsbsExitAuditorFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your QSBS Eligibility Verdict</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Gate-by-Gate QSBS Qualification Report</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function QsbsExitAuditorFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">Original Issuance Verification</span>
+                <span className="text-sm font-semibold text-neutral-950">Pre-2025 vs Post-2025 Regime Comparison</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function QsbsExitAuditorFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Active Business Test Audit</span>
+                <span className="text-sm font-semibold text-neutral-950">Mixed LLC / C-Corp Founder Equity</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +157,7 @@ export default function QsbsExitAuditorFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">83(b) Election Audit</span>
+                <span className="text-sm font-semibold text-neutral-950">§1045 Rollover Strategy</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -166,7 +166,7 @@ export default function QsbsExitAuditorFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">05</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Accountant Brief</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Tax Attorney Brief — QSBS</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -174,7 +174,7 @@ export default function QsbsExitAuditorFile06() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">06</span>
-                <span className="text-sm font-semibold text-white">Trust Stacking Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-white">Exit Timing Optimisation (Post-2025)<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -183,7 +183,7 @@ export default function QsbsExitAuditorFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Entity Repair Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Multi-Shareholder Cap Stacking<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -192,7 +192,7 @@ export default function QsbsExitAuditorFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">08</span>
-                <span className="text-sm font-semibold text-neutral-950">Exit Timing Optimisation<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">State Conformity and California Exit Planning<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -222,10 +222,10 @@ export default function QsbsExitAuditorFile06() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/us/check/qsbs-exit-auditor" className="hover:text-neutral-900 transition">
-              ← Back to QSBS Exit Auditor
+              ← Back to QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax
             </a>
-            <a href="https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Qualified Small Business Stock (Section 1202) ↗</a>
-            <a href="https://www.irs.gov/publications/p550" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Publication 550: Investment Income and Expenses ↗</a>
+            <a href="https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Partial exclusion for gain from certain small business stock (Section 1202) ↗</a>
+            <a href="https://www.law.cornell.edu/uscode/text/26/1202" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRC Section 1202 ↗</a>
           </div>
         </div>
       </footer>

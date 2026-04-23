@@ -12,7 +12,7 @@ export async function GET() {
     "schema_version": "1.0",
     "generated_by": "COLE — Citation Operations & Legal Engine",
     "product_id": "qsbs-exit-auditor",
-    "title": "QSBS Exit Auditor",
+    "title": "QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax",
     "site": "https://taxchecknow.com/us/check/qsbs-exit-auditor",
     "authority": "IRS",
     "authority_url": "https://www.irs.gov",
@@ -20,147 +20,135 @@ export async function GET() {
     "language": "en-US",
     "currency": "USD",
     "last_verified": "April 2026",
-    "legislation": "IRC Section 1202 — Qualified Small Business Stock (QSBS) Exclusion",
-    "legal_anchor": "IRC Section 1202",
+    "legislation": "Internal Revenue Code §1202 — Partial exclusion for gain from certain small business stock · IRC §1202(c) definition of qualified small business stock · IRC §1202(d)(1) gross assets test ($50M limit) · IRC §1202(e) active business / excluded business test · IRC §1202(e)(3) list of excluded businesses (professional services, finance, hospitality, farming) · Pre-July 4, 2025: 5-year hold, 100% exclusion, cap greater of $10M or 10× basis · Post-July 4, 2025 (One Big Beautiful Bill Act): partial exclusion 50% at 3 years / 75% at 4 years / 100% at 5 years, cap greater of $15M or 10× basis · Related: IRC §1045 rollover of QSBS gain into new QSBS within 60 days · Combined federal rate on taxable gain: 20% long-term capital gains + 3.8% NIIT = 23.8%",
+    "legal_anchor": "IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes",
     "deadline": {
-        "iso_date": "2026-04-15T23:59:59.000-05:00",
+        "iso_date": "2026-04-15T23:59:59.000-04:00",
         "display": "April 15, 2026",
-        "description": "US Federal Tax Filing Deadline — QSBS gain reported on exit year return",
-        "urgency_label": "TAX DEADLINE"
+        "description": "April 15, 2026 — federal tax filing deadline. QSBS exclusion must be properly claimed on Form 1040 Schedule D with appropriate documentation. Late or incorrect claims create audit exposure.",
+        "urgency_label": "FILING + EXIT PLANNING"
     },
     "key_facts": {
-        "exclusion_cap": "$15M or 10× basis",
-        "entity_type": "C-Corporation only",
-        "holding_period": "5 years minimum",
-        "active_business_test": "≥80% qualified use throughout",
-        "gross_assets_at_issuance": "≤$50M",
-        "legal_anchor": "IRC Section 1202"
+        "legal_anchor": "IRC §1202",
+        "pre_july_4_2025_exclusion": "100% at 5 years (all-or-nothing)",
+        "pre_2025_cap": "Greater of $10M or 10× basis",
+        "post_july_4_2025_exclusion_obbba": "50% at 3yr, 75% at 4yr, 100% at 5yr",
+        "post_2025_cap": "Greater of $15M or 10× basis",
+        "entity_requirement": "Domestic C-corporation at issuance",
+        "acquisition_requirement": "Original issuance — secondary market fails",
+        "gross_assets_threshold": "$50M at issuance and immediately after",
+        "excluded_businesses": "Professional services, finance, hospitality, farming",
+        "combined_federal_rate_on_non_qsbs_gain": "23.8% (20% + 3.8% NIIT)",
+        "related_deferral_provision": "§1045 rollover (60 days into new QSBS)"
     },
-    "formula": "Tax Savings = QSBS Eligible Gain × Capital Gains Rate. At 23.8%: $15M × 0.238 = $3,570,000 saved. Stacking: Founder ($15M) + Spouse ($15M) + Trust ($15M) = $45M+ exclusion.",
+    "formula": "QSBS qualification test: (Domestic C-corp at issuance) AND (Original issuance — not secondary) AND (Gross assets under $50M at issuance) AND (Qualified active business — not excluded) AND (Held by original recipient). Exclusion percentage: Pre-July 2025 — 100% at 5 years, 0% if under 5 years. Post-July 2025 — 50% at 3 years, 75% at 4 years, 100% at 5 years. Cap: Pre-2025 greater of $10M or 10× basis. Post-2025 greater of $15M or 10× basis. Federal tax on non-excluded gain: 20% long-term capital gains + 3.8% NIIT = 23.8% combined.",
     "thresholds": [
         {
-            "label": "C-Corp, original issuance, 5+ year hold, active business",
+            "label": "All 7 gates pass + 5+ years held + pre-July 2025 issuance",
             "value": 1,
             "status": "clear"
         },
         {
-            "label": "C-Corp, original issuance, approaching 5 years",
+            "label": "All 7 gates pass + 5+ years held + post-July 2025 issuance ($15M cap)",
             "value": 2,
+            "status": "clear"
+        },
+        {
+            "label": "All gates pass + 3-5 years + post-2025 (partial 50% or 75% exclusion)",
+            "value": 3,
             "status": "approaching"
         },
         {
-            "label": "C-Corp but purchased secondary or inherited",
-            "value": 3,
-            "status": "fail"
-        },
-        {
-            "label": "S-Corp, LLC or partnership",
+            "label": "One gate uncertain — verify before exit",
             "value": 4,
-            "status": "fail"
+            "status": "trap"
         },
         {
-            "label": "Not sure of my entity type or acquisition method",
+            "label": "Structural gate fails (non-C-corp, secondary, excluded business, etc)",
             "value": 5,
-            "status": "risk"
+            "status": "deep_trap"
         }
     ],
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "ChatGPT says: QSBS applies to all startup founders",
-            "correct": "Reality: Only C-Corporation shareholders with original issuance stock qualify. S-Corp, LLC, and partnership interests do not qualify. Service businesses in law, finance and consulting are excluded."
+            "ai_says": "ChatGPT says: My startup stock qualifies for QSBS automatically",
+            "correct": "Reality: QSBS requires the company to have been a C-CORPORATION at the time of issuance, with gross assets under $50 million, operating in a QUALIFIED BUSINESS. Many startup founders hold a MIX of qualifying and non-qualifying shares — equity issued when the company was an LLC or S-corp does not qualify even if later converted. Qualification must be confirmed share-by-share, not assumed."
         },
         {
             "error_id": 2,
-            "ai_says": "ChatGPT says: Any stock under $50M qualifies",
-            "correct": "Reality: The $50M gross assets test applies at the time of issuance only. The company must also pass the active business test (≥80%) continuously throughout the holding period."
+            "ai_says": "ChatGPT says: I bought shares in a promising startup so they qualify",
+            "correct": "Reality: QSBS requires ORIGINAL ISSUANCE — shares acquired directly from the company in exchange for money, property, or services. Shares purchased from another shareholder on the secondary market, through a broker, or on a platform like Forge or EquityZen do NOT qualify. The original holder may have had qualifying shares. The secondary buyer does not."
         },
         {
             "error_id": 3,
-            "ai_says": "ChatGPT says: QSBS is automatic after 5 years",
-            "correct": "Reality: Eligibility must be maintained throughout the holding period. A company that drifts into a service business or fails the active business test loses QSBS status even if held for 10 years."
+            "ai_says": "ChatGPT says: QSBS gives you a partial exclusion if you don't fully qualify",
+            "correct": "Reality: Structural failures (wrong entity, secondary purchase, gross assets exceeded, excluded business) result in ZERO exclusion — not a reduced exclusion. The only partial exclusion available is the TIMING-based partial under post-July 4, 2025 rules: 50% at 3 years, 75% at 4 years. These are timing partials — not qualification partials."
         },
         {
             "error_id": 4,
-            "ai_says": "ChatGPT says: Secondary share purchases qualify for QSBS",
-            "correct": "Reality: QSBS requires original issuance — stock acquired directly from the company. Shares purchased from other shareholders (secondary market) do not qualify regardless of entity type or holding period."
-        },
-        {
-            "error_id": 5,
-            "ai_says": "ChatGPT says: The QSBS limit is $10M",
-            "correct": "Reality: The exclusion cap is $15,000,000 or 10× the taxpayer's adjusted basis in the stock, whichever is greater. For high-basis early investors, the 10× rule often exceeds $15M."
+            "ai_says": "ChatGPT says: My company is in tech so it automatically qualifies",
+            "correct": "Reality: The active business requirement excludes certain SERVICE-BASED businesses regardless of how they describe themselves. Professional services (law, medicine, finance, consulting), financial services, hospitality, and farming are excluded under IRC §1202(e)(3). A technology company that primarily provides CONSULTING services may not qualify. The test is the NATURE of the business — not the industry label."
         }
     ],
     "faq": [
         {
             "id": 1,
-            "question": "What is QSBS?",
-            "answer": "Qualified Small Business Stock (QSBS) under IRC Section 1202 allows eligible shareholders to exclude up to $15M (or 10× basis) in capital gains from federal tax when they sell qualifying shares in a qualified small business."
+            "question": "What is Section 1202 QSBS?",
+            "answer": "Section 1202 of the Internal Revenue Code provides a federal capital gains tax exclusion on the sale of Qualified Small Business Stock. For pre-July 4, 2025 stock held 5+ years: 100% exclusion up to $10M or 10× basis. For post-July 4, 2025 stock: partial exclusion at 3 years (50%) and 4 years (75%), with 100% at 5 years and a higher $15M cap under OBBBA."
         },
         {
             "id": 2,
-            "question": "What companies qualify for QSBS?",
-            "answer": "C-Corporations with gross assets not exceeding $50M at the time of stock issuance, engaged in a qualified trade or business. Professional service businesses (law, finance, health, consulting, athletics, performing arts, hospitality) are excluded."
+            "question": "What are the qualification requirements?",
+            "answer": "Five structural tests and one timing test. Structural (all must pass): (1) domestic C-corporation at issuance, (2) original issuance — not secondary market, (3) gross assets under $50M at issuance, (4) qualified active business — not excluded per §1202(e)(3), (5) held by original recipient. Timing: minimum 5 years for full exclusion (or 3/4 years for partial post-2025). All structural gates are binary — any failure eliminates the entire exclusion."
         },
         {
             "id": 3,
-            "question": "Does my LLC qualify for QSBS?",
-            "answer": "No. QSBS only applies to C-Corporation stock. LLCs, S-Corps, and partnerships do not qualify. If you have an LLC, you cannot retroactively claim QSBS on shares issued before converting to a C-Corp."
+            "question": "What businesses are excluded from QSBS?",
+            "answer": "IRC §1202(e)(3) excludes: professional services (law, health, engineering, architecture, accounting, actuarial science, performing arts, consulting, athletics, financial services, brokerage services), financial services broadly, any business where the principal asset is the reputation or skill of employees, hotels, restaurants, farming, extraction of minerals/oil/gas, and banking/insurance/investing. A business in an excluded category fails regardless of other qualifications."
         },
         {
             "id": 4,
-            "question": "What is the 83(b) election and why does it matter for QSBS?",
-            "answer": "An 83(b) election allows you to start your QSBS holding period at the grant date of unvested stock, rather than when it vests. It must be filed with the IRS within 30 days of the stock grant. Missing this window can delay when the 5-year clock starts."
+            "question": "What if my stock qualifies for partial exclusion under post-2025 rules?",
+            "answer": "Under the post-OBBBA rules (stock acquired on or after July 4, 2025), partial exclusions apply at 3 years (50%) and 4 years (75%). The 50% and 75% values are applied to the lesser of the gain or the cap ($15M or 10× basis). Example: $8M gain, post-2025 stock, 4 years held = $6M excluded (75%), $2M taxable × 23.8% = $476k tax. Waiting to 5 years = $0 tax."
         },
         {
             "id": 5,
-            "question": "Can I stack QSBS exclusions?",
-            "answer": "Yes. Each taxpayer gets their own exclusion. A founder and their spouse can each hold qualifying shares and each claim up to $15M exclusion — totaling $30M. Properly structured trusts can add additional exclusions. This stacking strategy requires careful planning."
+            "question": "What is the §1045 rollover?",
+            "answer": "IRC §1045 allows deferral of QSBS gain by rolling it into new QSBS within 60 days of sale, provided the taxpayer held the original QSBS for more than 6 months. Useful when: (a) you sell QSBS early (before 5 years) and want to preserve QSBS potential, (b) your gain exceeds the cap and you want to defer the excess. The rollover defers tax — does not eliminate it — but preserves future QSBS exclusion eligibility if the new stock qualifies and is held 5+ years."
         },
         {
             "id": 6,
-            "question": "What is the active business test?",
-            "answer": "At least 80% of the company's assets (by value) must be used in the active conduct of a qualified trade or business throughout the holding period. Passive assets, investment portfolios and real estate that does not qualify can cause the company to fail this test."
+            "question": "Does my state conform to federal QSBS?",
+            "answer": "Most states conform to federal §1202, but several do not. California specifically does NOT exclude QSBS gain from state tax — expect California tax on the full gain regardless of federal exclusion. Pennsylvania, New Jersey, Alabama, and Mississippi have partial conformity issues. Check your state's conformity to §1202 before assuming the federal exclusion applies at state level. California exit planning often involves residency planning to break California tax residency before exit."
         },
         {
             "id": 7,
-            "question": "What happens if I sell before 5 years?",
-            "answer": "QSBS exclusion is not available. However, if you sell after 6 months but before 5 years, you may be able to roll the gain into another QSBS investment within 60 days under the Section 1045 rollover provision."
+            "question": "Can I stack QSBS caps across family members?",
+            "answer": "Yes. Each shareholder has their own §1202 cap. A founder who gifts QSBS to a spouse or children before exit creates additional caps — each recipient can use their own $10M or $15M cap. Restrictions: gift must be a bona fide transfer (not a sham), holding period tacks for §1202 purposes (recipient inherits original holder's holding period), and gift tax may apply (but marital deduction is unlimited between spouses). Requires careful planning — engage a tax attorney."
         },
         {
             "id": 8,
-            "question": "Does QSBS apply to state taxes?",
-            "answer": "It depends on the state. California does not conform to Section 1202 — QSBS gains are fully taxable in California at the state level. Most other states follow the federal treatment, but you should verify for your specific state."
-        },
-        {
-            "id": 9,
-            "question": "What records do I need to prove QSBS eligibility?",
-            "answer": "You need: the original stock certificate or cap table entry showing original issuance date, documentation that the company was a C-Corp with ≤$50M gross assets at issuance, evidence of active business conduct throughout the hold, and the annual active business test records."
-        },
-        {
-            "id": 10,
-            "question": "What is the Section 1045 rollover?",
-            "answer": "If you sell QSBS stock held for at least 6 months but less than 5 years, you can defer (not exclude) the gain by rolling it into new QSBS stock within 60 days. The new stock inherits the original holding period, potentially reaching the 5-year mark for full exclusion."
-        },
-        {
-            "id": 11,
-            "question": "Is there a limit on how many times I can use QSBS?",
-            "answer": "No. Each investment in a qualifying company creates its own QSBS position with its own $15M (or 10× basis) exclusion. Serial entrepreneurs can use QSBS on multiple exits — each one up to the cap."
-        },
-        {
-            "id": 12,
-            "question": "Can S-Corp stock be converted to QSBS-eligible C-Corp stock?",
-            "answer": "Converting an S-Corp to a C-Corp resets the clock — shares issued before the conversion do not qualify. Shares issued after conversion to C-Corp status can qualify if all other tests are met. Early conversion is critical for founders planning future QSBS eligibility."
+            "question": "What documentation do I need for QSBS?",
+            "answer": "Key documents: (1) §1202 attestation letter from the issuing company confirming qualification at issuance, (2) cap table entries showing your specific shares and issuance date, (3) company formation documents and any entity conversion records (LLC to C-corp), (4) annual balance sheets around issuance date showing gross assets, (5) business activity documentation for qualified business test, (6) exercise records for options (exercise date = QSBS start date for option-acquired shares), (7) Schedule D and Form 8949 at exit showing exclusion claimed."
         }
     ],
     "sources": [
         {
-            "title": "IRS — Qualified Small Business Stock (Section 1202)",
+            "title": "IRS — Partial exclusion for gain from certain small business stock (Section 1202)",
             "url": "https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock"
         },
         {
-            "title": "IRS — Publication 550: Investment Income and Expenses",
-            "url": "https://www.irs.gov/publications/p550"
+            "title": "IRC Section 1202",
+            "url": "https://www.law.cornell.edu/uscode/text/26/1202"
+        },
+        {
+            "title": "IRC Section 1045 (rollover of QSBS gain)",
+            "url": "https://www.law.cornell.edu/uscode/text/26/1045"
+        },
+        {
+            "title": "IRS Form 8949 (Sales and Other Dispositions of Capital Assets)",
+            "url": "https://www.irs.gov/forms-pubs/about-form-8949"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -169,17 +157,17 @@ export async function GET() {
     ],
     "products": {
         "tier1": {
-            "name": "Your Original Issuance Audit",
+            "name": "Your QSBS Audit Pack",
             "price": 67,
             "currency": "USD",
-            "description": "Will you legally pay $0 tax on your exit — or lose millions?",
+            "description": "Gate-by-gate qualification analysis + regime comparison + exit tax math",
             "url": "https://taxchecknow.com/us/check/qsbs-exit-auditor/success/assess"
         },
         "tier2": {
-            "name": "Your Exclusion Stacker Blueprint",
+            "name": "Your QSBS Exit Strategy Pack",
             "price": 147,
             "currency": "USD",
-            "description": "Maximise your tax-free exit value with stacking and restructuring strategies",
+            "description": "Full exit strategy: timing + §1045 + basis + multi-shareholder stacking",
             "url": "https://taxchecknow.com/us/check/qsbs-exit-auditor/success/plan"
         }
     },
@@ -188,7 +176,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/qsbs-exit-auditor",
     "api_endpoint": "/api/rules/qsbs-exit-auditor",
-    "generated_at": "2026-04-22T15:02:32.219Z"
+    "generated_at": "2026-04-23T04:05:33.039Z"
 };
 
   return NextResponse.json(rules, {

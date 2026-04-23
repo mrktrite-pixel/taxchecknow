@@ -8,57 +8,57 @@ const FILES = [
   {
     "num": "01",
     "slug": "qsbs-01",
-    "name": "Your QSBS Eligibility Verdict",
-    "desc": "Your exact QSBS qualification status — entity, acquisition, hold period, active business.",
+    "name": "Your Gate-by-Gate QSBS Qualification Report",
+    "desc": "Pass/fail analysis of each of the seven QSBS gates for your specific stock.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "qsbs-02",
-    "name": "Original Issuance Verification",
-    "desc": "Confirm your stock was acquired at original issuance — the most common disqualification.",
+    "name": "Pre-2025 vs Post-2025 Regime Comparison",
+    "desc": "How the OBBBA 2025 amendments changed QSBS for stock acquired on or after July 4, 2025.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "qsbs-03",
-    "name": "Active Business Test Audit",
-    "desc": "Verify the company maintained ≥80% qualified use throughout your holding period.",
+    "name": "Mixed LLC / C-Corp Founder Equity",
+    "desc": "How to identify qualifying vs non-qualifying shares when your company started as an LLC.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "qsbs-04",
-    "name": "83(b) Election Audit",
-    "desc": "Confirm all 83(b) elections were filed within 30 days — critical for holding period.",
+    "name": "§1045 Rollover Strategy",
+    "desc": "How to defer QSBS gain into new QSBS when you need liquidity before 5 years.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "qsbs-05",
-    "name": "Your Accountant Brief",
-    "desc": "Print and take to your exit planning meeting — QSBS questions your CPA must answer.",
+    "name": "Your Tax Attorney Brief — QSBS",
+    "desc": "5 questions to ask your tax attorney before any QSBS exit.",
     "tier": 1
   },
   {
     "num": "06",
     "slug": "qsbs-06",
-    "name": "Trust Stacking Strategy",
-    "desc": "Multiply your QSBS exclusion beyond $15M using spouse and trust strategies.",
+    "name": "Exit Timing Optimisation (Post-2025)",
+    "desc": "When to exit for maximum QSBS benefit under the new partial exclusion rules.",
     "tier": 2
   },
   {
     "num": "07",
     "slug": "qsbs-07",
-    "name": "Entity Repair Plan",
-    "desc": "What to do if your company is an S-Corp, LLC or needs restructuring for QSBS.",
+    "name": "Multi-Shareholder Cap Stacking",
+    "desc": "How to use family member caps to extend your QSBS exclusion beyond the individual limit.",
     "tier": 2
   },
   {
     "num": "08",
     "slug": "qsbs-08",
-    "name": "Exit Timing Optimisation",
-    "desc": "When to exit for maximum QSBS benefit — and what to do if you are under 5 years.",
+    "name": "State Conformity and California Exit Planning",
+    "desc": "How state tax treatment varies — especially critical for California residents.",
     "tier": 2
   }
 ];
@@ -79,7 +79,7 @@ export default function SuccessPlan() {
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-04-15T23:59:59.000-05:00").getTime() - Date.now()) / 86_400_000
+    (new Date("2026-04-15T23:59:59.000-04:00").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -121,18 +121,36 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const qsbs_entity = sessionStorage.getItem("qsbs-exit-auditor_qsbs_entity") || "ccorp";
-      const qsbs_acquisition = sessionStorage.getItem("qsbs-exit-auditor_qsbs_acquisition") || "original";
-      const qsbs_hold = sessionStorage.getItem("qsbs-exit-auditor_qsbs_hold") || "6";
-      const qsbs_status = sessionStorage.getItem("qsbs-exit-auditor_qsbs_status") || "qualified";
+      const entity_type = sessionStorage.getItem("qsbs-exit-auditor_entity_type") || "c_corp";
+      const acquisition = sessionStorage.getItem("qsbs-exit-auditor_acquisition") || "original";
+      const gross_assets = sessionStorage.getItem("qsbs-exit-auditor_gross_assets") || "under_50m";
+      const business_type = sessionStorage.getItem("qsbs-exit-auditor_business_type") || "tech";
+      const acquisition_date = sessionStorage.getItem("qsbs-exit-auditor_acquisition_date") || "pre_2025";
+      const holding_period = sessionStorage.getItem("qsbs-exit-auditor_holding_period") || "over_5";
+      const exit_value = sessionStorage.getItem("qsbs-exit-auditor_exit_value") || "5m_to_15m";
+      const qualification_status = sessionStorage.getItem("qsbs-exit-auditor_qualification_status") || "QUALIFIED_PRE2025";
+      const exclusion_pct = sessionStorage.getItem("qsbs-exit-auditor_exclusion_pct") || "1.00";
+      const tax_on_gain = sessionStorage.getItem("qsbs-exit-auditor_tax_on_gain") || "0";
+      const savings = sessionStorage.getItem("qsbs-exit-auditor_savings") || "2380000";
+      const status = sessionStorage.getItem("qsbs-exit-auditor_status") || "QUALIFIED — PRE-2025";
+      const tier = sessionStorage.getItem("qsbs-exit-auditor_tier") || "67";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "qsbs_entity": qsbs_entity,
-        "qsbs_acquisition": qsbs_acquisition,
-        "qsbs_hold": qsbs_hold,
-        "qsbs_status": qsbs_status,
-      }).some(v => v && v !== "ccorp");
+        "entity_type": entity_type,
+        "acquisition": acquisition,
+        "gross_assets": gross_assets,
+        "business_type": business_type,
+        "acquisition_date": acquisition_date,
+        "holding_period": holding_period,
+        "exit_value": exit_value,
+        "qualification_status": qualification_status,
+        "exclusion_pct": exclusion_pct,
+        "tax_on_gain": tax_on_gain,
+        "savings": savings,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "c_corp");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -144,12 +162,21 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "Entity type": qsbs_entity,
-        "Acquisition type": qsbs_acquisition,
-        "Holding years": qsbs_hold,
-        "QSBS status": qsbs_status,
+        "Entity at issuance": entity_type,
+        "Acquisition method": acquisition,
+        "Gross assets at issuance": gross_assets,
+        "Business type": business_type,
+        "Acquisition date": acquisition_date,
+        "Holding period": holding_period,
+        "Exit value band": exit_value,
+        "QSBS qualification status": qualification_status,
+        "Exclusion percentage": exclusion_pct,
+        "Federal tax on gain": tax_on_gain,
+        "Tax savings vs no QSBS": savings,
+        "Verdict status": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","eligibilityVerdict","exclusionAmount","taxSaving","stackingOpportunity","entityRisk","actions","weekPlan","accountantQuestions"],
+          fields: ["qualificationStatusSummary","gateByGateAnalysis","regimeIdentification","timingOptimisationAnalysis","section1045RolloverPath","multiShareholderCapStacking","stateConformityReview","californiaResidencyPlanning","mixedEquityAnalysis","attestationLetterStrategy","taxAttorneyCoordinationBrief"],
         }),
       });
       const data = await res.json();
@@ -159,12 +186,17 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        eligibilityVerdict: "Your personalised eligibilityVerdict is being prepared — please refresh in a moment.",
-        exclusionAmount: "Your personalised exclusionAmount is being prepared — please refresh in a moment.",
-        taxSaving: "Your personalised taxSaving is being prepared — please refresh in a moment.",
-        stackingOpportunity: "Your personalised stackingOpportunity is being prepared — please refresh in a moment.",
-        entityRisk: "Your personalised entityRisk is being prepared — please refresh in a moment.",
+        qualificationStatusSummary: "Your personalised qualificationStatusSummary is being prepared — please refresh in a moment.",
+        gateByGateAnalysis: "Your personalised gateByGateAnalysis is being prepared — please refresh in a moment.",
+        regimeIdentification: "Your personalised regimeIdentification is being prepared — please refresh in a moment.",
+        timingOptimisationAnalysis: "Your personalised timingOptimisationAnalysis is being prepared — please refresh in a moment.",
+        section1045RolloverPath: "Your personalised section1045RolloverPath is being prepared — please refresh in a moment.",
+        multiShareholderCapStacking: "Your personalised multiShareholderCapStacking is being prepared — please refresh in a moment.",
+        stateConformityReview: "Your personalised stateConformityReview is being prepared — please refresh in a moment.",
+        californiaResidencyPlanning: "Your personalised californiaResidencyPlanning is being prepared — please refresh in a moment.",
+        mixedEquityAnalysis: "Your personalised mixedEquityAnalysis is being prepared — please refresh in a moment.",
+        attestationLetterStrategy: "Your personalised attestationLetterStrategy is being prepared — please refresh in a moment.",
+        taxAttorneyCoordinationBrief: "Your personalised taxAttorneyCoordinationBrief is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRS position based on my answers?",
           "What is the single most important action I should take before April 15, 2026?",
@@ -179,10 +211,19 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const qsbs_entity = sessionStorage.getItem("qsbs-exit-auditor_qsbs_entity") || "ccorp";
-    const qsbs_acquisition = sessionStorage.getItem("qsbs-exit-auditor_qsbs_acquisition") || "original";
-    const qsbs_hold = sessionStorage.getItem("qsbs-exit-auditor_qsbs_hold") || "6";
-    const qsbs_status = sessionStorage.getItem("qsbs-exit-auditor_qsbs_status") || "qualified";
+    const entity_type = sessionStorage.getItem("qsbs-exit-auditor_entity_type") || "c_corp";
+    const acquisition = sessionStorage.getItem("qsbs-exit-auditor_acquisition") || "original";
+    const gross_assets = sessionStorage.getItem("qsbs-exit-auditor_gross_assets") || "under_50m";
+    const business_type = sessionStorage.getItem("qsbs-exit-auditor_business_type") || "tech";
+    const acquisition_date = sessionStorage.getItem("qsbs-exit-auditor_acquisition_date") || "pre_2025";
+    const holding_period = sessionStorage.getItem("qsbs-exit-auditor_holding_period") || "over_5";
+    const exit_value = sessionStorage.getItem("qsbs-exit-auditor_exit_value") || "5m_to_15m";
+    const qualification_status = sessionStorage.getItem("qsbs-exit-auditor_qualification_status") || "QUALIFIED_PRE2025";
+    const exclusion_pct = sessionStorage.getItem("qsbs-exit-auditor_exclusion_pct") || "1.00";
+    const tax_on_gain = sessionStorage.getItem("qsbs-exit-auditor_tax_on_gain") || "0";
+    const savings = sessionStorage.getItem("qsbs-exit-auditor_savings") || "2380000";
+    const status = sessionStorage.getItem("qsbs-exit-auditor_status") || "QUALIFIED — PRE-2025";
+    const tier = sessionStorage.getItem("qsbs-exit-auditor_tier") || "67";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -190,32 +231,50 @@ export default function SuccessPlan() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:QSBS Exit Auditor — Deadlines`,
+      `X-WR-CALNAME:QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax — Deadlines`,
       "BEGIN:VEVENT",
       `UID:qsbs-audit-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(7)}`,
+      `DTEND;VALUE=DATE:${relativeDate(7)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Pre-exit gate audit",
+      "DESCRIPTION:Verify all 7 QSBS gates with tax attorney.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:qsbs-attestation-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${relativeDate(14)}`,
       `DTEND;VALUE=DATE:${relativeDate(14)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:QSBS — Full eligibility audit",
-      "DESCRIPTION:Verify all four QSBS tests with tax counsel.",
+      "SUMMARY:Request §1202 attestation letter",
+      "DESCRIPTION:From issuer before exit.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:qsbs-stack-${Date.now()}@taxchecknow.com`,
+      `UID:qsbs-giftplan-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${relativeDate(30)}`,
       `DTEND;VALUE=DATE:${relativeDate(30)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:QSBS — Trust stacking review",
-      "DESCRIPTION:Plan spouse and trust shareholding for maximum exclusion.",
+      "SUMMARY:Family cap stacking planning",
+      "DESCRIPTION:If applicable — structure gifts before exit.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:qsbs-final-${Date.now()}@taxchecknow.com`,
+      `UID:qsbs-state-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(60)}`,
+      `DTEND;VALUE=DATE:${relativeDate(60)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:State residency verification",
+      "DESCRIPTION:If California or other non-conforming state, verify residency status.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:qsbs-apr15-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${"20260415"}`,
       `DTEND;VALUE=DATE:${"20260415"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:QSBS — Tax return deadline",
-      "DESCRIPTION:Report exit gain. Claim Section 1202 exclusion.",
+      "SUMMARY:Federal filing deadline",
+      "DESCRIPTION:April 15 filing with QSBS exclusion claim.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -234,7 +293,7 @@ export default function SuccessPlan() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your Exclusion Stacker Blueprint — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your QSBS Exit Strategy Pack — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -263,17 +322,17 @@ export default function SuccessPlan() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your Exclusion Stacker Blueprint · $147
+            Payment confirmed · Your QSBS Exit Strategy Pack · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Exclusion Stacker Blueprint
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your QSBS Exit Strategy Pack
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to April 15, 2026</span>
-            <span className="font-mono text-sm font-bold text-white">Apr 15 2026</span>
+            <span className="font-mono text-sm font-bold text-white">15 Apr 2026</span>
           </div>
         </div>
 
@@ -308,7 +367,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","eligibilityVerdict","exclusionAmount","taxSaving","stackingOpportunity","entityRisk"] as string[]).map(key => {
+                {(["qualificationStatusSummary","gateByGateAnalysis","regimeIdentification","timingOptimisationAnalysis","section1045RolloverPath","multiShareholderCapStacking"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -406,8 +465,8 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">QSBS — Full eligibility audit</p>
-                    <p className="text-xs text-neutral-500">Verify all four QSBS tests with tax counsel.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Pre-exit gate audit</p>
+                    <p className="text-xs text-neutral-500">Verify all 7 QSBS gates with tax attorney.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     This week
@@ -415,8 +474,8 @@ export default function SuccessPlan() {
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">QSBS — Trust stacking review</p>
-                    <p className="text-xs text-neutral-500">Plan spouse and trust shareholding for maximum exclusion.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Request §1202 attestation letter</p>
+                    <p className="text-xs text-neutral-500">From issuer before exit.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     This week
@@ -424,8 +483,26 @@ export default function SuccessPlan() {
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">QSBS — Tax return deadline</p>
-                    <p className="text-xs text-neutral-500">Report exit gain. Claim Section 1202 exclusion.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Family cap stacking planning</p>
+                    <p className="text-xs text-neutral-500">If applicable — structure gifts before exit.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    This week
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">State residency verification</p>
+                    <p className="text-xs text-neutral-500">If California or other non-conforming state, verify residency status.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    This week
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Federal filing deadline</p>
+                    <p className="text-xs text-neutral-500">April 15 filing with QSBS exclusion claim.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     15 Apr 2026
@@ -508,10 +585,10 @@ export default function SuccessPlan() {
             
             <div className="no-print rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Also relevant</p>
-              <p className="mb-1 text-sm font-bold text-neutral-950">Also relevant: ISO AMT Exercise Sniper</p>
-              <p className="mb-2 text-xs text-neutral-600">If you hold ISOs alongside QSBS, exercising options can trigger AMT on phantom income. Check your ISO position before exercising.</p>
+              <p className="mb-1 text-sm font-bold text-neutral-950">Also holding ISOs? Check the AMT trap.</p>
+              <p className="mb-2 text-xs text-neutral-600">ISOs exercised but not sold can trigger Alternative Minimum Tax exposure at exercise — separate from QSBS. Our ISO AMT Sniper shows the zero-AMT exercise range.</p>
               <Link href="/us/check/iso-amt-sniper" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
-                Check your ISO AMT exposure →
+                Check ISO AMT exposure →
               </Link>
             </div>
 
@@ -525,7 +602,7 @@ export default function SuccessPlan() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United States tax adviser before making financial decisions.
             Based on IRS guidance April 2026.{" "}
-            <a href="https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" target="_blank" rel="noopener noreferrer" className="underline">IRS — Qualified Small Business Stock (Section 1202)</a> · <a href="https://www.irs.gov/publications/p550" target="_blank" rel="noopener noreferrer" className="underline">IRS — Publication 550: Investment Income and Expenses</a>
+            <a href="https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" target="_blank" rel="noopener noreferrer" className="underline">IRS — Partial exclusion for gain from certain small business stock (Section 1202)</a> · <a href="https://www.law.cornell.edu/uscode/text/26/1202" target="_blank" rel="noopener noreferrer" className="underline">IRC Section 1202</a>
           </p>
         </div>
 

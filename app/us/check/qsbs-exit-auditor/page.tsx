@@ -10,12 +10,12 @@ import QsbsExitAuditorCalculator from "./QsbsExitAuditorCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "QSBS Exit Auditor 2026: Will Your $15M Exit Be Tax-Free? | TaxCheckNow",
-  description: "Under IRC Section 1202, QSBS allows up to $15M in tax-free capital gains. But one eligibility failure eliminates 100% of the benefit. Most founders discover problems at exit — when it is too late to fix. Check your QSBS status now.",
+  title: "QSBS §1202 Exit Analysis 2026: 7-Gate Qualification Audit | TaxCheckNow",
+  description: "Section 1202 QSBS can exclude up to $15M of capital gains from federal tax — but only if all 7 qualification gates pass. One failure = $2M+ tax on a $10M exit. Audit your stock before exit in 3 minutes.",
   alternates: { canonical: "https://taxchecknow.com/us/check/qsbs-exit-auditor" },
   openGraph: {
-    title: "QSBS Exit Auditor 2026: Will Your $15M Exit Be Tax-Free? | TaxCheckNow",
-    description: "Under IRC Section 1202, QSBS allows up to $15M in tax-free capital gains. But one eligibility failure eliminates 100% of the benefit. Most founders discover problems at exit — when it is too late to fix. Check your QSBS status now.",
+    title: "QSBS §1202 Exit Analysis 2026: 7-Gate Qualification Audit | TaxCheckNow",
+    description: "Section 1202 QSBS can exclude up to $15M of capital gains from federal tax — but only if all 7 qualification gates pass. One failure = $2M+ tax on a $10M exit. Audit your stock before exit in 3 minutes.",
     url: "https://taxchecknow.com/us/check/qsbs-exit-auditor",
     siteName: "TaxCheckNow",
     type: "website",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "April 15, 2026";
-const DEADLINE_ISO   = "2026-04-15T23:59:59.000-05:00";
+const DEADLINE_ISO   = "2026-04-15T23:59:59.000-04:00";
 
 function daysToDeadline(): number {
   if (!DEADLINE_ISO) return 0;
@@ -49,221 +49,256 @@ function progressPct(): number {
 
 const faqs = [
   {
-    "question": "What is QSBS?",
-    "answer": "Qualified Small Business Stock (QSBS) under IRC Section 1202 allows eligible shareholders to exclude up to $15M (or 10× basis) in capital gains from federal tax when they sell qualifying shares in a qualified small business."
+    "question": "What is Section 1202 QSBS?",
+    "answer": "Section 1202 of the Internal Revenue Code provides a federal capital gains tax exclusion on the sale of Qualified Small Business Stock. For pre-July 4, 2025 stock held 5+ years: 100% exclusion up to $10M or 10× basis. For post-July 4, 2025 stock: partial exclusion at 3 years (50%) and 4 years (75%), with 100% at 5 years and a higher $15M cap under OBBBA."
   },
   {
-    "question": "What companies qualify for QSBS?",
-    "answer": "C-Corporations with gross assets not exceeding $50M at the time of stock issuance, engaged in a qualified trade or business. Professional service businesses (law, finance, health, consulting, athletics, performing arts, hospitality) are excluded."
+    "question": "What are the qualification requirements?",
+    "answer": "Five structural tests and one timing test. Structural (all must pass): (1) domestic C-corporation at issuance, (2) original issuance — not secondary market, (3) gross assets under $50M at issuance, (4) qualified active business — not excluded per §1202(e)(3), (5) held by original recipient. Timing: minimum 5 years for full exclusion (or 3/4 years for partial post-2025). All structural gates are binary — any failure eliminates the entire exclusion."
   },
   {
-    "question": "Does my LLC qualify for QSBS?",
-    "answer": "No. QSBS only applies to C-Corporation stock. LLCs, S-Corps, and partnerships do not qualify. If you have an LLC, you cannot retroactively claim QSBS on shares issued before converting to a C-Corp."
+    "question": "What businesses are excluded from QSBS?",
+    "answer": "IRC §1202(e)(3) excludes: professional services (law, health, engineering, architecture, accounting, actuarial science, performing arts, consulting, athletics, financial services, brokerage services), financial services broadly, any business where the principal asset is the reputation or skill of employees, hotels, restaurants, farming, extraction of minerals/oil/gas, and banking/insurance/investing. A business in an excluded category fails regardless of other qualifications."
   },
   {
-    "question": "What is the 83(b) election and why does it matter for QSBS?",
-    "answer": "An 83(b) election allows you to start your QSBS holding period at the grant date of unvested stock, rather than when it vests. It must be filed with the IRS within 30 days of the stock grant. Missing this window can delay when the 5-year clock starts."
+    "question": "What if my stock qualifies for partial exclusion under post-2025 rules?",
+    "answer": "Under the post-OBBBA rules (stock acquired on or after July 4, 2025), partial exclusions apply at 3 years (50%) and 4 years (75%). The 50% and 75% values are applied to the lesser of the gain or the cap ($15M or 10× basis). Example: $8M gain, post-2025 stock, 4 years held = $6M excluded (75%), $2M taxable × 23.8% = $476k tax. Waiting to 5 years = $0 tax."
   },
   {
-    "question": "Can I stack QSBS exclusions?",
-    "answer": "Yes. Each taxpayer gets their own exclusion. A founder and their spouse can each hold qualifying shares and each claim up to $15M exclusion — totaling $30M. Properly structured trusts can add additional exclusions. This stacking strategy requires careful planning."
+    "question": "What is the §1045 rollover?",
+    "answer": "IRC §1045 allows deferral of QSBS gain by rolling it into new QSBS within 60 days of sale, provided the taxpayer held the original QSBS for more than 6 months. Useful when: (a) you sell QSBS early (before 5 years) and want to preserve QSBS potential, (b) your gain exceeds the cap and you want to defer the excess. The rollover defers tax — does not eliminate it — but preserves future QSBS exclusion eligibility if the new stock qualifies and is held 5+ years."
   },
   {
-    "question": "What is the active business test?",
-    "answer": "At least 80% of the company's assets (by value) must be used in the active conduct of a qualified trade or business throughout the holding period. Passive assets, investment portfolios and real estate that does not qualify can cause the company to fail this test."
+    "question": "Does my state conform to federal QSBS?",
+    "answer": "Most states conform to federal §1202, but several do not. California specifically does NOT exclude QSBS gain from state tax — expect California tax on the full gain regardless of federal exclusion. Pennsylvania, New Jersey, Alabama, and Mississippi have partial conformity issues. Check your state's conformity to §1202 before assuming the federal exclusion applies at state level. California exit planning often involves residency planning to break California tax residency before exit."
   },
   {
-    "question": "What happens if I sell before 5 years?",
-    "answer": "QSBS exclusion is not available. However, if you sell after 6 months but before 5 years, you may be able to roll the gain into another QSBS investment within 60 days under the Section 1045 rollover provision."
+    "question": "Can I stack QSBS caps across family members?",
+    "answer": "Yes. Each shareholder has their own §1202 cap. A founder who gifts QSBS to a spouse or children before exit creates additional caps — each recipient can use their own $10M or $15M cap. Restrictions: gift must be a bona fide transfer (not a sham), holding period tacks for §1202 purposes (recipient inherits original holder's holding period), and gift tax may apply (but marital deduction is unlimited between spouses). Requires careful planning — engage a tax attorney."
   },
   {
-    "question": "Does QSBS apply to state taxes?",
-    "answer": "It depends on the state. California does not conform to Section 1202 — QSBS gains are fully taxable in California at the state level. Most other states follow the federal treatment, but you should verify for your specific state."
-  },
-  {
-    "question": "What records do I need to prove QSBS eligibility?",
-    "answer": "You need: the original stock certificate or cap table entry showing original issuance date, documentation that the company was a C-Corp with ≤$50M gross assets at issuance, evidence of active business conduct throughout the hold, and the annual active business test records."
-  },
-  {
-    "question": "What is the Section 1045 rollover?",
-    "answer": "If you sell QSBS stock held for at least 6 months but less than 5 years, you can defer (not exclude) the gain by rolling it into new QSBS stock within 60 days. The new stock inherits the original holding period, potentially reaching the 5-year mark for full exclusion."
-  },
-  {
-    "question": "Is there a limit on how many times I can use QSBS?",
-    "answer": "No. Each investment in a qualifying company creates its own QSBS position with its own $15M (or 10× basis) exclusion. Serial entrepreneurs can use QSBS on multiple exits — each one up to the cap."
-  },
-  {
-    "question": "Can S-Corp stock be converted to QSBS-eligible C-Corp stock?",
-    "answer": "Converting an S-Corp to a C-Corp resets the clock — shares issued before the conversion do not qualify. Shares issued after conversion to C-Corp status can qualify if all other tests are met. Early conversion is critical for founders planning future QSBS eligibility."
+    "question": "What documentation do I need for QSBS?",
+    "answer": "Key documents: (1) §1202 attestation letter from the issuing company confirming qualification at issuance, (2) cap table entries showing your specific shares and issuance date, (3) company formation documents and any entity conversion records (LLC to C-corp), (4) annual balance sheets around issuance date showing gross assets, (5) business activity documentation for qualified business test, (6) exercise records for options (exercise date = QSBS start date for option-acquired shares), (7) Schedule D and Form 8949 at exit showing exclusion claimed."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: QSBS applies to all startup founders",
-    "correct": "Reality: Only C-Corporation shareholders with original issuance stock qualify. S-Corp, LLC, and partnership interests do not qualify. Service businesses in law, finance and consulting are excluded."
+    "wrong": "ChatGPT says: My startup stock qualifies for QSBS automatically",
+    "correct": "Reality: QSBS requires the company to have been a C-CORPORATION at the time of issuance, with gross assets under $50 million, operating in a QUALIFIED BUSINESS. Many startup founders hold a MIX of qualifying and non-qualifying shares — equity issued when the company was an LLC or S-corp does not qualify even if later converted. Qualification must be confirmed share-by-share, not assumed."
   },
   {
-    "wrong": "ChatGPT says: Any stock under $50M qualifies",
-    "correct": "Reality: The $50M gross assets test applies at the time of issuance only. The company must also pass the active business test (≥80%) continuously throughout the holding period."
+    "wrong": "ChatGPT says: I bought shares in a promising startup so they qualify",
+    "correct": "Reality: QSBS requires ORIGINAL ISSUANCE — shares acquired directly from the company in exchange for money, property, or services. Shares purchased from another shareholder on the secondary market, through a broker, or on a platform like Forge or EquityZen do NOT qualify. The original holder may have had qualifying shares. The secondary buyer does not."
   },
   {
-    "wrong": "ChatGPT says: QSBS is automatic after 5 years",
-    "correct": "Reality: Eligibility must be maintained throughout the holding period. A company that drifts into a service business or fails the active business test loses QSBS status even if held for 10 years."
+    "wrong": "ChatGPT says: QSBS gives you a partial exclusion if you don't fully qualify",
+    "correct": "Reality: Structural failures (wrong entity, secondary purchase, gross assets exceeded, excluded business) result in ZERO exclusion — not a reduced exclusion. The only partial exclusion available is the TIMING-based partial under post-July 4, 2025 rules: 50% at 3 years, 75% at 4 years. These are timing partials — not qualification partials."
   },
   {
-    "wrong": "ChatGPT says: Secondary share purchases qualify for QSBS",
-    "correct": "Reality: QSBS requires original issuance — stock acquired directly from the company. Shares purchased from other shareholders (secondary market) do not qualify regardless of entity type or holding period."
-  },
-  {
-    "wrong": "ChatGPT says: The QSBS limit is $10M",
-    "correct": "Reality: The exclusion cap is $15,000,000 or 10× the taxpayer's adjusted basis in the stock, whichever is greater. For high-basis early investors, the 10× rule often exceeds $15M."
+    "wrong": "ChatGPT says: My company is in tech so it automatically qualifies",
+    "correct": "Reality: The active business requirement excludes certain SERVICE-BASED businesses regardless of how they describe themselves. Professional services (law, medicine, finance, consulting), financial services, hospitality, and farming are excluded under IRC §1202(e)(3). A technology company that primarily provides CONSULTING services may not qualify. The test is the NATURE of the business — not the industry label."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "Is my stock genuinely QSBS-eligible — have you verified entity type, original issuance, gross assets at issuance, and active business test?",
-    "why": "QSBS eligibility must be confirmed before exit. Discovering a problem during due diligence is too late to restructure."
+    "q": "Has the issuing company provided a §1202 attestation letter — and if not, can we obtain one before exit?",
+    "why": "Formal §1202 attestation from the issuer is the gold standard. Some companies issue them proactively; others need a request. Before any exit, this documentation should be in your file."
   },
   {
-    "q": "Has the company maintained the active business test (≥80%) throughout my holding period?",
-    "why": "Eligibility decay is the most overlooked QSBS risk. Asset drift into passive holdings can quietly disqualify shares held for years."
+    "q": "For my specific shares, what was the exact entity structure and gross assets at the issuance date — separated by share lot if necessary?",
+    "why": "Mixed LLC / C-corp equity situations need share-by-share analysis. One share lot may qualify and another may not. Your tax attorney should run a per-lot analysis, not a company-wide assumption."
   },
   {
-    "q": "Can my spouse and any trusts I control hold qualifying shares to stack exclusions beyond $15M?",
-    "why": "Stacking can multiply the exclusion to $30M, $45M or beyond with proper planning — but it must be set up before exit."
+    "q": "If my company has been close to the $50M gross assets threshold, have we verified the test was met at MY specific issuance date — not just some point historically?",
+    "why": "Gross assets is a point-in-time test at each issuance. Shares issued before the company crossed $50M qualify; shares issued after do not. This is a share-by-share analysis."
   },
   {
-    "q": "Does California (or my state) conform to Section 1202 — and what is my state tax exposure on the exit?",
-    "why": "California does not recognize QSBS. A $15M federal exclusion may still result in $1M+ in California state tax."
+    "q": "Is our business clearly in a qualified trade under §1202(e)(3), or are we in a gray area (tech-enabled services, hybrid product/service)?",
+    "why": "The qualified business test is subjective for hybrid companies. A tech-forward consulting firm may be on the excluded side. Documentation of revenue mix and primary activity is essential."
   },
   {
-    "q": "Have all 83(b) elections been filed within 30 days for all restricted stock grants?",
-    "why": "A missed 83(b) election delays the QSBS holding period start date, potentially pushing a 5-year hold to 8+ years."
+    "q": "If I'm in California (or another non-conforming state), what is my state tax exposure — and should I consider residency planning before exit?",
+    "why": "California doesn't exclude QSBS gain from state tax — a federal $0 tax becomes a California ~13% tax. Pre-exit residency planning can save 7-figures for large exits."
   }
 ];
 
 const workedExamples = [
   {
+    "name": "Jordan — founder with LLC-phase equity",
+    "setup": "Founded as LLC July 2019, converted to C-corp Dec 2019, exit Apr 2026 at $14M",
+    "income": "$14M exit",
+    "status": "~40% fails QSBS (LLC units)"
+  },
+  {
     "name": "Clean founder",
-    "setup": "C-Corp, original issuance, 6-year hold, SaaS business",
-    "income": "Qualified",
-    "status": "$0 TAX ON $15M"
+    "setup": "C-corp from day 1, 5+ years held, tech SaaS, exit $8M",
+    "income": "$8M exit",
+    "status": "100% excluded — $0 federal tax"
   },
   {
-    "name": "LLC founder",
-    "setup": "LLC converted to C-Corp — shares issued before conversion",
-    "income": "Disqualified",
-    "status": "~$3.5M TAX"
+    "name": "Secondary market purchaser",
+    "setup": "Bought shares on Forge in 2022, exit $3M",
+    "income": "$3M exit",
+    "status": "FAILS — $714k federal tax"
   },
   {
-    "name": "Secondary buyer",
-    "setup": "Purchased shares from early employee on secondary market",
-    "income": "Disqualified",
-    "status": "FULL CGT"
-  },
-  {
-    "name": "Consultant firm",
-    "setup": "C-Corp but primary business is management consulting",
-    "income": "Disqualified",
-    "status": "SERVICE EXCLUSION"
+    "name": "Post-OBBBA investor at 4 years",
+    "setup": "Bought QSBS July 2026, exit Aug 2030, $5M gain",
+    "income": "$5M exit",
+    "status": "PARTIAL 75% — $298k federal tax"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "Single founder QSBS",
-    "metric1": "$15M gain",
-    "metric2": "~$3.57M",
-    "bestMove": "$0 — full exclusion"
+    "position": "Full exclusion holding period",
+    "metric1": "5 years",
+    "metric2": "5 years",
+    "bestMove": "Same threshold"
   },
   {
-    "position": "Spouse + trust stack",
-    "metric1": "$45M gain",
-    "metric2": "~$10.71M",
-    "bestMove": "$0 — stacked exclusion"
+    "position": "Partial exclusion availability",
+    "metric1": "None — all or nothing at 5 yrs",
+    "metric2": "50% at 3yr, 75% at 4yr",
+    "bestMove": "Post-2025 adds flexibility"
   },
   {
-    "position": "No QSBS (S-Corp)",
-    "metric1": "$15M gain",
-    "metric2": "~$3.57M",
-    "bestMove": "Cannot exclude — restructure now"
+    "position": "Exclusion cap",
+    "metric1": "Greater of $10M or 10× basis",
+    "metric2": "Greater of $15M or 10× basis",
+    "bestMove": "Post-2025 +$5M cap"
+  },
+  {
+    "position": "Structural gate tests",
+    "metric1": "Same",
+    "metric2": "Same",
+    "bestMove": "Both require all 5 structural gates"
+  },
+  {
+    "position": "Federal tax if fails",
+    "metric1": "23.8% on gain",
+    "metric2": "23.8% on gain",
+    "bestMove": "Same — structural fail is full tax"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "Spouse shareholding",
-    "effect": "Second $15M exclusion",
-    "note": "Spouse must hold separate qualifying shares"
+    "tool": "Form 8949 + Schedule D",
+    "effect": "Reports QSBS sale with §1202 exclusion claimed",
+    "note": "Annual filing for any QSBS sale"
   },
   {
-    "tool": "Trust stacking",
-    "effect": "Additional exclusions per trust",
-    "note": "Irrevocable trusts — legal and tax advice required"
+    "tool": "§1202 attestation letter from issuer",
+    "effect": "Company confirms QSBS qualification at issuance",
+    "note": "Request before exit — document for IRS"
   },
   {
-    "tool": "83(b) election",
-    "effect": "Start holding period at grant date",
-    "note": "Must file within 30 days of stock grant"
+    "tool": "§1045 rollover election",
+    "effect": "Defers gain into new QSBS within 60 days",
+    "note": "Useful if partial or failing current QSBS"
+  },
+  {
+    "tool": "Cap table review pre-exit",
+    "effect": "Identifies which shares qualify vs fail",
+    "note": "Critical for mixed LLC/C-corp founders"
+  },
+  {
+    "tool": "Multi-shareholder cap stacking",
+    "effect": "Family members can each use their own cap",
+    "note": "Gifting QSBS to spouse/kids before exit"
+  },
+  {
+    "tool": "California conformity check",
+    "effect": "CA does NOT conform — state tax applies regardless",
+    "note": "Plan state tax separately"
   }
 ];
 
 const geoFacts = [
   {
-    "label": "Exclusion cap",
-    "value": "$15M or 10× basis"
-  },
-  {
-    "label": "Entity type",
-    "value": "C-Corporation only"
-  },
-  {
-    "label": "Holding period",
-    "value": "5 years minimum"
-  },
-  {
-    "label": "Active business test",
-    "value": "≥80% qualified use throughout"
-  },
-  {
-    "label": "Gross assets at issuance",
-    "value": "≤$50M"
-  },
-  {
     "label": "Legal anchor",
-    "value": "IRC Section 1202"
+    "value": "IRC §1202"
+  },
+  {
+    "label": "Pre-July 4, 2025 exclusion",
+    "value": "100% at 5 years (all-or-nothing)"
+  },
+  {
+    "label": "Pre-2025 cap",
+    "value": "Greater of $10M or 10× basis"
+  },
+  {
+    "label": "Post-July 4, 2025 exclusion (OBBBA)",
+    "value": "50% at 3yr, 75% at 4yr, 100% at 5yr"
+  },
+  {
+    "label": "Post-2025 cap",
+    "value": "Greater of $15M or 10× basis"
+  },
+  {
+    "label": "Entity requirement",
+    "value": "Domestic C-corporation at issuance"
+  },
+  {
+    "label": "Acquisition requirement",
+    "value": "Original issuance — secondary market fails"
+  },
+  {
+    "label": "Gross assets threshold",
+    "value": "$50M at issuance and immediately after"
+  },
+  {
+    "label": "Excluded businesses",
+    "value": "Professional services, finance, hospitality, farming"
+  },
+  {
+    "label": "Combined federal rate on non-QSBS gain",
+    "value": "23.8% (20% + 3.8% NIIT)"
+  },
+  {
+    "label": "Related deferral provision",
+    "value": "§1045 rollover (60 days into new QSBS)"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "Exclusion cap",
+    "label": "Pre-2025 cap",
+    "value": "$10M"
+  },
+  {
+    "label": "Post-2025 cap",
     "value": "$15M"
   },
   {
-    "label": "Minimum hold",
+    "label": "Combined federal rate",
+    "value": "23.8%"
+  },
+  {
+    "label": "Full exclusion hold",
     "value": "5 years"
-  },
-  {
-    "label": "Entity type",
-    "value": "C-Corp"
-  },
-  {
-    "label": "Tax without QSBS",
-    "value": "~$3.5M"
   }
 ];
 
 const sources = [
   {
-    "title": "IRS — Qualified Small Business Stock (Section 1202)",
+    "title": "IRS — Partial exclusion for gain from certain small business stock (Section 1202)",
     "url": "https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock"
   },
   {
-    "title": "IRS — Publication 550: Investment Income and Expenses",
-    "url": "https://www.irs.gov/publications/p550"
+    "title": "IRC Section 1202",
+    "url": "https://www.law.cornell.edu/uscode/text/26/1202"
+  },
+  {
+    "title": "IRC Section 1045 (rollover of QSBS gain)",
+    "url": "https://www.law.cornell.edu/uscode/text/26/1045"
+  },
+  {
+    "title": "IRS Form 8949 (Sales and Other Dispositions of Capital Assets)",
+    "url": "https://www.irs.gov/forms-pubs/about-form-8949"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -273,26 +308,26 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "What founders assume",
-    "value": "$0 tax on exit",
-    "sub": "QSBS is widely misunderstood as automatic"
+    "label": "Pre-2025 cap",
+    "value": "$10M",
+    "sub": "Or 10× basis, whichever greater"
   },
   {
-    "label": "Reality check",
-    "value": "Many disqualify",
-    "sub": "S-Corp, secondary purchase, service business",
+    "label": "Post-2025 cap (OBBBA)",
+    "value": "$15M",
+    "sub": "Or 10× basis, whichever greater"
+  },
+  {
+    "label": "Combined federal rate",
+    "value": "23.8%",
+    "sub": "20% capital gains + 3.8% NIIT",
     "red": true
   },
   {
-    "label": "Tax without QSBS",
-    "value": "~$3.5M",
-    "sub": "on a $15M exit at current capital gains rates",
+    "label": "Tax on failed $10M exit",
+    "value": "$2.38M",
+    "sub": "Full rate on full gain",
     "red": true
-  },
-  {
-    "label": "Stacking potential",
-    "value": "Up to $45M+",
-    "sub": "via spouse and trust stacking strategies"
   }
 ];
 
@@ -316,8 +351,8 @@ export default function QsbsExitAuditorPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "QSBS Exit Auditor — Rules April 2026",
-    description: "Under IRC Section 1202, QSBS allows up to $15M in tax-free capital gains. But one eligibility failure eliminates 100% of the benefit. Most founders discover problems at exit — when it is too late to fix. Check your QSBS status now.",
+    name: "QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax — Rules April 2026",
+    description: "Section 1202 QSBS can exclude up to $15M of capital gains from federal tax — but only if all 7 qualification gates pass. One failure = $2M+ tax on a $10M exit. Audit your stock before exit in 3 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -332,15 +367,15 @@ export default function QsbsExitAuditorPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "QSBS Exit Auditor",
-    description: "Under IRC Section 1202, QSBS allows up to $15M in tax-free capital gains. But one eligibility failure eliminates 100% of the benefit. Most founders discover problems at exit — when it is too late to fix. Check your QSBS status now.",
+    name: "QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax",
+    description: "Section 1202 QSBS can exclude up to $15M of capital gains from federal tax — but only if all 7 qualification gates pass. One failure = $2M+ tax on a $10M exit. Audit your stock before exit in 3 minutes.",
     url: "https://taxchecknow.com/us/check/qsbs-exit-auditor",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your Original Issuance Audit", price: "67.00", priceCurrency: "USD" },
-      { "@type": "Offer", name: "Your Exclusion Stacker Blueprint", price: "147.00", priceCurrency: "USD" },
+      { "@type": "Offer", name: "Your QSBS Audit Pack", price: "67.00", priceCurrency: "USD" },
+      { "@type": "Offer", name: "Your QSBS Exit Strategy Pack", price: "147.00", priceCurrency: "USD" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -348,28 +383,43 @@ export default function QsbsExitAuditorPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the QSBS Exit Auditor",
+    name: "How to use the QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Select your company structure",
-            "text": "Choose your entity type. Only C-Corporation stock qualifies for QSBS."
+            "name": "Confirm entity type at issuance",
+            "text": "C-corporation required. LLC / S-corp / partnership equity fails."
       },
       {
             "@type": "HowToStep",
-            "name": "Identify acquisition method",
-            "text": "Confirm whether your stock was acquired at original issuance from the company."
+            "name": "Confirm original issuance",
+            "text": "Shares directly from company. Secondary market purchases fail."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your QSBS eligibility verdict",
-            "text": "See immediately whether your exit qualifies for the $0 tax exclusion or is at risk."
+            "name": "Verify gross assets test",
+            "text": "Under $50M at issuance and immediately after."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your protection plan",
-            "text": "Receive a personalised QSBS audit and stacking strategy for your specific situation."
+            "name": "Confirm qualified business",
+            "text": "Not professional services, finance, hospitality, or farming."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Identify applicable regime",
+            "text": "Pre-2025 all-or-nothing at 5 years. Post-2025 partial at 3/4/5 years."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Determine exclusion percentage",
+            "text": "0%, 50%, 75%, or 100% based on holding period and regime."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Calculate tax on excess gain",
+            "text": "Gain above cap ($10M / $15M / 10× basis) fully taxable at 23.8%."
       }
 ],
   };
@@ -377,12 +427,12 @@ export default function QsbsExitAuditorPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "QSBS Exit Auditor — Free Check",
+    "name": "QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/us/check/qsbs-exit-auditor#calculator",
-    "description": "Under IRC Section 1202, QSBS allows up to $15M in tax-free capital gains. But one eligibility failure eliminates 100% of the benefit. Most founders discover problems at exit — when it is too late to fix. Check your QSBS status now.",
+    "description": "Section 1202 QSBS can exclude up to $15M of capital gains from federal tax — but only if all 7 qualification gates pass. One failure = $2M+ tax on a $10M exit. Audit your stock before exit in 3 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -409,7 +459,7 @@ export default function QsbsExitAuditorPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United States", item: "https://taxchecknow.com/us" },
-      { "@type": "ListItem", position: 3, name: "QSBS Exit Auditor", item: "https://taxchecknow.com/us/check/qsbs-exit-auditor" },
+      { "@type": "ListItem", position: 3, name: "QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax", item: "https://taxchecknow.com/us/check/qsbs-exit-auditor" },
     ],
   };
 
@@ -442,7 +492,7 @@ export default function QsbsExitAuditorPage() {
 
       {/* Mobile red bar */}
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · TAX DEADLINE
+        🔴 {countdown} days · {DEADLINE_LABEL} · FILING + EXIT PLANNING
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -454,7 +504,7 @@ export default function QsbsExitAuditorPage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇺🇸 IRS Verified · IRC Section 1202 ↗
+            🇺🇸 IRS Verified · IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-US
@@ -463,12 +513,12 @@ export default function QsbsExitAuditorPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          The 2026 QSBS Exit Auditor: Will Your $15M Exit Be Tax-Free?
+          On a $10M Exit, Valid QSBS Means $0 Federal Tax. Invalid QSBS Means $2,000,000+. Here Is Which Side You Are On.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          Under IRC Section 1202, Qualified Small Business Stock allows up to $15,000,000 in tax-free capital gains — or 10× your original investment, whichever is greater. To qualify, your stock must be issued by a C-Corporation, acquired at original issuance, held for at least 5 years, and the company must pass the active business test throughout the holding period.
+          Section 1202 of the Internal Revenue Code provides an exclusion from federal capital gains tax on the sale of Qualified Small Business Stock. For stock acquired before July 4, 2025, a 5-year holding period qualifies for 100% exclusion up to the greater of $10 million or 10 times the adjusted basis. For stock acquired on or after July 4, 2025 (under the One Big Beautiful Bill Act), partial exclusions apply at 3 years (50%) and 4 years (75%), with full 100% exclusion at 5 years and a higher cap of $15 million or 10 times basis. The exclusion is one of the most valuable provisions in the US tax code — and one of the most frequently misapplied.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -490,20 +540,20 @@ export default function QsbsExitAuditorPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Exclusion cap</dt>
+                  <dt className="text-neutral-600">Pre-2025 cap</dt>
+                  <dd className="font-bold">$10M</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-neutral-600">Post-2025 cap</dt>
                   <dd className="font-bold">$15M</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Minimum hold</dt>
+                  <dt className="text-neutral-600">Combined federal rate</dt>
+                  <dd className="font-bold">23.8%</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-neutral-600">Full exclusion hold</dt>
                   <dd className="font-bold">5 years</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-neutral-600">Entity type</dt>
-                  <dd className="font-bold">C-Corp</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-neutral-600">Tax without QSBS</dt>
-                  <dd className="font-bold">~$3.5M</dd>
                 </div>
               </dl>
             </div>
@@ -511,16 +561,16 @@ export default function QsbsExitAuditorPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">QSBS Exit Auditor</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised QSBS eligibility audit built around your stock, your company, and your holding period — not a generic startup guide.</p>
+              <h3 className="mb-1 text-lg font-bold">QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax</h3>
+              <p className="mb-3 text-sm text-neutral-300">Your exact QSBS gate-by-gate qualification analysis, pre-2025 vs post-2025 regime comparison, exit value tax calculation, and 5 tax attorney questions — built around your specific stock, entity type at issuance, and exit timeline.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  $67 · Original Issuance Audit
+                  $67 · QSBS Audit Pack
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  $147 · Exclusion Stacker Blueprint
+                  $147 · QSBS Exit Strategy Pack
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
@@ -536,7 +586,7 @@ export default function QsbsExitAuditorPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to April 15, 2026 filing deadline
+            Countdown to April 15, 2026 — federal filing deadline
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
@@ -549,39 +599,39 @@ export default function QsbsExitAuditorPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                What founders assume
+                Pre-2025 cap
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $0 tax on exit
+                $10M
               </p>
-              <p className="text-xs text-neutral-400">QSBS is widely misunderstood as automatic</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Reality check
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Many disqualify
-              </p>
-              <p className="text-xs text-neutral-400">S-Corp, secondary purchase, service business</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Tax without QSBS
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                ~$3.5M
-              </p>
-              <p className="text-xs text-neutral-400">on a $15M exit at current capital gains rates</p>
+              <p className="text-xs text-neutral-400">Or 10× basis, whichever greater</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Stacking potential
+                Post-2025 cap (OBBBA)
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Up to $45M+
+                $15M
               </p>
-              <p className="text-xs text-neutral-400">via spouse and trust stacking strategies</p>
+              <p className="text-xs text-neutral-400">Or 10× basis, whichever greater</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                Combined federal rate
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                23.8%
+              </p>
+              <p className="text-xs text-neutral-400">20% capital gains + 3.8% NIIT</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                Tax on failed $10M exit
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                $2.38M
+              </p>
+              <p className="text-xs text-neutral-400">Full rate on full gain</p>
             </div>
           </div>
         </div>
@@ -593,50 +643,51 @@ export default function QsbsExitAuditorPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            QSBS — all four tests required
+            QSBS — the two regimes
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ C-Corporation entity</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Original issuance only</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 5+ year hold</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Active business ≥80%</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Pre-July 4, 2025: 5-year hold → 100% exclusion, $10M cap</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Post-July 4, 2025 (OBBBA): 3yr=50%, 4yr=75%, 5yr=100%, $15M cap</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ All 5 structural gates must pass in either regime</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gain above cap fully taxable at 23.8% combined</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ §1045 rollover available for 60-day deferral</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ S-Corps and LLCs</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Secondary market purchases</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Service businesses (law, finance, consulting)</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Companies with over $50M assets at issuance</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT partial on structural failures — all-or-nothing</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT available for secondary market purchases</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT available for LLC / S-corp / partnership equity</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT applicable to excluded businesses (services, finance, hospitality, farming)</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: IRS — IRC Section 1202</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRC §1202 · OBBBA 2025 · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — IRS confirmed April 2026
+            QSBS is all-or-nothing on structural gates — one failure costs millions
           </p>
-          <p className="mb-2 text-neutral-900">Under IRC Section 1202, Qualified Small Business Stock allows up to $15,000,000 in tax-free capital gains — or 10× your original investment, whichever is greater. To qualify, your stock must be issued by a C-Corporation, acquired at original issuance, held for at least 5 years, and the company must pass the active business test throughout the holding period.</p>
-          <p className="mb-2 text-neutral-900">One eligibility failure eliminates 100% of the tax benefit. S-Corps, LLCs and partnerships do not qualify. Secondary market purchases do not qualify. Service businesses in law, finance, consulting and hospitality are excluded industries.</p>
-          <p className="mb-2 text-neutral-900">Most founders discover QSBS problems at exit — when restructuring is no longer possible. The time to audit is during the holding period, not when the term sheet arrives.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC Section 1202 · IRS Publication 550</p>
+          <p className="mb-2 text-neutral-900">Section 1202 of the Internal Revenue Code provides an exclusion from federal capital gains tax on the sale of Qualified Small Business Stock. For stock acquired before July 4, 2025, a 5-year holding period qualifies for 100% exclusion up to the greater of $10 million or 10 times the adjusted basis. For stock acquired on or after July 4, 2025 (under the One Big Beautiful Bill Act), partial exclusions apply at 3 years (50%) and 4 years (75%), with full 100% exclusion at 5 years and a higher cap of $15 million or 10 times basis. The exclusion is one of the most valuable provisions in the US tax code — and one of the most frequently misapplied.</p>
+          <p className="mb-2 text-neutral-900">QSBS qualification is all-or-nothing on structural conditions. The stock must be originally issued by a domestic C-corporation (not an LLC or S-corp), the company's gross assets must have been under $50 million at the time of issuance, the business must be in a qualified trade (technology, manufacturing, life sciences — not professional services, finance, or hospitality), and the stock must have been acquired directly from the company not purchased on the secondary market. If any one of these conditions fails, the entire exclusion is lost — not reduced. On a $10 million exit, one disqualifying condition costs over $2 million in federal tax.</p>
+          <p className="mb-2 text-neutral-900">The most common failure mode is entity structure at issuance. Many early-stage companies operate as LLCs before converting to C-corporations. Stock or units issued before conversion do not qualify — only shares issued after the C-corp election. Founders and early employees who received equity in the LLC phase may have non-qualifying shares sitting alongside qualifying C-corp shares. The second most common failure is the secondary purchase — investors who bought shares from a departing founder or on a secondary platform did not receive original issuance and do not qualify regardless of hold period.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC §1202 · One Big Beautiful Bill Act 2025 amendments · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            QSBS qualification — all conditions must be met throughout
+            The QSBS failure chain (and the fix)
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ C-Corp ✓  BUT  Purchased secondary  ❌  →  QSBS DISQUALIFIED — $3.5M tax owed
+              ❌ LLC equity → company converts to C-corp → founder assumes QSBS → exits at $10M → LLC units do not qualify → $2M plus federal tax  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ C-Corp ✓  Original issuance ✓  5yr hold ✓  Active business ✓  →  $0 TAX ON EXIT
+              ✔ Confirm C-corp at issuance → original issuance only → gross assets under $50M → 5-year hold → $0 federal tax on $10M gain  ✔
             </div>
           </div>
         </div>
@@ -644,12 +695,13 @@ export default function QsbsExitAuditorPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            Common AI errors on this topic
+            What most founders, early employees, and investors get wrong about QSBS
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ QSBS applies to all startups — wrong. Only qualified trades and C-Corporations qualify. S-Corps, LLCs, partnerships and certain service industries are excluded.</li>
-            <li>✗ Stock ownership alone qualifies for QSBS — wrong. Stock must be acquired at original issuance directly from the company, not purchased on a secondary market.</li>
-            <li>✗ QSBS eligibility is automatic after 5 years — wrong. Eligibility must be maintained throughout the holding period. The active business test and gross assets threshold must be satisfied continuously.</li>
+            <li>✗ My startup stock qualifies for QSBS automatically — wrong. QSBS requires the company to have been a C-corporation at the time of issuance, with gross assets under $50 million, operating in a qualified business. Many startup founders hold a mix of qualifying and non-qualifying shares — equity issued when the company was an LLC or S-corp does not qualify even if later converted. Qualification must be confirmed share-by-share, not assumed.</li>
+            <li>✗ I bought shares in a promising startup so they qualify — wrong. QSBS requires original issuance — shares acquired directly from the company in exchange for money, property, or services. Shares purchased from another shareholder on the secondary market, through a broker, or on a platform like Forge or EquityZen do not qualify. The original holder may have had qualifying shares. The secondary buyer does not.</li>
+            <li>✗ QSBS gives me a partial exclusion if I do not fully qualify — wrong on structural conditions, right on timing. Structural failures (wrong entity, secondary purchase, gross assets exceeded, excluded business) result in zero exclusion — not a reduced exclusion. The only partial exclusion available is the timing-based partial under post-July 4, 2025 rules: 50% at 3 years, 75% at 4 years. These are timing partials — not qualification partials.</li>
+            <li>✗ My company is in tech so it automatically qualifies as an active business — wrong. The active business requirement excludes certain service-based businesses regardless of how they describe themselves. Professional services (law, medicine, finance, consulting), financial services, hospitality, and farming are excluded. A technology company that primarily provides consulting services may not qualify. The test is the nature of the business — not the industry label.</li>
           </ul>
         </div>
 
@@ -674,13 +726,14 @@ export default function QsbsExitAuditorPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Tyler's lawyer had mentioned QSBS when they incorporated. That was three years ago. Tyler had filed it away.</p>
-            <p>Stackform was incorporated as a Delaware C-Corp from day one. The QSBS exclusion — up to $10M of gain excluded from federal tax — was mentioned in the incorporation docs. Tyler had assumed it applied automatically.</p>
-            <p>At the Series A the cap table got more complex. Tyler's ISO options were repriced. A small secondary transaction allowed an early angel to sell some shares. Everything happened quickly.</p>
-            <p>Tyler was preparing for a potential Series B and had started thinking about an eventual exit. A founder friend who had sold a company mentioned his QSBS exclusion had saved him $2.4M in federal tax.</p>
-            <p className="font-semibold text-neutral-900">ISO options are not stock — they become stock on exercise. Tyler had not yet exercised. The five-year holding period clock starts on exercise, not grant. He had been counting from the wrong date.</p>
+            <p className="text-base font-medium text-neutral-900">Jordan had been assuming QSBS for 6 years. Then his M&A attorney asked one question: 'When did you convert from LLC to C-corp?'</p>
+            <p>Jordan and his co-founder had started the company in 2019. First 6 months as a Delaware LLC — fast to set up, flexible. They took an angel round that summer — the angels insisted on C-corp conversion for QSBS eligibility. Converted July 2019. Jordan's LLC founder units converted into C-corp shares at that time.</p>
+            <p>The company grew. 2020 product-market fit. 2021 Series A. 2022 exercised his remaining options. 2023-2024 Series B growth. 2025 acquisition offer. April 2026 deal close.</p>
+            <p>Jordan had assumed his founder equity was QSBS. He'd read about the exclusion, planned around $0 federal tax on his exit. The $14M realization was going to fund everything — new house, college fund, angel investments of his own.</p>
+            <p>Then the M&A attorney in diligence asked: 'When did you convert from LLC to C-corp?' Jordan answered: 'July 2019.' The attorney paused. 'Your LLC-phase equity doesn't qualify for QSBS. Only the post-conversion shares. We need to look at your cap table carefully.'</p>
+            <p className="font-semibold text-neutral-900">Jordan ran the calculator. Entity at issuance: he had both LLC and C-corp issuances. Pre-2025 acquisition date (all shares). Holding period over 5 years (all shares). Original issuance on all. Gross assets under $50M (confirmed via early-year balance sheets). Qualified business (SaaS software — clear tech). The ONLY failing gate for his LLC-phase units: entity type at issuance. Result: roughly 40% of his shares fail QSBS. On the $14M total exit, approximately $5.6M faces full 23.8% tax = $1.33M. The remaining $8.4M from qualified C-corp shares: some goes above the $10M pre-2025 cap, some is fully excluded. Net tax exposure: ~$1.5M instead of the ~$0 he'd assumed.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Tyler exercised 200,000 ISOs immediately — starting the five-year clock. Rachel confirmed Stackform met the gross asset test. The remaining options were modelled against Series B valuation and AMT exposure.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Jordan engaged a specialist QSBS tax attorney recommended by his M&A counsel. Detailed cap table analysis confirmed the split. Attorney verified LLC-phase units were definitively non-qualifying. Explored alternatives: (1) §1045 rollover on the $400k above the pre-2025 cap — deferred into new QSBS investment, (2) split sale timing to use multiple tax years for the excess (limited benefit given single closing), (3) state residency check — California does NOT conform to federal QSBS, so state tax applies regardless. Net resolution: ~$1.5M federal tax + $1.2M California state tax. Jordan restructured his post-exit plan around the lower net proceeds (~$11.3M net vs $14M pre-tax assumption). The precise cap table analysis saved him from a $1M+ surprise at filing time.</p>
             </div>
           </div>
           
@@ -693,16 +746,16 @@ export default function QsbsExitAuditorPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — QSBS Section 1202 eligibility 2026
+            AI extraction block — QSBS §1202 exclusion and OBBBA 2025 amendments
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            QSBS Section 1202 — confirmed eligibility rules 2026
+            Qualified Small Business Stock (QSBS) — Section 1202 Exclusion, Two Regimes
           </h2>
-          <p className="mb-4 text-neutral-800">Under IRC Section 1202, Qualified Small Business Stock (QSBS) allows eligible shareholders to exclude up to $15,000,000 (or 10× their original investment basis, whichever is greater) in capital gains from federal tax. To qualify, stock must be issued by a domestic C-Corporation with gross assets not exceeding $50M at the time of issuance. The stock must be acquired at original issuance, not purchased on a secondary market. The company must be engaged in a qualified trade or business (excluding professional services in law, finance, health, consulting, athletics, performing arts, and hospitality). The stock must be held for at least 5 years. Eligibility must be maintained throughout the holding period — the active business test requires 80% or more of assets to be used in a qualified trade or business.</p>
+          <p className="mb-4 text-neutral-800">Section 1202 of the Internal Revenue Code provides a federal capital gains tax exclusion on the sale of Qualified Small Business Stock (QSBS). For stock acquired before July 4, 2025, the exclusion is 100% of gain up to the greater of $10 million or 10 times the adjusted basis, provided the stock has been held for at least 5 years. Under amendments enacted in 2025 (One Big Beautiful Bill Act), stock acquired on or after July 4, 2025 qualifies for partial exclusions at 3 years (50%) and 4 years (75%), with full exclusion at 5 years and a higher cap of $15 million or 10 times basis. To qualify, the stock must be: originally issued by a domestic C-corporation (not an LLC, partnership, or S-corp); issued when the company's aggregate gross assets were under $50 million; issued in a qualified active business (excluding professional services, finance, hospitality, and farming); and held by the original recipient (not acquired on the secondary market). All conditions must be satisfied simultaneously — any single failure results in the loss of the entire exclusion. On a $10 million capital gain, valid QSBS results in $0 federal tax. Invalid QSBS results in approximately $2,380,000 in federal capital gains tax and net investment income tax.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Tax Savings = QSBS Eligible Gain × Capital Gains Rate. At 23.8%: $15M × 0.238 = $3,570,000 saved. Stacking: Founder ($15M) + Spouse ($15M) + Trust ($15M) = $45M+ exclusion.
+            QSBS qualification test: (Domestic C-corp at issuance) AND (Original issuance — not secondary) AND (Gross assets under $50M at issuance) AND (Qualified active business — not excluded) AND (Held by original recipient). Exclusion percentage: Pre-July 2025 — 100% at 5 years, 0% if under 5 years. Post-July 2025 — 50% at 3 years, 75% at 4 years, 100% at 5 years. Cap: Pre-2025 greater of $10M or 10× basis. Post-2025 greater of $15M or 10× basis. Federal tax on non-excluded gain: 20% long-term capital gains + 3.8% NIIT = 23.8% combined.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -716,34 +769,59 @@ export default function QsbsExitAuditorPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Exclusion cap</td>
-                  <td className="p-2">$15M or 10× basis</td>
-                  <td className="p-2 text-neutral-500">IRC Section 1202</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">Entity type</td>
-                  <td className="p-2">C-Corporation only</td>
-                  <td className="p-2 text-neutral-500">IRC Section 1202</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">Holding period</td>
-                  <td className="p-2">5 years minimum</td>
-                  <td className="p-2 text-neutral-500">IRC Section 1202</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">Active business test</td>
-                  <td className="p-2">≥80% qualified use throughout</td>
-                  <td className="p-2 text-neutral-500">IRC Section 1202</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">Gross assets at issuance</td>
-                  <td className="p-2">≤$50M</td>
-                  <td className="p-2 text-neutral-500">IRC Section 1202</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
                   <td className="p-2">Legal anchor</td>
-                  <td className="p-2">IRC Section 1202</td>
-                  <td className="p-2 text-neutral-500">IRC Section 1202</td>
+                  <td className="p-2">IRC §1202</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Pre-July 4, 2025 exclusion</td>
+                  <td className="p-2">100% at 5 years (all-or-nothing)</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Pre-2025 cap</td>
+                  <td className="p-2">Greater of $10M or 10× basis</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Post-July 4, 2025 exclusion (OBBBA)</td>
+                  <td className="p-2">50% at 3yr, 75% at 4yr, 100% at 5yr</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Post-2025 cap</td>
+                  <td className="p-2">Greater of $15M or 10× basis</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Entity requirement</td>
+                  <td className="p-2">Domestic C-corporation at issuance</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Acquisition requirement</td>
+                  <td className="p-2">Original issuance — secondary market fails</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Gross assets threshold</td>
+                  <td className="p-2">$50M at issuance and immediately after</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Excluded businesses</td>
+                  <td className="p-2">Professional services, finance, hospitality, farming</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Combined federal rate on non-QSBS gain</td>
+                  <td className="p-2">23.8% (20% + 3.8% NIIT)</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Related deferral provision</td>
+                  <td className="p-2">§1045 rollover (60 days into new QSBS)</td>
+                  <td className="p-2 text-neutral-500">IRC §1202 (Qualified Small Business Stock) — pre-amendment and OBBBA 2025 regimes</td>
                 </tr>
               </tbody>
             </table>
@@ -752,7 +830,7 @@ export default function QsbsExitAuditorPage() {
             Primary source:{" "}
             <a href="https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              IRS — Qualified Small Business Stock (Section 1202)
+              IRS — Partial exclusion for gain from certain small business stock (Section 1202)
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/qsbs-exit-auditor" className="font-mono text-blue-700 hover:underline">
@@ -770,58 +848,57 @@ export default function QsbsExitAuditorPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four exit scenarios — QSBS qualified or not
+          Four QSBS scenarios under §1202
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Founder</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Structure</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Acquisition</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Hold</th>
-                <th className="border-b border-neutral-300 p-3 text-left">QSBS Status</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Holder</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Situation</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Qualification</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax outcome</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Jordan — founder with LLC-phase equity</td>
+                <td className="p-3 text-neutral-700">Founded as LLC July 2019, converted to C-corp Dec 2019, exit Apr 2026 at $14M</td>
+                <td className="p-3 font-mono">$14M exit</td>
+                <td className="p-3">
+                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
+                    ~40% fails QSBS (LLC units)
+                  </span>
+                </td>
+              </tr>
+              <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Clean founder</td>
-                <td className="p-3 text-neutral-700">C-Corp, original issuance, 6-year hold, SaaS business</td>
-                <td className="p-3 font-mono">Qualified</td>
+                <td className="p-3 text-neutral-700">C-corp from day 1, 5+ years held, tech SaaS, exit $8M</td>
+                <td className="p-3 font-mono">$8M exit</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $0 TAX ON $15M
+                    100% excluded — $0 federal tax
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">LLC founder</td>
-                <td className="p-3 text-neutral-700">LLC converted to C-Corp — shares issued before conversion</td>
-                <td className="p-3 font-mono">Disqualified</td>
+                <td className="p-3 font-bold">Secondary market purchaser</td>
+                <td className="p-3 text-neutral-700">Bought shares on Forge in 2022, exit $3M</td>
+                <td className="p-3 font-mono">$3M exit</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    ~$3.5M TAX
+                    FAILS — $714k federal tax
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Secondary buyer</td>
-                <td className="p-3 text-neutral-700">Purchased shares from early employee on secondary market</td>
-                <td className="p-3 font-mono">Disqualified</td>
+                <td className="p-3 font-bold">Post-OBBBA investor at 4 years</td>
+                <td className="p-3 text-neutral-700">Bought QSBS July 2026, exit Aug 2030, $5M gain</td>
+                <td className="p-3 font-mono">$5M exit</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    FULL CGT
-                  </span>
-                </td>
-              </tr>
-              <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Consultant firm</td>
-                <td className="p-3 text-neutral-700">C-Corp but primary business is management consulting</td>
-                <td className="p-3 font-mono">Disqualified</td>
-                <td className="p-3">
-                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    SERVICE EXCLUSION
+                    PARTIAL 75% — $298k federal tax
                   </span>
                 </td>
               </tr>
@@ -838,37 +915,49 @@ export default function QsbsExitAuditorPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          QSBS vs non-QSBS — the tax difference
+          Pre-2025 vs Post-2025 QSBS regimes
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Exit Value</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Tax Without QSBS</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Tax With QSBS</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Element</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Pre-July 4, 2025</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Post-July 4, 2025 (OBBBA)</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Key difference</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Single founder QSBS</td>
-                <td className="p-3 font-mono text-xs">$15M gain</td>
-                <td className="p-3 text-xs">~$3.57M</td>
-                <td className="p-3 text-xs text-neutral-700">$0 — full exclusion</td>
+                <td className="p-3 font-bold">Full exclusion holding period</td>
+                <td className="p-3 font-mono text-xs">5 years</td>
+                <td className="p-3 text-xs">5 years</td>
+                <td className="p-3 text-xs text-neutral-700">Same threshold</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Spouse + trust stack</td>
-                <td className="p-3 font-mono text-xs">$45M gain</td>
-                <td className="p-3 text-xs">~$10.71M</td>
-                <td className="p-3 text-xs text-neutral-700">$0 — stacked exclusion</td>
+                <td className="p-3 font-bold">Partial exclusion availability</td>
+                <td className="p-3 font-mono text-xs">None — all or nothing at 5 yrs</td>
+                <td className="p-3 text-xs">50% at 3yr, 75% at 4yr</td>
+                <td className="p-3 text-xs text-neutral-700">Post-2025 adds flexibility</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">No QSBS (S-Corp)</td>
-                <td className="p-3 font-mono text-xs">$15M gain</td>
-                <td className="p-3 text-xs">~$3.57M</td>
-                <td className="p-3 text-xs text-neutral-700">Cannot exclude — restructure now</td>
+                <td className="p-3 font-bold">Exclusion cap</td>
+                <td className="p-3 font-mono text-xs">Greater of $10M or 10× basis</td>
+                <td className="p-3 text-xs">Greater of $15M or 10× basis</td>
+                <td className="p-3 text-xs text-neutral-700">Post-2025 +$5M cap</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Structural gate tests</td>
+                <td className="p-3 font-mono text-xs">Same</td>
+                <td className="p-3 text-xs">Same</td>
+                <td className="p-3 text-xs text-neutral-700">Both require all 5 structural gates</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Federal tax if fails</td>
+                <td className="p-3 font-mono text-xs">23.8% on gain</td>
+                <td className="p-3 text-xs">23.8% on gain</td>
+                <td className="p-3 text-xs text-neutral-700">Same — structural fail is full tax</td>
               </tr>
             </tbody>
           </table>
@@ -883,33 +972,48 @@ export default function QsbsExitAuditorPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Strategies to maximise QSBS tax-free exit value
+          QSBS planning tools and documentation
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Strategy</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Effect</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Complexity</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tool</th>
+                <th className="border-b border-neutral-300 p-3 text-left">What it does</th>
+                <th className="border-b border-neutral-300 p-3 text-left">When to use</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Spouse shareholding</td>
-                <td className="p-3 text-xs">Second $15M exclusion</td>
-                <td className="p-3 text-xs text-neutral-700">Spouse must hold separate qualifying shares</td>
+                <td className="p-3 font-bold">Form 8949 + Schedule D</td>
+                <td className="p-3 text-xs">Reports QSBS sale with §1202 exclusion claimed</td>
+                <td className="p-3 text-xs text-neutral-700">Annual filing for any QSBS sale</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Trust stacking</td>
-                <td className="p-3 text-xs">Additional exclusions per trust</td>
-                <td className="p-3 text-xs text-neutral-700">Irrevocable trusts — legal and tax advice required</td>
+                <td className="p-3 font-bold">§1202 attestation letter from issuer</td>
+                <td className="p-3 text-xs">Company confirms QSBS qualification at issuance</td>
+                <td className="p-3 text-xs text-neutral-700">Request before exit — document for IRS</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">83(b) election</td>
-                <td className="p-3 text-xs">Start holding period at grant date</td>
-                <td className="p-3 text-xs text-neutral-700">Must file within 30 days of stock grant</td>
+                <td className="p-3 font-bold">§1045 rollover election</td>
+                <td className="p-3 text-xs">Defers gain into new QSBS within 60 days</td>
+                <td className="p-3 text-xs text-neutral-700">Useful if partial or failing current QSBS</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Cap table review pre-exit</td>
+                <td className="p-3 text-xs">Identifies which shares qualify vs fail</td>
+                <td className="p-3 text-xs text-neutral-700">Critical for mixed LLC/C-corp founders</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Multi-shareholder cap stacking</td>
+                <td className="p-3 text-xs">Family members can each use their own cap</td>
+                <td className="p-3 text-xs text-neutral-700">Gifting QSBS to spouse/kids before exit</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">California conformity check</td>
+                <td className="p-3 text-xs">CA does NOT conform — state tax applies regardless</td>
+                <td className="p-3 text-xs text-neutral-700">Plan state tax separately</td>
               </tr>
             </tbody>
           </table>
@@ -924,7 +1028,7 @@ export default function QsbsExitAuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          5 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -969,7 +1073,7 @@ export default function QsbsExitAuditorPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before your exit
+            Ask these before any QSBS exit
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -998,14 +1102,14 @@ export default function QsbsExitAuditorPage() {
             Also relevant
           </p>
           <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Also relevant: ISO AMT Exercise Sniper
+            Also holding ISOs? Check the AMT trap.
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            If you hold ISOs alongside QSBS, exercising options can trigger AMT on phantom income. Check your ISO position before exercising.
+            ISOs exercised but not sold can trigger Alternative Minimum Tax exposure at exercise — separate from QSBS. Our ISO AMT Sniper shows the zero-AMT exercise range.
           </p>
           <Link href="/us/check/iso-amt-sniper"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
-            Check your ISO AMT exposure →
+            Check ISO AMT exposure →
           </Link>
         </div>
       </section>
@@ -1019,7 +1123,7 @@ export default function QsbsExitAuditorPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            IRC Section 1202 QSBS exclusion: up to $15M or 10× basis in capital gains excluded from federal tax. Requires C-Corp original issuance, 5-year hold, active business ≥80%, gross assets ≤$50M at issuance. Service businesses excluded. California does not conform.
+            IRC §1202 Qualified Small Business Stock exclusion. Pre-July 4, 2025: 5-year hold, 100% exclusion, cap greater of $10M or 10× basis. Post-July 4, 2025 (OBBBA): 3yr=50%, 4yr=75%, 5yr=100%, cap greater of $15M or 10× basis. Requires C-corporation at issuance, original issuance, gross assets under $50M, qualified active business (excludes professional services, finance, hospitality, farming). All structural gates binary — one failure eliminates entire exclusion. Federal tax on non-excluded gain: 23.8% combined (20% + 3.8% NIIT). §1045 rollover available for 60-day deferral into new QSBS.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1027,26 +1131,42 @@ export default function QsbsExitAuditorPage() {
               IRS
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              IRC Section 1202
+              IRC §1202
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              IRS Publication 550
+              $15M Cap Post-2025
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              5-Year Hold Full Exclusion
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              C-Corp Required
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Original Issuance Only
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
             <a href="https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRS — Qualified Small Business Stock (Section 1202) ↗</p>
+              <p className="font-bold text-neutral-900">IRS — Partial exclusion for gain from certain small business stock (Section 1202) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock</p>
             </a>
-            <a href="https://www.irs.gov/publications/p550" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.law.cornell.edu/uscode/text/26/1202" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRS — Publication 550: Investment Income and Expenses ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.irs.gov/publications/p550</p>
+              <p className="font-bold text-neutral-900">IRC Section 1202 ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.law.cornell.edu/uscode/text/26/1202</p>
+            </a>
+            <a href="https://www.law.cornell.edu/uscode/text/26/1045" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRC Section 1045 (rollover of QSBS gain) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.law.cornell.edu/uscode/text/26/1045</p>
+            </a>
+            <a href="https://www.irs.gov/forms-pubs/about-form-8949" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS Form 8949 (Sales and Other Dispositions of Capital Assets) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/forms-pubs/about-form-8949</p>
             </a>
             <a href="/api/rules/qsbs-exit-auditor" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
