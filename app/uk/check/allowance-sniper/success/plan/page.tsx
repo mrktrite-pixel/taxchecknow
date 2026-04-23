@@ -8,57 +8,57 @@ const FILES = [
   {
     "num": "01",
     "slug": "as-01",
-    "name": "Your Taper Exposure Report",
-    "desc": "Your exact taper position — allowance lost, extra tax, pension fix amount.",
+    "name": "Your 60% Trap Exposure Report",
+    "desc": "Your exact adjusted net income, allowance lost, and trap-band tax exposure.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "as-02",
-    "name": "Pension Contribution Calculator",
-    "desc": "Exactly how much to contribute to escape or reduce the 60% trap.",
+    "name": "Pension Contribution to Escape",
+    "desc": "Exact pension contribution needed to restore full allowance and the tax saving it produces.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "as-03",
-    "name": "Salary Sacrifice vs Personal Pension",
-    "desc": "Which method saves more — salary sacrifice or personal pension contributions?",
+    "name": "Salary Sacrifice vs Personal Contribution",
+    "desc": "Why salary sacrifice beats personal SIPP contributions at this income level.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "as-04",
-    "name": "Accountant Brief — Taper",
-    "desc": "Questions and data to take to your accountant.",
+    "name": "Bonus Timing Around £125,140",
+    "desc": "How to time bonuses and irregular income to stay in the trap band (escapable) rather than crossing into additional rate territory.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "as-05",
-    "name": "Gift Aid Tax Recovery Guide",
-    "desc": "How gift aid donations reduce adjusted net income and help with the taper.",
+    "name": "Your Accountant Brief — 60% Trap",
+    "desc": "5 questions to take to your accountant or IFA about the 60% trap and pension escape strategy.",
     "tier": 1
   },
   {
     "num": "06",
     "slug": "as-06",
-    "name": "Annual Allowance Check",
-    "desc": "Ensure your pension contribution does not exceed the annual allowance.",
+    "name": "Multi-Year Pension Planning",
+    "desc": "How to optimise pension contributions across multiple tax years using carry forward and contribution capacity.",
     "tier": 2
   },
   {
     "num": "07",
     "slug": "as-07",
-    "name": "Multi-Year Taper Strategy",
-    "desc": "Planning pension contributions across multiple years to smooth income.",
+    "name": "Spousal Income Shifting",
+    "desc": "Transferring investments, rental property, and business income to a lower-earning spouse to reduce the higher earner's adjusted net income.",
     "tier": 2
   },
   {
     "num": "08",
     "slug": "as-08",
-    "name": "Director Remuneration Review",
-    "desc": "Optimising salary, dividends, and pension to minimise taper exposure.",
+    "name": "Full 60% Trap Escape Execution Plan",
+    "desc": "Step-by-step execution plan for the tax year — diagnosis through post-year-end record keeping.",
     "tier": 2
   }
 ];
@@ -79,7 +79,7 @@ export default function SuccessPlan() {
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2027-04-05T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
+    (new Date("2027-04-05T23:59:59.000+01:00").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -121,14 +121,30 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const as_income = sessionStorage.getItem("allowance-sniper_as_income") || "106000";
-      const as_pension = sessionStorage.getItem("allowance-sniper_as_pension") || "false";
+      const income_band = sessionStorage.getItem("allowance-sniper_income_band") || "110k_120k";
+      const pension_contributions = sessionStorage.getItem("allowance-sniper_pension_contributions") || "none";
+      const salary_sacrifice = sessionStorage.getItem("allowance-sniper_salary_sacrifice") || "no";
+      const adjusted_net_income = sessionStorage.getItem("allowance-sniper_adjusted_net_income") || "115000";
+      const trap_band_income = sessionStorage.getItem("allowance-sniper_trap_band_income") || "15000";
+      const trap_tax = sessionStorage.getItem("allowance-sniper_trap_tax") || "9000";
+      const pension_needed = sessionStorage.getItem("allowance-sniper_pension_needed") || "15000";
+      const pension_tax_saving = sessionStorage.getItem("allowance-sniper_pension_tax_saving") || "6000";
+      const status = sessionStorage.getItem("allowance-sniper_status") || "IN THE 60% TRAP — DEEP ZONE";
+      const tier = sessionStorage.getItem("allowance-sniper_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "as_income": as_income,
-        "as_pension": as_pension,
-      }).some(v => v && v !== "106000");
+        "income_band": income_band,
+        "pension_contributions": pension_contributions,
+        "salary_sacrifice": salary_sacrifice,
+        "adjusted_net_income": adjusted_net_income,
+        "trap_band_income": trap_band_income,
+        "trap_tax": trap_tax,
+        "pension_needed": pension_needed,
+        "pension_tax_saving": pension_tax_saving,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "110k_120k");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -140,10 +156,18 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "Adjusted income": as_income,
-        "Makes pension contribs": as_pension,
+        "Income band": income_band,
+        "Current pension contributions": pension_contributions,
+        "Salary sacrifice availability": salary_sacrifice,
+        "Adjusted net income": adjusted_net_income,
+        "Income in 60% trap band": trap_band_income,
+        "Tax on trap band (60%)": trap_tax,
+        "Pension contribution to escape": pension_needed,
+        "Tax saved by pension contribution": pension_tax_saving,
+        "Verdict status": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","allowanceLost","extraTax","pensionNeeded","salaryStrategy","actions","weekPlan"],
+          fields: ["trapStatusSummary","adjustedNetIncomeCalculation","allowanceTaperImpact","trapBandExposure","taxOnLast10k","pensionEscapeRequirement","taxSavingProjection","salarySacrificeOptimisation","personalSippTopupStrategy","bonusTimingStrategy","multiYearPensionPlan","spousalIncomeShifting","accountantCoordinationBrief"],
         }),
       });
       const data = await res.json();
@@ -153,11 +177,19 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        allowanceLost: "Your personalised allowanceLost is being prepared — please refresh in a moment.",
-        extraTax: "Your personalised extraTax is being prepared — please refresh in a moment.",
-        pensionNeeded: "Your personalised pensionNeeded is being prepared — please refresh in a moment.",
-        salaryStrategy: "Your personalised salaryStrategy is being prepared — please refresh in a moment.",
+        trapStatusSummary: "Your personalised trapStatusSummary is being prepared — please refresh in a moment.",
+        adjustedNetIncomeCalculation: "Your personalised adjustedNetIncomeCalculation is being prepared — please refresh in a moment.",
+        allowanceTaperImpact: "Your personalised allowanceTaperImpact is being prepared — please refresh in a moment.",
+        trapBandExposure: "Your personalised trapBandExposure is being prepared — please refresh in a moment.",
+        taxOnLast10k: "Your personalised taxOnLast10k is being prepared — please refresh in a moment.",
+        pensionEscapeRequirement: "Your personalised pensionEscapeRequirement is being prepared — please refresh in a moment.",
+        taxSavingProjection: "Your personalised taxSavingProjection is being prepared — please refresh in a moment.",
+        salarySacrificeOptimisation: "Your personalised salarySacrificeOptimisation is being prepared — please refresh in a moment.",
+        personalSippTopupStrategy: "Your personalised personalSippTopupStrategy is being prepared — please refresh in a moment.",
+        bonusTimingStrategy: "Your personalised bonusTimingStrategy is being prepared — please refresh in a moment.",
+        multiYearPensionPlan: "Your personalised multiYearPensionPlan is being prepared — please refresh in a moment.",
+        spousalIncomeShifting: "Your personalised spousalIncomeShifting is being prepared — please refresh in a moment.",
+        accountantCoordinationBrief: "Your personalised accountantCoordinationBrief is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
           "What is the single most important action I should take before 5 April 2027?",
@@ -172,8 +204,16 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const as_income = sessionStorage.getItem("allowance-sniper_as_income") || "106000";
-    const as_pension = sessionStorage.getItem("allowance-sniper_as_pension") || "false";
+    const income_band = sessionStorage.getItem("allowance-sniper_income_band") || "110k_120k";
+    const pension_contributions = sessionStorage.getItem("allowance-sniper_pension_contributions") || "none";
+    const salary_sacrifice = sessionStorage.getItem("allowance-sniper_salary_sacrifice") || "no";
+    const adjusted_net_income = sessionStorage.getItem("allowance-sniper_adjusted_net_income") || "115000";
+    const trap_band_income = sessionStorage.getItem("allowance-sniper_trap_band_income") || "15000";
+    const trap_tax = sessionStorage.getItem("allowance-sniper_trap_tax") || "9000";
+    const pension_needed = sessionStorage.getItem("allowance-sniper_pension_needed") || "15000";
+    const pension_tax_saving = sessionStorage.getItem("allowance-sniper_pension_tax_saving") || "6000";
+    const status = sessionStorage.getItem("allowance-sniper_status") || "IN THE 60% TRAP — DEEP ZONE";
+    const tier = sessionStorage.getItem("allowance-sniper_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -181,14 +221,23 @@ export default function SuccessPlan() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Allowance Sniper — Deadlines`,
+      `X-WR-CALNAME:60% Tax Trap Engine — Deadlines`,
       "BEGIN:VEVENT",
       `UID:as-review-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(14)}`,
-      `DTEND;VALUE=DATE:${relativeDate(14)}`,
+      `DTSTART;VALUE=DATE:${relativeDate(60)}`,
+      `DTEND;VALUE=DATE:${relativeDate(60)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Taper — Review adjusted income mid-year",
-      "DESCRIPTION:Check adjusted net income now and model pension contribution needed.",
+      "SUMMARY:Mid-year adjusted net income review",
+      "DESCRIPTION:Check projected full-year adjusted net income 6 months into tax year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:as-autumn-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(120)}`,
+      `DTEND;VALUE=DATE:${relativeDate(120)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Autumn planning — pension top-up decision",
+      "DESCRIPTION:Final pension contribution planning with 5 months to go.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -197,7 +246,16 @@ export default function SuccessPlan() {
       `DTEND;VALUE=DATE:${"20270405"}`,
       `DTSTAMP:${now}`,
       "SUMMARY:Tax Year End — Final pension deadline",
-      "DESCRIPTION:Last chance to make pension contributions for 2026/27.",
+      "DESCRIPTION:5 April — last chance to contribute for current tax year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:as-sa-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20280131"}`,
+      `DTEND;VALUE=DATE:${"20280131"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Self-Assessment Deadline",
+      "DESCRIPTION:31 January 2028 — file 2026-27 return.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -290,7 +348,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","allowanceLost","extraTax","pensionNeeded","salaryStrategy","actions"] as string[]).map(key => {
+                {(["trapStatusSummary","adjustedNetIncomeCalculation","allowanceTaperImpact","trapBandExposure","taxOnLast10k","pensionEscapeRequirement"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -388,8 +446,17 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Taper — Review adjusted income mid-year</p>
-                    <p className="text-xs text-neutral-500">Check adjusted net income now and model pension contribution needed.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Mid-year adjusted net income review</p>
+                    <p className="text-xs text-neutral-500">Check projected full-year adjusted net income 6 months into tax year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    This week
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Autumn planning — pension top-up decision</p>
+                    <p className="text-xs text-neutral-500">Final pension contribution planning with 5 months to go.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     This week
@@ -398,10 +465,19 @@ export default function SuccessPlan() {
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold text-neutral-900">Tax Year End — Final pension deadline</p>
-                    <p className="text-xs text-neutral-500">Last chance to make pension contributions for 2026/27.</p>
+                    <p className="text-xs text-neutral-500">5 April — last chance to contribute for current tax year.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     5 Apr 2027
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Self-Assessment Deadline</p>
+                    <p className="text-xs text-neutral-500">31 January 2028 — file 2026-27 return.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    31 Jan 2028
                   </span>
                 </div>
               </div>
@@ -481,8 +557,8 @@ export default function SuccessPlan() {
             
             <div className="no-print rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Also relevant</p>
-              <p className="mb-1 text-sm font-bold text-neutral-950">Also taking dividends from your company?</p>
-              <p className="mb-2 text-xs text-neutral-600">Directors in the taper band often have both salary and dividend income pushing them above £100,000. Check your dividend tax position as well.</p>
+              <p className="mb-1 text-sm font-bold text-neutral-950">Also a company director taking dividends?</p>
+              <p className="mb-2 text-xs text-neutral-600">Company directors often combine salary, dividends, and rental — which can cross the £100k adjusted net income threshold without crossing £100k salary alone. The dividend trap and the 60% trap often catch the same person.</p>
               <Link href="/uk/check/dividend-trap" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
                 Check your dividend position →
               </Link>
@@ -498,7 +574,7 @@ export default function SuccessPlan() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United Kingdom tax adviser before making financial decisions.
             Based on HMRC guidance April 2026.{" "}
-            <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Personal Allowance taper</a> · <a href="/api/rules/allowance-sniper" target="_blank" rel="noopener noreferrer" className="underline">Machine-readable JSON rules</a>
+            <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Income Tax rates and Personal Allowances</a> · <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Personal Allowance and income over £100,000</a>
           </p>
         </div>
 

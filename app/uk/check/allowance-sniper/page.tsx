@@ -10,12 +10,12 @@ import AllowanceSniperCalculator from "./AllowanceSniperCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "UK 60% Tax Trap 2026: Personal Allowance Taper Explained | TaxCheckNow",
-  description: "Earn between £100,000 and £125,140? You are paying an effective 60% tax rate. Most people do not know this exists. Pension contributions can eliminate it entirely. Check your position in 2 minutes.",
+  title: "UK 60% Tax Trap 2026: Exact Exposure and Pension Escape | TaxCheckNow",
+  description: "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/allowance-sniper" },
   openGraph: {
-    title: "UK 60% Tax Trap 2026: Personal Allowance Taper Explained | TaxCheckNow",
-    description: "Earn between £100,000 and £125,140? You are paying an effective 60% tax rate. Most people do not know this exists. Pension contributions can eliminate it entirely. Check your position in 2 minutes.",
+    title: "UK 60% Tax Trap 2026: Exact Exposure and Pension Escape | TaxCheckNow",
+    description: "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/allowance-sniper",
     siteName: "TaxCheckNow",
     type: "website",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "5 April 2027";
-const DEADLINE_ISO   = "2027-04-05T23:59:59.000Z";
+const DEADLINE_ISO   = "2027-04-05T23:59:59.000+01:00";
 
 function daysToDeadline(): number {
   if (!DEADLINE_ISO) return 0;
@@ -49,192 +49,241 @@ function progressPct(): number {
 
 const faqs = [
   {
-    "question": "What is the 60% tax trap?",
-    "answer": "Between £100,000 and £125,140, the UK personal allowance is reduced by £1 for every £2 of adjusted net income above £100,000. This means income in this band is effectively taxed at 60% — 40% income tax plus the tax cost of losing the allowance. It is one of the UK's least-publicised tax quirks."
+    "question": "What is the UK 60% tax trap?",
+    "answer": "The 60% tax trap is the effective marginal tax rate faced by UK earners with adjusted net income between £100,000 and £125,140. The personal allowance of £12,570 is withdrawn at £1 for every £2 earned above £100,000 — fully gone at £125,140. Combined with 40% higher-rate income tax, the effective marginal rate on earnings in this band is 60%."
   },
   {
-    "question": "How do I calculate my adjusted net income?",
-    "answer": "Adjusted net income is your total income from all sources (salary, dividends, rental profit, savings interest) minus certain deductions including pension contributions, gift aid donations, and trading losses. It is not the same as your gross salary."
+    "question": "How does the personal allowance taper work?",
+    "answer": "For every £2 of adjusted net income above £100,000, £1 of personal allowance is withdrawn. At £100,000 you have the full £12,570 allowance. At £110,000 you have £7,570. At £125,140 you have zero. The taper is automatic under Income Tax Act 2007 section 35. Adjusted net income includes employment, self-employment, rental, savings, and dividends — minus deductions like gross pension contributions and Gift Aid."
   },
   {
-    "question": "Can pension contributions fix the 60% trap?",
-    "answer": "Yes — and very effectively. A pension contribution reduces your adjusted net income. If you contribute enough to bring adjusted net income below £100,000, you eliminate the taper entirely. In the taper band, the effective relief on a pension contribution is 60% — making it the most valuable pension investment in the UK tax system."
+    "question": "Can pension contributions really save me 60% in tax?",
+    "answer": "Yes. A pension contribution that brings adjusted net income below £100,000 achieves two things simultaneously: (1) the contribution itself gets higher-rate pension relief (40% for higher-rate taxpayers), and (2) the personal allowance is restored, saving the tax that would have been paid on that £12,570 at the higher rate. Combined effective saving can approach 60% of the contribution amount."
   },
   {
-    "question": "Does salary sacrifice help?",
-    "answer": "Yes. Salary sacrifice reduces your gross salary before it enters the HMRC system — it is the most efficient method because it also reduces National Insurance contributions. A £10,000 salary sacrifice reduces adjusted net income by £10,000 and saves additional NI."
+    "question": "What is salary sacrifice and why is it better than personal pension contributions?",
+    "answer": "Salary sacrifice is an employer-facilitated arrangement where part of your salary is redirected to pension BEFORE tax or NI is deducted. Unlike personal pension contributions (which save only income tax), salary sacrifice also saves employee NI (8-13% depending on band) and employer NI (typically 13.8% — often reinvested into the pension). Combined saving on a £15,000 salary sacrifice at this income level can exceed 60% of the contribution amount."
   },
   {
-    "question": "What if I cannot afford a pension contribution large enough to escape the trap?",
-    "answer": "Even a partial contribution helps. Every £2 contributed in the taper band saves 60p in tax (60% effective relief). You do not need to escape the trap entirely to benefit — partial recovery still reduces your tax bill."
+    "question": "What is adjusted net income?",
+    "answer": "Adjusted net income is the income figure used to calculate the personal allowance taper. It includes all taxable income from employment, self-employment, rental, savings, and dividends. It is REDUCED by gross pension contributions (including employer and personal), Gift Aid donations (grossed up), and certain other reliefs. It is NOT reduced by ordinary deductible expenses or capital losses. HMRC's calculator on gov.uk provides the exact definition."
+  },
+  {
+    "question": "Does the 60% trap apply if I receive dividends instead of salary?",
+    "answer": "Yes, in effect. Dividend income is subject to its own dividend tax rates (8.75% basic, 33.75% higher, 39.35% additional rate) but dividends still count toward adjusted net income for personal allowance taper purposes. Company directors taking £95k salary + £40k dividends can easily cross £100k adjusted net income and lose allowance — even though their marginal tax on the dividends themselves is 33.75%."
+  },
+  {
+    "question": "What about the child benefit tax charge?",
+    "answer": "The High Income Child Benefit Charge (HICBC) is a separate clawback that starts at £60,000 and fully claws back child benefit at £80,000 (thresholds changed in April 2024). This creates an additional effective tax rate stack — in the £60k-£80k band you can face a combined 50%+ effective rate depending on number of children. Above £100k you stack the 60% allowance taper on top. Can mean effective rates above 65% for families with multiple children."
+  },
+  {
+    "question": "Is there any way HMRC shows this on my payslip or tax code?",
+    "answer": "No, not directly. The personal allowance taper is applied at self-assessment or via adjusted tax code if HMRC has income projection data. Most taxpayers in the £100k-£125k band discover the 60% trap only when they file their tax return — often nine to twelve months after the year ends. By then the allowance for that year is permanently lost and cannot be retrospectively restored."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: The highest income tax rate in the UK is 45%",
-    "correct": "Reality: For income between £100,000 and £125,140, the effective marginal rate is 60% due to the personal allowance taper. This is widely misunderstood and not prominently explained by HMRC."
+    "wrong": "ChatGPT says: UK income tax rates are 20%, 40%, and 45% — there is no 60% rate",
+    "correct": "Reality: Between £100,000 and £125,140 the EFFECTIVE marginal rate is 60% — composed of 40% higher rate income tax PLUS the 20% cost of personal allowance withdrawal (£1 withdrawn per £2 earned). It's not a headline rate — it's the real arithmetic of the taper under Income Tax Act 2007 s35."
   },
   {
-    "wrong": "ChatGPT says: Pension contributions save 40% tax relief",
-    "correct": "Reality: For income in the £100k-£125,140 taper band, pension contributions save 40% income tax relief PLUS restore personal allowance — giving an effective relief rate of 60%. It is the highest-value pension contribution band in the UK tax system."
+    "wrong": "ChatGPT says: Earning more always means more take-home pay",
+    "correct": "Reality: Between £100,000 and £125,140 earning an extra £1 gives you only 40p. At some NI + student loan + child benefit clawback combinations, the effective marginal rate can exceed 70%. A £5,000 bonus in this band nets approximately £2,000 after all deductions."
   },
   {
-    "wrong": "ChatGPT says: The personal allowance is always £12,570",
-    "correct": "Reality: The personal allowance is tapered to zero for adjusted net income above £100,000, reaching zero at £125,140. For anyone earning in this band, the effective personal allowance is less than £12,570."
+    "wrong": "ChatGPT says: Pension contributions just defer tax — you pay it later",
+    "correct": "Reality: A pension contribution that restores your personal allowance doesn't just defer the allowance withdrawal cost — it ELIMINATES it. The £12,570 that would never have been received tax-free gets restored. This saves up to £5,028 in tax that would otherwise never come back. That's in addition to the ordinary pension tax relief on the contribution itself."
+  },
+  {
+    "wrong": "ChatGPT says: My employer handles my tax so this is not my problem",
+    "correct": "Reality: PAYE handles income tax on employment income based on your tax code. It does NOT model your TOTAL adjusted net income including rental, self-employment, dividends, or side-consulting. The 60% trap only surfaces on self-assessment — by which time the allowance is already lost for that year and cannot be retrospectively restored."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "What is my exact adjusted net income — and am I in the personal allowance taper band?",
-    "why": "Many people are in the taper without knowing it because their adjusted income includes rental profit, dividends, or other sources they forget about."
+    "q": "What is my projected adjusted net income for this tax year — including employment, self-employment, rental, savings, and dividends?",
+    "why": "Your accountant should have a forward projection, not just last year's number. Bonuses, side-income growth, and rental yield changes can push you into the trap mid-year."
   },
   {
-    "q": "How much pension contribution would bring my adjusted income below £100,000?",
-    "why": "This is the simplest way to eliminate the taper entirely. Your accountant can calculate the exact amount needed."
+    "q": "Given that projection, what pension contribution would bring me to £100,000 exactly — and what is the combined tax saving?",
+    "why": "The answer should be specific: a pound figure, split between pension tax relief (40%) and allowance restoration (~£5,028 max), giving a total saving. Vague answers mean they haven't run the maths."
   },
   {
-    "q": "Should I use salary sacrifice or personal contributions — which is more efficient for me?",
-    "why": "Salary sacrifice saves NI as well as income tax. Personal contributions get relief at source. The right choice depends on your employer's arrangements."
+    "q": "Is salary sacrifice available through my employer, and how does it compare to a personal SIPP contribution for me specifically?",
+    "why": "Salary sacrifice adds NI savings on top of income tax relief. Personal SIPP doesn't. On £15k at £115k income, salary sacrifice can save £1,500-£2,000 more than an equivalent personal contribution."
   },
   {
-    "q": "Can gift aid donations help reduce my adjusted income?",
-    "why": "Regular charitable giving via gift aid reduces adjusted net income and can contribute to escaping the taper, while also supporting causes you care about."
+    "q": "How should I time bonuses or large payments to avoid crossing £125,140 (where the allowance is fully lost)?",
+    "why": "Above £125,140 marginal rate drops to 45% but you've fully lost the £12,570 allowance — worse overall. Bonus timing or deferral can keep you in the 60% trap band (where escape is cheaper) instead of crossing into additional rate territory."
   },
   {
-    "q": "If I have a good year and hit £100k for the first time, what should I do immediately?",
-    "why": "The taper is most painful for first-time £100k earners who are not expecting it. The sooner you act within the tax year, the more you can recover."
+    "q": "What should I do before 5 April to maximise allowance restoration for this tax year — and how early should I act next year to avoid last-minute panic?",
+    "why": "The allowance is annual use-it-or-lose-it. Retrospective pension contributions after year-end cannot restore the prior year's allowance. The operational discipline matters as much as the strategy."
   }
 ];
 
 const workedExamples = [
   {
-    "name": "Just inside",
-    "setup": "£102,000 adjusted income",
-    "income": "£1,000 lost",
-    "status": "£400 extra — £2k pension fixes it"
+    "name": "Senior PM, £105k salary",
+    "setup": "Just crossed threshold, no rental, standard pension",
+    "income": "Adjusted net income £105k",
+    "status": "£5K TRAP — ~£3K TAX"
   },
   {
-    "name": "Mid-taper",
-    "setup": "£112,000 adjusted income",
-    "income": "£6,000 lost",
-    "status": "£2,400 extra — £12k pension fixes it"
+    "name": "Director, £118k salary + bonus",
+    "setup": "£115k base + £10k bonus, 4% pension",
+    "income": "Adjusted net income £120k",
+    "status": "£20K TRAP — ~£12K TAX"
   },
   {
-    "name": "Deep taper",
-    "setup": "£120,000 adjusted income",
-    "income": "£10,000 lost",
-    "status": "£4,000 extra — £20k pension fixes it"
+    "name": "Contractor, £135k take-home",
+    "setup": "Limited company, £95k salary + £40k dividends",
+    "income": "Adjusted net income £135k",
+    "status": "PAST TRAP — ALLOWANCE GONE"
   },
   {
-    "name": "Full allowance gone",
-    "setup": "£125,140+ income",
-    "income": "£12,570 lost",
-    "status": "£5,028 extra — back to 45% rate"
+    "name": "Consultant, £98k + £15k rental",
+    "setup": "Employed + rental flat in Leeds",
+    "income": "Adjusted net income £113k",
+    "status": "£13K TRAP — HIDDEN BY RENTAL"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "£95,000",
-    "metric1": "40%",
-    "metric2": "40%",
-    "bestMove": "No taper — fine"
+    "position": "Basic rate taxpayer (£30k income)",
+    "metric1": "20%",
+    "metric2": "£3,000",
+    "bestMove": "£12,000"
   },
   {
-    "position": "£110,000",
+    "position": "Higher rate taxpayer (£75k income)",
     "metric1": "40%",
-    "metric2": "60%",
-    "bestMove": "Pension reduces to 40%"
+    "metric2": "£6,000",
+    "bestMove": "£9,000"
   },
   {
-    "position": "£120,000",
-    "metric1": "40%",
-    "metric2": "60%",
-    "bestMove": "Pension reduces to 40%"
+    "position": "60% trap taxpayer (£115k income)",
+    "metric1": "60%",
+    "metric2": "£9,000",
+    "bestMove": "£6,000"
   },
   {
-    "position": "£130,000",
+    "position": "Additional rate taxpayer (£150k income)",
     "metric1": "45%",
-    "metric2": "45%",
-    "bestMove": "Out of taper band"
+    "metric2": "£6,750",
+    "bestMove": "£8,250"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "Personal pension contribution",
-    "effect": "Reduces adjusted net income directly",
-    "note": "Most effective — 60% effective relief in band"
+    "tool": "Employer salary sacrifice",
+    "effect": "Reduces gross salary → reduces adjusted net income AND saves NI",
+    "note": "Best lever if employer offers it"
   },
   {
-    "tool": "Salary sacrifice",
-    "effect": "Reduces gross salary — never enters adjusted income",
-    "note": "Best if employer supports it"
+    "tool": "Personal SIPP contribution",
+    "effect": "Reduces adjusted net income, gets 40% pension tax relief",
+    "note": "Good fallback if no salary sacrifice"
+  },
+  {
+    "tool": "Bonus timing / deferral",
+    "effect": "Smooths income across tax years to stay under £100k",
+    "note": "Employer-dependent option"
   },
   {
     "tool": "Gift Aid donations",
-    "effect": "Basic rate relief — reduces adjusted income",
-    "note": "Good if you donate regularly"
+    "effect": "Reduces adjusted net income by gross Gift Aid value",
+    "note": "Works but smaller scale"
   },
   {
-    "tool": "Trading loss relief",
-    "effect": "Losses from self-employment can offset income",
-    "note": "Only if you have genuine trading losses"
+    "tool": "Spousal income shifting",
+    "effect": "Transfer investments / property to lower-earning spouse",
+    "note": "Structural move — needs legal setup"
   }
 ];
 
 const geoFacts = [
   {
-    "label": "Taper starts",
-    "value": "Adjusted net income over £100,000"
+    "label": "Personal allowance 2025-26",
+    "value": "£12,570"
   },
   {
-    "label": "Rate of taper",
-    "value": "£1 allowance per £2 income above £100k"
+    "label": "Allowance taper start",
+    "value": "£100,000 adjusted net income"
+  },
+  {
+    "label": "Withdrawal rate",
+    "value": "£1 for every £2 earned above £100,000"
   },
   {
     "label": "Allowance fully withdrawn at",
     "value": "£125,140"
   },
   {
-    "label": "Effective marginal rate in band",
-    "value": "60%"
+    "label": "Effective rate in trap band",
+    "value": "60% marginal"
   },
   {
-    "label": "Personal allowance 2026/27",
-    "value": "£12,570"
+    "label": "Higher rate income tax",
+    "value": "40% between £50,270 and £125,140"
   },
   {
-    "label": "Fix",
-    "value": "Pension contributions reduce adjusted net income"
+    "label": "Additional rate above £125,140",
+    "value": "45%"
+  },
+  {
+    "label": "Legal anchor",
+    "value": "Income Tax Act 2007 section 35"
+  },
+  {
+    "label": "Taper introduced",
+    "value": "April 2010"
+  },
+  {
+    "label": "Reversible via",
+    "value": "Pension contributions or salary sacrifice"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "Taper starts",
-    "value": "£100,000"
+    "label": "Personal allowance",
+    "value": "£12,570"
   },
   {
-    "label": "Effective rate",
+    "label": "Taper threshold",
+    "value": "£100,000 ANI"
+  },
+  {
+    "label": "Effective rate in trap",
     "value": "60%"
   },
   {
-    "label": "Taper ends",
+    "label": "Allowance fully lost at",
     "value": "£125,140"
-  },
-  {
-    "label": "Pension relief in band",
-    "value": "Up to 60%"
   }
 ];
 
 const sources = [
   {
-    "title": "HMRC — Personal Allowance taper",
+    "title": "HMRC — Income Tax rates and Personal Allowances",
+    "url": "https://www.gov.uk/income-tax-rates"
+  },
+  {
+    "title": "HMRC — Personal Allowance and income over £100,000",
     "url": "https://www.gov.uk/income-tax-rates/income-over-100000"
+  },
+  {
+    "title": "HMRC — Tax on your private pension contributions (tax relief)",
+    "url": "https://www.gov.uk/tax-on-your-private-pension"
+  },
+  {
+    "title": "Income Tax Act 2007 — section 35 (Personal allowance)",
+    "url": "https://www.legislation.gov.uk/ukpga/2007/3/section/35"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -244,26 +293,26 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "Taper starts at",
-    "value": "£100,000",
-    "sub": "adjusted net income"
+    "label": "Personal allowance 2025-26",
+    "value": "£12,570",
+    "sub": "Withdrawn at £100k threshold"
   },
   {
-    "label": "Effective rate",
+    "label": "Withdrawal rate",
+    "value": "£1 per £2",
+    "sub": "For every £2 earned over £100k"
+  },
+  {
+    "label": "Effective rate in trap",
     "value": "60%",
-    "sub": "in the taper band",
+    "sub": "40% tax + 20% allowance cost",
     "red": true
   },
   {
-    "label": "Taper ends at",
-    "value": "£125,140",
-    "sub": "full allowance gone",
+    "label": "Kept on last £10k earned",
+    "value": "£4,000",
+    "sub": "60p lost to tax on every £1",
     "red": true
-  },
-  {
-    "label": "Pension relief",
-    "value": "Up to 60%",
-    "sub": "in the taper band — most efficient UK pension"
   }
 ];
 
@@ -287,8 +336,8 @@ export default function AllowanceSniperPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Allowance Sniper — Rules April 2026",
-    description: "Earn between £100,000 and £125,140? You are paying an effective 60% tax rate. Most people do not know this exists. Pension contributions can eliminate it entirely. Check your position in 2 minutes.",
+    name: "60% Tax Trap Engine — Rules April 2026",
+    description: "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -303,14 +352,14 @@ export default function AllowanceSniperPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Allowance Sniper",
-    description: "Earn between £100,000 and £125,140? You are paying an effective 60% tax rate. Most people do not know this exists. Pension contributions can eliminate it entirely. Check your position in 2 minutes.",
+    name: "60% Tax Trap Engine",
+    description: "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/allowance-sniper",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your Allowance Recovery Pack", price: "67.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your Allowance Audit Pack", price: "67.00", priceCurrency: "GBP" },
       { "@type": "Offer", name: "Your 60% Tax Escape Plan", price: "147.00", priceCurrency: "GBP" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
@@ -319,23 +368,28 @@ export default function AllowanceSniperPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Allowance Sniper",
+    name: "How to use the 60% Tax Trap Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter your adjusted income",
-            "text": "Choose your total income from all sources."
+            "name": "Enter your total income",
+            "text": "Combined employment, self-employment, rental, and relevant other income bands."
       },
       {
             "@type": "HowToStep",
-            "name": "Check pension status",
-            "text": "Confirm whether you are already using pension contributions to reduce income."
+            "name": "Enter current pension contributions",
+            "text": "All pension contributions including employer match."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your taper verdict",
-            "text": "See your exact taper exposure in pounds and your pension fix amount."
+            "name": "Indicate salary sacrifice availability",
+            "text": "Determines optimal escape lever — sacrifice is more efficient than personal SIPP."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "See exact trap exposure and escape plan",
+            "text": "Tax on trap band, pension needed to escape, net cost after tax saving."
       }
 ],
   };
@@ -343,12 +397,12 @@ export default function AllowanceSniperPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Allowance Sniper — Free Check",
+    "name": "60% Tax Trap Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/allowance-sniper#calculator",
-    "description": "Earn between £100,000 and £125,140? You are paying an effective 60% tax rate. Most people do not know this exists. Pension contributions can eliminate it entirely. Check your position in 2 minutes.",
+    "description": "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -375,7 +429,7 @@ export default function AllowanceSniperPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United Kingdom", item: "https://taxchecknow.com/uk" },
-      { "@type": "ListItem", position: 3, name: "Allowance Sniper", item: "https://taxchecknow.com/uk/check/allowance-sniper" },
+      { "@type": "ListItem", position: 3, name: "60% Tax Trap Engine", item: "https://taxchecknow.com/uk/check/allowance-sniper" },
     ],
   };
 
@@ -408,7 +462,7 @@ export default function AllowanceSniperPage() {
 
       {/* Mobile red bar */}
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · TAX YEAR END
+        🔴 {countdown} days · {DEADLINE_LABEL} · YEAR END — ALLOWANCE LOST IF MISSED
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -418,9 +472,9 @@ export default function AllowanceSniperPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇬🇧 HMRC Verified · Income Tax Act 2007 — Personal Allowance Taper ↗
+            🇬🇧 HMRC Verified · Income Tax Act 2007 section 35 — Personal allowance taper above £100,000 ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
@@ -429,12 +483,12 @@ export default function AllowanceSniperPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          The 60% Tax Trap: Is Your Income Between £100,000 and £125,140?
+          UK Earners Between £100,000 and £125,140 Face a 60% Tax Rate — Here Is Exactly What It Is Costing You
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          If your adjusted net income is between £100,000 and £125,140, your personal allowance is tapered away at £1 for every £2 of income above £100,000. This creates an effective marginal tax rate of 60% on income in that band — not the 40% or 45% most people assume.
+          In the UK, the personal allowance of £12,570 is withdrawn at £100,000 at a rate of £1 for every £2 earned. By £125,140 it is gone entirely. The effect is a 60% effective marginal tax rate — 40% income tax plus the 20% value of the allowance being removed. This is not a penalty. It is arithmetic. And it is avoidable.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -456,20 +510,20 @@ export default function AllowanceSniperPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Taper starts</dt>
-                  <dd className="font-bold">£100,000</dd>
+                  <dt className="text-neutral-600">Personal allowance</dt>
+                  <dd className="font-bold">£12,570</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Effective rate</dt>
+                  <dt className="text-neutral-600">Taper threshold</dt>
+                  <dd className="font-bold">£100,000 ANI</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-neutral-600">Effective rate in trap</dt>
                   <dd className="font-bold">60%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Taper ends</dt>
+                  <dt className="text-neutral-600">Allowance fully lost at</dt>
                   <dd className="font-bold">£125,140</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-neutral-600">Pension relief in band</dt>
-                  <dd className="font-bold">Up to 60%</dd>
                 </div>
               </dl>
             </div>
@@ -477,12 +531,12 @@ export default function AllowanceSniperPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Allowance Sniper</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised allowance audit showing your taper exposure, pension relief opportunity, and exact recovery amount.</p>
+              <h3 className="mb-1 text-lg font-bold">60% Tax Trap Engine</h3>
+              <p className="mb-3 text-sm text-neutral-300">Your exact 60% trap exposure calculation, pension contribution needed to restore the full allowance, tax saving projection, and 5 accountant questions — built for your income band and current pension setup.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  £67 · Allowance Recovery Pack
+                  £67 · Allowance Audit Pack
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
@@ -515,39 +569,39 @@ export default function AllowanceSniperPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Taper starts at
+                Personal allowance 2025-26
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                £100,000
+                £12,570
               </p>
-              <p className="text-xs text-neutral-400">adjusted net income</p>
+              <p className="text-xs text-neutral-400">Withdrawn at £100k threshold</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Withdrawal rate
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                £1 per £2
+              </p>
+              <p className="text-xs text-neutral-400">For every £2 earned over £100k</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Effective rate
+                Effective rate in trap
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
                 60%
               </p>
-              <p className="text-xs text-neutral-400">in the taper band</p>
+              <p className="text-xs text-neutral-400">40% tax + 20% allowance cost</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Taper ends at
+                Kept on last £10k earned
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                £125,140
+                £4,000
               </p>
-              <p className="text-xs text-neutral-400">full allowance gone</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Pension relief
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Up to 60%
-              </p>
-              <p className="text-xs text-neutral-400">in the taper band — most efficient UK pension</p>
+              <p className="text-xs text-neutral-400">60p lost to tax on every £1</p>
             </div>
           </div>
         </div>
@@ -559,48 +613,51 @@ export default function AllowanceSniperPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The 60% trap calculation
+            The 60% trap arithmetic
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ 40% income tax on taper income</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Plus losing £1 allowance per £2 income</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ = 60% effective marginal rate</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 1: Personal allowance £12,570 reduced by £1 for every £2 over £100,000 ANI</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 2: Allowance fully withdrawn at £125,140</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 3: Higher rate income tax 40% on trap-band income</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 4: Effective marginal rate = 40% tax + 20% allowance cost = 60%</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 5: Pension and salary sacrifice reduce ANI, restoring allowance proportionally</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT shown on your tax code</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT visible on P60</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT explained by HMRC proactively</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT shown on payslip or PAYE tax code</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a penalty — statutory under ITA 2007 s35</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT reversible retrospectively after tax year end</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT only a salary issue — includes rental, dividends, self-employment</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC · Income Tax Act 2007 s.35</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC — Income over £100,000 · Income Tax Act 2007 section 35 · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — HMRC confirmed April 2026
+            The 60% trap is arithmetic, not opinion — and it is avoidable
           </p>
-          <p className="mb-2 text-neutral-900">If your adjusted net income is between £100,000 and £125,140, your personal allowance is tapered away at £1 for every £2 of income above £100,000. This creates an effective marginal tax rate of 60% on income in that band — not the 40% or 45% most people assume.</p>
-          <p className="mb-2 text-neutral-900">The taper is completely legal, has been in place since 2010, and is not widely understood even by people it affects. On £125,140 income you lose the entire £12,570 personal allowance — worth £5,028 in additional tax at the 40% rate.</p>
-          <p className="mb-2 text-neutral-900">The escape route is straightforward: pension contributions reduce your adjusted net income. A £10,000 pension contribution for someone earning £110,000 recovers £5,000 of allowance and eliminates £3,000 of the 60% rate exposure — worth £3,000 in real tax saving on top of the basic pension relief.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Income Tax personal allowance · Income Tax Act 2007 s.35</p>
+          <p className="mb-2 text-neutral-900">In the UK, the personal allowance of £12,570 is withdrawn at £100,000 at a rate of £1 for every £2 earned. By £125,140 it is gone entirely. The effect is a 60% effective marginal tax rate — 40% income tax plus the 20% value of the allowance being removed. This is not a penalty. It is arithmetic. And it is avoidable.</p>
+          <p className="mb-2 text-neutral-900">The fix is a pension contribution or salary sacrifice arrangement that reduces adjusted net income below £100,000. Every £2 contributed restores £1 of personal allowance. A £15,000 contribution at £115,000 income restores the full allowance and saves approximately £6,000 in tax — making the net cost of the contribution £9,000 not £15,000.</p>
+          <p className="mb-2 text-neutral-900">This has been the rule since 2010. HMRC does not flag it. Your payslip does not show it. Most people in this band discover it only when they see their tax return — by which point the year is gone.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Personal Allowances · Income Tax Act 2007 section 35 · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The 60% trap — how it works
+            The 60% trap chain — how the arithmetic works
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Income £110,000 → 40% tax on income → most people stop here  ❌  Missing the taper
+              ❌ Earn £1 over £100,000 → pay 40p income tax + lose 50p of allowance (worth 20p in future tax) → 60p gone  ❌  60% effective rate
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Income £110,000 → 40% on income PLUS lose £5,000 allowance = 60% effective rate  ✔  The real position
+              ✔ Pension contribution of £Y brings adjusted net income to £100,000 → full £12,570 allowance restored → up to £5,028 tax saved  ✔  Allowance preserved
             </div>
           </div>
         </div>
@@ -608,12 +665,13 @@ export default function AllowanceSniperPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most people get wrong about the 60% trap
+            What most people (and most online tax commentary) get wrong about the 60% trap
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The highest UK income tax rate is 45% — wrong for income in the £100k-£125,140 band. The personal allowance taper creates an effective 60% rate on income in this range. This is not publicised by HMRC and surprises most people who hit it for the first time.</li>
-            <li>✗ Pension contributions only save 40% tax relief — wrong if you are in the taper band. A pension contribution in the £100k-£125,140 band saves 40% relief PLUS restores personal allowance — giving an effective 60% relief on the amount contributed. It is the most tax-efficient pension band in the UK.</li>
-            <li>✗ The taper only applies to very high earners — wrong. It starts at £100,000 — a level reached by many directors, senior professionals, landlords with multiple properties, and anyone with a strong year. It is far more common than people realise.</li>
+            <li>✗ I am a 40% taxpayer so I pay 40% on everything over £50,270 — wrong. Between £100,000 and £125,140 you pay a 60% effective rate because your personal allowance is simultaneously withdrawn. HMRC does not put this on your tax code or payslip — it only shows up on your self-assessment return.</li>
+            <li>✗ Earning more always means more take-home pay — wrong. Between £100,000 and £125,140 earning an extra £1,000 costs you £600 in tax. You keep £400. In some National Insurance combinations (student loan, child benefit clawback) the effective marginal rate can be even worse.</li>
+            <li>✗ Pension contributions just defer tax — wrong. A contribution that reduces adjusted net income below £100,000 restores your personal allowance, saving up to £5,028 in tax that would never have been paid at all — not deferred, eliminated. The allowance is annual use-it-or-lose-it.</li>
+            <li>✗ My employer handles this — wrong. Employers deduct PAYE but do not model personal allowance withdrawal across your total income (employment + self-employment + rental). The 60% trap is only visible when all income sources are combined on your self-assessment return. Most people in this band find out a year late.</li>
           </ul>
         </div>
 
@@ -638,13 +696,13 @@ export default function AllowanceSniperPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">James had been paying himself £62,000 a year for six years. His accountant set it up that way. He had never asked why.</p>
-            <p>The salary and dividend split made sense when Dave explained it years ago — pay up to the personal allowance, take the rest as dividends, pay less National Insurance. James understood it well enough at the time and then forgot about it.</p>
-            <p>What James did not know was that his total income — salary plus dividends plus the rental flat — had crept over £100,000 in the 2024/25 year. He had no idea what that meant. The rental had done better than expected.</p>
-            <p>His daughter mentioned something at Easter about a 60% tax trap she had read about. James dismissed it. She was studying economics and liked showing off. But the phrase stuck with him.</p>
-            <p className="font-semibold text-neutral-900">The calculator showed his total income at £103,400. The personal allowance taper had started. He was paying an effective 60% on the slice between £100,000 and £103,400 — completely avoidable with a pension contribution.</p>
+            <p className="text-base font-medium text-neutral-900">Daniel's promotion letter was framed as a £20,000 pay rise. His payslip the following January showed otherwise.</p>
+            <p>Daniel had been promoted in early 2025. Salary moved from £95,000 to £115,000. Small rental flat in Manchester added another £8,400 gross to his income. His wife worked part-time. Two kids. Mortgage. Clapham. The pay rise was supposed to ease the family's cash flow.</p>
+            <p>It did not. The monthly take-home did go up, but not by as much as he expected. Daniel assumed it was tax at 40% on the extra — so he'd keep roughly 60% of the raise. That was wrong.</p>
+            <p>In January he filed his self-assessment. Total adjusted net income: about £123,000 after including the rental. Personal allowance: almost fully withdrawn. Tax bill: £5,000 higher than his back-of-envelope estimate. He Googled why and found the phrase '60% tax trap' for the first time.</p>
+            <p className="font-semibold text-neutral-900">Daniel ran the calculator. Adjusted net income £123,000. Allowance lost: £11,500 (almost all of the £12,570). Tax on the £23,000 of trap-band income: £13,800 at 60% effective rate. Pension contribution needed to escape entirely: £23,000. Tax saving from that contribution: roughly £9,200 (40% pension relief) plus another £4,600 from restored allowance. Net cost of contribution: about £9,200 for something worth £23,000 in his pension and about £13,800 in recovered tax.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> He called Dave and asked one question: am I in the taper? Dave confirmed he was. They made a £3,400 pension contribution before year end. Saved £2,040. Took twenty minutes.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Daniel booked an IFA meeting the next week. Plan: increase salary sacrifice from 4% to the maximum his employer allowed (20%, reducing gross to £92,000), fund the gap with a personal SIPP contribution for the remaining £8,000. Bonus timing shifted to ensure it didn't push him over £125,140. Across the full year his 60% trap exposure went to near zero, with the added benefit that his pension pot now grew by £23,000/year that would otherwise have been taxed at 60%.</p>
             </div>
           </div>
           
@@ -657,16 +715,16 @@ export default function AllowanceSniperPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — UK 60% tax trap 2026
+            AI extraction block — UK 60% personal allowance taper
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            UK Personal Allowance Taper — confirmed 2026
+            UK 60% effective marginal tax rate and personal allowance taper — confirmed April 2026
           </h2>
-          <p className="mb-4 text-neutral-800">The UK personal allowance taper reduces the £12,570 personal allowance by £1 for every £2 of adjusted net income above £100,000 under Income Tax Act 2007 s.35. The allowance is completely withdrawn at £125,140. This creates an effective marginal income tax rate of 60% on income between £100,000 and £125,140 (40% income tax plus the effect of losing tax-free allowance). Pension contributions, salary sacrifice arrangements, gift aid donations, and trading losses all reduce adjusted net income and can partially or fully recover the personal allowance. The 2026/27 personal allowance remains £12,570.</p>
+          <p className="mb-4 text-neutral-800">UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance of £12,570 is withdrawn at a rate of £1 for every £2 of income above £100,000. This is established under Income Tax Act 2007 section 35. The allowance is fully withdrawn at £125,140. The effective rate arises from the combination of 40% income tax on earnings in the higher rate band plus the effective 20% tax cost of losing the personal allowance. A taxpayer earning £110,000 pays approximately £6,000 tax on the £10,000 above the threshold — keeping only £4,000. The mechanism can be reversed by making pension contributions or salary sacrifice arrangements that reduce adjusted net income below £100,000, restoring the full personal allowance and saving up to £5,028 in tax.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Adjusted net income above £100,000 = taper amount. Allowance lost = taper amount divided by 2. Tax cost of lost allowance = allowance lost × 40%. Effective taper band rate = 60%. Pension needed to escape taper fully: adjusted income minus £100,000.
+            Personal allowance reduction = max(0, (Adjusted Net Income − 100,000) / 2), capped at £12,570. Effective marginal rate in £100k-£125,140 band = 60% (40% income tax + 20% allowance withdrawal cost). Above £125,140: 45% additional rate, allowance fully lost. Pension contribution required to escape = Adjusted Net Income − 100,000. Tax saving approximately 60% of contribution amount when fully restoring allowance.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -680,43 +738,63 @@ export default function AllowanceSniperPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Taper starts</td>
-                  <td className="p-2">Adjusted net income over £100,000</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Personal Allowance Taper</td>
+                  <td className="p-2">Personal allowance 2025-26</td>
+                  <td className="p-2">£12,570</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Rate of taper</td>
-                  <td className="p-2">£1 allowance per £2 income above £100k</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Personal Allowance Taper</td>
+                  <td className="p-2">Allowance taper start</td>
+                  <td className="p-2">£100,000 adjusted net income</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Withdrawal rate</td>
+                  <td className="p-2">£1 for every £2 earned above £100,000</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Allowance fully withdrawn at</td>
                   <td className="p-2">£125,140</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Personal Allowance Taper</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Effective marginal rate in band</td>
-                  <td className="p-2">60%</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Personal Allowance Taper</td>
+                  <td className="p-2">Effective rate in trap band</td>
+                  <td className="p-2">60% marginal</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Personal allowance 2026/27</td>
-                  <td className="p-2">£12,570</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Personal Allowance Taper</td>
+                  <td className="p-2">Higher rate income tax</td>
+                  <td className="p-2">40% between £50,270 and £125,140</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Fix</td>
-                  <td className="p-2">Pension contributions reduce adjusted net income</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Personal Allowance Taper</td>
+                  <td className="p-2">Additional rate above £125,140</td>
+                  <td className="p-2">45%</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Legal anchor</td>
+                  <td className="p-2">Income Tax Act 2007 section 35</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Taper introduced</td>
+                  <td className="p-2">April 2010</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Reversible via</td>
+                  <td className="p-2">Pension contributions or salary sacrifice</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 section 35 — Personal allowance taper above £100,000</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              HMRC — Personal Allowance taper
+              HMRC — Income Tax rates and Personal Allowances
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/allowance-sniper" className="font-mono text-blue-700 hover:underline">
@@ -734,57 +812,57 @@ export default function AllowanceSniperPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four income scenarios — taper exposure
+          Four UK earners — how the 60% trap affects them
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Income</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Allowance Lost</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Extra Tax</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Pension Fix</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Earner</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Income position</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Trap exposure</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Escape route</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Just inside</td>
-                <td className="p-3 text-neutral-700">£102,000 adjusted income</td>
-                <td className="p-3 font-mono">£1,000 lost</td>
+                <td className="p-3 font-bold">Senior PM, £105k salary</td>
+                <td className="p-3 text-neutral-700">Just crossed threshold, no rental, standard pension</td>
+                <td className="p-3 font-mono">Adjusted net income £105k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    £400 extra — £2k pension fixes it
+                    £5K TRAP — ~£3K TAX
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Mid-taper</td>
-                <td className="p-3 text-neutral-700">£112,000 adjusted income</td>
-                <td className="p-3 font-mono">£6,000 lost</td>
+                <td className="p-3 font-bold">Director, £118k salary + bonus</td>
+                <td className="p-3 text-neutral-700">£115k base + £10k bonus, 4% pension</td>
+                <td className="p-3 font-mono">Adjusted net income £120k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    £2,400 extra — £12k pension fixes it
+                    £20K TRAP — ~£12K TAX
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Deep taper</td>
-                <td className="p-3 text-neutral-700">£120,000 adjusted income</td>
-                <td className="p-3 font-mono">£10,000 lost</td>
+                <td className="p-3 font-bold">Contractor, £135k take-home</td>
+                <td className="p-3 text-neutral-700">Limited company, £95k salary + £40k dividends</td>
+                <td className="p-3 font-mono">Adjusted net income £135k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    £4,000 extra — £20k pension fixes it
+                    PAST TRAP — ALLOWANCE GONE
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Full allowance gone</td>
-                <td className="p-3 text-neutral-700">£125,140+ income</td>
-                <td className="p-3 font-mono">£12,570 lost</td>
+                <td className="p-3 font-bold">Consultant, £98k + £15k rental</td>
+                <td className="p-3 text-neutral-700">Employed + rental flat in Leeds</td>
+                <td className="p-3 font-mono">Adjusted net income £113k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    £5,028 extra — back to 45% rate
+                    £13K TRAP — HIDDEN BY RENTAL
                   </span>
                 </td>
               </tr>
@@ -801,43 +879,43 @@ export default function AllowanceSniperPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Effective tax rates — with and without taper awareness
+          The 60% trap vs not in trap — what £15,000 of extra income actually costs
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Income</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Stated Rate</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Actual Effective Rate</th>
-                <th className="border-b border-neutral-300 p-3 text-left">With Pension Fix</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Marginal rate</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax on £15k</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Keep from £15k</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">£95,000</td>
-                <td className="p-3 font-mono text-xs">40%</td>
-                <td className="p-3 text-xs">40%</td>
-                <td className="p-3 text-xs text-neutral-700">No taper — fine</td>
+                <td className="p-3 font-bold">Basic rate taxpayer (£30k income)</td>
+                <td className="p-3 font-mono text-xs">20%</td>
+                <td className="p-3 text-xs">£3,000</td>
+                <td className="p-3 text-xs text-neutral-700">£12,000</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">£110,000</td>
+                <td className="p-3 font-bold">Higher rate taxpayer (£75k income)</td>
                 <td className="p-3 font-mono text-xs">40%</td>
-                <td className="p-3 text-xs">60%</td>
-                <td className="p-3 text-xs text-neutral-700">Pension reduces to 40%</td>
+                <td className="p-3 text-xs">£6,000</td>
+                <td className="p-3 text-xs text-neutral-700">£9,000</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">£120,000</td>
-                <td className="p-3 font-mono text-xs">40%</td>
-                <td className="p-3 text-xs">60%</td>
-                <td className="p-3 text-xs text-neutral-700">Pension reduces to 40%</td>
+                <td className="p-3 font-bold">60% trap taxpayer (£115k income)</td>
+                <td className="p-3 font-mono text-xs">60%</td>
+                <td className="p-3 text-xs">£9,000</td>
+                <td className="p-3 text-xs text-neutral-700">£6,000</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">£130,000</td>
+                <td className="p-3 font-bold">Additional rate taxpayer (£150k income)</td>
                 <td className="p-3 font-mono text-xs">45%</td>
-                <td className="p-3 text-xs">45%</td>
-                <td className="p-3 text-xs text-neutral-700">Out of taper band</td>
+                <td className="p-3 text-xs">£6,750</td>
+                <td className="p-3 text-xs text-neutral-700">£8,250</td>
               </tr>
             </tbody>
           </table>
@@ -852,38 +930,43 @@ export default function AllowanceSniperPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Ways to reduce adjusted net income below £100,000
+          Tools for escaping the 60% trap
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Method</th>
-                <th className="border-b border-neutral-300 p-3 text-left">How It Works</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Effectiveness</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tool</th>
+                <th className="border-b border-neutral-300 p-3 text-left">What it does</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Best for</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Personal pension contribution</td>
-                <td className="p-3 text-xs">Reduces adjusted net income directly</td>
-                <td className="p-3 text-xs text-neutral-700">Most effective — 60% effective relief in band</td>
+                <td className="p-3 font-bold">Employer salary sacrifice</td>
+                <td className="p-3 text-xs">Reduces gross salary → reduces adjusted net income AND saves NI</td>
+                <td className="p-3 text-xs text-neutral-700">Best lever if employer offers it</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Salary sacrifice</td>
-                <td className="p-3 text-xs">Reduces gross salary — never enters adjusted income</td>
-                <td className="p-3 text-xs text-neutral-700">Best if employer supports it</td>
+                <td className="p-3 font-bold">Personal SIPP contribution</td>
+                <td className="p-3 text-xs">Reduces adjusted net income, gets 40% pension tax relief</td>
+                <td className="p-3 text-xs text-neutral-700">Good fallback if no salary sacrifice</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Bonus timing / deferral</td>
+                <td className="p-3 text-xs">Smooths income across tax years to stay under £100k</td>
+                <td className="p-3 text-xs text-neutral-700">Employer-dependent option</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Gift Aid donations</td>
-                <td className="p-3 text-xs">Basic rate relief — reduces adjusted income</td>
-                <td className="p-3 text-xs text-neutral-700">Good if you donate regularly</td>
+                <td className="p-3 text-xs">Reduces adjusted net income by gross Gift Aid value</td>
+                <td className="p-3 text-xs text-neutral-700">Works but smaller scale</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Trading loss relief</td>
-                <td className="p-3 text-xs">Losses from self-employment can offset income</td>
-                <td className="p-3 text-xs text-neutral-700">Only if you have genuine trading losses</td>
+                <td className="p-3 font-bold">Spousal income shifting</td>
+                <td className="p-3 text-xs">Transfer investments / property to lower-earning spouse</td>
+                <td className="p-3 text-xs text-neutral-700">Structural move — needs legal setup</td>
               </tr>
             </tbody>
           </table>
@@ -898,7 +981,7 @@ export default function AllowanceSniperPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          3 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -972,10 +1055,10 @@ export default function AllowanceSniperPage() {
             Also relevant
           </p>
           <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Also taking dividends from your company?
+            Also a company director taking dividends?
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            Directors in the taper band often have both salary and dividend income pushing them above £100,000. Check your dividend tax position as well.
+            Company directors often combine salary, dividends, and rental — which can cross the £100k adjusted net income threshold without crossing £100k salary alone. The dividend trap and the 60% trap often catch the same person.
           </p>
           <Link href="/uk/check/dividend-trap"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
@@ -993,7 +1076,7 @@ export default function AllowanceSniperPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            UK personal allowance taper: £1 allowance lost per £2 income above £100,000. Full withdrawal at £125,140. Effective 60% marginal rate in band. Pension contributions reduce adjusted net income and restore allowance. Under Income Tax Act 2007 s.35.
+            UK personal allowance 2025-26: £12,570. Tapers at £100,000 adjusted net income at £1 for every £2 earned. Fully withdrawn at £125,140. Effective marginal rate in trap band: 60% (40% higher-rate income tax + 20% allowance withdrawal cost). Pension contributions and salary sacrifice reduce adjusted net income, restoring allowance proportionally. Established under Income Tax Act 2007 section 35 from April 2010.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1001,21 +1084,39 @@ export default function AllowanceSniperPage() {
               HMRC
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Income Tax Act 2007
+              Income Tax Act 2007 s35
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              s.35 Taper
+              60% Effective Rate
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              £100k Threshold
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Personal Allowance Trap
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
+            <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Income Tax rates and Personal Allowances ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/income-tax-rates</p>
+            </a>
             <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">HMRC — Personal Allowance taper ↗</p>
+              <p className="font-bold text-neutral-900">HMRC — Personal Allowance and income over £100,000 ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.gov.uk/income-tax-rates/income-over-100000</p>
+            </a>
+            <a href="https://www.gov.uk/tax-on-your-private-pension" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Tax on your private pension contributions (tax relief) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/tax-on-your-private-pension</p>
+            </a>
+            <a href="https://www.legislation.gov.uk/ukpga/2007/3/section/35" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">Income Tax Act 2007 — section 35 (Personal allowance) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.uk/ukpga/2007/3/section/35</p>
             </a>
             <a href="/api/rules/allowance-sniper" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">

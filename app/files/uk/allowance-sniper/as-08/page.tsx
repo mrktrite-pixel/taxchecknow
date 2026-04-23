@@ -49,7 +49,7 @@ export default function AllowanceSniperFile08() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">United Kingdom · Allowance Sniper</span>
+            <span className="hidden sm:block">United Kingdom · 60% Tax Trap Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function AllowanceSniperFile08() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/uk/allowance-sniper/as-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Multi-Year Taper Strategy</a></div>
+          <div><a href="/files/uk/allowance-sniper/as-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Spousal Income Shifting</a></div>
           <span className="font-mono">File 08 of 8</span>
-          <div><a href="/uk/check/allowance-sniper" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to Allowance Sniper →</a></div>
+          <div><a href="/uk/check/allowance-sniper" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to 60% Tax Trap Engine →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function AllowanceSniperFile08() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 HMRC · Income Tax Act 2007 — Personal Allowance Taper
+              🇬🇧 HMRC · Income Tax Act 2007 section 35 — Personal allowance taper above £100,000
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -87,7 +87,7 @@ export default function AllowanceSniperFile08() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 TAX YEAR END: 5 April 2027
+              🔴 YEAR END — ALLOWANCE LOST IF MISSED: 5 April 2027
             </span>
             <a href="/uk/check/allowance-sniper"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -96,12 +96,12 @@ export default function AllowanceSniperFile08() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Allowance Sniper · File 08 of 8
+            60% Tax Trap Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Director Remuneration Review
+            Full 60% Trap Escape Execution Plan
           </h1>
-          <p className="text-neutral-500 text-sm">Optimising salary, dividends, and pension to minimise taper exposure.</p>
+          <p className="text-neutral-500 text-sm">Step-by-step execution plan for the tax year — diagnosis through post-year-end record keeping.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function AllowanceSniperFile08() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Director Remuneration and the Taper</h2><p>Directors with control over their remuneration mix can significantly reduce taper exposure by optimising the balance of salary, dividends, and pension contributions.</p><div class="action-box"><h3>Key Levers</h3><p>Salary: keep to basic rate band where possible</p><p>Dividends: taxed separately — but count toward adjusted income</p><p>Pension: most effective taper escape tool</p></div>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>60% Trap Escape — Full Execution Plan</h2><h3>Phase 1 — Diagnosis (Month 1-2)</h3><ul class="checklist"><li>Project total adjusted net income including all sources</li><li>Calculate current trap exposure</li><li>Determine pension contribution capacity (salary sacrifice + SIPP)</li><li>Model net cost of full escape</li></ul><h3>Phase 2 — Setup (Month 2-3)</h3><ul class="checklist"><li>Increase employer salary sacrifice to practical maximum</li><li>Open SIPP for top-up contributions if needed</li><li>Brief accountant/IFA on plan</li><li>Schedule quarterly income reviews to catch bonus/side-income surprises</li></ul><h3>Phase 3 — Execution (Months 3-12)</h3><ul class="checklist"><li>Monthly salary sacrifice running</li><li>Quarterly top-up SIPP contributions if tracking above £100k</li><li>Bonus timing discussions with employer</li><li>Year-end (Feb-March) final top-up to hit £100k exactly</li></ul><h3>Phase 4 — Year-End Verification (April)</h3><ul class="checklist"><li>Confirm final adjusted net income sits at or below £100,000</li><li>Retain pension contribution certificates</li><li>Set up next year's plan based on projected bonuses and raises</li></ul>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function AllowanceSniperFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Taper Exposure Report</span>
+                <span className="text-sm font-semibold text-neutral-950">Your 60% Trap Exposure Report</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function AllowanceSniperFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">Pension Contribution Calculator</span>
+                <span className="text-sm font-semibold text-neutral-950">Pension Contribution to Escape</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function AllowanceSniperFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Salary Sacrifice vs Personal Pension</span>
+                <span className="text-sm font-semibold text-neutral-950">Salary Sacrifice vs Personal Contribution</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +157,7 @@ export default function AllowanceSniperFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Accountant Brief — Taper</span>
+                <span className="text-sm font-semibold text-neutral-950">Bonus Timing Around £125,140</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -166,7 +166,7 @@ export default function AllowanceSniperFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">05</span>
-                <span className="text-sm font-semibold text-neutral-950">Gift Aid Tax Recovery Guide</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Accountant Brief — 60% Trap</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -175,7 +175,7 @@ export default function AllowanceSniperFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Annual Allowance Check<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Multi-Year Pension Planning<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -184,7 +184,7 @@ export default function AllowanceSniperFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Year Taper Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Spousal Income Shifting<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -192,7 +192,7 @@ export default function AllowanceSniperFile08() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">08</span>
-                <span className="text-sm font-semibold text-white">Director Remuneration Review<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-white">Full 60% Trap Escape Execution Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -222,10 +222,10 @@ export default function AllowanceSniperFile08() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/uk/check/allowance-sniper" className="hover:text-neutral-900 transition">
-              ← Back to Allowance Sniper
+              ← Back to 60% Tax Trap Engine
             </a>
-            <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Personal Allowance taper ↗</a>
-            <a href="/api/rules/allowance-sniper" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Machine-readable JSON rules ↗</a>
+            <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Income Tax rates and Personal Allowances ↗</a>
+            <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Personal Allowance and income over £100,000 ↗</a>
           </div>
         </div>
       </footer>
