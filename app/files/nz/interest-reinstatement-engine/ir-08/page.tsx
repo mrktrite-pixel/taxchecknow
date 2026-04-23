@@ -49,7 +49,7 @@ export default function InterestReinstatementEngineFile08() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">New Zealand · Interest Reinstatement Engine</span>
+            <span className="hidden sm:block">New Zealand · Property Interest Deductibility Recovery Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -64,7 +64,7 @@ export default function InterestReinstatementEngineFile08() {
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
           <div><a href="/files/nz/interest-reinstatement-engine/ir-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: LTC vs Personal Ownership Audit</a></div>
           <span className="font-mono">File 08 of 8</span>
-          <div><a href="/nz/check/interest-reinstatement-engine" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to Interest Reinstatement Engine →</a></div>
+          <div><a href="/nz/check/interest-reinstatement-engine" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to Property Interest Deductibility Recovery Engine →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function InterestReinstatementEngineFile08() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 IRD · Income Tax Act 2007 — Interest Deductibility
+              🇬🇧 Inland Revenue Department (IRD) · Income Tax Act 2007, section DB 2 — Interest Deductibility (restored)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -96,7 +96,7 @@ export default function InterestReinstatementEngineFile08() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Interest Reinstatement Engine · File 08 of 8
+            Property Interest Deductibility Recovery Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
             Multi-Property Optimisation Plan
@@ -205,7 +205,7 @@ export default function InterestReinstatementEngineFile08() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on IRD guidance April 2026.
+            Based on Inland Revenue Department (IRD) guidance April 2026.
           </p>
         </div>
 
@@ -222,7 +222,7 @@ export default function InterestReinstatementEngineFile08() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/nz/check/interest-reinstatement-engine" className="hover:text-neutral-900 transition">
-              ← Back to Interest Reinstatement Engine
+              ← Back to Property Interest Deductibility Recovery Engine
             </a>
             <a href="https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/deductions-for-residential-rental-property/interest" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — Interest deductibility for residential rental properties ↗</a>
             <a href="/api/rules/interest-reinstatement-engine" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Machine-readable JSON rules ↗</a>

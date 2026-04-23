@@ -100,18 +100,24 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const ir_interest = sessionStorage.getItem("interest-reinstatement-engine_ir_interest") || "17000";
+      const ir_purchase_date = sessionStorage.getItem("interest-reinstatement-engine_ir_purchase_date") || "pre_oct_2021";
+      const ir_property_type = sessionStorage.getItem("interest-reinstatement-engine_ir_property_type") || "existing_residential";
+      const ir_interest = sessionStorage.getItem("interest-reinstatement-engine_ir_interest") || "17500";
+      const ir_ownership = sessionStorage.getItem("interest-reinstatement-engine_ir_ownership") || "individual";
       const ir_rate = sessionStorage.getItem("interest-reinstatement-engine_ir_rate") || "33";
-      const ir_refinanced = sessionStorage.getItem("interest-reinstatement-engine_ir_refinanced") || "false";
-      const ir_status = sessionStorage.getItem("interest-reinstatement-engine_ir_status") || "clear";
+      const ir_sale = sessionStorage.getItem("interest-reinstatement-engine_ir_sale") || "no";
+      const ir_status = sessionStorage.getItem("interest-reinstatement-engine_ir_status") || "recovery_restored_existing";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
+        "ir_purchase_date": ir_purchase_date,
+        "ir_property_type": ir_property_type,
         "ir_interest": ir_interest,
+        "ir_ownership": ir_ownership,
         "ir_rate": ir_rate,
-        "ir_refinanced": ir_refinanced,
+        "ir_sale": ir_sale,
         "ir_status": ir_status,
-      }).some(v => v && v !== "17000");
+      }).some(v => v && v !== "pre_oct_2021");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -119,16 +125,19 @@ export default function SuccessAssess() {
         body: JSON.stringify({
           product_id: "interest-reinstatement-engine",
           market:     "New Zealand",
-          authority:  "IRD",
+          authority:  "Inland Revenue Department (IRD)",
           tier:       1,
           name,
           inputs: {
-        "Annual interest": ir_interest,
-        "Tax rate": ir_rate,
-        "Has refinanced": ir_refinanced,
-        "Status": ir_status,
+        "Purchase settlement date": ir_purchase_date,
+        "Property type": ir_property_type,
+        "Annual interest band": ir_interest,
+        "Ownership structure": ir_ownership,
+        "Marginal rate": ir_rate,
+        "Sale consideration": ir_sale,
+        "Recovery status": ir_status,
           },
-          fields: ["status","annualTaxSaving","cashflowShift","tracingRisk","firstAction","documentationNeeded","accountantQuestions"],
+          fields: ["status","applicableRule","annualTaxSaving","cumulative3YrRecovery","brightLineInteraction","tracingRisk","firstAction","accountantQuestions"],
         }),
       });
       const data = await res.json();
@@ -139,13 +148,14 @@ export default function SuccessAssess() {
       // Graceful fallback — page still shows files and calendar
       setAssessment({
         status: "Your personalised status is being prepared — please refresh in a moment.",
+        applicableRule: "Your personalised applicableRule is being prepared — please refresh in a moment.",
         annualTaxSaving: "Your personalised annualTaxSaving is being prepared — please refresh in a moment.",
-        cashflowShift: "Your personalised cashflowShift is being prepared — please refresh in a moment.",
+        cumulative3YrRecovery: "Your personalised cumulative3YrRecovery is being prepared — please refresh in a moment.",
+        brightLineInteraction: "Your personalised brightLineInteraction is being prepared — please refresh in a moment.",
         tracingRisk: "Your personalised tracingRisk is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
-        documentationNeeded: "Your personalised documentationNeeded is being prepared — please refresh in a moment.",
         accountantQuestions: [
-          "What is my exact IRD position based on my answers?",
+          "What is my exact Inland Revenue Department (IRD) position based on my answers?",
           "What is the single most important action I should take before 31 March 2027?",
           "Are there any planning opportunities specific to my situation?",
         ],
@@ -158,10 +168,13 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const ir_interest = sessionStorage.getItem("interest-reinstatement-engine_ir_interest") || "17000";
+    const ir_purchase_date = sessionStorage.getItem("interest-reinstatement-engine_ir_purchase_date") || "pre_oct_2021";
+    const ir_property_type = sessionStorage.getItem("interest-reinstatement-engine_ir_property_type") || "existing_residential";
+    const ir_interest = sessionStorage.getItem("interest-reinstatement-engine_ir_interest") || "17500";
+    const ir_ownership = sessionStorage.getItem("interest-reinstatement-engine_ir_ownership") || "individual";
     const ir_rate = sessionStorage.getItem("interest-reinstatement-engine_ir_rate") || "33";
-    const ir_refinanced = sessionStorage.getItem("interest-reinstatement-engine_ir_refinanced") || "false";
-    const ir_status = sessionStorage.getItem("interest-reinstatement-engine_ir_status") || "clear";
+    const ir_sale = sessionStorage.getItem("interest-reinstatement-engine_ir_sale") || "no";
+    const ir_status = sessionStorage.getItem("interest-reinstatement-engine_ir_status") || "recovery_restored_existing";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -169,7 +182,7 @@ export default function SuccessAssess() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Interest Reinstatement Engine — Deadlines`,
+      `X-WR-CALNAME:Property Interest Deductibility Recovery Engine — Deadlines`,
       "BEGIN:VEVENT",
       `UID:ir-return-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${"20261007"}`,
@@ -252,7 +265,7 @@ export default function SuccessAssess() {
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
             <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against IRD rules</p>
+            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against Inland Revenue Department (IRD) rules</p>
           </div>
         )}
 
@@ -272,13 +285,13 @@ export default function SuccessAssess() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your New Zealand IRD position
+                Your New Zealand Inland Revenue Department (IRD) position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","annualTaxSaving","cashflowShift","tracingRisk","firstAction","documentationNeeded"] as string[]).map(key => {
+                {(["status","applicableRule","annualTaxSaving","cumulative3YrRecovery","brightLineInteraction","tracingRisk"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -378,7 +391,7 @@ export default function SuccessAssess() {
                 Everything you need — in one place
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
-                Each document is built around your specific IRD position.
+                Each document is built around your specific Inland Revenue Department (IRD) position.
                 Start with File 02 — it has your exact numbers.
                 
               </p>
@@ -465,7 +478,7 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified New Zealand tax adviser before making financial decisions.
-            Based on IRD guidance April 2026.{" "}
+            Based on Inland Revenue Department (IRD) guidance April 2026.{" "}
             <a href="https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/deductions-for-residential-rental-property/interest" target="_blank" rel="noopener noreferrer" className="underline">IRD — Interest deductibility for residential rental properties</a> · <a href="/api/rules/interest-reinstatement-engine" target="_blank" rel="noopener noreferrer" className="underline">Machine-readable JSON rules</a>
           </p>
         </div>

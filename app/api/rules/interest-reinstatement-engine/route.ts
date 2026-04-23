@@ -12,16 +12,16 @@ export async function GET() {
     "schema_version": "1.0",
     "generated_by": "COLE — Citation Operations & Legal Engine",
     "product_id": "interest-reinstatement-engine",
-    "title": "Interest Reinstatement Engine",
+    "title": "Property Interest Deductibility Recovery Engine",
     "site": "https://taxchecknow.com/nz/check/interest-reinstatement-engine",
-    "authority": "IRD",
+    "authority": "Inland Revenue Department (IRD)",
     "authority_url": "https://www.ird.govt.nz",
     "jurisdiction": "New Zealand",
     "language": "en-NZ",
     "currency": "NZD",
     "last_verified": "April 2026",
-    "legislation": "Income Tax Act 2007 — Interest Limitation Rules Repeal (effective 1 April 2025)",
-    "legal_anchor": "Income Tax Act 2007 — Interest Deductibility",
+    "legislation": "Income Tax Act 2007, section DB 2, as restored by the Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024 — 80% from 1 April 2024, 100% from 1 April 2025",
+    "legal_anchor": "Income Tax Act 2007, section DB 2 — Interest Deductibility (restored)",
     "deadline": {
         "iso_date": "2027-03-31T23:59:59.000+13:00",
         "display": "31 March 2027",
@@ -29,14 +29,18 @@ export async function GET() {
         "urgency_label": "TAX YEAR END"
     },
     "key_facts": {
-        "deductibility_rate_2026": "100%",
-        "restored_from": "1 April 2025",
-        "applies_to": "All residential rental properties",
-        "determined_by": "Purpose of borrowing — not security",
-        "audit_risk": "Loan tracing for refinanced debt",
-        "prior_years_2021_2024": "Phase-out from 75% to 0% — now repealed"
+        "current_deductibility_from_1_april_2025": "100%",
+        "prior_step_1_apr_2024_31_mar_2025": "80% deductible",
+        "restriction_period_1_oct_2021_31_mar_2024": "phased removal to 0% for most existing residential",
+        "new_builds_post_july_2020": "Never restricted — always 100%",
+        "commercial_property": "Never restricted — always deductible",
+        "legal_anchor": "Income Tax Act 2007, section DB 2",
+        "restoration_legislation": "Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024",
+        "ownership_claim_location": "Individual (personal return) / Company (28%) / Trust (33%) / LTC (flow-through)",
+        "ring_fencing_rules_2019": "Still apply — rental losses cannot offset other income",
+        "audit_risk": "Loan tracing — purpose of borrowing determines deductibility, not security"
     },
-    "formula": "Tax Saving = Annual Rental Interest × Marginal Tax Rate. Example at 33%: $30,000 interest × 33% = $9,900 annual tax saving. Cashflow shift = Pre-2025 cashflow + Tax saving restored.",
+    "formula": "Annual Tax Saving = Annual Mortgage Interest × Applicable Deductibility % × Effective Claim Rate. From 1 April 2025: 100% deductible. Individual ownership: effective rate = personal marginal (17.5/30/33/39%). Company: 28%. Trust: 33%. LTC: shareholder marginal. Example at 33% marginal on $20,000 interest: $20,000 × 100% × 33% = $6,600/year restored.",
     "thresholds": [
         {
             "label": "Simple rental mortgage — single property, no refinancing",
@@ -67,28 +71,23 @@ export async function GET() {
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "ChatGPT says: Mortgage interest is not deductible on NZ rental properties",
-            "correct": "Reality: From 1 April 2025, the interest limitation rules have been fully repealed. 100% of qualifying mortgage interest is deductible on residential rental properties. This is one of the most commonly outdated answers in NZ tax."
+            "ai_says": "ChatGPT says: Interest deductibility was fully restored in 2024",
+            "correct": "Reality: The restoration is staged. From 1 April 2024, 80% of mortgage interest on existing residential investment properties is deductible. Full 100% deductibility does not apply until 1 April 2025. For a property with $20,000 of annual interest, the difference between 80% and 100% is $660/year at 33% — timing matters."
         },
         {
             "error_id": 2,
-            "ai_says": "ChatGPT says: Only new builds qualify for interest deductions in NZ",
-            "correct": "Reality: The new build exemption applied only during the 2021-2024 phase-out period. Since 1 April 2025, all residential rental properties qualify for full interest deductibility regardless of build date."
+            "ai_says": "ChatGPT says: The interest restriction never affected new builds",
+            "correct": "Reality: Correct statement, but often misunderstood in the opposite direction. New builds (constructed after July 2020) retained full interest deductibility throughout the restriction period. Investors in new builds were never affected. The cashflow impact was entirely on existing residential investment properties. Investors holding both types may have different deductibility positions on each property."
         },
         {
             "error_id": 3,
-            "ai_says": "ChatGPT says: The security determines whether interest is deductible",
-            "correct": "Reality: The purpose of the borrowing determines deductibility — not which property the mortgage is secured against. If you borrowed to acquire or improve a rental property, the interest is deductible even if the loan is secured against your home."
+            "ai_says": "ChatGPT says: I can claim the full interest deduction on my 2023-24 return",
+            "correct": "Reality: Wrong. For the 2023-24 income year (1 April 2023 – 31 March 2024), existing residential investment properties had 0% deductibility for the first six months and partial deductibility only from 1 April 2024. The full 80% rate applies to the 2024-25 year. Claims on prior year returns must use the deductibility rate that applied in that period."
         },
         {
             "error_id": 4,
-            "ai_says": "ChatGPT says: Refinancing affects whether you can claim interest",
-            "correct": "Reality: Refinancing itself does not remove deductibility. However, you must be able to trace the purpose of each dollar of refinanced debt. If you drew additional funds for private purposes in a refinance, only the portion traceable to rental use is deductible."
-        },
-        {
-            "error_id": 5,
-            "ai_says": "ChatGPT says: Ring-fenced losses still apply to rental property",
-            "correct": "Reality: The ring-fencing rules that applied from 2019 remain in place. Rental losses cannot be offset against other income — they can only be carried forward and offset against future rental income or capital gains from property."
+            "ai_says": "ChatGPT says: My trust or company structure does not affect my deductibility",
+            "correct": "Reality: Wrong. The ownership structure determines where the deduction is claimed and at what rate. An LTC passes deductions through to shareholders at their marginal rate. A trust claims at 33%. A company claims at 28%. The dollar value of the deduction varies by structure even on identical interest costs."
         }
     ],
     "faq": [
@@ -174,7 +173,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nz/check/interest-reinstatement-engine",
     "api_endpoint": "/api/rules/interest-reinstatement-engine",
-    "generated_at": "2026-04-22T23:34:46.428Z"
+    "generated_at": "2026-04-23T06:04:14.991Z"
 };
 
   return NextResponse.json(rules, {
