@@ -49,7 +49,7 @@ export default function Section174AuditorFile05() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">United States · Section 174 Auditor</span>
+            <span className="hidden sm:block">United States · R&D Tax Cashflow Shock Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function Section174AuditorFile05() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/us/section-174-auditor/s174-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 04: Section 41 R&D Credit Analysis</a></div>
+          <div><a href="/files/us/section-174-auditor/s174-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 04: Section 41 R&D Tax Credit Screening</a></div>
           <span className="font-mono">File 05 of 8</span>
-          <div><a href="/files/us/section-174-auditor/s174-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 06: Prior Year Amendment Analysis →</a></div>
+          <div><a href="/files/us/section-174-auditor/s174-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 06: Multi-Year Cashflow Forecast →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function Section174AuditorFile05() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 IRS · IRC Section 174 — Research and Experimental Expenditures
+              🇬🇧 IRS · IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -87,7 +87,7 @@ export default function Section174AuditorFile05() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 TAX DEADLINE: April 15, 2026
+              🔴 FILING DEADLINE APPROACHING: April 15, 2026
             </span>
             <a href="/us/check/section-174-auditor"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -96,12 +96,12 @@ export default function Section174AuditorFile05() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Section 174 Auditor · File 05 of 8
+            R&D Tax Cashflow Shock Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            CPA Brief — Section 174
+            Your CPA Brief — Section 174
           </h1>
-          <p className="text-neutral-500 text-sm">Questions for your CPA about Section 174 compliance and planning.</p>
+          <p className="text-neutral-500 text-sm">5 questions to ask your CPA about Section 174 compliance and optimisation.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function Section174AuditorFile05() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Section 174 CPA Questions</h2><h3>Question 1</h3><p>"Have you correctly segregated US and offshore R&E costs?"</p><h3>Question 2</h3><p>"Do we have reclassification opportunities?"</p><h3>Question 3</h3><p>"How do our amortization pools affect future year planning?"</p>` }}
+          dangerouslySetInnerHTML={{ __html: `<div class="info-box">Take to your CPA. These force specific answers, not generic 'we handle it' responses.</div><h2>Questions for Your CPA</h2><div class="action-box"><h3>Question 1</h3><p>"For my 2022, 2023, and 2024 returns — did you apply Section 174 amortization correctly, using 10% year 1 (half-year) for domestic and 3.33% year 1 for foreign?"</p></div><h3>Question 2</h3><p>"Given my R&amp;D spend mix, have we run a Section 41 R&amp;D tax credit analysis — and can we amend prior returns if we haven't claimed the credit?"</p><h3>Question 3</h3><p>"What is my classification of Section 174 expenditures vs ordinary business expenses — specifically for cloud computing, contractors, and software tools?"</p><h3>Question 4</h3><p>"If Section 174A is enacted, what is my plan to benefit from it — and how do existing 2022-2024 amortization schedules interact with post-enactment expensing?"</p><h3>Question 5</h3><p>"Are we tracking Section 174 expenditure categories separately in the books, so that if we need to amend or restructure, the supporting documentation is ready?"</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function Section174AuditorFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Section 174 Exposure Report</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Section 174 Amortization Schedule</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function Section174AuditorFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">Expense Reclassification Guide</span>
+                <span className="text-sm font-semibold text-neutral-950">Prior-Year Filing Review Checklist</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function Section174AuditorFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Offshore vs Domestic Cost Allocation</span>
+                <span className="text-sm font-semibold text-neutral-950">Amendment Path — Form 3115 vs 1120X</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +157,7 @@ export default function Section174AuditorFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Section 41 R&D Credit Analysis</span>
+                <span className="text-sm font-semibold text-neutral-950">Section 41 R&D Tax Credit Screening</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -165,7 +165,7 @@ export default function Section174AuditorFile05() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">05</span>
-                <span className="text-sm font-semibold text-white">CPA Brief — Section 174</span>
+                <span className="text-sm font-semibold text-white">Your CPA Brief — Section 174</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -174,7 +174,7 @@ export default function Section174AuditorFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Prior Year Amendment Analysis<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Multi-Year Cashflow Forecast<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +183,7 @@ export default function Section174AuditorFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Year Amortization Model<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Section 174 vs Ordinary Expense Classification<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -192,7 +192,7 @@ export default function Section174AuditorFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">08</span>
-                <span className="text-sm font-semibold text-neutral-950">Entity Structure Optimisation<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Section 174A Preparedness Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -222,10 +222,10 @@ export default function Section174AuditorFile05() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/us/check/section-174-auditor" className="hover:text-neutral-900 transition">
-              ← Back to Section 174 Auditor
+              ← Back to R&D Tax Cashflow Shock Engine
             </a>
-            <a href="https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Section 174 research and experimental expenditures ↗</a>
-            <a href="/api/rules/section-174-auditor" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Machine-readable JSON rules ↗</a>
+            <a href="https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Research and Experimental Expenditures (Section 174) ↗</a>
+            <a href="https://www.irs.gov/pub/irs-drop/rp-23-8.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS Revenue Procedure 2023-8 (Section 174 implementation guidance) ↗</a>
           </div>
         </div>
       </footer>

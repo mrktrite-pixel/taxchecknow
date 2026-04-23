@@ -10,12 +10,12 @@ import Section174AuditorCalculator from "./Section174AuditorCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Section 174 Amortization 2026: Tech Company Tax Trap Explained | TaxCheckNow",
-  description: "Since 2022, R&D expenses must be amortized over 5 years (US) or 15 years (offshore). Companies with $500k+ engineering spend are getting unexpected tax bills. Offshore teams make it much worse. Check your Section 174 exposure in 2 minutes.",
+  title: "Section 174 R&D Amortization 2026: Cashflow Impact + Amendment Path | TaxCheckNow",
+  description: "The 2022 amendment to IRC Section 174 requires R&D costs to be amortized over 5 years (15 foreign) instead of immediately expensed. Under the old rules $1M R&D gave $0 year 1 tax. Under the new rules: $189k year 1 tax. Run your exact exposure in 2 minutes.",
   alternates: { canonical: "https://taxchecknow.com/us/check/section-174-auditor" },
   openGraph: {
-    title: "Section 174 Amortization 2026: Tech Company Tax Trap Explained | TaxCheckNow",
-    description: "Since 2022, R&D expenses must be amortized over 5 years (US) or 15 years (offshore). Companies with $500k+ engineering spend are getting unexpected tax bills. Offshore teams make it much worse. Check your Section 174 exposure in 2 minutes.",
+    title: "Section 174 R&D Amortization 2026: Cashflow Impact + Amendment Path | TaxCheckNow",
+    description: "The 2022 amendment to IRC Section 174 requires R&D costs to be amortized over 5 years (15 foreign) instead of immediately expensed. Under the old rules $1M R&D gave $0 year 1 tax. Under the new rules: $189k year 1 tax. Run your exact exposure in 2 minutes.",
     url: "https://taxchecknow.com/us/check/section-174-auditor",
     siteName: "TaxCheckNow",
     type: "website",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "April 15, 2026";
-const DEADLINE_ISO   = "2026-04-15T23:59:59.000Z";
+const DEADLINE_ISO   = "2026-04-15T23:59:59.000-04:00";
 
 function daysToDeadline(): number {
   if (!DEADLINE_ISO) return 0;
@@ -49,168 +49,256 @@ function progressPct(): number {
 
 const faqs = [
   {
-    "question": "What is Section 174 and when did it change?",
-    "answer": "Section 174 governs how R&E expenditures are deducted for federal tax purposes. Before 2022, companies could immediately deduct all R&E costs. From January 1, 2022, the TCJA change requires mandatory capitalization and amortization over 5 years (domestic) or 15 years (foreign). Software development is included."
+    "question": "What is Section 174 and what changed in 2022?",
+    "answer": "IRC Section 174 governs tax treatment of research and experimental expenditures. Before 2022, R&D costs could be deducted immediately in the year incurred. The Tax Cuts and Jobs Act amendment, effective for tax years beginning after December 31, 2021, requires R&D costs to be capitalized and amortized — domestic over 5 years, foreign over 15 years — using a half-year convention in year 1 and the final year. The total deduction is unchanged; the timing is. For businesses that planned for immediate expensing, the shift created significant year 1 cashflow shock."
   },
   {
-    "question": "Does Section 174 apply to software development?",
-    "answer": "Yes. The IRS treats software development as R&E expenditure under Revenue Procedure 2000-50. This applies to internal software, SaaS platforms, mobile apps, and any other software development activity. SaaS companies are significantly affected."
+    "question": "What costs are included under Section 174?",
+    "answer": "Section 174 expenditures include: wages paid to employees engaged in R&D (including software developers, engineers, product researchers), qualified contractor payments for research services, supplies used in R&D, cloud computing costs attributable to development, and software development costs. The IRS clarified post-TCJA that software development is included — the safe harbor from Revenue Procedure 2000-50 was eliminated. This is a BROADER definition than most businesses had applied pre-2022."
   },
   {
-    "question": "What if my CPA did not address Section 174 correctly in 2022 or 2023?",
-    "answer": "Companies that did not properly capitalize and amortize R&E costs in prior years may need to file amended returns. The IRS has been increasing scrutiny of Section 174 compliance. Taking advice on whether an amendment is needed and whether it creates greater or lesser tax liability is recommended."
+    "question": "What is the half-year convention?",
+    "answer": "The half-year convention assumes mid-year placement of all R&D. Instead of deducting 1/5 in year 1 (20%), domestic R&D gets 1/10 in year 1 (10%) — half of the 20%. The other half comes in year 6 (10%). Years 2-5 get the full 20% each. So: 10% + 20% + 20% + 20% + 20% + 10% = 100% over 6 years. For foreign R&D: 3.33% year 1, 6.67% years 2-15, 3.33% year 16 = 100% over 16 years."
   },
   {
-    "question": "Is there any relief or change expected?",
-    "answer": "Congress has considered restoring immediate expensing of domestic R&D but no law has been enacted as of April 2026. Companies should plan around current law and not assume legislative changes will occur."
+    "question": "If I filed 2022 returns under the old rules, what do I do now?",
+    "answer": "Three main paths: (1) File amended returns (Form 1120X for C-corps, Form 1040X for individuals, Form 1065X for partnerships) for each year — allowed within 3 years of original filing, (2) File a Form 3115 change-in-accounting-method request with a section 481(a) adjustment to catch up prior amortization — often preferred for compliance going forward, (3) For materially incorrect prior years, consult a tax attorney about voluntary disclosure options. Whatever route, acting before an IRS examination begins is treated more favourably than correcting after."
+  },
+  {
+    "question": "Does Section 174 stack with the Section 41 R&D tax credit?",
+    "answer": "Yes — Section 174 (deduction of R&D costs) and Section 41 (R&D tax credit) are separate provisions that apply to overlapping but not identical expenditures. Most Section 174 expenditures are also Qualified Research Expenses (QREs) for Section 41. A Section 41 election under section 280C avoids having to reduce the deduction by the credit amount. For many businesses, claiming BOTH is possible and recommended — the credit provides a direct tax offset worth up to 10% of QREs."
+  },
+  {
+    "question": "What is Section 174A and when will it be enacted?",
+    "answer": "Section 174A is proposed legislation under the One Big Beautiful Bill Act (OBBBA) that would restore immediate expensing of R&D costs, effectively reversing the 2022 amendment going forward. As of April 2026 the legislation has NOT been enacted. The proposal is in legislative process with political support but no confirmed enactment date. If enacted, it would apply prospectively — existing amortization schedules from 2022-2024 continue on their original schedule; new R&D would be immediately deductible. Monitor congressional progress for enactment news."
+  },
+  {
+    "question": "Does Section 174 apply to my small business?",
+    "answer": "Yes, if you have R&D expenditures. The amendment applies to all taxpayers regardless of size. For a small business with $100,000 of domestic R&D, the year 1 cashflow shock at 21% corporate rate is approximately $18,900 — smaller in absolute terms than a large company but potentially a larger percentage of cash reserves. Even sole proprietors with significant engineering contractor spend are affected. Check whether your labor expenses meet the Section 174 definition."
+  },
+  {
+    "question": "What about R&D done outside the US?",
+    "answer": "Foreign R&D expenditures are amortized over 15 years (vs 5 years for domestic) under the 2022 amendment. This creates a larger year 1 cashflow shock for companies with offshore engineering teams or foreign R&D operations. The IRS determines 'foreign' based on where the R&D is performed, not the citizenship of the developer. Remote engineers working outside the US typically count as foreign R&D. The 15-year amortization is substantially more punitive than the domestic 5-year schedule."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: You can still expense R&D costs immediately in the US",
-    "correct": "Reality: The immediate expensing of R&E costs ended on January 1, 2022 under the TCJA change. All R&E expenditures including software development must now be amortized over 5 years (domestic) or 15 years (offshore). There is no opt-out."
+    "wrong": "ChatGPT says: My accountant handles R&D deductions so Section 174 does not affect me",
+    "correct": "Reality: Section 174 changed how ALL R&D costs are deducted for tax years after 2021 — not just formally claimed R&D tax credits. If your business pays software engineers, developers, or product researchers, those wages are likely Section 174 expenditures subject to amortization. Many businesses discovered this only when their 2022 tax bill was significantly higher than projected."
   },
   {
-    "wrong": "ChatGPT says: Section 174 only affects biotech and pharmaceutical companies",
-    "correct": "Reality: Section 174 applies to any R&E expenditure including software development. SaaS companies, app developers, and any business that builds software is subject to the amortization requirement."
+    "wrong": "ChatGPT says: Section 174 only applies to formal R&D departments",
+    "correct": "Reality: The IRS definition of Section 174 expenditures includes wages paid to employees engaged in the DEVELOPMENT or IMPROVEMENT of products and processes. For software companies this includes developers, engineers, and product managers. Cloud computing costs directly attributable to development may also qualify. The rule applies broadly — not just to companies with formal R&D programs."
   },
   {
-    "wrong": "ChatGPT says: Offshore engineering costs amortize the same as US costs",
-    "correct": "Reality: Foreign R&E costs amortize over 15 years — three times longer than the 5-year domestic period. A company with significant offshore development faces dramatically worse year-one deductions."
+    "wrong": "ChatGPT says: We lost our R&D deductions under Section 174",
+    "correct": "Reality: The deductions are NOT lost — they are DEFERRED. A $1,000,000 R&D spend still generates $1,000,000 of deductions over 5 years (domestic) or 15 years (foreign). The issue is TIMING: tax that would have been zero in year 1 under old rules is now $189,000 in year 1 with the remaining deductions flowing through years 2-6. Total tax over the amortization period is the same — cashflow timing is the problem."
+  },
+  {
+    "wrong": "ChatGPT says: Section 174 no longer applies because immediate expensing is being restored",
+    "correct": "Reality (as of April 2026): The One Big Beautiful Bill Act proposes restoring immediate expensing under Section 174A, but this has NOT been enacted into final law. The 2022 amortization requirement remains in effect until legislation passes. Check current legislative status with your tax adviser before assuming expensing applies to your current tax year."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "Have you specifically identified and segregated our Section 174 R&E costs — and applied the correct US vs offshore amortization periods?",
-    "why": "Many generalist CPAs applied the pre-2022 rules in 2022 and 2023 returns. The offshore multiplier is easy to miss if not specifically looked for."
+    "q": "For my 2022, 2023, and 2024 returns — did you apply Section 174 amortization correctly, using 10% year 1 (half-year) for domestic R&D and 3.33% year 1 for foreign R&D?",
+    "why": "Vague 'yes we handled it' answers are not enough. Your CPA should be able to show you the specific Form 4562 entries and the amortization schedule. If they can't, it wasn't done."
   },
   {
-    "q": "Do we have any costs that can legitimately be reclassified out of Section 174 R&E treatment?",
-    "why": "Quality assurance, routine maintenance, and post-development support do not qualify as R&E. Every dollar correctly reclassified reduces amortization burden."
+    "q": "Given my R&D spend mix, have we run a Section 41 R&D tax credit analysis — and can we amend prior returns if we haven't claimed the credit?",
+    "why": "Most businesses with Section 174 exposure are also Section 41 eligible. The credit can offset meaningful portions of the cashflow shock. Missed credits in prior years can sometimes be recovered via amendment."
   },
   {
-    "q": "How do our accumulated Section 174 amortization pools affect our NOL position and multi-year tax planning?",
-    "why": "Section 174 creates growing amortization pools that affect future years' deductions. Multi-year modelling is essential for cash tax planning."
+    "q": "What is my classification of Section 174 expenditures vs ordinary business expenses — specifically for cloud computing, contractors, and software tools?",
+    "why": "Over-classification increases amortization base and cashflow shock. Under-classification creates audit risk. The line is IRS-defined but requires judgment. Your CPA should walk through the classification with you."
+  },
+  {
+    "q": "If Section 174A is enacted, what is my plan to benefit from it — and how do existing 2022-2024 amortization schedules interact with post-enactment expensing?",
+    "why": "Section 174A won't automatically fix prior years. Existing amortization continues on its original schedule. Your CPA should have a plan for both scenarios (enactment and non-enactment) with specific actions for each."
+  },
+  {
+    "q": "Are we tracking Section 174 expenditure categories separately in the books, so that if we need to amend or restructure, the supporting documentation is ready?",
+    "why": "Many businesses don't track R&D expenditures separately from general ops — making amendment or audit defense much harder. Clean categorization from source is the cheapest tool in the compliance kit."
   }
 ];
 
 const workedExamples = [
   {
-    "name": "US-only startup",
-    "setup": "$500k US engineers, no offshore",
-    "income": "$50k (10%)",
-    "status": "$450k phantom income"
+    "name": "Marcus — SaaS C-corp, $2M R&D",
+    "setup": "14 engineers, cloud, contractors — all domestic",
+    "income": "$2M domestic",
+    "status": "~$378k year 1, $1.9M over 3 years"
   },
   {
-    "name": "Hybrid team",
-    "setup": "$500k US + $300k offshore (India)",
-    "income": "$60k",
-    "status": "$740k phantom income"
+    "name": "Early-stage startup, $300k R&D",
+    "setup": "3 developers, cloud, domestic",
+    "income": "$300k domestic",
+    "status": "~$57k year 1 — manageable"
   },
   {
-    "name": "Offshore-heavy",
-    "setup": "$200k US + $600k offshore",
-    "income": "$40k",
-    "status": "$760k phantom income"
+    "name": "AI company with offshore team, $1M R&D",
+    "setup": "Half domestic engineering, half offshore",
+    "income": "$500k dom + $500k foreign",
+    "status": "~$139k year 1 — foreign amortization hits"
+  },
+  {
+    "name": "Pass-through consultancy, $600k R&D",
+    "setup": "Partnership structure, domestic R&D",
+    "income": "$600k domestic",
+    "status": "~$162k year 1 at 30% pass-through rate"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "US R&D deduction year 1",
+    "position": "Year 1 deduction",
     "metric1": "100% immediate",
-    "metric2": "10% (5-year amortization)",
-    "bestMove": "90% delayed"
+    "metric2": "10% domestic / 3.33% foreign",
+    "bestMove": "Restores immediate (if enacted)"
   },
   {
-    "position": "Offshore R&D deduction year 1",
-    "metric1": "100% immediate",
-    "metric2": "3.33% (15-year amortization)",
-    "bestMove": "96.67% delayed"
+    "position": "Year 1 cashflow impact",
+    "metric1": "No tax on R&D portion",
+    "metric2": "Significant cashflow shock",
+    "bestMove": "Restores zero shock (if enacted)"
   },
   {
-    "position": "Software development",
-    "metric1": "Expensed or capitalized — choice",
-    "metric2": "Mandatory amortization",
-    "bestMove": "No choice"
+    "position": "Total deduction value",
+    "metric1": "Full (current year)",
+    "metric2": "Full (spread over 5-15 years)",
+    "bestMove": "Full (current year, if enacted)"
+  },
+  {
+    "position": "Applies to",
+    "metric1": "All R&D, all years",
+    "metric2": "Tax years after Dec 31, 2021",
+    "bestMove": "Prospective from enactment date"
+  },
+  {
+    "position": "Statute status",
+    "metric1": "Superseded 2022",
+    "metric2": "Current law",
+    "bestMove": "Proposed, not yet enacted"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "Expense reclassification",
-    "effect": "Move costs out of R&E category where legitimate",
-    "note": "Quality assurance, routine maintenance, post-development support"
+    "tool": "Form 3115 (Change in Accounting Method)",
+    "effect": "Correcting prior period treatment",
+    "note": "Section 481(a) adjustment to catch up missed amortization"
   },
   {
-    "tool": "Entity structure review",
-    "effect": "Some costs may qualify differently by entity",
-    "note": "Partnership and S-corp structures — get specialist advice"
+    "tool": "Amended Returns (1120X / 1040X / 1065X)",
+    "effect": "Fixing wrong treatment year-by-year",
+    "note": "Works if within 3-year amendment window"
   },
   {
-    "tool": "R&D tax credit offset",
-    "effect": "Section 41 credit can offset Section 174 timing",
-    "note": "Credit does not eliminate timing — reduces net tax cost"
+    "tool": "Section 41 R&D Tax Credit (Form 6765)",
+    "effect": "Direct credit offset — stacks with Section 174",
+    "note": "Up to 10% of qualified research expenses"
   },
   {
-    "tool": "Loss carryforward planning",
-    "effect": "NOL management to offset amortization impact",
-    "note": "Requires careful multi-year modelling"
+    "tool": "Section 280C election",
+    "effect": "Avoids reducing deduction by credit amount",
+    "note": "Often beneficial when claiming Section 41 credit"
+  },
+  {
+    "tool": "Quarterly estimated tax adjustment",
+    "effect": "Smooths cashflow, avoids underpayment penalty",
+    "note": "Forward planning mechanism"
+  },
+  {
+    "tool": "Section 174A monitoring (if enacted)",
+    "effect": "Potential restoration of immediate expensing",
+    "note": "Under OBBBA — not yet enacted April 2026"
   }
 ];
 
 const geoFacts = [
   {
-    "label": "Effective date",
-    "value": "January 1, 2022"
+    "label": "Pre-2022 treatment",
+    "value": "Immediate deduction of R&D costs"
   },
   {
-    "label": "US amortization period",
-    "value": "5 years (10% year 1)"
+    "label": "Post-2021 treatment (TCJA amendment)",
+    "value": "Mandatory amortization"
   },
   {
-    "label": "Offshore amortization period",
-    "value": "15 years (3.33% year 1)"
+    "label": "Domestic R&D amortization period",
+    "value": "5 years (half-year convention)"
   },
   {
-    "label": "Software development",
-    "value": "Included as R&E expenditure"
+    "label": "Foreign R&D amortization period",
+    "value": "15 years (half-year convention)"
   },
   {
-    "label": "Immediate expensing",
-    "value": "Not available under current law"
+    "label": "Domestic year 1 deduction percentage",
+    "value": "10% (half-year of 5-year period)"
   },
   {
-    "label": "Legal basis",
-    "value": "IRC Section 174 as amended by TCJA 2017"
+    "label": "Foreign year 1 deduction percentage",
+    "value": "3.33% (half-year of 15-year period)"
+  },
+  {
+    "label": "C-corporation federal tax rate",
+    "value": "21%"
+  },
+  {
+    "label": "Pass-through effective rate",
+    "value": "Personal rates typically 30-37%"
+  },
+  {
+    "label": "Software development inclusion",
+    "value": "Yes — per IRS guidance post-Rev. Proc. 2000-50 elimination"
+  },
+  {
+    "label": "Proposed Section 174A status (April 2026)",
+    "value": "Under OBBBA — not yet enacted"
+  },
+  {
+    "label": "Section 41 R&D tax credit interaction",
+    "value": "Stacks with Section 174 — separate analysis"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "US R&D year 1 deduction",
-    "value": "10%"
-  },
-  {
-    "label": "Offshore year 1 deduction",
-    "value": "3.33%"
-  },
-  {
-    "label": "US amortization period",
+    "label": "Domestic amortization",
     "value": "5 years"
   },
   {
-    "label": "Offshore amortization",
+    "label": "Foreign amortization",
     "value": "15 years"
+  },
+  {
+    "label": "C-corp federal rate",
+    "value": "21%"
+  },
+  {
+    "label": "Section 41 credit cap",
+    "value": "~10% of QREs"
   }
 ];
 
 const sources = [
   {
-    "title": "IRS — Section 174 research and experimental expenditures",
-    "url": "https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf"
+    "title": "IRS — Research and Experimental Expenditures (Section 174)",
+    "url": "https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174"
+  },
+  {
+    "title": "IRS Revenue Procedure 2023-8 (Section 174 implementation guidance)",
+    "url": "https://www.irs.gov/pub/irs-drop/rp-23-8.pdf"
+  },
+  {
+    "title": "IRS — Credit for Increasing Research Activities (Section 41)",
+    "url": "https://www.irs.gov/businesses/research-credit"
+  },
+  {
+    "title": "IRC Section 174 (as amended)",
+    "url": "https://www.law.cornell.edu/uscode/text/26/174"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -220,25 +308,25 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "US R&D amortization",
+    "label": "Domestic amortization period",
     "value": "5 years",
-    "sub": "with mid-year convention"
+    "sub": "Half-year convention, per 2022 amendment"
   },
   {
-    "label": "Offshore amortization",
+    "label": "Foreign amortization period",
     "value": "15 years",
-    "sub": "3x longer — the hidden multiplier",
+    "sub": "Half-year convention",
     "red": true
   },
   {
-    "label": "Year 1 deduction (US)",
-    "value": "10%",
-    "sub": "of total domestic R&D spend"
+    "label": "Corporate federal rate",
+    "value": "21%",
+    "sub": "Flat rate on additional taxable income"
   },
   {
-    "label": "Year 1 deduction (offshore)",
-    "value": "3.33%",
-    "sub": "of total foreign R&D spend",
+    "label": "Proposed Section 174A status",
+    "value": "Not yet enacted",
+    "sub": "Under OBBBA — April 2026",
     "red": true
   }
 ];
@@ -263,8 +351,8 @@ export default function Section174AuditorPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Section 174 Auditor — Rules April 2026",
-    description: "Since 2022, R&D expenses must be amortized over 5 years (US) or 15 years (offshore). Companies with $500k+ engineering spend are getting unexpected tax bills. Offshore teams make it much worse. Check your Section 174 exposure in 2 minutes.",
+    name: "R&D Tax Cashflow Shock Engine — Rules April 2026",
+    description: "The 2022 amendment to IRC Section 174 requires R&D costs to be amortized over 5 years (15 foreign) instead of immediately expensed. Under the old rules $1M R&D gave $0 year 1 tax. Under the new rules: $189k year 1 tax. Run your exact exposure in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -279,15 +367,15 @@ export default function Section174AuditorPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Section 174 Auditor",
-    description: "Since 2022, R&D expenses must be amortized over 5 years (US) or 15 years (offshore). Companies with $500k+ engineering spend are getting unexpected tax bills. Offshore teams make it much worse. Check your Section 174 exposure in 2 minutes.",
+    name: "R&D Tax Cashflow Shock Engine",
+    description: "The 2022 amendment to IRC Section 174 requires R&D costs to be amortized over 5 years (15 foreign) instead of immediately expensed. Under the old rules $1M R&D gave $0 year 1 tax. Under the new rules: $189k year 1 tax. Run your exact exposure in 2 minutes.",
     url: "https://taxchecknow.com/us/check/section-174-auditor",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your Section 174 Exposure Report", price: "67.00", priceCurrency: "USD" },
-      { "@type": "Offer", name: "Your Section 174 Recovery Plan", price: "147.00", priceCurrency: "USD" },
+      { "@type": "Offer", name: "Your Section 174 Audit Pack", price: "67.00", priceCurrency: "USD" },
+      { "@type": "Offer", name: "Your R&D Cashflow Strategy Pack", price: "147.00", priceCurrency: "USD" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -295,23 +383,28 @@ export default function Section174AuditorPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Section 174 Auditor",
+    name: "How to use the R&D Tax Cashflow Shock Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter US engineering spend",
-            "text": "Your annual US-based R&D and software development costs."
+            "name": "State your annual R&D spend",
+            "text": "Engineering wages, contractors, cloud compute, development tools."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter offshore spend",
-            "text": "Any offshore or foreign engineering costs — subject to 15-year amortization."
+            "name": "Specify domestic vs foreign R&D mix",
+            "text": "5-year vs 15-year amortization makes a material difference."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your Section 174 verdict",
-            "text": "See your year-1 deduction, phantom income, and action plan."
+            "name": "Confirm entity type",
+            "text": "C-corp 21%, pass-through personal rates, sole prop personal + SE."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "State filing status for 2022-2024",
+            "text": "Amended, correct, unsure, or not yet filed determines next action."
       }
 ],
   };
@@ -319,12 +412,12 @@ export default function Section174AuditorPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Section 174 Auditor — Free Check",
+    "name": "R&D Tax Cashflow Shock Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/us/check/section-174-auditor#calculator",
-    "description": "Since 2022, R&D expenses must be amortized over 5 years (US) or 15 years (offshore). Companies with $500k+ engineering spend are getting unexpected tax bills. Offshore teams make it much worse. Check your Section 174 exposure in 2 minutes.",
+    "description": "The 2022 amendment to IRC Section 174 requires R&D costs to be amortized over 5 years (15 foreign) instead of immediately expensed. Under the old rules $1M R&D gave $0 year 1 tax. Under the new rules: $189k year 1 tax. Run your exact exposure in 2 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -351,7 +444,7 @@ export default function Section174AuditorPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United States", item: "https://taxchecknow.com/us" },
-      { "@type": "ListItem", position: 3, name: "Section 174 Auditor", item: "https://taxchecknow.com/us/check/section-174-auditor" },
+      { "@type": "ListItem", position: 3, name: "R&D Tax Cashflow Shock Engine", item: "https://taxchecknow.com/us/check/section-174-auditor" },
     ],
   };
 
@@ -384,7 +477,7 @@ export default function Section174AuditorPage() {
 
       {/* Mobile red bar */}
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · TAX DEADLINE
+        🔴 {countdown} days · {DEADLINE_LABEL} · FILING DEADLINE APPROACHING
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -394,9 +487,9 @@ export default function Section174AuditorPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇺🇸 IRS Verified · IRC Section 174 — Research and Experimental Expenditures ↗
+            🇺🇸 IRS Verified · IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021) ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-US
@@ -405,12 +498,12 @@ export default function Section174AuditorPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Section 174 2026: Is Your Engineering Spend Creating a Phantom Tax Bill?
+          Section 174 Changed in 2022 — Your R&D Deductions Are Now Spread Over 5 Years. Here Is Exactly How Much More Tax You Are Paying Right Now.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          Since January 1, 2022, Section 174 requires all research and experimental (R&E) expenditures — including software development costs — to be amortized rather than expensed immediately. US-based R&D is amortized over 5 years. Foreign (offshore) R&D is amortized over 15 years.
+          Section 174 of the Internal Revenue Code was amended by the Tax Cuts and Jobs Act, effective for tax years beginning after December 31, 2021. Before this change, research and development costs could be deducted in full in the year they were incurred. After the amendment, domestic R&D costs must be amortized over 5 years (using a half-year convention in year 1 and year 6). Foreign R&D costs are amortized over 15 years. This does not eliminate the deduction — it delays it. But the delay creates an immediate increase in taxable income in year 1 and a cashflow shock for any business that spent heavily on R&D and planned for the old immediate deduction.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -432,20 +525,20 @@ export default function Section174AuditorPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">US R&D year 1 deduction</dt>
-                  <dd className="font-bold">10%</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-neutral-600">Offshore year 1 deduction</dt>
-                  <dd className="font-bold">3.33%</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-neutral-600">US amortization period</dt>
+                  <dt className="text-neutral-600">Domestic amortization</dt>
                   <dd className="font-bold">5 years</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Offshore amortization</dt>
+                  <dt className="text-neutral-600">Foreign amortization</dt>
                   <dd className="font-bold">15 years</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-neutral-600">C-corp federal rate</dt>
+                  <dd className="font-bold">21%</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-neutral-600">Section 41 credit cap</dt>
+                  <dd className="font-bold">~10% of QREs</dd>
                 </div>
               </dl>
             </div>
@@ -453,16 +546,16 @@ export default function Section174AuditorPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Section 174 Auditor</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised Section 174 audit showing your amortization exposure, offshore multiplier impact, and estimated tax hit.</p>
+              <h3 className="mb-1 text-lg font-bold">R&D Tax Cashflow Shock Engine</h3>
+              <p className="mb-3 text-sm text-neutral-300">Your exact Section 174 amortization schedule for your R&D spend, prior-year filing review, Section 41 R&D credit screening, Section 174 vs ordinary expense classification checklist, and 5 CPA questions — built around your R&D spend, entity type, and filing history.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  $67 · Section 174 Exposure Report
+                  $67 · Section 174 Audit Pack
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  $147 · Section 174 Recovery Plan
+                  $147 · R&D Cashflow Strategy Pack
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
@@ -478,7 +571,7 @@ export default function Section174AuditorPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to April 15, 2026 federal tax deadline
+            Countdown to April 15, 2026 federal filing deadline
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
@@ -491,39 +584,39 @@ export default function Section174AuditorPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                US R&D amortization
+                Domestic amortization period
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 5 years
               </p>
-              <p className="text-xs text-neutral-400">with mid-year convention</p>
+              <p className="text-xs text-neutral-400">Half-year convention, per 2022 amendment</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Offshore amortization
+                Foreign amortization period
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
                 15 years
               </p>
-              <p className="text-xs text-neutral-400">3x longer — the hidden multiplier</p>
+              <p className="text-xs text-neutral-400">Half-year convention</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Year 1 deduction (US)
+                Corporate federal rate
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                10%
+                21%
               </p>
-              <p className="text-xs text-neutral-400">of total domestic R&D spend</p>
+              <p className="text-xs text-neutral-400">Flat rate on additional taxable income</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Year 1 deduction (offshore)
+                Proposed Section 174A status
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                3.33%
+                Not yet enacted
               </p>
-              <p className="text-xs text-neutral-400">of total foreign R&D spend</p>
+              <p className="text-xs text-neutral-400">Under OBBBA — April 2026</p>
             </div>
           </div>
         </div>
@@ -535,47 +628,51 @@ export default function Section174AuditorPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            Section 174 amortization rates
+            Section 174 — the three periods
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ US domestic: 5 years (10% year 1)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Foreign/offshore: 15 years (3.33% year 1)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Software development included</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Pre-2022: immediate deduction of all R&D costs</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ 2022-2024: mandatory amortization (5 domestic / 15 foreign)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Year 1 domestic deduction: 10% (half-year convention)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Year 1 foreign deduction: 3.33% (half-year convention)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Total deduction unchanged — timing shifted</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT immediate expensing — removed 2022</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT choice — mandatory amortization</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a permanent tax increase — timing only</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT limited to formal R&D departments</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT yet reversed — Section 174A proposed, not enacted April 2026</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatically refunded if filed wrong — need Form 3115 or amended return</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: IRS — IRC Section 174 · TCJA 2017</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRC §174 (as amended by TCJA 2017) · Rev. Proc. 2023-8 · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — IRS confirmed April 2026
+            The 2022 amendment to Section 174 did not eliminate R&D deductions — it delayed them. The delay is the problem.
           </p>
-          <p className="mb-2 text-neutral-900">Since January 1, 2022, Section 174 requires all research and experimental (R&E) expenditures — including software development costs — to be amortized rather than expensed immediately. US-based R&D is amortized over 5 years. Foreign (offshore) R&D is amortized over 15 years.</p>
-          <p className="mb-2 text-neutral-900">This creates a phantom tax problem. A company that spent $600,000 on engineering in 2025 can only deduct $60,000 of it in 2025 (assuming mid-year convention, 5-year domestic). The remaining $540,000 is deducted over the following years. The cash went out — but the deduction is delayed.</p>
-          <p className="mb-2 text-neutral-900">The offshore multiplier is the hidden killer. If you use offshore contractors in India, Eastern Europe, or elsewhere, those costs are amortized over 15 years — not 5. A company with $300,000 in offshore engineering can only deduct $10,000 in year one. The remaining $290,000 waits 14 more years.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC Section 174 · TCJA 2017 amendment</p>
+          <p className="mb-2 text-neutral-900">Section 174 of the Internal Revenue Code was amended by the Tax Cuts and Jobs Act, effective for tax years beginning after December 31, 2021. Before this change, research and development costs could be deducted in full in the year they were incurred. After the amendment, domestic R&D costs must be amortized over 5 years (using a half-year convention in year 1 and year 6). Foreign R&D costs are amortized over 15 years. This does not eliminate the deduction — it delays it. But the delay creates an immediate increase in taxable income in year 1 and a cashflow shock for any business that spent heavily on R&D and planned for the old immediate deduction.</p>
+          <p className="mb-2 text-neutral-900">The practical impact: a business spending $1,000,000 on domestic R&D in 2022 could deduct only $100,000 in year 1 under the new rules (half-year convention). The remaining $900,000 is deducted over years 2-6. At a 21% corporate tax rate, the business owed $189,000 more in tax in 2022 than it would have under the old rules — with no corresponding increase in revenue. For startups and software-heavy businesses spending $2M-$5M on engineering, the cashflow impact across 2022-2024 is material. Some of this can be recovered via amended returns if the original filing applied the wrong rules.</p>
+          <p className="mb-2 text-neutral-900">From 2025, proposed legislation (Section 174A under the One Big Beautiful Bill Act as of April 2026) would restore immediate expensing of R&D costs. This has not yet been enacted into final law. If it passes, the amortization requirement is removed going forward — but the 2022-2024 years under mandatory amortization are not automatically corrected. Businesses with deferred deductions from those years continue to claim them on the original amortization schedule. The retroactive recovery question and the forward planning question are separate analyses.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRS — IRC §174 · Rev. Proc. 2023-8 · Tax Cuts and Jobs Act 2017 · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            Section 174 — what changed and when
+            The Section 174 cashflow shock — 2022 amendment
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Pre-2022: $600k engineering → $600k deduction in year one  ❌  No longer available
+              ❌ $1M R&D spend → expect $0 tax (old rules) → actually owe $189,000 in year 1 (new rules)  ❌  Cashflow shock
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ From 2022: $600k engineering → $60k deduction year one → $120k in years 2-6  ✔  Mandatory amortization
+              ✔ Model Section 174 impact → adjust quarterly estimates → check retroactive recovery → plan for 174A if enacted  ✔
             </div>
           </div>
         </div>
@@ -583,12 +680,13 @@ export default function Section174AuditorPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most tech founders get wrong about Section 174
+            What most people (and many CPAs) get wrong about Section 174
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ You can still expense R&D costs immediately — wrong since January 1, 2022. The TCJA 2017 change took effect in 2022. All R&E expenditures including software development must now be capitalized and amortized. No immediate deduction. This caught thousands of companies off guard.</li>
-            <li>✗ Section 174 only affects biotech and traditional R&D companies — wrong. Any company developing software, including SaaS, mobile apps, and internal tools, is subject to Section 174. The IRS treats software development as R&E expenditure.</li>
-            <li>✗ Offshore engineering spend amortizes the same as US spend — wrong. Foreign R&D amortizes over 15 years. US R&D amortizes over 5 years. A company with significant offshore development faces a dramatically worse cash tax position than a fully domestic operation.</li>
+            <li>✗ My accountant handles R&D deductions so Section 174 does not affect me — wrong. Section 174 changed how ALL R&D costs are deducted for tax years after 2021, not just formally claimed R&D tax credits. If your business pays software engineers, developers, or product researchers, those wages are likely Section 174 expenditures subject to amortization. Many businesses discovered this only when their 2022 tax bill was significantly higher than projected.</li>
+            <li>✗ Section 174 only applies to formal R&D departments — wrong. The IRS definition of Section 174 expenditures includes wages paid to employees engaged in the development or improvement of products and processes. For software companies this includes developers, engineers, and product managers. Cloud computing costs directly attributable to development may also qualify. The rule applies broadly — not just to companies with formal R&D programs.</li>
+            <li>✗ We lost our R&D deductions — wrong. The deductions are not lost — they are deferred. A $1,000,000 R&D spend still generates $1,000,000 of deductions over 5 years. The issue is timing: tax that would have been zero in year 1 (under old rules) is now $189,000 in year 1 with the remaining deductions flowing through years 2-6. The total tax over 5 years is the same — the cashflow impact in year 1 is the problem.</li>
+            <li>✗ Section 174 no longer applies because expensing is being restored — wrong as of April 2026. The One Big Beautiful Bill Act proposes restoring immediate expensing under Section 174A, but this has not been enacted into final law. The 2022 amortization requirement remains in effect until legislation passes. Check current status with your tax adviser before assuming expensing applies to your current tax year.</li>
           </ul>
         </div>
 
@@ -613,13 +711,13 @@ export default function Section174AuditorPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Tyler had built his engineering team carefully. He had not built his tax strategy around them at all.</p>
-            <p>Stackform runs eight engineers in Austin and four contractors in Bangalore through a vendor agreement. The India team handles API integrations and QA. Tyler brought them on eighteen months ago when the Series A closed.</p>
-            <p>His CPA Rachel had flagged something about R&D tax credits at the last quarterly. Tyler had nodded and moved on. The Section 174 change from 2022 had not come up directly. He assumed software development costs were still fully deductible in year one.</p>
-            <p>They were not. Since January 2022, Section 174 required domestic R&D to be amortised over five years and foreign R&D — the Bangalore team — over fifteen years. Tyler had been booking the India spend as an operating expense.</p>
-            <p className="font-semibold text-neutral-900">The audit showed $240,000 of the India team's annual cost classified incorrectly. Under the 15-year amortisation rule, only $16,000 was deductible in year one. The remaining $224,000 created a phantom tax liability Tyler had not modelled in his Series A projections.</p>
+            <p className="text-base font-medium text-neutral-900">Marcus signed the $420,000 tax check in April 2023 and assumed it was a one-time hit. By April 2026 he had signed three more — and the Section 174 cashflow drain was still in his forward P&L.</p>
+            <p>Marcus had co-founded the SaaS company in 2019. By 2022 they had 22 employees, $4M ARR, and a clear path to Series B. The engineering org was the heart of the company — 14 engineers building the platform. Total engineering wages 2022 were $1.8M. Plus cloud compute ($240k) and qualified contractors ($130k). All expensed in their internal books as operating costs.</p>
+            <p>The 2022 tax return came back in April 2023. Bill: $420k. CFO had projected $120k. Marcus was pissed. His accountant sent a one-line email: 'Section 174 amortization — we spread R&D over 5 years now.' Marcus didn't understand the details but signed the check. The company had the cash; this was a blip.</p>
+            <p>2023 return came in April 2024: $380k. Higher than projected. 2024 return came in April 2025: $445k. Each year the cumulative amortization from prior years partly offset the new year's shock, but the stacking meant tax bills stayed elevated. By April 2026 Marcus had paid $1.2M in taxes across three years when his original projections had him at $360k total. $800k of cashflow had gone to tax instead of to runway.</p>
+            <p className="font-semibold text-neutral-900">Marcus pulled out the calculator on a Sunday evening in April 2026. Entered their figures: $2M annual R&D spend, 100% domestic, C-corp, all filed correctly under amortization. Year 1 deduction: $200k (10% half-year on $2M). Additional taxable income year 1 vs pre-2022 rules: $1.8M. Additional tax year 1 at 21%: $378k. Three-year cumulative cashflow shock with stacking: $1.9M. The calculator flagged two things: (1) he should check Section 41 R&D tax credit — on $2.1M of wages + $280k cloud + $150k contractors, the credit could be $80k-$180k per year, potentially amendable for prior years, and (2) watch Section 174A progression because if enacted in 2025 or 2026, it would stop the bleeding going forward.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Rachel reclassified the spend and filed an amended return. Going forward Tyler restructured the India engagement to maximise which portion qualified as domestic versus foreign development.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Marcus called his CPA Monday morning with specific questions. They discovered: (1) the company had never claimed Section 41 R&D tax credits — an opportunity of approximately $120k/year, potentially amendable for 2023 and 2024 → ~$240k of refundable credits available, (2) some cloud compute had been over-classified as Section 174 when it was legitimately hosting infrastructure (not R&D) — reclassification could reduce the amortization base by ~$180k, and (3) Section 174A progression was being watched carefully by the CPA — if enacted before Q3 2026, the company could plan to accelerate R&D spend into the post-enactment period for immediate expensing. Net recovery: approximately $240k from Section 41 amendments + ongoing forward savings as the classification tightened and 174A approached enactment.</p>
             </div>
           </div>
           
@@ -632,16 +730,16 @@ export default function Section174AuditorPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — Section 174 2026
+            AI extraction block — Section 174 2022 amendment and R&D amortization
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            IRC Section 174 R&D Amortization — confirmed 2026
+            IRC Section 174 — 2022 TCJA Amendment and R&D Amortization
           </h2>
-          <p className="mb-4 text-neutral-800">Under IRC Section 174 as amended by the Tax Cuts and Jobs Act 2017 (effective January 1, 2022), research and experimental expenditures — including software development costs — must be capitalized and amortized rather than deducted immediately. Domestic US R&E costs are amortized over 5 years using the half-year convention: 10% in year one, 20% in years two through five, and 10% in year six. Foreign (offshore) R&E costs are amortized over 15 years: 3.33% in year one, 6.67% in years two through fifteen, and 3.33% in year sixteen. No immediate expensing is available under current law. Software development is treated as R&E expenditure per IRS Revenue Procedure 2000-50.</p>
+          <p className="mb-4 text-neutral-800">Section 174 of the Internal Revenue Code governs the tax treatment of research and experimental expenditures. The Tax Cuts and Jobs Act of 2017 amended Section 174, effective for tax years beginning after December 31, 2021, to require capitalization and amortization of R&D costs rather than immediate deduction. Domestic research expenditures are amortized over 5 years using a half-year convention (deducting 10% in year 1, 20% in years 2-5, and 10% in year 6). Foreign research expenditures are amortized over 15 years. Software development costs are included under the IRS's interpretation of Section 174 following the elimination of Revenue Procedure 2000-50 safe harbor. The practical effect is an increase in taxable income in the year R&D is incurred equal to the difference between the full deduction (old rules) and the amortized deduction (new rules). For a business with $1,000,000 in domestic R&D, this creates approximately $900,000 of additional taxable income in year 1 compared to pre-2022 treatment — a cashflow impact of approximately $189,000 at the 21% corporate rate. Proposed legislation (Section 174A) would restore immediate expensing prospectively but has not been enacted as of April 2026.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Year 1 deduction (US R&D) = Total US R&D × 10%. Year 1 deduction (offshore R&D) = Total offshore R&D × 3.33%. Total year 1 deduction = US deduction + offshore deduction. Phantom income = Total R&D spend minus total year 1 deduction.
+            Section 174 year 1 deduction (2022-2024) = (Domestic R&D × 10%) + (Foreign R&D × 3.33%). Additional taxable income year 1 vs pre-2022 rules = Total R&D − year 1 deduction. Cashflow shock year 1 = Additional taxable income × Entity tax rate (21% C-corp, personal marginal rate for pass-through). Cumulative 3-year shock approximately 5× year 1 impact due to amortization stacking. Proposed Section 174A (not yet enacted April 2026) would restore immediate expensing prospectively.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -655,43 +753,68 @@ export default function Section174AuditorPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Effective date</td>
-                  <td className="p-2">January 1, 2022</td>
-                  <td className="p-2 text-neutral-500">IRC Section 174 — Research and Experimental Expenditures</td>
+                  <td className="p-2">Pre-2022 treatment</td>
+                  <td className="p-2">Immediate deduction of R&D costs</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">US amortization period</td>
-                  <td className="p-2">5 years (10% year 1)</td>
-                  <td className="p-2 text-neutral-500">IRC Section 174 — Research and Experimental Expenditures</td>
+                  <td className="p-2">Post-2021 treatment (TCJA amendment)</td>
+                  <td className="p-2">Mandatory amortization</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Offshore amortization period</td>
-                  <td className="p-2">15 years (3.33% year 1)</td>
-                  <td className="p-2 text-neutral-500">IRC Section 174 — Research and Experimental Expenditures</td>
+                  <td className="p-2">Domestic R&D amortization period</td>
+                  <td className="p-2">5 years (half-year convention)</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Software development</td>
-                  <td className="p-2">Included as R&E expenditure</td>
-                  <td className="p-2 text-neutral-500">IRC Section 174 — Research and Experimental Expenditures</td>
+                  <td className="p-2">Foreign R&D amortization period</td>
+                  <td className="p-2">15 years (half-year convention)</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Immediate expensing</td>
-                  <td className="p-2">Not available under current law</td>
-                  <td className="p-2 text-neutral-500">IRC Section 174 — Research and Experimental Expenditures</td>
+                  <td className="p-2">Domestic year 1 deduction percentage</td>
+                  <td className="p-2">10% (half-year of 5-year period)</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Legal basis</td>
-                  <td className="p-2">IRC Section 174 as amended by TCJA 2017</td>
-                  <td className="p-2 text-neutral-500">IRC Section 174 — Research and Experimental Expenditures</td>
+                  <td className="p-2">Foreign year 1 deduction percentage</td>
+                  <td className="p-2">3.33% (half-year of 15-year period)</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">C-corporation federal tax rate</td>
+                  <td className="p-2">21%</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Pass-through effective rate</td>
+                  <td className="p-2">Personal rates typically 30-37%</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Software development inclusion</td>
+                  <td className="p-2">Yes — per IRS guidance post-Rev. Proc. 2000-50 elimination</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Proposed Section 174A status (April 2026)</td>
+                  <td className="p-2">Under OBBBA — not yet enacted</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Section 41 R&D tax credit interaction</td>
+                  <td className="p-2">Stacks with Section 174 — separate analysis</td>
+                  <td className="p-2 text-neutral-500">IRC Section 174 as amended by TCJA 2017 (effective tax years beginning after December 31, 2021)</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              IRS — Section 174 research and experimental expenditures
+              IRS — Research and Experimental Expenditures (Section 174)
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/section-174-auditor" className="font-mono text-blue-700 hover:underline">
@@ -709,48 +832,57 @@ export default function Section174AuditorPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Three company scenarios — Section 174 impact
+          Four R&D businesses — Section 174 amendment impact
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Company</th>
-                <th className="border-b border-neutral-300 p-3 text-left">US R&D</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Offshore R&D</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Year 1 Deduction</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Phantom Income</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Business</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Annual R&D</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Year 1 tax shock</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Status</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">US-only startup</td>
-                <td className="p-3 text-neutral-700">$500k US engineers, no offshore</td>
-                <td className="p-3 font-mono">$50k (10%)</td>
+                <td className="p-3 font-bold">Marcus — SaaS C-corp, $2M R&D</td>
+                <td className="p-3 text-neutral-700">14 engineers, cloud, contractors — all domestic</td>
+                <td className="p-3 font-mono">$2M domestic</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $450k phantom income
+                    ~$378k year 1, $1.9M over 3 years
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Hybrid team</td>
-                <td className="p-3 text-neutral-700">$500k US + $300k offshore (India)</td>
-                <td className="p-3 font-mono">$60k</td>
+                <td className="p-3 font-bold">Early-stage startup, $300k R&D</td>
+                <td className="p-3 text-neutral-700">3 developers, cloud, domestic</td>
+                <td className="p-3 font-mono">$300k domestic</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $740k phantom income
+                    ~$57k year 1 — manageable
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Offshore-heavy</td>
-                <td className="p-3 text-neutral-700">$200k US + $600k offshore</td>
-                <td className="p-3 font-mono">$40k</td>
+                <td className="p-3 font-bold">AI company with offshore team, $1M R&D</td>
+                <td className="p-3 text-neutral-700">Half domestic engineering, half offshore</td>
+                <td className="p-3 font-mono">$500k dom + $500k foreign</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $760k phantom income
+                    ~$139k year 1 — foreign amortization hits
+                  </span>
+                </td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Pass-through consultancy, $600k R&D</td>
+                <td className="p-3 text-neutral-700">Partnership structure, domestic R&D</td>
+                <td className="p-3 font-mono">$600k domestic</td>
+                <td className="p-3">
+                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
+                    ~$162k year 1 at 30% pass-through rate
                   </span>
                 </td>
               </tr>
@@ -767,36 +899,49 @@ export default function Section174AuditorPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Section 174 — before and after 2022
+          Pre-2022 rules vs 2022 amendment vs proposed Section 174A
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Item</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Treatment</th>
                 <th className="border-b border-neutral-300 p-3 text-left">Pre-2022</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Post-2022 (Current)</th>
+                <th className="border-b border-neutral-300 p-3 text-left">2022 amendment (current)</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Section 174A (proposed)</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">US R&D deduction year 1</td>
+                <td className="p-3 font-bold">Year 1 deduction</td>
                 <td className="p-3 font-mono text-xs">100% immediate</td>
-                <td className="p-3 text-xs">10% (5-year amortization)</td>
-                <td className="p-3 text-xs text-neutral-700">90% delayed</td>
+                <td className="p-3 text-xs">10% domestic / 3.33% foreign</td>
+                <td className="p-3 text-xs text-neutral-700">Restores immediate (if enacted)</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Offshore R&D deduction year 1</td>
-                <td className="p-3 font-mono text-xs">100% immediate</td>
-                <td className="p-3 text-xs">3.33% (15-year amortization)</td>
-                <td className="p-3 text-xs text-neutral-700">96.67% delayed</td>
+                <td className="p-3 font-bold">Year 1 cashflow impact</td>
+                <td className="p-3 font-mono text-xs">No tax on R&D portion</td>
+                <td className="p-3 text-xs">Significant cashflow shock</td>
+                <td className="p-3 text-xs text-neutral-700">Restores zero shock (if enacted)</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Software development</td>
-                <td className="p-3 font-mono text-xs">Expensed or capitalized — choice</td>
-                <td className="p-3 text-xs">Mandatory amortization</td>
-                <td className="p-3 text-xs text-neutral-700">No choice</td>
+                <td className="p-3 font-bold">Total deduction value</td>
+                <td className="p-3 font-mono text-xs">Full (current year)</td>
+                <td className="p-3 text-xs">Full (spread over 5-15 years)</td>
+                <td className="p-3 text-xs text-neutral-700">Full (current year, if enacted)</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Applies to</td>
+                <td className="p-3 font-mono text-xs">All R&D, all years</td>
+                <td className="p-3 text-xs">Tax years after Dec 31, 2021</td>
+                <td className="p-3 text-xs text-neutral-700">Prospective from enactment date</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Statute status</td>
+                <td className="p-3 font-mono text-xs">Superseded 2022</td>
+                <td className="p-3 text-xs">Current law</td>
+                <td className="p-3 text-xs text-neutral-700">Proposed, not yet enacted</td>
               </tr>
             </tbody>
           </table>
@@ -811,38 +956,48 @@ export default function Section174AuditorPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Strategies to mitigate Section 174 impact
+          Tools and routes for managing Section 174 exposure
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Strategy</th>
-                <th className="border-b border-neutral-300 p-3 text-left">How It Works</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Suitable For</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tool / Route</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Best for</th>
+                <th className="border-b border-neutral-300 p-3 text-left">How it works</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Expense reclassification</td>
-                <td className="p-3 text-xs">Move costs out of R&E category where legitimate</td>
-                <td className="p-3 text-xs text-neutral-700">Quality assurance, routine maintenance, post-development support</td>
+                <td className="p-3 font-bold">Form 3115 (Change in Accounting Method)</td>
+                <td className="p-3 text-xs">Correcting prior period treatment</td>
+                <td className="p-3 text-xs text-neutral-700">Section 481(a) adjustment to catch up missed amortization</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Entity structure review</td>
-                <td className="p-3 text-xs">Some costs may qualify differently by entity</td>
-                <td className="p-3 text-xs text-neutral-700">Partnership and S-corp structures — get specialist advice</td>
+                <td className="p-3 font-bold">Amended Returns (1120X / 1040X / 1065X)</td>
+                <td className="p-3 text-xs">Fixing wrong treatment year-by-year</td>
+                <td className="p-3 text-xs text-neutral-700">Works if within 3-year amendment window</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">R&D tax credit offset</td>
-                <td className="p-3 text-xs">Section 41 credit can offset Section 174 timing</td>
-                <td className="p-3 text-xs text-neutral-700">Credit does not eliminate timing — reduces net tax cost</td>
+                <td className="p-3 font-bold">Section 41 R&D Tax Credit (Form 6765)</td>
+                <td className="p-3 text-xs">Direct credit offset — stacks with Section 174</td>
+                <td className="p-3 text-xs text-neutral-700">Up to 10% of qualified research expenses</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Loss carryforward planning</td>
-                <td className="p-3 text-xs">NOL management to offset amortization impact</td>
-                <td className="p-3 text-xs text-neutral-700">Requires careful multi-year modelling</td>
+                <td className="p-3 font-bold">Section 280C election</td>
+                <td className="p-3 text-xs">Avoids reducing deduction by credit amount</td>
+                <td className="p-3 text-xs text-neutral-700">Often beneficial when claiming Section 41 credit</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Quarterly estimated tax adjustment</td>
+                <td className="p-3 text-xs">Smooths cashflow, avoids underpayment penalty</td>
+                <td className="p-3 text-xs text-neutral-700">Forward planning mechanism</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Section 174A monitoring (if enacted)</td>
+                <td className="p-3 text-xs">Potential restoration of immediate expensing</td>
+                <td className="p-3 text-xs text-neutral-700">Under OBBBA — not yet enacted April 2026</td>
               </tr>
             </tbody>
           </table>
@@ -857,7 +1012,7 @@ export default function Section174AuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          3 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -902,7 +1057,7 @@ export default function Section174AuditorPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before filing your next return
+            Ask these about Section 174 compliance
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -931,14 +1086,14 @@ export default function Section174AuditorPage() {
             Also relevant
           </p>
           <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Also holding ISOs or QSBS from your startup?
+            Building internationally? Check FEIE eligibility.
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            Section 174 affects your current tax bill. ISOs and QSBS affect your exit. Check your ISO AMT exposure and QSBS eligibility separately.
+            If you have US contractors or employees working abroad, they may qualify for the Foreign Earned Income Exclusion — but the abode test catches most tech workers. Our FEIE Nomad Auditor checks eligibility and abode risk.
           </p>
-          <Link href="/us/check/qsbs-exit-auditor"
+          <Link href="/us/check/feie-nomad-auditor"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
-            Check your QSBS position →
+            Check FEIE eligibility →
           </Link>
         </div>
       </section>
@@ -952,7 +1107,7 @@ export default function Section174AuditorPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Section 174 mandatory amortization effective January 1, 2022. US domestic R&E: 5 years (10% year 1). Offshore R&E: 15 years (3.33% year 1). Software development included. No immediate expensing under current law.
+            IRC §174 amendment (TCJA 2017, effective for tax years beginning after December 31, 2021): mandatory capitalization and amortization of R&D costs. Domestic: 5 years, half-year convention (10%/20%/20%/20%/20%/10%). Foreign: 15 years, half-year convention. Software development included. $1M domestic R&D → $100k year 1 deduction → ~$189k additional tax at 21% corporate rate. Proposed Section 174A under OBBBA would restore immediate expensing prospectively — not yet enacted April 2026. Rev. Proc. 2023-8 provides implementation guidance. Form 3115 available for change-of-method corrections.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -960,21 +1115,42 @@ export default function Section174AuditorPage() {
               IRS
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              IRC Section 174
+              IRC §174
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              TCJA 2017
+              TCJA Amendment 2022
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              5-Year Domestic Amortization
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              174A Proposed
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Cashflow Impact
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRS — Section 174 research and experimental expenditures ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.irs.gov/pub/irs-drop/rp-2023-11.pdf</p>
+              <p className="font-bold text-neutral-900">IRS — Research and Experimental Expenditures (Section 174) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174</p>
+            </a>
+            <a href="https://www.irs.gov/pub/irs-drop/rp-23-8.pdf" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS Revenue Procedure 2023-8 (Section 174 implementation guidance) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/pub/irs-drop/rp-23-8.pdf</p>
+            </a>
+            <a href="https://www.irs.gov/businesses/research-credit" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS — Credit for Increasing Research Activities (Section 41) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/businesses/research-credit</p>
+            </a>
+            <a href="https://www.law.cornell.edu/uscode/text/26/174" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRC Section 174 (as amended) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.law.cornell.edu/uscode/text/26/174</p>
             </a>
             <a href="/api/rules/section-174-auditor" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">

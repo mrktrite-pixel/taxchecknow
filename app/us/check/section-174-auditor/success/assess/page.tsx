@@ -8,36 +8,36 @@ const FILES = [
   {
     "num": "01",
     "slug": "s174-01",
-    "name": "Your Section 174 Exposure Report",
-    "desc": "Your exact year-1 deduction and phantom income under current law.",
+    "name": "Your Section 174 Amortization Schedule",
+    "desc": "Year-by-year breakdown of your R&D deduction under the 2022 amendment.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "s174-02",
-    "name": "Expense Reclassification Guide",
-    "desc": "Costs that may not qualify as R&E and can be expensed immediately.",
+    "name": "Prior-Year Filing Review Checklist",
+    "desc": "How to verify whether your 2022, 2023, 2024 returns correctly applied the amendment.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "s174-03",
-    "name": "Offshore vs Domestic Cost Allocation",
-    "desc": "How to correctly allocate and document US vs foreign R&E costs.",
+    "name": "Amendment Path — Form 3115 vs 1120X",
+    "desc": "When to use Form 3115 (accounting method change) vs amended returns for prior years.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "s174-04",
-    "name": "Section 41 R&D Credit Analysis",
-    "desc": "Can the research tax credit offset your Section 174 timing impact?",
+    "name": "Section 41 R&D Tax Credit Screening",
+    "desc": "How Section 174 interacts with Section 41 — and whether you qualify for the credit.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "s174-05",
-    "name": "CPA Brief — Section 174",
-    "desc": "Questions for your CPA about Section 174 compliance and planning.",
+    "name": "Your CPA Brief — Section 174",
+    "desc": "5 questions to ask your CPA about Section 174 compliance and optimisation.",
     "tier": 1
   }
 ];
@@ -58,7 +58,7 @@ export default function SuccessAssess() {
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-04-15T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
+    (new Date("2026-04-15T23:59:59.000-04:00").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -100,16 +100,30 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const s174_us = sessionStorage.getItem("section-174-auditor_s174_us") || "300000";
-      const s174_offshore = sessionStorage.getItem("section-174-auditor_s174_offshore") || "300000";
-      const s174_filed = sessionStorage.getItem("section-174-auditor_s174_filed") || "false";
+      const rd_spend = sessionStorage.getItem("section-174-auditor_rd_spend") || "500k_to_2m";
+      const rd_location = sessionStorage.getItem("section-174-auditor_rd_location") || "domestic";
+      const entity_type = sessionStorage.getItem("section-174-auditor_entity_type") || "c_corp";
+      const filing_status = sessionStorage.getItem("section-174-auditor_filing_status") || "some_unsure";
+      const exposure_status = sessionStorage.getItem("section-174-auditor_exposure_status") || "MATERIAL_SHOCK";
+      const additional_tax_y1 = sessionStorage.getItem("section-174-auditor_additional_tax_y1") || "236250";
+      const cumulative_3year = sessionStorage.getItem("section-174-auditor_cumulative_3year") || "1181250";
+      const amendment_opportunity = sessionStorage.getItem("section-174-auditor_amendment_opportunity") || "false";
+      const status = sessionStorage.getItem("section-174-auditor_status") || "MATERIAL CASHFLOW SHOCK";
+      const tier = sessionStorage.getItem("section-174-auditor_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "s174_us": s174_us,
-        "s174_offshore": s174_offshore,
-        "s174_filed": s174_filed,
-      }).some(v => v && v !== "300000");
+        "rd_spend": rd_spend,
+        "rd_location": rd_location,
+        "entity_type": entity_type,
+        "filing_status": filing_status,
+        "exposure_status": exposure_status,
+        "additional_tax_y1": additional_tax_y1,
+        "cumulative_3year": cumulative_3year,
+        "amendment_opportunity": amendment_opportunity,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "500k_to_2m");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -121,11 +135,18 @@ export default function SuccessAssess() {
           tier:       1,
           name,
           inputs: {
-        "US R&D spend": s174_us,
-        "Offshore R&D spend": s174_offshore,
-        "Filed correctly": s174_filed,
+        "Annual R&D spend band": rd_spend,
+        "R&D location mix": rd_location,
+        "Business entity type": entity_type,
+        "Filing status 2022-2024": filing_status,
+        "Exposure classification": exposure_status,
+        "Additional tax year 1": additional_tax_y1,
+        "Cumulative 3-year shock": cumulative_3year,
+        "Amendment opportunity flag": amendment_opportunity,
+        "Verdict status": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","year1Deduction","phantomIncome","taxHit","firstAction","cpaQuestions"],
+          fields: ["exposureStatusSummary","rdSpendClassification","domesticVsForeignImpact","year1AmortizationSchedule","additionalTaxCalculation","section41CreditScreening","priorYearFilingReview","firstAction"],
         }),
       });
       const data = await res.json();
@@ -135,12 +156,14 @@ export default function SuccessAssess() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        year1Deduction: "Your personalised year1Deduction is being prepared — please refresh in a moment.",
-        phantomIncome: "Your personalised phantomIncome is being prepared — please refresh in a moment.",
-        taxHit: "Your personalised taxHit is being prepared — please refresh in a moment.",
+        exposureStatusSummary: "Your personalised exposureStatusSummary is being prepared — please refresh in a moment.",
+        rdSpendClassification: "Your personalised rdSpendClassification is being prepared — please refresh in a moment.",
+        domesticVsForeignImpact: "Your personalised domesticVsForeignImpact is being prepared — please refresh in a moment.",
+        year1AmortizationSchedule: "Your personalised year1AmortizationSchedule is being prepared — please refresh in a moment.",
+        additionalTaxCalculation: "Your personalised additionalTaxCalculation is being prepared — please refresh in a moment.",
+        section41CreditScreening: "Your personalised section41CreditScreening is being prepared — please refresh in a moment.",
+        priorYearFilingReview: "Your personalised priorYearFilingReview is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
-        cpaQuestions: "Your personalised cpaQuestions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRS position based on my answers?",
           "What is the single most important action I should take before April 15, 2026?",
@@ -155,9 +178,16 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const s174_us = sessionStorage.getItem("section-174-auditor_s174_us") || "300000";
-    const s174_offshore = sessionStorage.getItem("section-174-auditor_s174_offshore") || "300000";
-    const s174_filed = sessionStorage.getItem("section-174-auditor_s174_filed") || "false";
+    const rd_spend = sessionStorage.getItem("section-174-auditor_rd_spend") || "500k_to_2m";
+    const rd_location = sessionStorage.getItem("section-174-auditor_rd_location") || "domestic";
+    const entity_type = sessionStorage.getItem("section-174-auditor_entity_type") || "c_corp";
+    const filing_status = sessionStorage.getItem("section-174-auditor_filing_status") || "some_unsure";
+    const exposure_status = sessionStorage.getItem("section-174-auditor_exposure_status") || "MATERIAL_SHOCK";
+    const additional_tax_y1 = sessionStorage.getItem("section-174-auditor_additional_tax_y1") || "236250";
+    const cumulative_3year = sessionStorage.getItem("section-174-auditor_cumulative_3year") || "1181250";
+    const amendment_opportunity = sessionStorage.getItem("section-174-auditor_amendment_opportunity") || "false";
+    const status = sessionStorage.getItem("section-174-auditor_status") || "MATERIAL CASHFLOW SHOCK";
+    const tier = sessionStorage.getItem("section-174-auditor_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -165,14 +195,32 @@ export default function SuccessAssess() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Section 174 Auditor — Deadlines`,
+      `X-WR-CALNAME:R&D Tax Cashflow Shock Engine — Deadlines`,
       "BEGIN:VEVENT",
-      `UID:s174-federal-${Date.now()}@taxchecknow.com`,
+      `UID:s174-apr15-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${"20260415"}`,
       `DTEND;VALUE=DATE:${"20260415"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Federal Tax Return Due — Section 174 Amortization",
-      "DESCRIPTION:Ensure Section 174 amortization is correctly reflected in 2025 federal return.",
+      "SUMMARY:Federal Tax Filing Deadline — April 15, 2026",
+      "DESCRIPTION:Calendar-year 2025 C-corp and individual federal returns. Ensure Section 174 amortization applied correctly.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:s174-extended-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20261015"}`,
+      `DTEND;VALUE=DATE:${"20261015"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Extended filing deadline — October 15, 2026",
+      "DESCRIPTION:C-corp extended filing deadline for 2025 tax year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:s174-174a-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20260901"}`,
+      `DTEND;VALUE=DATE:${"20260901"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Watch: Section 174A enactment",
+      "DESCRIPTION:Monitor OBBBA progress — potential restoration of immediate expensing.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -191,7 +239,7 @@ export default function SuccessAssess() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your Section 174 Exposure Report — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your Section 174 Audit Pack — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -220,17 +268,17 @@ export default function SuccessAssess() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your Section 174 Exposure Report · $67
+            Payment confirmed · Your Section 174 Audit Pack · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Section 174 Exposure Report
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Section 174 Audit Pack
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.
           </p>
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to April 15, 2026</span>
-            <span className="font-mono text-sm font-bold text-white">Apr 15 2026</span>
+            <span className="font-mono text-sm font-bold text-white">15 Apr 2026</span>
           </div>
         </div>
 
@@ -265,7 +313,7 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","year1Deduction","phantomIncome","taxHit","firstAction","cpaQuestions"] as string[]).map(key => {
+                {(["exposureStatusSummary","rdSpendClassification","domesticVsForeignImpact","year1AmortizationSchedule","additionalTaxCalculation","section41CreditScreening"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -333,11 +381,29 @@ export default function SuccessAssess() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Federal Tax Return Due — Section 174 Amortization</p>
-                    <p className="text-xs text-neutral-500">Ensure Section 174 amortization is correctly reflected in 2025 federal return.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Federal Tax Filing Deadline — April 15, 2026</p>
+                    <p className="text-xs text-neutral-500">Calendar-year 2025 C-corp and individual federal returns. Ensure Section 174 amortization applied correctly.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     15 Apr 2026
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Extended filing deadline — October 15, 2026</p>
+                    <p className="text-xs text-neutral-500">C-corp extended filing deadline for 2025 tax year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    15 Oct 2026
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Watch: Section 174A enactment</p>
+                    <p className="text-xs text-neutral-500">Monitor OBBBA progress — potential restoration of immediate expensing.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    1 Sep 2026
                   </span>
                 </div>
               </div>
@@ -415,8 +481,8 @@ export default function SuccessAssess() {
             {/* UPGRADE */}
             <div className="no-print rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Want the full implementation plan?</p>
-              <p className="mb-1 font-serif text-lg font-bold text-neutral-950">Your Section 174 Recovery Plan</p>
-              <p className="mb-3 text-sm text-neutral-600">Full Section 174 audit plus expense reclassification strategy, accounting method analysis, and a written brief for your CPA.</p>
+              <p className="mb-1 font-serif text-lg font-bold text-neutral-950">Your R&D Cashflow Strategy Pack</p>
+              <p className="mb-3 text-sm text-neutral-600">Full strategy: amendment path for prior years if filed under wrong rules, Section 41 R&D credit stacking analysis, classification audit (Section 174 vs ordinary business expense), Section 174A proactive planning, multi-year cashflow forecasting, and CPA coordination brief.</p>
               <Link href="/us/check/section-174-auditor"
                 className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950 transition">
                 Upgrade — $147 →
@@ -427,10 +493,10 @@ export default function SuccessAssess() {
             
             <div className="no-print rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Also relevant</p>
-              <p className="mb-1 text-sm font-bold text-neutral-950">Also holding ISOs or QSBS from your startup?</p>
-              <p className="mb-2 text-xs text-neutral-600">Section 174 affects your current tax bill. ISOs and QSBS affect your exit. Check your ISO AMT exposure and QSBS eligibility separately.</p>
-              <Link href="/us/check/qsbs-exit-auditor" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
-                Check your QSBS position →
+              <p className="mb-1 text-sm font-bold text-neutral-950">Building internationally? Check FEIE eligibility.</p>
+              <p className="mb-2 text-xs text-neutral-600">If you have US contractors or employees working abroad, they may qualify for the Foreign Earned Income Exclusion — but the abode test catches most tech workers. Our FEIE Nomad Auditor checks eligibility and abode risk.</p>
+              <Link href="/us/check/feie-nomad-auditor" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
+                Check FEIE eligibility →
               </Link>
             </div>
 
@@ -444,7 +510,7 @@ export default function SuccessAssess() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United States tax adviser before making financial decisions.
             Based on IRS guidance April 2026.{" "}
-            <a href="https://www.irs.gov/pub/irs-drop/rp-2023-11.pdf" target="_blank" rel="noopener noreferrer" className="underline">IRS — Section 174 research and experimental expenditures</a> · <a href="/api/rules/section-174-auditor" target="_blank" rel="noopener noreferrer" className="underline">Machine-readable JSON rules</a>
+            <a href="https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174" target="_blank" rel="noopener noreferrer" className="underline">IRS — Research and Experimental Expenditures (Section 174)</a> · <a href="https://www.irs.gov/pub/irs-drop/rp-23-8.pdf" target="_blank" rel="noopener noreferrer" className="underline">IRS Revenue Procedure 2023-8 (Section 174 implementation guidance)</a>
           </p>
         </div>
 
