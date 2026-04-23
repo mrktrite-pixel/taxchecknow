@@ -49,7 +49,7 @@ export default function SideHustleCheckerFile03() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">United Kingdom · Side Hustle Checker</span>
+            <span className="hidden sm:block">United Kingdom · HMRC Side Income Declaration Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function SideHustleCheckerFile03() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/uk/side-hustle-checker/sh-02" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 02: Self Assessment Registration Guide</a></div>
+          <div><a href="/files/uk/side-hustle-checker/sh-02" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 02: Your DAC7 Exposure Summary</a></div>
           <span className="font-mono">File 03 of 8</span>
-          <div><a href="/files/uk/side-hustle-checker/sh-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 04: Platform Income Record Template →</a></div>
+          <div><a href="/files/uk/side-hustle-checker/sh-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 04: Expense Deduction Guide →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function SideHustleCheckerFile03() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 HMRC · Income Tax (Trading and Other Income) Act 2005
+              🇬🇧 HMRC · Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -96,12 +96,12 @@ export default function SideHustleCheckerFile03() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Side Hustle Checker · File 03 of 8
+            HMRC Side Income Declaration Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Trading Allowance vs Expenses Calculator
+            Tax Rate Verification
           </h1>
-          <p className="text-neutral-500 text-sm">Which method saves you more tax — allowance or actual costs?</p>
+          <p className="text-neutral-500 text-sm">20% vs 40% — what rate actually applies to your side income.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function SideHustleCheckerFile03() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Which Method Saves More?</h2><table><tr><th>Method</th><th>Use when</th><th>Tax saving</th></tr><tr><td>Trading allowance (£1,000)</td><td>Expenses under £1,000</td><td>Simple — no receipts</td></tr><tr><td>Actual expenses</td><td>Expenses over £1,000</td><td>Higher deduction</td></tr></table>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Side Income Tax Rate — 20% or 40%?</h2><p>Side income is ADDED to your employment income. The marginal rate depends on total.</p><h3>The Calculation</h3><p>Total income = Employment income + Side income - Personal Allowance (£12,570)</p><p>If total above £50,270 after allowance = higher rate band = 40% on side income portion</p><p>If total below £50,270 = basic rate band = 20%</p><h3>Mixed Example</h3><p>Teacher on £48,000 salary with £5,000 Etsy income:</p><ul><li>Total gross: £53,000</li><li>After personal allowance (£12,570): £40,430 taxable</li><li>Band breakdown: £37,700 at 20% + £2,730 at 40%</li><li>£2,730 of the Etsy income is taxed at 40%, not 20%</li><li>Most accountants calculate this correctly — but self-assessing taxpayers often assume 20% throughout</li></ul><div class="info-box"><strong>Rule of thumb:</strong> if your employment income is above £45,000, some or all of your side income will be at 40%. Plan accordingly.</div>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function SideHustleCheckerFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Side Hustle Tax Verdict</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Declaration Position Report</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function SideHustleCheckerFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">Self Assessment Registration Guide</span>
+                <span className="text-sm font-semibold text-neutral-950">Your DAC7 Exposure Summary</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -147,7 +147,7 @@ export default function SideHustleCheckerFile03() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">03</span>
-                <span className="text-sm font-semibold text-white">Trading Allowance vs Expenses Calculator</span>
+                <span className="text-sm font-semibold text-white">Tax Rate Verification</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -156,7 +156,7 @@ export default function SideHustleCheckerFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Platform Income Record Template</span>
+                <span className="text-sm font-semibold text-neutral-950">Expense Deduction Guide</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -165,7 +165,7 @@ export default function SideHustleCheckerFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">05</span>
-                <span className="text-sm font-semibold text-neutral-950">Accountant Brief — Side Hustle</span>
+                <span className="text-sm font-semibold text-neutral-950">Accountant Brief — Side Income</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -174,7 +174,7 @@ export default function SideHustleCheckerFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Prior Year Disclosure Guide<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Voluntary Disclosure Playbook<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +183,7 @@ export default function SideHustleCheckerFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">VAT Registration Assessment<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Multi-Year Disclosure Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -192,7 +192,7 @@ export default function SideHustleCheckerFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">08</span>
-                <span className="text-sm font-semibold text-neutral-950">Grow Your Side Hustle Tax-Efficiently<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Ongoing Compliance Setup<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -222,10 +222,10 @@ export default function SideHustleCheckerFile03() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/uk/check/side-hustle-checker" className="hover:text-neutral-900 transition">
-              ← Back to Side Hustle Checker
+              ← Back to HMRC Side Income Declaration Engine
             </a>
-            <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Trading Allowance ↗</a>
-            <a href="https://www.gov.uk/guidance/digital-platform-reporting" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Digital platform reporting ↗</a>
+            <a href="https://www.gov.uk/check-if-you-need-tax-return" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Check if you need to send a Self Assessment tax return ↗</a>
+            <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Tax-free allowances on property and trading income ↗</a>
           </div>
         </div>
       </footer>

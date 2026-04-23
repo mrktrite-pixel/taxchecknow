@@ -10,12 +10,12 @@ import SideHustleCheckerCalculator from "./SideHustleCheckerCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Side Hustle Tax UK 2026: HMRC Now Gets Your Platform Data Automatically | TaxCheckNow",
-  description: "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
+  title: "HMRC Side Income DAC7 2026: What You Owe and When | TaxCheckNow",
+  description: "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/side-hustle-checker" },
   openGraph: {
-    title: "Side Hustle Tax UK 2026: HMRC Now Gets Your Platform Data Automatically | TaxCheckNow",
-    description: "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
+    title: "HMRC Side Income DAC7 2026: What You Owe and When | TaxCheckNow",
+    description: "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/side-hustle-checker",
     siteName: "TaxCheckNow",
     type: "website",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "5 October 2026";
-const DEADLINE_ISO   = "2026-10-05T23:59:59.000Z";
+const DEADLINE_ISO   = "2026-10-05T23:59:59.000+01:00";
 
 function daysToDeadline(): number {
   if (!DEADLINE_ISO) return 0;
@@ -50,171 +50,246 @@ function progressPct(): number {
 const faqs = [
   {
     "question": "What is the £1,000 trading allowance?",
-    "answer": "The trading allowance lets you earn up to £1,000 gross from trading or self-employment activities without paying income tax or needing to file a self assessment return. If your gross income from all side hustles exceeds £1,000 in a tax year, you must register for self assessment."
+    "answer": "The £1,000 trading allowance (ITTOIA 2005 s783A) exempts gross trading income up to £1,000 per tax year from declaration and tax. Below £1,000: no Self Assessment registration required, no tax owed. Above £1,000: must register for Self Assessment by 5 October following the tax year and declare the full gross income. The allowance covers TOTAL trading income across all sources — not per platform. £500 on eBay + £400 on Vinted + £200 on Etsy = £1,100 total, over threshold."
   },
   {
-    "question": "Can I use the trading allowance and also claim expenses?",
-    "answer": "No — you cannot use both. If you claim the trading allowance, you cannot also deduct actual business expenses. If your expenses exceed £1,000, you are better off using actual expenses. You choose the most beneficial method each year."
+    "question": "What is DAC7 and what does it mean for me?",
+    "answer": "DAC7 is an EU directive (adopted into UK law under SI 2023/817, the Platform Operators Regulations 2023) requiring digital platforms to report seller and host income directly to tax authorities. Since 1 January 2024, platforms including eBay, Vinted, Etsy, Airbnb, Amazon, Fiverr, and Upwork are required to report sellers who have sold over 30 items or earned over €2,000 (~£1,700) in a year. HMRC cross-references this against Self Assessment records and issues compliance letters for discrepancies."
   },
   {
-    "question": "Does the Rent-a-Room scheme apply to Airbnb?",
-    "answer": "The Rent-a-Room scheme allows you to earn up to £7,500 per year tax-free from letting furnished rooms in your main home. This can apply to Airbnb letting of rooms — but not to entire property lets. If you rent out a room in the house you live in, Rent-a-Room may be more beneficial than the trading allowance."
+    "question": "How do I register for Self Assessment?",
+    "answer": "Go to GOV.UK and search 'register for self assessment'. Complete the online form (SA1 for non-trading or CWF1 for self-employment/trading). HMRC issues a UTR (Unique Taxpayer Reference) within 2-3 weeks. Once you have the UTR, file your return by 31 January following the tax year end (online). Registration deadline: 5 October following the tax year in which you became liable. Missing the deadline triggers a £100 minimum penalty."
   },
   {
-    "question": "What if I have undeclared side income from prior years?",
-    "answer": "HMRC accepts voluntary disclosure through its Digital Disclosure Service. Disclosing voluntarily before HMRC contacts you typically results in lower penalties than being investigated. If you have undeclared income from prior years, taking advice on voluntary disclosure is strongly recommended."
+    "question": "What if I should have registered in a previous year but didn't?",
+    "answer": "Use HMRC's Digital Disclosure Service (DDS) for voluntary disclosure of past-year income. An unprompted disclosure typically carries a penalty of 20-30% of tax owed, compared to 30-50% for a response to a nudge letter, and up to 70% or 100% for discovered non-disclosure. DDS is online, structured, and generally leads to lighter penalties. For rental income specifically, HMRC operates the Let Property Campaign (LPC) with similarly beneficial terms."
+  },
+  {
+    "question": "What expenses can I deduct from side income?",
+    "answer": "Common deductions: platform fees (eBay/Etsy/PayPal commissions), shipping and packaging costs, cost of goods sold (for resellers), advertising, a portion of home utilities if working from home (£6/week flat rate without receipts), business mileage (45p/mile first 10,000 miles), phone and internet pro-rated for business use. Alternative: choose the £1,000 trading allowance INSTEAD of itemising expenses — take whichever gives the lower tax outcome."
+  },
+  {
+    "question": "What is the difference between trading and disposing of personal items?",
+    "answer": "HMRC's 'badges of trade' test distinguishes trading from personal sales. TRADING indicators: buying to resell, frequent sales, systematic activity, profit motive, modified items, business marketing. PERSONAL SALES indicators: selling things you owned for personal use, occasional activity, no profit motive, no purchase-to-resell cycle. Vintage reseller on eBay = trading. Clearing out your wardrobe on Vinted = usually not trading. If any single transaction shows commercial intent, HMRC can argue trading from that point forward."
+  },
+  {
+    "question": "Will HMRC send me a nudge letter if I haven't declared?",
+    "answer": "Likely yes, if your platform income is above the DAC7 reporting thresholds (30 items OR €2,000 ~ £1,700). HMRC has been issuing nudge letters since late 2024, targeting sellers identified via platform data. A nudge letter is not a formal compliance check — it is an invitation to register/declare before HMRC opens a formal case. Responding promptly with a voluntary disclosure typically reduces penalties significantly compared to waiting."
+  },
+  {
+    "question": "Does my rental income count toward the £1,000 trading allowance?",
+    "answer": "No — rental income has its own separate £1,000 PROPERTY allowance under ITTOIA 2005 s783B. You can receive up to £1,000 of gross rental income without declaration. Above that, property income must be declared (on the property pages of the SA return, not the self-employment pages). Airbnb income counts as property/rental income, not trading income, unless you provide substantial services (like daily cleaning and meals — rare). Separate allowances, similar thresholds."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: HMRC only knows about your side hustle if you tell them",
-    "correct": "Reality: From January 2026, digital platforms are legally required to report your earnings directly to HMRC. If you sell on eBay, Etsy, Airbnb, Vinted or similar platforms, HMRC receives your income data automatically."
+    "wrong": "ChatGPT says: HMRC won't know about my eBay sales as long as I don't tell them",
+    "correct": "Reality: Since 1 January 2024, eBay, Vinted, Etsy, Airbnb, Amazon, Fiverr and other platforms report seller income directly to HMRC under the DAC7 regulations (SI 2023/817). If you sold more than 30 items or earned over €2,000 (~£1,700) on a platform in 2024, that data has already been shared. HMRC is cross-referencing it now — nudge letters are being issued automatically."
   },
   {
-    "wrong": "ChatGPT says: You only need to register if you make a profit over £1,000",
-    "correct": "Reality: The £1,000 trading allowance is based on gross income — the total before any expenses. If your platform receipts total more than £1,000, you must register for self assessment, even if costs reduce your profit below £1,000."
+    "wrong": "ChatGPT says: I only sold personal items so it is not taxable",
+    "correct": "Reality: HMRC distinguishes between disposing of personal possessions (not taxable) and trading (taxable). If you BUY items to resell, sell regularly, or sell at a profit with commercial intent, HMRC treats this as trading regardless of how you describe it. The distinction is INTENT and PATTERN — not the platform you use. Vintage resellers on eBay are traders, not hobbyists."
   },
   {
-    "wrong": "ChatGPT says: You have until 31 January to register for self assessment",
-    "correct": "Reality: The self assessment REGISTRATION deadline is 5 October — not 31 January. The January date is for filing the return and paying tax. Registering late triggers a £100 penalty automatically."
+    "wrong": "ChatGPT says: I only have to pay tax if I make a profit",
+    "correct": "Reality: The obligation to REGISTER and DECLARE exists from £1,000 GROSS income regardless of profit. You may owe little or no tax after expenses — but failure to register by the 5 October deadline still triggers a £100 minimum penalty. Failure to declare the income on your return triggers further penalties under Schedule 41 FA 2008 even if no tax is ultimately owed."
+  },
+  {
+    "wrong": "ChatGPT says: My side income is taxed at 20%",
+    "correct": "Reality: Side income is ADDED to your total income. If your employment salary PLUS side income exceeds £50,270, the marginal rate on the side income is 40%, not 20%. A teacher earning £48,000 with £5,000 of Etsy income pays 40% on the top £2,730 of that Etsy income — the portion that pushes them over the higher rate threshold. The rate depends on the FULL INCOME picture."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "Do I need to register for self assessment for my side income — and have I missed any previous years?",
-    "why": "Platform reporting from January 2026 means HMRC can now cross-check your returns against platform data. Catching up on prior years before HMRC contacts you results in significantly lower penalties."
+    "q": "What is my exact declaration position for each side income source and each tax year going back 4 years?",
+    "why": "HMRC can go back 4 years for careless errors, 6 years for failure to notify, 20 years for deliberate non-disclosure. Getting the full history right matters — partial disclosure can undermine penalty mitigation."
   },
   {
-    "q": "Should I use the £1,000 trading allowance or claim actual expenses?",
-    "why": "The trading allowance is simpler but may not be optimal if your expenses are significant. Your accountant can run the numbers in minutes."
+    "q": "What tax rate applies to my side income given my full income picture — 20%, 40%, or mixed?",
+    "why": "If your total income is near £50,270, part of your side income may be at 20% and part at 40%. Getting the split right matters — many accountants default to one rate and underpay or overpay."
   },
   {
-    "q": "Does the Rent-a-Room scheme apply to my Airbnb letting?",
-    "why": "If you let rooms in your main home, Rent-a-Room gives you £7,500 tax-free — more than the trading allowance. But the rules are specific about what qualifies."
+    "q": "Should I use the £1,000 trading allowance or itemise expenses — which gives the lower tax for my specific income and expense profile?",
+    "why": "The trading allowance is an either/or choice vs itemising expenses. If your real expenses are under £1,000, take the allowance. If over £1,000, itemise. The calculation is worth doing explicitly."
+  },
+  {
+    "q": "If I need to disclose past years, is the HMRC Digital Disclosure Service the best route — or is there a better campaign for my specific income type?",
+    "why": "Rental disclosures are best via the Let Property Campaign. Trading/general disclosures via DDS. Each has slightly different procedures and terms. Wrong route = more penalty than necessary."
+  },
+  {
+    "q": "How do I set up proper bookkeeping going forward so I am compliant from next tax year onwards?",
+    "why": "Ongoing compliance is simpler than catching up. Set up a spreadsheet or side-income app, separate business bank account if volume justifies it, and quarterly reviews with the accountant."
   }
 ];
 
 const workedExamples = [
   {
-    "name": "Small Vinted seller",
-    "setup": "£750 gross from selling old clothes",
-    "income": "£750",
-    "status": "Under allowance — no action"
+    "name": "Sarah — teacher + Etsy cards",
+    "setup": "£39k salary, £4.2k Etsy",
+    "income": "£4,200 over threshold",
+    "status": "REGISTER + DECLARE (20%)"
   },
   {
-    "name": "Active Etsy seller",
-    "setup": "£4,200 gross ceramics sales",
-    "income": "£4,200",
-    "status": "Must register by 5 October"
+    "name": "James — director + Airbnb room",
+    "setup": "£62k salary + dividends, £8k Airbnb",
+    "income": "£8,000 — total over £50k",
+    "status": "REGISTER (40% on side income)"
   },
   {
-    "name": "Airbnb host",
-    "setup": "£12,000 gross room rental",
-    "income": "£12,000",
-    "status": "Register + Rent-a-Room check"
+    "name": "Emma — Vinted seller of personal clothes",
+    "setup": "£28k salary, £800 Vinted personal items",
+    "income": "£800 under trading allowance",
+    "status": "NOT TRADING — NO DECLARATION"
   },
   {
-    "name": "Fiverr freelancer",
-    "setup": "£28,000 gross design income",
-    "income": "£28,000",
-    "status": "Register + class 4 NI due"
+    "name": "Tom — freelance designer via Fiverr",
+    "setup": "£48k salary, £5k Fiverr gigs",
+    "income": "£5k — pushes total over £50k",
+    "status": "REGISTER (mixed 20%/40%)"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "Trading allowance (£1,000)",
-    "metric1": "Low expense businesses",
-    "metric2": "Sells on Etsy with no real costs",
-    "bestMove": "Simple — no receipts needed"
+    "position": "Declared correctly on Self Assessment",
+    "metric1": "Owed tax only",
+    "metric2": "£0",
+    "bestMove": "Compliant — stay this course"
   },
   {
-    "position": "Actual expenses",
-    "metric1": "High expense businesses",
-    "metric2": "Buys stock to resell",
-    "bestMove": "More admin but often larger deduction"
+    "position": "Voluntary disclosure via HMRC DDS",
+    "metric1": "Owed tax + interest",
+    "metric2": "~20-30% of tax",
+    "bestMove": "Unprompted = lighter penalties"
+  },
+  {
+    "position": "HMRC-initiated case (nudge letter response)",
+    "metric1": "Owed tax + interest",
+    "metric2": "~30-50% of tax (careless)",
+    "bestMove": "Still better than ignoring"
+  },
+  {
+    "position": "Deliberate non-disclosure discovered",
+    "metric1": "Owed tax + interest",
+    "metric2": "Up to 70% of tax",
+    "bestMove": "Serious — seek professional help"
+  },
+  {
+    "position": "Deliberate and concealed (e.g. offshore)",
+    "metric1": "Owed tax + interest",
+    "metric2": "Up to 100% of tax + criminal risk",
+    "bestMove": "Disclose immediately"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "Stock / materials purchased",
-    "effect": "Yes — cost of goods sold",
-    "note": "Keep all receipts"
+    "tool": "GOV.UK Self Assessment registration",
+    "effect": "Never registered before",
+    "note": "Online form — UTR issued in 2-3 weeks"
   },
   {
-    "tool": "Platform fees",
-    "effect": "Yes",
-    "note": "eBay, Etsy, Fiverr fees deductible"
+    "tool": "Amend existing SA return",
+    "effect": "Registered but didn't declare side income",
+    "note": "Within 12 months of filing deadline"
   },
   {
-    "tool": "Home office proportion",
-    "effect": "Yes — partial",
-    "note": "Proportion of broadband, electricity"
+    "tool": "HMRC Digital Disclosure Service (DDS)",
+    "effect": "Older undeclared years — voluntary disclosure",
+    "note": "Lighter penalties for unprompted disclosures"
   },
   {
-    "tool": "Postage and packaging",
-    "effect": "Yes",
-    "note": "All business postage deductible"
+    "tool": "Let Property Campaign (LPC)",
+    "effect": "Specifically for rental income disclosure",
+    "note": "Beneficial terms for landlord disclosures"
+  },
+  {
+    "tool": "Simple spreadsheet or side-income app",
+    "effect": "Ongoing record keeping for small sellers",
+    "note": "Prepares you for next year's return"
   }
 ];
 
 const geoFacts = [
   {
     "label": "Trading allowance",
-    "value": "£1,000 gross income"
-  },
-  {
-    "label": "Platform reporting",
-    "value": "Mandatory from January 2026"
+    "value": "£1,000 per tax year"
   },
   {
     "label": "Registration deadline",
-    "value": "5 October after tax year end"
+    "value": "5 October following tax year"
   },
   {
-    "label": "Filing deadline",
-    "value": "31 January (online)"
+    "label": "DAC7 reporting live from",
+    "value": "1 January 2024"
   },
   {
-    "label": "Late registration penalty",
-    "value": "£100 automatic"
+    "label": "Platforms reporting",
+    "value": "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr, Upwork"
   },
   {
-    "label": "VAT registration threshold",
-    "value": "£90,000 from April 2024"
+    "label": "Basic rate (under £50,270)",
+    "value": "20%"
+  },
+  {
+    "label": "Higher rate (over £50,270)",
+    "value": "40%"
+  },
+  {
+    "label": "Late filing minimum penalty",
+    "value": "£100"
+  },
+  {
+    "label": "Maximum failure-to-notify penalty",
+    "value": "100% of tax owed (deliberate + concealed)"
+  },
+  {
+    "label": "Voluntary disclosure saving",
+    "value": "Typically 30-50% vs prompted disclosure"
+  },
+  {
+    "label": "Legal anchors",
+    "value": "ITTOIA 2005 s783A · TMA 1970 s7 · SI 2023/817"
   }
 ];
 
 const sidebarNumbers = [
   {
     "label": "Trading allowance",
-    "value": "£1,000 gross"
+    "value": "£1,000"
   },
   {
     "label": "Registration deadline",
-    "value": "5 October"
+    "value": "5 Oct 2026"
   },
   {
-    "label": "Late penalty",
+    "label": "DAC7 live since",
+    "value": "1 Jan 2024"
+  },
+  {
+    "label": "Min late filing penalty",
     "value": "£100"
-  },
-  {
-    "label": "VAT threshold",
-    "value": "£90,000"
   }
 ];
 
 const sources = [
   {
-    "title": "HMRC — Trading Allowance",
+    "title": "HMRC — Check if you need to send a Self Assessment tax return",
+    "url": "https://www.gov.uk/check-if-you-need-tax-return"
+  },
+  {
+    "title": "HMRC — Tax-free allowances on property and trading income",
     "url": "https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income"
   },
   {
-    "title": "HMRC — Digital platform reporting",
-    "url": "https://www.gov.uk/guidance/digital-platform-reporting"
+    "title": "HMRC — Making a voluntary disclosure (Digital Disclosure Service)",
+    "url": "https://www.gov.uk/guidance/admitting-tax-fraud-the-contractual-disclosure-facility-cdf"
+  },
+  {
+    "title": "Platform Operators (Due Diligence and Reporting Requirements) Regulations 2023 (SI 2023/817)",
+    "url": "https://www.legislation.gov.uk/uksi/2023/817/contents/made"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -224,26 +299,25 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "Registration deadline",
-    "value": "5 October",
-    "sub": "for 2025/26 side income"
-  },
-  {
-    "label": "Late penalty",
-    "value": "£100",
-    "sub": "automatic — before you even file",
-    "red": true
-  },
-  {
-    "label": "Platforms reporting",
-    "value": "From Jan 26",
-    "sub": "HMRC gets your data directly",
-    "red": true
-  },
-  {
     "label": "Trading allowance",
     "value": "£1,000",
-    "sub": "gross — not profit"
+    "sub": "Per tax year, all sources combined"
+  },
+  {
+    "label": "DAC7 reporting live since",
+    "value": "1 Jan 2024",
+    "sub": "eBay, Etsy, Airbnb, Vinted, Amazon, Fiverr"
+  },
+  {
+    "label": "Registration deadline",
+    "value": "5 Oct 2026",
+    "sub": "For 2025-26 tax year"
+  },
+  {
+    "label": "Min late filing penalty",
+    "value": "£100",
+    "sub": "Increases if tax remains unpaid",
+    "red": true
   }
 ];
 
@@ -267,8 +341,8 @@ export default function SideHustleCheckerPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Side Hustle Checker — Rules April 2026",
-    description: "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
+    name: "HMRC Side Income Declaration Engine — Rules April 2026",
+    description: "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -283,15 +357,15 @@ export default function SideHustleCheckerPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Side Hustle Checker",
-    description: "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
+    name: "HMRC Side Income Declaration Engine",
+    description: "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/side-hustle-checker",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your Side Hustle Tax Pack", price: "67.00", priceCurrency: "GBP" },
-      { "@type": "Offer", name: "Your Side Hustle Registration Plan", price: "147.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your Side Income Audit Pack", price: "67.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your Disclosure and Compliance Plan", price: "147.00", priceCurrency: "GBP" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -299,23 +373,28 @@ export default function SideHustleCheckerPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Side Hustle Checker",
+    name: "How to use the HMRC Side Income Declaration Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter your gross side income",
-            "text": "Total from all platforms and trading activities combined."
+            "name": "State your total side income",
+            "text": "All platforms and activities combined — one £1,000 threshold applies."
       },
       {
             "@type": "HowToStep",
-            "name": "Check registration status",
-            "text": "Whether you are already registered for self assessment."
+            "name": "Identify your income type",
+            "text": "Platform-reported income is visible to HMRC automatically."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your verdict",
-            "text": "See exactly what HMRC expects and what you need to do before 5 October."
+            "name": "Confirm Self Assessment registration status",
+            "text": "Determines whether you register, amend, or confirm compliance."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Check your total income band",
+            "text": "Above £50,270 means 40% marginal rate on side income — not 20%."
       }
 ],
   };
@@ -323,12 +402,12 @@ export default function SideHustleCheckerPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Side Hustle Checker — Free Check",
+    "name": "HMRC Side Income Declaration Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/side-hustle-checker#calculator",
-    "description": "From January 2026, platforms like eBay, Etsy, Airbnb and Fiverr automatically report your earnings to HMRC. The £1,000 trading allowance is gross — not profit. If you earned over £1,000, you may need to register. Check your position in 2 minutes.",
+    "description": "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -355,7 +434,7 @@ export default function SideHustleCheckerPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United Kingdom", item: "https://taxchecknow.com/uk" },
-      { "@type": "ListItem", position: 3, name: "Side Hustle Checker", item: "https://taxchecknow.com/uk/check/side-hustle-checker" },
+      { "@type": "ListItem", position: 3, name: "HMRC Side Income Declaration Engine", item: "https://taxchecknow.com/uk/check/side-hustle-checker" },
     ],
   };
 
@@ -398,9 +477,9 @@ export default function SideHustleCheckerPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.gov.uk/check-if-you-need-tax-return" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇬🇧 HMRC Verified · Income Tax (Trading and Other Income) Act 2005 ↗
+            🇬🇧 HMRC Verified · Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
@@ -409,12 +488,12 @@ export default function SideHustleCheckerPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Side Hustle Tax UK 2026: Does HMRC Already Know?
+          HMRC Already Has Your Side Income Data — eBay, Etsy, Airbnb and Vinted Have Been Reporting Since 2024. Here Is What You Owe.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          From January 2026, digital platforms including eBay, Etsy, Airbnb, Fiverr, Vinted, and Uber are legally required to report your earnings to HMRC. This means HMRC receives your platform income data automatically — whether you have declared it or not.
+          Since January 2024, digital platforms including eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr and Upwork are legally required to report seller and host income directly to HMRC under the DAC7 Platform Operators Reporting Regulations 2023. HMRC cross-references this data against Self Assessment records. If you earned over £1,000 from a side hustle and have not declared it, HMRC may already have the figures. Nudge letters are being issued automatically.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -437,19 +516,19 @@ export default function SideHustleCheckerPage() {
                 
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Trading allowance</dt>
-                  <dd className="font-bold">£1,000 gross</dd>
+                  <dd className="font-bold">£1,000</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Registration deadline</dt>
-                  <dd className="font-bold">5 October</dd>
+                  <dd className="font-bold">5 Oct 2026</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Late penalty</dt>
+                  <dt className="text-neutral-600">DAC7 live since</dt>
+                  <dd className="font-bold">1 Jan 2024</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-neutral-600">Min late filing penalty</dt>
                   <dd className="font-bold">£100</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-neutral-600">VAT threshold</dt>
-                  <dd className="font-bold">£90,000</dd>
                 </div>
               </dl>
             </div>
@@ -457,16 +536,16 @@ export default function SideHustleCheckerPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Side Hustle Checker</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised side hustle tax assessment showing your declaration obligations, tax exposure, and whether you are already on HMRC radar.</p>
+              <h3 className="mb-1 text-lg font-bold">HMRC Side Income Declaration Engine</h3>
+              <p className="mb-3 text-sm text-neutral-300">Your exact declaration position, tax rate verification (20% or 40%), voluntary disclosure options, expense deduction list for your income type, and 5 accountant questions — built around your registration status and income band.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  £67 · Side Hustle Tax Pack
+                  £67 · Side Income Audit Pack
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  £147 · Side Hustle Registration Plan
+                  £147 · Disclosure and Compliance Plan
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
@@ -482,7 +561,7 @@ export default function SideHustleCheckerPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 5 October 2026 self assessment registration deadline
+            Countdown to 5 October 2026 — Self Assessment registration deadline
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
@@ -495,39 +574,39 @@ export default function SideHustleCheckerPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Registration deadline
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                5 October
-              </p>
-              <p className="text-xs text-neutral-400">for 2025/26 side income</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Late penalty
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                £100
-              </p>
-              <p className="text-xs text-neutral-400">automatic — before you even file</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Platforms reporting
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                From Jan 26
-              </p>
-              <p className="text-xs text-neutral-400">HMRC gets your data directly</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
                 Trading allowance
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 £1,000
               </p>
-              <p className="text-xs text-neutral-400">gross — not profit</p>
+              <p className="text-xs text-neutral-400">Per tax year, all sources combined</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                DAC7 reporting live since
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                1 Jan 2024
+              </p>
+              <p className="text-xs text-neutral-400">eBay, Etsy, Airbnb, Vinted, Amazon, Fiverr</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Registration deadline
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                5 Oct 2026
+              </p>
+              <p className="text-xs text-neutral-400">For 2025-26 tax year</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                Min late filing penalty
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                £100
+              </p>
+              <p className="text-xs text-neutral-400">Increases if tax remains unpaid</p>
             </div>
           </div>
         </div>
@@ -539,48 +618,51 @@ export default function SideHustleCheckerPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The trading allowance — what it covers
+            Side income — declaration thresholds
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ All trading income from all sources combined</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Platform income (Etsy, eBay, Fiverr etc.)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Gross — before any expenses</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Trading allowance £1,000 per tax year — all sources combined</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Property allowance £1,000 separate — Airbnb/SpareRoom covered</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Registration deadline 5 October following tax year</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Filing deadline 31 January online, 31 October paper</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ DAC7 platform reporting — 30 items OR €2,000 minimum</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT per platform — total combined</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT profit — gross income</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT employment income</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT per-platform — one £1,000 threshold total</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT just profit — gross income determines registration</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT optional above £1,000 — statutory obligation</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT protected by privacy — DAC7 auto-reports to HMRC</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC — Trading Allowance · ITTOIA 2005</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: ITTOIA 2005 s783A · TMA 1970 s7 · SI 2023/817 (DAC7) · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — HMRC confirmed April 2026
+            Platform reporting is live — the question is whether your declaration matches
           </p>
-          <p className="mb-2 text-neutral-900">From January 2026, digital platforms including eBay, Etsy, Airbnb, Fiverr, Vinted, and Uber are legally required to report your earnings to HMRC. This means HMRC receives your platform income data automatically — whether you have declared it or not.</p>
-          <p className="mb-2 text-neutral-900">The £1,000 trading allowance is based on gross income — the total you receive before any expenses. If your gross income from all side hustles combined exceeds £1,000 in a tax year, you must register for self assessment and file a tax return, even if your profit after expenses is lower.</p>
-          <p className="mb-2 text-neutral-900">The registration deadline is 5 October following the tax year end. For income earned in the 2025/26 tax year (ending 5 April 2026), you must register by 5 October 2026. Missing this deadline triggers an automatic £100 penalty.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Self assessment · Trading allowance · Platform reporting</p>
+          <p className="mb-2 text-neutral-900">Since January 2024, digital platforms including eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr and Upwork are legally required to report seller and host income directly to HMRC under the DAC7 Platform Operators Reporting Regulations 2023. HMRC cross-references this data against Self Assessment records. If you earned over £1,000 from a side hustle and have not declared it, HMRC may already have the figures. Nudge letters are being issued automatically.</p>
+          <p className="mb-2 text-neutral-900">The trading allowance of £1,000 per tax year means income below that threshold requires no declaration and no tax is owed. Above £1,000, you must register for Self Assessment by 5 October following the tax year and declare the full income. The tax owed is calculated on profit (income minus allowable expenses) — not gross income. But the obligation to declare exists from £1,000 regardless of whether tax is ultimately owed.</p>
+          <p className="mb-2 text-neutral-900">Side income stacks on top of employment income for tax purposes. A basic rate taxpayer (salary under £50,270) pays 20% on side hustle profit. But if total income exceeds £50,270, the side income is taxed at 40%. Most people assume 20% — the actual rate depends on their full income picture.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Tax on side-hustle income · ITTOIA 2005 · SI 2023/817 (DAC7 Platform Operators Regulations) · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            HMRC platform reporting — how it works from 2026
+            Your DAC7 exposure — the chain from platform to HMRC
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Platform pays you → you decide whether to declare  ❌  No longer works — HMRC gets the data directly
+              ❌ £5,000 Etsy income → not declared → HMRC receives platform data → nudge letter → penalties  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Platform pays you → platform reports to HMRC → HMRC cross-checks your return  ✔  The new reality
+              ✔ Register Self Assessment → declare income → pay correct tax → voluntary disclosure saves penalties  ✔
             </div>
           </div>
         </div>
@@ -588,12 +670,13 @@ export default function SideHustleCheckerPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most side hustlers get wrong
+            What most people (and most online advice) get wrong about side income
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The £1,000 allowance is per platform — wrong. The £1,000 trading allowance is your total across ALL income sources. Multiple platforms, multiple types of side income — they all count together. Earn £600 on Etsy and £600 on Vinted and you are over the threshold.</li>
-            <li>✗ HMRC only knows if you tell them — wrong from January 2026. Digital platforms now report directly to HMRC. If you earned over a certain amount on a qualifying platform, HMRC already has your data. Undeclared income will now be cross-referenced against platform reports.</li>
-            <li>✗ The allowance covers profit not income — wrong. The £1,000 threshold is gross income — the total you receive before expenses. If your platform payments total more than £1,000, you must register, even if costs mean your profit is below £1,000.</li>
+            <li>✗ HMRC won't know about my eBay sales — wrong. Since January 2024, eBay, Vinted, Etsy, Airbnb, Amazon, Fiverr and other platforms report seller income directly to HMRC under the DAC7 regulations. If you sold more than 30 items or earned over €2,000 (approximately £1,700) on a platform in 2023, that data has already been shared. HMRC is cross-referencing it now.</li>
+            <li>✗ I only sold personal items so it is not taxable — wrong. HMRC distinguishes between disposing of personal possessions (not taxable) and trading (taxable). If you buy items to resell, sell regularly, or sell at a profit with commercial intent, HMRC treats this as trading regardless of how you describe it. The distinction is intent and pattern — not the platform you use.</li>
+            <li>✗ I only owe tax if I make a profit — wrong. The obligation to REGISTER and DECLARE exists from £1,000 gross income regardless of profit. You may owe little or no tax after expenses — but failure to register by the deadline still triggers a £100 penalty, and failure to declare the income on your return triggers further penalties.</li>
+            <li>✗ My side income is taxed at 20% — wrong. Side income is added to your total income. If your employment salary plus side income exceeds £50,270, the marginal rate on the side income is 40% — not 20%. A teacher earning £48,000 with £5,000 of Etsy income pays 40% on the top £2,730 of that Etsy income. The rate depends on the full picture.</li>
           </ul>
         </div>
 
@@ -618,13 +701,13 @@ export default function SideHustleCheckerPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">The Birmingham flat had never felt like a side hustle. It was just something James and Helen owned.</p>
-            <p>They bought it in 2019 when Helen's mother moved into assisted living. Kept it rather than sell. Rented it to a young couple for £975 a month. The letting agent handled everything. James had barely thought about it.</p>
-            <p>What changed in 2024 was Airbnb. The tenants left in January. Rather than find new long-term tenants immediately, Helen suggested trying short-term lets. Six months of Airbnb followed — decent money, more hassle than expected.</p>
-            <p>Then they went back to a long-term tenant in July. So the 2024/25 year had mixed property income: six months lettings, six months Airbnb, different rules potentially applying to each period.</p>
-            <p className="font-semibold text-neutral-900">The furnished holiday letting rules changed in April 2025. The Airbnb income no longer qualified for the old FHL tax advantages. And HMRC's platform reporting meant Airbnb had already sent his earnings data directly. The numbers needed to match.</p>
+            <p className="text-base font-medium text-neutral-900">The Etsy email landed in Sarah's inbox on a Sunday evening in January. 'Changes to our reporting obligations to HMRC.' She almost deleted it.</p>
+            <p>Sarah had been making greeting cards as a hobby since lockdown. Her sister ran a craft blog and encouraged her to list them on Etsy. Cards sold slowly at first — about £400 in her first tax year. Then the shop grew. By 2024-25, sales hit £4,200 across 320 orders.</p>
+            <p>She had never registered for Self Assessment. She was a teacher on PAYE and assumed her 'hobby income' was under the threshold. Nobody had told her about the £1,000 trading allowance. Her partner Tom had suggested once that she 'should probably tell the tax people' but she had brushed it off — it was just pocket money.</p>
+            <p>The Etsy email was brief. From 1 January 2024, Etsy would be reporting seller income directly to HMRC under the DAC7 regulations. She Googled 'DAC7'. Read about the £1,000 threshold. Did the maths. Realised she was three years late registering for the 2023-24 tax year (£3,100 of sales) and coming up on the deadline for the 2024-25 year (£4,200).</p>
+            <p className="font-semibold text-neutral-900">Sarah ran the calculator. Over £1,000 + not registered = MUST REGISTER AND DECLARE. Registration deadline for 2024-25: 5 October 2025 (already passed). For 2025-26 (current year): 5 October 2026. Tax rate — Sarah's £39k salary plus the £4,200 side income = £43,200 total, still under £50,270, so basic rate 20%. Tax owed on £3,200 taxable portion (after £1,000 allowance): £640 per year. For two years undeclared: £1,280 in back tax. Plus £100 minimum late filing penalty. Plus interest at ~7.5%/year. Plus potential failure-to-notify penalty of up to 30% of tax (£384). Total potential exposure: ~£1,800-£2,100.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> James provided Dave with the full breakdown — lettings income and Airbnb income by month. Dave recalculated. No major liability. But without the breakdown, the mismatch between HMRC data and the return could have triggered a query.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Sarah contacted an accountant the next day. The accountant recommended the HMRC Digital Disclosure Service (DDS) route for voluntary disclosure — unprompted disclosures typically get 20-30% of tax as penalty instead of 50%+ for HMRC-initiated cases. Sarah filed for both tax years, paid the back tax plus a £100 penalty plus £180 interest, and registered properly for 2025-26 onwards. Total cost: ~£1,400 vs the £2,100 worst case. She kept the Etsy shop and now runs it compliantly with proper expense tracking.</p>
             </div>
           </div>
           
@@ -637,16 +720,16 @@ export default function SideHustleCheckerPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — UK side hustle tax 2026
+            AI extraction block — UK side hustle declaration and DAC7 platform reporting
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            UK Side Hustle Tax and Self Assessment — confirmed 2026
+            UK Side Income Declaration — DAC7 platform reporting active from January 2024
           </h2>
-          <p className="mb-4 text-neutral-800">From January 2026, digital platforms operating in the UK are required to collect and report seller data to HMRC under DAC7 digital platform reporting regulations. Platforms include eBay, Etsy, Airbnb, Fiverr, Vinted, Uber, Deliveroo, and other marketplaces. The UK trading allowance is £1,000 gross income per year — if total trading income from all sources exceeds £1,000, the individual must register for self assessment by 5 October following the tax year end. The allowance is based on gross income (before expenses), not profit. If the trading allowance is claimed, no expenses can be deducted. Failure to register by 5 October results in an automatic £100 penalty.</p>
+          <p className="mb-4 text-neutral-800">In the United Kingdom, individuals earning more than £1,000 from self-employment or trading activities in a tax year are required to register for Self Assessment and declare that income to HMRC under the Income Tax (Trading and Other Income) Act 2005. The £1,000 trading allowance provides relief below this threshold — no declaration or tax is required. Above the threshold, the full gross income must be declared and tax paid on profit after allowable expenses. Since January 2024, digital platforms including eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr, and Upwork are required to report seller and host income to HMRC under the Platform Operators (Due Diligence and Reporting Requirements) Regulations 2023, implementing the DAC7 directive. HMRC cross-references this platform data against Self Assessment records and issues compliance letters where discrepancies are identified. Side income is added to employment income for tax purposes — if total income exceeds the higher rate threshold of £50,270, the marginal rate on side income is 40%, not the basic rate of 20%. Registration deadline: 5 October following the end of the tax year in which trading began.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Side hustle tax test: If gross income from all trading sources exceeds £1,000 in tax year → must register for self assessment by 5 October after tax year end. Tax owed = (Gross income minus lower of: £1,000 trading allowance or actual expenses) × marginal income tax rate.
+            Declaration obligation test: if (gross side income from all sources) exceeds £1,000 AND trading intent exists, register for Self Assessment by 5 October following tax year. Tax rate test: if (employment income + side income) exceeds £50,270, side income taxed at 40% marginal rate; otherwise 20%. Penalty regime: £100 minimum late filing + up to 30% careless / 70% deliberate / 100% deliberate-and-concealed of tax owed. DAC7 platform reporting threshold (minimum required reporting): 30 items sold OR €2,000 (~£1,700) in proceeds.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -661,42 +744,62 @@ export default function SideHustleCheckerPage() {
                 
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Trading allowance</td>
-                  <td className="p-2">£1,000 gross income</td>
-                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">Platform reporting</td>
-                  <td className="p-2">Mandatory from January 2026</td>
-                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
+                  <td className="p-2">£1,000 per tax year</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Registration deadline</td>
-                  <td className="p-2">5 October after tax year end</td>
-                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
+                  <td className="p-2">5 October following tax year</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Filing deadline</td>
-                  <td className="p-2">31 January (online)</td>
-                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
+                  <td className="p-2">DAC7 reporting live from</td>
+                  <td className="p-2">1 January 2024</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Late registration penalty</td>
-                  <td className="p-2">£100 automatic</td>
-                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
+                  <td className="p-2">Platforms reporting</td>
+                  <td className="p-2">eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr, Upwork</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">VAT registration threshold</td>
-                  <td className="p-2">£90,000 from April 2024</td>
-                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005</td>
+                  <td className="p-2">Basic rate (under £50,270)</td>
+                  <td className="p-2">20%</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Higher rate (over £50,270)</td>
+                  <td className="p-2">40%</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Late filing minimum penalty</td>
+                  <td className="p-2">£100</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Maximum failure-to-notify penalty</td>
+                  <td className="p-2">100% of tax owed (deliberate + concealed)</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Voluntary disclosure saving</td>
+                  <td className="p-2">Typically 30-50% vs prompted disclosure</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Legal anchors</td>
+                  <td className="p-2">ITTOIA 2005 s783A · TMA 1970 s7 · SI 2023/817</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/check-if-you-need-tax-return" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              HMRC — Trading Allowance
+              HMRC — Check if you need to send a Self Assessment tax return
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/side-hustle-checker" className="font-mono text-blue-700 hover:underline">
@@ -714,57 +817,57 @@ export default function SideHustleCheckerPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four side hustler scenarios
+          Four side income scenarios — who owes what
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Side Hustler</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Gross Income</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Tax Position</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Action Needed</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Taxpayer</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Side income</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Status</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax owed</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Small Vinted seller</td>
-                <td className="p-3 text-neutral-700">£750 gross from selling old clothes</td>
-                <td className="p-3 font-mono">£750</td>
+                <td className="p-3 font-bold">Sarah — teacher + Etsy cards</td>
+                <td className="p-3 text-neutral-700">£39k salary, £4.2k Etsy</td>
+                <td className="p-3 font-mono">£4,200 over threshold</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    Under allowance — no action
+                    REGISTER + DECLARE (20%)
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Active Etsy seller</td>
-                <td className="p-3 text-neutral-700">£4,200 gross ceramics sales</td>
-                <td className="p-3 font-mono">£4,200</td>
+                <td className="p-3 font-bold">James — director + Airbnb room</td>
+                <td className="p-3 text-neutral-700">£62k salary + dividends, £8k Airbnb</td>
+                <td className="p-3 font-mono">£8,000 — total over £50k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    Must register by 5 October
+                    REGISTER (40% on side income)
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Airbnb host</td>
-                <td className="p-3 text-neutral-700">£12,000 gross room rental</td>
-                <td className="p-3 font-mono">£12,000</td>
+                <td className="p-3 font-bold">Emma — Vinted seller of personal clothes</td>
+                <td className="p-3 text-neutral-700">£28k salary, £800 Vinted personal items</td>
+                <td className="p-3 font-mono">£800 under trading allowance</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    Register + Rent-a-Room check
+                    NOT TRADING — NO DECLARATION
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Fiverr freelancer</td>
-                <td className="p-3 text-neutral-700">£28,000 gross design income</td>
-                <td className="p-3 font-mono">£28,000</td>
+                <td className="p-3 font-bold">Tom — freelance designer via Fiverr</td>
+                <td className="p-3 text-neutral-700">£48k salary, £5k Fiverr gigs</td>
+                <td className="p-3 font-mono">£5k — pushes total over £50k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    Register + class 4 NI due
+                    REGISTER (mixed 20%/40%)
                   </span>
                 </td>
               </tr>
@@ -781,30 +884,49 @@ export default function SideHustleCheckerPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Trading allowance vs actual expenses — which saves more?
+          The real cost of not declaring vs declaring
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Method</th>
-                <th className="border-b border-neutral-300 p-3 text-left">When It Wins</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Example</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax payable</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Penalty</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Best path</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Trading allowance (£1,000)</td>
-                <td className="p-3 font-mono text-xs">Low expense businesses</td>
-                <td className="p-3 text-xs">Sells on Etsy with no real costs</td>
-                <td className="p-3 text-xs text-neutral-700">Simple — no receipts needed</td>
+                <td className="p-3 font-bold">Declared correctly on Self Assessment</td>
+                <td className="p-3 font-mono text-xs">Owed tax only</td>
+                <td className="p-3 text-xs">£0</td>
+                <td className="p-3 text-xs text-neutral-700">Compliant — stay this course</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Actual expenses</td>
-                <td className="p-3 font-mono text-xs">High expense businesses</td>
-                <td className="p-3 text-xs">Buys stock to resell</td>
-                <td className="p-3 text-xs text-neutral-700">More admin but often larger deduction</td>
+                <td className="p-3 font-bold">Voluntary disclosure via HMRC DDS</td>
+                <td className="p-3 font-mono text-xs">Owed tax + interest</td>
+                <td className="p-3 text-xs">~20-30% of tax</td>
+                <td className="p-3 text-xs text-neutral-700">Unprompted = lighter penalties</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">HMRC-initiated case (nudge letter response)</td>
+                <td className="p-3 font-mono text-xs">Owed tax + interest</td>
+                <td className="p-3 text-xs">~30-50% of tax (careless)</td>
+                <td className="p-3 text-xs text-neutral-700">Still better than ignoring</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Deliberate non-disclosure discovered</td>
+                <td className="p-3 font-mono text-xs">Owed tax + interest</td>
+                <td className="p-3 text-xs">Up to 70% of tax</td>
+                <td className="p-3 text-xs text-neutral-700">Serious — seek professional help</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Deliberate and concealed (e.g. offshore)</td>
+                <td className="p-3 font-mono text-xs">Owed tax + interest</td>
+                <td className="p-3 text-xs">Up to 100% of tax + criminal risk</td>
+                <td className="p-3 text-xs text-neutral-700">Disclose immediately</td>
               </tr>
             </tbody>
           </table>
@@ -819,38 +941,43 @@ export default function SideHustleCheckerPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          What expenses can be claimed against side hustle income
+          Tools and routes for declaring side income
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Expense</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Claimable?</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Notes</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tool / Route</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Best for</th>
+                <th className="border-b border-neutral-300 p-3 text-left">How it works</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Stock / materials purchased</td>
-                <td className="p-3 text-xs">Yes — cost of goods sold</td>
-                <td className="p-3 text-xs text-neutral-700">Keep all receipts</td>
+                <td className="p-3 font-bold">GOV.UK Self Assessment registration</td>
+                <td className="p-3 text-xs">Never registered before</td>
+                <td className="p-3 text-xs text-neutral-700">Online form — UTR issued in 2-3 weeks</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Platform fees</td>
-                <td className="p-3 text-xs">Yes</td>
-                <td className="p-3 text-xs text-neutral-700">eBay, Etsy, Fiverr fees deductible</td>
+                <td className="p-3 font-bold">Amend existing SA return</td>
+                <td className="p-3 text-xs">Registered but didn't declare side income</td>
+                <td className="p-3 text-xs text-neutral-700">Within 12 months of filing deadline</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Home office proportion</td>
-                <td className="p-3 text-xs">Yes — partial</td>
-                <td className="p-3 text-xs text-neutral-700">Proportion of broadband, electricity</td>
+                <td className="p-3 font-bold">HMRC Digital Disclosure Service (DDS)</td>
+                <td className="p-3 text-xs">Older undeclared years — voluntary disclosure</td>
+                <td className="p-3 text-xs text-neutral-700">Lighter penalties for unprompted disclosures</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Postage and packaging</td>
-                <td className="p-3 text-xs">Yes</td>
-                <td className="p-3 text-xs text-neutral-700">All business postage deductible</td>
+                <td className="p-3 font-bold">Let Property Campaign (LPC)</td>
+                <td className="p-3 text-xs">Specifically for rental income disclosure</td>
+                <td className="p-3 text-xs text-neutral-700">Beneficial terms for landlord disclosures</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Simple spreadsheet or side-income app</td>
+                <td className="p-3 text-xs">Ongoing record keeping for small sellers</td>
+                <td className="p-3 text-xs text-neutral-700">Prepares you for next year's return</td>
               </tr>
             </tbody>
           </table>
@@ -865,7 +992,7 @@ export default function SideHustleCheckerPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          3 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -910,7 +1037,7 @@ export default function SideHustleCheckerPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before 5 October 2026
+            Ask these about your side income declaration
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -939,14 +1066,14 @@ export default function SideHustleCheckerPage() {
             Also relevant
           </p>
           <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Also a landlord with rental income?
+            Total income over £100,000? Different problem.
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            Rental income has different rules from trading income — and different MTD ITSA obligations. Check your landlord tax position separately.
+            If your side income pushes your total over £100,000 you enter the 60% tax trap — personal allowance withdrawn at £1 for every £2 over the threshold. Our 60% Tax Trap Engine shows the exact exposure and pension escape.
           </p>
-          <Link href="/uk/check/mtd-scorecard"
+          <Link href="/uk/check/allowance-sniper"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
-            Check your landlord MTD position →
+            Check the 60% trap →
           </Link>
         </div>
       </section>
@@ -960,7 +1087,7 @@ export default function SideHustleCheckerPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            UK trading allowance: £1,000 gross income. Over £1,000: register for self assessment by 5 October. Platform reporting mandatory from January 2026. Late registration penalty: £100. Under ITTOIA 2005.
+            Side income over £1,000 per tax year requires Self Assessment registration by 5 October following tax year (ITTOIA 2005 s783A trading allowance · TMA 1970 s7). Platform operators (eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr, Upwork) report seller income to HMRC since 1 January 2024 under SI 2023/817 (DAC7). Side income stacks on employment income — taxed at 20% basic rate (under £50,270 total) or 40% higher rate (above). Penalties £100 minimum late filing, up to 100% of tax for deliberate non-disclosure. Voluntary disclosure via HMRC DDS or Let Property Campaign carries lighter penalties.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -971,23 +1098,36 @@ export default function SideHustleCheckerPage() {
               ITTOIA 2005
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              DAC7 Reporting
+              DAC7 2024
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              £1,000 Trading Allowance
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Platform Reporting Live
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
+            <a href="https://www.gov.uk/check-if-you-need-tax-return" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Check if you need to send a Self Assessment tax return ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/check-if-you-need-tax-return</p>
+            </a>
             <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">HMRC — Trading Allowance ↗</p>
+              <p className="font-bold text-neutral-900">HMRC — Tax-free allowances on property and trading income ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income</p>
             </a>
-            <a href="https://www.gov.uk/guidance/digital-platform-reporting" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/guidance/admitting-tax-fraud-the-contractual-disclosure-facility-cdf" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">HMRC — Digital platform reporting ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/digital-platform-reporting</p>
+              <p className="font-bold text-neutral-900">HMRC — Making a voluntary disclosure (Digital Disclosure Service) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/admitting-tax-fraud-the-contractual-disclosure-facility-cdf</p>
+            </a>
+            <a href="https://www.legislation.gov.uk/uksi/2023/817/contents/made" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">Platform Operators (Due Diligence and Reporting Requirements) Regulations 2023 (SI 2023/817) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.uk/uksi/2023/817/contents/made</p>
             </a>
             <a href="/api/rules/side-hustle-checker" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">

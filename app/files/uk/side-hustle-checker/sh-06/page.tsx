@@ -49,7 +49,7 @@ export default function SideHustleCheckerFile06() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">United Kingdom · Side Hustle Checker</span>
+            <span className="hidden sm:block">United Kingdom · HMRC Side Income Declaration Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function SideHustleCheckerFile06() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/uk/side-hustle-checker/sh-05" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 05: Accountant Brief — Side Hustle</a></div>
+          <div><a href="/files/uk/side-hustle-checker/sh-05" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 05: Accountant Brief — Side Income</a></div>
           <span className="font-mono">File 06 of 8</span>
-          <div><a href="/files/uk/side-hustle-checker/sh-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 07: VAT Registration Assessment →</a></div>
+          <div><a href="/files/uk/side-hustle-checker/sh-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 07: Multi-Year Disclosure Strategy →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function SideHustleCheckerFile06() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 HMRC · Income Tax (Trading and Other Income) Act 2005
+              🇬🇧 HMRC · Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -96,12 +96,12 @@ export default function SideHustleCheckerFile06() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Side Hustle Checker · File 06 of 8
+            HMRC Side Income Declaration Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Prior Year Disclosure Guide
+            Voluntary Disclosure Playbook
           </h1>
-          <p className="text-neutral-500 text-sm">How to disclose undeclared side income from previous years.</p>
+          <p className="text-neutral-500 text-sm">Step-by-step guide to disclosing past undeclared side income via HMRC DDS or LPC.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function SideHustleCheckerFile06() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Voluntary Disclosure</h2><p>HMRC's Digital Disclosure Service allows you to disclose undeclared income from prior years. Voluntary disclosure before HMRC contacts you results in significantly lower penalties.</p><div class="action-box"><h3>How It Works</h3><p>1. Calculate income and tax owed for each year</p><p>2. Log into Digital Disclosure Service</p><p>3. Submit disclosure and pay</p><p>4. HMRC confirms receipt and closes the matter</p></div>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Voluntary Disclosure — Full Playbook</h2><h3>Why Disclose Voluntarily</h3><p>Unprompted disclosure typically reduces penalties from 30-70% of tax to 20-30% or less. HMRC DDS and Let Property Campaign both offer beneficial terms for taxpayers who come forward before HMRC opens a formal case.</p><h3>Phase 1 — Gather Data</h3><ul class="checklist"><li>Platform statements for each year undeclared (eBay, Etsy, etc.)</li><li>Bank statements corroborating receipts</li><li>Expense records (receipts, invoices)</li><li>Total gross income per year per source</li></ul><h3>Phase 2 — Calculate Tax Owed</h3><ul class="checklist"><li>Apply trading allowance or itemise expenses — whichever gives lower tax</li><li>Determine marginal rate per year (include employment income)</li><li>Calculate interest at HMRC's late payment rate (~7.5%)</li><li>Estimate penalty (typically 20-30% of tax for unprompted disclosure)</li></ul><h3>Phase 3 — Choose Route</h3><ul class="checklist"><li>General trading income: HMRC Digital Disclosure Service (DDS) online</li><li>Rental/property income: Let Property Campaign (LPC)</li><li>Complex or very large: consult accountant for CDF route</li></ul><h3>Phase 4 — File and Pay</h3><ul class="checklist"><li>Submit DDS / LPC disclosure online</li><li>Pay tax + interest + penalty (payment plan available if needed)</li><li>Register for Self Assessment for ongoing years</li></ul>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function SideHustleCheckerFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Side Hustle Tax Verdict</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Declaration Position Report</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function SideHustleCheckerFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">Self Assessment Registration Guide</span>
+                <span className="text-sm font-semibold text-neutral-950">Your DAC7 Exposure Summary</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function SideHustleCheckerFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Trading Allowance vs Expenses Calculator</span>
+                <span className="text-sm font-semibold text-neutral-950">Tax Rate Verification</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +157,7 @@ export default function SideHustleCheckerFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Platform Income Record Template</span>
+                <span className="text-sm font-semibold text-neutral-950">Expense Deduction Guide</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -166,7 +166,7 @@ export default function SideHustleCheckerFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">05</span>
-                <span className="text-sm font-semibold text-neutral-950">Accountant Brief — Side Hustle</span>
+                <span className="text-sm font-semibold text-neutral-950">Accountant Brief — Side Income</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -174,7 +174,7 @@ export default function SideHustleCheckerFile06() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">06</span>
-                <span className="text-sm font-semibold text-white">Prior Year Disclosure Guide<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-white">Voluntary Disclosure Playbook<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -183,7 +183,7 @@ export default function SideHustleCheckerFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">VAT Registration Assessment<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Multi-Year Disclosure Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -192,7 +192,7 @@ export default function SideHustleCheckerFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">08</span>
-                <span className="text-sm font-semibold text-neutral-950">Grow Your Side Hustle Tax-Efficiently<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Ongoing Compliance Setup<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -222,10 +222,10 @@ export default function SideHustleCheckerFile06() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/uk/check/side-hustle-checker" className="hover:text-neutral-900 transition">
-              ← Back to Side Hustle Checker
+              ← Back to HMRC Side Income Declaration Engine
             </a>
-            <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Trading Allowance ↗</a>
-            <a href="https://www.gov.uk/guidance/digital-platform-reporting" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Digital platform reporting ↗</a>
+            <a href="https://www.gov.uk/check-if-you-need-tax-return" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Check if you need to send a Self Assessment tax return ↗</a>
+            <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Tax-free allowances on property and trading income ↗</a>
           </div>
         </div>
       </footer>

@@ -8,57 +8,57 @@ const FILES = [
   {
     "num": "01",
     "slug": "sh-01",
-    "name": "Your Side Hustle Tax Verdict",
-    "desc": "Your exact declaration position — what you owe and what you need to do.",
+    "name": "Your Declaration Position Report",
+    "desc": "Exact declaration requirement for your income band and registration status, with statutory citations.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "sh-02",
-    "name": "Self Assessment Registration Guide",
-    "desc": "Step-by-step self assessment registration for side hustlers.",
+    "name": "Your DAC7 Exposure Summary",
+    "desc": "What platform data HMRC has on you and how they use it.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "sh-03",
-    "name": "Trading Allowance vs Expenses Calculator",
-    "desc": "Which method saves you more tax — allowance or actual costs?",
+    "name": "Tax Rate Verification",
+    "desc": "20% vs 40% — what rate actually applies to your side income.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "sh-04",
-    "name": "Platform Income Record Template",
-    "desc": "Monthly income tracker for all platform earnings.",
+    "name": "Expense Deduction Guide",
+    "desc": "Allowable expenses for your income type, with HMRC citations.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "sh-05",
-    "name": "Accountant Brief — Side Hustle",
-    "desc": "Questions to take to your accountant.",
+    "name": "Accountant Brief — Side Income",
+    "desc": "5 questions to ask your accountant before registering or disclosing.",
     "tier": 1
   },
   {
     "num": "06",
     "slug": "sh-06",
-    "name": "Prior Year Disclosure Guide",
-    "desc": "How to disclose undeclared side income from previous years.",
+    "name": "Voluntary Disclosure Playbook",
+    "desc": "Step-by-step guide to disclosing past undeclared side income via HMRC DDS or LPC.",
     "tier": 2
   },
   {
     "num": "07",
     "slug": "sh-07",
-    "name": "VAT Registration Assessment",
-    "desc": "When your side hustle income triggers VAT registration.",
+    "name": "Multi-Year Disclosure Strategy",
+    "desc": "If you have multiple undeclared years, how to approach the full disclosure efficiently.",
     "tier": 2
   },
   {
     "num": "08",
     "slug": "sh-08",
-    "name": "Grow Your Side Hustle Tax-Efficiently",
-    "desc": "Structuring side income as your business grows.",
+    "name": "Ongoing Compliance Setup",
+    "desc": "How to structure your side income record-keeping so you stay compliant from this year onwards.",
     "tier": 2
   }
 ];
@@ -79,7 +79,7 @@ export default function SuccessPlan() {
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-10-05T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
+    (new Date("2026-10-05T23:59:59.000+01:00").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -121,16 +121,30 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const sh_income = sessionStorage.getItem("side-hustle-checker_sh_income") || "3000";
-      const sh_registered = sessionStorage.getItem("side-hustle-checker_sh_registered") || "false";
-      const sh_platform = sessionStorage.getItem("side-hustle-checker_sh_platform") || "true";
+      const income_band = sessionStorage.getItem("side-hustle-checker_income_band") || "1k_to_5k";
+      const income_type = sessionStorage.getItem("side-hustle-checker_income_type") || "goods_online";
+      const sa_registration = sessionStorage.getItem("side-hustle-checker_sa_registration") || "no_never";
+      const total_income_band = sessionStorage.getItem("side-hustle-checker_total_income_band") || "basic_rate";
+      const declaration_status = sessionStorage.getItem("side-hustle-checker_declaration_status") || "MUST_REGISTER";
+      const side_income = sessionStorage.getItem("side-hustle-checker_side_income") || "3000";
+      const effective_tax_rate = sessionStorage.getItem("side-hustle-checker_effective_tax_rate") || "0.20";
+      const estimated_tax = sessionStorage.getItem("side-hustle-checker_estimated_tax") || "400";
+      const status = sessionStorage.getItem("side-hustle-checker_status") || "MUST REGISTER FOR SELF ASSESSMENT";
+      const tier = sessionStorage.getItem("side-hustle-checker_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "sh_income": sh_income,
-        "sh_registered": sh_registered,
-        "sh_platform": sh_platform,
-      }).some(v => v && v !== "3000");
+        "income_band": income_band,
+        "income_type": income_type,
+        "sa_registration": sa_registration,
+        "total_income_band": total_income_band,
+        "declaration_status": declaration_status,
+        "side_income": side_income,
+        "effective_tax_rate": effective_tax_rate,
+        "estimated_tax": estimated_tax,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "1k_to_5k");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -142,11 +156,18 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "Gross side income": sh_income,
-        "Is registered": sh_registered,
-        "Platform income": sh_platform,
+        "Side income band": income_band,
+        "Side income type": income_type,
+        "SA registration status": sa_registration,
+        "Total income band": total_income_band,
+        "Declaration verdict": declaration_status,
+        "Side income estimate": side_income,
+        "Effective tax rate": effective_tax_rate,
+        "Estimated tax owed": estimated_tax,
+        "Verdict status": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","declarationRequired","taxExposure","priorYearsRisk","disclosureOption","actions","weekPlan"],
+          fields: ["declarationStatusSummary","platformReportingImpact","tradingAllowanceAnalysis","taxRateVerification","estimatedTaxOwed","penaltyExposure","voluntaryDisclosurePath","multiYearDisclosureStrategy","expenseOptimisation","ongoingComplianceSetup","accountantCoordinationBrief","trackingAndTriggers"],
         }),
       });
       const data = await res.json();
@@ -156,11 +177,18 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        declarationRequired: "Your personalised declarationRequired is being prepared — please refresh in a moment.",
-        taxExposure: "Your personalised taxExposure is being prepared — please refresh in a moment.",
-        priorYearsRisk: "Your personalised priorYearsRisk is being prepared — please refresh in a moment.",
-        disclosureOption: "Your personalised disclosureOption is being prepared — please refresh in a moment.",
+        declarationStatusSummary: "Your personalised declarationStatusSummary is being prepared — please refresh in a moment.",
+        platformReportingImpact: "Your personalised platformReportingImpact is being prepared — please refresh in a moment.",
+        tradingAllowanceAnalysis: "Your personalised tradingAllowanceAnalysis is being prepared — please refresh in a moment.",
+        taxRateVerification: "Your personalised taxRateVerification is being prepared — please refresh in a moment.",
+        estimatedTaxOwed: "Your personalised estimatedTaxOwed is being prepared — please refresh in a moment.",
+        penaltyExposure: "Your personalised penaltyExposure is being prepared — please refresh in a moment.",
+        voluntaryDisclosurePath: "Your personalised voluntaryDisclosurePath is being prepared — please refresh in a moment.",
+        multiYearDisclosureStrategy: "Your personalised multiYearDisclosureStrategy is being prepared — please refresh in a moment.",
+        expenseOptimisation: "Your personalised expenseOptimisation is being prepared — please refresh in a moment.",
+        ongoingComplianceSetup: "Your personalised ongoingComplianceSetup is being prepared — please refresh in a moment.",
+        accountantCoordinationBrief: "Your personalised accountantCoordinationBrief is being prepared — please refresh in a moment.",
+        trackingAndTriggers: "Your personalised trackingAndTriggers is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
           "What is the single most important action I should take before 5 October 2026?",
@@ -175,9 +203,16 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const sh_income = sessionStorage.getItem("side-hustle-checker_sh_income") || "3000";
-    const sh_registered = sessionStorage.getItem("side-hustle-checker_sh_registered") || "false";
-    const sh_platform = sessionStorage.getItem("side-hustle-checker_sh_platform") || "true";
+    const income_band = sessionStorage.getItem("side-hustle-checker_income_band") || "1k_to_5k";
+    const income_type = sessionStorage.getItem("side-hustle-checker_income_type") || "goods_online";
+    const sa_registration = sessionStorage.getItem("side-hustle-checker_sa_registration") || "no_never";
+    const total_income_band = sessionStorage.getItem("side-hustle-checker_total_income_band") || "basic_rate";
+    const declaration_status = sessionStorage.getItem("side-hustle-checker_declaration_status") || "MUST_REGISTER";
+    const side_income = sessionStorage.getItem("side-hustle-checker_side_income") || "3000";
+    const effective_tax_rate = sessionStorage.getItem("side-hustle-checker_effective_tax_rate") || "0.20";
+    const estimated_tax = sessionStorage.getItem("side-hustle-checker_estimated_tax") || "400";
+    const status = sessionStorage.getItem("side-hustle-checker_status") || "MUST REGISTER FOR SELF ASSESSMENT";
+    const tier = sessionStorage.getItem("side-hustle-checker_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -185,14 +220,23 @@ export default function SuccessPlan() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Side Hustle Checker — Deadlines`,
+      `X-WR-CALNAME:HMRC Side Income Declaration Engine — Deadlines`,
       "BEGIN:VEVENT",
-      `UID:sh-review-${Date.now()}@taxchecknow.com`,
+      `UID:sh-diagnose-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${relativeDate(7)}`,
       `DTEND;VALUE=DATE:${relativeDate(7)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Side Hustle — Review all platform income",
-      "DESCRIPTION:Calculate total gross income from all platforms for 2025/26.",
+      "SUMMARY:Side income audit — gather data",
+      "DESCRIPTION:Platform statements, bank records, expense receipts.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:sh-disclosure-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(30)}`,
+      `DTEND;VALUE=DATE:${relativeDate(30)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Voluntary disclosure via DDS (if needed)",
+      "DESCRIPTION:File unprompted disclosure for past-year undeclared income.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -201,7 +245,7 @@ export default function SuccessPlan() {
       `DTEND;VALUE=DATE:${"20261005"}`,
       `DTSTAMP:${now}`,
       "SUMMARY:Self Assessment Registration Deadline",
-      "DESCRIPTION:Register by 5 October 2026.",
+      "DESCRIPTION:5 October 2026.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -209,7 +253,7 @@ export default function SuccessPlan() {
       `DTSTART;VALUE=DATE:${"20270131"}`,
       `DTEND;VALUE=DATE:${"20270131"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Filing and Payment Deadline",
+      "SUMMARY:Self Assessment Filing Deadline",
       "DESCRIPTION:31 January 2027.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
@@ -229,7 +273,7 @@ export default function SuccessPlan() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your Side Hustle Registration Plan — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your Disclosure and Compliance Plan — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -258,10 +302,10 @@ export default function SuccessPlan() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your Side Hustle Registration Plan · £147
+            Payment confirmed · Your Disclosure and Compliance Plan · £147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Side Hustle Registration Plan
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Disclosure and Compliance Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
@@ -303,7 +347,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","declarationRequired","taxExposure","priorYearsRisk","disclosureOption","actions"] as string[]).map(key => {
+                {(["declarationStatusSummary","platformReportingImpact","tradingAllowanceAnalysis","taxRateVerification","estimatedTaxOwed","penaltyExposure"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -401,8 +445,17 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Side Hustle — Review all platform income</p>
-                    <p className="text-xs text-neutral-500">Calculate total gross income from all platforms for 2025/26.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Side income audit — gather data</p>
+                    <p className="text-xs text-neutral-500">Platform statements, bank records, expense receipts.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    This week
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Voluntary disclosure via DDS (if needed)</p>
+                    <p className="text-xs text-neutral-500">File unprompted disclosure for past-year undeclared income.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     This week
@@ -411,7 +464,7 @@ export default function SuccessPlan() {
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold text-neutral-900">Self Assessment Registration Deadline</p>
-                    <p className="text-xs text-neutral-500">Register by 5 October 2026.</p>
+                    <p className="text-xs text-neutral-500">5 October 2026.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     5 Oct 2026
@@ -419,7 +472,7 @@ export default function SuccessPlan() {
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Filing and Payment Deadline</p>
+                    <p className="text-sm font-semibold text-neutral-900">Self Assessment Filing Deadline</p>
                     <p className="text-xs text-neutral-500">31 January 2027.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
@@ -503,10 +556,10 @@ export default function SuccessPlan() {
             
             <div className="no-print rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Also relevant</p>
-              <p className="mb-1 text-sm font-bold text-neutral-950">Also a landlord with rental income?</p>
-              <p className="mb-2 text-xs text-neutral-600">Rental income has different rules from trading income — and different MTD ITSA obligations. Check your landlord tax position separately.</p>
-              <Link href="/uk/check/mtd-scorecard" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
-                Check your landlord MTD position →
+              <p className="mb-1 text-sm font-bold text-neutral-950">Total income over £100,000? Different problem.</p>
+              <p className="mb-2 text-xs text-neutral-600">If your side income pushes your total over £100,000 you enter the 60% tax trap — personal allowance withdrawn at £1 for every £2 over the threshold. Our 60% Tax Trap Engine shows the exact exposure and pension escape.</p>
+              <Link href="/uk/check/allowance-sniper" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
+                Check the 60% trap →
               </Link>
             </div>
 
@@ -520,7 +573,7 @@ export default function SuccessPlan() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United Kingdom tax adviser before making financial decisions.
             Based on HMRC guidance April 2026.{" "}
-            <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Trading Allowance</a> · <a href="https://www.gov.uk/guidance/digital-platform-reporting" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Digital platform reporting</a>
+            <a href="https://www.gov.uk/check-if-you-need-tax-return" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Check if you need to send a Self Assessment tax return</a> · <a href="https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Tax-free allowances on property and trading income</a>
           </p>
         </div>
 
