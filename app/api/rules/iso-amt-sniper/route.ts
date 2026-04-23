@@ -29,14 +29,15 @@ export async function GET() {
         "urgency_label": "YEAR-END DEADLINE"
     },
     "key_facts": {
-        "amt_trigger": "ISO exercise spread (FMV − strike)",
-        "amt_exemption_2026_single": "$137,000",
-        "amt_exemption_2026_mfj": "$220,700",
-        "amt_rate": "26% up to $220,700, then 28%",
-        "credit_recovery": "Form 8801 — Minimum Tax Credit",
-        "legal_anchor": "IRC Section 56(b)(3)"
+        "amt_trigger": "ISO exercise spread (FMV − strike) — IRC §56(b)(3)",
+        "amt_exemption_2025_single": "$88,100 — 2026 subject to IRS inflation adjustment, verify at IRS.gov/Form6251",
+        "amt_exemption_2025_mfj": "$137,000 — 2026 subject to IRS inflation adjustment, verify at IRS.gov/Form6251",
+        "amt_rate": "26% / 28% — threshold inflation-adjusted, see Form 6251 instructions",
+        "credit_recovery": "IRC §53 · Form 8801 — Minimum Tax Credit",
+        "employer_reporting": "IRS Form 3921 (at exercise)",
+        "legal_anchor": "IRC §56(b)(3) · IRS Form 6251 instructions"
     },
-    "formula": "AMT Income = Regular Income + (FMV − Strike Price) × Shares Exercised. Tentative Minimum Tax = AMT Income × 26% (up to $220,700) then 28%. AMT Due = Max(0, Tentative Minimum Tax − Regular Tax).",
+    "formula": "AMT Income = Regular Income + (FMV − Strike Price) × Shares Exercised. Tentative Minimum Tax = AMT Income × 26% up to the annual AMT rate threshold (see IRS Form 6251 instructions, inflation-adjusted), 28% above. AMT Due = Max(0, Tentative Minimum Tax − Regular Tax).",
     "thresholds": [
         {
             "label": "Under 1,000 shares with small spread (under $10)",
@@ -104,8 +105,8 @@ export async function GET() {
         },
         {
             "id": 3,
-            "question": "What is the AMT exemption for 2026?",
-            "answer": "The AMT exemption for 2026 is $137,000 (single filer) and $220,700 (married filing jointly). The exemption phases out at $0.25 for every dollar above $1,237,300 (MFJ), disappearing entirely at approximately $2,121,100 (MFJ)."
+            "question": "What is the AMT exemption for ISO exercise?",
+            "answer": "The 2025 AMT exemption confirmed by the IRS is $88,100 (single filer) and $137,000 (married filing jointly). 2026 figures are subject to IRS inflation adjustment — verify current amounts at IRS.gov/Form6251 before filing. The exemption phases out at $0.25 for every dollar above the top threshold (also inflation-adjusted annually)."
         },
         {
             "id": 4,
@@ -135,7 +136,7 @@ export async function GET() {
         {
             "id": 9,
             "question": "What is the AMT rate?",
-            "answer": "AMT is calculated at 26% on the first $220,700 of AMT income above the exemption, and 28% on amounts above that. This compares to regular income tax rates which can be higher — but regular tax allows deductions that AMT does not."
+            "answer": "AMT is calculated at 26% up to the annual AMT rate threshold (inflation-adjusted — see IRS Form 6251 instructions), and 28% on amounts above that. This compares to regular income tax rates which can be higher — but regular tax allows deductions that AMT does not."
         },
         {
             "id": 10,
@@ -155,16 +156,24 @@ export async function GET() {
     ],
     "sources": [
         {
-            "title": "IRS — Incentive Stock Options",
+            "title": "IRS — Incentive Stock Options (Topic 427)",
             "url": "https://www.irs.gov/taxtopics/tc427"
         },
         {
-            "title": "IRS — Alternative Minimum Tax",
+            "title": "IRS — Alternative Minimum Tax (Topic 556)",
             "url": "https://www.irs.gov/taxtopics/tc556"
         },
         {
-            "title": "IRS — Form 6251 Instructions",
+            "title": "IRS — Form 6251 Instructions (AMT)",
             "url": "https://www.irs.gov/forms-pubs/about-form-6251"
+        },
+        {
+            "title": "IRS — Form 8801 (AMT Credit — IRC §53)",
+            "url": "https://www.irs.gov/forms-pubs/about-form-8801"
+        },
+        {
+            "title": "IRS — Form 3921 (Employer ISO Reporting)",
+            "url": "https://www.irs.gov/forms-pubs/about-form-3921"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -193,7 +202,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/iso-amt-sniper",
     "api_endpoint": "/api/rules/iso-amt-sniper",
-    "generated_at": "2026-04-22T15:02:34.869Z"
+    "generated_at": "2026-04-23T04:26:44.663Z"
 };
 
   return NextResponse.json(rules, {

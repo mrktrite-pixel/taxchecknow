@@ -116,7 +116,7 @@ export default function IsoAmtSniperFile01() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Your Safe Exercise Range</h2><p>The safe exercise range is the number of shares you can exercise this year before your tentative minimum tax exceeds your regular tax — triggering AMT.</p><div class="action-box"><h3>The Formula</h3><p>AMT Income = Salary + (FMV − Strike) × Shares Exercised</p><p>Tentative Minimum Tax = AMT Income × 26% (first $220,700 above exemption)</p><p>AMT Due = Max(0, Tentative Minimum Tax − Regular Tax)</p><p>Safe Range = Shares where AMT Due = $0</p></div><h2>2026 AMT Exemptions</h2><table><tr><th>Filing Status</th><th>Exemption</th><th>Phaseout Starts</th></tr><tr><td>Single</td><td>$137,000</td><td>$626,350</td></tr><tr><td>Married Filing Jointly</td><td>$220,700</td><td>$1,237,300</td></tr></table><p>Source: <a href="https://www.irs.gov/taxtopics/tc556">IRS — Alternative Minimum Tax</a> · Last verified April 2026</p>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Your Safe Exercise Range</h2><p>The safe exercise range is the number of shares you can exercise this year before your tentative minimum tax exceeds your regular tax — triggering AMT.</p><div class="action-box"><h3>The Formula</h3><p>AMT Income = Salary + (FMV − Strike) × Shares Exercised</p><p>Tentative Minimum Tax = AMT Income × 26% (first $220,700 above exemption)</p><p>AMT Due = Max(0, Tentative Minimum Tax − Regular Tax)</p><p>Safe Range = Shares where AMT Due = $0</p></div><h2>AMT Exemptions — 2025 confirmed (2026 inflation-adjusted, verify at IRS.gov/Form6251 before filing)</h2><table><tr><th>Filing Status</th><th>Exemption (2025)</th></tr><tr><td>Single</td><td>$88,100</td></tr><tr><td>Married Filing Jointly</td><td>$137,000</td></tr></table><p>Phaseout thresholds are inflation-adjusted annually — see IRS Form 6251 instructions for current year.</p><p>Source: <a href="https://www.irs.gov/forms-pubs/about-form-6251">IRS — Form 6251 Instructions</a> · IRC §56(b)(3) · Last verified April 2026</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -224,8 +224,8 @@ export default function IsoAmtSniperFile01() {
             <a href="/us/check/iso-amt-sniper" className="hover:text-neutral-900 transition">
               ← Back to ISO AMT Exercise Sniper
             </a>
-            <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Incentive Stock Options ↗</a>
-            <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Alternative Minimum Tax ↗</a>
+            <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Incentive Stock Options (Topic 427) ↗</a>
+            <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Alternative Minimum Tax (Topic 556) ↗</a>
           </div>
         </div>
       </footer>

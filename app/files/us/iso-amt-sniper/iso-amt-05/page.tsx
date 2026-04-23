@@ -116,7 +116,7 @@ export default function IsoAmtSniperFile05() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your CPA or financial adviser before exercising any options.</div><h2>Client ISO AMT Status</h2><table><tr><th>Item</th><th>Detail</th></tr><tr><td>AMT trigger</td><td>ISO exercise spread (FMV − strike)</td></tr><tr><td>AMT exemption (MFJ 2026)</td><td>$220,700</td></tr><tr><td>Tax owed</td><td>At exercise — not at sale</td></tr><tr><td>Year-end deadline</td><td><strong>December 31, 2026</strong></td></tr></table><div class="action-box"><h3>Question 1</h3><p>"What is my exact safe exercise range this year?"</p></div><h3>Question 2</h3><p>"If I trigger AMT, how long will Form 8801 take to recover it?"</p><h3>Question 3</h3><p>"Should I consider a disqualifying disposition to reverse AMT?"</p><h3>Question 4</h3><p>"What is the California state tax impact of exercising?"</p><h3>Question 5</h3><p>"Should I early exercise with an 83(b) election at the current 409A?"</p>` }}
+          dangerouslySetInnerHTML={{ __html: `<div class="info-box"><strong>How to use this brief:</strong> Print or forward to your CPA or financial adviser before exercising any options.</div><h2>Client ISO AMT Status</h2><table><tr><th>Item</th><th>Detail</th></tr><tr><td>AMT trigger</td><td>ISO exercise spread (FMV − strike)</td></tr><tr><td>AMT exemption (MFJ 2025 confirmed)</td><td>$137,000 — 2026 subject to IRS inflation adjustment (verify at IRS.gov/Form6251)</td></tr><tr><td>Tax owed</td><td>At exercise — not at sale</td></tr><tr><td>Year-end deadline</td><td><strong>December 31, 2026</strong></td></tr></table><div class="action-box"><h3>Question 1</h3><p>"What is my exact safe exercise range this year?"</p></div><h3>Question 2</h3><p>"If I trigger AMT, how long will Form 8801 take to recover it?"</p><h3>Question 3</h3><p>"Should I consider a disqualifying disposition to reverse AMT?"</p><h3>Question 4</h3><p>"What is the California state tax impact of exercising?"</p><h3>Question 5</h3><p>"Should I early exercise with an 83(b) election at the current 409A?"</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -224,8 +224,8 @@ export default function IsoAmtSniperFile05() {
             <a href="/us/check/iso-amt-sniper" className="hover:text-neutral-900 transition">
               ← Back to ISO AMT Exercise Sniper
             </a>
-            <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Incentive Stock Options ↗</a>
-            <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Alternative Minimum Tax ↗</a>
+            <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Incentive Stock Options (Topic 427) ↗</a>
+            <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Alternative Minimum Tax (Topic 556) ↗</a>
           </div>
         </div>
       </footer>

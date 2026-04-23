@@ -224,8 +224,8 @@ export default function IsoAmtSniperFile02() {
             <a href="/us/check/iso-amt-sniper" className="hover:text-neutral-900 transition">
               ← Back to ISO AMT Exercise Sniper
             </a>
-            <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Incentive Stock Options ↗</a>
-            <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Alternative Minimum Tax ↗</a>
+            <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Incentive Stock Options (Topic 427) ↗</a>
+            <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Alternative Minimum Tax (Topic 556) ↗</a>
           </div>
         </div>
       </footer>

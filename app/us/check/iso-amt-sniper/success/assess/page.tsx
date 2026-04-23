@@ -484,7 +484,7 @@ export default function SuccessAssess() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United States tax adviser before making financial decisions.
             Based on IRS guidance April 2026.{" "}
-            <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer" className="underline">IRS — Incentive Stock Options</a> · <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer" className="underline">IRS — Alternative Minimum Tax</a>
+            <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer" className="underline">IRS — Incentive Stock Options (Topic 427)</a> · <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer" className="underline">IRS — Alternative Minimum Tax (Topic 556)</a>
           </p>
         </div>
 

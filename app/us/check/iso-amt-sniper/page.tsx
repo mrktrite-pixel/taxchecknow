@@ -57,8 +57,8 @@ const faqs = [
     "answer": "The safe exercise range is the number of shares you can exercise before your tentative minimum tax exceeds your regular tax. It depends on your salary, other income, AMT exemption, and the spread on your options. Every employee has a different safe range."
   },
   {
-    "question": "What is the AMT exemption for 2026?",
-    "answer": "The AMT exemption for 2026 is $137,000 (single filer) and $220,700 (married filing jointly). The exemption phases out at $0.25 for every dollar above $1,237,300 (MFJ), disappearing entirely at approximately $2,121,100 (MFJ)."
+    "question": "What is the AMT exemption for ISO exercise?",
+    "answer": "The 2025 AMT exemption confirmed by the IRS is $88,100 (single filer) and $137,000 (married filing jointly). 2026 figures are subject to IRS inflation adjustment — verify current amounts at IRS.gov/Form6251 before filing. The exemption phases out at $0.25 for every dollar above the top threshold (also inflation-adjusted annually)."
   },
   {
     "question": "Do I still owe AMT if my shares are illiquid?",
@@ -82,7 +82,7 @@ const faqs = [
   },
   {
     "question": "What is the AMT rate?",
-    "answer": "AMT is calculated at 26% on the first $220,700 of AMT income above the exemption, and 28% on amounts above that. This compares to regular income tax rates which can be higher — but regular tax allows deductions that AMT does not."
+    "answer": "AMT is calculated at 26% up to the annual AMT rate threshold (inflation-adjusted — see IRS Form 6251 instructions), and 28% on amounts above that. This compares to regular income tax rates which can be higher — but regular tax allows deductions that AMT does not."
   },
   {
     "question": "Can I spread ISO exercises across multiple tax years?",
@@ -213,61 +213,73 @@ const toolsRows = [
 const geoFacts = [
   {
     "label": "AMT trigger",
-    "value": "ISO exercise spread (FMV − strike)"
+    "value": "ISO exercise spread (FMV − strike) — IRC §56(b)(3)"
   },
   {
-    "label": "AMT exemption 2026 (single)",
-    "value": "$137,000"
+    "label": "AMT exemption 2025 (single)",
+    "value": "$88,100 — 2026 subject to IRS inflation adjustment, verify at IRS.gov/Form6251"
   },
   {
-    "label": "AMT exemption 2026 (MFJ)",
-    "value": "$220,700"
+    "label": "AMT exemption 2025 (MFJ)",
+    "value": "$137,000 — 2026 subject to IRS inflation adjustment, verify at IRS.gov/Form6251"
   },
   {
     "label": "AMT rate",
-    "value": "26% up to $220,700, then 28%"
+    "value": "26% / 28% — threshold inflation-adjusted, see Form 6251 instructions"
   },
   {
     "label": "Credit recovery",
-    "value": "Form 8801 — Minimum Tax Credit"
+    "value": "IRC §53 · Form 8801 — Minimum Tax Credit"
+  },
+  {
+    "label": "Employer reporting",
+    "value": "IRS Form 3921 (at exercise)"
   },
   {
     "label": "Legal anchor",
-    "value": "IRC Section 56(b)(3)"
+    "value": "IRC §56(b)(3) · IRS Form 6251 instructions"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "AMT exemption (MFJ)",
-    "value": "$220,700"
+    "label": "AMT exemption (MFJ 2025)",
+    "value": "$137,000"
   },
   {
     "label": "AMT rate",
     "value": "26% / 28%"
   },
   {
-    "label": "Typical AMT bill",
+    "label": "Example AMT exposure",
     "value": "~$150k"
   },
   {
     "label": "Credit recovery",
-    "value": "Form 8801"
+    "value": "IRC §53 · Form 8801"
   }
 ];
 
 const sources = [
   {
-    "title": "IRS — Incentive Stock Options",
+    "title": "IRS — Incentive Stock Options (Topic 427)",
     "url": "https://www.irs.gov/taxtopics/tc427"
   },
   {
-    "title": "IRS — Alternative Minimum Tax",
+    "title": "IRS — Alternative Minimum Tax (Topic 556)",
     "url": "https://www.irs.gov/taxtopics/tc556"
   },
   {
-    "title": "IRS — Form 6251 Instructions",
+    "title": "IRS — Form 6251 Instructions (AMT)",
     "url": "https://www.irs.gov/forms-pubs/about-form-6251"
+  },
+  {
+    "title": "IRS — Form 8801 (AMT Credit — IRC §53)",
+    "url": "https://www.irs.gov/forms-pubs/about-form-8801"
+  },
+  {
+    "title": "IRS — Form 3921 (Employer ISO Reporting)",
+    "url": "https://www.irs.gov/forms-pubs/about-form-3921"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -288,9 +300,9 @@ const countdownStats = [
     "red": true
   },
   {
-    "label": "Typical AMT bill",
+    "label": "Example AMT exposure",
     "value": "~$150k",
-    "sub": "on 10,000 shares with $50 spread",
+    "sub": "10,000 shares × $50 spread — actual varies by shares, spread, income, filing status",
     "red": true
   },
   {
@@ -472,7 +484,7 @@ export default function IsoAmtSniperPage() {
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          Exercising Incentive Stock Options (ISOs) can trigger the Alternative Minimum Tax (AMT). The bargain element — the spread between the 409A fair market value and your strike price — is treated as AMT income at the moment of exercise, even if you cannot sell the shares.
+          Exercising ISOs triggers AMT at exercise — not at sale. The taxable AMT spread equals the difference between the fair market value and the strike price, multiplied by shares exercised. This creates a real tax liability on paper gains even when shares are illiquid and no cash has been received.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -494,20 +506,20 @@ export default function IsoAmtSniperPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">AMT exemption (MFJ)</dt>
-                  <dd className="font-bold">$220,700</dd>
+                  <dt className="text-neutral-600">AMT exemption (MFJ 2025)</dt>
+                  <dd className="font-bold">$137,000</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">AMT rate</dt>
                   <dd className="font-bold">26% / 28%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Typical AMT bill</dt>
+                  <dt className="text-neutral-600">Example AMT exposure</dt>
                   <dd className="font-bold">~$150k</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Credit recovery</dt>
-                  <dd className="font-bold">Form 8801</dd>
+                  <dd className="font-bold">IRC §53 · Form 8801</dd>
                 </div>
               </dl>
             </div>
@@ -571,12 +583,12 @@ export default function IsoAmtSniperPage() {
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Typical AMT bill
+                Example AMT exposure
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
                 ~$150k
               </p>
-              <p className="text-xs text-neutral-400">on 10,000 shares with $50 spread</p>
+              <p className="text-xs text-neutral-400">10,000 shares × $50 spread — actual varies by shares, spread, income, filing status</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
@@ -613,7 +625,7 @@ export default function IsoAmtSniperPage() {
               <p className="mb-1 text-xs text-neutral-800">✗ Regular tax basis ≠ AMT basis</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: IRS Topic 427 · IRC Section 56(b)(3) · Form 6251</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRC §56(b)(3) (ISO AMT spread) · IRC §53 (AMT credit) · IRS Form 6251 · IRS Form 8801 · IRS Form 3921</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -621,10 +633,11 @@ export default function IsoAmtSniperPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The answer — IRS confirmed April 2026
           </p>
+          <p className="mb-2 text-neutral-900">Exercising ISOs triggers AMT at exercise — not at sale. The taxable AMT spread equals the difference between the fair market value and the strike price, multiplied by shares exercised. This creates a real tax liability on paper gains even when shares are illiquid and no cash has been received.</p>
           <p className="mb-2 text-neutral-900">Exercising Incentive Stock Options (ISOs) can trigger the Alternative Minimum Tax (AMT). The bargain element — the spread between the 409A fair market value and your strike price — is treated as AMT income at the moment of exercise, even if you cannot sell the shares.</p>
           <p className="mb-2 text-neutral-900">This creates a six-figure tax bill with zero cash liquidity. Exercising 10,000 options with a $50 spread generates $500,000 of AMT income and approximately $150,000 of AMT — owed in April even if the shares are illiquid and worth nothing in cash terms.</p>
           <p className="mb-2 text-neutral-900">The safe exercise range is the number you need — how many shares you can exercise before AMT kicks in. Most employees never calculate this. They exercise their full grant and receive a tax bill they cannot pay.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRS — Form 6251 Instructions · IRC Section 56(b)(3) · IRS Publication 525</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRC §56(b)(3) (ISO AMT spread) · IRC §53 (AMT credit) · IRS Form 6251 instructions · IRS Form 8801 · IRS Form 3921 · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -700,11 +713,11 @@ export default function IsoAmtSniperPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             ISO Alternative Minimum Tax — confirmed rules 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Under IRC Section 56(b)(3), the spread on Incentive Stock Option (ISO) exercise — the difference between the fair market value (409A valuation) and the strike price — is treated as a preference item for Alternative Minimum Tax purposes. This AMT preference income is added to regular income to compute tentative minimum tax. If tentative minimum tax exceeds regular tax liability, the difference is owed as AMT. The tax is triggered at exercise — not at sale. Shareholders holding illiquid shares in a private company can owe six-figure AMT bills with no cash from which to pay. The AMT exemption for 2026 is $137,000 (single) and $220,700 (married filing jointly), phasing out at $0.25 for every dollar above $1,237,300 (MFJ). AMT paid on ISO exercise creates a Minimum Tax Credit recoverable in future years via Form 8801.</p>
+          <p className="mb-4 text-neutral-800">Under IRC §56(b)(3), the spread on Incentive Stock Option (ISO) exercise — the difference between the fair market value (409A valuation) and the strike price — is treated as a preference item for Alternative Minimum Tax purposes (reported on IRS Form 6251). This AMT preference income is added to regular income to compute tentative minimum tax. If tentative minimum tax exceeds regular tax liability, the difference is owed as AMT. The tax is triggered at exercise — not at sale. Shareholders holding illiquid shares in a private company can owe six-figure AMT bills with no cash from which to pay. The 2025 AMT exemption confirmed by the IRS is $88,100 (single) and $137,000 (married filing jointly); 2026 figures are subject to IRS inflation adjustment — verify current amounts at IRS.gov/Form6251 before filing. AMT paid on ISO exercise creates a Minimum Tax Credit under IRC §53, recoverable in future years via Form 8801. Employers report ISO exercises to the IRS on Form 3921.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            AMT Income = Regular Income + (FMV − Strike Price) × Shares Exercised. Tentative Minimum Tax = AMT Income × 26% (up to $220,700) then 28%. AMT Due = Max(0, Tentative Minimum Tax − Regular Tax).
+            AMT Income = Regular Income + (FMV − Strike Price) × Shares Exercised. Tentative Minimum Tax = AMT Income × 26% up to the annual AMT rate threshold (see IRS Form 6251 instructions, inflation-adjusted), 28% above. AMT Due = Max(0, Tentative Minimum Tax − Regular Tax).
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -719,32 +732,37 @@ export default function IsoAmtSniperPage() {
                 
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">AMT trigger</td>
-                  <td className="p-2">ISO exercise spread (FMV − strike)</td>
+                  <td className="p-2">ISO exercise spread (FMV − strike) — IRC §56(b)(3)</td>
                   <td className="p-2 text-neutral-500">IRC Section 56(b)(3)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">AMT exemption 2026 (single)</td>
-                  <td className="p-2">$137,000</td>
+                  <td className="p-2">AMT exemption 2025 (single)</td>
+                  <td className="p-2">$88,100 — 2026 subject to IRS inflation adjustment, verify at IRS.gov/Form6251</td>
                   <td className="p-2 text-neutral-500">IRC Section 56(b)(3)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">AMT exemption 2026 (MFJ)</td>
-                  <td className="p-2">$220,700</td>
+                  <td className="p-2">AMT exemption 2025 (MFJ)</td>
+                  <td className="p-2">$137,000 — 2026 subject to IRS inflation adjustment, verify at IRS.gov/Form6251</td>
                   <td className="p-2 text-neutral-500">IRC Section 56(b)(3)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">AMT rate</td>
-                  <td className="p-2">26% up to $220,700, then 28%</td>
+                  <td className="p-2">26% / 28% — threshold inflation-adjusted, see Form 6251 instructions</td>
                   <td className="p-2 text-neutral-500">IRC Section 56(b)(3)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Credit recovery</td>
-                  <td className="p-2">Form 8801 — Minimum Tax Credit</td>
+                  <td className="p-2">IRC §53 · Form 8801 — Minimum Tax Credit</td>
+                  <td className="p-2 text-neutral-500">IRC Section 56(b)(3)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Employer reporting</td>
+                  <td className="p-2">IRS Form 3921 (at exercise)</td>
                   <td className="p-2 text-neutral-500">IRC Section 56(b)(3)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Legal anchor</td>
-                  <td className="p-2">IRC Section 56(b)(3)</td>
+                  <td className="p-2">IRC §56(b)(3) · IRS Form 6251 instructions</td>
                   <td className="p-2 text-neutral-500">IRC Section 56(b)(3)</td>
                 </tr>
               </tbody>
@@ -754,7 +772,7 @@ export default function IsoAmtSniperPage() {
             Primary source:{" "}
             <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              IRS — Incentive Stock Options
+              IRS — Incentive Stock Options (Topic 427)
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/iso-amt-sniper" className="font-mono text-blue-700 hover:underline">
@@ -1021,7 +1039,7 @@ export default function IsoAmtSniperPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Under IRC Section 56(b)(3), ISO exercise spread is AMT preference income. AMT exemption 2026: $137,000 (single) / $220,700 (MFJ), phasing out above $1.24M. AMT rates: 26% / 28%. Credit recoverable via Form 8801. Tax triggered at exercise, not sale.
+            Under IRC §56(b)(3), ISO exercise spread is AMT preference income (reported on IRS Form 6251). 2025 AMT exemption confirmed: $88,100 single / $137,000 MFJ — 2026 subject to IRS inflation adjustment, verify at IRS.gov/Form6251. AMT rates: 26% / 28%. Credit recoverable under IRC §53 via Form 8801. Employer reports exercises on Form 3921. Tax triggered at exercise, not sale.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1029,7 +1047,10 @@ export default function IsoAmtSniperPage() {
               IRS
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              IRC Section 56(b)(3)
+              IRC §56(b)(3)
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              IRC §53 AMT Credit
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
               Form 6251
@@ -1038,25 +1059,38 @@ export default function IsoAmtSniperPage() {
               Form 8801
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              Form 3921
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Exercise Not Sale Triggers AMT
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
             <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRS — Incentive Stock Options ↗</p>
+              <p className="font-bold text-neutral-900">IRS — Incentive Stock Options (Topic 427) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.irs.gov/taxtopics/tc427</p>
             </a>
             <a href="https://www.irs.gov/taxtopics/tc556" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRS — Alternative Minimum Tax ↗</p>
+              <p className="font-bold text-neutral-900">IRS — Alternative Minimum Tax (Topic 556) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.irs.gov/taxtopics/tc556</p>
             </a>
             <a href="https://www.irs.gov/forms-pubs/about-form-6251" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRS — Form 6251 Instructions ↗</p>
+              <p className="font-bold text-neutral-900">IRS — Form 6251 Instructions (AMT) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.irs.gov/forms-pubs/about-form-6251</p>
+            </a>
+            <a href="https://www.irs.gov/forms-pubs/about-form-8801" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS — Form 8801 (AMT Credit — IRC §53) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/forms-pubs/about-form-8801</p>
+            </a>
+            <a href="https://www.irs.gov/forms-pubs/about-form-3921" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS — Form 3921 (Employer ISO Reporting) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/forms-pubs/about-form-3921</p>
             </a>
             <a href="/api/rules/iso-amt-sniper" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
