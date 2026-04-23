@@ -10,12 +10,12 @@ import WayfairNexusSniperCalculator from "./WayfairNexusSniperCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Wayfair Nexus 2026: Are You Already Non-Compliant? | TaxCheckNow",
-  description: "Most US states enforce economic nexus at $100,000 in GROSS sales — including marketplace sales. FBA inventory creates immediate nexus with no threshold. States can audit years later. Check your nexus exposure instantly.",
+  title: "Sales Tax Nexus Liability Engine 2026: Have You Triggered Multi-State Sales Tax Obligations? | TaxCheckNow",
+  description: "Since South Dakota v. Wayfair (2018), 45 states + DC enforce economic nexus based on sales activity alone — no warehouse required. Nexus is retroactive from the date you crossed the threshold. Check your multi-state exposure instantly.",
   alternates: { canonical: "https://taxchecknow.com/us/check/wayfair-nexus-sniper" },
   openGraph: {
-    title: "Wayfair Nexus 2026: Are You Already Non-Compliant? | TaxCheckNow",
-    description: "Most US states enforce economic nexus at $100,000 in GROSS sales — including marketplace sales. FBA inventory creates immediate nexus with no threshold. States can audit years later. Check your nexus exposure instantly.",
+    title: "Sales Tax Nexus Liability Engine 2026: Have You Triggered Multi-State Sales Tax Obligations? | TaxCheckNow",
+    description: "Since South Dakota v. Wayfair (2018), 45 states + DC enforce economic nexus based on sales activity alone — no warehouse required. Nexus is retroactive from the date you crossed the threshold. Check your multi-state exposure instantly.",
     url: "https://taxchecknow.com/us/check/wayfair-nexus-sniper",
     siteName: "TaxCheckNow",
     type: "website",
@@ -100,24 +100,20 @@ const faqs = [
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: You only count taxable sales toward nexus thresholds",
-    "correct": "Reality: Most states use gross revenue — all sales including exempt transactions — to measure nexus thresholds. Sellers who only count taxable sales significantly undercount their exposure and may be non-compliant without knowing it."
+    "wrong": "ChatGPT says: I do not have a physical presence in that state so I do not owe sales tax",
+    "correct": "Reality: The Supreme Court's 2018 Wayfair decision ended physical presence as the test. Economic nexus — based on sales volume or transaction count in the state — is now the standard in 45 states plus DC. If you have exceeded the state's threshold, you have a collection and remittance obligation regardless of where your business is physically located."
   },
   {
-    "wrong": "ChatGPT says: Amazon handles my sales tax so I do not have nexus",
-    "correct": "Reality: Marketplace facilitator laws require Amazon to collect and remit tax on your sales — but your gross marketplace sales still count toward nexus thresholds in most states. You may be registered as required in zero states while crossing nexus thresholds in 15."
+    "wrong": "ChatGPT says: Amazon collects sales tax for me so I am covered",
+    "correct": "Reality: Partially wrong. Amazon collects tax on marketplace sales in most states. But your Amazon sales still count toward economic nexus thresholds in many states. Direct website sales create separate obligations. And some states require you to file returns even when a marketplace facilitator collects on your behalf. 'Amazon handles it' is not a complete answer."
   },
   {
-    "wrong": "ChatGPT says: You need 200 transactions to trigger nexus",
-    "correct": "Reality: Multiple states removed the 200-transaction threshold in 2026. Illinois is the most significant example. In these states, $100,000 in gross sales alone triggers nexus regardless of transaction count."
+    "wrong": "ChatGPT says: I will register once I know I have nexus",
+    "correct": "Reality: Wrong on timing. Nexus is triggered at the moment you cross the threshold — not at the moment you register. Waiting to register does not reset the clock. It increases the retroactive exposure. Every month you sell without registration after crossing the threshold adds to the uncollected tax, interest, and penalty stack. VDAs limit the lookback period — but only if you proactively register. Waiting for an audit removes the VDA option."
   },
   {
-    "wrong": "ChatGPT says: If you have FBA, Amazon registers you for sales tax automatically",
-    "correct": "Reality: FBA inventory creates physical nexus in every state with an Amazon fulfilment centre — immediately, with no threshold. Amazon does not register you. You must register and file in each FBA state yourself (or Amazon files on your behalf under marketplace facilitator laws — but your registration obligation still exists)."
-  },
-  {
-    "wrong": "ChatGPT says: States cannot audit you for old uncollected sales tax",
-    "correct": "Reality: States can assess tax retroactively from the date nexus was established. Some states have no statute of limitations for non-filers. A seller who crossed nexus in California 3 years ago without registering faces 3+ years of uncollected tax plus interest and penalties."
+    "wrong": "ChatGPT says: Sales tax is the customer's problem",
+    "correct": "Reality: Wrong when you do not collect it. Sales tax is a trust fund tax — collected from customers on behalf of the state. If you do not collect it, the state still holds you responsible for remitting it. The liability does not transfer to your customers because you failed to charge them. You absorb the full uncollected tax from your margin."
   }
 ];
 
@@ -146,49 +142,49 @@ const accountantQuestions = [
 
 const workedExamples = [
   {
-    "name": "Small direct seller",
-    "setup": "$40k direct sales only, no FBA",
-    "income": "$40k",
+    "name": "Single-state seller",
+    "setup": "$60k/yr, one state, home-registered",
+    "income": "$60k/yr",
     "status": "CLEAR — under threshold"
   },
   {
-    "name": "Amazon FBA seller",
-    "setup": "$60k total sales, FBA in 20 states",
-    "income": "$60k",
-    "status": "NEXUS IN 20 STATES"
+    "name": "New multi-state growth",
+    "setup": "$250k/yr across 6 states, under 1 year, direct website",
+    "income": "$250k/yr",
+    "status": "AT RISK — ~1-2 states triggered, exposure small but growing"
   },
   {
-    "name": "Multi-channel seller",
-    "setup": "$150k across Amazon + Etsy + own site",
-    "income": "$150k",
-    "status": "NON-COMPLIANT — threshold crossed"
+    "name": "$500k/yr, 5 states, 3 years",
+    "setup": "Direct + marketplace mix, never registered",
+    "income": "$500k/yr",
+    "status": "$33k-$68k exposure; VDA saves ~$25k-$50k"
   },
   {
-    "name": "Exempt goods seller",
-    "setup": "$120k gross but only $80k taxable — not registered",
-    "income": "$120k",
-    "status": "NON-COMPLIANT — gross counts"
+    "name": "$2M/yr, 8 states, 3+ years",
+    "setup": "Mix of marketplace and direct, home state only",
+    "income": "$2M/yr",
+    "status": "SEVERE — 6-figure exposure; VDA critical before audit"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "Economic nexus",
-    "metric1": "$100k gross or 200 transactions",
-    "metric2": "Day threshold crossed",
-    "bestMove": "Most common for online sellers"
+    "position": "Wait for audit discovery (5+ yr lookback)",
+    "metric1": "$25,000–$50,000",
+    "metric2": "$8,000–$18,500",
+    "bestMove": "$33,000–$68,500 — full retroactive"
   },
   {
-    "position": "Physical nexus",
-    "metric1": "No threshold",
-    "metric2": "Day inventory arrives",
-    "bestMove": "FBA, warehouse, employees"
+    "position": "File VDA now (3-4 yr lookback, no penalty)",
+    "metric1": "$15,000–$30,000",
+    "metric2": "$0 penalty + ~$2-4k interest",
+    "bestMove": "$17,000–$34,000 — saving $16k-$34k+"
   },
   {
-    "position": "Affiliate nexus",
-    "metric1": "Varies by state",
-    "metric2": "Day affiliate agreement signed",
-    "bestMove": "Referral partners in state"
+    "position": "Delta — saving from acting now",
+    "metric1": "Depends on state",
+    "metric2": "Penalty typically waived",
+    "bestMove": "$25,000–$50,000+ savings typical"
   }
 ];
 
@@ -212,47 +208,59 @@ const toolsRows = [
 
 const geoFacts = [
   {
-    "label": "Economic nexus threshold",
-    "value": "$100,000 gross sales (most states)"
-  },
-  {
-    "label": "Transaction threshold",
-    "value": "Removed in some states (e.g. IL 2026)"
-  },
-  {
-    "label": "Marketplace sales",
-    "value": "Count toward threshold even if platform collects"
-  },
-  {
-    "label": "FBA inventory",
-    "value": "Physical nexus — no threshold required"
-  },
-  {
-    "label": "Lookback period",
-    "value": "Potentially unlimited for non-filers"
-  },
-  {
     "label": "Legal anchor",
-    "value": "South Dakota v. Wayfair (2018)"
+    "value": "South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)"
+  },
+  {
+    "label": "States with economic nexus (2026)",
+    "value": "45 states + DC"
+  },
+  {
+    "label": "States with no sales tax",
+    "value": "Alaska, Delaware, Montana, New Hampshire, Oregon"
+  },
+  {
+    "label": "Most common threshold",
+    "value": "$100,000 sales OR 200 transactions per state per calendar year"
+  },
+  {
+    "label": "Retroactive start date",
+    "value": "Date threshold crossed (not registration/discovery)"
+  },
+  {
+    "label": "Interest rate",
+    "value": "Typically 6-12% per year"
+  },
+  {
+    "label": "Penalty rate",
+    "value": "Typically 10-25% of uncollected tax"
+  },
+  {
+    "label": "VDA lookback cap",
+    "value": "3-4 years (most states)"
+  },
+  {
+    "label": "Marketplace rule",
+    "value": "Platform collects on marketplace sales in most states; sales still count toward seller's threshold"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "Economic nexus threshold",
-    "value": "$100k gross"
+    "label": "Economic nexus states",
+    "value": "45 + DC"
   },
   {
-    "label": "FBA nexus",
-    "value": "Immediate"
+    "label": "Most common threshold",
+    "value": "$100k / 200 txns"
   },
   {
-    "label": "Marketplace sales",
-    "value": "Count toward threshold"
+    "label": "Liability starts",
+    "value": "Date threshold crossed"
   },
   {
-    "label": "Lookback risk",
-    "value": "Unlimited (some states)"
+    "label": "VDA lookback cap",
+    "value": "3–4 years"
   }
 ];
 
@@ -277,26 +285,25 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "What sellers think",
-    "value": "Taxable sales only",
-    "sub": "common misunderstanding of nexus thresholds"
+    "label": "Economic nexus states",
+    "value": "45 + DC",
+    "sub": "states with economic nexus statutes (2026)"
   },
   {
-    "label": "Nexus reality",
-    "value": "Gross sales count",
-    "sub": "all channels, all products, including exempt",
+    "label": "Most common threshold",
+    "value": "$100k / 200 txns",
+    "sub": "per state per calendar year"
+  },
+  {
+    "label": "Retroactive exposure",
+    "value": "$33k–$68k example",
+    "sub": "$500k across 5 states, 3 years unregistered",
     "red": true
   },
   {
-    "label": "FBA reality",
-    "value": "Immediate nexus",
-    "sub": "no threshold — inventory presence = nexus",
-    "red": true
-  },
-  {
-    "label": "Lookback risk",
-    "value": "Unlimited in some",
-    "sub": "states can audit with no statute of limitations"
+    "label": "VDA lookback cap",
+    "value": "3–4 years",
+    "sub": "vs open-ended for non-filer audit discovery"
   }
 ];
 
@@ -320,8 +327,8 @@ export default function WayfairNexusSniperPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Wayfair Nexus Sniper — Rules April 2026",
-    description: "Most US states enforce economic nexus at $100,000 in GROSS sales — including marketplace sales. FBA inventory creates immediate nexus with no threshold. States can audit years later. Check your nexus exposure instantly.",
+    name: "Sales Tax Nexus Liability Engine — Rules April 2026",
+    description: "Since South Dakota v. Wayfair (2018), 45 states + DC enforce economic nexus based on sales activity alone — no warehouse required. Nexus is retroactive from the date you crossed the threshold. Check your multi-state exposure instantly.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -336,8 +343,8 @@ export default function WayfairNexusSniperPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Wayfair Nexus Sniper",
-    description: "Most US states enforce economic nexus at $100,000 in GROSS sales — including marketplace sales. FBA inventory creates immediate nexus with no threshold. States can audit years later. Check your nexus exposure instantly.",
+    name: "Sales Tax Nexus Liability Engine",
+    description: "Since South Dakota v. Wayfair (2018), 45 states + DC enforce economic nexus based on sales activity alone — no warehouse required. Nexus is retroactive from the date you crossed the threshold. Check your multi-state exposure instantly.",
     url: "https://taxchecknow.com/us/check/wayfair-nexus-sniper",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -352,28 +359,33 @@ export default function WayfairNexusSniperPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Wayfair Nexus Sniper",
+    name: "How to use the Sales Tax Nexus Liability Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Select your sales volume bracket",
-            "text": "Choose your total gross sales across all channels — direct and marketplace — in the last 12 months."
+            "name": "Select your customer geography",
+            "text": "Identify whether your customers are concentrated in one state or distributed across multiple states."
       },
       {
             "@type": "HowToStep",
-            "name": "Identify your channels and FBA use",
-            "text": "Specify where you sell and whether you use Amazon FBA. FBA creates immediate nexus regardless of sales volume."
+            "name": "Identify revenue and channel mix",
+            "text": "Specify your annual US online revenue and whether you sell via marketplace, direct, or both."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your nexus exposure verdict",
-            "text": "See which states you likely have nexus in, your estimated liability, and whether you are already non-compliant."
+            "name": "State your current registration",
+            "text": "Identify whether you are registered for sales tax in multiple states, home only, or not at all."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your compliance plan",
-            "text": "Receive a personalised registration order, VDA strategy, and estimated penalty savings for your situation."
+            "name": "Get your exposure verdict",
+            "text": "See estimated states where nexus is triggered, retroactive exposure range, and VDA opportunity."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Get your VDA plan",
+            "text": "Receive a personalised VDA filing sequence, priority registration order, and penalty-savings estimate."
       }
 ],
   };
@@ -381,18 +393,18 @@ export default function WayfairNexusSniperPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Wayfair Nexus Sniper — Free Check",
+    "name": "Sales Tax Nexus Liability Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/us/check/wayfair-nexus-sniper#calculator",
-    "description": "Most US states enforce economic nexus at $100,000 in GROSS sales — including marketplace sales. FBA inventory creates immediate nexus with no threshold. States can audit years later. Check your nexus exposure instantly.",
+    "description": "Since South Dakota v. Wayfair (2018), 45 states + DC enforce economic nexus based on sales activity alone — no warehouse required. Nexus is retroactive from the date you crossed the threshold. Check your multi-state exposure instantly.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on IRS guidance April 2026"
+      "Based on State Revenue Authorities / US Supreme Court guidance April 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -413,7 +425,7 @@ export default function WayfairNexusSniperPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United States", item: "https://taxchecknow.com/us" },
-      { "@type": "ListItem", position: 3, name: "Wayfair Nexus Sniper", item: "https://taxchecknow.com/us/check/wayfair-nexus-sniper" },
+      { "@type": "ListItem", position: 3, name: "Sales Tax Nexus Liability Engine", item: "https://taxchecknow.com/us/check/wayfair-nexus-sniper" },
     ],
   };
 
@@ -458,7 +470,7 @@ export default function WayfairNexusSniperPage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇺🇸 IRS Verified · South Dakota v. Wayfair (2018) ↗
+            🇺🇸 State Revenue Authorities / US Supreme Court Verified · South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018) ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-US
@@ -467,12 +479,12 @@ export default function WayfairNexusSniperPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          The 2026 Wayfair Nexus Sniper: Are You Already Non-Compliant?
+          You Do Not Need a Warehouse in California to Owe California Sales Tax. Here Is How Many States You Have Already Triggered — and What You Owe.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          Following South Dakota v. Wayfair (2018), most US states enforce economic nexus based on $100,000 in gross sales or 200 transactions in the prior 12 months. In 2026, several states including Illinois have removed the transaction threshold — gross sales alone trigger nexus.
+          The Supreme Court's 2018 decision in South Dakota v. Wayfair, Inc. fundamentally changed US sales tax. States can now require any seller to collect and remit sales tax based on economic activity alone — no warehouse, no employee, no office required. By 2026, 45 states and the District of Columbia have enacted economic nexus rules. The most common threshold is $100,000 in sales or 200 transactions in the state in a calendar year. Cross that threshold and you have a collection and remittance obligation — retroactive to the date you crossed it, not to the date you discover it.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -494,20 +506,20 @@ export default function WayfairNexusSniperPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Economic nexus threshold</dt>
-                  <dd className="font-bold">$100k gross</dd>
+                  <dt className="text-neutral-600">Economic nexus states</dt>
+                  <dd className="font-bold">45 + DC</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">FBA nexus</dt>
-                  <dd className="font-bold">Immediate</dd>
+                  <dt className="text-neutral-600">Most common threshold</dt>
+                  <dd className="font-bold">$100k / 200 txns</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Marketplace sales</dt>
-                  <dd className="font-bold">Count toward threshold</dd>
+                  <dt className="text-neutral-600">Liability starts</dt>
+                  <dd className="font-bold">Date threshold crossed</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Lookback risk</dt>
-                  <dd className="font-bold">Unlimited (some states)</dd>
+                  <dt className="text-neutral-600">VDA lookback cap</dt>
+                  <dd className="font-bold">3–4 years</dd>
                 </div>
               </dl>
             </div>
@@ -515,7 +527,7 @@ export default function WayfairNexusSniperPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Wayfair Nexus Sniper</h3>
+              <h3 className="mb-1 text-lg font-bold">Sales Tax Nexus Liability Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised nexus audit built around your sales by state, your marketplace channels, and your FBA inventory locations.</p>
               <div className="space-y-2">
                 <a href="#calculator"
@@ -553,39 +565,39 @@ export default function WayfairNexusSniperPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                What sellers think
+                Economic nexus states
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Taxable sales only
+                45 + DC
               </p>
-              <p className="text-xs text-neutral-400">common misunderstanding of nexus thresholds</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Nexus reality
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Gross sales count
-              </p>
-              <p className="text-xs text-neutral-400">all channels, all products, including exempt</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                FBA reality
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Immediate nexus
-              </p>
-              <p className="text-xs text-neutral-400">no threshold — inventory presence = nexus</p>
+              <p className="text-xs text-neutral-400">states with economic nexus statutes (2026)</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Lookback risk
+                Most common threshold
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Unlimited in some
+                $100k / 200 txns
               </p>
-              <p className="text-xs text-neutral-400">states can audit with no statute of limitations</p>
+              <p className="text-xs text-neutral-400">per state per calendar year</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                Retroactive exposure
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                $33k–$68k example
+              </p>
+              <p className="text-xs text-neutral-400">$500k across 5 states, 3 years unregistered</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                VDA lookback cap
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                3–4 years
+              </p>
+              <p className="text-xs text-neutral-400">vs open-ended for non-filer audit discovery</p>
             </div>
           </div>
         </div>
@@ -597,25 +609,25 @@ export default function WayfairNexusSniperPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What counts toward nexus threshold
+            Retroactive exposure components
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Direct website sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Amazon marketplace sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Etsy / Walmart sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Exempt product sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ FBA states: all sales from $1</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Uncollected sales tax (from threshold date)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Interest (typically 6-12%/year)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Penalties (typically 10-25%)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Marketplace sales count toward threshold</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Direct sales = your collection obligation</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT just taxable sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT just direct sales</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT safe if marketplace collects</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT prospective-only — retroactive from crossing</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT waived because you did not know</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT shifted to customers who were never charged</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: South Dakota v. Wayfair (2018) · Sales Tax Institute 2026</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018) · State Departments of Revenue · Streamlined Sales Tax Governing Board</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -623,24 +635,24 @@ export default function WayfairNexusSniperPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The answer — state tax authorities confirmed 2026
           </p>
-          <p className="mb-2 text-neutral-900">Following South Dakota v. Wayfair (2018), most US states enforce economic nexus based on $100,000 in gross sales or 200 transactions in the prior 12 months. In 2026, several states including Illinois have removed the transaction threshold — gross sales alone trigger nexus.</p>
-          <p className="mb-2 text-neutral-900">Gross sales means total revenue from all channels — not just taxable sales. Marketplace sales through Amazon, Etsy, and Walmart count toward your nexus threshold even though the marketplace collects the tax. FBA inventory in any Amazon fulfilment centre creates physical nexus immediately — no threshold required.</p>
-          <p className="mb-2 text-neutral-900">States can audit you years later for uncollected sales tax, even if you never registered or knew you had nexus. Voluntary Disclosure Agreements (VDAs) can limit the lookback period and reduce penalties — but only before the audit letter arrives.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: South Dakota v. Wayfair, Inc. (2018) · State Department of Revenue · Sales Tax Institute 2026</p>
+          <p className="mb-2 text-neutral-900">The Supreme Court's 2018 decision in South Dakota v. Wayfair, Inc. fundamentally changed US sales tax. States can now require any seller to collect and remit sales tax based on economic activity alone — no warehouse, no employee, no office required. By 2026, 45 states and the District of Columbia have enacted economic nexus rules. The most common threshold is $100,000 in sales or 200 transactions in the state in a calendar year. Cross that threshold and you have a collection and remittance obligation — retroactive to the date you crossed it, not to the date you discover it.</p>
+          <p className="mb-2 text-neutral-900">The retroactive exposure is the part most sellers do not model. If you crossed nexus in California in 2022 and have not registered, you owe California sales tax on every qualifying sale since the threshold was crossed — plus interest at the state rate (typically 6-8% per year) plus penalties (typically 10-25% of tax owed). You never collected that tax from your customers. The state does not care. The liability is yours. For a $500,000/year seller in 5 states, the retroactive exposure over 3 years can exceed $60,000 — money that was earned but never set aside.</p>
+          <p className="mb-2 text-neutral-900">Marketplace sales add a layer of confusion. Amazon, Etsy, and eBay act as marketplace facilitators and collect sales tax on your behalf in most states. This does not eliminate your nexus obligations. Your marketplace sales still count toward the economic nexus threshold in most states. Direct website sales create separate obligations. And some states require registration even when a marketplace collects on your behalf. The seller who assumes 'Amazon handles everything' often has unaddressed nexus obligations on direct sales and may have triggered thresholds they have not registered for.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018) · State Departments of Revenue · Streamlined Sales Tax Governing Board · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The nexus calculation — what counts toward your threshold
+            Retroactive exposure — wait vs register now via VDA
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Taxable direct sales only (what most sellers count)  ❌  WRONG — misses marketplace + exempt sales
+              ❌ $500K online sales → nexus in 5 states not tracked → 3 years unregistered → $60,000 back tax + penalties + interest  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Gross sales ALL channels (direct + Amazon + Etsy + exempt)  ✔  CORRECT — triggers nexus sooner than you think
+              ✔ Track sales by state → identify nexus triggers → VDA registration → limited lookback → penalty waiver → clean slate  ✔
             </div>
           </div>
         </div>
@@ -651,9 +663,10 @@ export default function WayfairNexusSniperPage() {
             Common AI errors on this topic
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ You only count taxable sales toward nexus thresholds — wrong. Most states use gross revenue from all sales — including exempt transactions — to measure nexus thresholds. Sellers who exclude exempt sales significantly undercount their exposure.</li>
-            <li>✗ Amazon handles all my sales tax so I do not have nexus — wrong. Marketplace facilitator laws require Amazon to collect and remit sales tax on your behalf — but your gross marketplace sales still count toward nexus thresholds in most states.</li>
-            <li>✗ You need 200 transactions to trigger nexus — wrong. Multiple states including Illinois removed the 200-transaction threshold in 2026. Gross sales alone now trigger nexus in these states.</li>
+            <li>✗ I do not have a physical presence in that state so I do not owe sales tax — wrong since 2018. The Supreme Court's Wayfair decision ended physical presence as the test for sales tax nexus. Economic nexus — based on sales volume or transaction count in the state — is now the standard in 45 states plus DC. If you have exceeded the state's threshold, you have a collection and remittance obligation regardless of where your business is physically located.</li>
+            <li>✗ Amazon collects sales tax for me so I am covered — partially wrong. Amazon collects tax on marketplace sales in most states. But your Amazon sales still count toward economic nexus thresholds in many states. If you also sell directly through your own website, those sales create separate obligations. And some states require you to file returns even when a marketplace facilitator collects on your behalf. 'Amazon handles it' is not a complete answer.</li>
+            <li>✗ I will register once I know I have nexus — wrong on timing. Nexus is triggered at the moment you cross the threshold — not at the moment you register. Waiting to register does not reset the clock. It increases the retroactive exposure. Every month you sell without registration after crossing the threshold adds to the uncollected tax, interest, and penalty stack. Voluntary Disclosure Agreements are available in most states and limit the lookback period — but only if you proactively register. Waiting for an audit removes the VDA option.</li>
+            <li>✗ Sales tax is the customer's problem — wrong when you do not collect it. Sales tax is a trust fund tax — collected from customers on behalf of the state. If you do not collect it, the state still holds you responsible for remitting it. The liability does not transfer to your customers because you failed to charge them. You absorb the full uncollected tax from your margin.</li>
           </ul>
         </div>
 
@@ -678,13 +691,13 @@ export default function WayfairNexusSniperPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Stackform sold into 18 states. Tyler knew about sales tax in theory. He had not checked his nexus position since launch.</p>
-            <p>The first version of Stackform sold only to Texas companies. As the product grew, AWS Marketplace opened up sales to California, New York, Illinois, Washington, Florida, and twelve more states automatically.</p>
-            <p>Tyler assumed SaaS was sometimes tax exempt. He had heard this at a founder dinner. The reality is more fragmented: some states tax SaaS fully, some partially, some not at all.</p>
-            <p>Each state sets its own threshold. Most use $100,000 in annual sales or 200 transactions. Tyler had crossed both in California, New York, and Washington in the prior year without registering in any of them.</p>
-            <p className="font-semibold text-neutral-900">The nexus audit showed active economic nexus in seven states with no sales tax registration. California exposure alone was 14 months of unregistered sales at up to 10.25%.</p>
+            <p className="text-base font-medium text-neutral-900">Coastal Supply had done $4.8M across three years. Morgan had never looked at the sales tax question in any state other than North Carolina.</p>
+            <p>The first year of Shopify sales was $300k — under the $100k threshold in most states, so it felt safe. But California and Texas accumulated $80k and $50k respectively even in that first year — close enough that year two would cross.</p>
+            <p>Year two was $750k. Year three was $1.65M. By that point California had crossed $100k three times over. New York, Florida, Illinois, Texas, Pennsylvania had all crossed too. Marketplace sales via Amazon were being handled by Amazon — but the Shopify direct channel was Morgan's obligation, and nothing had been collected.</p>
+            <p>Then a California Department of Tax and Fee Administration questionnaire arrived in the mail. It asked for three years of sales data by customer ZIP code. Morgan did the back-of-envelope: retroactive tax across 5-7 states, penalties, interest — the number looked like $80,000-$130,000.</p>
+            <p className="font-semibold text-neutral-900">The path was not registration-first — it was VDA-first. Voluntary Disclosure Agreements in CA, TX, NY, FL, IL, PA could cap the lookback at 3-4 years and waive penalties. Savings vs audit discovery: approximately $50,000-$80,000.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Rachel initiated voluntary disclosure in five states. Registered in all seven. Implemented a tax calculation API in the billing system. Nexus monitoring now runs automatically at 80% of each state threshold.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Morgan engaged a sales-tax attorney for anonymous VDA filing across six states. Signed up for automated sales tax calculation in Shopify. Nexus monitoring now flags new states at 80% of each threshold. Total VDA payments settled came in around $48,000 — versus the $110,000+ audit-discovery scenario.</p>
             </div>
           </div>
           
@@ -702,11 +715,11 @@ export default function WayfairNexusSniperPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Economic nexus rules — confirmed 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Following South Dakota v. Wayfair, Inc. (2018), US states can require out-of-state sellers to collect and remit sales tax based on economic activity alone — without physical presence. As of 2026, most states enforce economic nexus at $100,000 in gross sales or 200 transactions in the prior 12-month period. Several states including Illinois have removed the transaction threshold — gross sales alone now trigger nexus. Gross sales means total revenue from all channels and all products, including exempt items and marketplace sales. Marketplace facilitator laws require platforms like Amazon, Etsy and Walmart to collect and remit sales tax — but marketplace sales still count toward the seller's nexus threshold. Amazon FBA inventory creates physical nexus immediately in every state containing an Amazon fulfilment centre, with no threshold requirement. States can assess tax retroactively to the date nexus was established, with some states having no statute of limitations for non-filers.</p>
+          <p className="mb-4 text-neutral-800">Economic nexus for sales tax purposes was established by the United States Supreme Court in South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018). The decision held that states may require remote sellers to collect and remit sales tax based on economic activity within the state, without physical presence. As of 2026, 45 states and the District of Columbia have enacted economic nexus statutes. The most widely adopted threshold is $100,000 in sales or 200 transactions in the state in the prior or current calendar year, modelled on South Dakota's statute upheld in Wayfair. Some states have lower thresholds. Crossing the threshold creates a retroactive obligation from the date of crossing, not from the date of registration or discovery. Unpaid sales tax carries interest (typically 6-12% per year) and penalties (typically 10-25% of tax owed). Most states offer Voluntary Disclosure Agreements that limit the lookback period to 3-4 years and waive penalties for proactive registration. Marketplace facilitator laws require platforms including Amazon, Etsy, eBay, and Walmart Marketplace to collect and remit sales tax on marketplace sales in most states — but marketplace sales still count toward the seller's economic nexus thresholds, and direct website sales create separate collection obligations.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Economic Nexus = Total Gross Sales (ALL channels, ALL products) ≥ $100,000 in prior 12 months. Physical Nexus = FBA inventory present in state = immediate nexus from $1 in sales.
+            Economic Nexus = sales OR transactions in the state ≥ state threshold (most common: $100,000 OR 200 transactions per calendar year). Retroactive liability = uncollected tax + interest (6-12%/yr) + penalties (10-25%) from date threshold crossed. VDA caps lookback at 3-4 years and typically waives penalties.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -720,34 +733,49 @@ export default function WayfairNexusSniperPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Economic nexus threshold</td>
-                  <td className="p-2">$100,000 gross sales (most states)</td>
-                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair (2018)</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">Transaction threshold</td>
-                  <td className="p-2">Removed in some states (e.g. IL 2026)</td>
-                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair (2018)</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">Marketplace sales</td>
-                  <td className="p-2">Count toward threshold even if platform collects</td>
-                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair (2018)</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">FBA inventory</td>
-                  <td className="p-2">Physical nexus — no threshold required</td>
-                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair (2018)</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
-                  <td className="p-2">Lookback period</td>
-                  <td className="p-2">Potentially unlimited for non-filers</td>
-                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair (2018)</td>
-                </tr>
-                <tr className="border-b border-neutral-200">
                   <td className="p-2">Legal anchor</td>
-                  <td className="p-2">South Dakota v. Wayfair (2018)</td>
-                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair (2018)</td>
+                  <td className="p-2">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
+                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">States with economic nexus (2026)</td>
+                  <td className="p-2">45 states + DC</td>
+                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">States with no sales tax</td>
+                  <td className="p-2">Alaska, Delaware, Montana, New Hampshire, Oregon</td>
+                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Most common threshold</td>
+                  <td className="p-2">$100,000 sales OR 200 transactions per state per calendar year</td>
+                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Retroactive start date</td>
+                  <td className="p-2">Date threshold crossed (not registration/discovery)</td>
+                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Interest rate</td>
+                  <td className="p-2">Typically 6-12% per year</td>
+                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Penalty rate</td>
+                  <td className="p-2">Typically 10-25% of uncollected tax</td>
+                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">VDA lookback cap</td>
+                  <td className="p-2">3-4 years (most states)</td>
+                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Marketplace rule</td>
+                  <td className="p-2">Platform collects on marketplace sales in most states; sales still count toward seller's threshold</td>
+                  <td className="p-2 text-neutral-500">South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)</td>
                 </tr>
               </tbody>
             </table>
@@ -774,25 +802,24 @@ export default function WayfairNexusSniperPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four real nexus scenarios — compliant or exposed
+          Four retroactive exposure scenarios
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Seller</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Sales</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Channels</th>
-                <th className="border-b border-neutral-300 p-3 text-left">FBA?</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Nexus Status</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Seller profile</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Setup</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Exposure estimate</th>
+                <th className="border-b border-neutral-300 p-3 text-left">VDA path</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Small direct seller</td>
-                <td className="p-3 text-neutral-700">$40k direct sales only, no FBA</td>
-                <td className="p-3 font-mono">$40k</td>
+                <td className="p-3 font-bold">Single-state seller</td>
+                <td className="p-3 text-neutral-700">$60k/yr, one state, home-registered</td>
+                <td className="p-3 font-mono">$60k/yr</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
                     CLEAR — under threshold
@@ -800,32 +827,32 @@ export default function WayfairNexusSniperPage() {
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Amazon FBA seller</td>
-                <td className="p-3 text-neutral-700">$60k total sales, FBA in 20 states</td>
-                <td className="p-3 font-mono">$60k</td>
+                <td className="p-3 font-bold">New multi-state growth</td>
+                <td className="p-3 text-neutral-700">$250k/yr across 6 states, under 1 year, direct website</td>
+                <td className="p-3 font-mono">$250k/yr</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NEXUS IN 20 STATES
+                    AT RISK — ~1-2 states triggered, exposure small but growing
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Multi-channel seller</td>
-                <td className="p-3 text-neutral-700">$150k across Amazon + Etsy + own site</td>
-                <td className="p-3 font-mono">$150k</td>
+                <td className="p-3 font-bold">$500k/yr, 5 states, 3 years</td>
+                <td className="p-3 text-neutral-700">Direct + marketplace mix, never registered</td>
+                <td className="p-3 font-mono">$500k/yr</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NON-COMPLIANT — threshold crossed
+                    $33k-$68k exposure; VDA saves ~$25k-$50k
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Exempt goods seller</td>
-                <td className="p-3 text-neutral-700">$120k gross but only $80k taxable — not registered</td>
-                <td className="p-3 font-mono">$120k</td>
+                <td className="p-3 font-bold">$2M/yr, 8 states, 3+ years</td>
+                <td className="p-3 text-neutral-700">Mix of marketplace and direct, home state only</td>
+                <td className="p-3 font-mono">$2M/yr</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NON-COMPLIANT — gross counts
+                    SEVERE — 6-figure exposure; VDA critical before audit
                   </span>
                 </td>
               </tr>
@@ -842,37 +869,37 @@ export default function WayfairNexusSniperPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Nexus triggers — what creates obligation in 2026
+          Without VDA vs With VDA registration now
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Trigger Type</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Threshold</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Applies From</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Example</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Back tax</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Penalties + Interest</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Total exposure</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Economic nexus</td>
-                <td className="p-3 font-mono text-xs">$100k gross or 200 transactions</td>
-                <td className="p-3 text-xs">Day threshold crossed</td>
-                <td className="p-3 text-xs text-neutral-700">Most common for online sellers</td>
+                <td className="p-3 font-bold">Wait for audit discovery (5+ yr lookback)</td>
+                <td className="p-3 font-mono text-xs">$25,000–$50,000</td>
+                <td className="p-3 text-xs">$8,000–$18,500</td>
+                <td className="p-3 text-xs text-neutral-700">$33,000–$68,500 — full retroactive</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Physical nexus</td>
-                <td className="p-3 font-mono text-xs">No threshold</td>
-                <td className="p-3 text-xs">Day inventory arrives</td>
-                <td className="p-3 text-xs text-neutral-700">FBA, warehouse, employees</td>
+                <td className="p-3 font-bold">File VDA now (3-4 yr lookback, no penalty)</td>
+                <td className="p-3 font-mono text-xs">$15,000–$30,000</td>
+                <td className="p-3 text-xs">$0 penalty + ~$2-4k interest</td>
+                <td className="p-3 text-xs text-neutral-700">$17,000–$34,000 — saving $16k-$34k+</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Affiliate nexus</td>
-                <td className="p-3 font-mono text-xs">Varies by state</td>
-                <td className="p-3 text-xs">Day affiliate agreement signed</td>
-                <td className="p-3 text-xs text-neutral-700">Referral partners in state</td>
+                <td className="p-3 font-bold">Delta — saving from acting now</td>
+                <td className="p-3 font-mono text-xs">Depends on state</td>
+                <td className="p-3 text-xs">Penalty typically waived</td>
+                <td className="p-3 text-xs text-neutral-700">$25,000–$50,000+ savings typical</td>
               </tr>
             </tbody>
           </table>
@@ -928,7 +955,7 @@ export default function WayfairNexusSniperPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          5 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -1023,24 +1050,27 @@ export default function WayfairNexusSniperPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Economic nexus established by South Dakota v. Wayfair (2018). Most states: $100,000 gross sales or 200 transactions threshold (some states removed transaction threshold in 2026). FBA inventory = physical nexus, no threshold. Marketplace sales count toward threshold. Lookback unlimited for non-filers in some states.
+            Economic nexus established by South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018). 45 states + DC have economic nexus statutes. Most common threshold: $100,000 in sales OR 200 transactions per state per calendar year. Retroactive from date threshold crossed. Marketplace sales count toward threshold even when platform collects. VDA caps lookback at 3-4 years and typically waives penalties — only available before first audit contact.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Supreme Court
+              IRS
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              S.D. v. Wayfair 2018
+              Wayfair 2018
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              State DOR
+              $100K / 200 Transaction Threshold
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Sales Tax Institute
+              45 States Economic Nexus
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              VDA Available
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Retroactive From Threshold Date
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
@@ -1075,7 +1105,7 @@ export default function WayfairNexusSniperPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from IRS and GOV.UK guidance for April 2026.
+          built from State Revenue Authorities / US Supreme Court and GOV.UK guidance for April 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.

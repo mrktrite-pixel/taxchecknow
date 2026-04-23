@@ -49,7 +49,7 @@ export default function WayfairNexusSniperFile08() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">United States · Wayfair Nexus Sniper</span>
+            <span className="hidden sm:block">United States · Sales Tax Nexus Liability Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -64,7 +64,7 @@ export default function WayfairNexusSniperFile08() {
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
           <div><a href="/files/us/wayfair-nexus-sniper/nexus-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Penalty Reduction Calculator</a></div>
           <span className="font-mono">File 08 of 8</span>
-          <div><a href="/us/check/wayfair-nexus-sniper" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to Wayfair Nexus Sniper →</a></div>
+          <div><a href="/us/check/wayfair-nexus-sniper" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to Sales Tax Nexus Liability Engine →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function WayfairNexusSniperFile08() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 IRS · South Dakota v. Wayfair (2018)
+              🇬🇧 State Revenue Authorities / US Supreme Court · South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -96,7 +96,7 @@ export default function WayfairNexusSniperFile08() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Wayfair Nexus Sniper · File 08 of 8
+            Sales Tax Nexus Liability Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
             Multi-State VDA Strategy and Amnesty Tracker
@@ -205,7 +205,7 @@ export default function WayfairNexusSniperFile08() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on IRS guidance April 2026.
+            Based on State Revenue Authorities / US Supreme Court guidance April 2026.
           </p>
         </div>
 
@@ -222,7 +222,7 @@ export default function WayfairNexusSniperFile08() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/us/check/wayfair-nexus-sniper" className="hover:text-neutral-900 transition">
-              ← Back to Wayfair Nexus Sniper
+              ← Back to Sales Tax Nexus Liability Engine
             </a>
             <a href="https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Sales Tax Institute — Nexus State-by-State Guide 2026 ↗</a>
             <a href="https://www.irs.gov/businesses/small-businesses-self-employed/state-and-local-taxes" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — State and Local Taxes ↗</a>

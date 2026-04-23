@@ -100,18 +100,22 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const nexus_sales = sessionStorage.getItem("wayfair-nexus-sniper_nexus_sales") || "150000";
-      const nexus_channels = sessionStorage.getItem("wayfair-nexus-sniper_nexus_channels") || "multi";
-      const nexus_fba = sessionStorage.getItem("wayfair-nexus-sniper_nexus_fba") || "false";
-      const nexus_status = sessionStorage.getItem("wayfair-nexus-sniper_nexus_status") || "at_risk";
+      const nexus_geography = sessionStorage.getItem("wayfair-nexus-sniper_nexus_geography") || "multi_known";
+      const nexus_revenue = sessionStorage.getItem("wayfair-nexus-sniper_nexus_revenue") || "500000";
+      const nexus_marketplace = sessionStorage.getItem("wayfair-nexus-sniper_nexus_marketplace") || "mix";
+      const nexus_registered = sessionStorage.getItem("wayfair-nexus-sniper_nexus_registered") || "home";
+      const nexus_duration = sessionStorage.getItem("wayfair-nexus-sniper_nexus_duration") || "one_to_3";
+      const nexus_status = sessionStorage.getItem("wayfair-nexus-sniper_nexus_status") || "non_compliant_moderate";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "nexus_sales": nexus_sales,
-        "nexus_channels": nexus_channels,
-        "nexus_fba": nexus_fba,
+        "nexus_geography": nexus_geography,
+        "nexus_revenue": nexus_revenue,
+        "nexus_marketplace": nexus_marketplace,
+        "nexus_registered": nexus_registered,
+        "nexus_duration": nexus_duration,
         "nexus_status": nexus_status,
-      }).some(v => v && v !== "150000");
+      }).some(v => v && v !== "multi_known");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -119,16 +123,18 @@ export default function SuccessAssess() {
         body: JSON.stringify({
           product_id: "wayfair-nexus-sniper",
           market:     "United States",
-          authority:  "IRS",
+          authority:  "State Revenue Authorities / US Supreme Court",
           tier:       1,
           name,
           inputs: {
-        "Annual gross sales": nexus_sales,
-        "Sales channels": nexus_channels,
-        "Uses FBA": nexus_fba,
-        "Nexus status": nexus_status,
+        "Customer geography": nexus_geography,
+        "Annual US online revenue": nexus_revenue,
+        "Marketplace channel use": nexus_marketplace,
+        "Current registration": nexus_registered,
+        "Duration at revenue level": nexus_duration,
+        "Compliance status": nexus_status,
           },
-          fields: ["status","nexusStates","estimatedLiability","biggestRisk","firstAction","registrationPriority","accountantQuestions"],
+          fields: ["status","nexusStates","estimatedExposureRange","marketplaceDirectSplit","vdaOpportunity","firstAction","priorityStates","accountantQuestions"],
         }),
       });
       const data = await res.json();
@@ -140,12 +146,13 @@ export default function SuccessAssess() {
       setAssessment({
         status: "Your personalised status is being prepared — please refresh in a moment.",
         nexusStates: "Your personalised nexusStates is being prepared — please refresh in a moment.",
-        estimatedLiability: "Your personalised estimatedLiability is being prepared — please refresh in a moment.",
-        biggestRisk: "Your personalised biggestRisk is being prepared — please refresh in a moment.",
+        estimatedExposureRange: "Your personalised estimatedExposureRange is being prepared — please refresh in a moment.",
+        marketplaceDirectSplit: "Your personalised marketplaceDirectSplit is being prepared — please refresh in a moment.",
+        vdaOpportunity: "Your personalised vdaOpportunity is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
-        registrationPriority: "Your personalised registrationPriority is being prepared — please refresh in a moment.",
+        priorityStates: "Your personalised priorityStates is being prepared — please refresh in a moment.",
         accountantQuestions: [
-          "What is my exact IRS position based on my answers?",
+          "What is my exact State Revenue Authorities / US Supreme Court position based on my answers?",
           "What is the single most important action I should take before December 31, 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
@@ -158,10 +165,12 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const nexus_sales = sessionStorage.getItem("wayfair-nexus-sniper_nexus_sales") || "150000";
-    const nexus_channels = sessionStorage.getItem("wayfair-nexus-sniper_nexus_channels") || "multi";
-    const nexus_fba = sessionStorage.getItem("wayfair-nexus-sniper_nexus_fba") || "false";
-    const nexus_status = sessionStorage.getItem("wayfair-nexus-sniper_nexus_status") || "at_risk";
+    const nexus_geography = sessionStorage.getItem("wayfair-nexus-sniper_nexus_geography") || "multi_known";
+    const nexus_revenue = sessionStorage.getItem("wayfair-nexus-sniper_nexus_revenue") || "500000";
+    const nexus_marketplace = sessionStorage.getItem("wayfair-nexus-sniper_nexus_marketplace") || "mix";
+    const nexus_registered = sessionStorage.getItem("wayfair-nexus-sniper_nexus_registered") || "home";
+    const nexus_duration = sessionStorage.getItem("wayfair-nexus-sniper_nexus_duration") || "one_to_3";
+    const nexus_status = sessionStorage.getItem("wayfair-nexus-sniper_nexus_status") || "non_compliant_moderate";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -169,7 +178,7 @@ export default function SuccessAssess() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Wayfair Nexus Sniper — Deadlines`,
+      `X-WR-CALNAME:Sales Tax Nexus Liability Engine — Deadlines`,
       "BEGIN:VEVENT",
       `UID:nexus-q2-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${"20260630"}`,
@@ -270,7 +279,7 @@ export default function SuccessAssess() {
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
             <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against IRS rules</p>
+            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against State Revenue Authorities / US Supreme Court rules</p>
           </div>
         )}
 
@@ -290,13 +299,13 @@ export default function SuccessAssess() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your United States IRS position
+                Your United States State Revenue Authorities / US Supreme Court position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","nexusStates","estimatedLiability","biggestRisk","firstAction","registrationPriority"] as string[]).map(key => {
+                {(["status","nexusStates","estimatedExposureRange","marketplaceDirectSplit","vdaOpportunity","firstAction"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -414,7 +423,7 @@ export default function SuccessAssess() {
                 Everything you need — in one place
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
-                Each document is built around your specific IRS position.
+                Each document is built around your specific State Revenue Authorities / US Supreme Court position.
                 Start with File 02 — it has your exact numbers.
                 
               </p>
@@ -501,7 +510,7 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United States tax adviser before making financial decisions.
-            Based on IRS guidance April 2026.{" "}
+            Based on State Revenue Authorities / US Supreme Court guidance April 2026.{" "}
             <a href="https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide" target="_blank" rel="noopener noreferrer" className="underline">Sales Tax Institute — Nexus State-by-State Guide 2026</a> · <a href="https://www.irs.gov/businesses/small-businesses-self-employed/state-and-local-taxes" target="_blank" rel="noopener noreferrer" className="underline">IRS — State and Local Taxes</a>
           </p>
         </div>

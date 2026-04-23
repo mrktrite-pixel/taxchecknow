@@ -12,16 +12,16 @@ export async function GET() {
     "schema_version": "1.0",
     "generated_by": "COLE — Citation Operations & Legal Engine",
     "product_id": "wayfair-nexus-sniper",
-    "title": "Wayfair Nexus Sniper",
+    "title": "Sales Tax Nexus Liability Engine",
     "site": "https://taxchecknow.com/us/check/wayfair-nexus-sniper",
-    "authority": "IRS",
-    "authority_url": "https://www.irs.gov",
+    "authority": "State Revenue Authorities / US Supreme Court",
+    "authority_url": "https://www.supremecourt.gov/opinions/17pdf/17-494_j4el.pdf",
     "jurisdiction": "United States",
     "language": "en-US",
     "currency": "USD",
     "last_verified": "April 2026",
-    "legislation": "South Dakota v. Wayfair, Inc. (2018) — Economic Nexus for Sales Tax",
-    "legal_anchor": "South Dakota v. Wayfair (2018)",
+    "legislation": "South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018) — Economic Nexus for Sales Tax (45 states + DC)",
+    "legal_anchor": "South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)",
     "deadline": {
         "iso_date": "2026-12-31T23:59:59.000-05:00",
         "display": "December 31, 2026",
@@ -29,14 +29,17 @@ export async function GET() {
         "urgency_label": "COMPLIANCE DEADLINE"
     },
     "key_facts": {
-        "economic_nexus_threshold": "$100,000 gross sales (most states)",
-        "transaction_threshold": "Removed in some states (e.g. IL 2026)",
-        "marketplace_sales": "Count toward threshold even if platform collects",
-        "fba_inventory": "Physical nexus — no threshold required",
-        "lookback_period": "Potentially unlimited for non-filers",
-        "legal_anchor": "South Dakota v. Wayfair (2018)"
+        "legal_anchor": "South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)",
+        "states_with_economic_nexus_2026": "45 states + DC",
+        "states_with_no_sales_tax": "Alaska, Delaware, Montana, New Hampshire, Oregon",
+        "most_common_threshold": "$100,000 sales OR 200 transactions per state per calendar year",
+        "retroactive_start_date": "Date threshold crossed (not registration/discovery)",
+        "interest_rate": "Typically 6-12% per year",
+        "penalty_rate": "Typically 10-25% of uncollected tax",
+        "vda_lookback_cap": "3-4 years (most states)",
+        "marketplace_rule": "Platform collects on marketplace sales in most states; sales still count toward seller's threshold"
     },
-    "formula": "Economic Nexus = Total Gross Sales (ALL channels, ALL products) ≥ $100,000 in prior 12 months. Physical Nexus = FBA inventory present in state = immediate nexus from $1 in sales.",
+    "formula": "Economic Nexus = sales OR transactions in the state ≥ state threshold (most common: $100,000 OR 200 transactions per calendar year). Retroactive liability = uncollected tax + interest (6-12%/yr) + penalties (10-25%) from date threshold crossed. VDA caps lookback at 3-4 years and typically waives penalties.",
     "thresholds": [
         {
             "label": "Under $50k total gross sales across all states",
@@ -67,28 +70,23 @@ export async function GET() {
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "ChatGPT says: You only count taxable sales toward nexus thresholds",
-            "correct": "Reality: Most states use gross revenue — all sales including exempt transactions — to measure nexus thresholds. Sellers who only count taxable sales significantly undercount their exposure and may be non-compliant without knowing it."
+            "ai_says": "ChatGPT says: I do not have a physical presence in that state so I do not owe sales tax",
+            "correct": "Reality: The Supreme Court's 2018 Wayfair decision ended physical presence as the test. Economic nexus — based on sales volume or transaction count in the state — is now the standard in 45 states plus DC. If you have exceeded the state's threshold, you have a collection and remittance obligation regardless of where your business is physically located."
         },
         {
             "error_id": 2,
-            "ai_says": "ChatGPT says: Amazon handles my sales tax so I do not have nexus",
-            "correct": "Reality: Marketplace facilitator laws require Amazon to collect and remit tax on your sales — but your gross marketplace sales still count toward nexus thresholds in most states. You may be registered as required in zero states while crossing nexus thresholds in 15."
+            "ai_says": "ChatGPT says: Amazon collects sales tax for me so I am covered",
+            "correct": "Reality: Partially wrong. Amazon collects tax on marketplace sales in most states. But your Amazon sales still count toward economic nexus thresholds in many states. Direct website sales create separate obligations. And some states require you to file returns even when a marketplace facilitator collects on your behalf. 'Amazon handles it' is not a complete answer."
         },
         {
             "error_id": 3,
-            "ai_says": "ChatGPT says: You need 200 transactions to trigger nexus",
-            "correct": "Reality: Multiple states removed the 200-transaction threshold in 2026. Illinois is the most significant example. In these states, $100,000 in gross sales alone triggers nexus regardless of transaction count."
+            "ai_says": "ChatGPT says: I will register once I know I have nexus",
+            "correct": "Reality: Wrong on timing. Nexus is triggered at the moment you cross the threshold — not at the moment you register. Waiting to register does not reset the clock. It increases the retroactive exposure. Every month you sell without registration after crossing the threshold adds to the uncollected tax, interest, and penalty stack. VDAs limit the lookback period — but only if you proactively register. Waiting for an audit removes the VDA option."
         },
         {
             "error_id": 4,
-            "ai_says": "ChatGPT says: If you have FBA, Amazon registers you for sales tax automatically",
-            "correct": "Reality: FBA inventory creates physical nexus in every state with an Amazon fulfilment centre — immediately, with no threshold. Amazon does not register you. You must register and file in each FBA state yourself (or Amazon files on your behalf under marketplace facilitator laws — but your registration obligation still exists)."
-        },
-        {
-            "error_id": 5,
-            "ai_says": "ChatGPT says: States cannot audit you for old uncollected sales tax",
-            "correct": "Reality: States can assess tax retroactively from the date nexus was established. Some states have no statute of limitations for non-filers. A seller who crossed nexus in California 3 years ago without registering faces 3+ years of uncollected tax plus interest and penalties."
+            "ai_says": "ChatGPT says: Sales tax is the customer's problem",
+            "correct": "Reality: Wrong when you do not collect it. Sales tax is a trust fund tax — collected from customers on behalf of the state. If you do not collect it, the state still holds you responsible for remitting it. The liability does not transfer to your customers because you failed to charge them. You absorb the full uncollected tax from your margin."
         }
     ],
     "faq": [
@@ -193,7 +191,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/wayfair-nexus-sniper",
     "api_endpoint": "/api/rules/wayfair-nexus-sniper",
-    "generated_at": "2026-04-22T15:02:37.440Z"
+    "generated_at": "2026-04-23T04:58:18.526Z"
 };
 
   return NextResponse.json(rules, {
