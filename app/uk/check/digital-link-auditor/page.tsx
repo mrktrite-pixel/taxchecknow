@@ -10,12 +10,12 @@ import DigitalLinkAuditorCalculator from "./DigitalLinkAuditorCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "MTD VAT Digital Links 2026: Copy-Paste Fails HMRC — Check Your Process | TaxCheckNow",
-  description: "Copying figures from your accounting software into your VAT return breaks the digital link requirement. Most businesses do not know this. HMRC can issue penalties for non-compliant processes. Check your VAT chain in 2 minutes.",
+  title: "MTD Digital Link Audit 2026: Find Your Chain Break | TaxCheckNow",
+  description: "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/digital-link-auditor" },
   openGraph: {
-    title: "MTD VAT Digital Links 2026: Copy-Paste Fails HMRC — Check Your Process | TaxCheckNow",
-    description: "Copying figures from your accounting software into your VAT return breaks the digital link requirement. Most businesses do not know this. HMRC can issue penalties for non-compliant processes. Check your VAT chain in 2 minutes.",
+    title: "MTD Digital Link Audit 2026: Find Your Chain Break | TaxCheckNow",
+    description: "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
     url: "https://taxchecknow.com/uk/check/digital-link-auditor",
     siteName: "TaxCheckNow",
     type: "website",
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "7 August 2026";
-const DEADLINE_ISO   = "2026-08-07T23:59:59.000Z";
+const DEADLINE_LABEL = "6 April 2026";
+const DEADLINE_ISO   = "2026-04-06T00:00:00.000+01:00";
 
 function daysToDeadline(): number {
   if (!DEADLINE_ISO) return 0;
@@ -49,181 +49,252 @@ function progressPct(): number {
 
 const faqs = [
   {
-    "question": "What is a digital link for MTD VAT?",
-    "answer": "A digital link is an electronic transfer of data between steps in your VAT accounting process. It means data moves automatically — via API, CSV import, automated feed, or spreadsheet formula — without being manually retyped or copy-pasted. HMRC requires an unbroken digital link from source transaction records to the final VAT return submission."
+    "question": "What is a digital link under MTD?",
+    "answer": "A digital link is an automated electronic transfer of data between systems that does not require manual intervention. Examples include direct integration between software packages, API connections, automated file imports, and HMRC-approved bridging software. Examples that are NOT digital links: manual copy and paste, retyping of figures, and manual adjustment of exported data before import."
   },
   {
-    "question": "Is copy-paste compliant for MTD VAT?",
-    "answer": "No. HMRC explicitly excludes copy-paste from its definition of a digital link. Even copying a value from one cell to another in a different file is non-compliant. The digital link must be maintained electronically."
+    "question": "Can I still use spreadsheets under MTD?",
+    "answer": "Yes. Spreadsheets are permitted under MTD provided they are connected to submission via HMRC-approved bridging software. The requirement is for an unbroken digital chain — not a specific type of software. Excel or Google Sheets + approved bridging software + no manual data transfer = compliant. Common bridging tools cost £5-15/month and attach to your existing spreadsheet."
   },
   {
-    "question": "Can I still use spreadsheets for MTD VAT?",
-    "answer": "Yes — but you need bridging software to maintain the digital link between your spreadsheet and HMRC's submission system. Bridging software costs from around £40 per year and connects your spreadsheet to HMRC's API, completing the digital chain."
+    "question": "What counts as 'breaking' the digital link?",
+    "answer": "Any step in the data flow from first record to final submission that requires a human to copy, type, or adjust a figure. Examples: copying totals from a spreadsheet into the HMRC portal by hand; retyping invoice data from one software into another; manually adjusting an exported CSV file before importing it to submission software. If a human touches the numbers between systems, the link is broken."
   },
   {
-    "question": "What happens if I have a digital link breach?",
-    "answer": "A digital link breach is a VAT return compliance failure. HMRC can issue penalties under the MTD VAT regulations. The penalty amount depends on the nature and scale of the breach. HMRC has been auditing VAT processes since the soft landing ended in 2021."
+    "question": "What are the penalties for a non-compliant submission?",
+    "answer": "Under the MTD penalty regime (Schedule 24 Finance Act 2021), a submission made through a non-compliant process can be treated as NOT MADE. This triggers the standard late-filing penalty: £200 initial + £10 per day up to 90 days = up to £1,100 per affected quarter. Missing all four quarterly updates in a year = up to £4,400 in penalties alone. Plus points accumulating toward additional financial penalties."
+  },
+  {
+    "question": "Is my accountant responsible for digital link compliance?",
+    "answer": "No — the obligation is on the taxpayer under SI 2021/1076. Your accountant may PROCESS your records and make submissions, but if their process includes manual adjustments or copy/paste steps, the compliance risk sits with you. Ask your accountant directly: 'How does data move from my records to the submission?' If any manual step is in the chain, you need to discuss fixing it together."
+  },
+  {
+    "question": "When does the digital link requirement start enforcing?",
+    "answer": "The requirement is already statutory under SI 2021/1076 for VAT MTD. For Income Tax MTD (ITSA), it starts 6 April 2026 for taxpayers with gross income over £50,000, then April 2027 for £30k+, and April 2028 for £20k+. HMRC has signalled phased enforcement — lenient in year one, then following the VAT MTD precedent where digital link failures became the primary audit trigger once mandation completed."
+  },
+  {
+    "question": "What is bridging software and when do I need it?",
+    "answer": "Bridging software is HMRC-approved software that connects a spreadsheet to HMRC's MTD submission system directly. You need it if you keep records in a spreadsheet and submit to MTD. Without bridging software, the only way to submit from a spreadsheet is by copying figures manually — which breaks the digital link. Bridging tools cost £5-15/month and are listed on HMRC's website of approved MTD software."
+  },
+  {
+    "question": "Do I have to migrate to Xero or QuickBooks?",
+    "answer": "No. You can stay on spreadsheets provided you add HMRC-approved bridging software. Migration to integrated software (Xero, QuickBooks, FreeAgent, Sage) is an alternative path but not required. For simple sole traders and single-property landlords, spreadsheet + bridging is often cheaper and simpler than full software migration."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: As long as you use accounting software, you are MTD VAT compliant",
-    "correct": "Reality: The digital link must run unbroken from source records to submission. If any step involves copy-paste or manual retyping — even between files from the same software — the link is broken and you are non-compliant."
+    "wrong": "ChatGPT says: I submit via software so I am MTD compliant",
+    "correct": "Reality: Submission via software is NECESSARY but NOT SUFFICIENT. Every step in the chain — from first record to final submission — must be digitally linked. A manual copy/paste step anywhere in the process breaks compliance even if the final submission is made through approved software. SI 2021/1076 requires an UNBROKEN chain."
   },
   {
-    "wrong": "ChatGPT says: Copy-pasting from Excel to Excel is fine for MTD",
-    "correct": "Reality: HMRC explicitly states that copy-paste between separate files is not a digital link. The digital link must be maintained electronically — through import, API, or formulaic reference within a single file."
+    "wrong": "ChatGPT says: Spreadsheets are not allowed under MTD",
+    "correct": "Reality: Spreadsheets ARE permitted under MTD provided they are connected to HMRC-approved bridging software with no manual data breaks. The requirement is a digital LINK — not a specific type of software. Excel with bridging software = compliant. Excel with manual copy/paste to submission = non-compliant. Bridging tools cost £5-15/month."
+  },
+  {
+    "wrong": "ChatGPT says: My accountant handles MTD so I do not need to worry",
+    "correct": "Reality: The digital link obligation sits with the TAXPAYER, not the agent (under SI 2021/1076). If your accountant is manually adjusting figures between your records and their submission software, that break is YOUR compliance risk. Ask specifically: 'How does data move from my records to the submission?' If the answer includes manual entry anywhere, you are exposed."
+  },
+  {
+    "wrong": "ChatGPT says: Digital link failures are minor technical issues",
+    "correct": "Reality: Under HMRC's MTD regulations, a non-compliant submission PROCESS can result in the submission being treated as NOT MADE — triggering late filing penalties as if no submission occurred. The digital link requirement is a SUBSTANTIVE compliance condition, not a formatting preference. Up to £4,400/year if all 4 quarters rejected."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "Can you confirm our VAT process has an unbroken digital link from source records to HMRC submission?",
-    "why": "Many accountants prepare VAT returns using processes inherited from before MTD. The digital link requirement is easy to miss and your accountant may not have audited the specific transfer steps."
+    "q": "How does data move from my records to the submission — step by step, with every intermediate system named?",
+    "why": "Generic 'we handle it' answers hide manual steps. If there is any typing, copying, or adjusting between systems, that is a break you are exposed to under SI 2021/1076."
   },
   {
-    "q": "Do we need bridging software — and if so, which one do you recommend?",
-    "why": "If you use spreadsheets anywhere in your VAT process, bridging software is likely needed. Your accountant can identify the gap and recommend a suitable tool."
+    "q": "If I keep my rental in a spreadsheet, do you submit via bridging software or by typing into the portal?",
+    "why": "Spreadsheet + manual typing = non-compliant. Spreadsheet + bridging software = compliant. Your accountant might be doing either — you need to know specifically."
   },
   {
-    "q": "What documentation should we keep to evidence our digital link compliance?",
-    "why": "If HMRC asks for evidence of digital links, you need to be able to show the chain of electronic transfers. Your accountant can advise on record keeping."
+    "q": "Do you manually adjust any figures between my records and the submission — and if so, why?",
+    "why": "Adjustments break the chain. Even 'minor' or 'occasional' ones. If adjustments are needed, they must happen in your source records, not between systems."
+  },
+  {
+    "q": "What is my mandate date based on my total gross income from self-employment and property?",
+    "why": "Your digital link fix timeline depends on your mandate date. Phase 1 (April 2026) members need compliance now; Phase 2 (April 2027) and Phase 3 (April 2028) have more lead time but the requirement is the same."
+  },
+  {
+    "q": "If HMRC audited my MTD submissions today, would my process pass the digital link test — and can you put that in writing?",
+    "why": "An accountant willing to put digital link compliance in writing has actually thought about it. One who deflects has not. Written confirmation also shifts some evidentiary weight if HMRC queries later."
   }
 ];
 
 const workedExamples = [
   {
-    "name": "Xero direct API",
-    "setup": "Xero submits directly to HMRC via API",
-    "income": "✅ Compliant",
-    "status": "No action needed"
+    "name": "Freelancer on FreeAgent",
+    "setup": "FreeAgent tracks all income/expenses, auto-submits to HMRC",
+    "income": "Integrated software",
+    "status": "COMPLIANT"
   },
   {
-    "name": "Spreadsheet + bridge",
-    "setup": "Excel with BTC or Absolute BridgingTools",
-    "income": "✅ Compliant",
-    "status": "Maintain bridge"
+    "name": "Landlord with bridging tool",
+    "setup": "Excel spreadsheet + approved bridging add-in connects to HMRC",
+    "income": "Spreadsheet + bridging",
+    "status": "COMPLIANT"
   },
   {
-    "name": "Sage → copy → portal",
-    "setup": "Copies figures from Sage into separate spreadsheet",
-    "income": "❌ Non-compliant",
-    "status": "Add bridging tool"
+    "name": "Consultant manual typing",
+    "setup": "Excel totals typed into HMRC online submission form",
+    "income": "Spreadsheet → manual type",
+    "status": "NON-COMPLIANT (step 2)"
   },
   {
-    "name": "Manual ledger",
-    "setup": "Handwritten records typed into HMRC portal",
-    "income": "❌ Non-compliant",
-    "status": "Needs full solution"
+    "name": "Director with occasional tweaks",
+    "setup": "Xero integrated but accountant sometimes adjusts at year-end",
+    "income": "Software + manual adjustments",
+    "status": "AT RISK (step 4)"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "API connection",
-    "metric1": "Yes",
-    "metric2": "Gold standard",
-    "bestMove": "Most compliant"
+    "position": "Approved software, integrated submission",
+    "metric1": "Unbroken",
+    "metric2": "COMPLIANT",
+    "bestMove": "£10-15/month software"
   },
   {
-    "position": "CSV/XML import",
-    "metric1": "Yes",
-    "metric2": "Widely supported",
-    "bestMove": "Compliant"
+    "position": "Spreadsheets + HMRC-approved bridging software",
+    "metric1": "Unbroken",
+    "metric2": "COMPLIANT",
+    "bestMove": "£5-15/month bridging add-on"
   },
   {
-    "position": "Spreadsheet formula",
-    "metric1": "Yes",
-    "metric2": "Within same file only",
-    "bestMove": "Must be single file"
+    "position": "Spreadsheets submitted directly (manual typing)",
+    "metric1": "Broken at step 3",
+    "metric2": "NON-COMPLIANT",
+    "bestMove": "Add bridging software"
   },
   {
-    "position": "Copy-paste",
-    "metric1": "No",
-    "metric2": "HMRC explicitly excludes",
-    "bestMove": "Non-compliant"
+    "position": "Software but manual copy/paste between systems",
+    "metric1": "Broken at step 2",
+    "metric2": "NON-COMPLIANT",
+    "bestMove": "Integrate systems or migrate"
   },
   {
-    "position": "Manual retyping",
-    "metric1": "No",
-    "metric2": "Always non-compliant",
-    "bestMove": "Non-compliant"
+    "position": "Paper records",
+    "metric1": "No digital basis",
+    "metric2": "NON-COMPLIANT",
+    "bestMove": "Full migration to software"
+  },
+  {
+    "position": "Integrated software with occasional manual adjustments",
+    "metric1": "Intermittent break",
+    "metric2": "AT RISK / NON-COMPLIANT",
+    "bestMove": "Discipline: source-only corrections"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "Absolute BridgingTools",
-    "effect": "Excel users — widely used",
-    "note": "From £40/year"
+    "tool": "Tax Optimiser bridging",
+    "effect": "Excel-based spreadsheet users, simple connection to HMRC",
+    "note": "From £5/month"
   },
   {
-    "tool": "BTC Software Bridge",
-    "effect": "Accountant practices",
-    "note": "From £75/year"
+    "tool": "123 Sheets",
+    "effect": "Google Sheets users, cloud-based",
+    "note": "From £9/month"
   },
   {
-    "tool": "DataDear",
-    "effect": "Excel to HMRC direct",
-    "note": "From £50/year"
+    "tool": "Absolute Excel add-in",
+    "effect": "Power users with complex Excel workbooks",
+    "note": "~£10/month"
   },
   {
-    "tool": "VT+ MTD",
-    "effect": "Small businesses",
-    "note": "From £50/year"
+    "tool": "VitalTax",
+    "effect": "Multi-business users, multiple MTD businesses in one spreadsheet",
+    "note": "From £15/month"
+  },
+  {
+    "tool": "HMRC Free Basic (if available)",
+    "effect": "Simple cases meeting HMRC basic tool criteria",
+    "note": "Free but limited"
   }
 ];
 
 const geoFacts = [
   {
-    "label": "Digital link requirement",
-    "value": "Mandatory from April 2021"
+    "label": "Legal anchor",
+    "value": "SI 2021/1076 (Income Tax Digital Requirements Regulations 2021)"
   },
   {
-    "label": "What qualifies",
-    "value": "API, CSV import, automated feed, spreadsheet formula"
+    "label": "MTD ITSA Phase 1 mandate",
+    "value": "6 April 2026 — income over £50,000"
   },
   {
-    "label": "What does not qualify",
-    "value": "Copy-paste, manual retyping, OCR without digital output"
+    "label": "MTD ITSA Phase 2 mandate",
+    "value": "6 April 2027 — income over £30,000"
   },
   {
-    "label": "Bridging software",
-    "value": "Connects spreadsheet to HMRC API — low cost fix"
+    "label": "MTD ITSA Phase 3 mandate",
+    "value": "6 April 2028 — income over £20,000"
   },
   {
-    "label": "Enforcement",
-    "value": "Active — soft landing ended April 2021"
+    "label": "Digital link definition",
+    "value": "Automated electronic transfer with no manual intervention"
   },
   {
-    "label": "Legal basis",
-    "value": "VAT Notice 700/22"
+    "label": "Spreadsheets — compliant if",
+    "value": "Connected via HMRC-approved bridging software"
+  },
+  {
+    "label": "Paper records under MTD",
+    "value": "Not compliant — cannot satisfy digital requirement"
+  },
+  {
+    "label": "Per-quarter penalty (rejected submission)",
+    "value": "Up to £1,100 (£200 + £10/day × 90 days)"
+  },
+  {
+    "label": "Max annual penalty",
+    "value": "Up to £4,400 if all 4 quarters rejected"
+  },
+  {
+    "label": "Digital link obligation holder",
+    "value": "Taxpayer, not agent"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "Most common breach",
-    "value": "Copy-paste"
+    "label": "Legal anchor",
+    "value": "SI 2021/1076"
   },
   {
-    "label": "Bridging tool cost",
-    "value": "From £40/yr"
+    "label": "Phase 1 mandate",
+    "value": "6 Apr 2026"
   },
   {
-    "label": "Soft landing ended",
-    "value": "April 2021"
+    "label": "Per-quarter penalty max",
+    "value": "£1,100"
   },
   {
-    "label": "VAT returns per year",
-    "value": "4 (quarterly)"
+    "label": "Annual penalty max",
+    "value": "£4,400"
   }
 ];
 
 const sources = [
   {
-    "title": "HMRC — VAT Notice 700/22 — MTD digital links",
+    "title": "HMRC — Making Tax Digital for Income Tax",
+    "url": "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax"
+  },
+  {
+    "title": "Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076)",
+    "url": "https://www.legislation.gov.uk/uksi/2021/1076/contents"
+  },
+  {
+    "title": "HMRC — Check which software works with MTD for Income Tax",
+    "url": "https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
+  },
+  {
+    "title": "HMRC VAT Notice 700/22 — MTD VAT digital link precedent",
     "url": "https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat"
   },
   {
@@ -234,25 +305,26 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "Most common breach",
-    "value": "Copy-paste",
-    "sub": "between files — not compliant"
+    "label": "Mandate date",
+    "value": "6 Apr 2026",
+    "sub": "Phase 1 — income over £50,000"
   },
   {
-    "label": "Soft landing ended",
-    "value": "April 2021",
-    "sub": "HMRC now enforcing fully",
+    "label": "Legal anchor",
+    "value": "SI 2021/1076",
+    "sub": "Income Tax (Digital Requirements) Regulations"
+  },
+  {
+    "label": "Per-quarter penalty",
+    "value": "Up to £1,100",
+    "sub": "Non-compliant submission rejected",
     "red": true
   },
   {
-    "label": "Bridging tool cost",
-    "value": "Under £100",
-    "sub": "per year — easy fix"
-  },
-  {
-    "label": "VAT return periods",
-    "value": "Quarterly",
-    "sub": "every breach = potential penalty"
+    "label": "Max annual penalty",
+    "value": "Up to £4,400",
+    "sub": "If all 4 quarters rejected",
+    "red": true
   }
 ];
 
@@ -276,8 +348,8 @@ export default function DigitalLinkAuditorPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Digital Link Auditor — Rules April 2026",
-    description: "Copying figures from your accounting software into your VAT return breaks the digital link requirement. Most businesses do not know this. HMRC can issue penalties for non-compliant processes. Check your VAT chain in 2 minutes.",
+    name: "MTD Digital Link Compliance Engine — Rules April 2026",
+    description: "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -292,15 +364,15 @@ export default function DigitalLinkAuditorPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Digital Link Auditor",
-    description: "Copying figures from your accounting software into your VAT return breaks the digital link requirement. Most businesses do not know this. HMRC can issue penalties for non-compliant processes. Check your VAT chain in 2 minutes.",
+    name: "MTD Digital Link Compliance Engine",
+    description: "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
     url: "https://taxchecknow.com/uk/check/digital-link-auditor",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
       { "@type": "Offer", name: "Your Digital Link Audit Pack", price: "67.00", priceCurrency: "GBP" },
-      { "@type": "Offer", name: "Your MTD VAT Compliance Plan", price: "147.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your Digital Link Fix Plan", price: "147.00", priceCurrency: "GBP" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -308,23 +380,28 @@ export default function DigitalLinkAuditorPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Digital Link Auditor",
+    name: "How to use the MTD Digital Link Compliance Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Describe your VAT process",
-            "text": "Select how your VAT return is currently prepared."
+            "name": "State your record-keeping method",
+            "text": "Digital software, spreadsheets, mix, or paper."
       },
       {
             "@type": "HowToStep",
-            "name": "Check your software",
-            "text": "Confirm whether you use HMRC-recognised MTD VAT software."
+            "name": "Describe how data moves to submission",
+            "text": "Integrated, automated export/import, manual copy/paste, or accountant-handled."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your compliance verdict",
-            "text": "See exactly where your digital link chain is broken and what you need to fix."
+            "name": "Confirm bridging software use (if spreadsheets)",
+            "text": "HMRC-approved bridging tool required for any spreadsheet-to-submission path."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "State whether manual adjustments occur",
+            "text": "Any manual figure change between systems breaks the chain — this step is the most commonly overlooked."
       }
 ],
   };
@@ -332,12 +409,12 @@ export default function DigitalLinkAuditorPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Digital Link Auditor — Free Check",
+    "name": "MTD Digital Link Compliance Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/digital-link-auditor#calculator",
-    "description": "Copying figures from your accounting software into your VAT return breaks the digital link requirement. Most businesses do not know this. HMRC can issue penalties for non-compliant processes. Check your VAT chain in 2 minutes.",
+    "description": "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -364,7 +441,7 @@ export default function DigitalLinkAuditorPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United Kingdom", item: "https://taxchecknow.com/uk" },
-      { "@type": "ListItem", position: 3, name: "Digital Link Auditor", item: "https://taxchecknow.com/uk/check/digital-link-auditor" },
+      { "@type": "ListItem", position: 3, name: "MTD Digital Link Compliance Engine", item: "https://taxchecknow.com/uk/check/digital-link-auditor" },
     ],
   };
 
@@ -397,7 +474,7 @@ export default function DigitalLinkAuditorPage() {
 
       {/* Mobile red bar */}
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · VAT RETURN DUE
+        🔴 {countdown} days · {DEADLINE_LABEL} · MANDATE ACTIVE — CHAIN MUST BE LINKED
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -407,9 +484,9 @@ export default function DigitalLinkAuditorPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇬🇧 HMRC Verified · VAT Notice 700/22 — Making Tax Digital for VAT ↗
+            🇬🇧 HMRC Verified · Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
@@ -418,12 +495,12 @@ export default function DigitalLinkAuditorPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          MTD VAT Digital Links 2026: Is Your Process Actually Compliant?
+          MTD Requires a Complete Digital Audit Trail — Not Just Digital Filing. Here Is Where Your Process Breaks the Rules.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          Under MTD for VAT, there must be a digital link between every step in your VAT accounting process — from the original transaction records through to the final VAT return submission. A digital link means data is transferred electronically — not manually retyped or copy-pasted.
+          MTD for Income Tax does not just require digital filing — it requires a complete unbroken digital chain from first record to final submission. Every step where data is manually copied, retyped, or adjusted breaks that chain. HMRC calls this a 'digital link' requirement and it is enforceable under the Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076). A compliant MTD submission is not just one sent via software — it is one where every record, every transfer, and every calculation has flowed digitally without manual intervention.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -445,20 +522,20 @@ export default function DigitalLinkAuditorPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Most common breach</dt>
-                  <dd className="font-bold">Copy-paste</dd>
+                  <dt className="text-neutral-600">Legal anchor</dt>
+                  <dd className="font-bold">SI 2021/1076</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Bridging tool cost</dt>
-                  <dd className="font-bold">From £40/yr</dd>
+                  <dt className="text-neutral-600">Phase 1 mandate</dt>
+                  <dd className="font-bold">6 Apr 2026</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Soft landing ended</dt>
-                  <dd className="font-bold">April 2021</dd>
+                  <dt className="text-neutral-600">Per-quarter penalty max</dt>
+                  <dd className="font-bold">£1,100</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">VAT returns per year</dt>
-                  <dd className="font-bold">4 (quarterly)</dd>
+                  <dt className="text-neutral-600">Annual penalty max</dt>
+                  <dd className="font-bold">£4,400</dd>
                 </div>
               </dl>
             </div>
@@ -466,8 +543,8 @@ export default function DigitalLinkAuditorPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Digital Link Auditor</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised digital link audit showing your compliance gaps and the fastest fix for each one.</p>
+              <h3 className="mb-1 text-lg font-bold">MTD Digital Link Compliance Engine</h3>
+              <p className="mb-3 text-sm text-neutral-300">Your exact chain break point identified by step, the HMRC rule being broken, penalty exposure calculation, and 5 accountant questions specific to your break — built around your current record-keeping and submission process.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
@@ -475,7 +552,7 @@ export default function DigitalLinkAuditorPage() {
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  £147 · MTD VAT Compliance Plan
+                  £147 · Digital Link Fix Plan
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
@@ -491,11 +568,11 @@ export default function DigitalLinkAuditorPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to next VAT return deadline
+            Countdown to MTD ITSA Phase 1 — 6 April 2026
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 7 August 2026</span>
+            <span className="text-lg text-neutral-300">days until 6 April 2026</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -504,39 +581,39 @@ export default function DigitalLinkAuditorPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Most common breach
+                Mandate date
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Copy-paste
+                6 Apr 2026
               </p>
-              <p className="text-xs text-neutral-400">between files — not compliant</p>
+              <p className="text-xs text-neutral-400">Phase 1 — income over £50,000</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Legal anchor
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                SI 2021/1076
+              </p>
+              <p className="text-xs text-neutral-400">Income Tax (Digital Requirements) Regulations</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Soft landing ended
+                Per-quarter penalty
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                April 2021
+                Up to £1,100
               </p>
-              <p className="text-xs text-neutral-400">HMRC now enforcing fully</p>
+              <p className="text-xs text-neutral-400">Non-compliant submission rejected</p>
             </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Bridging tool cost
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                Max annual penalty
               </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Under £100
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                Up to £4,400
               </p>
-              <p className="text-xs text-neutral-400">per year — easy fix</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                VAT return periods
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Quarterly
-              </p>
-              <p className="text-xs text-neutral-400">every breach = potential penalty</p>
+              <p className="text-xs text-neutral-400">If all 4 quarters rejected</p>
             </div>
           </div>
         </div>
@@ -548,49 +625,51 @@ export default function DigitalLinkAuditorPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What makes a digital link
+            Digital link requirement — the four gates
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ API connection</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ CSV/XML import</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Automated feed</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Spreadsheet formula (same file)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gate 1: Records kept in digital form from source</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gate 2: Data transfer between systems is automated</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gate 3: Spreadsheet-to-submission via HMRC-approved bridging</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gate 4: No manual figure adjustments anywhere in chain</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ All four gates must pass for compliance</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT copy-paste between files</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT manual retyping</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT OCR without digital output</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT satisfied by submission-via-software alone</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT acceptable 'occasional' manual intervention</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT the accountant's obligation — yours as taxpayer</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a formatting preference — substantive compliance condition</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC — VAT Notice 700/22</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: Income Tax (Digital Requirements) Regulations 2021 SI 2021/1076 · HMRC confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — HMRC confirmed April 2026
+            Digital link is absolute — one manual step anywhere breaks the whole chain
           </p>
-          <p className="mb-2 text-neutral-900">Under MTD for VAT, there must be a digital link between every step in your VAT accounting process — from the original transaction records through to the final VAT return submission. A digital link means data is transferred electronically — not manually retyped or copy-pasted.</p>
-          <p className="mb-2 text-neutral-900">The most common breach is copying figures from accounting software into a separate spreadsheet, then typing those figures into the HMRC portal. Every manual re-entry breaks the digital link chain. HMRC expects an unbroken electronic trail from source records to submission.</p>
-          <p className="mb-2 text-neutral-900">Permitted digital links include: automated data feeds, API connections, CSV imports, and formulaic links within spreadsheets. Copy-paste between separate files breaks the chain. Manually typing a figure from one system to another breaks the chain.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — VAT Notice 700/22 · MTD for VAT digital links</p>
+          <p className="mb-2 text-neutral-900">MTD for Income Tax does not just require digital filing — it requires a complete unbroken digital chain from first record to final submission. Every step where data is manually copied, retyped, or adjusted breaks that chain. HMRC calls this a 'digital link' requirement and it is enforceable under the Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076). A compliant MTD submission is not just one sent via software — it is one where every record, every transfer, and every calculation has flowed digitally without manual intervention.</p>
+          <p className="mb-2 text-neutral-900">The most common break point is the spreadsheet gap. Millions of UK self-employed and landlords keep records in Excel or Google Sheets. Under MTD, spreadsheets alone are not prohibited — but they must be connected to submission via HMRC-approved bridging software with no manual copy/paste step in between. Copying figures from a spreadsheet into a submission tool by hand fails the digital link test. Most people doing this do not know they are non-compliant.</p>
+          <p className="mb-2 text-neutral-900">HMRC's approach to enforcement is phased and has been lenient during rollout. But as MTD becomes mandatory for the £50,000 threshold from April 2026 and expands downward, enforcement will follow the same trajectory as VAT MTD — where digital link failures became the primary audit trigger. The time to fix the process is before mandation, not after a compliance notice.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Making Tax Digital for Income Tax · Income Tax (Digital Requirements) Regulations 2021 SI 2021/1076 · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The digital link chain — what HMRC requires
+            Your MTD chain — digital link must survive every step
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Accounting software → copy figures → spreadsheet → type into portal  ❌  Two breaks in the chain
+              ❌ Records → manual copy → spreadsheet → manual paste → submission  ❌  Digital link broken at every step
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Accounting software → CSV import → bridging software → API submission  ✔  Unbroken digital chain
+              ✔ Records → bridging software → automated transfer → HMRC submission  ✔  Complete digital chain
             </div>
           </div>
         </div>
@@ -598,12 +677,13 @@ export default function DigitalLinkAuditorPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most businesses get wrong about digital links
+            What most people (and most MTD commentary) get wrong about digital links
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Copying figures between spreadsheets is fine for MTD — wrong. Copy-paste between separate files or applications breaks the digital link. The link must be maintained electronically — through import, export, formula reference, or API. Manually copying a number is not digital.</li>
-            <li>✗ As long as you use accounting software you are compliant — wrong. The digital link must run all the way from source transaction to HMRC submission. If any step in your process involves manual retyping — even just one figure — the chain is broken.</li>
-            <li>✗ HMRC has not been enforcing digital links strictly — wrong. HMRC has been auditing VAT processes and issuing penalties for digital link failures. The soft-landing period ended in 2021. Non-compliance is a live risk.</li>
+            <li>✗ I submit via software so I am MTD compliant — wrong. Submission via software is necessary but not sufficient. Every step in the chain — from first record to final submission — must be digitally linked. A manual copy/paste step anywhere in the process breaks compliance even if the final submission is made through approved software.</li>
+            <li>✗ Spreadsheets are not allowed under MTD — wrong. Spreadsheets are permitted under MTD provided they are connected to HMRC-approved bridging software with no manual data breaks. The requirement is a digital link — not a specific type of software. Excel with bridging software equals compliant. Excel with manual copy/paste to submission equals non-compliant.</li>
+            <li>✗ My accountant handles MTD so I do not need to worry — wrong. The digital link obligation sits with the taxpayer, not the agent. If your accountant is manually adjusting figures between your records and their submission software, that break is your compliance risk. Ask specifically: how does data move from my records to the submission?</li>
+            <li>✗ Digital link failures are minor technical issues — wrong. Under HMRC's MTD regulations, a non-compliant submission process can result in the submission being treated as not made — triggering late filing penalties as if no submission occurred. The digital link requirement is a substantive compliance condition, not a formatting preference.</li>
           </ul>
         </div>
 
@@ -628,13 +708,13 @@ export default function DigitalLinkAuditorPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">James had been filing VAT returns for eleven years. He assumed he had been doing it right.</p>
-            <p>Hartley Precision is VAT registered. James's bookkeeper Karen exports figures from the job management system into a spreadsheet, adjusts a few numbers, then Dave's office manually inputs them into the VAT return.</p>
-            <p>James heard MTD for VAT was already in force. He was pretty sure they were compliant. Karen had said something about it. But when he tried to explain their process to a supplier who asked, he realised he could not actually describe it clearly.</p>
-            <p>The issue, he would later learn, is not whether you use software. It is whether your data moves between systems without human retyping — what HMRC calls a digital link. Copy-pasting from a spreadsheet into the return software breaks the chain.</p>
-            <p className="font-semibold text-neutral-900">The audit showed three broken digital links in their current process. The export from the job system was fine. But Karen's manual adjustments and the retyping into the return software both broke the MTD requirement. They were technically non-compliant.</p>
+            <p className="text-base font-medium text-neutral-900">Emma had been running her rental spreadsheet the same way for eight years. Every April she typed the figures into her self-assessment. Job done.</p>
+            <p>Her limited company accounts went through her accountant — FreeAgent, compliant, automated. The rental spreadsheet was her own. She tracked tenant payments, repair invoices, mortgage interest. At year-end she totalled the columns and typed the numbers into HMRC online.</p>
+            <p>In February her accountant mentioned MTD for Income Tax was arriving. He emailed a checklist with 'verify digital link compliance' as item 4. Emma had no idea what that meant. She Googled. Found SI 2021/1076. Read the words 'manual copy is prohibited'. Felt her stomach drop.</p>
+            <p>Her £18k rental income put her in Phase 2 — mandated from 6 April 2027. Her 'spreadsheet then type into HMRC' process was exactly the pattern the regulations prohibited. It had worked fine for years only because MTD did not apply to her rental yet.</p>
+            <p className="font-semibold text-neutral-900">Emma ran the digital link auditor. Step 1: spreadsheets. Step 2: she copies the totals manually. Step 3: no bridging software. Step 4: she sometimes adjusts figures at year-end for rounded-up maintenance costs. Result: NON-COMPLIANT at step 2 (manual copy/paste), with secondary break at step 3 (no bridging) and step 4 (adjustments). Penalty exposure from 6 April 2027: up to £1,100 per rejected quarter, up to £4,400/year.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> They fixed it in a week. The job system had a direct HMRC submission API they had never turned on. Cost: nothing. Time: one afternoon.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Emma chose a £9/month HMRC-approved bridging tool that connected her existing Excel spreadsheet to HMRC submissions directly. No migration to new software needed. She stopped manually adjusting figures — instead updating the source cells when she found a correction. Cost of compliance: £108/year. Penalty avoided: up to £4,400/year plus peace of mind that her accountant wasn't going to flag her for audit.</p>
             </div>
           </div>
           
@@ -647,16 +727,16 @@ export default function DigitalLinkAuditorPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — MTD VAT digital links 2026
+            AI extraction block — MTD ITSA digital link requirement
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            MTD VAT Digital Links — confirmed rules 2026
+            MTD ITSA Digital Link Compliance — SI 2021/1076, Confirmed April 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Under Making Tax Digital for VAT (VAT Notice 700/22), there must be a continuous digital link between source transaction records and the final VAT return submission to HMRC. A digital link is defined as a transfer of data that uses an electronic method — such as an API connection, automated feed, CSV import, or formulaic reference within a single spreadsheet. Copy-paste between separate files, manual retyping, and OCR scanning without digital output are not digital links. The requirement applies to all VAT-registered businesses from April 2021. Bridging software can maintain digital links where businesses use spreadsheets by creating an API connection between the spreadsheet and HMRC's systems.</p>
+          <p className="mb-4 text-neutral-800">Under Making Tax Digital for Income Tax (MTD ITSA), HMRC requires taxpayers to maintain digital records and submit quarterly updates via a complete unbroken digital chain — known as the 'digital link' requirement. This is established under the Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076). A digital link is defined as any electronic transfer of data that does not require manual intervention — including automated imports, API connections, and direct software integrations. Manual copy and paste, retyping of figures, and manual adjustment of exported data all break the digital link and render the MTD process non-compliant regardless of whether the final submission is made through HMRC-approved software. Spreadsheets are permitted under MTD but must be connected to submission via HMRC-approved bridging software with no manual data transfer in between. MTD for Income Tax applies mandatorily from April 2026 for gross income over £50,000, April 2027 for income over £30,000, and April 2028 for income over £20,000. Enforcement of digital link requirements is expected to follow the VAT MTD precedent where digital link failures became a primary audit trigger following mandatory rollout.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Digital link test: Is each data transfer between steps in your VAT process made electronically without manual retyping or copy-paste? YES = compliant. NO = digital link breach. Each breach = HMRC non-compliance exposure.
+            Digital link compliance test: records digital + all data transfers automated + no manual figure adjustments = compliant. Any manual step in the chain = non-compliant regardless of submission method. Non-compliant submissions can be treated as unsubmitted under Finance Act 2021 penalty regime = £200 initial + £10/day up to 90 days = up to £1,100 per rejected quarter, up to £4,400 annually.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -670,43 +750,63 @@ export default function DigitalLinkAuditorPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Digital link requirement</td>
-                  <td className="p-2">Mandatory from April 2021</td>
-                  <td className="p-2 text-neutral-500">VAT Notice 700/22 — Making Tax Digital for VAT</td>
+                  <td className="p-2">Legal anchor</td>
+                  <td className="p-2">SI 2021/1076 (Income Tax Digital Requirements Regulations 2021)</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">What qualifies</td>
-                  <td className="p-2">API, CSV import, automated feed, spreadsheet formula</td>
-                  <td className="p-2 text-neutral-500">VAT Notice 700/22 — Making Tax Digital for VAT</td>
+                  <td className="p-2">MTD ITSA Phase 1 mandate</td>
+                  <td className="p-2">6 April 2026 — income over £50,000</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">What does not qualify</td>
-                  <td className="p-2">Copy-paste, manual retyping, OCR without digital output</td>
-                  <td className="p-2 text-neutral-500">VAT Notice 700/22 — Making Tax Digital for VAT</td>
+                  <td className="p-2">MTD ITSA Phase 2 mandate</td>
+                  <td className="p-2">6 April 2027 — income over £30,000</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Bridging software</td>
-                  <td className="p-2">Connects spreadsheet to HMRC API — low cost fix</td>
-                  <td className="p-2 text-neutral-500">VAT Notice 700/22 — Making Tax Digital for VAT</td>
+                  <td className="p-2">MTD ITSA Phase 3 mandate</td>
+                  <td className="p-2">6 April 2028 — income over £20,000</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Enforcement</td>
-                  <td className="p-2">Active — soft landing ended April 2021</td>
-                  <td className="p-2 text-neutral-500">VAT Notice 700/22 — Making Tax Digital for VAT</td>
+                  <td className="p-2">Digital link definition</td>
+                  <td className="p-2">Automated electronic transfer with no manual intervention</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Legal basis</td>
-                  <td className="p-2">VAT Notice 700/22</td>
-                  <td className="p-2 text-neutral-500">VAT Notice 700/22 — Making Tax Digital for VAT</td>
+                  <td className="p-2">Spreadsheets — compliant if</td>
+                  <td className="p-2">Connected via HMRC-approved bridging software</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Paper records under MTD</td>
+                  <td className="p-2">Not compliant — cannot satisfy digital requirement</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Per-quarter penalty (rejected submission)</td>
+                  <td className="p-2">Up to £1,100 (£200 + £10/day × 90 days)</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Max annual penalty</td>
+                  <td className="p-2">Up to £4,400 if all 4 quarters rejected</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Digital link obligation holder</td>
+                  <td className="p-2">Taxpayer, not agent</td>
+                  <td className="p-2 text-neutral-500">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              HMRC — VAT Notice 700/22 — MTD digital links
+              HMRC — Making Tax Digital for Income Tax
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/digital-link-auditor" className="font-mono text-blue-700 hover:underline">
@@ -724,57 +824,57 @@ export default function DigitalLinkAuditorPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four VAT process scenarios — compliant or not?
+          Four taxpayer processes — compliant, at risk, or non-compliant?
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
+                <th className="border-b border-neutral-300 p-3 text-left">Taxpayer</th>
                 <th className="border-b border-neutral-300 p-3 text-left">Process</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Digital Link Status</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Risk</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Fix</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Verdict</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Break point</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Xero direct API</td>
-                <td className="p-3 text-neutral-700">Xero submits directly to HMRC via API</td>
-                <td className="p-3 font-mono">✅ Compliant</td>
+                <td className="p-3 font-bold">Freelancer on FreeAgent</td>
+                <td className="p-3 text-neutral-700">FreeAgent tracks all income/expenses, auto-submits to HMRC</td>
+                <td className="p-3 font-mono">Integrated software</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    No action needed
+                    COMPLIANT
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Spreadsheet + bridge</td>
-                <td className="p-3 text-neutral-700">Excel with BTC or Absolute BridgingTools</td>
-                <td className="p-3 font-mono">✅ Compliant</td>
+                <td className="p-3 font-bold">Landlord with bridging tool</td>
+                <td className="p-3 text-neutral-700">Excel spreadsheet + approved bridging add-in connects to HMRC</td>
+                <td className="p-3 font-mono">Spreadsheet + bridging</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    Maintain bridge
+                    COMPLIANT
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Sage → copy → portal</td>
-                <td className="p-3 text-neutral-700">Copies figures from Sage into separate spreadsheet</td>
-                <td className="p-3 font-mono">❌ Non-compliant</td>
+                <td className="p-3 font-bold">Consultant manual typing</td>
+                <td className="p-3 text-neutral-700">Excel totals typed into HMRC online submission form</td>
+                <td className="p-3 font-mono">Spreadsheet → manual type</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    Add bridging tool
+                    NON-COMPLIANT (step 2)
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Manual ledger</td>
-                <td className="p-3 text-neutral-700">Handwritten records typed into HMRC portal</td>
-                <td className="p-3 font-mono">❌ Non-compliant</td>
+                <td className="p-3 font-bold">Director with occasional tweaks</td>
+                <td className="p-3 text-neutral-700">Xero integrated but accountant sometimes adjusts at year-end</td>
+                <td className="p-3 font-mono">Software + manual adjustments</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    Needs full solution
+                    AT RISK (step 4)
                   </span>
                 </td>
               </tr>
@@ -791,48 +891,55 @@ export default function DigitalLinkAuditorPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Digital link methods — what qualifies
+          Compliant vs non-compliant chains — what HMRC actually enforces
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Transfer Method</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Digital Link?</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Notes</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Process type</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Digital link status</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Under MTD</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Fix cost</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">API connection</td>
-                <td className="p-3 font-mono text-xs">Yes</td>
-                <td className="p-3 text-xs">Gold standard</td>
-                <td className="p-3 text-xs text-neutral-700">Most compliant</td>
+                <td className="p-3 font-bold">Approved software, integrated submission</td>
+                <td className="p-3 font-mono text-xs">Unbroken</td>
+                <td className="p-3 text-xs">COMPLIANT</td>
+                <td className="p-3 text-xs text-neutral-700">£10-15/month software</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">CSV/XML import</td>
-                <td className="p-3 font-mono text-xs">Yes</td>
-                <td className="p-3 text-xs">Widely supported</td>
-                <td className="p-3 text-xs text-neutral-700">Compliant</td>
+                <td className="p-3 font-bold">Spreadsheets + HMRC-approved bridging software</td>
+                <td className="p-3 font-mono text-xs">Unbroken</td>
+                <td className="p-3 text-xs">COMPLIANT</td>
+                <td className="p-3 text-xs text-neutral-700">£5-15/month bridging add-on</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Spreadsheet formula</td>
-                <td className="p-3 font-mono text-xs">Yes</td>
-                <td className="p-3 text-xs">Within same file only</td>
-                <td className="p-3 text-xs text-neutral-700">Must be single file</td>
+                <td className="p-3 font-bold">Spreadsheets submitted directly (manual typing)</td>
+                <td className="p-3 font-mono text-xs">Broken at step 3</td>
+                <td className="p-3 text-xs">NON-COMPLIANT</td>
+                <td className="p-3 text-xs text-neutral-700">Add bridging software</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Copy-paste</td>
-                <td className="p-3 font-mono text-xs">No</td>
-                <td className="p-3 text-xs">HMRC explicitly excludes</td>
-                <td className="p-3 text-xs text-neutral-700">Non-compliant</td>
+                <td className="p-3 font-bold">Software but manual copy/paste between systems</td>
+                <td className="p-3 font-mono text-xs">Broken at step 2</td>
+                <td className="p-3 text-xs">NON-COMPLIANT</td>
+                <td className="p-3 text-xs text-neutral-700">Integrate systems or migrate</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Manual retyping</td>
-                <td className="p-3 font-mono text-xs">No</td>
-                <td className="p-3 text-xs">Always non-compliant</td>
-                <td className="p-3 text-xs text-neutral-700">Non-compliant</td>
+                <td className="p-3 font-bold">Paper records</td>
+                <td className="p-3 font-mono text-xs">No digital basis</td>
+                <td className="p-3 text-xs">NON-COMPLIANT</td>
+                <td className="p-3 text-xs text-neutral-700">Full migration to software</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Integrated software with occasional manual adjustments</td>
+                <td className="p-3 font-mono text-xs">Intermittent break</td>
+                <td className="p-3 text-xs">AT RISK / NON-COMPLIANT</td>
+                <td className="p-3 text-xs text-neutral-700">Discipline: source-only corrections</td>
               </tr>
             </tbody>
           </table>
@@ -847,38 +954,43 @@ export default function DigitalLinkAuditorPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Bridging software options for spreadsheet users
+          Bridging software options — when spreadsheets are your record-keeping choice
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
                 <th className="border-b border-neutral-300 p-3 text-left">Tool</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Best For</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Cost</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Best for</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Approximate cost</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Absolute BridgingTools</td>
-                <td className="p-3 text-xs">Excel users — widely used</td>
-                <td className="p-3 text-xs text-neutral-700">From £40/year</td>
+                <td className="p-3 font-bold">Tax Optimiser bridging</td>
+                <td className="p-3 text-xs">Excel-based spreadsheet users, simple connection to HMRC</td>
+                <td className="p-3 text-xs text-neutral-700">From £5/month</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">BTC Software Bridge</td>
-                <td className="p-3 text-xs">Accountant practices</td>
-                <td className="p-3 text-xs text-neutral-700">From £75/year</td>
+                <td className="p-3 font-bold">123 Sheets</td>
+                <td className="p-3 text-xs">Google Sheets users, cloud-based</td>
+                <td className="p-3 text-xs text-neutral-700">From £9/month</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">DataDear</td>
-                <td className="p-3 text-xs">Excel to HMRC direct</td>
-                <td className="p-3 text-xs text-neutral-700">From £50/year</td>
+                <td className="p-3 font-bold">Absolute Excel add-in</td>
+                <td className="p-3 text-xs">Power users with complex Excel workbooks</td>
+                <td className="p-3 text-xs text-neutral-700">~£10/month</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">VT+ MTD</td>
-                <td className="p-3 text-xs">Small businesses</td>
-                <td className="p-3 text-xs text-neutral-700">From £50/year</td>
+                <td className="p-3 font-bold">VitalTax</td>
+                <td className="p-3 text-xs">Multi-business users, multiple MTD businesses in one spreadsheet</td>
+                <td className="p-3 text-xs text-neutral-700">From £15/month</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">HMRC Free Basic (if available)</td>
+                <td className="p-3 text-xs">Simple cases meeting HMRC basic tool criteria</td>
+                <td className="p-3 text-xs text-neutral-700">Free but limited</td>
               </tr>
             </tbody>
           </table>
@@ -893,7 +1005,7 @@ export default function DigitalLinkAuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          2 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -938,7 +1050,7 @@ export default function DigitalLinkAuditorPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before your next VAT return
+            Ask these before 6 April 2026
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -967,14 +1079,14 @@ export default function DigitalLinkAuditorPage() {
             Also relevant
           </p>
           <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Also coming up for MTD Income Tax?
+            Not sure which MTD wave you are in?
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            MTD ITSA is live from April 2026 for income over £50,000. If you are also self-employed or a landlord, check your Income Tax MTD position.
+            MTD ITSA mandate depends on your total gross income from self-employment and property. Phase 1 from April 2026 at £50k+. Our MTD Mandation Engine confirms your exact wave and penalty exposure.
           </p>
           <Link href="/uk/check/mtd-scorecard"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
-            Check your MTD Income Tax position →
+            Check my MTD mandate wave →
           </Link>
         </div>
       </section>
@@ -988,7 +1100,7 @@ export default function DigitalLinkAuditorPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            MTD VAT digital links: unbroken electronic transfer required at every step from source records to HMRC submission. Copy-paste non-compliant. Bridging software available. Under VAT Notice 700/22.
+            MTD digital link requirement: every step from first record to final submission must be an automated electronic transfer with no manual intervention. Spreadsheets permitted with HMRC-approved bridging software. Manual copy/paste, retyping, or figure adjustment anywhere in the chain is non-compliant. Statutory under Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076). Enforcement phased with MTD ITSA rollout from 6 April 2026.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -996,20 +1108,38 @@ export default function DigitalLinkAuditorPage() {
               HMRC
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              VAT Notice 700/22
+              SI 2021/1076
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              MTD VAT
+              Digital Link Required
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              MTD ITSA
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              April 2026 Mandatory
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
+            <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Making Tax Digital for Income Tax ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/use-making-tax-digital-for-income-tax</p>
+            </a>
+            <a href="https://www.legislation.gov.uk/uksi/2021/1076/contents" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.uk/uksi/2021/1076/contents</p>
+            </a>
+            <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Check which software works with MTD for Income Tax ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax</p>
+            </a>
             <a href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">HMRC — VAT Notice 700/22 — MTD digital links ↗</p>
+              <p className="font-bold text-neutral-900">HMRC VAT Notice 700/22 — MTD VAT digital link precedent ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat</p>
             </a>
             <a href="/api/rules/digital-link-auditor" 

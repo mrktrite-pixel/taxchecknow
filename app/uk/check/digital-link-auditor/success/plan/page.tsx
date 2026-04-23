@@ -7,58 +7,58 @@ import Link from "next/link";
 const FILES = [
   {
     "num": "01",
-    "slug": "dl-01",
-    "name": "Your Digital Link Chain Audit",
-    "desc": "Map of your current VAT process and where digital links are broken.",
+    "slug": "dla-01",
+    "name": "Your Chain Break Point Report",
+    "desc": "Which step in your MTD process breaks the digital link — with HMRC citation.",
     "tier": 1
   },
   {
     "num": "02",
-    "slug": "dl-02",
-    "name": "Bridging Software Selection Guide",
-    "desc": "The right bridging tool for your spreadsheet setup.",
+    "slug": "dla-02",
+    "name": "HMRC-Approved Bridging Software Comparison",
+    "desc": "Ranked bridging software options if spreadsheets are your record-keeping choice.",
     "tier": 1
   },
   {
     "num": "03",
-    "slug": "dl-03",
-    "name": "Digital Link Evidence Pack",
-    "desc": "What to keep to evidence compliance if HMRC audits your process.",
+    "slug": "dla-03",
+    "name": "The Five Common Break Points",
+    "desc": "Real-world break points most taxpayers do not realise are non-compliant.",
     "tier": 1
   },
   {
     "num": "04",
-    "slug": "dl-04",
-    "name": "Accountant Brief — Digital Links",
-    "desc": "Questions for your accountant about VAT digital link compliance.",
+    "slug": "dla-04",
+    "name": "Process Documentation Template",
+    "desc": "Template for documenting your MTD data chain — what you need if HMRC asks.",
     "tier": 1
   },
   {
     "num": "05",
-    "slug": "dl-05",
-    "name": "VAT Return Process Checklist",
-    "desc": "Step-by-step compliant VAT return process.",
+    "slug": "dla-05",
+    "name": "Your Accountant Brief — Digital Link",
+    "desc": "5 questions for your accountant about your MTD chain.",
     "tier": 1
   },
   {
     "num": "06",
-    "slug": "dl-06",
-    "name": "Full Software Migration Guide",
-    "desc": "Moving from spreadsheets to fully digital accounting software.",
+    "slug": "dla-06",
+    "name": "Migration Sequencing Playbook",
+    "desc": "Step-by-step plan to migrate from broken chain to compliant chain without disrupting current filings.",
     "tier": 2
   },
   {
     "num": "07",
-    "slug": "dl-07",
-    "name": "Multi-Entity VAT Group Guide",
-    "desc": "Digital link requirements for VAT groups with multiple legal entities.",
+    "slug": "dla-07",
+    "name": "Multi-Business Digital Link Strategy",
+    "desc": "How to maintain digital link compliance across multiple MTD businesses (self-employment + rental + etc).",
     "tier": 2
   },
   {
     "num": "08",
-    "slug": "dl-08",
-    "name": "HMRC Compliance Check Response",
-    "desc": "What to do if HMRC asks about your digital link process.",
+    "slug": "dla-08",
+    "name": "Post-Mandate Verification Checklist",
+    "desc": "Ongoing compliance checks after MTD mandation lands for you — to catch chain breaks before HMRC does.",
     "tier": 2
   }
 ];
@@ -79,7 +79,7 @@ export default function SuccessPlan() {
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-08-07T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
+    (new Date("2026-04-06T00:00:00.000+01:00").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -121,14 +121,28 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const dl_process = sessionStorage.getItem("digital-link-auditor_dl_process") || "copypaste";
-      const dl_software = sessionStorage.getItem("digital-link-auditor_dl_software") || "true";
+      const record_keeping = sessionStorage.getItem("digital-link-auditor_record_keeping") || "spreadsheets";
+      const data_flow = sessionStorage.getItem("digital-link-auditor_data_flow") || "manual_copy_paste";
+      const bridging = sessionStorage.getItem("digital-link-auditor_bridging") || "no_submit_direct";
+      const manual_adjustments = sessionStorage.getItem("digital-link-auditor_manual_adjustments") || "sometimes";
+      const compliance_status = sessionStorage.getItem("digital-link-auditor_compliance_status") || "NON_COMPLIANT";
+      const break_step = sessionStorage.getItem("digital-link-auditor_break_step") || "2";
+      const break_point = sessionStorage.getItem("digital-link-auditor_break_point") || "Manual copy/paste between systems";
+      const status = sessionStorage.getItem("digital-link-auditor_status") || "NON-COMPLIANT — DIGITAL LINK BROKEN AT STEP 2";
+      const tier = sessionStorage.getItem("digital-link-auditor_tier") || "147";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "dl_process": dl_process,
-        "dl_software": dl_software,
-      }).some(v => v && v !== "copypaste");
+        "record_keeping": record_keeping,
+        "data_flow": data_flow,
+        "bridging": bridging,
+        "manual_adjustments": manual_adjustments,
+        "compliance_status": compliance_status,
+        "break_step": break_step,
+        "break_point": break_point,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "spreadsheets");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -140,10 +154,17 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "VAT process": dl_process,
-        "Uses approved software": dl_software,
+        "Record-keeping method": record_keeping,
+        "Data flow method": data_flow,
+        "Bridging software status": bridging,
+        "Manual adjustments frequency": manual_adjustments,
+        "Compliance verdict": compliance_status,
+        "Chain break step (1-4)": break_step,
+        "Break point description": break_point,
+        "Verdict status": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","breachPoints","fixRequired","bridgingOption","migrationOption","actions","weekPlan"],
+          fields: ["complianceStatusSummary","chainBreakIdentification","hmrcRequirementCitation","specificFixRequired","penaltyExposureCalculation","bridgingSoftwareSelection","migrationSequencingPlan","processDocumentationTemplate","multiBusinessStrategy","accountantCoordinationBrief","postMandateVerificationChecklist","ongoingComplianceSchedule"],
         }),
       });
       const data = await res.json();
@@ -153,14 +174,21 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        breachPoints: "Your personalised breachPoints is being prepared — please refresh in a moment.",
-        fixRequired: "Your personalised fixRequired is being prepared — please refresh in a moment.",
-        bridgingOption: "Your personalised bridgingOption is being prepared — please refresh in a moment.",
-        migrationOption: "Your personalised migrationOption is being prepared — please refresh in a moment.",
+        complianceStatusSummary: "Your personalised complianceStatusSummary is being prepared — please refresh in a moment.",
+        chainBreakIdentification: "Your personalised chainBreakIdentification is being prepared — please refresh in a moment.",
+        hmrcRequirementCitation: "Your personalised hmrcRequirementCitation is being prepared — please refresh in a moment.",
+        specificFixRequired: "Your personalised specificFixRequired is being prepared — please refresh in a moment.",
+        penaltyExposureCalculation: "Your personalised penaltyExposureCalculation is being prepared — please refresh in a moment.",
+        bridgingSoftwareSelection: "Your personalised bridgingSoftwareSelection is being prepared — please refresh in a moment.",
+        migrationSequencingPlan: "Your personalised migrationSequencingPlan is being prepared — please refresh in a moment.",
+        processDocumentationTemplate: "Your personalised processDocumentationTemplate is being prepared — please refresh in a moment.",
+        multiBusinessStrategy: "Your personalised multiBusinessStrategy is being prepared — please refresh in a moment.",
+        accountantCoordinationBrief: "Your personalised accountantCoordinationBrief is being prepared — please refresh in a moment.",
+        postMandateVerificationChecklist: "Your personalised postMandateVerificationChecklist is being prepared — please refresh in a moment.",
+        ongoingComplianceSchedule: "Your personalised ongoingComplianceSchedule is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
-          "What is the single most important action I should take before 7 August 2026?",
+          "What is the single most important action I should take before 6 April 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -172,8 +200,15 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const dl_process = sessionStorage.getItem("digital-link-auditor_dl_process") || "copypaste";
-    const dl_software = sessionStorage.getItem("digital-link-auditor_dl_software") || "true";
+    const record_keeping = sessionStorage.getItem("digital-link-auditor_record_keeping") || "spreadsheets";
+    const data_flow = sessionStorage.getItem("digital-link-auditor_data_flow") || "manual_copy_paste";
+    const bridging = sessionStorage.getItem("digital-link-auditor_bridging") || "no_submit_direct";
+    const manual_adjustments = sessionStorage.getItem("digital-link-auditor_manual_adjustments") || "sometimes";
+    const compliance_status = sessionStorage.getItem("digital-link-auditor_compliance_status") || "NON_COMPLIANT";
+    const break_step = sessionStorage.getItem("digital-link-auditor_break_step") || "2";
+    const break_point = sessionStorage.getItem("digital-link-auditor_break_point") || "Manual copy/paste between systems";
+    const status = sessionStorage.getItem("digital-link-auditor_status") || "NON-COMPLIANT — DIGITAL LINK BROKEN AT STEP 2";
+    const tier = sessionStorage.getItem("digital-link-auditor_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -181,23 +216,50 @@ export default function SuccessPlan() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Digital Link Auditor — Deadlines`,
+      `X-WR-CALNAME:MTD Digital Link Compliance Engine — Deadlines`,
       "BEGIN:VEVENT",
-      `UID:dl-audit-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(14)}`,
-      `DTEND;VALUE=DATE:${relativeDate(14)}`,
+      `UID:dla-diagnose-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(7)}`,
+      `DTEND;VALUE=DATE:${relativeDate(7)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Digital Link — Full Process Audit",
-      "DESCRIPTION:Complete digital link audit and implement any bridging software needed.",
+      "SUMMARY:Digital Link — Diagnose current chain",
+      "DESCRIPTION:Document current chain for each MTD business.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:dl-vat1-${Date.now()}@taxchecknow.com`,
+      `UID:dla-tool-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${relativeDate(30)}`,
       `DTEND;VALUE=DATE:${relativeDate(30)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:VAT Return — Digital Link Confirmed",
-      "DESCRIPTION:Submit next VAT return with confirmed compliant digital link chain.",
+      "SUMMARY:Digital Link — Select bridging or migration tool",
+      "DESCRIPTION:Decide path and select HMRC-approved tool.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:dla-parallel-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(60)}`,
+      `DTEND;VALUE=DATE:${relativeDate(60)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Digital Link — Parallel run",
+      "DESCRIPTION:Run new compliant chain alongside old process for one quarter.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:dla-cutover-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(120)}`,
+      `DTEND;VALUE=DATE:${relativeDate(120)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Digital Link — Full cutover",
+      "DESCRIPTION:Switch fully to compliant chain.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:dla-phase1-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20260406"}`,
+      `DTEND;VALUE=DATE:${"20260406"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:MTD ITSA Phase 1 Mandate",
+      "DESCRIPTION:6 April 2026 — compliance chain must be in place.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -216,7 +278,7 @@ export default function SuccessPlan() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your MTD VAT Compliance Plan — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your Digital Link Fix Plan — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -245,17 +307,17 @@ export default function SuccessPlan() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your MTD VAT Compliance Plan · £147
+            Payment confirmed · Your Digital Link Fix Plan · £147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your MTD VAT Compliance Plan
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Digital Link Fix Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 7 August 2026</span>
-            <span className="font-mono text-sm font-bold text-white">7 Aug 2026</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 6 April 2026</span>
+            <span className="font-mono text-sm font-bold text-white">6 Apr 2026</span>
           </div>
         </div>
 
@@ -290,7 +352,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","breachPoints","fixRequired","bridgingOption","migrationOption","actions"] as string[]).map(key => {
+                {(["complianceStatusSummary","chainBreakIdentification","hmrcRequirementCitation","specificFixRequired","penaltyExposureCalculation","bridgingSoftwareSelection"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -313,7 +375,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 7 August 2026
+                  What to do — in order — before 6 April 2026
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
@@ -388,8 +450,8 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Digital Link — Full Process Audit</p>
-                    <p className="text-xs text-neutral-500">Complete digital link audit and implement any bridging software needed.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Digital Link — Diagnose current chain</p>
+                    <p className="text-xs text-neutral-500">Document current chain for each MTD business.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     This week
@@ -397,11 +459,38 @@ export default function SuccessPlan() {
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">VAT Return — Digital Link Confirmed</p>
-                    <p className="text-xs text-neutral-500">Submit next VAT return with confirmed compliant digital link chain.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Digital Link — Select bridging or migration tool</p>
+                    <p className="text-xs text-neutral-500">Decide path and select HMRC-approved tool.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     This week
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Digital Link — Parallel run</p>
+                    <p className="text-xs text-neutral-500">Run new compliant chain alongside old process for one quarter.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    This week
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Digital Link — Full cutover</p>
+                    <p className="text-xs text-neutral-500">Switch fully to compliant chain.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    This week
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">MTD ITSA Phase 1 Mandate</p>
+                    <p className="text-xs text-neutral-500">6 April 2026 — compliance chain must be in place.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    6 Apr 2026
                   </span>
                 </div>
               </div>
@@ -457,7 +546,7 @@ export default function SuccessPlan() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                {daysToDeadline} days to 7 August 2026.
+                {daysToDeadline} days to 6 April 2026.
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -481,10 +570,10 @@ export default function SuccessPlan() {
             
             <div className="no-print rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Also relevant</p>
-              <p className="mb-1 text-sm font-bold text-neutral-950">Also coming up for MTD Income Tax?</p>
-              <p className="mb-2 text-xs text-neutral-600">MTD ITSA is live from April 2026 for income over £50,000. If you are also self-employed or a landlord, check your Income Tax MTD position.</p>
+              <p className="mb-1 text-sm font-bold text-neutral-950">Not sure which MTD wave you are in?</p>
+              <p className="mb-2 text-xs text-neutral-600">MTD ITSA mandate depends on your total gross income from self-employment and property. Phase 1 from April 2026 at £50k+. Our MTD Mandation Engine confirms your exact wave and penalty exposure.</p>
               <Link href="/uk/check/mtd-scorecard" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
-                Check your MTD Income Tax position →
+                Check my MTD mandate wave →
               </Link>
             </div>
 
@@ -498,7 +587,7 @@ export default function SuccessPlan() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United Kingdom tax adviser before making financial decisions.
             Based on HMRC guidance April 2026.{" "}
-            <a href="https://www.gov.uk/government/publications/vat-notice-70022-making-tax-digital-for-vat" target="_blank" rel="noopener noreferrer" className="underline">HMRC — VAT Notice 700/22 — MTD digital links</a> · <a href="/api/rules/digital-link-auditor" target="_blank" rel="noopener noreferrer" className="underline">Machine-readable JSON rules</a>
+            <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Making Tax Digital for Income Tax</a> · <a href="https://www.legislation.gov.uk/uksi/2021/1076/contents" target="_blank" rel="noopener noreferrer" className="underline">Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076)</a>
           </p>
         </div>
 
