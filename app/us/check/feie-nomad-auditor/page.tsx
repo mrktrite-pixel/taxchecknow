@@ -10,12 +10,12 @@ import FeieNomadAuditorCalculator from "./FeieNomadAuditorCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "FEIE 2026: Foreign Earned Income Exclusion Eligibility — Nomad and Expat Tax | TaxCheckNow",
-  description: "The FEIE excludes up to $126,500 of foreign earned income in 2026. But the abode test catches most digital nomads. If you still have a US apartment, storage unit, or family home — you may not qualify. Check your FEIE position in 2 minutes.",
+  title: "FEIE Qualification 2026: 330-Day Test + Form 2555 + Passive Income | TaxCheckNow",
+  description: "The Foreign Earned Income Exclusion allows qualifying US expats to exclude up to $126,500 (2026) of foreign earned income. But 330 days is all-or-nothing, Form 2555 is mandatory, and passive income is always taxable. Run your qualification check in 2 minutes.",
   alternates: { canonical: "https://taxchecknow.com/us/check/feie-nomad-auditor" },
   openGraph: {
-    title: "FEIE 2026: Foreign Earned Income Exclusion Eligibility — Nomad and Expat Tax | TaxCheckNow",
-    description: "The FEIE excludes up to $126,500 of foreign earned income in 2026. But the abode test catches most digital nomads. If you still have a US apartment, storage unit, or family home — you may not qualify. Check your FEIE position in 2 minutes.",
+    title: "FEIE Qualification 2026: 330-Day Test + Form 2555 + Passive Income | TaxCheckNow",
+    description: "The Foreign Earned Income Exclusion allows qualifying US expats to exclude up to $126,500 (2026) of foreign earned income. But 330 days is all-or-nothing, Form 2555 is mandatory, and passive income is always taxable. Run your qualification check in 2 minutes.",
     url: "https://taxchecknow.com/us/check/feie-nomad-auditor",
     siteName: "TaxCheckNow",
     type: "website",
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "June 15, 2027";
-const DEADLINE_ISO   = "2027-06-15T23:59:59.000Z";
+const DEADLINE_LABEL = "June 15, 2026";
+const DEADLINE_ISO   = "2026-06-15T23:59:59.000-04:00";
 
 function daysToDeadline(): number {
   if (!DEADLINE_ISO) return 0;
@@ -49,154 +49,224 @@ function progressPct(): number {
 
 const faqs = [
   {
-    "question": "What is the Foreign Earned Income Exclusion?",
-    "answer": "The FEIE allows qualifying US citizens and resident aliens to exclude up to $126,500 (2026) of income earned for services performed outside the US from federal income tax. It requires qualifying under the Physical Presence Test or Bona Fide Residence Test, having a foreign tax home, and having no US abode."
+    "question": "What is the Foreign Earned Income Exclusion (FEIE)?",
+    "answer": "FEIE is a US tax provision under IRC §911 allowing qualifying US citizens and resident aliens living abroad to exclude up to $126,500 (2026, indexed) of foreign earned income from US federal income tax. Qualifying requires a foreign tax home AND either physical presence (330 days) or bona fide residence in a foreign country. It does not eliminate filing obligations — US citizens must still file Form 1040 and report worldwide income."
   },
   {
-    "question": "What is a US abode and how do I know if I have one?",
-    "answer": "An abode is your principal, primary, or regular dwelling place. The IRS uses facts and circumstances to determine abode — not just ownership. Indicators include: maintained US apartment or home (even sublet), majority of belongings in the US, US mailing address, regular returns for extended periods, family home in the US, and US as your primary banking location."
+    "question": "What is the physical presence test and how do I count days?",
+    "answer": "IRC §911(d)(1)(A) physical presence test: 330 FULL 24-hour days in foreign countries during any 12-month period. The 12-month period does not have to be calendar year — choose any 12 consecutive months that maximises your foreign days. Transit days through the US (including airport layovers) count as US days. A day is a foreign day only if you were in a foreign country for the entire 24 hours."
   },
   {
-    "question": "Is FEIE or Foreign Tax Credit better for me?",
-    "answer": "It depends on the tax rate in your country of residence. FEIE excludes up to $126,500 — best for low or zero tax countries. FTC gives you a dollar-for-dollar credit for foreign taxes paid — often better in high-tax countries like Germany or the UK where local taxes may equal or exceed US rates."
+    "question": "What is the bona fide residence test?",
+    "answer": "IRC §911(d)(1)(B) bona fide residence test: uninterrupted residence in a foreign country for a period that INCLUDES a full tax year. This is a facts-and-circumstances determination — indicators include formal residence permit, lease or property ownership, foreign driver's licence, community ties, foreign tax filings. Nomadic lifestyle without formal residence generally does NOT satisfy this test. Short trips back to the US during the residence period do not automatically break bona fide residence, unlike the strict day count for physical presence."
   },
   {
-    "question": "What happens if I claim FEIE incorrectly?",
-    "answer": "The IRS can disallow the exclusion and assess back taxes, penalties, and interest. In addition, fraudulent or negligent FEIE claims can result in a 2-year revocation of the election. Incorrect FEIE claims are a common focus area for IRS examinations of expat returns."
+    "question": "What income does FEIE exclude?",
+    "answer": "FEIE excludes FOREIGN EARNED income only: wages, salaries, professional fees, and net self-employment income from services performed in a foreign country. It does NOT exclude: dividends from US or foreign stocks, interest income, capital gains, rental income (US or foreign), cryptocurrency gains, pension income, Social Security, royalties, or business distributions not attributable to personal services. The passive income gap is the most common oversight for expats with investment portfolios."
+  },
+  {
+    "question": "Do I have to file a US tax return if I live abroad?",
+    "answer": "Yes. US citizens and permanent residents must file Form 1040 annually reporting WORLDWIDE income, regardless of where they live or whether FEIE fully excludes their foreign income. Living abroad does not eliminate the filing obligation — it creates eligibility for certain exclusions and credits. Failure to file can trigger penalties even if no tax is ultimately owed. The IRS Streamlined Filing Compliance Procedures offer a path for non-willful non-filers to become compliant."
+  },
+  {
+    "question": "Can I use both FEIE and the Foreign Tax Credit?",
+    "answer": "Yes, but not on the same income. FEIE and FTC are alternative mechanisms — FEIE EXCLUDES foreign earned income (up to $126,500); FTC CREDITS foreign tax paid against US tax on the same income. You cannot use both on the same dollar of income. Common strategy: FEIE on earned income (excludes it), FTC on passive income (credits foreign tax paid on dividends, capital gains, etc). Form 1116 for FTC. Choice is election-based and can affect future flexibility."
+  },
+  {
+    "question": "What is the housing exclusion / deduction?",
+    "answer": "IRC §911(c) provides an additional exclusion (or deduction for self-employed) for foreign housing expenses — rent, utilities (except telephone), property insurance. The exclusion is in addition to the earned income exclusion of $126,500. Amount varies by location — IRS publishes high-cost city adjustments. For expats in cities like London, Tokyo, Zurich, Singapore, this can be material. Must qualify for FEIE first to use."
+  },
+  {
+    "question": "What are the penalties for failing FEIE?",
+    "answer": "If FEIE is disallowed on examination, your foreign income becomes fully taxable. Accuracy-related penalty: 20% of underpayment (IRC §6662). Substantial underpayment penalty: 20% if underpayment exceeds greater of $5,000 or 10% of required tax. Fraud penalty: 75% if fraudulent. Interest accrues from original filing date. Voluntary correction before examination reduces penalty exposure. For non-filers, the Streamlined Procedures offer reduced-penalty compliance."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: If you spend 330 days outside the US, you qualify for FEIE",
-    "correct": "Reality: The day count is one requirement, not the only requirement. You must also have a foreign tax home AND no US abode. Maintaining a US apartment, even if sublet, can constitute a US abode that disqualifies you."
+    "wrong": "ChatGPT says: I live abroad so I do not owe US tax",
+    "correct": "Reality: The US taxes CITIZENS and permanent residents on WORLDWIDE income regardless of residence. Living abroad does not eliminate US tax obligations — it creates ELIGIBILITY to claim FEIE if you meet the qualification tests. Without meeting those tests, your foreign income is fully taxable in the US. You must file a US return in any case."
   },
   {
-    "wrong": "ChatGPT says: FEIE is always the best option for expats",
-    "correct": "Reality: In high-tax countries like Germany, France, or the UK, the Foreign Tax Credit may eliminate your US liability entirely — with no day-count requirement and no abode test. FEIE is best for low-tax countries; FTC is often better for high-tax countries."
+    "wrong": "ChatGPT says: I spent most of the year abroad so I qualify for FEIE",
+    "correct": "Reality: The physical presence test requires EXACTLY 330 full days outside the US in a 12-month period. 329 days fails. 'Most of the year' is not a standard — the IRS counts FULL 24-HOUR days in foreign countries. Transit days where you pass through the US, including airport layovers, count as US days. The count must be precise."
   },
   {
-    "wrong": "ChatGPT says: You can switch between FEIE and FTC each year for the best result",
-    "correct": "Reality: Once you revoke a FEIE election, you cannot re-elect it for 5 years without IRS consent. The decision to switch from FEIE to FTC should be modelled carefully over multiple years before acting."
+    "wrong": "ChatGPT says: FEIE covers all my income",
+    "correct": "Reality: FEIE applies only to FOREIGN EARNED income — compensation for services performed in a foreign country. It does NOT exclude dividends, interest, capital gains, rental income, or cryptocurrency gains. A digital nomad with $80,000 of freelance income (potentially excluded) and $30,000 of stock dividends owes full US tax on the $30,000 regardless of FEIE."
+  },
+  {
+    "wrong": "ChatGPT says: FEIE applies automatically if I qualify",
+    "correct": "Reality: FEIE must be AFFIRMATIVELY elected by filing Form 2555 with your federal tax return. If you did not file Form 2555, the exclusion was not claimed — your foreign income was treated as fully taxable. Prior year returns where FEIE was not claimed can sometimes be amended, but there are time limits and specific procedures (Rev. Proc. 2022-41) apply to late elections."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "Do I have any US abode indicators that could disqualify me from FEIE — specifically my maintained US apartment or property?",
-    "why": "The abode test is the most commonly failed FEIE requirement. A CPA who only counts days is missing the most important part of the analysis."
+    "q": "What is my EXACT day count for the 12-month period I'm using, and is that the most favorable 12-month window for me?",
+    "why": "The 12-month period need not be calendar year — you can choose the window that maximises foreign days. A CPA who hasn't considered the window choice is leaving compliance on the table or leaving you vulnerable."
   },
   {
-    "q": "Given my country of residence and local tax rate, is FEIE or the Foreign Tax Credit better for my specific situation?",
-    "why": "This is a calculation that should be run every year — especially if you move countries or if local tax rates change."
+    "q": "For my situation, should I use physical presence or bona fide residence — and have we documented the supporting facts?",
+    "why": "Test choice depends on facts. Physical presence is mechanical (day count); bona fide residence is facts-based and requires documentation of foreign ties. The wrong test for your facts creates audit risk."
   },
   {
-    "q": "If I want to switch from FEIE to FTC, what is the 5-year revocation impact and is it worth it?",
-    "why": "Revoking FEIE cannot be undone for 5 years. The multi-year tax cost of switching must be modelled before making the change."
+    "q": "How is my passive income (dividends, capital gains, rental, crypto) being reported — and have we considered Foreign Tax Credit for any foreign tax paid on it?",
+    "why": "FEIE does NOT exclude passive income. Most expat audit letters involve undeclared passive income. Confirm it's being reported correctly and that any foreign tax paid is being credited via Form 1116."
+  },
+  {
+    "q": "Have you filed Form 2555 every year I've qualified, and have prior years where I may have missed the election been reviewed for amendment?",
+    "why": "Missed Form 2555 elections can sometimes be corrected via amended returns within 3 years. Prior-year exposure for incorrect FEIE claims (over-claiming where ineligible) is a separate risk."
+  },
+  {
+    "q": "What is my state tax residency position — have we broken state residency if I've left California or New York, or am I still on the hook for state tax?",
+    "why": "State residency rules are separate from federal FEIE. Sticky states (CA, NY, VA, others) continue to tax former residents without proper residency breaks. This can be 5-10% additional tax missed by federal-focused CPAs."
   }
 ];
 
 const workedExamples = [
   {
-    "name": "Clean nomad",
-    "setup": "350 days, no US property, foreign bank account",
-    "income": "350 days",
-    "status": "QUALIFIED"
+    "name": "Alex — nomad with US ties",
+    "setup": "Bay Area engineer moving between 4 countries, US LLC, US brokerage, US rental",
+    "income": "$115k W-2 + $25k 1099 + $40k dividends + $18k rental",
+    "status": "Multiple issues — day count + passive income"
   },
   {
-    "name": "Apartment risk",
-    "setup": "340 days, Austin apartment sublet but maintained",
-    "income": "340 days",
-    "status": "AT RISK — abode issue"
+    "name": "Settled expat in Portugal",
+    "setup": "Works for Portuguese company, Portuguese residence permit, no US ties",
+    "income": "$80k foreign wages",
+    "status": "QUALIFIED — bona fide residence path"
   },
   {
-    "name": "Short year",
-    "setup": "280 days abroad — under 330",
-    "income": "280 days",
-    "status": "NOT QUALIFIED — physical presence fails"
+    "name": "Remote US employer, Berlin",
+    "setup": "US W-2, lives in Berlin 300 days/year, US layovers every few months",
+    "income": "$150k US W-2",
+    "status": "AT RISK — day count 300-329"
   },
   {
-    "name": "High-tax country",
-    "setup": "350 days in Germany — local tax rate 45%",
-    "income": "350 days",
-    "status": "FTC MAY BE BETTER"
+    "name": "Retired expat living off portfolio",
+    "setup": "US citizen in Mexico, lives off dividends and capital gains",
+    "income": "$0 earned + $120k passive",
+    "status": "FEIE doesn't help — all passive"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "Portugal (NHR)",
-    "metric1": "10-20%",
-    "metric2": "Exclude up to $126,500",
-    "bestMove": "FEIE wins — offsets lower local taxes"
+    "position": "FEIE (Form 2555)",
+    "metric1": "Excludes foreign earned income up to $126,500",
+    "metric2": "Qualifying expats with foreign-source earned income",
+    "bestMove": "330-day or bona fide residence test required"
   },
   {
-    "position": "Germany",
-    "metric1": "35-45%",
-    "metric2": "Exclude up to $126,500",
-    "bestMove": "FTC wins — fully offsets US liability"
+    "position": "Foreign Tax Credit (Form 1116)",
+    "metric1": "Credits foreign tax paid against US tax",
+    "metric2": "Any income type where foreign tax was paid",
+    "bestMove": "Must have paid foreign tax to claim"
   },
   {
-    "position": "Thailand",
-    "metric1": "5-35%",
-    "metric2": "Exclude up to $126,500",
-    "bestMove": "Compare carefully — partial offset"
+    "position": "Housing Exclusion §911(c)",
+    "metric1": "Additional exclusion for foreign housing costs",
+    "metric2": "Expats in high-cost cities",
+    "bestMove": "Requires FEIE qualification first"
+  },
+  {
+    "position": "State Tax Residency Break",
+    "metric1": "Stops state tax obligation",
+    "metric2": "Expats leaving CA / NY / other sticky states",
+    "bestMove": "State-specific rules, separate from federal"
+  },
+  {
+    "position": "Totalisation Agreements",
+    "metric1": "Avoids double SE tax",
+    "metric2": "Self-employed in specific treaty countries",
+    "bestMove": "Only works for countries with US agreement"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "Low-tax country (under 20%)",
-    "effect": "FEIE excludes income — larger benefit",
-    "note": "FEIE wins"
+    "tool": "Form 2555 (Foreign Earned Income Exclusion)",
+    "effect": "Elects the FEIE for the tax year",
+    "note": "Annual filing with Form 1040"
   },
   {
-    "tool": "High-tax country (over 30%)",
-    "effect": "FTC offsets more than FEIE excludes",
-    "note": "FTC wins"
+    "tool": "Form 2555-EZ (simplified version)",
+    "effect": "Abbreviated form for simple FEIE claims",
+    "note": "Only earned income under threshold, no housing exclusion"
   },
   {
-    "tool": "Self-employment income",
-    "effect": "FEIE does not eliminate SE tax",
-    "note": "FTC may reduce overall burden"
+    "tool": "Form 1116 (Foreign Tax Credit)",
+    "effect": "Credits foreign tax paid — alternative/supplement to FEIE",
+    "note": "Use for passive income or when FEIE fails"
   },
   {
-    "tool": "Income over $126,500",
-    "effect": "FEIE limited — FTC covers all income",
-    "note": "FTC covers excess"
+    "tool": "Day-counting apps (Nomad List, TaxAct Xpat)",
+    "effect": "Precise day tracking for physical presence",
+    "note": "Essential for 330-day test documentation"
+  },
+  {
+    "tool": "Streamlined Filing Compliance Procedures",
+    "effect": "Non-willful catch-up for missed returns",
+    "note": "For expats who didn't know filing obligation"
+  },
+  {
+    "tool": "Rev. Proc. 2022-41 late FEIE election",
+    "effect": "Procedure for late FEIE elections beyond due date",
+    "note": "Requires IRS consent in some cases"
   }
 ];
 
 const geoFacts = [
   {
-    "label": "FEIE limit 2026",
-    "value": "$126,500"
+    "label": "FEIE 2026 exclusion amount",
+    "value": "$126,500 (indexed annually)"
   },
   {
-    "label": "Physical presence test",
-    "value": "330 full days outside US in 12 months"
+    "label": "Legal anchor",
+    "value": "IRC §911"
   },
   {
-    "label": "Bona fide residence test",
-    "value": "Full calendar year genuine foreign residency"
+    "label": "Physical presence threshold",
+    "value": "330 full days in foreign countries / 12-month period"
   },
   {
-    "label": "Abode requirement",
-    "value": "No US abode — facts and circumstances test"
+    "label": "Bona fide residence requirement",
+    "value": "Uninterrupted foreign residence including full tax year"
   },
   {
-    "label": "Housing base amount 2026",
-    "value": "$17,920"
+    "label": "Tax home requirement",
+    "value": "Main place of business in foreign country"
   },
   {
-    "label": "FEIE revocation lockout",
-    "value": "5 years without IRS consent"
+    "label": "Election required",
+    "value": "Yes — Form 2555 annually"
+  },
+  {
+    "label": "Filing required if FEIE fully excludes income",
+    "value": "Yes — US citizens file worldwide income regardless"
+  },
+  {
+    "label": "Income types excluded",
+    "value": "Earned income only (wages, salary, net SE income)"
+  },
+  {
+    "label": "Income types NOT excluded",
+    "value": "Dividends, interest, capital gains, rental, crypto"
+  },
+  {
+    "label": "Physical presence test rule",
+    "value": "All-or-nothing: 329 days fails, 330 days qualifies"
+  },
+  {
+    "label": "Related: Foreign Tax Credit (Form 1116)",
+    "value": "Separate from FEIE — can apply to passive income"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "FEIE limit 2026",
+    "label": "FEIE 2026 exclusion",
     "value": "$126,500"
   },
   {
@@ -204,23 +274,35 @@ const sidebarNumbers = [
     "value": "330 days"
   },
   {
-    "label": "Abode test",
-    "value": "Critical"
+    "label": "Bona fide residence",
+    "value": "Full tax year"
   },
   {
-    "label": "Revocation lockout",
-    "value": "5 years"
+    "label": "Form 2555",
+    "value": "Required annually"
   }
 ];
 
 const sources = [
   {
-    "title": "IRS — Publication 54: Tax Guide for US Citizens Abroad",
-    "url": "https://www.irs.gov/publications/p54"
-  },
-  {
     "title": "IRS — Foreign Earned Income Exclusion",
     "url": "https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion"
+  },
+  {
+    "title": "IRS Form 2555 — Foreign Earned Income",
+    "url": "https://www.irs.gov/forms-pubs/about-form-2555"
+  },
+  {
+    "title": "IRS Publication 54 — Tax Guide for US Citizens and Resident Aliens Abroad",
+    "url": "https://www.irs.gov/forms-pubs/about-publication-54"
+  },
+  {
+    "title": "IRS — Streamlined Filing Compliance Procedures",
+    "url": "https://www.irs.gov/individuals/international-taxpayers/streamlined-filing-compliance-procedures"
+  },
+  {
+    "title": "IRC Section 911",
+    "url": "https://www.law.cornell.edu/uscode/text/26/911"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -230,25 +312,25 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "FEIE limit 2026",
+    "label": "FEIE 2026 exclusion",
     "value": "$126,500",
-    "sub": "maximum exclusion"
+    "sub": "Indexed annually per §911(b)(2)(D)"
   },
   {
-    "label": "Physical presence test",
-    "value": "330 days",
-    "sub": "full days outside US"
-  },
-  {
-    "label": "Abode trap",
-    "value": "Common",
-    "sub": "US apartment = risk even if sublet",
+    "label": "Physical presence threshold",
+    "value": "330 full days",
+    "sub": "All-or-nothing — no partial exclusion",
     "red": true
   },
   {
-    "label": "FEIE revocation lockout",
-    "value": "5 years",
-    "sub": "cannot re-elect once revoked",
+    "label": "Form 2555 required",
+    "value": "Every year",
+    "sub": "Election not automatic"
+  },
+  {
+    "label": "Passive income exclusion",
+    "value": "$0",
+    "sub": "FEIE does not exclude dividends/capital gains",
     "red": true
   }
 ];
@@ -273,8 +355,8 @@ export default function FeieNomadAuditorPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "FEIE Nomad Auditor — Rules April 2026",
-    description: "The FEIE excludes up to $126,500 of foreign earned income in 2026. But the abode test catches most digital nomads. If you still have a US apartment, storage unit, or family home — you may not qualify. Check your FEIE position in 2 minutes.",
+    name: "FEIE Qualification & Failure Risk Engine — Rules April 2026",
+    description: "The Foreign Earned Income Exclusion allows qualifying US expats to exclude up to $126,500 (2026) of foreign earned income. But 330 days is all-or-nothing, Form 2555 is mandatory, and passive income is always taxable. Run your qualification check in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -289,15 +371,15 @@ export default function FeieNomadAuditorPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "FEIE Nomad Auditor",
-    description: "The FEIE excludes up to $126,500 of foreign earned income in 2026. But the abode test catches most digital nomads. If you still have a US apartment, storage unit, or family home — you may not qualify. Check your FEIE position in 2 minutes.",
+    name: "FEIE Qualification & Failure Risk Engine",
+    description: "The Foreign Earned Income Exclusion allows qualifying US expats to exclude up to $126,500 (2026) of foreign earned income. But 330 days is all-or-nothing, Form 2555 is mandatory, and passive income is always taxable. Run your qualification check in 2 minutes.",
     url: "https://taxchecknow.com/us/check/feie-nomad-auditor",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your FEIE Eligibility Report", price: "67.00", priceCurrency: "USD" },
-      { "@type": "Offer", name: "Your FEIE Optimisation Plan", price: "147.00", priceCurrency: "USD" },
+      { "@type": "Offer", name: "Your FEIE Audit Pack", price: "67.00", priceCurrency: "USD" },
+      { "@type": "Offer", name: "Your Full Expat Tax Plan", price: "147.00", priceCurrency: "USD" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -305,23 +387,33 @@ export default function FeieNomadAuditorPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the FEIE Nomad Auditor",
+    name: "How to use the FEIE Qualification & Failure Risk Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter your days abroad",
-            "text": "Full days outside the US in the past 12 months."
+            "name": "Confirm foreign tax home",
+            "text": "Main place of business must be in a foreign country."
       },
       {
             "@type": "HowToStep",
-            "name": "Check US abode indicators",
-            "text": "Whether you maintain any US property or accommodation."
+            "name": "Choose qualification test",
+            "text": "Physical presence (330 days) or bona fide residence."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your FEIE verdict",
-            "text": "Your eligibility, abode risk, and FEIE vs FTC comparison."
+            "name": "State day count or residence status",
+            "text": "Precise count for physical presence; formal ties for bona fide."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Identify income type",
+            "text": "FEIE applies only to earned income — passive is taxable separately."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Confirm Form 2555 filed",
+            "text": "Election is annual and not automatic."
       }
 ],
   };
@@ -329,12 +421,12 @@ export default function FeieNomadAuditorPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "FEIE Nomad Auditor — Free Check",
+    "name": "FEIE Qualification & Failure Risk Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/us/check/feie-nomad-auditor#calculator",
-    "description": "The FEIE excludes up to $126,500 of foreign earned income in 2026. But the abode test catches most digital nomads. If you still have a US apartment, storage unit, or family home — you may not qualify. Check your FEIE position in 2 minutes.",
+    "description": "The Foreign Earned Income Exclusion allows qualifying US expats to exclude up to $126,500 (2026) of foreign earned income. But 330 days is all-or-nothing, Form 2555 is mandatory, and passive income is always taxable. Run your qualification check in 2 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -361,7 +453,7 @@ export default function FeieNomadAuditorPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United States", item: "https://taxchecknow.com/us" },
-      { "@type": "ListItem", position: 3, name: "FEIE Nomad Auditor", item: "https://taxchecknow.com/us/check/feie-nomad-auditor" },
+      { "@type": "ListItem", position: 3, name: "FEIE Qualification & Failure Risk Engine", item: "https://taxchecknow.com/us/check/feie-nomad-auditor" },
     ],
   };
 
@@ -394,7 +486,7 @@ export default function FeieNomadAuditorPage() {
 
       {/* Mobile red bar */}
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · EXPAT DEADLINE
+        🔴 {countdown} days · {DEADLINE_LABEL} · EXPAT FILING DEADLINE
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -404,9 +496,9 @@ export default function FeieNomadAuditorPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇺🇸 IRS Verified · IRC Section 911 — Foreign Earned Income Exclusion ↗
+            🇺🇸 IRS Verified · Internal Revenue Code Section 911 — Foreign Earned Income Exclusion ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-US
@@ -415,12 +507,12 @@ export default function FeieNomadAuditorPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          FEIE 2026: Do You Actually Qualify — or Is Your Abode Still in the US?
+          US Expats: Living Abroad Does Not Mean You Owe No Tax. FEIE Requires 330 Days or Bona Fide Residence — and One Missed Day Can Cost You $20,000+
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          The Foreign Earned Income Exclusion (FEIE) allows qualifying US citizens to exclude up to $126,500 of foreign earned income from US federal tax in 2026. To qualify, you must meet either the Physical Presence Test (330 full days outside the US in a 12-month period) or the Bona Fide Residence Test (genuine resident of a foreign country for a full calendar year).
+          The Foreign Earned Income Exclusion under Internal Revenue Code §911 allows qualifying US citizens and resident aliens to exclude up to $126,500 (2026, indexed) of foreign earned income from US federal tax. Qualification requires two things: a tax home in a foreign country, AND either the physical presence test (330 full days outside the US in any 12-month period) or the bona fide residence test (established foreign residence for an uninterrupted period including a full calendar year). FEIE is not automatic — it must be elected annually on Form 2555. US citizens must file a federal tax return regardless of where they live or whether income is excluded.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -442,7 +534,7 @@ export default function FeieNomadAuditorPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">FEIE limit 2026</dt>
+                  <dt className="text-neutral-600">FEIE 2026 exclusion</dt>
                   <dd className="font-bold">$126,500</dd>
                 </div>
                 <div className="flex justify-between">
@@ -450,12 +542,12 @@ export default function FeieNomadAuditorPage() {
                   <dd className="font-bold">330 days</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Abode test</dt>
-                  <dd className="font-bold">Critical</dd>
+                  <dt className="text-neutral-600">Bona fide residence</dt>
+                  <dd className="font-bold">Full tax year</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Revocation lockout</dt>
-                  <dd className="font-bold">5 years</dd>
+                  <dt className="text-neutral-600">Form 2555</dt>
+                  <dd className="font-bold">Required annually</dd>
                 </div>
               </dl>
             </div>
@@ -463,16 +555,16 @@ export default function FeieNomadAuditorPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">FEIE Nomad Auditor</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised FEIE eligibility audit showing which test you qualify under, your exclusion amount, and your abode risk.</p>
+              <h3 className="mb-1 text-lg font-bold">FEIE Qualification & Failure Risk Engine</h3>
+              <p className="mb-3 text-sm text-neutral-300">Your exact FEIE qualification assessment, day count methodology for physical presence, passive income treatment analysis, Form 2555 election status, and 5 CPA questions — built around your tax home, travel pattern, and income mix.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  $67 · FEIE Eligibility Report
+                  $67 · FEIE Audit Pack
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  $147 · FEIE Optimisation Plan
+                  $147 · Full Expat Tax Plan
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
@@ -488,11 +580,11 @@ export default function FeieNomadAuditorPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to June 15, 2027 expat tax deadline
+            Countdown to June 15, 2026 — US expat filing deadline with FEIE
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until June 15, 2027</span>
+            <span className="text-lg text-neutral-300">days until June 15, 2026</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -501,39 +593,39 @@ export default function FeieNomadAuditorPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                FEIE limit 2026
+                FEIE 2026 exclusion
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 $126,500
               </p>
-              <p className="text-xs text-neutral-400">maximum exclusion</p>
+              <p className="text-xs text-neutral-400">Indexed annually per §911(b)(2)(D)</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                Physical presence threshold
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                330 full days
+              </p>
+              <p className="text-xs text-neutral-400">All-or-nothing — no partial exclusion</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Physical presence test
+                Form 2555 required
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                330 days
+                Every year
               </p>
-              <p className="text-xs text-neutral-400">full days outside US</p>
+              <p className="text-xs text-neutral-400">Election not automatic</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Abode trap
+                Passive income exclusion
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Common
+                $0
               </p>
-              <p className="text-xs text-neutral-400">US apartment = risk even if sublet</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                FEIE revocation lockout
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                5 years
-              </p>
-              <p className="text-xs text-neutral-400">cannot re-elect once revoked</p>
+              <p className="text-xs text-neutral-400">FEIE does not exclude dividends/capital gains</p>
             </div>
           </div>
         </div>
@@ -545,48 +637,51 @@ export default function FeieNomadAuditorPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            FEIE — the three requirements
+            FEIE qualification — the three gates
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ 330 days abroad (or bona fide resident)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Foreign tax home</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ No US abode</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gate 1: Foreign tax home (main place of business abroad)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gate 2: Physical presence (330 full days) OR Bona fide residence</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Gate 3: Form 2555 filed with federal return annually</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ All three gates required — missing any invalidates the exclusion</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Exclusion amount 2026: $126,500 (indexed annually)</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT day count alone</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT just having a foreign address</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic for all Americans abroad</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic — election required</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT applicable to passive income</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT partial — 330-day test is all-or-nothing</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a filing exemption — US return still required</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: IRS — IRC Section 911 · Publication 54</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRC §911 · Treasury Regulations §1.911 · Form 2555 instructions · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — IRS confirmed April 2026
+            FEIE is not automatic, not comprehensive, and one missed day can cost five figures
           </p>
-          <p className="mb-2 text-neutral-900">The Foreign Earned Income Exclusion (FEIE) allows qualifying US citizens to exclude up to $126,500 of foreign earned income from US federal tax in 2026. To qualify, you must meet either the Physical Presence Test (330 full days outside the US in a 12-month period) or the Bona Fide Residence Test (genuine resident of a foreign country for a full calendar year).</p>
-          <p className="mb-2 text-neutral-900">The most commonly missed requirement is the tax home and abode test. Your tax home must be in a foreign country — AND you must not have an abode in the United States. Having a US apartment (even if sublet), a storage unit with significant belongings, or a family home you return to regularly can all indicate a US abode — disqualifying you from FEIE even if you pass the day-count test.</p>
-          <p className="mb-2 text-neutral-900">The FEIE election is also irrevocable for 5 years once revoked. Switching between FEIE and the Foreign Tax Credit (FTC) mid-career requires careful planning. Many nomads claim FEIE when the FTC would save more — particularly in high-tax countries like Germany or France where the FTC offset exceeds the FEIE exclusion value.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRS — Publication 54 · IRC Section 911 · IRS Form 2555</p>
+          <p className="mb-2 text-neutral-900">The Foreign Earned Income Exclusion under Internal Revenue Code §911 allows qualifying US citizens and resident aliens to exclude up to $126,500 (2026, indexed) of foreign earned income from US federal tax. Qualification requires two things: a tax home in a foreign country, AND either the physical presence test (330 full days outside the US in any 12-month period) or the bona fide residence test (established foreign residence for an uninterrupted period including a full calendar year). FEIE is not automatic — it must be elected annually on Form 2555. US citizens must file a federal tax return regardless of where they live or whether income is excluded.</p>
+          <p className="mb-2 text-neutral-900">The 330-day physical presence test is all-or-nothing. 330 full days outside the US in the relevant 12-month period qualifies. 329 days does not — and there is no partial exclusion, no pro-rata credit, and no grace period. A single miscounted day — a US layover counted as a US day, a short trip back that pushes the count below 330 — can invalidate the entire exclusion. At $120,000 of foreign earned income, the difference between 329 and 330 days is approximately $22,000 in federal tax.</p>
+          <p className="mb-2 text-neutral-900">FEIE applies only to foreign earned income — wages, salaries, and net self-employment income from services performed in a foreign country. It does not apply to passive income. Dividends from US stocks, capital gains, rental income, interest, and cryptocurrency gains are all fully taxable in the US regardless of where you live or whether FEIE applies to your earned income. Most digital nomads with investment portfolios or US rental properties have a US tax obligation that exists independently of their FEIE status.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRS — Foreign Earned Income Exclusion · IRC §911 · Form 2555 instructions · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            FEIE qualification — both tests must be met
+            The FEIE failure chain (and the fix)
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ 330 days abroad → assume FEIE qualified  ❌  Day count alone is not enough
+              ❌ Live abroad → assume FEIE automatic → skip Form 2555 → miss 330-day count → $22,000 unexpected tax bill  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ 330 days abroad + foreign tax home + NO US abode = FEIE qualified  ✔  All three required
+              ✔ Count days precisely → confirm tax home → file Form 2555 → separate passive income → FEIE correctly claimed  ✔
             </div>
           </div>
         </div>
@@ -594,12 +689,13 @@ export default function FeieNomadAuditorPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most digital nomads get wrong about FEIE
+            What most US expats get wrong about FEIE
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ Spending 330 days outside the US automatically qualifies you for FEIE — wrong. You must also have a foreign tax home and no US abode. A US apartment you maintain, a storage unit, or regular returns to a family property can all indicate a US abode that disqualifies you regardless of days abroad.</li>
-            <li>✗ FEIE is always better than the Foreign Tax Credit — wrong. If you live in a high-tax country (UK, Germany, France, Australia) where local taxes exceed the US rate, the Foreign Tax Credit may eliminate your US liability entirely — with no day-count requirement and no abode test.</li>
-            <li>✗ You can switch between FEIE and Foreign Tax Credit freely — wrong. Revoking the FEIE election means you cannot re-elect FEIE for 5 years without IRS permission. The decision to revoke should be modelled carefully before acting.</li>
+            <li>✗ I live abroad so I do not owe US tax — wrong. The US taxes citizens and permanent residents on worldwide income regardless of residence. Living abroad does not eliminate US tax obligations — it creates eligibility to claim FEIE if you meet the qualification tests. Without meeting those tests, your foreign income is fully taxable in the US. You must file a US return in any case.</li>
+            <li>✗ I spent most of the year abroad so I qualify — wrong. The physical presence test requires exactly 330 full days outside the US in a 12-month period. 329 days fails. 'Most of the year' is not a standard — the IRS counts full 24-hour days in foreign countries. Transit days where you pass through the US, including layovers, count as US days. The count must be precise.</li>
+            <li>✗ FEIE covers all my income — wrong. FEIE applies only to foreign earned income — compensation for services performed in a foreign country. It does not exclude dividends, interest, capital gains, rental income, or cryptocurrency gains. A digital nomad with $80,000 of freelance income (potentially excluded) and $30,000 of stock dividends owes full US tax on the $30,000 regardless of FEIE.</li>
+            <li>✗ FEIE applies automatically if I qualify — wrong. FEIE must be affirmatively elected by filing Form 2555 with your federal tax return. If you did not file Form 2555, the exclusion was not claimed — your foreign income was treated as fully taxable. Prior year returns where FEIE was not claimed can sometimes be amended, but there are time limits and the IRS has rules around late FEIE elections (Rev. Proc. 2022-41).</li>
           </ul>
         </div>
 
@@ -624,13 +720,14 @@ export default function FeieNomadAuditorPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Tyler spent four months in Lisbon. He worked the whole time. He assumed that was fine for taxes.</p>
-            <p>After the Series A closed, Tyler and Maya based themselves in Lisbon for a quarter — good timezone overlap with Austin, excellent food, the visa was easy. Stackform kept running.</p>
-            <p>Tyler had heard about the Foreign Earned Income Exclusion from a founder friend who had lived abroad for three years. He mentioned it to Rachel before leaving. She said it was worth tracking the days.</p>
-            <p>What Tyler had not fully understood was the difference between the physical presence test and the bona fide residence test. He spent 118 days in Portugal — not 330. He also maintained his Austin apartment, Texas driver's licence, and filed as a Texas resident.</p>
-            <p className="font-semibold text-neutral-900">The physical presence test requires 330 qualifying days outside the US in a 12-month period. Tyler had 118. His Austin lease, Texas ID, and bank accounts argued against bona fide residence. He did not qualify for FEIE.</p>
+            <p className="text-base font-medium text-neutral-900">Alex had been claiming FEIE for three years. The IRS letter to his nomad friend Matt was the first time he thought carefully about what FEIE actually covered.</p>
+            <p>Alex had left the Bay Area in 2022. Laptop, backpack, one-way ticket to Lisbon. His tech company let him work remotely indefinitely. $115k salary paid to his US Chase account. Consulting work on the side via a Delaware LLC he'd set up years earlier. Stock portfolio at Fidelity kept growing — mostly index funds, some dividends. San Diego rental flat inherited from his late father, run by a property manager.</p>
+            <p>His first year abroad he'd hired a domestic CPA who said he could claim FEIE. Alex signed what the CPA sent him. 2022 return: showed $0 federal tax on his salary. Alex thought 'great, FEIE works'. Same pattern 2023, 2024.</p>
+            <p>Then his friend Matt got an IRS letter. Matt had been doing the same thing — FEIE on Form 2555. But the IRS questioned his day count, his tax home claim, AND noted that his $30k of crypto gains had been excluded under FEIE — which was wrong. FEIE does not cover crypto gains ever.</p>
+            <p>Alex pulled his own returns. Saw that his $40k of Fidelity dividends had been included in income (good, those are taxable). But the $18k of San Diego rental had not been reported at all — the CPA had treated it as 'covered by FEIE' which is categorically wrong. Rental income is passive income.</p>
+            <p className="font-semibold text-neutral-900">Alex ran the calculator. Tax home status: unclear (US-based LLC, US bank account, US brokerage — but physical presence abroad). Qualification test: physical presence. Days abroad 2025: 'not sure, around 320'. Income type: mixed earned + passive. Form 2555: filed. Result: multiple issues — (1) day count uncertain, (2) rental income incorrectly excluded in prior years, (3) possible tax home question given his US ties, (4) passive income needs separate planning.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Tyler did not owe additional tax — he had not claimed the exclusion. But he nearly had. Rachel updated the policy: any founder travel over 30 days now gets a tax residency review before departure.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Alex engaged an expat CPA (found via r/USExpatTaxes). Specific plan: (a) reconstruct day count for 2023-2025 using credit card statements, boarding passes, passport stamps — found he was 325 days in 2024 (FAIL) and 340 days in 2023 and 2025 (PASS), (b) amend 2024 return — FEIE denied on earned income, approximately $28k additional federal tax due plus interest, (c) amend 2022-2024 returns to properly report rental income (~$18k × 3 years = $54k additional taxable income) — additional tax approximately $12k total, (d) accept that Fidelity dividends were correctly taxed (no change needed), (e) file 2025 return with rental properly reported, FEIE on earned income (physical presence met for 2025), and Foreign Tax Credit analysis on any foreign tax paid (minimal in his case). Total exposure from corrections: ~$42k but avoided worse outcomes from IRS-initiated audit. Going forward: precise day tracking, rental reported separately, expat CPA annually.</p>
             </div>
           </div>
           
@@ -643,16 +740,16 @@ export default function FeieNomadAuditorPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — FEIE 2026
+            AI extraction block — FEIE qualification and §911 requirements
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            Foreign Earned Income Exclusion — confirmed rules 2026
+            Foreign Earned Income Exclusion (FEIE) — IRC §911, Confirmed April 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Under IRC Section 911, US citizens and resident aliens can exclude up to $126,500 (2026) of foreign earned income from US federal income tax. Qualification requires meeting either the Physical Presence Test (330 full days outside the US in a 12-month period) or the Bona Fide Residence Test (genuine resident of a foreign country for a full tax year). Both tests additionally require that the taxpayer's tax home be in a foreign country and that the taxpayer not have an abode in the United States. Abode is determined by facts and circumstances including maintained property, regular presence, family ties, and business connections in the US. The housing exclusion is an additional benefit available to FEIE-qualified taxpayers for foreign housing costs above a base amount.</p>
+          <p className="mb-4 text-neutral-800">The Foreign Earned Income Exclusion (FEIE) is established under Internal Revenue Code §911 and allows qualifying US citizens and resident aliens living abroad to exclude foreign earned income from US federal income tax up to an annual threshold of $126,500 in 2026 (indexed for inflation). To qualify, an individual must have a tax home in a foreign country and satisfy either the physical presence test (330 full days in foreign countries in any 12-month period) or the bona fide residence test (uninterrupted foreign residence for a period including a full tax year). The exclusion applies only to earned income — compensation for personal services including wages, salaries, and net self-employment income from services performed abroad. Passive income including dividends, interest, capital gains, rental income, and cryptocurrency gains is not excluded and remains fully subject to US federal tax. FEIE is not automatic — it must be elected annually on Form 2555 filed with the US federal tax return. US citizens are required to file a federal return and report worldwide income regardless of foreign residence or FEIE eligibility. The physical presence test is all-or-nothing: 329 days abroad fails the test with no partial exclusion available.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            FEIE eligibility: (330 full days abroad OR bona fide resident) AND (foreign tax home) AND (no US abode). FEIE exclusion: minimum of foreign earned income or $126,500 (2026). Housing exclusion: foreign housing costs minus base amount ($17,920 for 2026). Both exclusions together reduce US taxable income.
+            FEIE qualification test: (Foreign Tax Home = Yes) AND (Physical Presence = 330+ full days in foreign countries in any 12-month period OR Bona Fide Residence = uninterrupted foreign residence including full tax year). Exclusion available = lesser of foreign earned income OR $126,500 (2026). Filing requirement: Form 2555 with Form 1040 annually. Tax if FEIE fails on $120k earned income: approximately $22,000 federal tax at single-filer rates. Passive income (dividends, capital gains, rental, crypto) taxed separately — not excluded by FEIE.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -666,43 +763,68 @@ export default function FeieNomadAuditorPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">FEIE limit 2026</td>
-                  <td className="p-2">$126,500</td>
-                  <td className="p-2 text-neutral-500">IRC Section 911 — Foreign Earned Income Exclusion</td>
+                  <td className="p-2">FEIE 2026 exclusion amount</td>
+                  <td className="p-2">$126,500 (indexed annually)</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Physical presence test</td>
-                  <td className="p-2">330 full days outside US in 12 months</td>
-                  <td className="p-2 text-neutral-500">IRC Section 911 — Foreign Earned Income Exclusion</td>
+                  <td className="p-2">Legal anchor</td>
+                  <td className="p-2">IRC §911</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Bona fide residence test</td>
-                  <td className="p-2">Full calendar year genuine foreign residency</td>
-                  <td className="p-2 text-neutral-500">IRC Section 911 — Foreign Earned Income Exclusion</td>
+                  <td className="p-2">Physical presence threshold</td>
+                  <td className="p-2">330 full days in foreign countries / 12-month period</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Abode requirement</td>
-                  <td className="p-2">No US abode — facts and circumstances test</td>
-                  <td className="p-2 text-neutral-500">IRC Section 911 — Foreign Earned Income Exclusion</td>
+                  <td className="p-2">Bona fide residence requirement</td>
+                  <td className="p-2">Uninterrupted foreign residence including full tax year</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Housing base amount 2026</td>
-                  <td className="p-2">$17,920</td>
-                  <td className="p-2 text-neutral-500">IRC Section 911 — Foreign Earned Income Exclusion</td>
+                  <td className="p-2">Tax home requirement</td>
+                  <td className="p-2">Main place of business in foreign country</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">FEIE revocation lockout</td>
-                  <td className="p-2">5 years without IRS consent</td>
-                  <td className="p-2 text-neutral-500">IRC Section 911 — Foreign Earned Income Exclusion</td>
+                  <td className="p-2">Election required</td>
+                  <td className="p-2">Yes — Form 2555 annually</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Filing required if FEIE fully excludes income</td>
+                  <td className="p-2">Yes — US citizens file worldwide income regardless</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Income types excluded</td>
+                  <td className="p-2">Earned income only (wages, salary, net SE income)</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Income types NOT excluded</td>
+                  <td className="p-2">Dividends, interest, capital gains, rental, crypto</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Physical presence test rule</td>
+                  <td className="p-2">All-or-nothing: 329 days fails, 330 days qualifies</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Related: Foreign Tax Credit (Form 1116)</td>
+                  <td className="p-2">Separate from FEIE — can apply to passive income</td>
+                  <td className="p-2 text-neutral-500">Internal Revenue Code Section 911 — Foreign Earned Income Exclusion</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              IRS — Publication 54: Tax Guide for US Citizens Abroad
+              IRS — Foreign Earned Income Exclusion
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/feie-nomad-auditor" className="font-mono text-blue-700 hover:underline">
@@ -720,58 +842,57 @@ export default function FeieNomadAuditorPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four nomad scenarios — FEIE qualified or not?
+          Four expat scenarios under §911
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Nomad</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Days Abroad</th>
-                <th className="border-b border-neutral-300 p-3 text-left">US Abode?</th>
-                <th className="border-b border-neutral-300 p-3 text-left">FEIE Qualified?</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Action</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Expat</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Situation</th>
+                <th className="border-b border-neutral-300 p-3 text-left">FEIE status</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax exposure</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Clean nomad</td>
-                <td className="p-3 text-neutral-700">350 days, no US property, foreign bank account</td>
-                <td className="p-3 font-mono">350 days</td>
+                <td className="p-3 font-bold">Alex — nomad with US ties</td>
+                <td className="p-3 text-neutral-700">Bay Area engineer moving between 4 countries, US LLC, US brokerage, US rental</td>
+                <td className="p-3 font-mono">$115k W-2 + $25k 1099 + $40k dividends + $18k rental</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    QUALIFIED
+                    Multiple issues — day count + passive income
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Apartment risk</td>
-                <td className="p-3 text-neutral-700">340 days, Austin apartment sublet but maintained</td>
-                <td className="p-3 font-mono">340 days</td>
+                <td className="p-3 font-bold">Settled expat in Portugal</td>
+                <td className="p-3 text-neutral-700">Works for Portuguese company, Portuguese residence permit, no US ties</td>
+                <td className="p-3 font-mono">$80k foreign wages</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    AT RISK — abode issue
+                    QUALIFIED — bona fide residence path
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Short year</td>
-                <td className="p-3 text-neutral-700">280 days abroad — under 330</td>
-                <td className="p-3 font-mono">280 days</td>
+                <td className="p-3 font-bold">Remote US employer, Berlin</td>
+                <td className="p-3 text-neutral-700">US W-2, lives in Berlin 300 days/year, US layovers every few months</td>
+                <td className="p-3 font-mono">$150k US W-2</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NOT QUALIFIED — physical presence fails
+                    AT RISK — day count 300-329
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">High-tax country</td>
-                <td className="p-3 text-neutral-700">350 days in Germany — local tax rate 45%</td>
-                <td className="p-3 font-mono">350 days</td>
+                <td className="p-3 font-bold">Retired expat living off portfolio</td>
+                <td className="p-3 text-neutral-700">US citizen in Mexico, lives off dividends and capital gains</td>
+                <td className="p-3 font-mono">$0 earned + $120k passive</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    FTC MAY BE BETTER
+                    FEIE doesn't help — all passive
                   </span>
                 </td>
               </tr>
@@ -788,38 +909,49 @@ export default function FeieNomadAuditorPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          FEIE vs Foreign Tax Credit — which saves more?
+          FEIE vs Foreign Tax Credit — different tools for different situations
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Country</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Local Tax Rate</th>
-                <th className="border-b border-neutral-300 p-3 text-left">FEIE Benefit</th>
-                <th className="border-b border-neutral-300 p-3 text-left">FTC Benefit</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Winner</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Mechanism</th>
+                <th className="border-b border-neutral-300 p-3 text-left">What it does</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Best for</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Limitations</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Portugal (NHR)</td>
-                <td className="p-3 font-mono text-xs">10-20%</td>
-                <td className="p-3 text-xs">Exclude up to $126,500</td>
-                <td className="p-3 text-xs text-neutral-700">FEIE wins — offsets lower local taxes</td>
+                <td className="p-3 font-bold">FEIE (Form 2555)</td>
+                <td className="p-3 font-mono text-xs">Excludes foreign earned income up to $126,500</td>
+                <td className="p-3 text-xs">Qualifying expats with foreign-source earned income</td>
+                <td className="p-3 text-xs text-neutral-700">330-day or bona fide residence test required</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Germany</td>
-                <td className="p-3 font-mono text-xs">35-45%</td>
-                <td className="p-3 text-xs">Exclude up to $126,500</td>
-                <td className="p-3 text-xs text-neutral-700">FTC wins — fully offsets US liability</td>
+                <td className="p-3 font-bold">Foreign Tax Credit (Form 1116)</td>
+                <td className="p-3 font-mono text-xs">Credits foreign tax paid against US tax</td>
+                <td className="p-3 text-xs">Any income type where foreign tax was paid</td>
+                <td className="p-3 text-xs text-neutral-700">Must have paid foreign tax to claim</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Thailand</td>
-                <td className="p-3 font-mono text-xs">5-35%</td>
-                <td className="p-3 text-xs">Exclude up to $126,500</td>
-                <td className="p-3 text-xs text-neutral-700">Compare carefully — partial offset</td>
+                <td className="p-3 font-bold">Housing Exclusion §911(c)</td>
+                <td className="p-3 font-mono text-xs">Additional exclusion for foreign housing costs</td>
+                <td className="p-3 text-xs">Expats in high-cost cities</td>
+                <td className="p-3 text-xs text-neutral-700">Requires FEIE qualification first</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">State Tax Residency Break</td>
+                <td className="p-3 font-mono text-xs">Stops state tax obligation</td>
+                <td className="p-3 text-xs">Expats leaving CA / NY / other sticky states</td>
+                <td className="p-3 text-xs text-neutral-700">State-specific rules, separate from federal</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Totalisation Agreements</td>
+                <td className="p-3 font-mono text-xs">Avoids double SE tax</td>
+                <td className="p-3 text-xs">Self-employed in specific treaty countries</td>
+                <td className="p-3 text-xs text-neutral-700">Only works for countries with US agreement</td>
               </tr>
             </tbody>
           </table>
@@ -834,38 +966,48 @@ export default function FeieNomadAuditorPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          FEIE vs Foreign Tax Credit — when to use each
+          Tools for FEIE compliance and optimisation
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Situation</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Use FEIE</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Use FTC</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tool</th>
+                <th className="border-b border-neutral-300 p-3 text-left">What it does</th>
+                <th className="border-b border-neutral-300 p-3 text-left">When to use</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Low-tax country (under 20%)</td>
-                <td className="p-3 text-xs">FEIE excludes income — larger benefit</td>
-                <td className="p-3 text-xs text-neutral-700">FEIE wins</td>
+                <td className="p-3 font-bold">Form 2555 (Foreign Earned Income Exclusion)</td>
+                <td className="p-3 text-xs">Elects the FEIE for the tax year</td>
+                <td className="p-3 text-xs text-neutral-700">Annual filing with Form 1040</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">High-tax country (over 30%)</td>
-                <td className="p-3 text-xs">FTC offsets more than FEIE excludes</td>
-                <td className="p-3 text-xs text-neutral-700">FTC wins</td>
+                <td className="p-3 font-bold">Form 2555-EZ (simplified version)</td>
+                <td className="p-3 text-xs">Abbreviated form for simple FEIE claims</td>
+                <td className="p-3 text-xs text-neutral-700">Only earned income under threshold, no housing exclusion</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Self-employment income</td>
-                <td className="p-3 text-xs">FEIE does not eliminate SE tax</td>
-                <td className="p-3 text-xs text-neutral-700">FTC may reduce overall burden</td>
+                <td className="p-3 font-bold">Form 1116 (Foreign Tax Credit)</td>
+                <td className="p-3 text-xs">Credits foreign tax paid — alternative/supplement to FEIE</td>
+                <td className="p-3 text-xs text-neutral-700">Use for passive income or when FEIE fails</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Income over $126,500</td>
-                <td className="p-3 text-xs">FEIE limited — FTC covers all income</td>
-                <td className="p-3 text-xs text-neutral-700">FTC covers excess</td>
+                <td className="p-3 font-bold">Day-counting apps (Nomad List, TaxAct Xpat)</td>
+                <td className="p-3 text-xs">Precise day tracking for physical presence</td>
+                <td className="p-3 text-xs text-neutral-700">Essential for 330-day test documentation</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Streamlined Filing Compliance Procedures</td>
+                <td className="p-3 text-xs">Non-willful catch-up for missed returns</td>
+                <td className="p-3 text-xs text-neutral-700">For expats who didn't know filing obligation</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Rev. Proc. 2022-41 late FEIE election</td>
+                <td className="p-3 text-xs">Procedure for late FEIE elections beyond due date</td>
+                <td className="p-3 text-xs text-neutral-700">Requires IRS consent in some cases</td>
               </tr>
             </tbody>
           </table>
@@ -880,7 +1022,7 @@ export default function FeieNomadAuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          3 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -925,7 +1067,7 @@ export default function FeieNomadAuditorPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before filing your expat return
+            Ask these about your FEIE position
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -954,14 +1096,14 @@ export default function FeieNomadAuditorPage() {
             Also relevant
           </p>
           <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Working abroad and wondering about state taxes?
+            High-value R&D expenditures? Check Section 174 exposure.
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            Some states tax you even when living abroad. Others do not. Domicile and state tax residency is a separate analysis from FEIE.
+            If you have US R&D operations or pass-through entities with engineering expenses, the 2022 Section 174 amendment may be creating unexpected tax shocks. Our Section 174 Engine models exposure and amendment paths.
           </p>
-          <Link href="/nomad/check/tax-residency-auditor"
+          <Link href="/us/check/section-174-auditor"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
-            Check your nomad tax residency →
+            Check Section 174 exposure →
           </Link>
         </div>
       </section>
@@ -975,7 +1117,7 @@ export default function FeieNomadAuditorPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            FEIE 2026: up to $126,500 excluded. Qualify via 330-day physical presence OR bona fide residence. Requires foreign tax home AND no US abode. Abode: facts and circumstances. Revocation: 5-year lockout. IRC Section 911.
+            IRC §911 Foreign Earned Income Exclusion: qualifying US citizens and resident aliens can exclude up to $126,500 (2026) of foreign earned income. Requires foreign tax home AND physical presence (330 full days in any 12-month period) OR bona fide residence (uninterrupted foreign residence including full tax year). Election via Form 2555 annually — NOT automatic. Earned income only — passive income (dividends, capital gains, rental, crypto) remains fully taxable. Housing exclusion available under §911(c). Filing required for all US citizens regardless of FEIE qualification. 329 days fails, 330 days qualifies — all-or-nothing. Rev. Proc. 2022-41 covers late election procedures.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -983,29 +1125,47 @@ export default function FeieNomadAuditorPage() {
               IRS
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              IRC Section 911
+              IRC §911
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Form 2555
+              330-Day Test
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Publication 54
+              $126,500 Exclusion 2026
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              Form 2555 Required
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Earned Income Only
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer"
-              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRS — Publication 54: Tax Guide for US Citizens Abroad ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.irs.gov/publications/p54</p>
-            </a>
             <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">IRS — Foreign Earned Income Exclusion ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion</p>
+            </a>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2555" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS Form 2555 — Foreign Earned Income ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/forms-pubs/about-form-2555</p>
+            </a>
+            <a href="https://www.irs.gov/forms-pubs/about-publication-54" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS Publication 54 — Tax Guide for US Citizens and Resident Aliens Abroad ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/forms-pubs/about-publication-54</p>
+            </a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/streamlined-filing-compliance-procedures" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS — Streamlined Filing Compliance Procedures ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/individuals/international-taxpayers/streamlined-filing-compliance-procedures</p>
+            </a>
+            <a href="https://www.law.cornell.edu/uscode/text/26/911" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRC Section 911 ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.law.cornell.edu/uscode/text/26/911</p>
             </a>
             <a href="/api/rules/feie-nomad-auditor" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">

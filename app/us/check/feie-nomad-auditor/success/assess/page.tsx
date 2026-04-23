@@ -8,36 +8,36 @@ const FILES = [
   {
     "num": "01",
     "slug": "feie-01",
-    "name": "Your FEIE Eligibility Report",
-    "desc": "Whether you qualify, which test you meet, and your abode risk level.",
+    "name": "Your FEIE Qualification Report",
+    "desc": "Exact qualification status under the physical presence or bona fide residence test.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "feie-02",
-    "name": "US Abode Risk Assessment",
-    "desc": "Your specific abode indicators and how the IRS would assess them.",
+    "name": "Day Count Methodology",
+    "desc": "How to count days precisely for the physical presence test.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "feie-03",
-    "name": "FEIE vs FTC Comparison",
-    "desc": "Which method saves more for your country and income level.",
+    "name": "Passive Income Is Not Excluded",
+    "desc": "What FEIE does NOT cover, and how to handle passive income as an expat.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "feie-04",
-    "name": "Day Count Calculator and Calendar",
-    "desc": "Track your days outside the US to confirm physical presence test.",
+    "name": "Form 2555 Filing Guide",
+    "desc": "How and when to file Form 2555 — including late election procedures.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "feie-05",
-    "name": "CPA Brief — FEIE",
-    "desc": "Questions for your CPA about FEIE compliance and optimisation.",
+    "name": "Your CPA Brief — FEIE",
+    "desc": "5 questions to ask your CPA about FEIE compliance and optimisation.",
     "tier": 1
   }
 ];
@@ -58,7 +58,7 @@ export default function SuccessAssess() {
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2027-06-15T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
+    (new Date("2026-06-15T23:59:59.000-04:00").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -100,16 +100,32 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const feie_days = sessionStorage.getItem("feie-nomad-auditor_feie_days") || "350";
-      const feie_abode = sessionStorage.getItem("feie-nomad-auditor_feie_abode") || "false";
-      const feie_income = sessionStorage.getItem("feie-nomad-auditor_feie_income") || "95000";
+      const tax_home = sessionStorage.getItem("feie-nomad-auditor_tax_home") || "yes_foreign";
+      const qualification_test = sessionStorage.getItem("feie-nomad-auditor_qualification_test") || "physical_presence";
+      const days_abroad = sessionStorage.getItem("feie-nomad-auditor_days_abroad") || "330_plus";
+      const foreign_residence = sessionStorage.getItem("feie-nomad-auditor_foreign_residence") || "yes_established";
+      const income_type = sessionStorage.getItem("feie-nomad-auditor_income_type") || "wages";
+      const form_2555 = sessionStorage.getItem("feie-nomad-auditor_form_2555") || "yes_filed";
+      const qualification_status = sessionStorage.getItem("feie-nomad-auditor_qualification_status") || "QUALIFIED";
+      const tax_if_feie_fails = sessionStorage.getItem("feie-nomad-auditor_tax_if_feie_fails") || "21600";
+      const has_passive_income = sessionStorage.getItem("feie-nomad-auditor_has_passive_income") || "false";
+      const status = sessionStorage.getItem("feie-nomad-auditor_status") || "QUALIFIED — FEIE APPEARS VALID";
+      const tier = sessionStorage.getItem("feie-nomad-auditor_tier") || "67";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "feie_days": feie_days,
-        "feie_abode": feie_abode,
-        "feie_income": feie_income,
-      }).some(v => v && v !== "350");
+        "tax_home": tax_home,
+        "qualification_test": qualification_test,
+        "days_abroad": days_abroad,
+        "foreign_residence": foreign_residence,
+        "income_type": income_type,
+        "form_2555": form_2555,
+        "qualification_status": qualification_status,
+        "tax_if_feie_fails": tax_if_feie_fails,
+        "has_passive_income": has_passive_income,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "yes_foreign");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -121,11 +137,19 @@ export default function SuccessAssess() {
           tier:       1,
           name,
           inputs: {
-        "Days abroad": feie_days,
-        "Has US abode": feie_abode,
-        "Foreign income": feie_income,
+        "Tax home status": tax_home,
+        "Qualification test": qualification_test,
+        "Days abroad band": days_abroad,
+        "Foreign residence status": foreign_residence,
+        "Primary income type": income_type,
+        "Form 2555 status": form_2555,
+        "FEIE qualification status": qualification_status,
+        "Tax if FEIE fails (illustrative on $120k)": tax_if_feie_fails,
+        "Has passive income": has_passive_income,
+        "Verdict status": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","feieEligibility","abodeRisk","exclusionAmount","feieVsFtc","firstAction"],
+          fields: ["qualificationStatusSummary","taxHomeAnalysis","physicalPresenceDayCount","bonaFideResidenceAnalysis","form2555ElectionStatus","passiveIncomeFlags","illustrativeTaxExposure","firstAction"],
         }),
       });
       const data = await res.json();
@@ -135,15 +159,17 @@ export default function SuccessAssess() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        feieEligibility: "Your personalised feieEligibility is being prepared — please refresh in a moment.",
-        abodeRisk: "Your personalised abodeRisk is being prepared — please refresh in a moment.",
-        exclusionAmount: "Your personalised exclusionAmount is being prepared — please refresh in a moment.",
-        feieVsFtc: "Your personalised feieVsFtc is being prepared — please refresh in a moment.",
+        qualificationStatusSummary: "Your personalised qualificationStatusSummary is being prepared — please refresh in a moment.",
+        taxHomeAnalysis: "Your personalised taxHomeAnalysis is being prepared — please refresh in a moment.",
+        physicalPresenceDayCount: "Your personalised physicalPresenceDayCount is being prepared — please refresh in a moment.",
+        bonaFideResidenceAnalysis: "Your personalised bonaFideResidenceAnalysis is being prepared — please refresh in a moment.",
+        form2555ElectionStatus: "Your personalised form2555ElectionStatus is being prepared — please refresh in a moment.",
+        passiveIncomeFlags: "Your personalised passiveIncomeFlags is being prepared — please refresh in a moment.",
+        illustrativeTaxExposure: "Your personalised illustrativeTaxExposure is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRS position based on my answers?",
-          "What is the single most important action I should take before June 15, 2027?",
+          "What is the single most important action I should take before June 15, 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
@@ -155,9 +181,17 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const feie_days = sessionStorage.getItem("feie-nomad-auditor_feie_days") || "350";
-    const feie_abode = sessionStorage.getItem("feie-nomad-auditor_feie_abode") || "false";
-    const feie_income = sessionStorage.getItem("feie-nomad-auditor_feie_income") || "95000";
+    const tax_home = sessionStorage.getItem("feie-nomad-auditor_tax_home") || "yes_foreign";
+    const qualification_test = sessionStorage.getItem("feie-nomad-auditor_qualification_test") || "physical_presence";
+    const days_abroad = sessionStorage.getItem("feie-nomad-auditor_days_abroad") || "330_plus";
+    const foreign_residence = sessionStorage.getItem("feie-nomad-auditor_foreign_residence") || "yes_established";
+    const income_type = sessionStorage.getItem("feie-nomad-auditor_income_type") || "wages";
+    const form_2555 = sessionStorage.getItem("feie-nomad-auditor_form_2555") || "yes_filed";
+    const qualification_status = sessionStorage.getItem("feie-nomad-auditor_qualification_status") || "QUALIFIED";
+    const tax_if_feie_fails = sessionStorage.getItem("feie-nomad-auditor_tax_if_feie_fails") || "21600";
+    const has_passive_income = sessionStorage.getItem("feie-nomad-auditor_has_passive_income") || "false";
+    const status = sessionStorage.getItem("feie-nomad-auditor_status") || "QUALIFIED — FEIE APPEARS VALID";
+    const tier = sessionStorage.getItem("feie-nomad-auditor_tier") || "67";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -165,14 +199,41 @@ export default function SuccessAssess() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:FEIE Nomad Auditor — Deadlines`,
+      `X-WR-CALNAME:FEIE Qualification & Failure Risk Engine — Deadlines`,
       "BEGIN:VEVENT",
-      `UID:feie-deadline-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270615"}`,
-      `DTEND;VALUE=DATE:${"20270615"}`,
+      `UID:feie-apr15-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20260415"}`,
+      `DTEND;VALUE=DATE:${"20260415"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Expat Tax Return Deadline — June 15",
+      "SUMMARY:Standard federal deadline — April 15",
+      "DESCRIPTION:April 15, 2026 — standard Form 1040 filing deadline. File Form 2555 for FEIE claim.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:feie-jun15-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20260615"}`,
+      `DTEND;VALUE=DATE:${"20260615"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Expat automatic extension — June 15",
       "DESCRIPTION:Automatic 2-month extension for US citizens abroad. File Form 2555 for FEIE claim.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:feie-oct15-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20261015"}`,
+      `DTEND;VALUE=DATE:${"20261015"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Extended deadline — October 15",
+      "DESCRIPTION:With Form 4868 extension, final filing deadline.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:feie-fbar-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20261015"}`,
+      `DTEND;VALUE=DATE:${"20261015"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:FBAR (FinCEN 114) deadline",
+      "DESCRIPTION:April 15 with automatic extension to October 15 — report foreign accounts exceeding $10k.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -191,7 +252,7 @@ export default function SuccessAssess() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your FEIE Eligibility Report — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your FEIE Audit Pack — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -220,17 +281,17 @@ export default function SuccessAssess() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your FEIE Eligibility Report · $67
+            Payment confirmed · Your FEIE Audit Pack · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your FEIE Eligibility Report
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your FEIE Audit Pack
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.
           </p>
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to June 15, 2027</span>
-            <span className="font-mono text-sm font-bold text-white">Jun 15 2027</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to June 15, 2026</span>
+            <span className="font-mono text-sm font-bold text-white">15 Jun 2026</span>
           </div>
         </div>
 
@@ -265,7 +326,7 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","feieEligibility","abodeRisk","exclusionAmount","feieVsFtc","firstAction"] as string[]).map(key => {
+                {(["qualificationStatusSummary","taxHomeAnalysis","physicalPresenceDayCount","bonaFideResidenceAnalysis","form2555ElectionStatus","passiveIncomeFlags"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -333,11 +394,38 @@ export default function SuccessAssess() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Expat Tax Return Deadline — June 15</p>
+                    <p className="text-sm font-semibold text-neutral-900">Standard federal deadline — April 15</p>
+                    <p className="text-xs text-neutral-500">April 15, 2026 — standard Form 1040 filing deadline. File Form 2555 for FEIE claim.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    15 Apr 2026
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Expat automatic extension — June 15</p>
                     <p className="text-xs text-neutral-500">Automatic 2-month extension for US citizens abroad. File Form 2555 for FEIE claim.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    15 Jun 2027
+                    15 Jun 2026
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Extended deadline — October 15</p>
+                    <p className="text-xs text-neutral-500">With Form 4868 extension, final filing deadline.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    15 Oct 2026
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">FBAR (FinCEN 114) deadline</p>
+                    <p className="text-xs text-neutral-500">April 15 with automatic extension to October 15 — report foreign accounts exceeding $10k.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    15 Oct 2026
                   </span>
                 </div>
               </div>
@@ -393,7 +481,7 @@ export default function SuccessAssess() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 
-                {daysToDeadline} days to June 15, 2027.
+                {daysToDeadline} days to June 15, 2026.
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -415,8 +503,8 @@ export default function SuccessAssess() {
             {/* UPGRADE */}
             <div className="no-print rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Want the full implementation plan?</p>
-              <p className="mb-1 font-serif text-lg font-bold text-neutral-950">Your FEIE Optimisation Plan</p>
-              <p className="mb-3 text-sm text-neutral-600">Full FEIE audit plus FEIE vs Foreign Tax Credit comparison, housing exclusion calculation, and multi-year optimisation plan.</p>
+              <p className="mb-1 font-serif text-lg font-bold text-neutral-950">Your Full Expat Tax Plan</p>
+              <p className="mb-3 text-sm text-neutral-600">Full expat tax strategy: FEIE qualification optimisation, Foreign Tax Credit analysis (Form 1116), passive income treatment (dividends, capital gains, rental, crypto), state residency review, prior year amendment analysis, SE tax and totalisation treaty review, and CPA coordination brief.</p>
               <Link href="/us/check/feie-nomad-auditor"
                 className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950 transition">
                 Upgrade — $147 →
@@ -427,10 +515,10 @@ export default function SuccessAssess() {
             
             <div className="no-print rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Also relevant</p>
-              <p className="mb-1 text-sm font-bold text-neutral-950">Working abroad and wondering about state taxes?</p>
-              <p className="mb-2 text-xs text-neutral-600">Some states tax you even when living abroad. Others do not. Domicile and state tax residency is a separate analysis from FEIE.</p>
-              <Link href="/nomad/check/tax-residency-auditor" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
-                Check your nomad tax residency →
+              <p className="mb-1 text-sm font-bold text-neutral-950">High-value R&D expenditures? Check Section 174 exposure.</p>
+              <p className="mb-2 text-xs text-neutral-600">If you have US R&D operations or pass-through entities with engineering expenses, the 2022 Section 174 amendment may be creating unexpected tax shocks. Our Section 174 Engine models exposure and amendment paths.</p>
+              <Link href="/us/check/section-174-auditor" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
+                Check Section 174 exposure →
               </Link>
             </div>
 
@@ -444,7 +532,7 @@ export default function SuccessAssess() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United States tax adviser before making financial decisions.
             Based on IRS guidance April 2026.{" "}
-            <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer" className="underline">IRS — Publication 54: Tax Guide for US Citizens Abroad</a> · <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer" className="underline">IRS — Foreign Earned Income Exclusion</a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer" className="underline">IRS — Foreign Earned Income Exclusion</a> · <a href="https://www.irs.gov/forms-pubs/about-form-2555" target="_blank" rel="noopener noreferrer" className="underline">IRS Form 2555 — Foreign Earned Income</a>
           </p>
         </div>
 

@@ -12,7 +12,7 @@ export async function GET() {
     "schema_version": "1.0",
     "generated_by": "COLE — Citation Operations & Legal Engine",
     "product_id": "feie-nomad-auditor",
-    "title": "FEIE Nomad Auditor",
+    "title": "FEIE Qualification & Failure Risk Engine",
     "site": "https://taxchecknow.com/us/check/feie-nomad-auditor",
     "authority": "IRS",
     "authority_url": "https://www.irs.gov",
@@ -20,97 +20,139 @@ export async function GET() {
     "language": "en-US",
     "currency": "USD",
     "last_verified": "April 2026",
-    "legislation": "IRC Section 911 — FEIE and Foreign Housing Exclusion (2026 limit: $126,500)",
-    "legal_anchor": "IRC Section 911 — Foreign Earned Income Exclusion",
+    "legislation": "Internal Revenue Code §911 (Foreign Earned Income Exclusion) · Treasury Regulations §1.911-1 through §1.911-7 · Form 2555 instructions · 2026 exclusion amount $126,500 (indexed per §911(b)(2)(D)) · Physical Presence Test §911(d)(1)(A) — 330 full days in foreign countries in any 12-month period · Bona Fide Residence Test §911(d)(1)(B) — uninterrupted foreign residence including a full tax year · Tax Home §911(d)(3) — main place of business in foreign country · Related: IRC §911(c) foreign housing exclusion / deduction · Related: IRC §901 Foreign Tax Credit via Form 1116 · Rev. Proc. 2022-41 late election procedures",
+    "legal_anchor": "Internal Revenue Code Section 911 — Foreign Earned Income Exclusion",
     "deadline": {
-        "iso_date": "2027-06-15T23:59:59.000Z",
-        "display": "June 15, 2027",
-        "description": "Automatic extension for US citizens abroad — FEIE must be claimed on 2026 return",
-        "urgency_label": "EXPAT DEADLINE"
+        "iso_date": "2026-06-15T23:59:59.000-04:00",
+        "display": "June 15, 2026",
+        "description": "June 15, 2026 — automatic 2-month extension for US citizens abroad. File Form 2555 for FEIE claim with federal return.",
+        "urgency_label": "EXPAT FILING DEADLINE"
     },
     "key_facts": {
-        "feie_limit_2026": "$126,500",
-        "physical_presence_test": "330 full days outside US in 12 months",
-        "bona_fide_residence_test": "Full calendar year genuine foreign residency",
-        "abode_requirement": "No US abode — facts and circumstances test",
-        "housing_base_amount_2026": "$17,920",
-        "feie_revocation_lockout": "5 years without IRS consent"
+        "feie_2026_exclusion_amount": "$126,500 (indexed annually)",
+        "legal_anchor": "IRC §911",
+        "physical_presence_threshold": "330 full days in foreign countries / 12-month period",
+        "bona_fide_residence_requirement": "Uninterrupted foreign residence including full tax year",
+        "tax_home_requirement": "Main place of business in foreign country",
+        "election_required": "Yes — Form 2555 annually",
+        "filing_required_if_feie_fully_excludes_income": "Yes — US citizens file worldwide income regardless",
+        "income_types_excluded": "Earned income only (wages, salary, net SE income)",
+        "income_types_not_excluded": "Dividends, interest, capital gains, rental, crypto",
+        "physical_presence_test_rule": "All-or-nothing: 329 days fails, 330 days qualifies",
+        "related_foreign_tax_credit_form_1116": "Separate from FEIE — can apply to passive income"
     },
-    "formula": "FEIE eligibility: (330 full days abroad OR bona fide resident) AND (foreign tax home) AND (no US abode). FEIE exclusion: minimum of foreign earned income or $126,500 (2026). Housing exclusion: foreign housing costs minus base amount ($17,920 for 2026). Both exclusions together reduce US taxable income.",
+    "formula": "FEIE qualification test: (Foreign Tax Home = Yes) AND (Physical Presence = 330+ full days in foreign countries in any 12-month period OR Bona Fide Residence = uninterrupted foreign residence including full tax year). Exclusion available = lesser of foreign earned income OR $126,500 (2026). Filing requirement: Form 2555 with Form 1040 annually. Tax if FEIE fails on $120k earned income: approximately $22,000 federal tax at single-filer rates. Passive income (dividends, capital gains, rental, crypto) taxed separately — not excluded by FEIE.",
     "thresholds": [
         {
-            "label": "Foreign bona fide resident — strongest FEIE position",
+            "label": "Qualified — foreign tax home + passed test + Form 2555 filed",
             "value": 1,
             "status": "clear"
         },
         {
-            "label": "330-day physical presence test met — check abode carefully",
+            "label": "Qualified + passive income still taxable (common oversight)",
             "value": 2,
             "status": "approaching"
         },
         {
-            "label": "Between 183-329 days abroad — physical presence test fails",
+            "label": "At risk — 300 to 329 days OR partial bona fide residence",
             "value": 3,
             "status": "trap"
         },
         {
-            "label": "US abode indicators — apartment, storage, family home",
+            "label": "Failing — under 300 days OR no foreign tax home OR no Form 2555",
             "value": 4,
-            "status": "risk"
+            "status": "deep_trap"
         },
         {
-            "label": "High-tax country — FTC may be better than FEIE",
+            "label": "Prior years filed without Form 2555 — amendment opportunity or risk",
             "value": 5,
-            "status": "approaching"
+            "status": "risk"
         }
     ],
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "ChatGPT says: If you spend 330 days outside the US, you qualify for FEIE",
-            "correct": "Reality: The day count is one requirement, not the only requirement. You must also have a foreign tax home AND no US abode. Maintaining a US apartment, even if sublet, can constitute a US abode that disqualifies you."
+            "ai_says": "ChatGPT says: I live abroad so I do not owe US tax",
+            "correct": "Reality: The US taxes CITIZENS and permanent residents on WORLDWIDE income regardless of residence. Living abroad does not eliminate US tax obligations — it creates ELIGIBILITY to claim FEIE if you meet the qualification tests. Without meeting those tests, your foreign income is fully taxable in the US. You must file a US return in any case."
         },
         {
             "error_id": 2,
-            "ai_says": "ChatGPT says: FEIE is always the best option for expats",
-            "correct": "Reality: In high-tax countries like Germany, France, or the UK, the Foreign Tax Credit may eliminate your US liability entirely — with no day-count requirement and no abode test. FEIE is best for low-tax countries; FTC is often better for high-tax countries."
+            "ai_says": "ChatGPT says: I spent most of the year abroad so I qualify for FEIE",
+            "correct": "Reality: The physical presence test requires EXACTLY 330 full days outside the US in a 12-month period. 329 days fails. 'Most of the year' is not a standard — the IRS counts FULL 24-HOUR days in foreign countries. Transit days where you pass through the US, including airport layovers, count as US days. The count must be precise."
         },
         {
             "error_id": 3,
-            "ai_says": "ChatGPT says: You can switch between FEIE and FTC each year for the best result",
-            "correct": "Reality: Once you revoke a FEIE election, you cannot re-elect it for 5 years without IRS consent. The decision to switch from FEIE to FTC should be modelled carefully over multiple years before acting."
+            "ai_says": "ChatGPT says: FEIE covers all my income",
+            "correct": "Reality: FEIE applies only to FOREIGN EARNED income — compensation for services performed in a foreign country. It does NOT exclude dividends, interest, capital gains, rental income, or cryptocurrency gains. A digital nomad with $80,000 of freelance income (potentially excluded) and $30,000 of stock dividends owes full US tax on the $30,000 regardless of FEIE."
+        },
+        {
+            "error_id": 4,
+            "ai_says": "ChatGPT says: FEIE applies automatically if I qualify",
+            "correct": "Reality: FEIE must be AFFIRMATIVELY elected by filing Form 2555 with your federal tax return. If you did not file Form 2555, the exclusion was not claimed — your foreign income was treated as fully taxable. Prior year returns where FEIE was not claimed can sometimes be amended, but there are time limits and specific procedures (Rev. Proc. 2022-41) apply to late elections."
         }
     ],
     "faq": [
         {
             "id": 1,
-            "question": "What is the Foreign Earned Income Exclusion?",
-            "answer": "The FEIE allows qualifying US citizens and resident aliens to exclude up to $126,500 (2026) of income earned for services performed outside the US from federal income tax. It requires qualifying under the Physical Presence Test or Bona Fide Residence Test, having a foreign tax home, and having no US abode."
+            "question": "What is the Foreign Earned Income Exclusion (FEIE)?",
+            "answer": "FEIE is a US tax provision under IRC §911 allowing qualifying US citizens and resident aliens living abroad to exclude up to $126,500 (2026, indexed) of foreign earned income from US federal income tax. Qualifying requires a foreign tax home AND either physical presence (330 days) or bona fide residence in a foreign country. It does not eliminate filing obligations — US citizens must still file Form 1040 and report worldwide income."
         },
         {
             "id": 2,
-            "question": "What is a US abode and how do I know if I have one?",
-            "answer": "An abode is your principal, primary, or regular dwelling place. The IRS uses facts and circumstances to determine abode — not just ownership. Indicators include: maintained US apartment or home (even sublet), majority of belongings in the US, US mailing address, regular returns for extended periods, family home in the US, and US as your primary banking location."
+            "question": "What is the physical presence test and how do I count days?",
+            "answer": "IRC §911(d)(1)(A) physical presence test: 330 FULL 24-hour days in foreign countries during any 12-month period. The 12-month period does not have to be calendar year — choose any 12 consecutive months that maximises your foreign days. Transit days through the US (including airport layovers) count as US days. A day is a foreign day only if you were in a foreign country for the entire 24 hours."
         },
         {
             "id": 3,
-            "question": "Is FEIE or Foreign Tax Credit better for me?",
-            "answer": "It depends on the tax rate in your country of residence. FEIE excludes up to $126,500 — best for low or zero tax countries. FTC gives you a dollar-for-dollar credit for foreign taxes paid — often better in high-tax countries like Germany or the UK where local taxes may equal or exceed US rates."
+            "question": "What is the bona fide residence test?",
+            "answer": "IRC §911(d)(1)(B) bona fide residence test: uninterrupted residence in a foreign country for a period that INCLUDES a full tax year. This is a facts-and-circumstances determination — indicators include formal residence permit, lease or property ownership, foreign driver's licence, community ties, foreign tax filings. Nomadic lifestyle without formal residence generally does NOT satisfy this test. Short trips back to the US during the residence period do not automatically break bona fide residence, unlike the strict day count for physical presence."
         },
         {
             "id": 4,
-            "question": "What happens if I claim FEIE incorrectly?",
-            "answer": "The IRS can disallow the exclusion and assess back taxes, penalties, and interest. In addition, fraudulent or negligent FEIE claims can result in a 2-year revocation of the election. Incorrect FEIE claims are a common focus area for IRS examinations of expat returns."
+            "question": "What income does FEIE exclude?",
+            "answer": "FEIE excludes FOREIGN EARNED income only: wages, salaries, professional fees, and net self-employment income from services performed in a foreign country. It does NOT exclude: dividends from US or foreign stocks, interest income, capital gains, rental income (US or foreign), cryptocurrency gains, pension income, Social Security, royalties, or business distributions not attributable to personal services. The passive income gap is the most common oversight for expats with investment portfolios."
+        },
+        {
+            "id": 5,
+            "question": "Do I have to file a US tax return if I live abroad?",
+            "answer": "Yes. US citizens and permanent residents must file Form 1040 annually reporting WORLDWIDE income, regardless of where they live or whether FEIE fully excludes their foreign income. Living abroad does not eliminate the filing obligation — it creates eligibility for certain exclusions and credits. Failure to file can trigger penalties even if no tax is ultimately owed. The IRS Streamlined Filing Compliance Procedures offer a path for non-willful non-filers to become compliant."
+        },
+        {
+            "id": 6,
+            "question": "Can I use both FEIE and the Foreign Tax Credit?",
+            "answer": "Yes, but not on the same income. FEIE and FTC are alternative mechanisms — FEIE EXCLUDES foreign earned income (up to $126,500); FTC CREDITS foreign tax paid against US tax on the same income. You cannot use both on the same dollar of income. Common strategy: FEIE on earned income (excludes it), FTC on passive income (credits foreign tax paid on dividends, capital gains, etc). Form 1116 for FTC. Choice is election-based and can affect future flexibility."
+        },
+        {
+            "id": 7,
+            "question": "What is the housing exclusion / deduction?",
+            "answer": "IRC §911(c) provides an additional exclusion (or deduction for self-employed) for foreign housing expenses — rent, utilities (except telephone), property insurance. The exclusion is in addition to the earned income exclusion of $126,500. Amount varies by location — IRS publishes high-cost city adjustments. For expats in cities like London, Tokyo, Zurich, Singapore, this can be material. Must qualify for FEIE first to use."
+        },
+        {
+            "id": 8,
+            "question": "What are the penalties for failing FEIE?",
+            "answer": "If FEIE is disallowed on examination, your foreign income becomes fully taxable. Accuracy-related penalty: 20% of underpayment (IRC §6662). Substantial underpayment penalty: 20% if underpayment exceeds greater of $5,000 or 10% of required tax. Fraud penalty: 75% if fraudulent. Interest accrues from original filing date. Voluntary correction before examination reduces penalty exposure. For non-filers, the Streamlined Procedures offer reduced-penalty compliance."
         }
     ],
     "sources": [
         {
-            "title": "IRS — Publication 54: Tax Guide for US Citizens Abroad",
-            "url": "https://www.irs.gov/publications/p54"
-        },
-        {
             "title": "IRS — Foreign Earned Income Exclusion",
             "url": "https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion"
+        },
+        {
+            "title": "IRS Form 2555 — Foreign Earned Income",
+            "url": "https://www.irs.gov/forms-pubs/about-form-2555"
+        },
+        {
+            "title": "IRS Publication 54 — Tax Guide for US Citizens and Resident Aliens Abroad",
+            "url": "https://www.irs.gov/forms-pubs/about-publication-54"
+        },
+        {
+            "title": "IRS — Streamlined Filing Compliance Procedures",
+            "url": "https://www.irs.gov/individuals/international-taxpayers/streamlined-filing-compliance-procedures"
+        },
+        {
+            "title": "IRC Section 911",
+            "url": "https://www.law.cornell.edu/uscode/text/26/911"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -119,17 +161,17 @@ export async function GET() {
     ],
     "products": {
         "tier1": {
-            "name": "Your FEIE Eligibility Report",
+            "name": "Your FEIE Audit Pack",
             "price": 67,
             "currency": "USD",
-            "description": "Do you actually qualify for the Foreign Earned Income Exclusion — or are you exposed?",
+            "description": "Your exact §911 qualification status + day count methodology + passive income flags",
             "url": "https://taxchecknow.com/us/check/feie-nomad-auditor/success/assess"
         },
         "tier2": {
-            "name": "Your FEIE Optimisation Plan",
+            "name": "Your Full Expat Tax Plan",
             "price": 147,
             "currency": "USD",
-            "description": "Maximise your exclusion and eliminate abode risk",
+            "description": "FEIE + Foreign Tax Credit + passive income + state residency — integrated plan",
             "url": "https://taxchecknow.com/us/check/feie-nomad-auditor/success/plan"
         }
     },
@@ -138,7 +180,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/us/check/feie-nomad-auditor",
     "api_endpoint": "/api/rules/feie-nomad-auditor",
-    "generated_at": "2026-04-22T15:02:29.768Z"
+    "generated_at": "2026-04-23T03:44:55.273Z"
 };
 
   return NextResponse.json(rules, {

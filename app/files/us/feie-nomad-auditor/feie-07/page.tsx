@@ -49,7 +49,7 @@ export default function FeieNomadAuditorFile07() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">United States · FEIE Nomad Auditor</span>
+            <span className="hidden sm:block">United States · FEIE Qualification & Failure Risk Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function FeieNomadAuditorFile07() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/us/feie-nomad-auditor/feie-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 06: Housing Exclusion Calculator</a></div>
+          <div><a href="/files/us/feie-nomad-auditor/feie-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 06: FEIE vs Foreign Tax Credit Analysis</a></div>
           <span className="font-mono">File 07 of 8</span>
-          <div><a href="/files/us/feie-nomad-auditor/feie-08" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 08: Multi-Year FEIE Strategy →</a></div>
+          <div><a href="/files/us/feie-nomad-auditor/feie-08" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 08: Full Expat Compliance Checklist →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function FeieNomadAuditorFile07() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 IRS · IRC Section 911 — Foreign Earned Income Exclusion
+              🇬🇧 IRS · Internal Revenue Code Section 911 — Foreign Earned Income Exclusion
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -87,7 +87,7 @@ export default function FeieNomadAuditorFile07() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 EXPAT DEADLINE: June 15, 2027
+              🔴 EXPAT FILING DEADLINE: June 15, 2026
             </span>
             <a href="/us/check/feie-nomad-auditor"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -96,12 +96,12 @@ export default function FeieNomadAuditorFile07() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            FEIE Nomad Auditor · File 07 of 8
+            FEIE Qualification & Failure Risk Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Self-Employment and FEIE
+            State Residency Strategy
           </h1>
-          <p className="text-neutral-500 text-sm">How FEIE interacts with self-employment tax for freelancers and founders.</p>
+          <p className="text-neutral-500 text-sm">How to break state tax residency when leaving California, New York, or other sticky states.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function FeieNomadAuditorFile07() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Self-Employment Tax and FEIE</h2><p>FEIE reduces federal income tax — but does NOT reduce self-employment (SE) tax. If you are self-employed, you still owe SE tax (15.3%) on your net earnings even after claiming FEIE. This is a significant difference from the Foreign Tax Credit approach.</p>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>State Residency Strategy for Expats</h2><p>FEIE handles federal tax. State tax is separate — and many states continue to tax former residents without a clear residency break.</p><h3>Sticky States</h3><ul><li><strong>California:</strong> closest-connection test, can tax former residents for years after leaving</li><li><strong>New York:</strong> 183-day rule PLUS permanent place of abode test</li><li><strong>Virginia:</strong> strict domicile test</li><li><strong>New Mexico:</strong> source-of-income based</li></ul><h3>Steps to Break Residency</h3><ul class="checklist"><li>Change driver's licence to new state (or foreign)</li><li>Register to vote in new state or cancel voter registration</li><li>Sell or lease out former state residence</li><li>Move bank accounts, brokerage to new state address</li><li>Update address on tax returns, employer records, credit cards</li><li>Obtain residence documentation in new location (lease, utility bills)</li><li>Break memberships tied to former state (gym, clubs, professional associations)</li><li>File final partial-year resident return</li><li>File non-resident returns if earning state-sourced income in following years</li></ul><h3>Expats and State Tax</h3><p>Living abroad doesn't automatically break state residency. Some states require you to establish residency ELSEWHERE (not just leave). If you are genuinely abroad with no US state residency, establishing the foreign country as your tax home helps — but sticky states may still argue closest connection.</p><h3>State-Specific Notes</h3><ul><li>California: file FTB 540NR or claim non-resident status; prepare for audit if CA connections persist</li><li>New York: 183-day count matters; keep travel records</li><li>Florida, Texas, Nevada, Tennessee, Washington, Wyoming, South Dakota, Alaska: no state income tax — moving to any of these first before going abroad simplifies the residency break</li></ul>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function FeieNomadAuditorFile07() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your FEIE Eligibility Report</span>
+                <span className="text-sm font-semibold text-neutral-950">Your FEIE Qualification Report</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function FeieNomadAuditorFile07() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">US Abode Risk Assessment</span>
+                <span className="text-sm font-semibold text-neutral-950">Day Count Methodology</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function FeieNomadAuditorFile07() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">FEIE vs FTC Comparison</span>
+                <span className="text-sm font-semibold text-neutral-950">Passive Income Is Not Excluded</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +157,7 @@ export default function FeieNomadAuditorFile07() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Day Count Calculator and Calendar</span>
+                <span className="text-sm font-semibold text-neutral-950">Form 2555 Filing Guide</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -166,7 +166,7 @@ export default function FeieNomadAuditorFile07() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">05</span>
-                <span className="text-sm font-semibold text-neutral-950">CPA Brief — FEIE</span>
+                <span className="text-sm font-semibold text-neutral-950">Your CPA Brief — FEIE</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -175,7 +175,7 @@ export default function FeieNomadAuditorFile07() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Housing Exclusion Calculator<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">FEIE vs Foreign Tax Credit Analysis<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +183,7 @@ export default function FeieNomadAuditorFile07() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">07</span>
-                <span className="text-sm font-semibold text-white">Self-Employment and FEIE<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-white">State Residency Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -192,7 +192,7 @@ export default function FeieNomadAuditorFile07() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">08</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Year FEIE Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Full Expat Compliance Checklist<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -222,10 +222,10 @@ export default function FeieNomadAuditorFile07() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/us/check/feie-nomad-auditor" className="hover:text-neutral-900 transition">
-              ← Back to FEIE Nomad Auditor
+              ← Back to FEIE Qualification & Failure Risk Engine
             </a>
-            <a href="https://www.irs.gov/publications/p54" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Publication 54: Tax Guide for US Citizens Abroad ↗</a>
             <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Foreign Earned Income Exclusion ↗</a>
+            <a href="https://www.irs.gov/forms-pubs/about-form-2555" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS Form 2555 — Foreign Earned Income ↗</a>
           </div>
         </div>
       </footer>
