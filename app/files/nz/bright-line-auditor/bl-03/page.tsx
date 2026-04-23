@@ -49,7 +49,7 @@ export default function BrightLineAuditorFile03() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">New Zealand · Bright-Line Escape Auditor</span>
+            <span className="hidden sm:block">New Zealand · Bright-Line Property Tax Decision Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -74,7 +74,7 @@ export default function BrightLineAuditorFile03() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 IRD · Income Tax Act 2007 — Bright-Line Test
+              🇬🇧 Inland Revenue Department (IRD) · Income Tax Act 2007, subpart CB — Bright-Line Property Rule
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -96,7 +96,7 @@ export default function BrightLineAuditorFile03() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Bright-Line Escape Auditor · File 03 of 8
+            Bright-Line Property Tax Decision Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
             Main Home Area Test Auditor
@@ -205,7 +205,7 @@ export default function BrightLineAuditorFile03() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on IRD guidance April 2026.
+            Based on Inland Revenue Department (IRD) guidance April 2026.
           </p>
         </div>
 
@@ -222,7 +222,7 @@ export default function BrightLineAuditorFile03() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/nz/check/bright-line-auditor" className="hover:text-neutral-900 transition">
-              ← Back to Bright-Line Escape Auditor
+              ← Back to Bright-Line Property Tax Decision Engine
             </a>
             <a href="https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — Bright-line property rule ↗</a>
             <a href="https://www.ird.govt.nz/property/buying-and-selling/bright-line-test/main-home" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRD — Main home exclusion ↗</a>

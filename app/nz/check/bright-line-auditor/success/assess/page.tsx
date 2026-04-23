@@ -100,18 +100,22 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const bl_days = sessionStorage.getItem("bright-line-auditor_bl_days") || "548";
-      const bl_use = sessionStorage.getItem("bright-line-auditor_bl_use") || "mixed";
-      const bl_transferred = sessionStorage.getItem("bright-line-auditor_bl_transferred") || "false";
-      const bl_status = sessionStorage.getItem("bright-line-auditor_bl_status") || "at_risk";
+      const bl_purchase_date = sessionStorage.getItem("bright-line-auditor_bl_purchase_date") || "post_2024";
+      const bl_sale_status = sessionStorage.getItem("bright-line-auditor_bl_sale_status") || "planning";
+      const bl_property_use = sessionStorage.getItem("bright-line-auditor_bl_property_use") || "primary";
+      const bl_gain_band = sessionStorage.getItem("bright-line-auditor_bl_gain_band") || "50k_150k";
+      const bl_income_band = sessionStorage.getItem("bright-line-auditor_bl_income_band") || "70k_180k";
+      const bl_status = sessionStorage.getItem("bright-line-auditor_bl_status") || "agreement_trap_warning";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "bl_days": bl_days,
-        "bl_use": bl_use,
-        "bl_transferred": bl_transferred,
+        "bl_purchase_date": bl_purchase_date,
+        "bl_sale_status": bl_sale_status,
+        "bl_property_use": bl_property_use,
+        "bl_gain_band": bl_gain_band,
+        "bl_income_band": bl_income_band,
         "bl_status": bl_status,
-      }).some(v => v && v !== "548");
+      }).some(v => v && v !== "post_2024");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -119,16 +123,18 @@ export default function SuccessAssess() {
         body: JSON.stringify({
           product_id: "bright-line-auditor",
           market:     "New Zealand",
-          authority:  "IRD",
+          authority:  "Inland Revenue Department (IRD)",
           tier:       1,
           name,
           inputs: {
-        "Days held": bl_days,
-        "Property use": bl_use,
-        "Was transferred": bl_transferred,
+        "Purchase settlement date": bl_purchase_date,
+        "Sale status": bl_sale_status,
+        "Property use": bl_property_use,
+        "Gain band": bl_gain_band,
+        "Income band": bl_income_band,
         "Bright-line status": bl_status,
           },
-          fields: ["status","daysHeld","brightLineVerdict","mainHomeRisk","taxExposure","firstAction","documentationNeeded","accountantQuestions"],
+          fields: ["status","applicableRule","brightLineTaxEstimate","mainHomeExemptionStatus","agreementDateWindow","firstAction","documentationChecklist","accountantQuestions"],
         }),
       });
       const data = await res.json();
@@ -139,14 +145,14 @@ export default function SuccessAssess() {
       // Graceful fallback — page still shows files and calendar
       setAssessment({
         status: "Your personalised status is being prepared — please refresh in a moment.",
-        daysHeld: "Your personalised daysHeld is being prepared — please refresh in a moment.",
-        brightLineVerdict: "Your personalised brightLineVerdict is being prepared — please refresh in a moment.",
-        mainHomeRisk: "Your personalised mainHomeRisk is being prepared — please refresh in a moment.",
-        taxExposure: "Your personalised taxExposure is being prepared — please refresh in a moment.",
+        applicableRule: "Your personalised applicableRule is being prepared — please refresh in a moment.",
+        brightLineTaxEstimate: "Your personalised brightLineTaxEstimate is being prepared — please refresh in a moment.",
+        mainHomeExemptionStatus: "Your personalised mainHomeExemptionStatus is being prepared — please refresh in a moment.",
+        agreementDateWindow: "Your personalised agreementDateWindow is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
-        documentationNeeded: "Your personalised documentationNeeded is being prepared — please refresh in a moment.",
+        documentationChecklist: "Your personalised documentationChecklist is being prepared — please refresh in a moment.",
         accountantQuestions: [
-          "What is my exact IRD position based on my answers?",
+          "What is my exact Inland Revenue Department (IRD) position based on my answers?",
           "What is the single most important action I should take before 31 March 2027?",
           "Are there any planning opportunities specific to my situation?",
         ],
@@ -159,10 +165,12 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const bl_days = sessionStorage.getItem("bright-line-auditor_bl_days") || "548";
-    const bl_use = sessionStorage.getItem("bright-line-auditor_bl_use") || "mixed";
-    const bl_transferred = sessionStorage.getItem("bright-line-auditor_bl_transferred") || "false";
-    const bl_status = sessionStorage.getItem("bright-line-auditor_bl_status") || "at_risk";
+    const bl_purchase_date = sessionStorage.getItem("bright-line-auditor_bl_purchase_date") || "post_2024";
+    const bl_sale_status = sessionStorage.getItem("bright-line-auditor_bl_sale_status") || "planning";
+    const bl_property_use = sessionStorage.getItem("bright-line-auditor_bl_property_use") || "primary";
+    const bl_gain_band = sessionStorage.getItem("bright-line-auditor_bl_gain_band") || "50k_150k";
+    const bl_income_band = sessionStorage.getItem("bright-line-auditor_bl_income_band") || "70k_180k";
+    const bl_status = sessionStorage.getItem("bright-line-auditor_bl_status") || "agreement_trap_warning";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -170,7 +178,7 @@ export default function SuccessAssess() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Bright-Line Escape Auditor — Deadlines`,
+      `X-WR-CALNAME:Bright-Line Property Tax Decision Engine — Deadlines`,
       "BEGIN:VEVENT",
       `UID:bl-review-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${relativeDate(7)}`,
@@ -253,7 +261,7 @@ export default function SuccessAssess() {
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
             <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against IRD rules</p>
+            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against Inland Revenue Department (IRD) rules</p>
           </div>
         )}
 
@@ -273,13 +281,13 @@ export default function SuccessAssess() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your New Zealand IRD position
+                Your New Zealand Inland Revenue Department (IRD) position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","daysHeld","brightLineVerdict","mainHomeRisk","taxExposure","firstAction"] as string[]).map(key => {
+                {(["status","applicableRule","brightLineTaxEstimate","mainHomeExemptionStatus","agreementDateWindow","firstAction"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -379,7 +387,7 @@ export default function SuccessAssess() {
                 Everything you need — in one place
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
-                Each document is built around your specific IRD position.
+                Each document is built around your specific Inland Revenue Department (IRD) position.
                 Start with File 02 — it has your exact numbers.
                 
               </p>
@@ -466,7 +474,7 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified New Zealand tax adviser before making financial decisions.
-            Based on IRD guidance April 2026.{" "}
+            Based on Inland Revenue Department (IRD) guidance April 2026.{" "}
             <a href="https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test" target="_blank" rel="noopener noreferrer" className="underline">IRD — Bright-line property rule</a> · <a href="https://www.ird.govt.nz/property/buying-and-selling/bright-line-test/main-home" target="_blank" rel="noopener noreferrer" className="underline">IRD — Main home exclusion</a>
           </p>
         </div>

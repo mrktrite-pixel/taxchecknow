@@ -10,12 +10,12 @@ import BrightLineAuditorCalculator from "./BrightLineAuditorCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "NZ Bright-Line Test 2026: Is Your Property Sale Tax-Free? | TaxCheckNow",
-  description: "From 1 July 2024, NZ bright-line is 2 years for ALL properties. Most people are using outdated 5-10 year rules. Start date is title registration — not purchase agreement. Check your position instantly.",
+  title: "NZ Bright-Line Property Tax Decision Engine 2026 | TaxCheckNow",
+  description: "NZ bright-line is 2 years for property purchased from 1 July 2024 (5 or 10 years for earlier purchases). Profit is taxed as income at your marginal rate — up to 39%. The agreement date — not the settlement date — is the test. Check your exact position.",
   alternates: { canonical: "https://taxchecknow.com/nz/check/bright-line-auditor" },
   openGraph: {
-    title: "NZ Bright-Line Test 2026: Is Your Property Sale Tax-Free? | TaxCheckNow",
-    description: "From 1 July 2024, NZ bright-line is 2 years for ALL properties. Most people are using outdated 5-10 year rules. Start date is title registration — not purchase agreement. Check your position instantly.",
+    title: "NZ Bright-Line Property Tax Decision Engine 2026 | TaxCheckNow",
+    description: "NZ bright-line is 2 years for property purchased from 1 July 2024 (5 or 10 years for earlier purchases). Profit is taxed as income at your marginal rate — up to 39%. The agreement date — not the settlement date — is the test. Check your exact position.",
     url: "https://taxchecknow.com/nz/check/bright-line-auditor",
     siteName: "TaxCheckNow",
     type: "website",
@@ -100,24 +100,20 @@ const faqs = [
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: The 10-year bright-line test still applies in NZ",
-    "correct": "Reality: The 10-year rule was repealed. From 1 July 2024, the bright-line period is 2 years for all residential property sales. AI tools consistently cite the old rules."
+    "wrong": "ChatGPT says: I have owned over 2 years so bright-line does not apply",
+    "correct": "Reality: The bright-line test uses the date the agreement for sale is signed — not the settlement date. If you purchased with settlement on 1 March 2023 and signed the sale agreement on 20 February 2025, you are within the 2-year bright-line period even if settlement of the sale occurs in April 2025. Agreement date is the test."
   },
   {
-    "wrong": "ChatGPT says: The purchase agreement date starts the bright-line period",
-    "correct": "Reality: The bright-line clock starts on the title registration date — not the purchase agreement date and not the settlement date. Using the wrong date is the most common bright-line calculation error."
+    "wrong": "ChatGPT says: My main home is automatically exempt",
+    "correct": "Reality: Wrong if there was any mixed use. The exemption requires the property to have been predominantly used as your main home for the majority of the bright-line period. Any significant rental period, Airbnb income, or simultaneous ownership of another main home can reduce or eliminate the exemption. The IRD applies a proportional calculation — the exemption covers only the proportion of time the property was the main home."
   },
   {
-    "wrong": "ChatGPT says: Living in the property means you are automatically exempt",
-    "correct": "Reality: The main home exemption requires passing both the time test (over 50% occupancy) and the area test (over 50% of land used as main home). Simply living there is not sufficient."
+    "wrong": "ChatGPT says: The bright-line rule is a capital gains tax",
+    "correct": "Reality: Wrong. NZ does not have a general capital gains tax. The bright-line rule is an income tax provision under the Income Tax Act 2007. Profit on a bright-line sale is added to the seller's other income and taxed at their marginal income tax rate — up to 39% for incomes over $180,000. There is no separate CGT rate or discount mechanism."
   },
   {
-    "wrong": "ChatGPT says: Transfers to family or trusts are always safe",
-    "correct": "Reality: Transfers between associated persons can reset the bright-line clock or trigger tax. Rollover relief is available in specific circumstances but must be confirmed."
-  },
-  {
-    "wrong": "ChatGPT says: The bright-line test does not apply to your main home",
-    "correct": "Reality: The bright-line test can apply to your main home if you fail either the time test or area test. Partial rental use or short ownership periods can expose you even in your primary residence."
+    "wrong": "ChatGPT says: Bright-line only applies to investors",
+    "correct": "Reality: Wrong. The bright-line rule applies to any residential property that is not the seller's main home for the majority of the period. A first-home buyer who purchases, rents out for 12 months, then sells within 2 years is within scope. A person who inherits and sells within 2 years may be within scope (inherited property via deceased estate is generally excluded — but other inheritance paths differ). The exemption is the main home — not owner-occupier status generally."
   }
 ];
 
@@ -146,49 +142,49 @@ const accountantQuestions = [
 
 const workedExamples = [
   {
-    "name": "Clear exit",
-    "setup": "Main home, used as primary residence throughout",
-    "income": "900 days",
-    "status": "TAX-FREE"
+    "name": "Agreement date trap",
+    "setup": "Purchase settlement 15 Mar 2023; agreement signed 10 Mar 2025; $150k gain; 33% rate",
+    "income": "$49,500 tax",
+    "status": "TAXED (10 days early)"
   },
   {
-    "name": "Just inside",
-    "setup": "Investment property, sold at 680 days",
-    "income": "680 days",
-    "status": "TAXABLE"
+    "name": "Wait 10 days",
+    "setup": "Same property; agreement signed 20 Mar 2025 instead",
+    "income": "$0 tax",
+    "status": "CLEAR (after anniversary)"
   },
   {
-    "name": "Mixed use",
-    "setup": "50% main home, 50% rental — 18 months held",
-    "income": "548 days",
-    "status": "PARTIAL TAX"
+    "name": "Main home clean",
+    "setup": "2023 settlement; primary residence entire 2 yrs; $120k gain; 33% rate",
+    "income": "$0 tax",
+    "status": "EXEMPT (main home)"
   },
   {
-    "name": "Trust transfer",
-    "setup": "Transferred from trust — clock may have reset",
-    "income": "Verify",
-    "status": "AT RISK"
+    "name": "Main home + rental mix",
+    "setup": "2022 settlement; 14 months residence + 10 months rental; $200k gain; 33% rate",
+    "income": "~$27,500",
+    "status": "PARTIAL (proportional)"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "Before March 2021",
-    "metric1": "5 years",
-    "metric2": "Most residential property",
-    "bestMove": "Repealed"
+    "position": "Sign 10 days before anniversary",
+    "metric1": "$49,500 tax",
+    "metric2": "$100,500 net",
+    "bestMove": "Full bright-line exposure"
   },
   {
-    "position": "March 2021-July 2024",
-    "metric1": "10 years",
-    "metric2": "Investment property",
-    "bestMove": "Repealed"
+    "position": "Wait — sign after anniversary",
+    "metric1": "$0 tax",
+    "metric2": "$150,000 net",
+    "bestMove": "10 days of patience"
   },
   {
-    "position": "From 1 July 2024",
-    "metric1": "2 years",
-    "metric2": "All residential property",
-    "bestMove": "Current law"
+    "position": "At 39% (income over $180k)",
+    "metric1": "$58,500 tax",
+    "metric2": "$91,500 net",
+    "bestMove": "Stakes rise with income"
   }
 ];
 
@@ -217,43 +213,59 @@ const toolsRows = [
 
 const geoFacts = [
   {
-    "label": "Bright-line period (2026)",
-    "value": "2 years (730 days)"
+    "label": "Legal anchor",
+    "value": "Income Tax Act 2007, subpart CB"
+  },
+  {
+    "label": "Current period (settlement from 1 Jul 2024)",
+    "value": "2 years"
+  },
+  {
+    "label": "Period for 27 Mar 2021 – 30 Jun 2024",
+    "value": "10 years (5yr for new builds)"
+  },
+  {
+    "label": "Period for 29 Mar 2018 – 26 Mar 2021",
+    "value": "5 years"
+  },
+  {
+    "label": "Period for before 29 Mar 2018",
+    "value": "2 years (original rule)"
   },
   {
     "label": "Start date",
-    "value": "Title registration date"
+    "value": "Settlement date (title transfer)"
   },
   {
     "label": "End date",
-    "value": "Binding sale agreement date"
+    "value": "AGREEMENT date (not settlement of sale)"
   },
   {
-    "label": "Main home time test",
-    "value": "Over 50% of ownership period"
+    "label": "Tax treatment",
+    "value": "Income tax at marginal rate (20.5–39%)"
   },
   {
-    "label": "Main home area test",
-    "value": "Over 50% of land"
+    "label": "NZ general CGT",
+    "value": "None — bright-line is income tax"
   },
   {
-    "label": "Applies from",
-    "value": "Sales from 1 July 2024"
+    "label": "Main home exemption",
+    "value": "Predominant main home use for majority of period (mixed use reduces proportionally)"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "Bright-line period",
+    "label": "Current rule (from 1 Jul 2024)",
     "value": "2 years"
   },
   {
-    "label": "Start date",
-    "value": "Title registration"
+    "label": "End date rule",
+    "value": "Agreement date"
   },
   {
-    "label": "Main home tests",
-    "value": "2 required"
+    "label": "Tax rate",
+    "value": "20.5% – 39% marginal"
   },
   {
     "label": "Tax year end",
@@ -278,26 +290,26 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "Old rule AI cites",
-    "value": "10 years",
-    "sub": "repealed — no longer applies"
-  },
-  {
-    "label": "Actual 2026 rule",
+    "label": "Current rule (from 1 Jul 2024)",
     "value": "2 years",
-    "sub": "for all properties from 1 July 2024",
+    "sub": "agreement date from settlement"
+  },
+  {
+    "label": "Fear anchor — $150k gain at 33%",
+    "value": "$49,500 tax",
+    "sub": "10 days on the wrong side of the anniversary",
     "red": true
   },
   {
-    "label": "Start date",
-    "value": "Title reg",
-    "sub": "not purchase agreement",
+    "label": "At 39% (income over $180k)",
+    "value": "$58,500 tax",
+    "sub": "income tax — no separate CGT in NZ",
     "red": true
   },
   {
-    "label": "Exemption test",
-    "value": "2 tests",
-    "sub": "time AND area — both required"
+    "label": "Agreement date vs settlement",
+    "value": "Agreement wins",
+    "sub": "signing before anniversary = fully taxable"
   }
 ];
 
@@ -321,8 +333,8 @@ export default function BrightLineAuditorPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Bright-Line Escape Auditor — Rules April 2026",
-    description: "From 1 July 2024, NZ bright-line is 2 years for ALL properties. Most people are using outdated 5-10 year rules. Start date is title registration — not purchase agreement. Check your position instantly.",
+    name: "Bright-Line Property Tax Decision Engine — Rules April 2026",
+    description: "NZ bright-line is 2 years for property purchased from 1 July 2024 (5 or 10 years for earlier purchases). Profit is taxed as income at your marginal rate — up to 39%. The agreement date — not the settlement date — is the test. Check your exact position.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -337,8 +349,8 @@ export default function BrightLineAuditorPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Bright-Line Escape Auditor",
-    description: "From 1 July 2024, NZ bright-line is 2 years for ALL properties. Most people are using outdated 5-10 year rules. Start date is title registration — not purchase agreement. Check your position instantly.",
+    name: "Bright-Line Property Tax Decision Engine",
+    description: "NZ bright-line is 2 years for property purchased from 1 July 2024 (5 or 10 years for earlier purchases). Profit is taxed as income at your marginal rate — up to 39%. The agreement date — not the settlement date — is the test. Check your exact position.",
     url: "https://taxchecknow.com/nz/check/bright-line-auditor",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -353,28 +365,38 @@ export default function BrightLineAuditorPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Bright-Line Escape Auditor",
+    name: "How to use the Bright-Line Property Tax Decision Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Select your holding period",
-            "text": "Choose how many days elapsed between your title registration date and binding sale agreement date."
+            "name": "Select your purchase settlement date",
+            "text": "Determines which bright-line rule applies (2yr / 5yr / 10yr / current 2yr)."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Indicate sale status",
+            "text": "Already sold, planning, considering, or just checking position."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "State timing (agreement date bucket or time since purchase)",
+            "text": "Determines whether the sale falls within or outside the applicable period."
       },
       {
             "@type": "HowToStep",
             "name": "Identify property use",
-            "text": "Specify whether the property was your main home, a rental, mixed use, or holiday home."
+            "text": "Primary residence, mixed use, rental, holiday — main home exemption depends on this."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your bright-line verdict",
-            "text": "See immediately whether your sale is tax-free, taxable, or requires further analysis."
+            "name": "Enter gain band and income band",
+            "text": "Approximate gain and your marginal rate produce the tax estimate."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your proof pack",
-            "text": "Receive a personalised documentation checklist and main home test analysis for your specific situation."
+            "name": "Get your bright-line position",
+            "text": "See the applicable rule, agreement date window, main home exemption status, and tax math."
       }
 ],
   };
@@ -382,18 +404,18 @@ export default function BrightLineAuditorPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Bright-Line Escape Auditor — Free Check",
+    "name": "Bright-Line Property Tax Decision Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nz/check/bright-line-auditor#calculator",
-    "description": "From 1 July 2024, NZ bright-line is 2 years for ALL properties. Most people are using outdated 5-10 year rules. Start date is title registration — not purchase agreement. Check your position instantly.",
+    "description": "NZ bright-line is 2 years for property purchased from 1 July 2024 (5 or 10 years for earlier purchases). Profit is taxed as income at your marginal rate — up to 39%. The agreement date — not the settlement date — is the test. Check your exact position.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on IRD guidance April 2026"
+      "Based on Inland Revenue Department (IRD) guidance April 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -414,7 +436,7 @@ export default function BrightLineAuditorPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "New Zealand", item: "https://taxchecknow.com/nz" },
-      { "@type": "ListItem", position: 3, name: "Bright-Line Escape Auditor", item: "https://taxchecknow.com/nz/check/bright-line-auditor" },
+      { "@type": "ListItem", position: 3, name: "Bright-Line Property Tax Decision Engine", item: "https://taxchecknow.com/nz/check/bright-line-auditor" },
     ],
   };
 
@@ -459,7 +481,7 @@ export default function BrightLineAuditorPage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇳🇿 IRD Verified · Income Tax Act 2007 — Bright-Line Test ↗
+            🇳🇿 Inland Revenue Department (IRD) Verified · Income Tax Act 2007, subpart CB — Bright-Line Property Rule ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-NZ
@@ -468,12 +490,12 @@ export default function BrightLineAuditorPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          NZ Bright-Line 2026: Is Your Property Sale Tax-Free?
+          NZ Property Sold Within 2 Years of Purchase Is Taxed on the Full Profit. On a $150,000 Gain That Is $45,000+ to the IRD. Here Is Your Exact Position.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          From 1 July 2024, New Zealand's bright-line test is 2 years for ALL residential property sales. If you sell more than 730 days after your title registration date, your profit is generally tax-free. The old 5-year and 10-year rules have been repealed.
+          In New Zealand, the bright-line property rule taxes profits on residential property sold within the bright-line period. For property with a settlement date on or after 1 July 2024, the bright-line period is 2 years. For property purchased between March 2021 and June 2024, a 10-year period applied (5 years for new builds). The profit is taxed as income at the seller's marginal tax rate — not as a separate capital gains tax. On a $150,000 gain at a 33% marginal rate, that is $49,500 of tax payable to the IRD. The rule is established under the Income Tax Act 2007, subpart CB.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -495,16 +517,16 @@ export default function BrightLineAuditorPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Bright-line period</dt>
+                  <dt className="text-neutral-600">Current rule (from 1 Jul 2024)</dt>
                   <dd className="font-bold">2 years</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Start date</dt>
-                  <dd className="font-bold">Title registration</dd>
+                  <dt className="text-neutral-600">End date rule</dt>
+                  <dd className="font-bold">Agreement date</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Main home tests</dt>
-                  <dd className="font-bold">2 required</dd>
+                  <dt className="text-neutral-600">Tax rate</dt>
+                  <dd className="font-bold">20.5% – 39% marginal</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Tax year end</dt>
@@ -516,7 +538,7 @@ export default function BrightLineAuditorPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Bright-Line Escape Auditor</h3>
+              <h3 className="mb-1 text-lg font-bold">Bright-Line Property Tax Decision Engine</h3>
               <p className="mb-3 text-sm text-neutral-300">A personalised bright-line audit built around your title date, sale date, and main home usage — not a generic property guide.</p>
               <div className="space-y-2">
                 <a href="#calculator"
@@ -554,39 +576,39 @@ export default function BrightLineAuditorPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Old rule AI cites
+                Current rule (from 1 Jul 2024)
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                10 years
-              </p>
-              <p className="text-xs text-neutral-400">repealed — no longer applies</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Actual 2026 rule
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
                 2 years
               </p>
-              <p className="text-xs text-neutral-400">for all properties from 1 July 2024</p>
+              <p className="text-xs text-neutral-400">agreement date from settlement</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Start date
+                Fear anchor — $150k gain at 33%
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Title reg
+                $49,500 tax
               </p>
-              <p className="text-xs text-neutral-400">not purchase agreement</p>
+              <p className="text-xs text-neutral-400">10 days on the wrong side of the anniversary</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                At 39% (income over $180k)
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                $58,500 tax
+              </p>
+              <p className="text-xs text-neutral-400">income tax — no separate CGT in NZ</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Exemption test
+                Agreement date vs settlement
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                2 tests
+                Agreement wins
               </p>
-              <p className="text-xs text-neutral-400">time AND area — both required</p>
+              <p className="text-xs text-neutral-400">signing before anniversary = fully taxable</p>
             </div>
           </div>
         </div>
@@ -598,22 +620,26 @@ export default function BrightLineAuditorPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What starts the bright-line clock
+            What the bright-line test measures
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Title registration date (start)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Binding sale agreement (end)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Start: SETTLEMENT date (title transfer)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ End: AGREEMENT date of sale (not sale settlement)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Applicable period by original purchase date (2/5/10 years)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Profit taxed as income at marginal rate</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Main home exemption proportional to period of main home use</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT purchase agreement date</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT settlement date</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT possession date</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a separate capital gains tax</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT measured to sale settlement date</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic main home exemption</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ Holiday homes do NOT qualify for exemption</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: IRD — Bright-line property rule · Income Tax Act 2007</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: Income Tax Act 2007, subpart CB · IRD — Bright-line property rule · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -621,24 +647,24 @@ export default function BrightLineAuditorPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The answer — IRD confirmed April 2026
           </p>
-          <p className="mb-2 text-neutral-900">From 1 July 2024, New Zealand's bright-line test is 2 years for ALL residential property sales. If you sell more than 730 days after your title registration date, your profit is generally tax-free. The old 5-year and 10-year rules have been repealed.</p>
-          <p className="mb-2 text-neutral-900">The start date is your title registration date — not your purchase agreement date, and not your settlement date. Most people get this wrong. Using the wrong start date can mean thinking you are taxable when you are not, or thinking you are safe when the clock has not yet expired.</p>
-          <p className="mb-2 text-neutral-900">The main home exemption still applies but requires passing both the time test (over 50% occupancy) and the area test (over 50% of land used as main home). Simply living in the property is not enough — you need to be able to prove it.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: IRD — Bright-line property rule · Income Tax Act 2007 s CB 6A</p>
+          <p className="mb-2 text-neutral-900">In New Zealand, the bright-line property rule taxes profits on residential property sold within the bright-line period. For property with a settlement date on or after 1 July 2024, the bright-line period is 2 years. For property purchased between March 2021 and June 2024, a 10-year period applied (5 years for new builds). The profit is taxed as income at the seller's marginal tax rate — not as a separate capital gains tax. On a $150,000 gain at a 33% marginal rate, that is $49,500 of tax payable to the IRD. The rule is established under the Income Tax Act 2007, subpart CB.</p>
+          <p className="mb-2 text-neutral-900">The most commonly missed trap is the agreement date rule. The bright-line test uses the date the agreement for sale is signed — not the settlement date. A property settled after the 2-year period can still be taxed if the agreement was signed before the period ended. A vendor who thinks 'it settles after 2 years so I am fine' may have signed the agreement 3 weeks too early and owe $49,500 in bright-line tax they were not planning for. The agreement date is the test — not the settlement date.</p>
+          <p className="mb-2 text-neutral-900">The main home exemption exists but is not automatic. The property must have been used predominantly as the owner's main home for the majority of the bright-line period. Partial rental, Airbnb income, flatmates paying market rent, or holiday use can all affect the exemption. An owner who rented out the property for 6 months during a 2-year ownership period may lose the exemption entirely on the proportion attributable to the rental period. The exemption must be confirmed — not assumed.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: Income Tax Act 2007, subpart CB (Bright-Line Property Rule) · IRD — Bright-line property rule · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The bright-line clock — what starts and stops it
+            Agreement date timing — the decisive trap
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Purchase agreement date → sale date  ❌  WRONG — most people use this
+              ❌ Purchase March 2023  →  plan to settle April 2025  →  sign agreement February 2025  →  within 2-year period  →  $49,500 tax on $150,000 gain  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Title registration date → binding sale agreement  ✔  CORRECT IRD rule
+              ✔ Purchase March 2023  →  wait  →  sign agreement after March 2025  →  outside bright-line  →  $0 tax  →  $49,500 saved  ✔
             </div>
           </div>
         </div>
@@ -649,9 +675,10 @@ export default function BrightLineAuditorPage() {
             Common AI errors on this topic
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The 10-year bright-line still applies — wrong. From 1 July 2024, the bright-line period is 2 years for all residential property sales regardless of purchase date or property type. The old rules have been repealed.</li>
-            <li>✗ The purchase agreement date starts the bright-line clock — wrong. The start date is your title registration date. Using the wrong date can result in incorrect tax assessment.</li>
-            <li>✗ Living in the property means you are automatically exempt — wrong. You must pass both the time test (over 50% occupancy during ownership) and the area test (over 50% of land used as main home).</li>
+            <li>✗ I have owned the property for over 2 years so bright-line does not apply — wrong if the agreement was signed within 2 years. The bright-line test uses the date the agreement for sale is signed, not the settlement date. If you purchased with settlement on 1 March 2023 and signed the sale agreement on 20 February 2025, you are within the 2-year bright-line period even if settlement occurs in April 2025. Agreement date is the test.</li>
+            <li>✗ My property is my main home so the bright-line exemption applies automatically — wrong if there was any mixed use. The main home exemption requires the property to have been predominantly used as your main home for the majority of the bright-line period. Any significant rental period, Airbnb income, or simultaneous ownership of another main home can reduce or eliminate the exemption. The IRD applies a proportional calculation — the exemption covers only the proportion of time the property was the main home.</li>
+            <li>✗ The bright-line rule is a capital gains tax — wrong. New Zealand does not have a general capital gains tax. The bright-line rule is an income tax provision under the Income Tax Act 2007. Profit on a bright-line sale is added to the seller's other income and taxed at their marginal income tax rate — which can be up to 39% for incomes over $180,000. The distinction matters: there is no separate CGT rate or CGT discount mechanism.</li>
+            <li>✗ The bright-line test only applies to investors — wrong. The bright-line rule applies to any residential property that is not the seller's main home for the majority of the period. A first-home buyer who purchases, rents out for 12 months, then sells within 2 years is within scope. A person who inherits a property and sells within 2 years may be within scope. The exemption is the main home — not owner-occupier status generally.</li>
           </ul>
         </div>
 
@@ -700,11 +727,11 @@ export default function BrightLineAuditorPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             NZ Bright-Line Property Rule — confirmed 2026
           </h2>
-          <p className="mb-4 text-neutral-800">From 1 July 2024, New Zealand's bright-line test is 2 years for all residential property sales under the Income Tax Act 2007 s CB 6A. The previous 5-year and 10-year rules have been repealed. The bright-line period starts on the date of title registration and ends on the date of the binding sale and purchase agreement. Settlement date is not used. The main home exemption applies where the property was used as the seller's main home for more than 50% of the ownership period and more than 50% of the land area. Both tests must be satisfied. Transfers between associated persons and trust transfers can reset or affect the bright-line period. Rollover relief is available in specific circumstances including relationship property transfers and death.</p>
+          <p className="mb-4 text-neutral-800">New Zealand's bright-line property rule, established under the Income Tax Act 2007 (subpart CB), taxes profits on residential property sales where the property is sold within the bright-line period. For properties with a settlement date on or after 1 July 2024, the bright-line period is 2 years. For properties purchased between 27 March 2021 and 30 June 2024, a 10-year period applied (5 years for new builds). The bright-line period begins on the settlement date and ends on the date the agreement for sale is signed — not the settlement date of the sale. Profit within the bright-line period is taxed as income at the seller's marginal rate (10.5% to 39%) with no separate capital gains rate or discount. The main home exemption applies where the property was predominantly used as the owner's main home for the majority of the bright-line period — partial rental or mixed use reduces the exemption proportionally. Holiday homes and investment properties do not qualify for the main home exemption. The IRD can assess bright-line tax retrospectively and may require repayment of mortgage interest deductions claimed on investment properties.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Bright-Line Period = Binding Sale Date minus Title Registration Date. If period is over 730 days: generally tax-free. If 730 days or less: taxable unless an exclusion applies (main home, inherited property, relationship property transfer).
+            Bright-Line Tax = (Sale Price − Purchase Price − Deductible Expenses) × Marginal Income Tax Rate. Period runs from SETTLEMENT date to AGREEMENT date of sale. Applicable period years depends on purchase settlement date: 2yr (pre-29 Mar 2018), 5yr (29 Mar 2018–26 Mar 2021), 10yr (27 Mar 2021–30 Jun 2024; 5yr for new builds), 2yr (from 1 Jul 2024). If agreement signed within applicable period: taxable unless main home exemption applies. No separate CGT — profit added to income.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -718,34 +745,54 @@ export default function BrightLineAuditorPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Bright-line period (2026)</td>
-                  <td className="p-2">2 years (730 days)</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Bright-Line Test</td>
+                  <td className="p-2">Legal anchor</td>
+                  <td className="p-2">Income Tax Act 2007, subpart CB</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Current period (settlement from 1 Jul 2024)</td>
+                  <td className="p-2">2 years</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Period for 27 Mar 2021 – 30 Jun 2024</td>
+                  <td className="p-2">10 years (5yr for new builds)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Period for 29 Mar 2018 – 26 Mar 2021</td>
+                  <td className="p-2">5 years</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Period for before 29 Mar 2018</td>
+                  <td className="p-2">2 years (original rule)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Start date</td>
-                  <td className="p-2">Title registration date</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Bright-Line Test</td>
+                  <td className="p-2">Settlement date (title transfer)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">End date</td>
-                  <td className="p-2">Binding sale agreement date</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Bright-Line Test</td>
+                  <td className="p-2">AGREEMENT date (not settlement of sale)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Main home time test</td>
-                  <td className="p-2">Over 50% of ownership period</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Bright-Line Test</td>
+                  <td className="p-2">Tax treatment</td>
+                  <td className="p-2">Income tax at marginal rate (20.5–39%)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Main home area test</td>
-                  <td className="p-2">Over 50% of land</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Bright-Line Test</td>
+                  <td className="p-2">NZ general CGT</td>
+                  <td className="p-2">None — bright-line is income tax</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Applies from</td>
-                  <td className="p-2">Sales from 1 July 2024</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Bright-Line Test</td>
+                  <td className="p-2">Main home exemption</td>
+                  <td className="p-2">Predominant main home use for majority of period (mixed use reduces proportionally)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007, subpart CB — Bright-Line Property Rule</td>
                 </tr>
               </tbody>
             </table>
@@ -772,58 +819,57 @@ export default function BrightLineAuditorPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four property sale scenarios
+          Four bright-line scenarios
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
                 <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Title Date</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Sale Agreement</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Days Held</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Status</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Setup</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax outcome</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Planning lever</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Clear exit</td>
-                <td className="p-3 text-neutral-700">Main home, used as primary residence throughout</td>
-                <td className="p-3 font-mono">900 days</td>
+                <td className="p-3 font-bold">Agreement date trap</td>
+                <td className="p-3 text-neutral-700">Purchase settlement 15 Mar 2023; agreement signed 10 Mar 2025; $150k gain; 33% rate</td>
+                <td className="p-3 font-mono">$49,500 tax</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    TAX-FREE
+                    TAXED (10 days early)
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Just inside</td>
-                <td className="p-3 text-neutral-700">Investment property, sold at 680 days</td>
-                <td className="p-3 font-mono">680 days</td>
+                <td className="p-3 font-bold">Wait 10 days</td>
+                <td className="p-3 text-neutral-700">Same property; agreement signed 20 Mar 2025 instead</td>
+                <td className="p-3 font-mono">$0 tax</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    TAXABLE
+                    CLEAR (after anniversary)
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Mixed use</td>
-                <td className="p-3 text-neutral-700">50% main home, 50% rental — 18 months held</td>
-                <td className="p-3 font-mono">548 days</td>
+                <td className="p-3 font-bold">Main home clean</td>
+                <td className="p-3 text-neutral-700">2023 settlement; primary residence entire 2 yrs; $120k gain; 33% rate</td>
+                <td className="p-3 font-mono">$0 tax</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    PARTIAL TAX
+                    EXEMPT (main home)
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Trust transfer</td>
-                <td className="p-3 text-neutral-700">Transferred from trust — clock may have reset</td>
-                <td className="p-3 font-mono">Verify</td>
+                <td className="p-3 font-bold">Main home + rental mix</td>
+                <td className="p-3 text-neutral-700">2022 settlement; 14 months residence + 10 months rental; $200k gain; 33% rate</td>
+                <td className="p-3 font-mono">~$27,500</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    AT RISK
+                    PARTIAL (proportional)
                   </span>
                 </td>
               </tr>
@@ -840,36 +886,37 @@ export default function BrightLineAuditorPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Bright-line rules — what changed
+          Sign within period vs wait — $150k gain at 33%
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Period</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Rule</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Applies To</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Net from gain</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Saving vs wait</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Before March 2021</td>
-                <td className="p-3 font-mono text-xs">5 years</td>
-                <td className="p-3 text-xs">Most residential property</td>
-                <td className="p-3 text-xs text-neutral-700">Repealed</td>
+                <td className="p-3 font-bold">Sign 10 days before anniversary</td>
+                <td className="p-3 font-mono text-xs">$49,500 tax</td>
+                <td className="p-3 text-xs">$100,500 net</td>
+                <td className="p-3 text-xs text-neutral-700">Full bright-line exposure</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">March 2021-July 2024</td>
-                <td className="p-3 font-mono text-xs">10 years</td>
-                <td className="p-3 text-xs">Investment property</td>
-                <td className="p-3 text-xs text-neutral-700">Repealed</td>
+                <td className="p-3 font-bold">Wait — sign after anniversary</td>
+                <td className="p-3 font-mono text-xs">$0 tax</td>
+                <td className="p-3 text-xs">$150,000 net</td>
+                <td className="p-3 text-xs text-neutral-700">10 days of patience</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">From 1 July 2024</td>
-                <td className="p-3 font-mono text-xs">2 years</td>
-                <td className="p-3 text-xs">All residential property</td>
-                <td className="p-3 text-xs text-neutral-700">Current law</td>
+                <td className="p-3 font-bold">At 39% (income over $180k)</td>
+                <td className="p-3 font-mono text-xs">$58,500 tax</td>
+                <td className="p-3 text-xs">$91,500 net</td>
+                <td className="p-3 text-xs text-neutral-700">Stakes rise with income</td>
               </tr>
             </tbody>
           </table>
@@ -930,7 +977,7 @@ export default function BrightLineAuditorPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          5 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -1025,7 +1072,7 @@ export default function BrightLineAuditorPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            NZ bright-line test 2026: 2 years for all residential property sales from 1 July 2024. Start date: title registration. End date: binding sale agreement. Main home exclusion: time test over 50% AND area test over 50%. Under Income Tax Act 2007 s CB 6A.
+            NZ bright-line property rule — Income Tax Act 2007, subpart CB. Four regimes by settlement date: 2yr (pre-29 Mar 2018), 5yr (29 Mar 2018–26 Mar 2021), 10yr (27 Mar 2021–30 Jun 2024; 5yr for new builds), 2yr (from 1 Jul 2024). Amendments not retrospective. Start: SETTLEMENT date. End: AGREEMENT date (not settlement of sale). Tax: income tax at marginal rate (20.5–39%). Main home exemption conditional on predominant main home use for majority of period — mixed rental/Airbnb reduces exemption proportionally.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1036,10 +1083,13 @@ export default function BrightLineAuditorPage() {
               Income Tax Act 2007
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              s CB 6A
+              2-Year Rule from 1 July 2024
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              Agreement Date Not Settlement
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Main Home Exception Conditional
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
@@ -1069,7 +1119,7 @@ export default function BrightLineAuditorPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from IRD and GOV.UK guidance for April 2026.
+          built from Inland Revenue Department (IRD) and GOV.UK guidance for April 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
