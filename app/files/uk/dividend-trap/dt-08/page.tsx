@@ -49,7 +49,7 @@ export default function DividendTrapFile08() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">United Kingdom · Dividend Trap</span>
+            <span className="hidden sm:block">United Kingdom · Salary + Dividend Tax Trap Engine</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function DividendTrapFile08() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/uk/dividend-trap/dt-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Corporate Retained Profits Strategy</a></div>
+          <div><a href="/files/uk/dividend-trap/dt-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Multi-Year Dividend Sequencing</a></div>
           <span className="font-mono">File 08 of 8</span>
-          <div><a href="/uk/check/dividend-trap" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to Dividend Trap →</a></div>
+          <div><a href="/uk/check/dividend-trap" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to Salary + Dividend Tax Trap Engine →</a></div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function DividendTrapFile08() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 HMRC · Income Tax Act 2007 — Dividend Tax Rates
+              🇬🇧 HMRC · Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -87,7 +87,7 @@ export default function DividendTrapFile08() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 SA DEADLINE: 31 January 2027
+              🔴 YEAR END — TIMING LEVER CLOSES: 5 April 2027
             </span>
             <a href="/uk/check/dividend-trap"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -96,12 +96,12 @@ export default function DividendTrapFile08() {
           </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
-            Dividend Trap · File 08 of 8
+            Salary + Dividend Tax Trap Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            ISA Dividend Sheltering Guide
+            Annual Review Checklist
           </h1>
-          <p className="text-neutral-500 text-sm">Using ISAs to hold dividend-generating investments tax-free.</p>
+          <p className="text-neutral-500 text-sm">What to check every year before 5 April to ensure your salary/dividend split is still optimal.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function DividendTrapFile08() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>ISA Dividend Sheltering</h2><p>Dividends on investments held inside an ISA are completely tax-free — they do not use the £500 allowance and are not taxed at any rate. The annual ISA allowance is £20,000 per person.</p><div class="action-box"><h3>Optimal Strategy</h3><p>Hold highest-dividend investments inside ISA</p><p>Hold growth investments outside ISA (lower dividend yield)</p><p>Use spousal ISA allowance as well</p></div>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Annual Dividend Review Checklist</h2><h3>February (2 months before year-end)</h3><ul class="checklist"><li>Pull YTD income figures: salary, dividends, other income</li><li>Project full-year total income</li><li>Identify whether total will cross £50,270 or £125,140 thresholds</li><li>Quantify higher-rate dividend exposure if any</li><li>Model restructure options (pension, spousal, deferral)</li></ul><h3>March (month before year-end)</h3><ul class="checklist"><li>Execute chosen restructure (pension contribution, dividend deferral, spousal shift)</li><li>Time final dividend payment to control year-end total</li><li>Confirm bookkeeping reflects actual dividend declaration dates</li><li>Brief accountant on changes</li></ul><h3>April (new tax year)</h3><ul class="checklist"><li>Check updated tax year figures (bands, allowances)</li><li>Adjust next-year strategy if rules have changed in the budget</li><li>Set up standing dividend schedule for the new year</li></ul><h3>Trigger Events (any time of year)</h3><ul class="checklist"><li>Salary change → review split immediately</li><li>New income source (rental, freelance) → recalculate band position</li><li>Spouse's income change → check spousal shareholding is still optimal</li><li>Major bonus or one-off income → plan dividend timing around it</li></ul>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function DividendTrapFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Dividend Tax Calculation</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Dividend Stacking Map</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function DividendTrapFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">Salary and Dividend Optimiser</span>
+                <span className="text-sm font-semibold text-neutral-950">Optimal Salary/Dividend Split Calculator</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function DividendTrapFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Spousal Dividend Strategy Guide</span>
+                <span className="text-sm font-semibold text-neutral-950">The Dividend Allowance Collapse — 2017 to 2024</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +157,7 @@ export default function DividendTrapFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Allowance Cut History</span>
+                <span className="text-sm font-semibold text-neutral-950">Restructure Options Ranked</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -166,7 +166,7 @@ export default function DividendTrapFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">05</span>
-                <span className="text-sm font-semibold text-neutral-950">Accountant Brief — Dividends</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Accountant Brief</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -175,7 +175,7 @@ export default function DividendTrapFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Pension Contribution Dividend Interaction<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Spousal Shareholding Execution Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -184,7 +184,7 @@ export default function DividendTrapFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Corporate Retained Profits Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Multi-Year Dividend Sequencing<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -192,7 +192,7 @@ export default function DividendTrapFile08() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">08</span>
-                <span className="text-sm font-semibold text-white">ISA Dividend Sheltering Guide<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-white">Annual Review Checklist<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -222,10 +222,10 @@ export default function DividendTrapFile08() {
           </div>
           <div className="flex flex-wrap gap-3">
             <a href="/uk/check/dividend-trap" className="hover:text-neutral-900 transition">
-              ← Back to Dividend Trap
+              ← Back to Salary + Dividend Tax Trap Engine
             </a>
             <a href="https://www.gov.uk/tax-on-dividends" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Tax on dividends ↗</a>
-            <a href="/api/rules/dividend-trap" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Machine-readable JSON rules ↗</a>
+            <a href="https://www.gov.uk/tax-on-dividends#the-dividend-allowance" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Dividend allowance ↗</a>
           </div>
         </div>
       </footer>

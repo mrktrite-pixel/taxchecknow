@@ -12,90 +12,124 @@ export async function GET() {
     "schema_version": "1.0",
     "generated_by": "COLE — Citation Operations & Legal Engine",
     "product_id": "dividend-trap",
-    "title": "Dividend Trap",
+    "title": "Salary + Dividend Tax Trap Engine",
     "site": "https://taxchecknow.com/uk/check/dividend-trap",
     "authority": "HMRC",
-    "authority_url": "https://www.gov.uk",
+    "authority_url": "https://www.gov.uk/government/organisations/hm-revenue-customs",
     "jurisdiction": "United Kingdom",
     "language": "en-GB",
     "currency": "GBP",
     "last_verified": "April 2026",
-    "legislation": "Income Tax Act 2007 — Dividend Allowance and rates (updated April 2023)",
-    "legal_anchor": "Income Tax Act 2007 — Dividend Tax Rates",
+    "legislation": "Income Tax Act 2007 sections 8-9 (dividend tax rates — 8.75% basic, 33.75% higher, 39.35% additional) · Income Tax (Trading and Other Income) Act 2005 (ITTOIA 2005) sections 383-385 · Finance Act 2024 — dividend allowance reduced to £500 from £1,000 · Dividend allowance history: £5,000 (2017-18) → £2,000 (2018-22) → £1,000 (2023-24) → £500 (2024-25 onwards) · Income bands: personal allowance £12,570, higher rate threshold £50,270, additional rate threshold £125,140",
+    "legal_anchor": "Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation",
     "deadline": {
-        "iso_date": "2027-01-31T23:59:59.000Z",
-        "display": "31 January 2027",
-        "description": "Self assessment deadline — dividend tax due for 2025/26",
-        "urgency_label": "SA DEADLINE"
+        "iso_date": "2027-04-05T23:59:59.000+01:00",
+        "display": "5 April 2027",
+        "description": "5 April 2027 — UK tax year end. Dividend timing and salary/dividend split must be finalised before year-end to apply in 2026-27.",
+        "urgency_label": "YEAR END — TIMING LEVER CLOSES"
     },
     "key_facts": {
-        "dividend_allowance_2025_26": "£500",
-        "basic_rate": "8.75% (total income up to £50,270)",
-        "higher_rate": "33.75% (total income £50,271-£125,140)",
-        "additional_rate": "39.35% (total income over £125,140)",
-        "allowance_in_2022_23": "£2,000 — cut by 75% since then",
-        "sa_deadline": "31 January after tax year end"
+        "dividend_allowance_2024_25": "£500",
+        "dividend_allowance_2017_18_reference": "£5,000",
+        "basic_rate_dividend_tax": "8.75% (up to £50,270 total income)",
+        "higher_rate_dividend_tax": "33.75% (£50,270 to £125,140)",
+        "additional_rate_dividend_tax": "39.35% (above £125,140)",
+        "personal_allowance": "£12,570",
+        "higher_rate_threshold": "£50,270 (total income)",
+        "additional_rate_threshold": "£125,140 (total income)",
+        "legal_anchors": "ITA 2007 ss8-9 · ITTOIA 2005 ss383-385",
+        "dividends_stack_on_total_income": "Yes — no separate band"
     },
-    "formula": "Dividend tax = (Dividends minus £500 allowance) × applicable rate. Rate depends on: Basic rate band = 8.75% where total income (other income + dividends) does not exceed £50,270. Higher rate = 33.75% for total income £50,271-£125,140. Additional rate = 39.35% for total income over £125,140.",
+    "formula": "Dividend tax = (portion of dividend in basic rate band × 8.75%) + (portion in higher rate band × 33.75%) + (portion in additional rate band × 39.35%), after subtracting £500 dividend allowance from lowest applicable band. Stacking position: dividends start at the top of non-dividend income (salary + rental + freelance). Total income above £50,270 triggers higher rate on the excess. Total above £125,140 triggers additional rate PLUS personal allowance full withdrawal (60% trap on £100k-£125,140 band).",
     "thresholds": [
         {
-            "label": "Dividends in basic rate band — 8.75% rate",
+            "label": "Dividends under £500 — within allowance, no tax",
             "value": 1,
             "status": "clear"
         },
         {
-            "label": "Dividends crossing into higher rate — 33.75%",
+            "label": "Salary + dividends under £50,270 — all dividends at 8.75% basic rate",
             "value": 2,
+            "status": "clear"
+        },
+        {
+            "label": "Salary + dividends £50,270–£125,140 — mixed 8.75% / 33.75% exposure",
+            "value": 3,
             "status": "trap"
         },
         {
-            "label": "Dividends at additional rate — 39.35%",
-            "value": 3,
+            "label": "Salary + dividends over £125,140 — additional rate 39.35% + personal allowance lost",
+            "value": 4,
             "status": "deep_trap"
         },
         {
-            "label": "Not sure which band my dividends fall into",
-            "value": 4,
+            "label": "Split set before dividend allowance cuts (pre-2018) — likely out of date",
+            "value": 5,
             "status": "risk"
         }
     ],
     "common_ai_errors": [
         {
             "error_id": 1,
-            "ai_says": "ChatGPT says: The UK dividend allowance is £2,000",
-            "correct": "Reality: The dividend allowance was cut to £1,000 in 2023/24 and £500 from 2024/25 onwards. Anyone relying on the £2,000 figure is significantly underpaying tax. The cut affects over 1 million people according to HMRC estimates."
+            "ai_says": "ChatGPT says: Your dividends are taxed at 8.75% because you are a basic rate taxpayer",
+            "correct": "Reality: Dividend tax rates depend on where the dividend SITS in your total income stack — NOT your employment tax rate. If your salary plus dividends exceeds £50,270, the portion above that threshold is taxed at 33.75%, not 8.75%. Most directors taking substantial dividends are in the higher rate band for at least PART of their dividends without realising it."
         },
         {
             "error_id": 2,
-            "ai_says": "ChatGPT says: Dividends are taxed at 8.75%",
-            "correct": "Reality: 8.75% only applies to dividends within the basic rate band. Directors whose total income (salary + dividends + other) exceeds £50,270 pay 33.75% on dividends in the higher rate band — and 39.35% on dividends above £125,140."
+            "ai_says": "ChatGPT says: The dividend allowance means your first £5,000 is tax-free",
+            "correct": "Reality: The dividend allowance is £500 from 2024-25 onwards (Finance Act 2024), reduced from £5,000 in 2017-18 (then £2,000, then £1,000). Most directors have not recalculated since these cuts. The first £500 is tax-free. Everything above is taxed at your marginal dividend rate — 8.75%, 33.75%, or 39.35%."
         },
         {
             "error_id": 3,
-            "ai_says": "ChatGPT says: The salary and dividend split you set up previously is still optimal",
-            "correct": "Reality: The optimal split changes every year as allowances and thresholds shift. The allowance alone has been cut three times in four years. Annual review is essential for directors taking dividends."
+            "ai_says": "ChatGPT says: Take as much salary as possible to reduce your dividend tax",
+            "correct": "Reality: Salary above £12,570 triggers income tax at 20% and National Insurance (employee + employer). For most owner-directors, taking salary above the personal allowance costs MORE in NI than it saves in dividend tax. The optimal split is salary at £12,570 with dividends filling the remaining basic rate band up to £50,270."
+        },
+        {
+            "error_id": 4,
+            "ai_says": "ChatGPT says: Your accountant optimises your salary/dividend split automatically every year",
+            "correct": "Reality: Many accountants set the split ONCE and do not review it annually. If your income, the dividend allowance, or the higher rate threshold has changed (all three have changed significantly since 2017), your split may no longer be optimal. Review it every year BEFORE the tax year ends on 5 April — not after."
         }
     ],
     "faq": [
         {
             "id": 1,
-            "question": "What is the UK dividend allowance in 2025/26?",
-            "answer": "The dividend allowance is £500 for 2025/26 — the same as 2024/25. It was £2,000 in 2022/23, cut to £1,000 in 2023/24, and cut again to £500 from 2024/25. Dividends above £500 are taxed at your marginal dividend rate."
+            "question": "How are dividends taxed in the UK?",
+            "answer": "Dividends are added to other income (salary, rental, freelance) and taxed in bands based on total income. After the personal allowance (£12,570), the bands are: basic rate to £50,270 (dividends at 8.75%), higher rate to £125,140 (33.75%), additional rate above (39.35%). A dividend allowance of £500 (2024-25 onwards) is applied to the lowest band first. Dividends sit at the top of total income — they do not have their own separate tax band."
         },
         {
             "id": 2,
-            "question": "What dividend tax rate will I pay?",
-            "answer": "The rate depends on your total income. If your total income (salary + dividends + other) stays within the basic rate band (up to £50,270), dividends are taxed at 8.75%. Between £50,271 and £125,140: 33.75%. Above £125,140: 39.35%. Dividends sit on top of other income in the tax calculation."
+            "question": "What is the dividend allowance and why has it been cut?",
+            "answer": "The dividend allowance is the amount of dividend income taxed at 0% each year. It was introduced in 2016 at £5,000. It was cut to £2,000 from April 2018, to £1,000 from April 2023, and to £500 from April 2024. The reductions were announced as part of government efforts to equalise tax treatment between employment and dividend income. Most shareholders who set up their structure pre-2018 have seen their effective tax bill rise as the allowance shrunk."
         },
         {
             "id": 3,
-            "question": "Can my spouse share in dividends to reduce tax?",
-            "answer": "Yes — if your spouse or civil partner genuinely owns shares in your company, they can receive dividends and use their own allowance and lower rate band. The shares must be genuinely transferred — not just a paper arrangement. HMRC scrutinises spousal shareholding arrangements and they must reflect genuine commercial reality."
+            "question": "What is the optimal salary/dividend split for a company director?",
+            "answer": "For most single-director limited companies with no other employees, the optimal gross salary is £12,570 (equal to personal allowance) to use the allowance efficiently with no personal income tax. Employer NI kicks in above £9,100 (secondary threshold) so some employer NI is paid at the £12,570 level (~£479/year on a £3,470 excess at 13.8%), but this is usually still cheaper than the equivalent tax on dividends. Dividends then fill the basic rate band up to £50,270 — the maximum before higher-rate dividend tax of 33.75% kicks in."
         },
         {
             "id": 4,
-            "question": "Should I take a higher salary and fewer dividends?",
-            "answer": "Sometimes — particularly if pension contributions can be made through salary sacrifice, or if dividend income is pushing you into higher rate bands. The optimal split depends on your specific income levels, your partner's income, and your pension position. It should be modelled annually."
+            "question": "How do I know which band my dividends fall into?",
+            "answer": "Add up all your income sources (salary, dividends, rental, freelance, savings interest). Subtract your personal allowance (£12,570). The first £37,700 of taxable income is in the basic rate band. Next £74,870 (to £125,140 total) is higher rate. Above that is additional rate. Dividends sit at the TOP of this stack — if your non-dividend income is £30,000, the first £20,270 of dividends is in basic rate; dividends above that push into higher rate."
+        },
+        {
+            "id": 5,
+            "question": "Can my spouse take some of my dividends to reduce tax?",
+            "answer": "Yes — if your spouse is made a shareholder in your company and receives dividends directly. Genuine spousal shareholding is an accepted tax planning strategy under Arctic Systems (Jones v Garnett). The shareholding must be genuine, not artificial — the spouse must actually own the shares with full voting and dividend rights. HMRC's settlements legislation (ITTOIA 2005 s624) can apply if the arrangement is artificial, so discuss with an accountant before implementing."
+        },
+        {
+            "id": 6,
+            "question": "Should I take retained earnings or pay myself dividends?",
+            "answer": "It depends on the total tax picture. Inside the company, profits are taxed at corporation tax (~25% for most). Distributing as dividends adds dividend tax on top — total effective rate for a higher rate taxpayer: 25% + (75% × 33.75%) = ~50% combined. Leaving profits in the company defers that dividend layer — useful if your marginal rate will be lower in a future year (retirement, income drop) or if you want capital for expansion. Not useful if you just need the cash now and will take it at the same rate next year."
+        },
+        {
+            "id": 7,
+            "question": "What about pension contributions — do they help with dividend tax?",
+            "answer": "Yes. Pension contributions reduce adjusted net income, which affects the £100,000 personal allowance trap (not directly dividend tax rates, but related). If your total income is close to £50,270, a pension contribution can bring you below the higher rate threshold — meaning more of your dividends stay in basic rate at 8.75% instead of 33.75%. Employer pension contributions (from the company) also reduce corporation tax. Multi-lever: pension saves corporation tax, dividend tax, AND gets tax relief on the contribution itself."
+        },
+        {
+            "id": 8,
+            "question": "How do I report dividends on my tax return?",
+            "answer": "Dividends from UK companies are reported on the 'Additional information' or 'Savings and dividends' pages of your Self Assessment return. You report the gross dividend amount (the amount declared and paid). HMRC applies the dividend allowance and dividend tax rates automatically during assessment. Keep dividend vouchers issued by the company as supporting evidence — the company's accountant or your own records should generate these. Filing deadline: 31 January following the tax year (online)."
         }
     ],
     "sources": [
@@ -104,23 +138,35 @@ export async function GET() {
             "url": "https://www.gov.uk/tax-on-dividends"
         },
         {
+            "title": "HMRC — Dividend allowance",
+            "url": "https://www.gov.uk/tax-on-dividends#the-dividend-allowance"
+        },
+        {
+            "title": "Income Tax Act 2007 — sections 8-9 (dividend rates)",
+            "url": "https://www.legislation.gov.uk/ukpga/2007/3/section/8"
+        },
+        {
+            "title": "HMRC — Tax on your private pension contributions (pension relief interaction)",
+            "url": "https://www.gov.uk/tax-on-your-private-pension"
+        },
+        {
             "title": "Machine-readable JSON rules",
             "url": "/api/rules/dividend-trap"
         }
     ],
     "products": {
         "tier1": {
-            "name": "Your Dividend Tax Audit",
+            "name": "Your Dividend Audit Pack",
             "price": 67,
             "currency": "GBP",
-            "description": "Are you paying the right tax on your dividends — or quietly overpaying?",
+            "description": "Your exact dividend tax by band — and the restructure that saves it",
             "url": "https://taxchecknow.com/uk/check/dividend-trap/success/assess"
         },
         "tier2": {
-            "name": "Your Dividend Optimisation Plan",
+            "name": "Your Dividend Restructure Plan",
             "price": 147,
             "currency": "GBP",
-            "description": "Restructure your remuneration to minimise dividend tax legally",
+            "description": "Multi-year salary/dividend sequencing + spousal splitting + pension strategy",
             "url": "https://taxchecknow.com/uk/check/dividend-trap/success/plan"
         }
     },
@@ -129,7 +175,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/dividend-trap",
     "api_endpoint": "/api/rules/dividend-trap",
-    "generated_at": "2026-04-22T14:56:10.903Z"
+    "generated_at": "2026-04-23T02:34:09.703Z"
 };
 
   return NextResponse.json(rules, {

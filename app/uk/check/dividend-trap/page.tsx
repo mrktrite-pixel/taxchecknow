@@ -10,12 +10,12 @@ import DividendTrapCalculator from "./DividendTrapCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "UK Dividend Tax 2026: Director Dividend Trap Explained | TaxCheckNow",
-  description: "The UK dividend allowance dropped to £500 in April 2024. Directors paying themselves via dividends may now be in the 33.75% or 39.35% band without realising. Check your dividend position in 2 minutes.",
+  title: "UK Dividend Tax 2026: Stacking, Bands, and the 33.75% Higher Rate | TaxCheckNow",
+  description: "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/dividend-trap" },
   openGraph: {
-    title: "UK Dividend Tax 2026: Director Dividend Trap Explained | TaxCheckNow",
-    description: "The UK dividend allowance dropped to £500 in April 2024. Directors paying themselves via dividends may now be in the 33.75% or 39.35% band without realising. Check your dividend position in 2 minutes.",
+    title: "UK Dividend Tax 2026: Stacking, Bands, and the 33.75% Higher Rate | TaxCheckNow",
+    description: "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/dividend-trap",
     siteName: "TaxCheckNow",
     type: "website",
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "31 January 2027";
-const DEADLINE_ISO   = "2027-01-31T23:59:59.000Z";
+const DEADLINE_LABEL = "5 April 2027";
+const DEADLINE_ISO   = "2027-04-05T23:59:59.000+01:00";
 
 function daysToDeadline(): number {
   if (!DEADLINE_ISO) return 0;
@@ -49,170 +49,221 @@ function progressPct(): number {
 
 const faqs = [
   {
-    "question": "What is the UK dividend allowance in 2025/26?",
-    "answer": "The dividend allowance is £500 for 2025/26 — the same as 2024/25. It was £2,000 in 2022/23, cut to £1,000 in 2023/24, and cut again to £500 from 2024/25. Dividends above £500 are taxed at your marginal dividend rate."
+    "question": "How are dividends taxed in the UK?",
+    "answer": "Dividends are added to other income (salary, rental, freelance) and taxed in bands based on total income. After the personal allowance (£12,570), the bands are: basic rate to £50,270 (dividends at 8.75%), higher rate to £125,140 (33.75%), additional rate above (39.35%). A dividend allowance of £500 (2024-25 onwards) is applied to the lowest band first. Dividends sit at the top of total income — they do not have their own separate tax band."
   },
   {
-    "question": "What dividend tax rate will I pay?",
-    "answer": "The rate depends on your total income. If your total income (salary + dividends + other) stays within the basic rate band (up to £50,270), dividends are taxed at 8.75%. Between £50,271 and £125,140: 33.75%. Above £125,140: 39.35%. Dividends sit on top of other income in the tax calculation."
+    "question": "What is the dividend allowance and why has it been cut?",
+    "answer": "The dividend allowance is the amount of dividend income taxed at 0% each year. It was introduced in 2016 at £5,000. It was cut to £2,000 from April 2018, to £1,000 from April 2023, and to £500 from April 2024. The reductions were announced as part of government efforts to equalise tax treatment between employment and dividend income. Most shareholders who set up their structure pre-2018 have seen their effective tax bill rise as the allowance shrunk."
   },
   {
-    "question": "Can my spouse share in dividends to reduce tax?",
-    "answer": "Yes — if your spouse or civil partner genuinely owns shares in your company, they can receive dividends and use their own allowance and lower rate band. The shares must be genuinely transferred — not just a paper arrangement. HMRC scrutinises spousal shareholding arrangements and they must reflect genuine commercial reality."
+    "question": "What is the optimal salary/dividend split for a company director?",
+    "answer": "For most single-director limited companies with no other employees, the optimal gross salary is £12,570 (equal to personal allowance) to use the allowance efficiently with no personal income tax. Employer NI kicks in above £9,100 (secondary threshold) so some employer NI is paid at the £12,570 level (~£479/year on a £3,470 excess at 13.8%), but this is usually still cheaper than the equivalent tax on dividends. Dividends then fill the basic rate band up to £50,270 — the maximum before higher-rate dividend tax of 33.75% kicks in."
   },
   {
-    "question": "Should I take a higher salary and fewer dividends?",
-    "answer": "Sometimes — particularly if pension contributions can be made through salary sacrifice, or if dividend income is pushing you into higher rate bands. The optimal split depends on your specific income levels, your partner's income, and your pension position. It should be modelled annually."
+    "question": "How do I know which band my dividends fall into?",
+    "answer": "Add up all your income sources (salary, dividends, rental, freelance, savings interest). Subtract your personal allowance (£12,570). The first £37,700 of taxable income is in the basic rate band. Next £74,870 (to £125,140 total) is higher rate. Above that is additional rate. Dividends sit at the TOP of this stack — if your non-dividend income is £30,000, the first £20,270 of dividends is in basic rate; dividends above that push into higher rate."
+  },
+  {
+    "question": "Can my spouse take some of my dividends to reduce tax?",
+    "answer": "Yes — if your spouse is made a shareholder in your company and receives dividends directly. Genuine spousal shareholding is an accepted tax planning strategy under Arctic Systems (Jones v Garnett). The shareholding must be genuine, not artificial — the spouse must actually own the shares with full voting and dividend rights. HMRC's settlements legislation (ITTOIA 2005 s624) can apply if the arrangement is artificial, so discuss with an accountant before implementing."
+  },
+  {
+    "question": "Should I take retained earnings or pay myself dividends?",
+    "answer": "It depends on the total tax picture. Inside the company, profits are taxed at corporation tax (~25% for most). Distributing as dividends adds dividend tax on top — total effective rate for a higher rate taxpayer: 25% + (75% × 33.75%) = ~50% combined. Leaving profits in the company defers that dividend layer — useful if your marginal rate will be lower in a future year (retirement, income drop) or if you want capital for expansion. Not useful if you just need the cash now and will take it at the same rate next year."
+  },
+  {
+    "question": "What about pension contributions — do they help with dividend tax?",
+    "answer": "Yes. Pension contributions reduce adjusted net income, which affects the £100,000 personal allowance trap (not directly dividend tax rates, but related). If your total income is close to £50,270, a pension contribution can bring you below the higher rate threshold — meaning more of your dividends stay in basic rate at 8.75% instead of 33.75%. Employer pension contributions (from the company) also reduce corporation tax. Multi-lever: pension saves corporation tax, dividend tax, AND gets tax relief on the contribution itself."
+  },
+  {
+    "question": "How do I report dividends on my tax return?",
+    "answer": "Dividends from UK companies are reported on the 'Additional information' or 'Savings and dividends' pages of your Self Assessment return. You report the gross dividend amount (the amount declared and paid). HMRC applies the dividend allowance and dividend tax rates automatically during assessment. Keep dividend vouchers issued by the company as supporting evidence — the company's accountant or your own records should generate these. Filing deadline: 31 January following the tax year (online)."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: The UK dividend allowance is £2,000",
-    "correct": "Reality: The dividend allowance was cut to £1,000 in 2023/24 and £500 from 2024/25 onwards. Anyone relying on the £2,000 figure is significantly underpaying tax. The cut affects over 1 million people according to HMRC estimates."
+    "wrong": "ChatGPT says: Your dividends are taxed at 8.75% because you are a basic rate taxpayer",
+    "correct": "Reality: Dividend tax rates depend on where the dividend SITS in your total income stack — NOT your employment tax rate. If your salary plus dividends exceeds £50,270, the portion above that threshold is taxed at 33.75%, not 8.75%. Most directors taking substantial dividends are in the higher rate band for at least PART of their dividends without realising it."
   },
   {
-    "wrong": "ChatGPT says: Dividends are taxed at 8.75%",
-    "correct": "Reality: 8.75% only applies to dividends within the basic rate band. Directors whose total income (salary + dividends + other) exceeds £50,270 pay 33.75% on dividends in the higher rate band — and 39.35% on dividends above £125,140."
+    "wrong": "ChatGPT says: The dividend allowance means your first £5,000 is tax-free",
+    "correct": "Reality: The dividend allowance is £500 from 2024-25 onwards (Finance Act 2024), reduced from £5,000 in 2017-18 (then £2,000, then £1,000). Most directors have not recalculated since these cuts. The first £500 is tax-free. Everything above is taxed at your marginal dividend rate — 8.75%, 33.75%, or 39.35%."
   },
   {
-    "wrong": "ChatGPT says: The salary and dividend split you set up previously is still optimal",
-    "correct": "Reality: The optimal split changes every year as allowances and thresholds shift. The allowance alone has been cut three times in four years. Annual review is essential for directors taking dividends."
+    "wrong": "ChatGPT says: Take as much salary as possible to reduce your dividend tax",
+    "correct": "Reality: Salary above £12,570 triggers income tax at 20% and National Insurance (employee + employer). For most owner-directors, taking salary above the personal allowance costs MORE in NI than it saves in dividend tax. The optimal split is salary at £12,570 with dividends filling the remaining basic rate band up to £50,270."
+  },
+  {
+    "wrong": "ChatGPT says: Your accountant optimises your salary/dividend split automatically every year",
+    "correct": "Reality: Many accountants set the split ONCE and do not review it annually. If your income, the dividend allowance, or the higher rate threshold has changed (all three have changed significantly since 2017), your split may no longer be optimal. Review it every year BEFORE the tax year ends on 5 April — not after."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "What rate am I actually paying on my dividends — and has it changed from last year?",
-    "why": "With the allowance cut three times in four years, many directors' effective rates have increased significantly without their remuneration structure changing."
+    "q": "When was my current salary/dividend split last reviewed — and against which year's dividend allowance?",
+    "why": "If the split was set when the allowance was £5,000, £2,000, or £1,000, it's likely out of date. The allowance is now £500. The right answer is: 'We review it annually in February before year-end.'"
   },
   {
-    "q": "Should I revisit the salary and dividend split for 2026/27?",
-    "why": "The optimal split changes as thresholds move. An annual review with your accountant takes 30 minutes and can save thousands."
+    "q": "Exactly how much of my dividends sits in the higher rate band this year — and what is the restructure saving if we reduce that?",
+    "why": "Your accountant should be able to show the exact portion of dividends at 33.75% and the exact rate-differential saving from restructuring. Vague answers mean it hasn't been modelled."
   },
   {
-    "q": "If my spouse holds shares, are we making the most of their dividend allowance and basic rate band?",
-    "why": "Spousal dividend splitting is one of the most effective legal dividend tax reduction strategies available to director shareholders."
+    "q": "Have we considered making my spouse a shareholder — and what is the saving under current income levels?",
+    "why": "Spousal dividend splitting is legal (post-Arctic Systems) and often the biggest lever available. If your spouse has unused basic rate band and you have dividends in higher rate, the saving is usually £1,500-£5,000/year. Ask for the specific number."
   },
   {
-    "q": "Can pension contributions reduce my total income into a lower dividend tax band?",
-    "why": "A pension contribution that drops total income below £50,270 saves 25 percentage points on higher rate dividend tax — the difference between 33.75% and 8.75%."
+    "q": "Should I consider an employer pension contribution through the company instead of higher dividends?",
+    "why": "Company pension contributions are deductible against corporation tax, reduce your adjusted net income (helping dividend tax band position), and get personal pension tax relief. A £10k employer pension vs £10k dividend can be a big combined saving — but the split depends on your specific numbers."
+  },
+  {
+    "q": "For my income level, is the £100,000 personal allowance trap also relevant — and how does it interact with the dividend tax position?",
+    "why": "If total income is near £100,000, the 60% effective rate from allowance withdrawal compounds with dividend tax. Pension contributions or restructuring that keeps total under £100,000 saves both traps simultaneously. Many accountants address one trap at a time instead of combined."
   }
 ];
 
 const workedExamples = [
   {
-    "name": "Small dividend",
-    "setup": "£40k salary, £8k dividends",
-    "income": "£48k total",
-    "status": "8.75% — basic rate"
+    "name": "Raj — IT consultancy, single director",
+    "setup": "£12,570 salary + £45,000 dividends, no other income",
+    "income": "£57,570 total",
+    "status": "£5,719 div tax (£1,825 avoidable)"
   },
   {
-    "name": "Medium dividend",
-    "setup": "£50k salary, £30k dividends",
-    "income": "£80k total",
-    "status": "33.75% — higher rate"
+    "name": "Small e-com Ltd — modest dividends",
+    "setup": "£12,570 salary + £20,000 dividends",
+    "income": "£32,570 total",
+    "status": "£1,706 div tax — all basic rate"
   },
   {
-    "name": "Large dividend",
-    "setup": "£50k salary, £80k dividends",
-    "income": "£130k total",
-    "status": "39.35% — additional rate"
+    "name": "High-earning consultancy",
+    "setup": "£35,000 salary + £60,000 dividends + £5k rental",
+    "income": "£100,000 total",
+    "status": "£13,400 div tax — mixed higher + trap"
+  },
+  {
+    "name": "Director over £125k",
+    "setup": "£20,000 salary + £130,000 dividends",
+    "income": "£150,000 total",
+    "status": "Additional rate + 60% trap"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "2022/23",
-    "metric1": "£2,000",
-    "metric2": "33.75p",
-    "bestMove": "Old position — most missed"
+    "position": "Within £500 allowance",
+    "metric1": "0%",
+    "metric2": "£0",
+    "bestMove": "Tax-free"
   },
   {
-    "position": "2023/24",
-    "metric1": "£1,000",
-    "metric2": "33.75p",
-    "bestMove": "Cut by 50%"
+    "position": "Basic rate band (up to £50,270 total income)",
+    "metric1": "8.75%",
+    "metric2": "£875",
+    "bestMove": "Keep in this band if possible"
   },
   {
-    "position": "2024/25",
-    "metric1": "£500",
-    "metric2": "33.75p",
-    "bestMove": "Cut by another 50%"
+    "position": "Higher rate band (£50,270 to £125,140)",
+    "metric1": "33.75%",
+    "metric2": "£3,375",
+    "bestMove": "Restructure — 25 percentage point jump"
   },
   {
-    "position": "2025/26",
-    "metric1": "£500",
-    "metric2": "33.75p",
-    "bestMove": "Current position"
+    "position": "Additional rate band (over £125,140)",
+    "metric1": "39.35%",
+    "metric2": "£3,935",
+    "bestMove": "Plus 60% trap on £100k-£125k slice"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "Pension contributions",
-    "effect": "Reduces total income — keeps dividends in lower band",
-    "note": "Particularly effective if near £50,270 or £100,000"
+    "tool": "Defer dividends to next tax year",
+    "effect": "Spread across tax years — keep each year's total under £50,270",
+    "note": "Depends on cashflow tolerance"
   },
   {
-    "tool": "Spousal dividend split",
-    "effect": "Partner uses their allowance and lower rate band",
-    "note": "Requires shares genuinely transferred — not paper only"
+    "tool": "Spousal shareholding",
+    "effect": "Move some shares to lower-earning spouse — use their basic rate band",
+    "note": "~£1,800-£3,500 per £10k of shift"
   },
   {
-    "tool": "Salary sacrifice",
-    "effect": "Reduces salary component — more room in basic band",
-    "note": "Requires employer agreement"
+    "tool": "Pension contribution",
+    "effect": "Reduces adjusted net income → may bring total under £50,270",
+    "note": "Pension relief + dividend saving stack"
   },
   {
-    "tool": "ISA dividend sheltering",
-    "effect": "Dividends on ISA shares are tax-free",
-    "note": "£20,000 annual ISA allowance"
+    "tool": "Retained earnings vs distribution",
+    "effect": "Leave money in company at ~25% corporation tax — distribute in lower year",
+    "note": "Matters more above £125k income"
+  },
+  {
+    "tool": "Salary adjustment",
+    "effect": "Optimise salary to £12,570 if currently higher (rarely the lever for directors)",
+    "note": "NI vs dividend tax trade-off"
   }
 ];
 
 const geoFacts = [
   {
-    "label": "Dividend allowance 2025/26",
+    "label": "Dividend allowance 2024-25",
     "value": "£500"
   },
   {
-    "label": "Basic rate",
-    "value": "8.75% (total income up to £50,270)"
+    "label": "Dividend allowance 2017-18 (reference)",
+    "value": "£5,000"
   },
   {
-    "label": "Higher rate",
-    "value": "33.75% (total income £50,271-£125,140)"
+    "label": "Basic rate dividend tax",
+    "value": "8.75% (up to £50,270 total income)"
   },
   {
-    "label": "Additional rate",
-    "value": "39.35% (total income over £125,140)"
+    "label": "Higher rate dividend tax",
+    "value": "33.75% (£50,270 to £125,140)"
   },
   {
-    "label": "Allowance in 2022/23",
-    "value": "£2,000 — cut by 75% since then"
+    "label": "Additional rate dividend tax",
+    "value": "39.35% (above £125,140)"
   },
   {
-    "label": "SA deadline",
-    "value": "31 January after tax year end"
+    "label": "Personal allowance",
+    "value": "£12,570"
+  },
+  {
+    "label": "Higher rate threshold",
+    "value": "£50,270 (total income)"
+  },
+  {
+    "label": "Additional rate threshold",
+    "value": "£125,140 (total income)"
+  },
+  {
+    "label": "Legal anchors",
+    "value": "ITA 2007 ss8-9 · ITTOIA 2005 ss383-385"
+  },
+  {
+    "label": "Dividends stack on total income",
+    "value": "Yes — no separate band"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "Dividend allowance",
+    "label": "Dividend allowance 2024-25",
     "value": "£500"
   },
   {
-    "label": "Basic rate",
+    "label": "Basic rate dividend",
     "value": "8.75%"
   },
   {
-    "label": "Higher rate",
+    "label": "Higher rate dividend",
     "value": "33.75%"
   },
   {
-    "label": "Additional rate",
+    "label": "Additional rate dividend",
     "value": "39.35%"
   }
 ];
@@ -223,6 +274,18 @@ const sources = [
     "url": "https://www.gov.uk/tax-on-dividends"
   },
   {
+    "title": "HMRC — Dividend allowance",
+    "url": "https://www.gov.uk/tax-on-dividends#the-dividend-allowance"
+  },
+  {
+    "title": "Income Tax Act 2007 — sections 8-9 (dividend rates)",
+    "url": "https://www.legislation.gov.uk/ukpga/2007/3/section/8"
+  },
+  {
+    "title": "HMRC — Tax on your private pension contributions (pension relief interaction)",
+    "url": "https://www.gov.uk/tax-on-your-private-pension"
+  },
+  {
     "title": "Machine-readable JSON rules",
     "url": "/api/rules/dividend-trap"
   }
@@ -230,25 +293,25 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "Dividend allowance",
+    "label": "Dividend allowance 2024-25",
     "value": "£500",
-    "sub": "down from £2,000 in 2022"
+    "sub": "Down from £5,000 in 2017-18"
   },
   {
-    "label": "Basic rate dividend tax",
+    "label": "Basic rate (up to £50,270)",
     "value": "8.75%",
-    "sub": "on dividends in basic rate band"
+    "sub": "Dividends in basic rate band"
   },
   {
-    "label": "Higher rate",
+    "label": "Higher rate (over £50,270)",
     "value": "33.75%",
-    "sub": "once total income over £50,270",
+    "sub": "Where most directors get caught",
     "red": true
   },
   {
-    "label": "Additional rate",
+    "label": "Additional rate (over £125k)",
     "value": "39.35%",
-    "sub": "over £125,140 total income",
+    "sub": "Plus 60% trap on allowance",
     "red": true
   }
 ];
@@ -273,8 +336,8 @@ export default function DividendTrapPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Dividend Trap — Rules April 2026",
-    description: "The UK dividend allowance dropped to £500 in April 2024. Directors paying themselves via dividends may now be in the 33.75% or 39.35% band without realising. Check your dividend position in 2 minutes.",
+    name: "Salary + Dividend Tax Trap Engine — Rules April 2026",
+    description: "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -289,15 +352,15 @@ export default function DividendTrapPage() {
   const webAppSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Dividend Trap",
-    description: "The UK dividend allowance dropped to £500 in April 2024. Directors paying themselves via dividends may now be in the 33.75% or 39.35% band without realising. Check your dividend position in 2 minutes.",
+    name: "Salary + Dividend Tax Trap Engine",
+    description: "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
     url: "https://taxchecknow.com/uk/check/dividend-trap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your Dividend Tax Audit", price: "67.00", priceCurrency: "GBP" },
-      { "@type": "Offer", name: "Your Dividend Optimisation Plan", price: "147.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your Dividend Audit Pack", price: "67.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your Dividend Restructure Plan", price: "147.00", priceCurrency: "GBP" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -305,23 +368,28 @@ export default function DividendTrapPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to use the Dividend Trap",
+    name: "How to use the Salary + Dividend Tax Trap Engine",
     totalTime: "PT1M",
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter your total income",
-            "text": "Include salary, dividends, rental, and all other sources."
+            "name": "State your salary",
+            "text": "PAYE from your company. Determines basic rate band usage before dividends stack."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter your dividend amount",
-            "text": "Gross dividends from your company or investments."
+            "name": "State your dividends",
+            "text": "Total dividends this tax year including all quarterly payments."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your dividend tax verdict",
-            "text": "See your exact rate, tax bill, and optimisation opportunities."
+            "name": "State any other income",
+            "text": "Rental, freelance, interest — all add to the stack."
+      },
+      {
+            "@type": "HowToStep",
+            "name": "Confirm your modelling status",
+            "text": "Most directors assume dividends are taxed separately. They are not — they stack on total income."
       }
 ],
   };
@@ -329,12 +397,12 @@ export default function DividendTrapPage() {
   const calculatorSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Dividend Trap — Free Check",
+    "name": "Salary + Dividend Tax Trap Engine — Free Check",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/dividend-trap#calculator",
-    "description": "The UK dividend allowance dropped to £500 in April 2024. Directors paying themselves via dividends may now be in the 33.75% or 39.35% band without realising. Check your dividend position in 2 minutes.",
+    "description": "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -361,7 +429,7 @@ export default function DividendTrapPage() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
       { "@type": "ListItem", position: 2, name: "United Kingdom", item: "https://taxchecknow.com/uk" },
-      { "@type": "ListItem", position: 3, name: "Dividend Trap", item: "https://taxchecknow.com/uk/check/dividend-trap" },
+      { "@type": "ListItem", position: 3, name: "Salary + Dividend Tax Trap Engine", item: "https://taxchecknow.com/uk/check/dividend-trap" },
     ],
   };
 
@@ -394,7 +462,7 @@ export default function DividendTrapPage() {
 
       {/* Mobile red bar */}
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · SA DEADLINE
+        🔴 {countdown} days · {DEADLINE_LABEL} · YEAR END — TIMING LEVER CLOSES
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -406,7 +474,7 @@ export default function DividendTrapPage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.gov.uk/tax-on-dividends" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇬🇧 HMRC Verified · Income Tax Act 2007 — Dividend Tax Rates ↗
+            🇬🇧 HMRC Verified · Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en-GB
@@ -415,12 +483,12 @@ export default function DividendTrapPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          UK Dividend Tax 2026: Are You Paying 39.35% When You Should Pay 8.75%?
+          UK Company Directors: Your Dividends Are Taxed on Top of Your Salary — Not Separately. Here Is Exactly What That Costs You.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          The UK dividend tax allowance is £500 for 2024/25 and 2025/26 — down from £2,000 in 2022/23 and £1,000 in 2023/24. Dividends above this allowance are taxed at 8.75% (basic rate), 33.75% (higher rate), or 39.35% (additional rate).
+          In the UK, dividends are not taxed in isolation. They are added to your total income — salary, rental income, freelance earnings — and taxed on the portion that falls into each band. A company director taking £12,570 salary and £40,000 dividends has total income of £52,570. The first £500 of dividends is tax-free (the dividend allowance). The remaining £39,500 is taxed — most at 8.75% (basic rate) but £2,300 at 33.75% (higher rate) because the total crosses £50,270. That £2,300 at the higher rate costs an additional £576 compared to keeping everything in the basic rate band. The fix: defer £2,300 of dividends to the next tax year.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -442,19 +510,19 @@ export default function DividendTrapPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Dividend allowance</dt>
+                  <dt className="text-neutral-600">Dividend allowance 2024-25</dt>
                   <dd className="font-bold">£500</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Basic rate</dt>
+                  <dt className="text-neutral-600">Basic rate dividend</dt>
                   <dd className="font-bold">8.75%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Higher rate</dt>
+                  <dt className="text-neutral-600">Higher rate dividend</dt>
                   <dd className="font-bold">33.75%</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Additional rate</dt>
+                  <dt className="text-neutral-600">Additional rate dividend</dt>
                   <dd className="font-bold">39.35%</dd>
                 </div>
               </dl>
@@ -463,16 +531,16 @@ export default function DividendTrapPage() {
             {/* Product panel */}
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
-              <h3 className="mb-1 text-lg font-bold">Dividend Trap</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised dividend tax calculation showing your exact liability, the allowance you may be wasting, and opportunities to reduce your bill.</p>
+              <h3 className="mb-1 text-lg font-bold">Salary + Dividend Tax Trap Engine</h3>
+              <p className="mb-3 text-sm text-neutral-300">Your exact dividend tax by band (basic / higher / additional), optimal salary/dividend split for your situation, restructure options ranked, and 5 accountant questions — built for your salary + dividend + other income stack.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  £67 · Dividend Tax Audit
+                  £67 · Dividend Audit Pack
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  £147 · Dividend Optimisation Plan
+                  £147 · Dividend Restructure Plan
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
@@ -488,11 +556,11 @@ export default function DividendTrapPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 31 January 2027 self assessment deadline
+            Countdown to 5 April 2027 UK tax year end
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 31 January 2027</span>
+            <span className="text-lg text-neutral-300">days until 5 April 2027</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -501,39 +569,39 @@ export default function DividendTrapPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Dividend allowance
+                Dividend allowance 2024-25
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 £500
               </p>
-              <p className="text-xs text-neutral-400">down from £2,000 in 2022</p>
+              <p className="text-xs text-neutral-400">Down from £5,000 in 2017-18</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Basic rate dividend tax
+                Basic rate (up to £50,270)
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 8.75%
               </p>
-              <p className="text-xs text-neutral-400">on dividends in basic rate band</p>
+              <p className="text-xs text-neutral-400">Dividends in basic rate band</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Higher rate
+                Higher rate (over £50,270)
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
                 33.75%
               </p>
-              <p className="text-xs text-neutral-400">once total income over £50,270</p>
+              <p className="text-xs text-neutral-400">Where most directors get caught</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Additional rate
+                Additional rate (over £125k)
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
                 39.35%
               </p>
-              <p className="text-xs text-neutral-400">over £125,140 total income</p>
+              <p className="text-xs text-neutral-400">Plus 60% trap on allowance</p>
             </div>
           </div>
         </div>
@@ -545,48 +613,51 @@ export default function DividendTrapPage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            Which dividend rate applies
+            How dividends stack in the tax system
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ 8.75% if total income under £50,270</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 33.75% if total income £50,271-£125,140</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ 39.35% if total income over £125,140</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Dividends stack at the TOP of total income</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Personal allowance £12,570 applied first to non-dividend income</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Dividend allowance £500 applied to lowest applicable band first</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Basic rate dividend 8.75% up to £50,270 total income</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Higher rate dividend 33.75% between £50,270 and £125,140</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT flat 8.75% for everyone</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT based on dividends alone</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ Dividends sit on top of other income</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a separate tax band — dividends use same income thresholds</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT the same as employment marginal rate</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT £5,000 allowance — that was 2017-18, now £500</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT optimised automatically by accountants — review annually</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: HMRC — Tax on dividends · Income Tax Act 2007</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: Income Tax Act 2007 sections 8-9 · ITTOIA 2005 sections 383-385 · Finance Act 2024 · Confirmed April 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — HMRC confirmed April 2026
+            Dividends stack — and the £500 allowance is one-tenth of what it was in 2017
           </p>
-          <p className="mb-2 text-neutral-900">The UK dividend tax allowance is £500 for 2024/25 and 2025/26 — down from £2,000 in 2022/23 and £1,000 in 2023/24. Dividends above this allowance are taxed at 8.75% (basic rate), 33.75% (higher rate), or 39.35% (additional rate).</p>
-          <p className="mb-2 text-neutral-900">For company directors taking dividends, the rate depends on their total income including salary. A director on £50,000 salary who takes £30,000 in dividends has most of those dividends in the higher rate band — taxed at 33.75%, not 8.75%. Many directors are paying the higher rate without realising it.</p>
-          <p className="mb-2 text-neutral-900">The optimal salary and dividend split changes every year as allowances shift. Using the wrong split — or ignoring the allowance reduction — can cost thousands in unnecessary tax. The calculation needs to be done annually, not set once and forgotten.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Dividend tax rates and allowances · Income Tax Act 2007</p>
+          <p className="mb-2 text-neutral-900">In the UK, dividends are not taxed in isolation. They are added to your total income — salary, rental income, freelance earnings — and taxed on the portion that falls into each band. A company director taking £12,570 salary and £40,000 dividends has total income of £52,570. The first £500 of dividends is tax-free (the dividend allowance). The remaining £39,500 is taxed — most at 8.75% (basic rate) but £2,300 at 33.75% (higher rate) because the total crosses £50,270. That £2,300 at the higher rate costs an additional £576 compared to keeping everything in the basic rate band. The fix: defer £2,300 of dividends to the next tax year.</p>
+          <p className="mb-2 text-neutral-900">The dividend allowance has been reduced from £5,000 in 2017-18 to just £500 in 2024-25 and beyond. Most company directors and shareholders have not recalculated their position since these reductions. The effective tax rate on dividends above £500 is 8.75% in the basic rate band — rising sharply to 33.75% once total income crosses £50,270. This is the moment most directors do not model: the point where an extra pound of dividends costs 33.75p rather than 8.75p.</p>
+          <p className="mb-2 text-neutral-900">The optimal salary/dividend split for most owner-directors is a salary at the personal allowance (£12,570) or the secondary National Insurance threshold, with dividends filling the basic rate band up to £50,270. This minimises both income tax and NI. But the right number depends on other income sources, pension contributions, and whether the £100,000 personal allowance trap applies. The calculator models your specific position — not a generic example.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Tax on dividends · Income Tax Act 2007 · ITTOIA 2005 · Finance Act 2024 (dividend allowance reduction) · Confirmed April 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            Dividend tax bands — where you actually sit
+            The dividend stacking trap — how a restructure saves £576+
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Take salary + dividends → assume 8.75% rate → pay wrong amount  ❌  Missing higher rate exposure
+              ❌ £12,570 salary + £40,000 dividends = £52,570 total → £2,300 crosses higher rate → taxed at 33.75% not 8.75%  ❌  £576 avoidable extra tax
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Map total income → identify correct dividend band → optimise split  ✔  Right tax, right structure
+              ✔ Defer £2,300 dividends to next year → all dividends in basic rate band → 8.75% on everything  ✔  £576 saved, same money
             </div>
           </div>
         </div>
@@ -594,12 +665,13 @@ export default function DividendTrapPage() {
         {/* BLOCK 1b — AI Mistakes */}
         <div className="mb-8 border-l-4 border-red-600 bg-red-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-red-900">
-            What most director shareholders get wrong about dividends
+            What most people (and most online tax calculators) get wrong about dividends
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The dividend allowance is still £2,000 — wrong. The allowance was cut to £1,000 in 2023/24 and £500 in 2024/25 and beyond. Directors who set their dividend strategy in 2022 and have not revisited it are likely underpaying tax and risking HMRC inquiry.</li>
-            <li>✗ Dividends are always taxed at 8.75% — wrong. The 8.75% rate only applies to dividends in the basic rate band. Once total income (salary + dividends + other) exceeds £50,270, dividends are taxed at 33.75%. Above £125,140 they attract 39.35%.</li>
-            <li>✗ As long as you take a small salary and dividends you are tax-efficient — wrong. Tax efficiency depends on the exact amounts, your total income, your partner's tax position, and whether you are in the personal allowance taper. It requires annual recalculation.</li>
+            <li>✗ My dividends are taxed at 8.75% because I am a basic rate taxpayer — wrong. Dividend tax rates depend on where the dividend sits in your total income stack — not your employment tax rate. If your salary plus dividends exceeds £50,270, the portion above that threshold is taxed at 33.75%, not 8.75%. Most directors taking substantial dividends are in the higher rate band for at least part of their dividends without realising it.</li>
+            <li>✗ The dividend allowance means my first £5,000 is tax-free — wrong. The dividend allowance is £500 from 2024-25 onwards, reduced from £5,000 in 2017-18 (then £2,000, then £1,000). Most directors have not recalculated since these cuts. The first £500 is tax-free. Everything above is taxed at your marginal dividend rate — 8.75%, 33.75%, or 39.35%.</li>
+            <li>✗ I should take as much salary as possible to reduce dividend tax — wrong. Salary above £12,570 triggers income tax and National Insurance (both employee and employer). For most owner-directors, taking salary above the personal allowance costs more in NI than it saves in dividend tax. The optimal split is salary at £12,570 with dividends filling the remaining basic rate band up to £50,270.</li>
+            <li>✗ My accountant optimises my salary/dividend split automatically — wrong. Many accountants set the split once and do not review it annually. If your income, the dividend allowance, or the higher rate threshold has changed (all three have changed significantly since 2017), your split may no longer be optimal. Review it every year before the tax year ends on 5 April.</li>
           </ul>
         </div>
 
@@ -624,13 +696,13 @@ export default function DividendTrapPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">James had always taken £38,000 in dividends. Same number every year. It had never occurred to him to question it.</p>
-            <p>The company had a decent year. Retained profits sat in the business account. Dave had suggested leaving it there rather than extracting it — something about corporation tax and timing. The retained profits kept building.</p>
-            <p>In 2024/25 the dividend allowance dropped to £500. James did not notice. He had not tracked these changes. When he took his usual £38,000 dividend in March, the allowance that used to shelter £2,000 of it now only sheltered £500.</p>
-            <p>He also did not know the dividend rate for higher-rate taxpayers had gone up. The rate on dividends above the basic band was now 33.75%. Small difference. Meaningful on £38,000.</p>
-            <p className="font-semibold text-neutral-900">The calculator showed his dividend tax bill had increased by £490 compared to the prior year — purely from the allowance reduction and rate change, with no change in his behaviour.</p>
+            <p className="text-base font-medium text-neutral-900">Raj's accountant had set up the salary/dividend split in 2018. Since then, they had spoken once a year at the January review. The split had never changed.</p>
+            <p>Raj ran a single-director IT consulting company. The business was steady. Each year he took the same £12,570 salary and £45,000 in dividends — paid quarterly. His accountant had recommended the structure in 2018 and Raj had trusted it ever since.</p>
+            <p>What had changed between 2018 and now: the dividend allowance. In 2018 it was £2,000. By 2024 it was £500. The higher rate threshold had crept up to £50,270. Raj's total income of £57,570 was now comfortably into higher rate territory — dividends above £50,270 taxed at 33.75%, not 8.75%.</p>
+            <p>Nobody had pointed this out to Raj. His accountant's annual review covered the compliance — not the structure. The split had been frozen for six years while the rules around it had shifted three times.</p>
+            <p className="font-semibold text-neutral-900">Raj ran the calculator. Salary £12,570 + dividends £45,000 = total £57,570. Personal allowance used by salary. Basic rate dividend band available: £37,700. £500 dividend allowance used first. Remaining £44,500 dividend: £37,200 at 8.75% = £3,255. £7,300 in higher rate at 33.75% = £2,464. Total dividend tax: £5,719. Alternative — shift £7,300 to wife's dividends or defer to next year: £7,300 at 8.75% = £639 instead of £2,464. Permanent annual saving: £1,825.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Dave outlined three options: more salary, reinvest in equipment, or leave profits building. For the first time James had a structured choice rather than a default.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Raj called his accountant the next day with specific numbers. They discussed three restructure options: (1) make his wife Priya a shareholder — move £7,300/year dividends to her basic rate band (she has ~£12,270 of headroom at £38k salary), (2) time dividend declarations to spread across tax years, (3) increase pension contribution to reduce adjusted net income. They implemented option 1 — Priya became a 15% shareholder from April 2026 onwards. Annual saving: ~£1,825 permanent. The accountant also admitted the split should have been reviewed in 2023 when the allowance dropped to £1,000. Raj now does a proactive annual review each February — 2 months before year-end.</p>
             </div>
           </div>
           
@@ -643,16 +715,16 @@ export default function DividendTrapPage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — UK dividend tax 2026
+            AI extraction block — UK dividend tax stacking and bands
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            UK Dividend Tax Rates and Allowances — confirmed 2026
+            UK Dividend Taxation — Stacking, Bands, and Allowance Collapse
           </h2>
-          <p className="mb-4 text-neutral-800">UK dividend income is taxed after other income has filled the relevant tax bands. The dividend allowance for 2025/26 is £500 — reduced from £2,000 in 2022/23 to £1,000 in 2023/24 to £500 from 2024/25. Dividends above the allowance are taxed at 8.75% within the basic rate band (up to £50,270 total income), 33.75% within the higher rate band (£50,271 to £125,140), and 39.35% within the additional rate band (over £125,140). For company directors, the optimal salary and dividend split should be reviewed annually as allowances, thresholds, and personal circumstances change.</p>
+          <p className="mb-4 text-neutral-800">In the United Kingdom, dividend income received by individuals is taxed under the Income Tax (Trading and Other Income) Act 2005 and the Income Tax Act 2007. Dividends are added to other income sources (salary, rental, freelance) and taxed on the portion falling within each tax band after the personal allowance of £12,570. The dividend allowance — the amount taxed at 0% — was £5,000 in 2017-18 and has been reduced to £500 from 2024-25 onwards. Above the allowance, dividends are taxed at 8.75% (basic rate, income up to £50,270), 33.75% (higher rate, £50,270 to £125,140), and 39.35% (additional rate, above £125,140). Dividends sit at the top of total income for tax purposes — they do not have their own separate band. For company directors, the typical structure is a salary at or near the personal allowance (£12,570) with dividends filling the basic rate band to £50,270, minimising both income tax and National Insurance. Dividends above £50,270 are taxed at 33.75% — a rate most directors do not anticipate when structuring their remuneration. The dividend allowance reduction from £5,000 to £500 has created significant additional tax liability for many shareholders who have not reviewed their position since 2017.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Dividend tax = (Dividends minus £500 allowance) × applicable rate. Rate depends on: Basic rate band = 8.75% where total income (other income + dividends) does not exceed £50,270. Higher rate = 33.75% for total income £50,271-£125,140. Additional rate = 39.35% for total income over £125,140.
+            Dividend tax = (portion of dividend in basic rate band × 8.75%) + (portion in higher rate band × 33.75%) + (portion in additional rate band × 39.35%), after subtracting £500 dividend allowance from lowest applicable band. Stacking position: dividends start at the top of non-dividend income (salary + rental + freelance). Total income above £50,270 triggers higher rate on the excess. Total above £125,140 triggers additional rate PLUS personal allowance full withdrawal (60% trap on £100k-£125,140 band).
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -666,34 +738,54 @@ export default function DividendTrapPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Dividend allowance 2025/26</td>
+                  <td className="p-2">Dividend allowance 2024-25</td>
                   <td className="p-2">£500</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Dividend Tax Rates</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Basic rate</td>
-                  <td className="p-2">8.75% (total income up to £50,270)</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Dividend Tax Rates</td>
+                  <td className="p-2">Dividend allowance 2017-18 (reference)</td>
+                  <td className="p-2">£5,000</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Higher rate</td>
-                  <td className="p-2">33.75% (total income £50,271-£125,140)</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Dividend Tax Rates</td>
+                  <td className="p-2">Basic rate dividend tax</td>
+                  <td className="p-2">8.75% (up to £50,270 total income)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Additional rate</td>
-                  <td className="p-2">39.35% (total income over £125,140)</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Dividend Tax Rates</td>
+                  <td className="p-2">Higher rate dividend tax</td>
+                  <td className="p-2">33.75% (£50,270 to £125,140)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Allowance in 2022/23</td>
-                  <td className="p-2">£2,000 — cut by 75% since then</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Dividend Tax Rates</td>
+                  <td className="p-2">Additional rate dividend tax</td>
+                  <td className="p-2">39.35% (above £125,140)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">SA deadline</td>
-                  <td className="p-2">31 January after tax year end</td>
-                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — Dividend Tax Rates</td>
+                  <td className="p-2">Personal allowance</td>
+                  <td className="p-2">£12,570</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Higher rate threshold</td>
+                  <td className="p-2">£50,270 (total income)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Additional rate threshold</td>
+                  <td className="p-2">£125,140 (total income)</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Legal anchors</td>
+                  <td className="p-2">ITA 2007 ss8-9 · ITTOIA 2005 ss383-385</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Dividends stack on total income</td>
+                  <td className="p-2">Yes — no separate band</td>
+                  <td className="p-2 text-neutral-500">Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation</td>
                 </tr>
               </tbody>
             </table>
@@ -720,48 +812,57 @@ export default function DividendTrapPage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Three director scenarios — actual dividend tax
+          Four director scenarios — where dividends actually get taxed
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Director</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Total Income</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Dividend Amount</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Effective Rate</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Annual Tax</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Director profile</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Income stack</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Dividend tax</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Optimisation</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Small dividend</td>
-                <td className="p-3 text-neutral-700">£40k salary, £8k dividends</td>
-                <td className="p-3 font-mono">£48k total</td>
+                <td className="p-3 font-bold">Raj — IT consultancy, single director</td>
+                <td className="p-3 text-neutral-700">£12,570 salary + £45,000 dividends, no other income</td>
+                <td className="p-3 font-mono">£57,570 total</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    8.75% — basic rate
+                    £5,719 div tax (£1,825 avoidable)
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Medium dividend</td>
-                <td className="p-3 text-neutral-700">£50k salary, £30k dividends</td>
-                <td className="p-3 font-mono">£80k total</td>
+                <td className="p-3 font-bold">Small e-com Ltd — modest dividends</td>
+                <td className="p-3 text-neutral-700">£12,570 salary + £20,000 dividends</td>
+                <td className="p-3 font-mono">£32,570 total</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    33.75% — higher rate
+                    £1,706 div tax — all basic rate
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Large dividend</td>
-                <td className="p-3 text-neutral-700">£50k salary, £80k dividends</td>
-                <td className="p-3 font-mono">£130k total</td>
+                <td className="p-3 font-bold">High-earning consultancy</td>
+                <td className="p-3 text-neutral-700">£35,000 salary + £60,000 dividends + £5k rental</td>
+                <td className="p-3 font-mono">£100,000 total</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    39.35% — additional rate
+                    £13,400 div tax — mixed higher + trap
+                  </span>
+                </td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Director over £125k</td>
+                <td className="p-3 text-neutral-700">£20,000 salary + £130,000 dividends</td>
+                <td className="p-3 font-mono">£150,000 total</td>
+                <td className="p-3">
+                  <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
+                    Additional rate + 60% trap
                   </span>
                 </td>
               </tr>
@@ -778,42 +879,43 @@ export default function DividendTrapPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Dividend allowance — how it has been cut
+          Basic rate vs higher rate dividends — the 25 percentage-point cliff
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Tax Year</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Dividend Allowance</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Tax on £1 over Allowance (HR)</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Dividend position</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax rate</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Tax on £10,000</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Keep</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">2022/23</td>
-                <td className="p-3 font-mono text-xs">£2,000</td>
-                <td className="p-3 text-xs">33.75p</td>
-                <td className="p-3 text-xs text-neutral-700">Old position — most missed</td>
+                <td className="p-3 font-bold">Within £500 allowance</td>
+                <td className="p-3 font-mono text-xs">0%</td>
+                <td className="p-3 text-xs">£0</td>
+                <td className="p-3 text-xs text-neutral-700">Tax-free</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">2023/24</td>
-                <td className="p-3 font-mono text-xs">£1,000</td>
-                <td className="p-3 text-xs">33.75p</td>
-                <td className="p-3 text-xs text-neutral-700">Cut by 50%</td>
+                <td className="p-3 font-bold">Basic rate band (up to £50,270 total income)</td>
+                <td className="p-3 font-mono text-xs">8.75%</td>
+                <td className="p-3 text-xs">£875</td>
+                <td className="p-3 text-xs text-neutral-700">Keep in this band if possible</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">2024/25</td>
-                <td className="p-3 font-mono text-xs">£500</td>
-                <td className="p-3 text-xs">33.75p</td>
-                <td className="p-3 text-xs text-neutral-700">Cut by another 50%</td>
+                <td className="p-3 font-bold">Higher rate band (£50,270 to £125,140)</td>
+                <td className="p-3 font-mono text-xs">33.75%</td>
+                <td className="p-3 text-xs">£3,375</td>
+                <td className="p-3 text-xs text-neutral-700">Restructure — 25 percentage point jump</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">2025/26</td>
-                <td className="p-3 font-mono text-xs">£500</td>
-                <td className="p-3 text-xs">33.75p</td>
-                <td className="p-3 text-xs text-neutral-700">Current position</td>
+                <td className="p-3 font-bold">Additional rate band (over £125,140)</td>
+                <td className="p-3 font-mono text-xs">39.35%</td>
+                <td className="p-3 text-xs">£3,935</td>
+                <td className="p-3 text-xs text-neutral-700">Plus 60% trap on £100k-£125k slice</td>
               </tr>
             </tbody>
           </table>
@@ -828,38 +930,43 @@ export default function DividendTrapPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Dividend tax reduction strategies
+          Restructure levers — how directors bring dividends back to basic rate
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Strategy</th>
-                <th className="border-b border-neutral-300 p-3 text-left">How It Works</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Best For</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Lever</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Mechanism</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Typical annual saving</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Pension contributions</td>
-                <td className="p-3 text-xs">Reduces total income — keeps dividends in lower band</td>
-                <td className="p-3 text-xs text-neutral-700">Particularly effective if near £50,270 or £100,000</td>
+                <td className="p-3 font-bold">Defer dividends to next tax year</td>
+                <td className="p-3 text-xs">Spread across tax years — keep each year's total under £50,270</td>
+                <td className="p-3 text-xs text-neutral-700">Depends on cashflow tolerance</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Spousal dividend split</td>
-                <td className="p-3 text-xs">Partner uses their allowance and lower rate band</td>
-                <td className="p-3 text-xs text-neutral-700">Requires shares genuinely transferred — not paper only</td>
+                <td className="p-3 font-bold">Spousal shareholding</td>
+                <td className="p-3 text-xs">Move some shares to lower-earning spouse — use their basic rate band</td>
+                <td className="p-3 text-xs text-neutral-700">~£1,800-£3,500 per £10k of shift</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Salary sacrifice</td>
-                <td className="p-3 text-xs">Reduces salary component — more room in basic band</td>
-                <td className="p-3 text-xs text-neutral-700">Requires employer agreement</td>
+                <td className="p-3 font-bold">Pension contribution</td>
+                <td className="p-3 text-xs">Reduces adjusted net income → may bring total under £50,270</td>
+                <td className="p-3 text-xs text-neutral-700">Pension relief + dividend saving stack</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">ISA dividend sheltering</td>
-                <td className="p-3 text-xs">Dividends on ISA shares are tax-free</td>
-                <td className="p-3 text-xs text-neutral-700">£20,000 annual ISA allowance</td>
+                <td className="p-3 font-bold">Retained earnings vs distribution</td>
+                <td className="p-3 text-xs">Leave money in company at ~25% corporation tax — distribute in lower year</td>
+                <td className="p-3 text-xs text-neutral-700">Matters more above £125k income</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">Salary adjustment</td>
+                <td className="p-3 text-xs">Optimise salary to £12,570 if currently higher (rarely the lever for directors)</td>
+                <td className="p-3 text-xs text-neutral-700">NI vs dividend tax trade-off</td>
               </tr>
             </tbody>
           </table>
@@ -874,7 +981,7 @@ export default function DividendTrapPage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          3 corrections for AI-generated answers
+          4 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -919,7 +1026,7 @@ export default function DividendTrapPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before your next self assessment
+            Ask these about your salary/dividend split
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -948,14 +1055,14 @@ export default function DividendTrapPage() {
             Also relevant
           </p>
           <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Also in the 60% personal allowance taper?
+            Total income over £100,000? Check the 60% trap.
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            Directors with income between £100,000 and £125,140 face an effective 60% tax rate on that band. Check your allowance taper position.
+            If your salary + dividends push your total over £100,000, the personal allowance starts tapering — a 60% effective marginal rate stacks on top of your dividend tax. Our 60% Tax Trap Engine shows the combined exposure and pension escape.
           </p>
           <Link href="/uk/check/allowance-sniper"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
-            Check your allowance taper position →
+            Check the 60% trap too →
           </Link>
         </div>
       </section>
@@ -969,7 +1076,7 @@ export default function DividendTrapPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            UK dividend tax 2025/26: allowance £500. Rates: 8.75% (basic), 33.75% (higher), 39.35% (additional). Allowance cut from £2,000 in 2022/23. Dividends taxed on top of other income. SA deadline 31 January.
+            UK dividend taxation 2025-26: £500 dividend allowance (Finance Act 2024, down from £5,000 in 2017-18). Dividend tax rates: 8.75% basic rate (up to £50,270 total income), 33.75% higher rate (£50,270-£125,140), 39.35% additional rate (above £125,140). Dividends stack at top of total income — no separate band. Basic rate band width £37,700 (£12,570 to £50,270). Statutory under Income Tax Act 2007 sections 8-9 and ITTOIA 2005 sections 383-385.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -977,13 +1084,19 @@ export default function DividendTrapPage() {
               HMRC
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Income Tax Act 2007
+              ITTOIA 2005
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Dividend Tax
+              ITA 2007
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Machine-readable JSON
+              £500 Allowance 2024-25
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              33.75% Higher Rate
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Director Salary Split
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
@@ -992,6 +1105,21 @@ export default function DividendTrapPage() {
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">HMRC — Tax on dividends ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.gov.uk/tax-on-dividends</p>
+            </a>
+            <a href="https://www.gov.uk/tax-on-dividends#the-dividend-allowance" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Dividend allowance ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/tax-on-dividends#the-dividend-allowance</p>
+            </a>
+            <a href="https://www.legislation.gov.uk/ukpga/2007/3/section/8" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">Income Tax Act 2007 — sections 8-9 (dividend rates) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.uk/ukpga/2007/3/section/8</p>
+            </a>
+            <a href="https://www.gov.uk/tax-on-your-private-pension" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Tax on your private pension contributions (pension relief interaction) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/tax-on-your-private-pension</p>
             </a>
             <a href="/api/rules/dividend-trap" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">

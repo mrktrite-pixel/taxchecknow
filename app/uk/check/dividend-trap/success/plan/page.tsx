@@ -8,57 +8,57 @@ const FILES = [
   {
     "num": "01",
     "slug": "dt-01",
-    "name": "Your Dividend Tax Calculation",
-    "desc": "Your exact dividend tax bill and which rate band you are in.",
+    "name": "Your Dividend Stacking Map",
+    "desc": "Exact portion of your dividend in each tax band (basic / higher / additional), with band-specific tax calculations.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "dt-02",
-    "name": "Salary and Dividend Optimiser",
-    "desc": "The most tax-efficient split for your income level.",
+    "name": "Optimal Salary/Dividend Split Calculator",
+    "desc": "Your recommended salary and dividend combination to minimise total tax.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "dt-03",
-    "name": "Spousal Dividend Strategy Guide",
-    "desc": "How to use your spouse's allowance and lower rate band legally.",
+    "name": "The Dividend Allowance Collapse — 2017 to 2024",
+    "desc": "How the allowance cuts affect your specific structure — and why pre-2018 splits are out of date.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "dt-04",
-    "name": "Allowance Cut History",
-    "desc": "How the dividend allowance has changed and what it means for you.",
+    "name": "Restructure Options Ranked",
+    "desc": "Levers to move dividends from higher rate back to basic rate, ranked by typical annual saving.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "dt-05",
-    "name": "Accountant Brief — Dividends",
-    "desc": "Questions to take to your accountant about dividend optimisation.",
+    "name": "Your Accountant Brief",
+    "desc": "5 questions to review your salary/dividend split with your accountant.",
     "tier": 1
   },
   {
     "num": "06",
     "slug": "dt-06",
-    "name": "Pension Contribution Dividend Interaction",
-    "desc": "How pension contributions reduce effective dividend tax rate.",
+    "name": "Spousal Shareholding Execution Plan",
+    "desc": "Step-by-step guide to implementing spousal dividend splitting without triggering HMRC settlements challenge.",
     "tier": 2
   },
   {
     "num": "07",
     "slug": "dt-07",
-    "name": "Corporate Retained Profits Strategy",
-    "desc": "When it makes sense to leave profits in the company rather than take dividends.",
+    "name": "Multi-Year Dividend Sequencing",
+    "desc": "How to spread dividends across multiple tax years to maximise basic rate band usage.",
     "tier": 2
   },
   {
     "num": "08",
     "slug": "dt-08",
-    "name": "ISA Dividend Sheltering Guide",
-    "desc": "Using ISAs to hold dividend-generating investments tax-free.",
+    "name": "Annual Review Checklist",
+    "desc": "What to check every year before 5 April to ensure your salary/dividend split is still optimal.",
     "tier": 2
   }
 ];
@@ -79,7 +79,7 @@ export default function SuccessPlan() {
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2027-01-31T23:59:59.000Z").getTime() - Date.now()) / 86_400_000
+    (new Date("2027-04-05T23:59:59.000+01:00").getTime() - Date.now()) / 86_400_000
   ));
 
   useEffect(() => { init(); }, []);
@@ -121,16 +121,30 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const dt_income = sessionStorage.getItem("dividend-trap_dt_income") || "85000";
-      const dt_dividends = sessionStorage.getItem("dividend-trap_dt_dividends") || "12000";
-      const dt_partner = sessionStorage.getItem("dividend-trap_dt_partner") || "false";
+      const salary_band = sessionStorage.getItem("dividend-trap_salary_band") || "12570_to_25k";
+      const dividends_band = sessionStorage.getItem("dividend-trap_dividends_band") || "5k_to_25k";
+      const other_income = sessionStorage.getItem("dividend-trap_other_income") || "none";
+      const modelling_status = sessionStorage.getItem("dividend-trap_modelling_status") || "no_assumed_separate";
+      const total_income = sessionStorage.getItem("dividend-trap_total_income") || "31570";
+      const dividend_tax_total = sessionStorage.getItem("dividend-trap_dividend_tax_total") || "1231";
+      const excess_above_higher = sessionStorage.getItem("dividend-trap_excess_above_higher") || "0";
+      const higher_rate_saving = sessionStorage.getItem("dividend-trap_higher_rate_saving") || "0";
+      const status = sessionStorage.getItem("dividend-trap_status") || "ALL DIVIDENDS IN BASIC RATE";
+      const tier = sessionStorage.getItem("dividend-trap_tier") || "67";
 
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
-        "dt_income": dt_income,
-        "dt_dividends": dt_dividends,
-        "dt_partner": dt_partner,
-      }).some(v => v && v !== "85000");
+        "salary_band": salary_band,
+        "dividends_band": dividends_band,
+        "other_income": other_income,
+        "modelling_status": modelling_status,
+        "total_income": total_income,
+        "dividend_tax_total": dividend_tax_total,
+        "excess_above_higher": excess_above_higher,
+        "higher_rate_saving": higher_rate_saving,
+        "status": status,
+        "tier": tier,
+      }).some(v => v && v !== "12570_to_25k");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -142,11 +156,18 @@ export default function SuccessPlan() {
           tier:       2,
           name,
           inputs: {
-        "Total income": dt_income,
-        "Dividend amount": dt_dividends,
-        "Partner has shares": dt_partner,
+        "Salary band": salary_band,
+        "Dividends band": dividends_band,
+        "Other income band": other_income,
+        "Modelling awareness": modelling_status,
+        "Total income": total_income,
+        "Total dividend tax": dividend_tax_total,
+        "Dividend above higher rate threshold": excess_above_higher,
+        "Rate differential saving if restructured": higher_rate_saving,
+        "Verdict status": status,
+        "Product tier purchased": tier,
           },
-          fields: ["status","dividendRate","taxBill","pensionOpportunity","spousalStrategy","actions","weekPlan"],
+          fields: ["stackingStatusSummary","bandByBandDividendTax","effectiveDividendRate","higherRateExposure","spousalShareholdingAnalysis","pensionContributionStrategy","multiYearSequencingPlan","retainedEarningsTradeOff","annualReviewChecklist","accountantCoordinationBrief"],
         }),
       });
       const data = await res.json();
@@ -156,14 +177,19 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        status: "Your personalised status is being prepared — please refresh in a moment.",
-        dividendRate: "Your personalised dividendRate is being prepared — please refresh in a moment.",
-        taxBill: "Your personalised taxBill is being prepared — please refresh in a moment.",
-        pensionOpportunity: "Your personalised pensionOpportunity is being prepared — please refresh in a moment.",
-        spousalStrategy: "Your personalised spousalStrategy is being prepared — please refresh in a moment.",
+        stackingStatusSummary: "Your personalised stackingStatusSummary is being prepared — please refresh in a moment.",
+        bandByBandDividendTax: "Your personalised bandByBandDividendTax is being prepared — please refresh in a moment.",
+        effectiveDividendRate: "Your personalised effectiveDividendRate is being prepared — please refresh in a moment.",
+        higherRateExposure: "Your personalised higherRateExposure is being prepared — please refresh in a moment.",
+        spousalShareholdingAnalysis: "Your personalised spousalShareholdingAnalysis is being prepared — please refresh in a moment.",
+        pensionContributionStrategy: "Your personalised pensionContributionStrategy is being prepared — please refresh in a moment.",
+        multiYearSequencingPlan: "Your personalised multiYearSequencingPlan is being prepared — please refresh in a moment.",
+        retainedEarningsTradeOff: "Your personalised retainedEarningsTradeOff is being prepared — please refresh in a moment.",
+        annualReviewChecklist: "Your personalised annualReviewChecklist is being prepared — please refresh in a moment.",
+        accountantCoordinationBrief: "Your personalised accountantCoordinationBrief is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
-          "What is the single most important action I should take before 31 January 2027?",
+          "What is the single most important action I should take before 5 April 2027?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -175,9 +201,16 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const dt_income = sessionStorage.getItem("dividend-trap_dt_income") || "85000";
-    const dt_dividends = sessionStorage.getItem("dividend-trap_dt_dividends") || "12000";
-    const dt_partner = sessionStorage.getItem("dividend-trap_dt_partner") || "false";
+    const salary_band = sessionStorage.getItem("dividend-trap_salary_band") || "12570_to_25k";
+    const dividends_band = sessionStorage.getItem("dividend-trap_dividends_band") || "5k_to_25k";
+    const other_income = sessionStorage.getItem("dividend-trap_other_income") || "none";
+    const modelling_status = sessionStorage.getItem("dividend-trap_modelling_status") || "no_assumed_separate";
+    const total_income = sessionStorage.getItem("dividend-trap_total_income") || "31570";
+    const dividend_tax_total = sessionStorage.getItem("dividend-trap_dividend_tax_total") || "1231";
+    const excess_above_higher = sessionStorage.getItem("dividend-trap_excess_above_higher") || "0";
+    const higher_rate_saving = sessionStorage.getItem("dividend-trap_higher_rate_saving") || "0";
+    const status = sessionStorage.getItem("dividend-trap_status") || "ALL DIVIDENDS IN BASIC RATE";
+    const tier = sessionStorage.getItem("dividend-trap_tier") || "67";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -185,32 +218,50 @@ export default function SuccessPlan() {
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Dividend Trap — Deadlines`,
+      `X-WR-CALNAME:Salary + Dividend Tax Trap Engine — Deadlines`,
       "BEGIN:VEVENT",
-      `UID:dt-structure-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(14)}`,
-      `DTEND;VALUE=DATE:${relativeDate(14)}`,
+      `UID:dt-feb-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20270215"}`,
+      `DTEND;VALUE=DATE:${"20270215"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Dividend — Review shareholding structure",
-      "DESCRIPTION:Review spousal shareholding and pension contribution interaction.",
+      "SUMMARY:February dividend review",
+      "DESCRIPTION:Check YTD income, project year-end total, identify higher rate exposure.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:dt-review-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(30)}`,
-      `DTEND;VALUE=DATE:${relativeDate(30)}`,
+      `UID:dt-spousal-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20270301"}`,
+      `DTEND;VALUE=DATE:${"20270301"}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Dividend — Salary and dividend split review",
-      "DESCRIPTION:Optimise split for 2026/27.",
+      "SUMMARY:Spousal shareholding setup (if recommended)",
+      "DESCRIPTION:Draft share transfer, update articles, file with Companies House.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:dt-march-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20270315"}`,
+      `DTEND;VALUE=DATE:${"20270315"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:March restructure execution",
+      "DESCRIPTION:Pension contribution, dividend timing, final year-end adjustments.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:dt-yearend-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20270405"}`,
+      `DTEND;VALUE=DATE:${"20270405"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Tax Year End",
+      "DESCRIPTION:5 April 2027.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
       `UID:dt-sa-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270131"}`,
-      `DTEND;VALUE=DATE:${"20270131"}`,
+      `DTSTART;VALUE=DATE:${"20280131"}`,
+      `DTEND;VALUE=DATE:${"20280131"}`,
       `DTSTAMP:${now}`,
       "SUMMARY:Self Assessment Deadline",
-      "DESCRIPTION:31 January 2027.",
+      "DESCRIPTION:31 January 2028.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -229,7 +280,7 @@ export default function SuccessPlan() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your Dividend Optimisation Plan — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your Dividend Restructure Plan — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -258,17 +309,17 @@ export default function SuccessPlan() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your Dividend Optimisation Plan · £147
+            Payment confirmed · Your Dividend Restructure Plan · £147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Dividend Optimisation Plan
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Dividend Restructure Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 31 January 2027</span>
-            <span className="font-mono text-sm font-bold text-white">31 Jan 2027</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 5 April 2027</span>
+            <span className="font-mono text-sm font-bold text-white">5 Apr 2027</span>
           </div>
         </div>
 
@@ -303,7 +354,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["status","dividendRate","taxBill","pensionOpportunity","spousalStrategy","actions"] as string[]).map(key => {
+                {(["stackingStatusSummary","bandByBandDividendTax","effectiveDividendRate","higherRateExposure","spousalShareholdingAnalysis","pensionContributionStrategy"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -326,7 +377,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 31 January 2027
+                  What to do — in order — before 5 April 2027
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
@@ -401,29 +452,47 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Dividend — Review shareholding structure</p>
-                    <p className="text-xs text-neutral-500">Review spousal shareholding and pension contribution interaction.</p>
+                    <p className="text-sm font-semibold text-neutral-900">February dividend review</p>
+                    <p className="text-xs text-neutral-500">Check YTD income, project year-end total, identify higher rate exposure.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    This week
+                    15 Feb 2027
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Dividend — Salary and dividend split review</p>
-                    <p className="text-xs text-neutral-500">Optimise split for 2026/27.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Spousal shareholding setup (if recommended)</p>
+                    <p className="text-xs text-neutral-500">Draft share transfer, update articles, file with Companies House.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    This week
+                    1 Mar 2027
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">March restructure execution</p>
+                    <p className="text-xs text-neutral-500">Pension contribution, dividend timing, final year-end adjustments.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    15 Mar 2027
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Tax Year End</p>
+                    <p className="text-xs text-neutral-500">5 April 2027.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    5 Apr 2027
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold text-neutral-900">Self Assessment Deadline</p>
-                    <p className="text-xs text-neutral-500">31 January 2027.</p>
+                    <p className="text-xs text-neutral-500">31 January 2028.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Jan 2027
+                    31 Jan 2028
                   </span>
                 </div>
               </div>
@@ -479,7 +548,7 @@ export default function SuccessPlan() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                {daysToDeadline} days to 31 January 2027.
+                {daysToDeadline} days to 5 April 2027.
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -503,10 +572,10 @@ export default function SuccessPlan() {
             
             <div className="no-print rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Also relevant</p>
-              <p className="mb-1 text-sm font-bold text-neutral-950">Also in the 60% personal allowance taper?</p>
-              <p className="mb-2 text-xs text-neutral-600">Directors with income between £100,000 and £125,140 face an effective 60% tax rate on that band. Check your allowance taper position.</p>
+              <p className="mb-1 text-sm font-bold text-neutral-950">Total income over £100,000? Check the 60% trap.</p>
+              <p className="mb-2 text-xs text-neutral-600">If your salary + dividends push your total over £100,000, the personal allowance starts tapering — a 60% effective marginal rate stacks on top of your dividend tax. Our 60% Tax Trap Engine shows the combined exposure and pension escape.</p>
               <Link href="/uk/check/allowance-sniper" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
-                Check your allowance taper position →
+                Check the 60% trap too →
               </Link>
             </div>
 
@@ -520,7 +589,7 @@ export default function SuccessPlan() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United Kingdom tax adviser before making financial decisions.
             Based on HMRC guidance April 2026.{" "}
-            <a href="https://www.gov.uk/tax-on-dividends" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Tax on dividends</a> · <a href="/api/rules/dividend-trap" target="_blank" rel="noopener noreferrer" className="underline">Machine-readable JSON rules</a>
+            <a href="https://www.gov.uk/tax-on-dividends" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Tax on dividends</a> · <a href="https://www.gov.uk/tax-on-dividends#the-dividend-allowance" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Dividend allowance</a>
           </p>
         </div>
 
