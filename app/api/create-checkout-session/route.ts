@@ -146,6 +146,10 @@ function getPriceId(tier: number, productKey: string): string | undefined {
     if (tier === 67)  return process.env.STRIPE_CAN_PFT_67;
     if (tier === 147) return process.env.STRIPE_CAN_PFT_147;
   }
+  if (key.includes("can_") && key.includes("amt_shock")) {
+    if (tier === 67)  return process.env.STRIPE_CAN_AMT_67;
+    if (tier === 147) return process.env.STRIPE_CAN_AMT_147;
+  }
 
   // ─── TAXCHECKNOW AU ────────────────────────────────────────────────────────
   // All AU product keys start with "au_" — always check au_ prefix first.
