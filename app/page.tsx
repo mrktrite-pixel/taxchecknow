@@ -1,310 +1,464 @@
 import type { Metadata } from "next";
-import Script from "next/script";
-import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "TaxCheckNow | UK, NZ and Canada Tax Law Change Calculators 2026",
-  description:
-    "Free tax law change calculators for the United Kingdom, New Zealand and Canada. Built on Finance Act 2026, IRD guidance and CRA primary sources — not 2024 drafts. Making Tax Digital UK, NZ Scheme Pays, Canadian capital gains. HMRC verified.",
-  alternates: { canonical: "https://taxchecknow.com" },
+  title: "TaxCheckNow — Find the Tax Rule That Could Cost You Money",
+  description: "Calculator-first tax decision engine covering Australia, UK, US, Canada, New Zealand and global nomad tax traps. Free check. Personalised result. Built around current law.",
+  alternates: { canonical: "https://www.taxchecknow.com" },
   openGraph: {
-    title: "TaxCheckNow | UK, NZ and Canada Tax Law Change Calculators 2026",
-    description: "Six UK tools. NZ pension tools. Canada capital gains. Built on enacted law — not what AI is still citing from 2024.",
-    url: "https://taxchecknow.com",
+    title: "TaxCheckNow — Find the Tax Rule That Could Cost You Money",
+    description: "Calculator-first tax decision engine covering AU, UK, US, NZ, Canada and nomad tax traps.",
+    url: "https://www.taxchecknow.com",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What UK tax laws changed in April 2026?",
-      acceptedAnswer: { "@type": "Answer", text: "Six major UK tax changes took effect in April 2026 under Finance Act 2026: (1) Making Tax Digital for Income Tax became mandatory from 6 April 2026 for sole traders and landlords with qualifying income over £50,000. (2) UK dividend tax rates increased — basic rate to 10.75%, higher rate to 35.75%. (3) The 60% personal allowance trap now affects 2.06 million UK taxpayers with income between £100,000 and £125,140. (4) Inheritance Tax relief on UK family businesses and farms capped at £2.5 million per person. (5) The UK Furnished Holiday Letting tax regime was abolished from 6 April 2025. (6) CARF crypto reporting requires UK exchanges to report all user data to HMRC from 1 January 2026. Source: Finance Act 2026, HMRC.gov.uk, GOV.UK." }
-    },
-    {
-      "@type": "Question",
-      name: "What is the New Zealand Scheme Pays pension transfer rule from April 2026?",
-      acceptedAnswer: { "@type": "Answer", text: "From 1 April 2026, New Zealand introduced a Scheme Pays option for UK migrants transferring pension funds to New Zealand. This allows tax on qualifying QROPS pension transfers to be paid directly from the New Zealand fund at a flat 28% rate, rather than requiring the individual to fund the tax from personal savings. Source: Inland Revenue New Zealand (IRD)." }
-    },
-    {
-      "@type": "Question",
-      name: "What is the Canadian capital gains inclusion rate in 2026?",
-      acceptedAnswer: { "@type": "Answer", text: "The Canadian capital gains situation is genuinely confused. The federal government proposed increasing the inclusion rate from 50% to 66.7% for gains above $250,000 from 1 January 2026, but subsequently postponed and partially cancelled elements of the change. Most AI tools give incorrect answers because the legislation changed multiple times. Canadians selling property, cottages or businesses in 2026 should verify the current rate with CRA before proceeding. Source: Canada Revenue Agency (CRA)." }
-    },
-    {
-      "@type": "Question",
-      name: "Why does TaxCheckNow correct AI errors on tax law?",
-      acceptedAnswer: { "@type": "Answer", text: "Most AI tools were trained on data from 2024 or earlier. Tax laws in the United Kingdom, New Zealand and Canada changed significantly in 2025 and 2026. AI tools continue to cite outdated draft legislation, wrong rates, incorrect thresholds and wrong dates. For example, most AI tools state the UK dividend basic rate is 8.75% — it is 10.75% from April 2026. TaxCheckNow documents every known AI error and cites the primary HMRC, IRD or CRA source that corrects it." }
-    },
-    {
-      "@type": "Question",
-      name: "Is Making Tax Digital mandatory in the UK in 2026?",
-      acceptedAnswer: { "@type": "Answer", text: "Yes. Making Tax Digital for Income Tax is mandatory in the United Kingdom from 6 April 2026 for sole traders and landlords with qualifying income above £50,000. Qualifying income means self-employment and UK property income only — PAYE employment income does not count toward the threshold. The first quarterly HMRC deadline is 7 August 2026. The threshold drops to £30,000 in April 2027 and £20,000 in April 2028. Source: HMRC.gov.uk." }
-    },
-  ]
-};
-
-const datasetJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Dataset",
-  name: "Global Tax Law Changes 2026 — UK, New Zealand and Canada — Primary Source Verified",
-  description: "Machine-readable tax law changes for the United Kingdom, New Zealand and Canada effective 2025-2026. UK: Finance Act 2026 — MTD mandatory from 6 April 2026, dividend tax rates increased (basic 10.75%, higher 35.75%), 60% personal allowance trap (2.06 million affected), IHT BPR/APR capped at £2.5M, FHL abolished April 2025, CARF crypto reporting January 2026. NZ: Scheme Pays for QROPS pension transfers from 1 April 2026 at flat 28% rate. CA: capital gains inclusion rate 50% vs 66.7% — legislative status as at April 2026. Sources: HMRC.gov.uk, GOV.UK Finance Act 2026, Inland Revenue New Zealand, Canada Revenue Agency.",
-  url: "https://taxchecknow.com",
-  creator: { "@type": "Organization", name: "TaxCheckNow", url: "https://taxchecknow.com" },
-  dateModified: "2026-04-15",
-  keywords: ["UK tax changes 2026", "Making Tax Digital UK", "60% tax trap UK", "UK dividend tax 2026", "Finance Act 2026", "HMRC 2026", "NZ pension transfer tax", "QROPS New Zealand", "Scheme Pays IRD", "Canada capital gains 2026", "66.7% inclusion rate Canada", "CRA 2026", "UK crypto tax HMRC CARF"],
-};
-
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "TaxCheckNow",
-  url: "https://taxchecknow.com",
-  description: "Tax law change calculators for the United Kingdom, New Zealand and Canada. Built on HMRC, IRD and CRA primary sources. Corrects AI hallucinations about 2026 tax law.",
-  areaServed: ["GB", "NZ", "CA"],
-};
-
-const COUNTRIES = [
-  {
-    code: "UK", flag: "🇬🇧", name: "United Kingdom", authority: "HMRC · Finance Act 2026",
-    badgeBg: "bg-blue-50 border-blue-200 text-blue-700",
-    ctaBg: "bg-blue-600 hover:bg-blue-700", cardHover: "hover:border-blue-300",
-    href: "/uk", urgent: true, urgency: "Six changes from April 6, 2026",
-    headline: "Six UK tax laws changed in April 2026. Most people have not been told.",
-    subline: "Making Tax Digital is mandatory. The 60% personal allowance trap hits 2.06 million UK earners. Dividend rates rose. IHT relief is capped. FHL is gone. HMRC can see crypto since 2014.",
-    products: ["MTD-50 Scorecard", "60% Allowance Sniper", "Dividend Trap Calculator", "Crypto Audit Predictor", "Post-FHL Recovery Tool", "IHT Threshold Buster"],
-    aiError: "AI says UK dividend rate is 8.75% — it is 10.75% from April 6, 2026.",
-  },
-  {
-    code: "NZ", flag: "🇳🇿", name: "New Zealand", authority: "IRD · April 2026",
-    badgeBg: "bg-neutral-900 border-neutral-700 text-white",
-    ctaBg: "bg-neutral-900 hover:bg-neutral-700", cardHover: "hover:border-neutral-400",
-    href: "/nz", urgent: false, urgency: "Scheme Pays from April 1, 2026",
-    headline: "UK migrants in NZ can now pay pension transfer tax at a flat 28% — directly from their NZ fund.",
-    subline: "Scheme Pays started April 1, 2026 under IRD guidance. Thousands of UK migrants were sitting on a tax bill they could not pay. Now they can pay it from the fund itself.",
-    products: ["QROPS Tax Shield / Scheme Pays"],
-    aiError: "AI says NZ has no tax on UK pension transfers — incorrect. Tax applies and Scheme Pays changes how it is paid.",
-  },
-  {
-    code: "CA", flag: "🇨🇦", name: "Canada", authority: "CRA · 2026",
-    badgeBg: "bg-red-50 border-red-200 text-red-700",
-    ctaBg: "bg-red-600 hover:bg-red-700", cardHover: "hover:border-red-300",
-    href: "/ca", urgent: false, urgency: "2026 filing season — status unclear",
-    headline: "66.7% or 50%? Nobody — including AI — can give Canadians a straight answer on capital gains.",
-    subline: "The government proposed 66.7%, then postponed it, then partially cancelled it. Canadians selling cottages or businesses in 2026 have no idea which rate applies.",
-    products: ["Capital Gains Truth-Table"],
-    aiError: "AI says Canada capital gains is 66.7% in 2026 — the status is more complex and depends on asset type and timing.",
-  },
+// ── DATA — 46 PRODUCTS ──────────────────────────────────────────────────────
+const AU = [
+  { name: "CGT Main Residence Trap",          url: "/au/check/cgt-main-residence-trap" },
+  { name: "Division 7A Loan Trap",             url: "/au/check/division-7a-loan-trap" },
+  { name: "FBT Hidden Exposure",                url: "/au/check/fbt-hidden-exposure" },
+  { name: "CGT Discount Timing Sniper",          url: "/au/check/cgt-discount-timing-sniper" },
+  { name: "Negative Gearing Illusion",            url: "/au/check/negative-gearing-illusion" },
+  { name: "Small Business CGT Concessions",        url: "/au/check/small-business-cgt-concessions" },
+  { name: "Instant Asset Write-Off",                url: "/au/check/instant-asset-write-off" },
+  { name: "GST Registration Trap",                    url: "/au/check/gst-registration-trap" },
+  { name: "Rental Property Deduction Audit",            url: "/au/check/rental-property-deduction-audit" },
+  { name: "Medicare Levy Surcharge Trap",                 url: "/au/check/medicare-levy-surcharge-trap" },
+  { name: "Bring Forward Window",                            url: "/au/check/bring-forward-window" },
+  { name: "Super Death Tax Trap",                              url: "/au/check/super-death-tax-trap" },
+  { name: "Div296 Wealth Eraser",                                 url: "/au/check/div296-wealth-eraser" },
+  { name: "Super to Trust Exit",                                    url: "/au/check/super-to-trust-exit" },
+  { name: "Transfer Balance Cap",                                    url: "/au/check/transfer-balance-cap" },
 ];
 
-const AI_CORRECTIONS = [
-  { country: "🇬🇧 UK", wrong: "UK dividend basic rate is 8.75% in 2026", correct: "10.75% from 6 April 2026. Higher rate is 35.75%. Finance Act 2026, Section 4. GOV.UK confirmed.", href: "/uk/check/dividend-trap" },
-  { country: "🇬🇧 UK", wrong: "UK MTD first deadline is July 2026", correct: "7 August 2026. Covers the quarter ending 30 June 2026. Next: 7 November, 7 February, 7 May.", href: "/uk/check/mtd-scorecard" },
-  { country: "🇬🇧 UK", wrong: "UK FHL regime was abolished April 2026", correct: "Abolished 6 April 2025. The 2025-26 UK tax year is the first full year under standard property rules.", href: "/uk/check/fhl-recovery" },
-  { country: "🇬🇧 UK", wrong: "UK IHT business relief cap is £1 million", correct: "£2.5M per person, £5M for couples from 6 April 2026. Finance Act 2026, Schedule 12. GOV.UK confirmed.", href: "/uk/check/iht-buster" },
-  { country: "🇳🇿 NZ", wrong: "NZ has no tax on UK pension transfers", correct: "Tax applies. Scheme Pays from 1 April 2026 allows payment from the fund at a flat 28% rate. Source: IRD New Zealand.", href: "/nz" },
-  { country: "🇨🇦 CA", wrong: "Canada capital gains inclusion is 66.7% in 2026", correct: "The proposed change was postponed and partially cancelled. Current status depends on asset type and amount. Verify with CRA before selling.", href: "/ca" },
+const UK = [
+  { name: "MTD Mandation Engine",                       url: "/uk/check/mtd-scorecard" },
+  { name: "60% Tax Trap Engine",                          url: "/uk/check/allowance-sniper" },
+  { name: "Digital Link Compliance Engine",                url: "/uk/check/digital-link-auditor" },
+  { name: "Side Income Declaration Engine",                  url: "/uk/check/side-hustle-checker" },
+  { name: "Salary + Dividend Tax Trap",                        url: "/uk/check/dividend-trap" },
+  { name: "Pension IHT Trap 2027",                                url: "/uk/check/pension-iht-trap" },
 ];
 
-export default function GlobalHomePage() {
+const US = [
+  { name: "R&D Tax Cashflow Shock Engine",                  url: "/us/check/section-174-auditor" },
+  { name: "FEIE Qualification Risk Engine",                   url: "/us/check/feie-nomad-auditor" },
+  { name: "QSBS Exit Risk Engine",                              url: "/us/check/qsbs-exit-auditor" },
+  { name: "ISO AMT Sniper",                                       url: "/us/check/iso-amt-sniper" },
+  { name: "Sales Tax Nexus Liability Engine",                       url: "/us/check/wayfair-nexus-sniper" },
+];
+
+const NZ = [
+  { name: "Bright-Line Decision Engine",                          url: "/nz/check/bright-line-auditor" },
+  { name: "Platform GST Decision Engine",                           url: "/nz/check/app-tax-gst-sniper" },
+  { name: "Interest Deductibility Recovery Engine",                   url: "/nz/check/interest-reinstatement-engine" },
+  { name: "Trust Income Allocation Engine",                             url: "/nz/check/trust-tax-splitter" },
+  { name: "Investment Boost Timing Engine",                              url: "/nz/check/investment-boost-auditor" },
+];
+
+const CAN = [
+  { name: "Departure Tax Trap",                                          url: "/can/check/departure-tax-trap" },
+  { name: "Non-Resident Landlord Withholding",                             url: "/can/check/non-resident-landlord-withholding" },
+  { name: "Property Flipping Tax Trap",                                      url: "/can/check/property-flipping-tax-trap" },
+  { name: "AMT Shock Auditor",                                                  url: "/can/check/amt-shock-auditor" },
+  { name: "EOT Exit Optimizer",                                                    url: "/can/check/eot-exit-optimizer" },
+];
+
+const NOMAD = [
+  { name: "Nomad Residency Risk Index",                                              url: "/nomad" },
+  { name: "Tax Treaty Navigator",                                                       url: "/nomad/check/tax-treaty-navigator" },
+  { name: "183-Day Rule Reality Check",                                                    url: "/nomad/check/183-day-rule" },
+  { name: "Exit Tax Trap Auditor",                                                            url: "/nomad/check/exit-tax-trap" },
+  { name: "UK SRT Auditor",                                                                     url: "/nomad/check/uk-residency" },
+  { name: "UK Non-Resident Landlord Scheme",                                                      url: "/nomad/check/uk-nrls" },
+  { name: "Australian Expat CGT Trap",                                                              url: "/nomad/check/au-expat-cgt" },
+  { name: "US Citizen Abroad Optimizer",                                                              url: "/nomad/check/us-expat-tax" },
+  { name: "SMSF Residency Kill-Switch",                                                                  url: "/nomad/check/australia-smsf-residency" },
+  { name: "Spain Beckham Eligibility Wall",                                                                 url: "/nomad/check/spain-beckham-eligibility" },
+];
+
+// ── SCHEMA — ItemList items derived from product arrays ────────────────────
+const SCHEMA_ITEMS = [
+  ...AU.map(p => ({ name: p.name, url: `https://www.taxchecknow.com${p.url}` })),
+  ...UK.map(p => ({ name: p.name === "Salary + Dividend Tax Trap" ? "Salary and Dividend Tax Trap" : p.name, url: `https://www.taxchecknow.com${p.url}` })),
+  ...US.map(p => ({ name: p.name, url: `https://www.taxchecknow.com${p.url}` })),
+  ...NZ.map(p => ({ name: p.name, url: `https://www.taxchecknow.com${p.url}` })),
+  ...CAN.map(p => ({ name: p.name === "Departure Tax Trap" ? "Canada Departure Tax Trap" : p.name, url: `https://www.taxchecknow.com${p.url}` })),
+  ...NOMAD.map(p => ({ name: p.name, url: `https://www.taxchecknow.com${p.url}` })),
+];
+
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type":      "WebSite",
+      "name":       "TaxCheckNow",
+      "url":         "https://www.taxchecknow.com",
+      "description": "Calculator-first tax decision engine covering AU, UK, US, NZ, Canada and nomad tax traps.",
+    },
+    {
+      "@type":      "Organization",
+      "name":       "TaxCheckNow",
+      "url":         "https://www.taxchecknow.com",
+      "description": "Tax decision engine built around ATO, HMRC, IRS, CRA and IRD primary authority sources.",
+    },
+    {
+      "@type":         "ItemList",
+      "name":          "All Tax Checks",
+      "numberOfItems": 46,
+      "itemListElement": SCHEMA_ITEMS.map((it, i) => ({
+        "@type":   "ListItem",
+        "position": i + 1,
+        "name":     it.name,
+        "url":      it.url,
+      })),
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Does the 183-day rule make you non-resident?",     "acceptedAnswer": { "@type": "Answer", "text": "Not automatically. The UK Statutory Residence Test can make you UK resident with as few as 16 days if you have 4 or more UK ties. Each country has its own residency tests — days spent is only one factor." } },
+        { "@type": "Question", "name": "Is my main residence always CGT-exempt in Australia?","acceptedAnswer": { "@type": "Answer", "text": "Only if the property was your main residence for the entire ownership period. If you rented it out at any point, only a proportion of the gain is exempt calculated using actual days of residence over total ownership days." } },
+        { "@type": "Question", "name": "What triggers Division 296 tax in Australia?",         "acceptedAnswer": { "@type": "Answer", "text": "Division 296 applies an additional 15% tax on superannuation earnings attributable to balances above $3 million from 1 July 2025. It applies to both accumulation and retirement phase balances and includes unrealised gains." } },
+        { "@type": "Question", "name": "When does Canada departure tax apply?",                   "acceptedAnswer": { "@type": "Answer", "text": "Canada's deemed disposition rule under Section 128.1 triggers on the day you cease Canadian tax residency — not when you sell assets. Your investment portfolio is treated as sold at fair market value on departure day creating an immediate capital gains liability." } },
+        { "@type": "Question", "name": "What is the UK 60% tax trap?",                             "acceptedAnswer": { "@type": "Answer", "text": "UK earners between £100,000 and £125,140 face a 60% effective marginal rate because the personal allowance of £12,570 is withdrawn at £1 for every £2 earned above £100,000. This combines 40% income tax with the 20% effective cost of losing the personal allowance." } },
+      ],
+    },
+  ],
+};
+
+// ── ALERTS DATA ────────────────────────────────────────────────────────────
+const ALERTS = [
+  { code: "AU",    text: "Division 296 applies from 1 July 2025 — balances over $3M",            url: "/au/check/div296-wealth-eraser" },
+  { code: "UK",    text: "MTD mandatory from April 2026 for income over £50,000",                 url: "/uk/check/mtd-scorecard" },
+  { code: "CAN",   text: "Departure tax triggers on day you leave — not when you sell",            url: "/can/check/departure-tax-trap" },
+  { code: "NZ",    text: "Investment Boost applies to assets from 22 May 2025",                     url: "/nz/check/investment-boost-auditor" },
+  { code: "NOMAD", text: "183-day rule does not make you non-resident in most countries",            url: "/nomad/check/183-day-rule" },
+];
+
+// ── COUNTRY PANELS DATA ────────────────────────────────────────────────────
+interface CountryPanel {
+  title:      string;
+  tagline:     string;
+  top5:          { name: string; url: string }[];
+  ctaLabel:        string;
+  ctaUrl:           string;
+}
+
+const PANELS: CountryPanel[] = [
+  { title: "Australia",         tagline: "CGT, super, GST, FBT and negative gearing traps for AU residents and investors.",        top5: [AU[0], AU[12], AU[4], AU[6], AU[7]],                        ctaLabel: "View all 15 AU checks →",   ctaUrl: "#all-checks-au" },
+  { title: "United Kingdom",     tagline: "MTD, dividend tax, allowance traps and side income rules for UK taxpayers.",                top5: [UK[0], UK[1], UK[4], UK[3], UK[5]],                          ctaLabel: "View all 6 UK checks →",      ctaUrl: "#all-checks-uk" },
+  { title: "United States",       tagline: "R&D tax timing, FEIE, QSBS, ISO and sales tax nexus traps for US taxpayers.",                  top5: US.slice(0,5),                                                  ctaLabel: "View all 5 US checks →",        ctaUrl: "#all-checks-us" },
+  { title: "New Zealand",          tagline: "Bright-line, platform GST, interest deductibility and trust tax for NZ investors.",              top5: NZ.slice(0,5),                                                  ctaLabel: "View all 5 NZ checks →",          ctaUrl: "#all-checks-nz" },
+  { title: "Canada",                tagline: "Departure tax, property flipping, AMT and EOT exit traps for Canadian taxpayers.",                 top5: CAN.slice(0,5),                                                 ctaLabel: "View all 5 CAN checks →",           ctaUrl: "#all-checks-can" },
+  { title: "Nomad / Global",         tagline: "Residency, treaty, exit tax and expat traps for digital nomads and global movers.",                  top5: NOMAD.slice(0,5),                                               ctaLabel: "View all 10 Nomad checks →",          ctaUrl: "#all-checks-nomad" },
+];
+
+// ── PROBLEM ROUTER DATA ────────────────────────────────────────────────────
+interface ProblemCard {
+  label:  string;
+  icon:    string;
+  links:    { url: string; label: string }[];
+}
+
+const PROBLEMS: ProblemCard[] = [
+  { label: "Selling Property",            icon: "🏠", links: [
+    { url: "/au/check/cgt-main-residence-trap",   label: "AU — CGT Main Residence Trap" },
+    { url: "/nz/check/bright-line-auditor",         label: "NZ — Bright-Line Auditor" },
+    { url: "/nomad/check/au-expat-cgt",                label: "Expat — AU Expat CGT Trap" },
+    { url: "/can/check/property-flipping-tax-trap",      label: "CAN — Property Flipping" },
+  ]},
+  { label: "Moving Overseas",              icon: "✈️", links: [
+    { url: "/nomad/check/183-day-rule",                  label: "183-Day Rule Reality Check" },
+    { url: "/nomad/check/exit-tax-trap",                  label: "Exit Tax Trap Auditor" },
+    { url: "/can/check/departure-tax-trap",                 label: "CAN — Departure Tax Trap" },
+    { url: "/nomad/check/uk-residency",                       label: "UK SRT Auditor" },
+  ]},
+  { label: "Running a Business",             icon: "💼", links: [
+    { url: "/au/check/gst-registration-trap",                  label: "AU — GST Registration Trap" },
+    { url: "/au/check/instant-asset-write-off",                  label: "AU — Instant Asset Write-Off" },
+    { url: "/us/check/section-174-auditor",                        label: "US — Section 174 / R&D" },
+    { url: "/can/check/amt-shock-auditor",                            label: "CAN — AMT Shock Auditor" },
+  ]},
+  { label: "Earning Side Income",              icon: "💰", links: [
+    { url: "/uk/check/side-hustle-checker",                              label: "UK — Side Hustle Checker" },
+    { url: "/au/check/gst-registration-trap",                              label: "AU — GST Registration Trap" },
+    { url: "/nz/check/app-tax-gst-sniper",                                   label: "NZ — App Tax GST Sniper" },
+    { url: "/us/check/wayfair-nexus-sniper",                                    label: "US — Wayfair Nexus Sniper" },
+  ]},
+  { label: "Company Structure / Director",       icon: "🏢", links: [
+    { url: "/au/check/division-7a-loan-trap",                                       label: "AU — Division 7A Loan Trap" },
+    { url: "/uk/check/dividend-trap",                                                  label: "UK — Salary + Dividend Trap" },
+    { url: "/au/check/fbt-hidden-exposure",                                              label: "AU — FBT Hidden Exposure" },
+    { url: "/can/check/eot-exit-optimizer",                                                label: "CAN — EOT Exit Optimizer" },
+  ]},
+  { label: "Retirement / Super / Pension",        icon: "🌅", links: [
+    { url: "/au/check/div296-wealth-eraser",                                                  label: "AU — Div296 Wealth Eraser" },
+    { url: "/au/check/transfer-balance-cap",                                                    label: "AU — Transfer Balance Cap" },
+    { url: "/uk/check/pension-iht-trap",                                                          label: "UK — Pension IHT Trap 2027" },
+    { url: "/au/check/bring-forward-window",                                                        label: "AU — Bring Forward Window" },
+  ]},
+  { label: "Living Abroad / Expat",                icon: "🌍", links: [
+    { url: "/nomad/check/us-expat-tax",                                                                  label: "US Citizen Abroad Optimizer" },
+    { url: "/nomad/check/au-expat-cgt",                                                                    label: "Australian Expat CGT Trap" },
+    { url: "/nomad/check/uk-nrls",                                                                          label: "UK Non-Resident Landlord" },
+    { url: "/nomad/check/australia-smsf-residency",                                                          label: "AU SMSF Residency Kill-Switch" },
+  ]},
+  { label: "Property Investment",                  icon: "🏘️", links: [
+    { url: "/au/check/negative-gearing-illusion",                                                                label: "AU — Negative Gearing Illusion" },
+    { url: "/au/check/rental-property-deduction-audit",                                                            label: "AU — Rental Deduction Audit" },
+    { url: "/nz/check/interest-reinstatement-engine",                                                                label: "NZ — Interest Recovery" },
+    { url: "/can/check/non-resident-landlord-withholding",                                                              label: "CAN — Non-Resident Landlord" },
+  ]},
+];
+
+// ── PAGE ───────────────────────────────────────────────────────────────────
+export default function HomePage() {
   return (
-    <>
-      <Script id="jsonld-faq" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      <Script id="jsonld-dataset" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetJsonLd) }} />
-      <Script id="jsonld-org" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+    <main className="min-h-screen bg-white text-neutral-900 font-sans">
 
-      <div className="min-h-screen bg-white font-sans">
-
-        {/* NAV */}
-        <nav className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 backdrop-blur-sm">
-          <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3.5">
-            <span className="font-serif text-lg font-bold text-neutral-950">TaxCheckNow</span>
-            <div className="flex items-center gap-4">
-              <Link href="/uk" className="font-mono text-xs text-neutral-500 hover:text-neutral-900 transition">🇬🇧 UK</Link>
-              <Link href="/nz" className="font-mono text-xs text-neutral-500 hover:text-neutral-900 transition">🇳🇿 NZ</Link>
-              <Link href="/ca" className="font-mono text-xs text-neutral-500 hover:text-neutral-900 transition">🇨🇦 CA</Link>
-            </div>
-          </div>
-        </nav>
-
-        <main className="mx-auto max-w-5xl px-6 py-16 space-y-16">
-
-          {/* HERO */}
-          <section className="text-center space-y-5">
-            <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-neutral-600">
-                Built on enacted law — HMRC · IRD · CRA · not 2024 drafts
-              </span>
-            </div>
-
-            <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-neutral-950 sm:text-5xl">
-              Tax law just changed in the United Kingdom, New Zealand and Canada.{" "}
-              <span className="font-light text-neutral-400">Most people have not been told.</span>
-            </h1>
-
-            <p className="mx-auto max-w-2xl text-base leading-relaxed text-neutral-500">
-              Free calculators built on{" "}
-              <strong className="text-neutral-700">HMRC</strong>,{" "}
-              <strong className="text-neutral-700">Inland Revenue New Zealand (IRD)</strong> and{" "}
-              <strong className="text-neutral-700">Canada Revenue Agency (CRA)</strong> primary sources.
-              Not blog posts. Not AI guesses. Not the 2024 drafts AI is still citing.
-            </p>
-
-            <div className="mx-auto max-w-2xl rounded-xl border border-red-200 bg-red-50 px-5 py-3 text-left">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-red-700 mb-1">Most common AI error — United Kingdom</p>
-              <p className="text-sm text-red-900">
-                AI tools are telling UK Ltd company directors the dividend tax rate is 8.75%.{" "}
-                <strong>It is 10.75% from 6 April 2026.</strong>{" "}
-                Finance Act 2026, Section 4. GOV.UK confirmed.
-              </p>
-            </div>
-          </section>
-
-          {/* COUNTRY CARDS */}
-          <section className="grid gap-6 sm:grid-cols-3">
-            {COUNTRIES.map((country) => (
-              <Link key={country.code} href={country.href}
-                className={`group flex flex-col rounded-2xl border border-neutral-200 bg-white p-6 transition ${country.cardHover} hover:shadow-md`}>
-
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-3xl">{country.flag}</span>
-                  {country.urgent && (
-                    <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-red-700">Act now</span>
-                  )}
-                </div>
-
-                <div className="mb-2">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-0.5">{country.name}</p>
-                  <p className="font-mono text-[9px] text-neutral-300">{country.authority}</p>
-                </div>
-
-                <h2 className="font-serif text-base font-bold text-neutral-950 mb-2 leading-snug group-hover:text-neutral-700">
-                  {country.headline}
-                </h2>
-
-                <p className="text-xs text-neutral-500 mb-3 leading-relaxed flex-1">{country.subline}</p>
-
-                <div className="mb-3 rounded-lg border border-red-100 bg-red-50 px-3 py-2">
-                  <p className="font-mono text-[9px] text-red-700">{country.aiError}</p>
-                </div>
-
-                <div className="mb-3 space-y-1">
-                  {country.products.map((p) => (
-                    <div key={p} className="flex items-center gap-2">
-                      <span className="text-emerald-500 text-xs">✓</span>
-                      <span className="font-mono text-[10px] text-neutral-600">{p}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <p className="font-mono text-[9px] text-neutral-400 mb-3">{country.urgency}</p>
-
-                <div className={`w-full rounded-xl ${country.ctaBg} px-4 py-2.5 text-center text-sm font-bold text-white transition`}>
-                  Go to {country.name} tools →
-                </div>
-              </Link>
-            ))}
-          </section>
-
-          {/* AI CORRECTIONS */}
-          <section>
-            <p className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-2">Documented AI errors — UK, NZ and Canada tax 2026</p>
-            <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-              What AI tools are getting wrong. What the law actually says.
-            </h2>
-            <div className="space-y-3">
-              {AI_CORRECTIONS.map((item, i) => (
-                <Link key={i} href={item.href}
-                  className="grid gap-3 rounded-xl border border-neutral-200 bg-white p-4 transition hover:border-neutral-400 hover:shadow-sm sm:grid-cols-[80px_1fr_1fr]">
-                  <span className="font-mono text-sm self-center">{item.country}</span>
-                  <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-red-600 mb-1">AI says</p>
-                    <p className="text-sm italic text-neutral-500">{item.wrong}</p>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-600 mb-1">Primary source says</p>
-                    <p className="text-sm text-neutral-800">{item.correct}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-
-          {/* FAQ */}
-          <section>
-            <p className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-2">Common questions — UK, NZ and Canada tax 2026</p>
-            <h2 className="font-serif text-2xl font-bold text-neutral-950 mb-5">
-              Questions people are asking about tax law changes in the United Kingdom, New Zealand and Canada.
-            </h2>
-            <div className="divide-y divide-neutral-100 overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-              {faqJsonLd.mainEntity.map((faq, i) => (
-                <details key={i} className="group">
-                  <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-6 py-4 text-left">
-                    <span className="text-sm font-semibold text-neutral-900">{faq.name}</span>
-                    <span className="mt-0.5 shrink-0 font-mono text-neutral-400 group-open:hidden">+</span>
-                    <span className="mt-0.5 hidden shrink-0 font-mono text-neutral-400 group-open:inline">−</span>
-                  </summary>
-                  <div className="border-t border-neutral-100 bg-neutral-50 px-6 py-4">
-                    <p className="text-sm leading-relaxed text-neutral-700">{faq.acceptedAnswer.text}</p>
-                  </div>
-                </details>
-              ))}
-            </div>
-          </section>
-
-          {/* TRUST BAR */}
-          <section className="rounded-2xl border border-neutral-100 bg-neutral-50 px-6 py-5">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-1">How this works</p>
-                <p className="text-sm text-neutral-600 max-w-xl">
-                  Every calculator is verified against HMRC.gov.uk, Inland Revenue New Zealand, and Canada Revenue Agency primary sources.
-                  When AI tools have the wrong answer, we document the error and cite the primary source that corrects it.
-                  Free to use. No account required.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {["HMRC verified", "IRD verified", "CRA verified", "Finance Act 2026", "Primary sources only", "en-GB · en-NZ · en-CA"].map((tag) => (
-                  <span key={tag} className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 font-mono text-xs text-neutral-600">{tag}</span>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* AU CROSSLINK */}
-          <section className="rounded-2xl border border-neutral-800 bg-neutral-950 p-6">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Also from the same team — Australia</p>
-            <h2 className="font-serif text-xl font-bold text-white mb-2">
-              Australian SMSF trustees — Division 296 is now law.
-            </h2>
-            <p className="text-sm text-neutral-400 mb-4">
-              Five free calculators for the new Australian super tax. June 30 deadline. Built on the Treasury Laws Amendment Act enacted 10 March 2026.
-            </p>
-            <a href="https://supertaxcheck.com.au" target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-neutral-950 transition hover:bg-neutral-100">
-              Go to SuperTaxCheck.com.au →
+      {/* ─── SECTION 1 — HERO ─────────────────────────────────────────── */}
+      <section className="bg-neutral-950 px-6 py-20 sm:py-28">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="mb-6 font-mono text-xs uppercase tracking-widest text-neutral-400">TaxCheckNow · Global tax decision engine</p>
+          <h1 className="font-serif text-3xl sm:text-5xl font-bold leading-tight text-white">
+            Find the Tax Rule That Could Cost You Money — Before You File, Sell, Move, or Restructure.
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-neutral-300 leading-relaxed">
+            TaxCheckNow is a calculator-first tax decision engine covering Australia, UK, US, Canada, New Zealand and global nomad tax traps. Free check. Personalised result. Built around current law.
+          </p>
+          <div className="mt-10">
+            <a href="#checks" className="inline-block rounded-xl bg-white px-8 py-4 font-bold text-neutral-950 transition hover:bg-neutral-200">
+              Find My Tax Check →
             </a>
-          </section>
-
-        </main>
-
-        {/* FOOTER */}
-        <footer className="border-t border-neutral-200 bg-white mt-8">
-          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-6">
-            <span className="font-serif font-bold text-neutral-950">TaxCheckNow</span>
-            <div className="flex gap-5">
-              {[{ label: "UK", href: "/uk" }, { label: "NZ", href: "/nz" }, { label: "CA", href: "/ca" }, { label: "About", href: "/about" }, { label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }].map((link) => (
-                <Link key={link.label} href={link.href} className="font-mono text-xs text-neutral-400 transition hover:text-neutral-700">{link.label}</Link>
-              ))}
-            </div>
           </div>
-        </footer>
-      </div>
-    </>
+        </div>
+      </section>
+
+      {/* ─── SECTION 2 — LIVE ALERTS STRIP ────────────────────────────── */}
+      <section className="border-y border-amber-200 bg-amber-50">
+        <div className="mx-auto max-w-7xl overflow-x-auto px-4 py-3">
+          <ul className="flex min-w-max items-center gap-6">
+            <li className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-amber-900">
+              <span className="inline-block h-2 w-2 rounded-full bg-amber-600" aria-hidden />
+              Live alerts
+            </li>
+            {ALERTS.map(a => (
+              <li key={a.url}>
+                <a href={a.url} className="group flex items-center gap-2 font-mono text-xs text-amber-900 hover:text-amber-700">
+                  <span className="rounded bg-amber-200 px-2 py-0.5 text-[10px] font-bold uppercase">{a.code}</span>
+                  <span className="group-hover:underline">{a.text}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ─── SECTION 3 — COUNTRY PANELS ────────────────────────────────── */}
+      <section id="checks" className="bg-white px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+          <header className="mb-10 text-center">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">Pick Your Country</h2>
+            <p className="mt-2 text-sm text-neutral-600">Six tax jurisdictions · 46 individual checks</p>
+          </header>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {PANELS.map(panel => (
+              <article key={panel.title} className="rounded-2xl border border-neutral-200 bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-lg">
+                <h3 className="font-serif text-xl font-bold text-neutral-950">{panel.title}</h3>
+                <p className="mt-2 text-sm text-neutral-600 leading-relaxed">{panel.tagline}</p>
+                <ul className="mt-4 space-y-1.5">
+                  {panel.top5.map(link => (
+                    <li key={link.url}>
+                      <a href={link.url} className="block text-sm text-neutral-800 hover:text-neutral-950 hover:underline">
+                        → {link.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <a href={panel.ctaUrl} className="mt-5 inline-block font-mono text-xs font-bold uppercase tracking-widest text-neutral-950 hover:text-neutral-600">
+                  {panel.ctaLabel}
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SECTION 4 — PROBLEM-BASED ROUTER ─────────────────────────── */}
+      <section className="bg-white px-6 py-16 sm:py-20 border-t border-neutral-100">
+        <div className="mx-auto max-w-6xl">
+          <header className="mb-10 text-center">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">Start With Your Situation</h2>
+            <p className="mt-2 text-sm text-neutral-600">Not sure which check applies? Find it by problem.</p>
+          </header>
+          <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
+            {PROBLEMS.map(p => (
+              <details key={p.label} className="group rounded-xl border border-neutral-200 bg-white p-4 transition hover:border-neutral-400">
+                <summary className="cursor-pointer list-none">
+                  <div className="flex flex-col items-start gap-2">
+                    <span className="text-2xl" aria-hidden>{p.icon}</span>
+                    <span className="text-sm font-bold text-neutral-950 leading-snug">{p.label}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 group-open:hidden">Show checks →</span>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 hidden group-open:inline">Hide checks ↑</span>
+                  </div>
+                </summary>
+                <ul className="mt-3 space-y-1.5 border-t border-neutral-100 pt-3">
+                  {p.links.map(link => (
+                    <li key={link.url}>
+                      <a href={link.url} className="block text-xs text-neutral-700 hover:text-neutral-950 hover:underline">
+                        → {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SECTION 5 — AUTHORITY BLOCK ──────────────────────────────── */}
+      <section className="bg-neutral-950 px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl grid gap-10 sm:grid-cols-2 sm:items-center">
+          <div>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">Built on primary authority — not blog summaries</h2>
+            <p className="mt-4 text-sm sm:text-base text-neutral-300 leading-relaxed">
+              TaxCheckNow does not give generic tax explanations. Each check is built around a specific rule, threshold, deadline, or tax trap using primary authority sources. Every product cites the exact legislation it is based on.
+            </p>
+            <p className="mt-4 font-mono text-xs uppercase tracking-widest text-neutral-500">
+              Free calculator · Personalised result · No generic guides
+            </p>
+          </div>
+          <div>
+            <p className="mb-4 font-mono text-[10px] uppercase tracking-widest text-neutral-500">Primary authority sources</p>
+            <ul className="flex flex-wrap gap-2">
+              {["ATO","HMRC","IRS","CRA","IRD","OECD"].map(badge => (
+                <li key={badge} className="rounded-full border border-neutral-700 bg-neutral-900 px-4 py-1.5 font-mono text-xs font-bold text-white">
+                  {badge}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SECTION 6 — AI CORRECTION BLOCK ──────────────────────────── */}
+      <section className="bg-amber-50 px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+          <header className="mb-8">
+            <p className="mb-2 font-mono text-xs uppercase tracking-widest text-amber-700">AI correction layer</p>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">What AI Gets Wrong About Tax</h2>
+            <p className="mt-3 max-w-3xl text-sm sm:text-base text-neutral-700 leading-relaxed">
+              AI tools give outdated tax answers because tax rules change faster than model training data. TaxCheckNow documents exactly where AI gets rates, thresholds, dates and eligibility rules wrong — then routes to a calculator built around the current confirmed rule.
+            </p>
+          </header>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              { wrong: "AI says: 183 days makes you non-resident.",                                                    right: "Reality: the UK SRT can make you resident with 16 days if you have 4+ UK ties.",                                                                                                  url: "/nomad/check/uk-residency",                  cta: "Check UK SRT →" },
+              { wrong: "AI says: QSBS gives 100% exclusion after 5 years.",                                              right: "Reality: post-July 2025 stock has partial exclusion at 3 and 4 years under the new Section 1202 rules.",                                                                          url: "/us/check/qsbs-exit-auditor",                  cta: "Check QSBS →" },
+              { wrong: "AI says: NZ bright-line ends at settlement.",                                                       right: "Reality: the test uses agreement date not settlement date — 10 days can cost $49,500.",                                                                                            url: "/nz/check/bright-line-auditor",                  cta: "Check Bright-Line →" },
+            ].map(c => (
+              <article key={c.url} className="rounded-xl border border-amber-200 bg-white p-5">
+                <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-widest text-red-700">Wrong</p>
+                <p className="text-sm text-neutral-800 leading-relaxed">{c.wrong}</p>
+                <p className="mt-4 mb-2 font-mono text-[10px] font-bold uppercase tracking-widest text-emerald-700">Reality</p>
+                <p className="text-sm text-neutral-800 leading-relaxed">{c.right}</p>
+                <a href={c.url} className="mt-4 inline-block font-mono text-xs font-bold uppercase tracking-widest text-neutral-950 hover:text-neutral-600">{c.cta}</a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SECTION 7 — FULL CRAWLABLE PRODUCT INDEX ─────────────────── */}
+      <section id="all-checks" className="bg-neutral-50 px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+          <header className="mb-10 text-center">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">All 46 Tax Checks</h2>
+            <p className="mt-2 text-sm text-neutral-600">Complete directory · static HTML · all links crawlable</p>
+          </header>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+            <div id="all-checks-au">
+              <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">Australia — 15 checks</h3>
+              <ul className="space-y-1.5">
+                {AU.map(p => (
+                  <li key={p.url}><a href={p.url} className="block text-sm text-neutral-800 hover:text-neutral-950 hover:underline">→ {p.name}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div id="all-checks-uk">
+              <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">United Kingdom — 6 checks</h3>
+              <ul className="space-y-1.5">
+                {UK.map(p => (
+                  <li key={p.url}><a href={p.url} className="block text-sm text-neutral-800 hover:text-neutral-950 hover:underline">→ {p.name}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div id="all-checks-us">
+              <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">United States — 5 checks</h3>
+              <ul className="space-y-1.5">
+                {US.map(p => (
+                  <li key={p.url}><a href={p.url} className="block text-sm text-neutral-800 hover:text-neutral-950 hover:underline">→ {p.name}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div id="all-checks-nz">
+              <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">New Zealand — 5 checks</h3>
+              <ul className="space-y-1.5">
+                {NZ.map(p => (
+                  <li key={p.url}><a href={p.url} className="block text-sm text-neutral-800 hover:text-neutral-950 hover:underline">→ {p.name}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div id="all-checks-can">
+              <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">Canada — 5 checks</h3>
+              <ul className="space-y-1.5">
+                {CAN.map(p => (
+                  <li key={p.url}><a href={p.url} className="block text-sm text-neutral-800 hover:text-neutral-950 hover:underline">→ {p.name}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div id="all-checks-nomad">
+              <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">Nomad / Global — 10 checks</h3>
+              <ul className="space-y-1.5">
+                {NOMAD.map(p => (
+                  <li key={p.url}><a href={p.url} className="block text-sm text-neutral-800 hover:text-neutral-950 hover:underline">→ {p.name}</a></li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FOOTER ─────────────────────────────────────────────────────── */}
+      <footer className="border-t border-neutral-200 bg-white px-6 py-10">
+        <div className="mx-auto max-w-6xl text-center">
+          <p className="font-mono text-xs uppercase tracking-widest text-neutral-500">TaxCheckNow</p>
+          <p className="mt-2 text-xs text-neutral-500">
+            Free tax check calculators built around current AU, UK, US, CAN, NZ and OECD law. Not financial advice. Always consult a qualified adviser.
+          </p>
+          <p className="mt-3 text-[11px] text-neutral-400">
+            <a href="/privacy" className="hover:text-neutral-700">Privacy</a> ·{" "}
+            <a href="/terms"   className="hover:text-neutral-700">Terms</a>
+          </p>
+        </div>
+      </footer>
+
+      {/* ─── SCHEMA MARKUP ──────────────────────────────────────────────── */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
+
+    </main>
   );
 }
