@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import SituationRouter from "./_components/SituationRouter";
 
 export const metadata: Metadata = {
   title: "TaxCheckNow — Find the Tax Rule That Could Cost You Money",
@@ -136,37 +137,8 @@ const ALERTS = [
   { code: "NOMAD", text: "183-day rule does not make you non-resident in most countries",            url: "/nomad/check/183-day-rule" },
 ];
 
-// ── COUNTRY PANELS DATA ────────────────────────────────────────────────────
-interface CountryPanel {
-  id:        string;
-  title:      string;
-  tagline:     string;
-  top5:          { name: string; url: string }[];
-  ctaLabel:        string;
-  ctaUrl:           string;
-}
-
-const PANELS: CountryPanel[] = [
-  { id: "au-checks",     title: "Australia",         tagline: "CGT, super, GST, FBT and negative gearing traps for AU residents and investors.",        top5: [AU[0], AU[12], AU[4], AU[6], AU[7]],                        ctaLabel: "View all 15 AU checks →",   ctaUrl: "#all-checks-au" },
-  { id: "uk-checks",     title: "United Kingdom",     tagline: "MTD, dividend tax, allowance traps and side income rules for UK taxpayers.",                top5: [UK[0], UK[1], UK[4], UK[3], UK[5]],                          ctaLabel: "View all 6 UK checks →",      ctaUrl: "#all-checks-uk" },
-  { id: "us-checks",     title: "United States",       tagline: "R&D tax timing, FEIE, QSBS, ISO and sales tax nexus traps for US taxpayers.",                  top5: US.slice(0,5),                                                  ctaLabel: "View all 5 US checks →",        ctaUrl: "#all-checks-us" },
-  { id: "nz-checks",     title: "New Zealand",          tagline: "Bright-line, platform GST, interest deductibility and trust tax for NZ investors.",              top5: NZ.slice(0,5),                                                  ctaLabel: "View all 5 NZ checks →",          ctaUrl: "#all-checks-nz" },
-  { id: "can-checks",    title: "Canada",                tagline: "Departure tax, property flipping, AMT and EOT exit traps for Canadian taxpayers.",                 top5: CAN.slice(0,5),                                                 ctaLabel: "View all 5 CAN checks →",           ctaUrl: "#all-checks-can" },
-  { id: "nomad-checks",  title: "Nomad / Global",         tagline: "Residency, treaty, exit tax and expat traps for digital nomads and global movers.",                  top5: NOMAD.slice(0,5),                                               ctaLabel: "View all 10 Nomad checks →",          ctaUrl: "#all-checks-nomad" },
-];
-
-// ── FILTER PILLS — sticky bar + index bar ──────────────────────────────────
+// ── INDEX FILTER PILLS — used inside the all-checks SEO index ──────────────
 interface FilterPill { label: string; emoji: string; href: string; active?: boolean; }
-
-const TOP_PILLS: FilterPill[] = [
-  { label: "All",          emoji: "",      href: "#checks",         active: true  },
-  { label: "Australia",    emoji: "🇦🇺",   href: "#au-checks"                     },
-  { label: "UK",           emoji: "🇬🇧",   href: "#uk-checks"                     },
-  { label: "US",           emoji: "🇺🇸",   href: "#us-checks"                     },
-  { label: "New Zealand",  emoji: "🇳🇿",   href: "#nz-checks"                     },
-  { label: "Canada",       emoji: "🇨🇦",   href: "#can-checks"                    },
-  { label: "Nomad",        emoji: "🌍",    href: "#nomad-checks"                   },
-];
 
 const INDEX_PILLS: FilterPill[] = [
   { label: "All",          emoji: "",      href: "#all-checks",         active: true  },
@@ -200,63 +172,6 @@ function FilterPills({ pills }: { pills: FilterPill[] }) {
   );
 }
 
-// ── PROBLEM ROUTER DATA ────────────────────────────────────────────────────
-interface ProblemCard {
-  label:  string;
-  icon:    string;
-  links:    { url: string; label: string }[];
-}
-
-const PROBLEMS: ProblemCard[] = [
-  { label: "Selling Property",            icon: "🏠", links: [
-    { url: "/au/check/cgt-main-residence-trap",   label: "AU — CGT Main Residence Trap" },
-    { url: "/nz/check/bright-line-auditor",         label: "NZ — Bright-Line Auditor" },
-    { url: "/nomad/check/au-expat-cgt",                label: "Expat — AU Expat CGT Trap" },
-    { url: "/can/check/property-flipping-tax-trap",      label: "CAN — Property Flipping" },
-  ]},
-  { label: "Moving Overseas",              icon: "✈️", links: [
-    { url: "/nomad/check/183-day-rule",                  label: "183-Day Rule Reality Check" },
-    { url: "/nomad/check/exit-tax-trap",                  label: "Exit Tax Trap Auditor" },
-    { url: "/can/check/departure-tax-trap",                 label: "CAN — Departure Tax Trap" },
-    { url: "/nomad/check/uk-residency",                       label: "UK SRT Auditor" },
-  ]},
-  { label: "Running a Business",             icon: "💼", links: [
-    { url: "/au/check/gst-registration-trap",                  label: "AU — GST Registration Trap" },
-    { url: "/au/check/instant-asset-write-off",                  label: "AU — Instant Asset Write-Off" },
-    { url: "/us/check/section-174-auditor",                        label: "US — Section 174 / R&D" },
-    { url: "/can/check/amt-shock-auditor",                            label: "CAN — AMT Shock Auditor" },
-  ]},
-  { label: "Earning Side Income",              icon: "💰", links: [
-    { url: "/uk/check/side-hustle-checker",                              label: "UK — Side Hustle Checker" },
-    { url: "/au/check/gst-registration-trap",                              label: "AU — GST Registration Trap" },
-    { url: "/nz/check/app-tax-gst-sniper",                                   label: "NZ — App Tax GST Sniper" },
-    { url: "/us/check/wayfair-nexus-sniper",                                    label: "US — Wayfair Nexus Sniper" },
-  ]},
-  { label: "Company Structure / Director",       icon: "🏢", links: [
-    { url: "/au/check/division-7a-loan-trap",                                       label: "AU — Division 7A Loan Trap" },
-    { url: "/uk/check/dividend-trap",                                                  label: "UK — Salary + Dividend Trap" },
-    { url: "/au/check/fbt-hidden-exposure",                                              label: "AU — FBT Hidden Exposure" },
-    { url: "/can/check/eot-exit-optimizer",                                                label: "CAN — EOT Exit Optimizer" },
-  ]},
-  { label: "Retirement / Super / Pension",        icon: "🌅", links: [
-    { url: "/au/check/div296-wealth-eraser",                                                  label: "AU — Div296 Wealth Eraser" },
-    { url: "/au/check/transfer-balance-cap",                                                    label: "AU — Transfer Balance Cap" },
-    { url: "/uk/check/pension-iht-trap",                                                          label: "UK — Pension IHT Trap 2027" },
-    { url: "/au/check/bring-forward-window",                                                        label: "AU — Bring Forward Window" },
-  ]},
-  { label: "Living Abroad / Expat",                icon: "🌍", links: [
-    { url: "/nomad/check/us-expat-tax",                                                                  label: "US Citizen Abroad Optimizer" },
-    { url: "/nomad/check/au-expat-cgt",                                                                    label: "Australian Expat CGT Trap" },
-    { url: "/nomad/check/uk-nrls",                                                                          label: "UK Non-Resident Landlord" },
-    { url: "/nomad/check/australia-smsf-residency",                                                          label: "AU SMSF Residency Kill-Switch" },
-  ]},
-  { label: "Property Investment",                  icon: "🏘️", links: [
-    { url: "/au/check/negative-gearing-illusion",                                                                label: "AU — Negative Gearing Illusion" },
-    { url: "/au/check/rental-property-deduction-audit",                                                            label: "AU — Rental Deduction Audit" },
-    { url: "/nz/check/interest-reinstatement-engine",                                                                label: "NZ — Interest Recovery" },
-    { url: "/can/check/non-resident-landlord-withholding",                                                              label: "CAN — Non-Resident Landlord" },
-  ]},
-];
 
 // ── PAGE ───────────────────────────────────────────────────────────────────
 export default function HomePage() {
@@ -274,7 +189,7 @@ export default function HomePage() {
             TaxCheckNow is a calculator-first tax decision engine covering Australia, UK, US, Canada, New Zealand and global nomad tax traps. Free check. Personalised result. Built around current law.
           </p>
           <div className="mt-10">
-            <a href="#checks" className="inline-block rounded-xl bg-white px-8 py-4 font-bold text-neutral-950 transition hover:bg-neutral-200">
+            <a href="#router" className="inline-block rounded-xl bg-white px-8 py-4 font-bold text-neutral-950 transition hover:bg-neutral-200">
               Find My Tax Check →
             </a>
           </div>
@@ -301,75 +216,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── STICKY COUNTRY FILTER BAR ──────────────────────────────────── */}
-      <nav aria-label="Country filter" className="sticky top-0 z-50 border-b border-neutral-200 bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl overflow-x-auto px-4 py-3">
-          <FilterPills pills={TOP_PILLS} />
-        </div>
-      </nav>
-
-      {/* ─── SECTION 3 — COUNTRY PANELS ────────────────────────────────── */}
-      <section id="checks" className="scroll-mt-24 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl">
-          <header className="mb-10 text-center">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">Pick Your Country</h2>
-            <p className="mt-2 text-sm text-neutral-600">Six tax jurisdictions · 46 individual checks</p>
-          </header>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {PANELS.map(panel => (
-              <article key={panel.title} id={panel.id} className="scroll-mt-24 rounded-2xl border border-neutral-200 bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-lg target:ring-2 target:ring-neutral-950">
-                <h3 className="font-serif text-xl font-bold text-neutral-950">{panel.title}</h3>
-                <p className="mt-2 text-sm text-neutral-600 leading-relaxed">{panel.tagline}</p>
-                <ul className="mt-4 space-y-1.5">
-                  {panel.top5.map(link => (
-                    <li key={link.url}>
-                      <a href={link.url} className="block text-sm text-neutral-800 hover:text-neutral-950 hover:underline">
-                        → {link.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-                <a href={panel.ctaUrl} className="mt-5 inline-block font-mono text-xs font-bold uppercase tracking-widest text-neutral-950 hover:text-neutral-600">
-                  {panel.ctaLabel}
-                </a>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── SECTION 4 — PROBLEM-BASED ROUTER ─────────────────────────── */}
-      <section className="bg-white px-6 py-16 sm:py-20 border-t border-neutral-100">
-        <div className="mx-auto max-w-6xl">
-          <header className="mb-10 text-center">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">Start With Your Situation</h2>
-            <p className="mt-2 text-sm text-neutral-600">Not sure which check applies? Find it by problem.</p>
-          </header>
-          <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
-            {PROBLEMS.map(p => (
-              <details key={p.label} className="group rounded-xl border border-neutral-200 bg-white p-4 transition hover:border-neutral-400">
-                <summary className="cursor-pointer list-none">
-                  <div className="flex flex-col items-start gap-2">
-                    <span className="text-2xl" aria-hidden>{p.icon}</span>
-                    <span className="text-sm font-bold text-neutral-950 leading-snug">{p.label}</span>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 group-open:hidden">Show checks →</span>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 hidden group-open:inline">Hide checks ↑</span>
-                  </div>
-                </summary>
-                <ul className="mt-3 space-y-1.5 border-t border-neutral-100 pt-3">
-                  {p.links.map(link => (
-                    <li key={link.url}>
-                      <a href={link.url} className="block text-xs text-neutral-700 hover:text-neutral-950 hover:underline">
-                        → {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ─── 3-STEP SITUATION → COUNTRY → PRODUCT ROUTER ─────────────── */}
+      <SituationRouter />
 
       {/* ─── SECTION 5 — AUTHORITY BLOCK ──────────────────────────────── */}
       <section className="bg-neutral-950 px-6 py-16 sm:py-20">
