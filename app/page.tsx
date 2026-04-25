@@ -138,6 +138,7 @@ const ALERTS = [
 
 // ── COUNTRY PANELS DATA ────────────────────────────────────────────────────
 interface CountryPanel {
+  id:        string;
   title:      string;
   tagline:     string;
   top5:          { name: string; url: string }[];
@@ -146,13 +147,58 @@ interface CountryPanel {
 }
 
 const PANELS: CountryPanel[] = [
-  { title: "Australia",         tagline: "CGT, super, GST, FBT and negative gearing traps for AU residents and investors.",        top5: [AU[0], AU[12], AU[4], AU[6], AU[7]],                        ctaLabel: "View all 15 AU checks →",   ctaUrl: "#all-checks-au" },
-  { title: "United Kingdom",     tagline: "MTD, dividend tax, allowance traps and side income rules for UK taxpayers.",                top5: [UK[0], UK[1], UK[4], UK[3], UK[5]],                          ctaLabel: "View all 6 UK checks →",      ctaUrl: "#all-checks-uk" },
-  { title: "United States",       tagline: "R&D tax timing, FEIE, QSBS, ISO and sales tax nexus traps for US taxpayers.",                  top5: US.slice(0,5),                                                  ctaLabel: "View all 5 US checks →",        ctaUrl: "#all-checks-us" },
-  { title: "New Zealand",          tagline: "Bright-line, platform GST, interest deductibility and trust tax for NZ investors.",              top5: NZ.slice(0,5),                                                  ctaLabel: "View all 5 NZ checks →",          ctaUrl: "#all-checks-nz" },
-  { title: "Canada",                tagline: "Departure tax, property flipping, AMT and EOT exit traps for Canadian taxpayers.",                 top5: CAN.slice(0,5),                                                 ctaLabel: "View all 5 CAN checks →",           ctaUrl: "#all-checks-can" },
-  { title: "Nomad / Global",         tagline: "Residency, treaty, exit tax and expat traps for digital nomads and global movers.",                  top5: NOMAD.slice(0,5),                                               ctaLabel: "View all 10 Nomad checks →",          ctaUrl: "#all-checks-nomad" },
+  { id: "au-checks",     title: "Australia",         tagline: "CGT, super, GST, FBT and negative gearing traps for AU residents and investors.",        top5: [AU[0], AU[12], AU[4], AU[6], AU[7]],                        ctaLabel: "View all 15 AU checks →",   ctaUrl: "#all-checks-au" },
+  { id: "uk-checks",     title: "United Kingdom",     tagline: "MTD, dividend tax, allowance traps and side income rules for UK taxpayers.",                top5: [UK[0], UK[1], UK[4], UK[3], UK[5]],                          ctaLabel: "View all 6 UK checks →",      ctaUrl: "#all-checks-uk" },
+  { id: "us-checks",     title: "United States",       tagline: "R&D tax timing, FEIE, QSBS, ISO and sales tax nexus traps for US taxpayers.",                  top5: US.slice(0,5),                                                  ctaLabel: "View all 5 US checks →",        ctaUrl: "#all-checks-us" },
+  { id: "nz-checks",     title: "New Zealand",          tagline: "Bright-line, platform GST, interest deductibility and trust tax for NZ investors.",              top5: NZ.slice(0,5),                                                  ctaLabel: "View all 5 NZ checks →",          ctaUrl: "#all-checks-nz" },
+  { id: "can-checks",    title: "Canada",                tagline: "Departure tax, property flipping, AMT and EOT exit traps for Canadian taxpayers.",                 top5: CAN.slice(0,5),                                                 ctaLabel: "View all 5 CAN checks →",           ctaUrl: "#all-checks-can" },
+  { id: "nomad-checks",  title: "Nomad / Global",         tagline: "Residency, treaty, exit tax and expat traps for digital nomads and global movers.",                  top5: NOMAD.slice(0,5),                                               ctaLabel: "View all 10 Nomad checks →",          ctaUrl: "#all-checks-nomad" },
 ];
+
+// ── FILTER PILLS — sticky bar + index bar ──────────────────────────────────
+interface FilterPill { label: string; emoji: string; href: string; active?: boolean; }
+
+const TOP_PILLS: FilterPill[] = [
+  { label: "All",          emoji: "",      href: "#checks",         active: true  },
+  { label: "Australia",    emoji: "🇦🇺",   href: "#au-checks"                     },
+  { label: "UK",           emoji: "🇬🇧",   href: "#uk-checks"                     },
+  { label: "US",           emoji: "🇺🇸",   href: "#us-checks"                     },
+  { label: "New Zealand",  emoji: "🇳🇿",   href: "#nz-checks"                     },
+  { label: "Canada",       emoji: "🇨🇦",   href: "#can-checks"                    },
+  { label: "Nomad",        emoji: "🌍",    href: "#nomad-checks"                   },
+];
+
+const INDEX_PILLS: FilterPill[] = [
+  { label: "All",          emoji: "",      href: "#all-checks",         active: true  },
+  { label: "Australia",    emoji: "🇦🇺",   href: "#all-checks-au"                     },
+  { label: "UK",           emoji: "🇬🇧",   href: "#all-checks-uk"                     },
+  { label: "US",           emoji: "🇺🇸",   href: "#all-checks-us"                     },
+  { label: "New Zealand",  emoji: "🇳🇿",   href: "#all-checks-nz"                     },
+  { label: "Canada",       emoji: "🇨🇦",   href: "#all-checks-can"                    },
+  { label: "Nomad",        emoji: "🌍",    href: "#all-checks-nomad"                   },
+];
+
+function FilterPills({ pills }: { pills: FilterPill[] }) {
+  return (
+    <ul className="flex min-w-max items-center gap-2">
+      {pills.map(p => (
+        <li key={p.href}>
+          <a
+            href={p.href}
+            className={
+              p.active
+                ? "inline-flex items-center gap-1.5 rounded-full bg-neutral-950 px-4 py-1.5 text-xs font-bold text-white whitespace-nowrap"
+                : "inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-4 py-1.5 text-xs font-semibold text-neutral-600 transition hover:border-neutral-400 hover:text-neutral-950 whitespace-nowrap"
+            }
+          >
+            {p.emoji && <span aria-hidden>{p.emoji}</span>}
+            {p.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 // ── PROBLEM ROUTER DATA ────────────────────────────────────────────────────
 interface ProblemCard {
@@ -255,8 +301,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ─── STICKY COUNTRY FILTER BAR ──────────────────────────────────── */}
+      <nav aria-label="Country filter" className="sticky top-0 z-50 border-b border-neutral-200 bg-white shadow-sm">
+        <div className="mx-auto max-w-7xl overflow-x-auto px-4 py-3">
+          <FilterPills pills={TOP_PILLS} />
+        </div>
+      </nav>
+
       {/* ─── SECTION 3 — COUNTRY PANELS ────────────────────────────────── */}
-      <section id="checks" className="bg-white px-6 py-16 sm:py-20">
+      <section id="checks" className="scroll-mt-24 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <header className="mb-10 text-center">
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">Pick Your Country</h2>
@@ -264,7 +317,7 @@ export default function HomePage() {
           </header>
           <div className="grid gap-5 sm:grid-cols-2">
             {PANELS.map(panel => (
-              <article key={panel.title} className="rounded-2xl border border-neutral-200 bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-lg">
+              <article key={panel.title} id={panel.id} className="scroll-mt-24 rounded-2xl border border-neutral-200 bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-lg target:ring-2 target:ring-neutral-950">
                 <h3 className="font-serif text-xl font-bold text-neutral-950">{panel.title}</h3>
                 <p className="mt-2 text-sm text-neutral-600 leading-relaxed">{panel.tagline}</p>
                 <ul className="mt-4 space-y-1.5">
@@ -372,16 +425,20 @@ export default function HomePage() {
       </section>
 
       {/* ─── SECTION 7 — FULL CRAWLABLE PRODUCT INDEX ─────────────────── */}
-      <section id="all-checks" className="bg-neutral-50 px-6 py-16 sm:py-20">
+      <section id="all-checks" className="scroll-mt-24 bg-neutral-50 px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <header className="mb-10 text-center">
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">All 46 Tax Checks</h2>
             <p className="mt-2 text-sm text-neutral-600">Complete directory · static HTML · all links crawlable</p>
           </header>
 
+          <div className="mb-8 overflow-x-auto">
+            <FilterPills pills={INDEX_PILLS} />
+          </div>
+
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
 
-            <div id="all-checks-au">
+            <div id="all-checks-au" className="scroll-mt-24">
               <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">Australia — 15 checks</h3>
               <ul className="space-y-1.5">
                 {AU.map(p => (
@@ -390,7 +447,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div id="all-checks-uk">
+            <div id="all-checks-uk" className="scroll-mt-24">
               <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">United Kingdom — 6 checks</h3>
               <ul className="space-y-1.5">
                 {UK.map(p => (
@@ -399,7 +456,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div id="all-checks-us">
+            <div id="all-checks-us" className="scroll-mt-24">
               <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">United States — 5 checks</h3>
               <ul className="space-y-1.5">
                 {US.map(p => (
@@ -408,7 +465,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div id="all-checks-nz">
+            <div id="all-checks-nz" className="scroll-mt-24">
               <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">New Zealand — 5 checks</h3>
               <ul className="space-y-1.5">
                 {NZ.map(p => (
@@ -417,7 +474,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div id="all-checks-can">
+            <div id="all-checks-can" className="scroll-mt-24">
               <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">Canada — 5 checks</h3>
               <ul className="space-y-1.5">
                 {CAN.map(p => (
@@ -426,7 +483,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div id="all-checks-nomad">
+            <div id="all-checks-nomad" className="scroll-mt-24">
               <h3 className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">Nomad / Global — 10 checks</h3>
               <ul className="space-y-1.5">
                 {NOMAD.map(p => (
@@ -452,6 +509,9 @@ export default function HomePage() {
           </p>
         </div>
       </footer>
+
+      {/* ─── SMOOTH SCROLL FOR ANCHOR LINKS ─────────────────────────────── */}
+      <style dangerouslySetInnerHTML={{ __html: "html{scroll-behavior:smooth}" }} />
 
       {/* ─── SCHEMA MARKUP ──────────────────────────────────────────────── */}
       <script
