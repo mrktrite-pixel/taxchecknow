@@ -4,8 +4,8 @@ import { Playfair_Display, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 import CookieBanner from "@/components/CookieBanner";
 
-const GA_MEASUREMENT_ID = "G-Y2E57DRHZ5";
-const GTM_ID            = "GTM-NLCWQJ6D";
+const GTM_ID = "GTM-NLCWQJ6D";
+// GA4 (G-Y2E57DRHZ5) is configured inside the GTM container — no standalone gtag here.
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -75,7 +75,8 @@ export default function RootLayout({
         {children}
         <CookieBanner />
 
-        {/* Google Tag Manager — afterInteractive (non-blocking) */}
+        {/* Google Tag Manager — afterInteractive (non-blocking).
+            GA4 is configured inside the GTM container, so no standalone gtag. */}
         <Script
           id="gtm-script"
           strategy="afterInteractive"
@@ -83,20 +84,6 @@ export default function RootLayout({
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`,
           }}
         />
-
-        {/* Google Analytics (gtag) — loads after page is interactive (non-blocking) */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}');
-          `}
-        </Script>
       </body>
     </html>
   );
