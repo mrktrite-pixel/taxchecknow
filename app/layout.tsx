@@ -5,6 +5,7 @@ import "./globals.css";
 import CookieBanner from "@/components/CookieBanner";
 
 const GA_MEASUREMENT_ID = "G-Y2E57DRHZ5";
+const GTM_ID            = "GTM-NLCWQJ6D";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -61,10 +62,29 @@ export default function RootLayout({
       className={`${playfair.variable} ${dmSans.variable} ${dmMono.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col">
+        {/* GTM noscript fallback — must be immediately after opening <body> */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+
         {children}
         <CookieBanner />
 
-        {/* Google Analytics — loads after page is interactive (non-blocking) */}
+        {/* Google Tag Manager — afterInteractive (non-blocking) */}
+        <Script
+          id="gtm-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`,
+          }}
+        />
+
+        {/* Google Analytics (gtag) — loads after page is interactive (non-blocking) */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
