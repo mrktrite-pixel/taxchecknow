@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Playfair_Display, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 import CookieBanner from "@/components/CookieBanner";
+
+const GA_MEASUREMENT_ID = "G-Y2E57DRHZ5";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -60,6 +63,20 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <CookieBanner />
+
+        {/* Google Analytics — loads after page is interactive (non-blocking) */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );
