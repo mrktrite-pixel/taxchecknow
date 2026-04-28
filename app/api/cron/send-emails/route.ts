@@ -11,8 +11,11 @@
 
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getEmailTemplate, type EmailType, type TemplateData } from "@/lib/email-templates";
+import { getEmailTemplate, type EmailType, type TemplateData } from "@/lib/email-templates/index";
 import { LEAD_PRODUCT_META } from "@/lib/lead-product-meta";
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 const FROM_ADDRESS = "TaxCheckNow <hello@taxchecknow.com>";
 const RESEND_URL    = "https://api.resend.com/emails";
