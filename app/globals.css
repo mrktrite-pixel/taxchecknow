@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.geo-claim-bullets {
+  @apply mb-4 list-disc pl-6 text-neutral-800 space-y-1;
+}
+.geo-provenance {
+  @apply mb-4 text-xs text-neutral-500;
+}
