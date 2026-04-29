@@ -24,11 +24,12 @@ const sb = createClient(
 ) as any;
 
 (async () => {
+  // Pick up both 'pending' (first review) and 'needs_review' (re-review after fix)
   const gaps = await sb.from("gap_queue")
     .select("id, topic, site, ai_error, correct_law, search_volume, urgency, recommended_product, status, created_at")
-    .eq("status", "pending")
+    .in("status", ["pending", "needs_review"])
     .order("created_at", { ascending: false })
-    .limit(10);
+    .limit(20);
 
   if (gaps.error) { console.error(`ERROR: ${gaps.error.message}`); process.exit(3); }
 
