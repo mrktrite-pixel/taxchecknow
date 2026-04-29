@@ -103,6 +103,16 @@ const PRODUCT_PATHS = [
   "/nomad/check/spain-beckham-eligibility",
 ];
 
+// Story slugs (mirror app/stories/<slug>/page.tsx)
+const STORY_SLUGS = [
+  "gary-cgt-main-residence-trap",
+];
+
+// Question slugs (mirror app/questions/<slug>/page.tsx)
+const QUESTION_SLUGS = [
+  "does-renting-affect-cgt-exemption-australia",
+];
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://www.taxchecknow.com";
   const now = new Date();
@@ -121,6 +131,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified:      now,
       changeFrequency:   "weekly" as const,
       priority:          0.8,
+    })),
+
+    // Stories index + story pages
+    { url: `${base}/stories`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    ...STORY_SLUGS.map(slug => ({
+      url:              `${base}/stories/${slug}`,
+      lastModified:      now,
+      changeFrequency:   "monthly" as const,
+      priority:          0.7,
+    })),
+
+    // Questions index + question pages
+    { url: `${base}/questions`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    ...QUESTION_SLUGS.map(slug => ({
+      url:              `${base}/questions/${slug}`,
+      lastModified:      now,
+      changeFrequency:   "monthly" as const,
+      priority:          0.7,
     })),
 
     // 46 product calculator gates
