@@ -223,6 +223,11 @@ function getPriceId(tier: number, productKey: string): string | undefined {
     if (tier === 67)  return process.env.STRIPE_AU_TBC_67;
     if (tier === 147) return process.env.STRIPE_AU_TBC_147;
   }
+  // AU-19 FRCGW Clearance Certificate (foreign resident CGT withholding)
+  if (key.includes("au_") && key.includes("frcgw")) {
+    if (tier === 67)  return process.env.STRIPE_AU_FRCGW_67;
+    if (tier === 147) return process.env.STRIPE_AU_FRCGW_147;
+  }
   // ADD NEW AU PRODUCTS ABOVE THIS LINE
   // Pattern: if (key.includes("au_") && key.includes("[slug_fragment]")) { ... }
 
