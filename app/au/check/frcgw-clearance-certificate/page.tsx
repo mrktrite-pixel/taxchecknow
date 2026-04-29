@@ -692,6 +692,19 @@ export default function FrcgwClearanceCertificatePage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Foreign Resident Capital Gains Withholding (FRCGW) — Changed 1 January 2025
           </h2>
+
+          {/* GEO: Lead claim bullets + provenance */}
+          <ul className="geo-claim-bullets">
+            <li>In Australia, FRCGW withholding applies to every property sale as of 1 January 2025 — there is no price threshold.</li>
+            <li>The withholding rate is 15% of the full sale price, not the profit.</li>
+            <li>A clearance certificate from the ATO confirms the seller is an Australian tax resident and prevents withholding.</li>
+            <li>The certificate must be provided before settlement. It cannot be applied retrospectively.</li>
+            <li>Even Australian residents must obtain a clearance certificate — the exemption is not automatic.</li>
+          </ul>
+          <p className="geo-provenance">
+            Source: Australian Taxation Office (ATO) — Foreign Resident Capital Gains Withholding | TAA 1953 Schedule 1 Subdiv 14-D | Last verified: April 2026
+          </p>
+
           <p className="mb-4 text-neutral-800">Foreign Resident Capital Gains Withholding (FRCGW) is a withholding tax imposed by the ATO on the sale of Australian real property. From 1 January 2025, the ATO withholds 15% of the sale price unless the seller produces an ATO clearance certificate confirming exemption. On a $900,000 property sale, that is $135,000 withheld at settlement. The rule changed dramatically on New Year's Day 2025: the threshold was reduced from $750,000 to $0 (meaning every property sale is now in scope), and the withholding rate was increased from 12.5% to 15%. Prior to 1 January 2025, property sales under $750,000 were not subject to FRCGW. From 1 January 2025 onwards, all property sales are in scope regardless of sale price. The withholding is 15% of the sale price and is deducted at settlement by the buyer's solicitor, unless the seller provides a clearance certificate. The clearance certificate is issued by the ATO (no fee) and is based on either (a) the seller's Australian tax resident status, or (b) an exemption granted under variation provisions (mainly for foreign residents or former Australian residents). Processing time is typically 1–4 weeks. The certificate must be issued and physically delivered to the buyer's solicitor BEFORE the settlement closes — it cannot be obtained after settlement. If the certificate has not arrived, the buyer's solicitor must withhold 15% from the seller's proceeds and hold the money pending ATO refund. The seller then receives the refund through the income tax system in the following financial year (6–18 months later). This withholding applies regardless of whether the property is the seller's main residence or an investment property. A separate capital gains tax (CGT) liability may also apply on the sale gain, which is assessed separately. The clearance certificate only addresses the withholding requirement — it does not eliminate any underlying CGT liability. Foreign residents have no exemption from the 15% withholding and must apply for a variation certificate (a separate, longer process). Australian tax residents can apply for a standard clearance certificate (faster process) if they meet the residency criteria.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
