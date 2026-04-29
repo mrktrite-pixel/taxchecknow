@@ -49,6 +49,11 @@ export const metadata: Metadata = {
     "article:published_time": "2026-04-01",
     "article:author": "TaxCheckNow",
   },
+  verification: {
+    other: {
+      "msvalidate.01": "9D044AEA282E3F8B09C45D3BE3A2AEB0",
+    },
+  },
 };
 
 export default function RootLayout({
