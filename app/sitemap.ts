@@ -65,6 +65,7 @@ const PRODUCT_PATHS = [
   "/au/check/div296-wealth-eraser",
   "/au/check/super-to-trust-exit",
   "/au/check/transfer-balance-cap",
+  "/au/check/frcgw-clearance-certificate",
   // UK
   "/uk/check/mtd-scorecard",
   "/uk/check/allowance-sniper",
@@ -111,6 +112,11 @@ const STORY_SLUGS = [
 // Question slugs (mirror app/questions/<slug>/page.tsx)
 const QUESTION_SLUGS = [
   "does-renting-affect-cgt-exemption-australia",
+  "do-i-need-an-ato-clearance-certificate-if-im-an-australian-resident-selling-my",
+  "what-happens-if-i-dont-have-a-clearance-certificate-at-settlement-in-australia",
+  "how-long-does-it-take-the-ato-to-issue-a-clearance-certificate",
+  "is-the-frcgw-threshold-really-0-from-1-january-2025",
+  "does-the-15-withholding-apply-to-the-sale-price-or-the-capital-gain",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

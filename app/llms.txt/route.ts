@@ -30,6 +30,7 @@ const AUSTRALIA: CatalogItem[] = [
   { key: "au_67_div296_wealth_eraser",                              name: "Div 296 Wealth Eraser Engine",                              url: "/au/check/div296-wealth-eraser",                              auth: "ATO", fear: "$47,000/year" },
   { key: "au_67_super_to_trust_exit",                                  name: "Super-to-Trust Exit Strategy",                                url: "/au/check/super-to-trust-exit",                                  auth: "ATO", fear: "$220,000" },
   { key: "au_67_transfer_balance_cap",                                    name: "Transfer Balance Cap Engine",                                    url: "/au/check/transfer-balance-cap",                                    auth: "ATO", fear: "$36,000" },
+  { key: "au_67_frcgw_clearance_certificate",                                name: "FRCGW Clearance Certificate Checker",                            url: "/au/check/frcgw-clearance-certificate",                              auth: "ATO", fear: "$135,000" },
 ];
 
 const UNITED_KINGDOM: CatalogItem[] = [
@@ -83,7 +84,12 @@ const STORIES: { slug: string; title: string }[] = [
 ];
 
 const QUESTIONS: { slug: string; question: string }[] = [
-  { slug: "does-renting-affect-cgt-exemption-australia", question: "Does renting my property affect the CGT main residence exemption in Australia?" },
+  { slug: "does-renting-affect-cgt-exemption-australia",                                          question: "Does renting my property affect the CGT main residence exemption in Australia?" },
+  { slug: "do-i-need-an-ato-clearance-certificate-if-im-an-australian-resident-selling-my",         question: "Do I need an ATO clearance certificate if I'm an Australian resident selling my own house?" },
+  { slug: "what-happens-if-i-dont-have-a-clearance-certificate-at-settlement-in-australia",          question: "What happens if I don't have a clearance certificate at settlement in Australia?" },
+  { slug: "how-long-does-it-take-the-ato-to-issue-a-clearance-certificate",                            question: "How long does it take the ATO to issue a clearance certificate?" },
+  { slug: "is-the-frcgw-threshold-really-0-from-1-january-2025",                                        question: "Is the FRCGW threshold really $0 from 1 January 2025?" },
+  { slug: "does-the-15-withholding-apply-to-the-sale-price-or-the-capital-gain",                          question: "Does the 15% withholding apply to the sale price or the capital gain?" },
 ];
 
 function formatRegion(label: string, items: CatalogItem[]): string {
