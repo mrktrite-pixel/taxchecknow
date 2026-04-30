@@ -1,0 +1,51 @@
+[
+  {
+    "product_key": "au_67_frcgw_clearance_certificate",
+    "email_type": "T2",
+    "subject": "Your $135,000 protection — what's in your Clearance Pack",
+    "body": "$135,000 protected. That is what your ATO clearance certificate stops the buyer from withholding at settlement. You just bought Your FRCGW Clearance Pack — the exact dollar amount at risk on your sale, your certificate eligibility, and days-to-settlement countdown. Settlement is locked in. Processing takes 1-4 weeks. This pack tells you the real number and the deadline that actually matters. View your pack: https://taxchecknow.com/au/check/frcgw-clearance-certificate?utm_source=email_t2&utm_medium=email&utm_campaign=au-19-frcgw-clearance-certificate Gary",
+    "market": "Australia"
+  },
+  {
+    "product_key": "au_147_frcgw_clearance_certificate",
+    "email_type": "T3",
+    "subject": "$135,000 locked — here's your settlement execution plan",
+    "body": "$135,000. That money does not have to be locked up with the buyer's solicitor for 6-18 months. You bought Your FRCGW Execution Pack because you chose the full plan — not just the number, but the walkthrough. You get the pre-settlement execution strategy, the certificate application steps, the residency evidence checklist, the settlement-day buyer instruction template, and the refund path if the certificate misses the deadline. Eight files. One clear deadline. One action: hand your certificate to the buyer's solicitor before 9 am on settlement day. View your plan: https://taxchecknow.com/au/check/frcgw-clearance-certificate?utm_source=email_t3&utm_medium=email&utm_campaign=au-19-frcgw-clearance-certificate Gary",
+    "market": "Australia"
+  },
+  {
+    "product_key": "au_67_frcgw_clearance_certificate",
+    "email_type": "nurture_d3",
+    "subject": "Settlement in 3 weeks? Have you applied for the certificate yet?",
+    "body": "Three days in and this matters: has your accountant applied for the ATO clearance certificate? If settlement is more than 6 weeks away, you have time. If settlement is sooner, this is urgent. Check your status: https://taxchecknow.com/au/check/frcgw-clearance-certificate?utm_source=email_nurture_d3&utm_medium=email&utm_campaign=au-19-frcgw-clearance-certificate Gary",
+    "market": "Australia"
+  },
+  {
+    "product_key": "au_67_frcgw_clearance_certificate",
+    "email_type": "nurture_d7",
+    "subject": "Selling investment property too? Check your main residence exemption",
+    "body": "The 15% withholding applies to every property sale. If you are selling an investment property, capital gains tax also applies — different rules, different exposure. If you are selling your main residence, you might owe zero CGT but you still need the clearance certificate. Check your exemption: https://taxchecknow.com/au/check/cgt-main-residence-trap?utm_source=email_nurture_d7&utm_medium=email&utm_campaign=au-19-frcgw-clearance-certificate Gary",
+    "market": "Australia"
+  },
+  {
+    "product_key": "au_67_frcgw_clearance_certificate",
+    "email_type": "reminder_d30",
+    "subject": "30 days in — certificate sorted?",
+    "body": "One month since your purchase. Has the ATO clearance certificate arrived yet? If settlement is next month, the certificate needs to be in the buyer's solicitor's office before settlement morning. Check status: https://taxchecknow.com/au/check/frcgw-clearance-certificate?utm_source=email_reminder_d30&utm_medium=email&utm_campaign=au-19-frcgw-clearance-certificate Gary",
+    "market": "Australia"
+  },
+  {
+    "product_key": "au_67_frcgw_clearance_certificate",
+    "email_type": "law_change",
+    "subject": "Important — the FRCGW rule changed on 1 January 2025",
+    "body": "WHAT CHANGED: On 1 January 2025, the threshold dropped from $750,000 to $0. Every Australian property sale now applies. The withholding rate increased from 12.5% to 15%. On a $900,000 sale that is $135,000 now instead of $112,500. WHEN: 1 January 2025 onwards. Every property sale from that date forward is in scope. The old rule (threshold $750k, rate 12.5%) expired on 31 December 2024. HOW IT AFFECTS YOU: Without an ATO clearance certificate, the buyer's solicitor withholds 15% at settlement. That cash is locked up with the buyer for 6-18 months pending ATO refund. With a certificate, you get full payment on settlement day. WHAT TO DO NOW: If you are selling property, apply for the certificate now. Processing takes 1-4 weeks. Settlement is locked in — you cannot wait. Run your updated check: https://taxchecknow.com/au/check/frcgw-clearance-certificate?utm_source=email_law_change&utm_medium=email&utm_campaign=au-19-frcgw-clearance-certificate Gary",
+    "market": "Australia"
+  },
+  {
+    "product_key": "au_67_frcgw_clearance_certificate",
+    "email_type": "nurture_d14",
+    "subject": "Did your certificate arrive on time?",
+    "body": "Did the certificate come through before settlement? If the calculator helped you find this in time, a quick Google review matters — it helps other sellers find us.\n\n30 seconds: [Google Business link]\n\nGary",
+    "market": "Australia"
+  }
+]
