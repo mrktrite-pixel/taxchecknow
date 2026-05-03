@@ -54,7 +54,7 @@ const faqs = [
   },
   {
     "question": "What is the ATO benchmark interest rate?",
-    "answer": "The ATO sets a benchmark interest rate for Division 7A loans each year. For 2025/26 it is 8.37%. Div 7A loans must charge interest at no less than this rate. If the rate is lower than the benchmark, the difference may be treated as an additional deemed dividend."
+    "answer": "The ATO sets a benchmark interest rate for Division 7A loans each year. For 2025/26 it is 8.27%. Div 7A loans must charge interest at no less than this rate. If the rate is lower than the benchmark, the difference may be treated as an additional deemed dividend."
   },
   {
     "question": "What is the minimum repayment?",
@@ -188,7 +188,7 @@ const toolsRows = [
 const geoFacts = [
   {
     "label": "Benchmark interest rate 2025/26",
-    "value": "8.37%"
+    "value": "8.27%"
   },
   {
     "label": "Maximum loan term (unsecured)",
@@ -215,7 +215,7 @@ const geoFacts = [
 const sidebarNumbers = [
   {
     "label": "Benchmark rate 2025/26",
-    "value": "8.37%"
+    "value": "8.27%"
   },
   {
     "label": "Max term unsecured",
@@ -241,7 +241,7 @@ const sources = [
 const countdownStats = [
   {
     "label": "Benchmark rate 2025/26",
-    "value": "8.37%",
+    "value": "8.27%",
     "sub": "interest rate for Div 7A loans"
   },
   {
@@ -458,7 +458,7 @@ export default function Division7aLoanTrapPage() {
                 
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Benchmark rate 2025/26</dt>
-                  <dd className="font-bold">8.37%</dd>
+                  <dd className="font-bold">8.27%</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Max term unsecured</dt>
@@ -519,7 +519,7 @@ export default function Division7aLoanTrapPage() {
                 Benchmark rate 2025/26
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                8.37%
+                8.27%
               </p>
               <p className="text-xs text-neutral-400">interest rate for Div 7A loans</p>
             </div>
@@ -567,7 +567,7 @@ export default function Division7aLoanTrapPage() {
               <p className="mb-1 text-xs text-neutral-800">✓ Agreement: written, signed BEFORE lodgement day</p>
               <p className="mb-1 text-xs text-neutral-800">✓ Lodgement day: earlier of due date or actual lodge date</p>
               <p className="mb-1 text-xs text-neutral-800">✓ Repayments: minimum amount before 30 June every year</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Interest: at ATO benchmark rate (8.37% for 2025-26)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Interest: at ATO benchmark rate (8.27% for 2025-26)</p>
               <p className="mb-1 text-xs text-neutral-800">✓ Terms: unsecured max 7 years, secured max 25 years</p>
             </div>
             
@@ -588,7 +588,7 @@ export default function Division7aLoanTrapPage() {
             The answer — ATO confirmed April 2026
           </p>
           <p className="mb-2 text-neutral-900">Under Division 7A of ITAA 1936, if a private company lends money to a shareholder or their associate without a complying loan agreement, the loan is treated as an unfranked dividend — fully taxable at the shareholder's marginal rate. This applies even if the loan was never intended to be a dividend and even if the company never formally declared one.</p>
-          <p className="mb-2 text-neutral-900">To avoid the deemed dividend, loans must be documented with a written agreement before the company's lodgement day, charged at the ATO benchmark interest rate (currently 8.37% for 2025/26), and repaid with minimum annual repayments over a maximum of 7 years (25 years for loans secured by a registered mortgage over real property).</p>
+          <p className="mb-2 text-neutral-900">To avoid the deemed dividend, loans must be documented with a written agreement before the company's lodgement day, charged at the ATO benchmark interest rate (currently 8.27% for 2025/26), and repaid with minimum annual repayments over a maximum of 7 years (25 years for loans secured by a registered mortgage over real property).</p>
           <p className="mb-2 text-neutral-900">The most common trap: directors draw cash from their company without paperwork, the balance accumulates over years, and at tax time the accountant discovers the entire amount is a deemed dividend. On a $200,000 loan at a 47% marginal rate, that is $94,000 in unexpected tax.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Division 7A · ITAA 1936</p>
         </div>
@@ -667,7 +667,7 @@ export default function Division7aLoanTrapPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Division 7A Loan Rules — confirmed 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Under Division 7A of the Income Tax Assessment Act 1936, loans made by a private company to a shareholder or their associate are treated as unfranked dividends unless specific conditions are met. To avoid deemed dividend treatment, a written loan agreement must be in place before the company's lodgement day, the loan must be charged interest at no less than the ATO benchmark interest rate (8.37% for 2025/26), and minimum annual repayments must be made. The maximum loan term is 7 years for unsecured loans and 25 years for loans secured by a registered mortgage over real property. A missed minimum repayment results in a deemed dividend equal to the shortfall for that income year. The deemed dividend is unfranked, meaning no franking credits offset the tax liability.</p>
+          <p className="mb-4 text-neutral-800">Under Division 7A of the Income Tax Assessment Act 1936, loans made by a private company to a shareholder or their associate are treated as unfranked dividends unless specific conditions are met. To avoid deemed dividend treatment, a written loan agreement must be in place before the company's lodgement day, the loan must be charged interest at no less than the ATO benchmark interest rate (8.27% for 2025/26), and minimum annual repayments must be made. The maximum loan term is 7 years for unsecured loans and 25 years for loans secured by a registered mortgage over real property. A missed minimum repayment results in a deemed dividend equal to the shortfall for that income year. The deemed dividend is unfranked, meaning no franking credits offset the tax liability.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
@@ -686,7 +686,7 @@ export default function Division7aLoanTrapPage() {
                 
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Benchmark interest rate 2025/26</td>
-                  <td className="p-2">8.37%</td>
+                  <td className="p-2">8.27%</td>
                   <td className="p-2 text-neutral-500">ITAA 1936 — Division 7A</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -999,7 +999,7 @@ export default function Division7aLoanTrapPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Division 7A: company loans to shareholders or associates are deemed unfranked dividends unless written loan agreement in place before lodgement day, benchmark interest rate charged (8.37% in 2025/26), and minimum repayments made. Max term 7 years unsecured, 25 years secured by real property. Under ITAA 1936 Division 7A.
+            Division 7A: company loans to shareholders or associates are deemed unfranked dividends unless written loan agreement in place before lodgement day, benchmark interest rate charged (8.27% in 2025/26), and minimum repayments made. Max term 7 years unsecured, 25 years secured by real property. Under ITAA 1936 Division 7A.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1013,7 +1013,7 @@ export default function Division7aLoanTrapPage() {
               Division 7A
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              Benchmark Rate 8.37%
+              Benchmark Rate 8.27%
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
