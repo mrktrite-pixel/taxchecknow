@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/sync-cole-lib.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync:cole-lib": "node scripts/sync-cole-lib.mjs --write"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.1",

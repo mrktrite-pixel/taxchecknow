@@ -1,0 +1,18 @@
+{
+  "synced_at": "2026-05-06T10:25:47.829Z",
+  "source": "C:\\Users\\MATTV\\CitationGap\\cole-marketing\\lib",
+  "files": [
+    "cole-email.ts",
+    "email-context.ts",
+    "email-product-copy.ts",
+    "email-types.ts",
+    "product-deadlines.ts"
+  ],
+  "hashes": {
+    "email-types.ts": "bc5b3cef4b207d7f",
+    "email-product-copy.ts": "ecdb7a02f569e0a8",
+    "product-deadlines.ts": "97bfbfe42a0281c4",
+    "email-context.ts": "ef4410c09d1dab74",
+    "cole-email.ts": "40758693f2b77a3d"
+  }
+}

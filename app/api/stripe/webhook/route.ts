@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { sendDeliveryEmail } from "@/lib/cole-email";
+import { getMarketContext } from "@/lib/email-context";
+import { lookupDeadline } from "@/lib/product-deadlines";
 
 // ── PRODUCT DELIVERY MAP — all 25 TaxCheckNow + 5 SuperTaxCheck ─────────────
 const DELIVERY_MAP: Record<string, {
@@ -118,25 +120,8 @@ const DELIVERY_MAP: Record<string, {
   "supertax_147_div296_wealth_eraser": { subject: "Your Div 296 Strategy System — SuperTaxCheck", productName: "Your Div 296 Strategy System", driveUrl: process.env.DRIVE_DIV296_147 || "", tierLabel: "$147", market: "Australia", authority: "ATO", productId: "div296-wealth-eraser" },
 };
 
-// ── DEADLINES PER PRODUCT ────────────────────────────────────────────────────
-const PRODUCT_DEADLINES: Record<string, string> = {
-  "mtd-scorecard":                    "2026-08-07T00:00:00.000+01:00",
-  "allowance-sniper":                 "2027-01-31T23:59:59.000+00:00",
-  "digital-link-auditor":             "2026-08-07T00:00:00.000+01:00",
-  "side-hustle-checker":              "2027-01-31T23:59:59.000+00:00",
-  "dividend-trap":                    "2027-01-31T23:59:59.000+00:00",
-  "medicare-levy-surcharge-trap":     "2026-10-31T23:59:59.000+11:00",
-  "instant-asset-write-off":          "2026-06-30T23:59:59.000+10:00",
-  "gst-registration-trap":            "2026-06-30T23:59:59.000+10:00",
-  "cgt-main-residence-trap":          "2026-10-31T23:59:59.000+11:00",
-  "cgt-discount-timing-sniper":       "2026-10-31T23:59:59.000+11:00",
-  "negative-gearing-illusion":        "2026-10-31T23:59:59.000+11:00",
-  "rental-property-deduction-audit":  "2026-10-31T23:59:59.000+11:00",
-  "division-7a-loan-trap":            "2026-10-31T23:59:59.000+11:00",
-  "fbt-hidden-exposure":              "2026-03-31T23:59:59.000+11:00",
-  "small-business-cgt-concessions":   "2026-10-31T23:59:59.000+11:00",
-  "bring-forward-window":             "2026-06-30T23:59:59.000+10:00",
-};
+// PRODUCT_DEADLINES migrated to cole-marketing/lib/product-deadlines.ts
+// (Pre-Step-2D, Phase 1.5a). Use lookupDeadline("taxchecknow", productId).
 
 const REMINDER_DAYS = [30, 7, 1];
 
@@ -145,6 +130,11 @@ function getStripe() {
   if (!key) throw new Error("Missing STRIPE_SECRET_KEY");
   return new Stripe(key, { apiVersion: "2026-03-25.dahlia" });
 }
+
+// AUTHORITY_DETAILS, productKeyToCountryPrefix, formatDeadlineLabel,
+// getMarketContext all migrated to cole-marketing/lib/email-context.ts
+// (Pre-Step-2A, Phase 1.5a). Webhook is now a thin caller of the imported
+// getMarketContext().
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -225,10 +215,10 @@ async function queueReminders(
   delivery: typeof DELIVERY_MAP[string],
 ): Promise<void> {
   try {
-    const deadlineIso = PRODUCT_DEADLINES[delivery.productId];
-    if (!deadlineIso) return;
+    const deadlineEntry = lookupDeadline("taxchecknow", delivery.productId);
+    if (!deadlineEntry) return;
 
-    const deadline = new Date(deadlineIso);
+    const deadline = new Date(deadlineEntry.date);
     const rows = REMINDER_DAYS.map(days => {
       const trigger = new Date(deadline);
       trigger.setDate(trigger.getDate() - days);
@@ -343,13 +333,28 @@ export async function POST(req: Request) {
     return NextResponse.json({ received: true });
   }
 
+  // Resolve all multi-market context (authority full name + URL,
+  // deadline, success-page URL, per-product copy with tier-aware
+  // fallback to TIER_DEFAULTS, etc.)
+  const marketContext = getMarketContext("taxchecknow", productKey, tier, session.id, delivery);
+
   const emailResult = await sendDeliveryEmail({
-    to:          customerEmail,
-    productName: delivery.productName,
+    to:                customerEmail,
+    productName:       delivery.productName,
     productKey,
-    tierLabel:   delivery.tierLabel,
-    driveUrl:    delivery.driveUrl,
-    subject:     delivery.subject,
+    tierLabel:         delivery.tierLabel,
+    subject:           delivery.subject,
+    marketDisplayName: marketContext.marketDisplayName,
+    authority:         marketContext.authority,
+    authorityFullName: marketContext.authorityFullName,
+    authorityUrl:      marketContext.authorityUrl,
+    deadlineDate:      marketContext.deadlineDate,
+    deadlineLabel:     marketContext.deadlineLabel,
+    successUrl:        marketContext.successUrl,
+    ctaLabel:          marketContext.ctaLabel,
+    bullets:           marketContext.bullets,
+    nextStep:          marketContext.nextStep,
+    tagline:           marketContext.tagline,
   });
 
   // 5. Log email status
