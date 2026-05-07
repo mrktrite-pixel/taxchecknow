@@ -158,22 +158,34 @@ function addDays(days: number): string {
 }
 
 async function queueNurture(
-  supabase:      any,
-  customerEmail: string,
-  productKey:    string,
+  supabase:          any,
+  customerEmail:     string,
+  productKey:        string,
+  decisionSessionId: string | undefined,
 ): Promise<void> {
+  // Step 4 personalisation hook: if the calculator passed a real session_id
+  // (not a fallback_ stub, not undefined), link the nurture rows back to the
+  // decision_sessions row so the cron can read the customer's verdict +
+  // inputs at send time and inject them into the template body. When null,
+  // cron falls back gracefully to product-level (LeadProductMeta) data only.
+  const linkedSessionId =
+    decisionSessionId && !decisionSessionId.startsWith("fallback_")
+      ? decisionSessionId
+      : null;
+
   const rows = [
     { days: 3,  subject: "What people in your position usually do", email_type: "nurture_d3"  },
     { days: 7,  subject: "One week on — did you act on this?",       email_type: "nurture_d7"  },
     { days: 14, subject: "Did you sort this out?",                    email_type: "nurture_d14" },
   ].map(r => ({
-    customer_email: customerEmail,
-    product_key:    productKey,
-    trigger_date:   addDays(r.days),
-    subject:        r.subject,
-    email_type:     r.email_type,
-    status:         "queued",
-    created_at:     new Date().toISOString(),
+    customer_email:      customerEmail,
+    product_key:         productKey,
+    decision_session_id: linkedSessionId,
+    trigger_date:        addDays(r.days),
+    subject:             r.subject,
+    email_type:          r.email_type,
+    status:              "queued",
+    created_at:          new Date().toISOString(),
   }));
 
   try {
@@ -237,7 +249,7 @@ export async function POST(req: Request) {
       } catch { /* non-fatal */ }
 
       // Queue the S2 nurture sequence (d3, d7, d14)
-      await queueNurture(supabase, email, source ?? "unknown");
+      await queueNurture(supabase, email, source ?? "unknown", session_id);
     }
 
     // Always return 200 — never block the user experience

@@ -17,6 +17,14 @@ export interface TemplateData {
   productName:     string;
   productUrl:        string;
   deadlineDate?:      string;   // Required for reminder_* types
+
+  // Step 4 personalisation hooks — all optional, render conditionally.
+  // Cron resolves these from email_queue.decision_session_id JOIN
+  // decision_sessions + lead-product-meta lookup. When absent, templates
+  // gracefully degrade to product-level (non-personalised) copy.
+  fearNumber?:    string;   // e.g., "$135,000" or "£240,000" — per-product from LeadProductMeta
+  verdict?:       string;   // e.g., "exposed" / "safe" — from decision_sessions.output.status
+  authority?:     string;   // e.g., "ATO" / "HMRC" / "IRS" — per-product from LeadProductMeta
 }
 
 export interface EmailTemplate { subject: string; html: string; }
@@ -68,6 +76,38 @@ function escapeHtml(s: string): string {
 
 function escName(s: string): string { return escapeHtml(s); }
 
+// ── PERSONALISATION HELPERS (Step 4) ─────────────────────────────────────
+// Both helpers degrade gracefully when fields are absent — no broken layout
+// and no missing-data placeholders ("$undefined" etc.). Cron supplies the
+// fields when email_queue.decision_session_id resolves to a row + lead-
+// product-meta lookup; otherwise renders product-only copy.
+
+/** Lead sentence for nurture templates. Personalised when verdict + fearNumber
+ *  available; partially personalised when only fearNumber; product-only fallback
+ *  otherwise. timeAgo is a short phrase like "Three days ago" or "A week ago". */
+function leadSentence(d: TemplateData, timeAgo: string): string {
+  if (d.verdict && d.fearNumber) {
+    return `${timeAgo} your <strong>${escName(d.productName)}</strong> check found <strong>${escName(d.verdict)}</strong> status with <strong style="color:#dc2626;">${escName(d.fearNumber)}</strong> at stake.`;
+  }
+  if (d.fearNumber) {
+    return `${timeAgo} you ran the <strong>${escName(d.productName)}</strong> check — <strong style="color:#dc2626;">${escName(d.fearNumber)}</strong> exposure for situations like yours.`;
+  }
+  return `${timeAgo} you ran the <strong>${escName(d.productName)}</strong> check on TaxCheckNow.`;
+}
+
+/** Per-customer result block — boxed callout with verdict + fearNumber +
+ *  authority. Renders only when at least one personalisation field is set;
+ *  otherwise empty string (template flows around the absence). */
+function personalisationBlock(d: TemplateData): string {
+  if (!d.verdict && !d.fearNumber) return "";
+  return `
+      <div style="border:1px solid #e5e7eb;border-radius:10px;padding:16px;margin:0 0 18px;background:#f9fafb;">
+        <p style="margin:0 0 6px;font-family:monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9ca3af;">Your result</p>
+        ${d.verdict ? `<p style="margin:0 0 4px;font-size:15px;color:#111827;font-weight:600;line-height:1.5;">Status: ${escName(d.verdict)}</p>` : ""}
+        ${d.fearNumber ? `<p style="margin:0;font-size:14px;color:#374151;line-height:1.5;">Personalised exposure: <strong style="color:#dc2626;">${escName(d.fearNumber)}</strong>${d.authority ? ` under <strong>${escName(d.authority)}</strong>` : ""}</p>` : ""}
+      </div>`;
+}
+
 // ── TEMPLATE BUILDERS ────────────────────────────────────────────────────
 
 function nurtureD3(d: TemplateData): EmailTemplate {
@@ -76,10 +116,11 @@ function nurtureD3(d: TemplateData): EmailTemplate {
     html: wrap(`
       ${greeting(d.customerName)}
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#111;">
-        Three days ago you ran the <strong>${escName(d.productName)}</strong> check on TaxCheckNow.
+        ${leadSentence(d, "Three days ago")}
       </p>
+      ${personalisationBlock(d)}
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#374151;">
-        Most people who get a result like yours do one of two things in the first week: forward it to their accountant for a decision, or run the personalised plan to see the exact next step. Both work. Doing nothing usually doesn't.
+        Most people who get a result like yours do one of two things in the first week: forward it to their tax adviser for a decision, or run the personalised plan to see the exact next step. Both work. Doing nothing usually doesn't.
       </p>
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#374151;">
         Your result is still saved. If you want the full plan with the specific actions for your position:
@@ -98,13 +139,14 @@ function nurtureD7(d: TemplateData): EmailTemplate {
     html: wrap(`
       ${greeting(d.customerName)}
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#111;">
-        A week ago you ran the <strong>${escName(d.productName)}</strong> check.
+        ${leadSentence(d, "A week ago")}
       </p>
+      ${personalisationBlock(d)}
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#374151;">
         Tax positions don't fix themselves — they harden. The longer you leave a flagged issue, the harder it gets to unwind cleanly. Most people who deal with this in the first month spend less than those who deal with it a year later.
       </p>
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#374151;">
-        If your situation has changed since the check, re-run it. If you've spoken to your accountant, the personalised plan gives them the structured starting point.
+        If your situation has changed since the check, re-run it. If you've spoken to your tax adviser, the personalised plan gives them the structured starting point.
       </p>
       ${ctaButton("Open my saved result →", d.productUrl)}
     `),
@@ -117,13 +159,14 @@ function nurtureD14(d: TemplateData): EmailTemplate {
     html: wrap(`
       ${greeting(d.customerName)}
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#111;">
-        Two weeks since the <strong>${escName(d.productName)}</strong> check. Last note from us on this one.
+        ${leadSentence(d, "Two weeks since")}. Last note from us on this one.
       </p>
+      ${personalisationBlock(d)}
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#374151;">
         If you've sorted it — good. Stop reading.
       </p>
       <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#374151;">
-        If not — here is what you need: the personalised plan with the specific actions for your position. It takes about ten minutes to read. Forward it to your accountant when you're done.
+        If not — here is what you need: the personalised plan with the specific actions for your position. It takes about ten minutes to read. Forward it to your tax adviser when you're done.
       </p>
       ${ctaButton("Get the full plan →", d.productUrl)}
     `),

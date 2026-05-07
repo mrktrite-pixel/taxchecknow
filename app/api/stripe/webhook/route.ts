@@ -213,10 +213,20 @@ async function queueReminders(
   customerEmail: string,
   customerName: string,
   delivery: typeof DELIVERY_MAP[string],
+  decisionSessionId: string,
 ): Promise<void> {
   try {
     const deadlineEntry = lookupDeadline("taxchecknow", delivery.productId);
     if (!deadlineEntry) return;
+
+    // Step 4 personalisation hook: link reminder rows to the decision_sessions
+    // row when present so cron's send-emails can read the customer's verdict
+    // at send time. Falls back gracefully (cron uses product-only template
+    // when null). Reject fallback_ stubs — they're calculator-side fakes.
+    const linkedSessionId =
+      decisionSessionId && !decisionSessionId.startsWith("fallback_")
+        ? decisionSessionId
+        : null;
 
     const deadline = new Date(deadlineEntry.date);
     const rows = REMINDER_DAYS.map(days => {
@@ -228,6 +238,7 @@ async function queueReminders(
         product_id:           delivery.productId,
         customer_email:       customerEmail,
         customer_name:        customerName,
+        decision_session_id:  linkedSessionId,
         trigger_date:         trigger.toISOString().split("T")[0],
         days_before_deadline: days,
         subject:              `${days === 1 ? "Tomorrow" : `${days} days`} — ${delivery.productName}`,
@@ -319,7 +330,7 @@ export async function POST(req: Request) {
 
   // 3. Queue reminder emails (non-blocking)
   if (delivery && customerEmail) {
-    queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery)
+    queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery, decisionSid)
       .catch(() => {});
   }
 

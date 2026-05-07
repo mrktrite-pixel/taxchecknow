@@ -37,6 +37,15 @@ interface QueueRow {
   trigger_date:                            string;
   subject?:                                  string | null;
   status:                                       string;
+  // Step 4 — link to decision_sessions row for per-customer personalisation
+  decision_session_id?:                            string | null;
+}
+
+// Decision session shape we read at send time. Only the fields the cron
+// uses for personalisation (output.status). Embedded via PostgREST FK.
+interface EmbeddedDecisionSession {
+  id:        string;
+  output:    Record<string, unknown> | null;
 }
 
 // ── HELPERS ──────────────────────────────────────────────────────────────
@@ -160,10 +169,15 @@ export async function GET(request: Request) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sb = supabase as any;
 
-  // 2. Fetch due rows
+  // 2. Fetch due rows. Embed decision_sessions data via the FK we added in
+  //    Step 4 so personalisation context (output.status) is available at
+  //    send time without an extra query per row.
   const { data: rows, error: fetchErr } = await sb
     .from("email_queue")
-    .select("id, customer_email, customer_name, product_key, product_id, email_type, days_before_deadline, trigger_date, subject, status")
+    .select(
+      "id, customer_email, customer_name, product_key, product_id, email_type, days_before_deadline, trigger_date, subject, status, decision_session_id, " +
+      "decision_sessions:decision_session_id(id, output)",
+    )
     .eq("status", "queued")
     .lte("trigger_date", todayIso())
     .order("trigger_date", { ascending: true })
@@ -192,12 +206,58 @@ export async function GET(request: Request) {
     }
 
     const product = resolveProduct(row);
+
+    // Step 4 personalisation resolution — graceful degrade per bee canonical
+    // rule 8b (never crash; fall back to product-level when row data missing).
+    //
+    // Sources, in priority order:
+    //   - verdict        ← decision_sessions.output.status (embedded JOIN)
+    //   - fearNumber     ← LEAD_PRODUCT_META[source].fearNumber (lookup)
+    //   - authority      ← LEAD_PRODUCT_META[source].authority (lookup)
+    //
+    // When decision_session_id is null OR the embed didn't return a row,
+    // verdict stays undefined; templates render product-only fallback copy.
+    const embedded = (row as unknown as { decision_sessions?: EmbeddedDecisionSession | null }).decision_sessions ?? null;
+    const verdictRaw = embedded?.output && typeof embedded.output === "object"
+      ? (embedded.output as Record<string, unknown>).status
+      : undefined;
+    const verdict = typeof verdictRaw === "string" && verdictRaw.length > 0 ? verdictRaw : undefined;
+
+    // Look up LeadProductMeta by source-key. Same resolution logic as
+    // resolveProduct above — match the snake_case key after stripping any
+    // Stripe-style "<country>_<tier>_" prefix from product_key.
+    const leadKey = (() => {
+      const direct = row.product_key && row.product_key in LEAD_PRODUCT_META ? row.product_key : null;
+      if (direct) return direct;
+      if (row.product_key) {
+        const stripped = row.product_key.replace(/^(au|uk|us|nz|can|nomad|supertax)_(67|147)_/, "");
+        if (stripped in LEAD_PRODUCT_META) return stripped;
+      }
+      if (row.product_id) {
+        const snake = row.product_id.replace(/-/g, "_");
+        if (snake in LEAD_PRODUCT_META) return snake;
+      }
+      return null;
+    })();
+    const leadMeta = leadKey ? LEAD_PRODUCT_META[leadKey] : null;
+    const fearNumber = leadMeta?.fearNumber || undefined;
+    const authority  = leadMeta?.authority  || undefined;
+
     const data: TemplateData = {
       customerName:  row.customer_name ?? undefined,
-      productName:    product.name,
-      productUrl:      product.url,
-      deadlineDate:    formatDeadlineDate(row.trigger_date),
+      productName:   product.name,
+      productUrl:    product.url,
+      deadlineDate:  formatDeadlineDate(row.trigger_date),
+      verdict,
+      fearNumber,
+      authority,
     };
+
+    // Track personalisation fallback for Doctor Bee analytics. When verdict
+    // is null but decision_session_id was present, the embed returned no
+    // output — log it via error_message field on email_log (failure-mode
+    // string, not an actual send failure).
+    const personalisationDegraded = row.decision_session_id && !verdict;
 
     const tpl = getEmailTemplate(emailType, data);
     const result = await sendViaResend(row.customer_email, tpl.subject, tpl.html, resendKey);
@@ -213,7 +273,13 @@ export async function GET(request: Request) {
       console.error("[cron] Failed to update queue row", row.id, err);
     }
 
-    // 3d. Log to email_log
+    // 3d. Log to email_log. Include a personalisation_degraded note in
+    // error_message when the row had a decision_session_id but the embed
+    // returned no verdict — that signals a stale or broken FK linkage that
+    // Doctor Bee can pick up later (without breaking the actual send).
+    const errorMessage = result.success
+      ? (personalisationDegraded ? "personalisation_degraded:no_verdict_from_decision_session" : null)
+      : (result.error ?? "send error");
     try {
       await sb.from("email_log").insert({
         recipient_email: row.customer_email,
@@ -222,7 +288,7 @@ export async function GET(request: Request) {
         status:                result.success ? "sent" : "failed",
         product_key:             row.product_key ?? null,
         resend_id:                  result.resendId ?? null,
-        error_message:                 result.error ?? null,
+        error_message:                 errorMessage,
       });
     } catch (err) {
       console.error("[cron] Failed to write email_log", err);
