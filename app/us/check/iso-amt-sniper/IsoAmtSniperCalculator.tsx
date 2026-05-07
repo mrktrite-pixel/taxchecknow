@@ -198,6 +198,37 @@ export default function IsoAmtSniperCalculator() {
     }
   }, [selectedBracket]);
 
+  // COLE save-box hydration — read `?session_id=` URL param on mount,
+  // fetch decision_sessions row, restore bracket selection. Iso-amt-sniper
+  // only stores {bracket, value} in inputs jsonb (newer calculator pattern)
+  // — full form values (salary, isoShares, spread) get default values when
+  // bracket is set; customer can adjust if needed.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const urlSessionId = new URLSearchParams(window.location.search).get("session_id");
+    if (!urlSessionId || urlSessionId.startsWith("fallback_")) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/decision-sessions/${encodeURIComponent(urlSessionId)}`);
+        if (!res.ok) return;
+        const row = await res.json();
+        if (cancelled || !row || !row.inputs) return;
+        const bracketLabel = row.inputs.bracket;
+        if (!bracketLabel || typeof bracketLabel !== "string") return;
+        const idx = BRACKETS.findIndex(b => b.label === bracketLabel);
+        if (idx >= 0) {
+          setSelectedBracket(idx);
+          setSalary(150000);
+          setIsoShares(3500);
+          setSpread(30);
+          setSessionId(urlSessionId);
+        }
+      } catch { /* non-blocking */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   async function handleBracketSelect(index: number) {
     setSelectedBracket(index);
     setSalary(150000);

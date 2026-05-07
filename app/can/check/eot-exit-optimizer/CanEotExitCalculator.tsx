@@ -698,8 +698,31 @@ export default function CanEotExitCalculator() {
     return () => { document.body.style.overflow = ""; };
   }, [showPopup]);
 
+  // COLE save-box hydration — read `?session_id=` URL param on mount,
+  // fetch decision_sessions row, restore inputs + jump to verdict.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const urlSessionId = new URLSearchParams(window.location.search).get("session_id");
+    if (!urlSessionId || urlSessionId.startsWith("fallback_")) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/decision-sessions/${encodeURIComponent(urlSessionId)}`);
+        if (!res.ok) return;
+        const row = await res.json();
+        if (cancelled || !row || !row.inputs) return;
+        setAnswers(prev => ({ ...prev, ...row.inputs }));
+        setSessionId(urlSessionId);
+        setVerdict(true);
+      } catch { /* non-blocking */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+
   useEffect(() => {
     if (!showVerdict || !verdict) return;
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("session_id")) return;
     fetch("/api/decision-sessions", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
