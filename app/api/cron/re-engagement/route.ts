@@ -142,8 +142,24 @@ export async function GET(request: Request) {
   // 2. Sweep decision_sessions for eligible rows.
   //    Window: created_at >= now()-30d AND created_at <= now()-7d.
   //    Filters: converted=false, re_engagement_sent=false, email not null.
+  //
+  //    Step 6 dedupe (Discovery #30): a customer can have multiple eligible
+  //    sessions in the same window (saved 5 calculators -> 5 rows). The
+  //    pre-Step-6 sweep would fire 5 emails on day 8 — spammy.
+  //
+  //    PostgREST does not support CTEs / DISTINCT ON in client queries, so
+  //    dedupe runs in JS:
+  //      a) Fetch BATCH_LIMIT * 4 candidates ORDER BY created_at DESC
+  //      b) Walk the array, keep first occurrence per email (= most recent
+  //         save — what they saw last is freshest in their mind)
+  //      c) Cap at BATCH_LIMIT customers per run
+  //      d) After successful send: UPDATE re_engagement_sent=true on ALL
+  //         eligible rows for that email + window (not just the picked id),
+  //         so the customer is not re-engaged again on a different row
+  //         tomorrow.
   const minCreatedAt = isoDaysAgo(MAX_AGE_DAYS);   // older bound (e.g. 30 days ago)
   const maxCreatedAt = isoDaysAgo(MIN_AGE_DAYS);   // newer bound (e.g. 7 days ago)
+  const candidateLimit = BATCH_LIMIT * 4;          // 200 — dedupe headroom
 
   const { data: rows, error: fetchErr } = await sb
     .from("decision_sessions")
@@ -153,20 +169,33 @@ export async function GET(request: Request) {
     .eq("re_engagement_sent", false)
     .gte("created_at", minCreatedAt)
     .lte("created_at", maxCreatedAt)
-    .order("created_at", { ascending: true })
-    .limit(BATCH_LIMIT);
+    .order("created_at", { ascending: false })   // most recent FIRST so dedupe keeps the freshest save
+    .limit(candidateLimit);
 
   if (fetchErr) {
     return NextResponse.json({ error: "decision_sessions fetch failed", detail: fetchErr.message }, { status: 500 });
   }
 
-  const sessionRows: DecisionSessionRow[] = rows ?? [];
+  const candidateRows: DecisionSessionRow[] = rows ?? [];
+
+  // Dedupe by email — keep first occurrence (= most recent save given DESC).
+  // Cap at BATCH_LIMIT customers per run.
+  const seenEmails = new Set<string>();
+  const sessionRows: DecisionSessionRow[] = [];
+  for (const row of candidateRows) {
+    if (!row.email) continue;
+    if (seenEmails.has(row.email)) continue;
+    seenEmails.add(row.email);
+    sessionRows.push(row);
+    if (sessionRows.length >= BATCH_LIMIT) break;
+  }
+
   let sent     = 0;
   let failed    = 0;
   let skipped    = 0;
   const failures: string[] = [];
 
-  // 3. Process each row
+  // 3. Process each deduped customer
   for (const row of sessionRows) {
     if (!row.email) {
       skipped++;
@@ -207,17 +236,24 @@ export async function GET(request: Request) {
     const tpl = getEmailTemplate("re_engagement", data);
     const result = await sendViaResend(row.email, tpl.subject, tpl.html, resendKey);
 
-    // 3b. Atomic-ish UPDATE: flip re_engagement_sent + stamp re_engagement_at
-    //     only on send success. On failure: leave both null/false so a
-    //     future run can retry.
+    // 3b. UPDATE: flip re_engagement_sent on ALL eligible rows for this
+    //     customer (Step 6 dedupe). The filter mirrors the SELECT filter
+    //     exactly — only flips rows that were eligible for THIS run, never
+    //     a future-eligible row. On failure: leave rows untouched so a
+    //     future run can retry the entire customer cleanly.
     if (result.success) {
       try {
         await sb.from("decision_sessions").update({
           re_engagement_at:    new Date().toISOString(),
           re_engagement_sent:    true,
-        }).eq("id", row.id);
+        })
+        .eq("email", row.email)
+        .eq("converted", false)
+        .eq("re_engagement_sent", false)
+        .gte("created_at", minCreatedAt)
+        .lte("created_at", maxCreatedAt);
       } catch (err) {
-        console.error("[re-engagement cron] Failed to update decision_sessions row", row.id, err);
+        console.error("[re-engagement cron] Failed to update decision_sessions rows for", row.email, err);
       }
     }
 

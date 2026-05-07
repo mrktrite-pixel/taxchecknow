@@ -1,3 +1,17 @@
+// ── DEPRECATED — DO NOT USE FOR NEW CALCULATORS ──────────────────────────
+// Step 6.2 (May 7 2026): the canonical T2-and-nurture entrypoint is
+// /api/leads. This route is kept as a graceful fallback for any cached
+// browser session still POSTing here from a deployed-in-the-wild
+// calculator. All 47 cole/calculators/*.tsx files now call /api/leads,
+// and cole/generators/generate-calculator.ts emits /api/leads for any
+// future product.
+//
+// Day 9 verification gate: confirm ZERO traffic to this route in the
+// preceding 7 days BEFORE deletion. If non-zero traffic surfaces, trace
+// to the source calculator (cached browser bundle? un-migrated file?)
+// and fix that source — DO NOT just delete this route while it's still
+// receiving live POSTs.
+// ────────────────────────────────────────────────────────────────────────
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 

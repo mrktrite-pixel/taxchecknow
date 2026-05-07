@@ -235,15 +235,20 @@ export default function IsoAmtSniperCalculator() {
 
   async function handleSaveEmail() {
     if (!email) return;
-    fetch("/api/save-email", {
+    // Step 6.2: migrated from /api/save-email -> /api/leads.
+    // /api/leads is the canonical T2-and-nurture entrypoint; source key
+    // matches LEAD_PRODUCT_META (`iso_amt_sniper`) so personalisation
+    // resolves cleanly.
+    fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email,
-        source:       "iso-amt-sniper_result",
-        country_code: "US",
-        site:         "taxchecknow",
-        session_id:   sessionId ?? localStorage.getItem("iso-amt-sniper_session_id") ?? "",
+        source:         "iso_amt_sniper",
+        country_code:   "US",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? localStorage.getItem("iso-amt-sniper_session_id") ?? "",
+        verdict_status: bracketStatus,
       }),
     }).catch(() => {});
     setEmailSent(true);

@@ -221,15 +221,19 @@ ${stateKeys.map(k => `    ${buildStateReset(config, k)}`).join("\n")}
 
   async function handleSaveEmail() {
     if (!email) return;
-    fetch("/api/save-email", {
+    // Step 6.2: canonical T2-and-nurture entrypoint is /api/leads.
+    // The legacy /api/save-email is deprecated; never emit calls to it
+    // from generated calculators.
+    fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email,
-        source:       "${config.id}_result",
-        country_code: "${config.country.toUpperCase()}",
-        site:         "${config.site}",
-        session_id:   sessionId ?? localStorage.getItem("${config.id}_session_id") ?? "",
+        source:         "${config.id.replace(/-/g, "_")}",
+        country_code:   "${config.country.toUpperCase()}",
+        site:           "${config.site}",
+        session_id:     sessionId ?? localStorage.getItem("${config.id}_session_id") ?? "",
+        verdict_status: verdict?.status ?? "",
       }),
     }).catch(() => {});
     setEmailSent(true);
