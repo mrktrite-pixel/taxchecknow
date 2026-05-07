@@ -746,7 +746,14 @@ export default function UkResidencyCalculator() {
     if (!email) return;
     await fetch("/api/leads", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: "uk_residency", country_code: "UK", site: "taxchecknow" }),
+      body: JSON.stringify({
+        email,
+        source:         "uk_residency",
+        country_code:   "UK",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? "",
+        verdict_status: verdict?.status ?? "",
+      }),
     }).catch(() => {});
     setEmailSent(true);
   }

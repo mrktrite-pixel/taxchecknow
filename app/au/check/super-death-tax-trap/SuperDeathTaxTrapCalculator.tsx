@@ -665,7 +665,14 @@ export default function SuperDeathTaxTrapCalculator() {
     if (!email) return;
     await fetch("/api/leads", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: "super_death_tax_trap", country_code: "AU", site: "taxchecknow" }),
+      body: JSON.stringify({
+        email,
+        source:         "super_death_tax_trap",
+        country_code:   "AU",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? "",
+        verdict_status: verdict?.status ?? "",
+      }),
     }).catch(() => {});
     setEmailSent(true);
   }

@@ -687,7 +687,14 @@ export default function InterestReinstatementEngineCalculator() {
     if (!email) return;
     await fetch("/api/leads", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: "interest_reinstatement_engine", country_code: "NZ", site: "taxchecknow" }),
+      body: JSON.stringify({
+        email,
+        source:         "interest_reinstatement_engine",
+        country_code:   "NZ",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? "",
+        verdict_status: verdict?.status ?? "",
+      }),
     }).catch(() => {});
     setEmailSent(true);
   }

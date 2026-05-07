@@ -761,7 +761,14 @@ export default function Section174AuditorCalculator() {
     if (!email) return;
     await fetch("/api/leads", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: "section_174_auditor", country_code: "US", site: "taxchecknow" }),
+      body: JSON.stringify({
+        email,
+        source:         "section_174_auditor",
+        country_code:   "US",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? "",
+        verdict_status: verdict?.status ?? "",
+      }),
     }).catch(() => {});
     setEmailSent(true);
   }

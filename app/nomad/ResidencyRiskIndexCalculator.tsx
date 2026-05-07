@@ -650,7 +650,14 @@ export default function NomadResidencyCalculator() {
     if (!email) return;
     await fetch("/api/leads", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: "residency_risk_index", country_code: "GLOBAL", site: "taxchecknow" }),
+      body: JSON.stringify({
+        email,
+        source:         "residency_risk_index",
+        country_code:   "GLOBAL",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? "",
+        verdict_status: verdict?.status ?? "",
+      }),
     }).catch(() => {});
     setEmailSent(true);
   }

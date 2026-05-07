@@ -674,7 +674,14 @@ export default function DigitalLinkAuditorCalculator() {
     if (!email) return;
     await fetch("/api/leads", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: "digital_link_auditor", country_code: "UK", site: "taxchecknow" }),
+      body: JSON.stringify({
+        email,
+        source:         "digital_link_auditor",
+        country_code:   "UK",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? "",
+        verdict_status: verdict?.status ?? "",
+      }),
     }).catch(() => {});
     setEmailSent(true);
   }

@@ -754,7 +754,14 @@ export default function CanPropertyFlippingCalculator() {
     if (!email) return;
     await fetch("/api/leads", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: "can_property_flipping", country_code: "CA", site: "taxchecknow" }),
+      body: JSON.stringify({
+        email,
+        source:         "can_property_flipping",
+        country_code:   "CA",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? "",
+        verdict_status: verdict?.status ?? "",
+      }),
     }).catch(() => {});
     setEmailSent(true);
   }

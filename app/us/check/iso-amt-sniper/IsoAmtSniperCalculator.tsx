@@ -266,15 +266,16 @@ export default function IsoAmtSniperCalculator() {
 
   async function handleSaveEmail() {
     if (!email) return;
-    fetch("/api/save-email", {
+    await fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email,
-        source:       "iso-amt-sniper_result",
-        country_code: "US",
-        site:         "taxchecknow",
-        session_id:   sessionId ?? localStorage.getItem("iso-amt-sniper_session_id") ?? "",
+        source:         "iso-amt-sniper",
+        country_code:   "US",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? localStorage.getItem("iso-amt-sniper_session_id") ?? "",
+        verdict_status: selectedBracket !== null ? (BRACKETS[selectedBracket]?.status ?? "") : "",
       }),
     }).catch(() => {});
     setEmailSent(true);

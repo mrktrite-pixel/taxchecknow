@@ -564,7 +564,14 @@ export default function GstRegistrationTrapCalculator() {
     if (!email) return;
     await fetch("/api/leads", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: "gst_registration_trap", country_code: "AU", site: "taxchecknow" }),
+      body: JSON.stringify({
+        email,
+        source:         "gst_registration_trap",
+        country_code:   "AU",
+        site:           "taxchecknow",
+        session_id:     sessionId ?? "",
+        verdict_status: verdict?.status ?? "",
+      }),
     }).catch(() => {});
     setEmailSent(true);
   }

@@ -29,12 +29,25 @@ function buildT2Html(
   authority:   string,
   verdict:     string | undefined,
   questions:   readonly [string, string, string],
+  fearNumber:  string,
+  sessionId:   string | undefined,
 ): string {
-  const cta = `${SITE_ORIGIN}${productUrl}`;
-  const verdictBlock = verdict
+  // CTA URL — append session_id when present so calculator hydration fires
+  // (Step 2 of save-box β). Customer clicks email CTA → lands on calculator
+  // with their inputs preserved + verdict already shown.
+  const cta = sessionId
+    ? `${SITE_ORIGIN}${productUrl}?session_id=${encodeURIComponent(sessionId)}`
+    : `${SITE_ORIGIN}${productUrl}`;
+
+  // Personalised verdict block — combines verdict status (from calculator)
+  // with fearNumber (per-product from LeadProductMeta). Replaces the empty
+  // verdict block that existed pre-Step-3 (when calculator wasn't sending
+  // verdict_status at all).
+  const verdictBlock = (verdict || fearNumber)
     ? `<div style="border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin:0 0 28px;background:#f9fafb;">
-         <p style="margin:0 0 6px;font-family:monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9ca3af;">Your verdict</p>
-         <p style="margin:0;font-size:15px;color:#111827;font-weight:600;line-height:1.5;">${verdict}</p>
+         <p style="margin:0 0 6px;font-family:monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9ca3af;">What your check found</p>
+         ${verdict ? `<p style="margin:0 0 6px;font-size:15px;color:#111827;font-weight:600;line-height:1.5;">Your verdict: ${verdict}</p>` : ""}
+         ${fearNumber ? `<p style="margin:0;font-size:14px;color:#374151;line-height:1.5;">Personalised exposure: <strong style="color:#dc2626;">${fearNumber}</strong></p>` : ""}
        </div>`
     : "";
 
@@ -104,6 +117,8 @@ async function sendT2Email(
   authority:   string,
   verdict:     string | undefined,
   questions:   readonly [string, string, string],
+  fearNumber:  string,
+  sessionId:   string | undefined,
 ): Promise<{ success: boolean; resendId?: string; error?: string }> {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return { success: false, error: "Missing RESEND_API_KEY" };
@@ -119,7 +134,7 @@ async function sendT2Email(
         from:    FROM_ADDRESS,
         to:      [to],
         subject: `Your ${productName} result — saved`,
-        html:    buildT2Html(productName, productUrl, authority, verdict, questions),
+        html:    buildT2Html(productName, productUrl, authority, verdict, questions, fearNumber, sessionId),
       }),
     });
     const data = await res.json();
@@ -190,6 +205,8 @@ export async function POST(req: Request) {
       meta.authority,
       verdict_status,
       meta.questions,
+      meta.fearNumber,
+      session_id,
     );
 
     // Supabase operations — non-fatal if credentials missing
