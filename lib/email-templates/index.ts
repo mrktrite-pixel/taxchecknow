@@ -10,7 +10,8 @@ export type EmailType =
   | "nurture_d14"
   | "reminder_d30"
   | "reminder_d7"
-  | "reminder_d1";
+  | "reminder_d1"
+  | "re_engagement";
 
 export interface TemplateData {
   customerName?:  string;
@@ -223,15 +224,43 @@ function reminderD1(d: TemplateData): EmailTemplate {
   };
 }
 
+// ── RE-ENGAGEMENT (Step 5) ───────────────────────────────────────────────
+// Last automated touchpoint. Fires once per session, between days 7 and 30
+// after save (cron at /api/cron/re-engagement). Single CTA, no chase tone.
+// After this, customer goes silent unless they act — re_engagement_sent flag
+// flips true so the sweep never picks the same row twice.
+function reEngagement(d: TemplateData): EmailTemplate {
+  return {
+    subject: `Your ${d.productName} check is still saved`,
+    html: wrap(`
+      ${greeting(d.customerName)}
+      <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#111;">
+        ${d.fearNumber
+          ? `Your <strong>${escName(d.productName)}</strong> check is still saved — <strong style="color:#dc2626;">${escName(d.fearNumber)}</strong> at stake. Quick reminder before we move on.`
+          : `Your <strong>${escName(d.productName)}</strong> check is still saved at TaxCheckNow. Quick reminder before we move on.`}
+      </p>
+      ${personalisationBlock(d)}
+      <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#374151;">
+        Most people who run this check and don't act within a month either decide it doesn't apply to them, or forget. Both are common. The full plan with the specific actions is here if you want it:
+      </p>
+      ${ctaButton("View my full plan →", d.productUrl)}
+      <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+        If this isn't useful right now, no problem — we won't email about it again. Your saved result stays at taxchecknow.com whenever you want it.
+      </p>
+    `),
+  };
+}
+
 // ── PUBLIC API ───────────────────────────────────────────────────────────
 export function getEmailTemplate(type: EmailType, data: TemplateData): EmailTemplate {
   switch (type) {
-    case "nurture_d3":  return nurtureD3(data);
-    case "nurture_d7":  return nurtureD7(data);
-    case "nurture_d14": return nurtureD14(data);
-    case "reminder_d30":return reminderD30(data);
-    case "reminder_d7": return reminderD7(data);
-    case "reminder_d1": return reminderD1(data);
+    case "nurture_d3":   return nurtureD3(data);
+    case "nurture_d7":   return nurtureD7(data);
+    case "nurture_d14":  return nurtureD14(data);
+    case "reminder_d30": return reminderD30(data);
+    case "reminder_d7":  return reminderD7(data);
+    case "reminder_d1":  return reminderD1(data);
+    case "re_engagement":return reEngagement(data);
     default: {
       // Exhaustiveness check at compile time; runtime fallback if a new type slips in
       const _exhaustive: never = type;
