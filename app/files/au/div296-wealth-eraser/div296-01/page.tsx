@@ -77,7 +77,7 @@ export default function Div296WealthEraserFile01() {
               🇬🇧 ATO · ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: 2026-06-05
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 01 of 8
@@ -116,7 +116,7 @@ export default function Div296WealthEraserFile01() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Your Division 296 Exposure</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: Your TSB vs $3M threshold (and $10M threshold if applicable)</p><p>Number 2: Total embedded unrealised gains across fund CGT assets</p><p>Number 3: Loss-position assets and their impact on the all-or-nothing election</p></div><h3>Division 296 Tax Calculation</h3><p>Tax = Realised earnings × ((TSB − $3M) / TSB) × 15%</p><p>For TSB above $10M: additional 10% on attributable portion (25% total)</p><p>Source: <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds">ATO — Key superannuation rates and thresholds</a> · ITAA 1997 Subdiv 296-B</p>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Your Division 296 Exposure</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: Your TSB vs $3M threshold (and $10M threshold if applicable)</p><p>Number 2: Total embedded unrealised gains across fund CGT assets</p><p>Number 3: Loss-position assets and their impact on the all-or-nothing election</p></div><h3>Division 296 Tax Calculation</h3><p>Tax = Realised earnings × ((TSB − $3M) / TSB) × 15%</p><p>For TSB above $10M: further 10% on attributable portion (40% total)</p><p>Source: <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds">ATO — Key superannuation rates and thresholds</a> · ITAA 1997 Subdiv 296-B</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -205,7 +205,7 @@ export default function Div296WealthEraserFile01() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance 2026-06-05.
           </p>
         </div>
 

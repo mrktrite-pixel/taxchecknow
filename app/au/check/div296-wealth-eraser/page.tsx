@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "2026-06-05";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
@@ -50,7 +50,7 @@ function progressPct(): number {
 const faqs = [
   {
     "question": "What is Division 296?",
-    "answer": "Division 296 is an additional 15% personal tax on superannuation earnings attributable to the portion of an individual's Total Super Balance above $3 million, plus an additional 10% (25% total) on the portion above $10 million. Both thresholds are indexed to CPI. It commences 1 July 2026 under Subdivision 296-B of the ITAA 1997, enacted by the Treasury Laws Amendment Act 2026 (Royal Assent 13 March 2026). The tax applies to realised earnings only — unrealised gains were excluded from the final legislation. Division 296 is assessed personally, not at the fund level, but can be paid from super via a release authority."
+    "answer": "Division 296 is an additional 15% personal tax on superannuation earnings attributable to the portion of an individual's Total Super Balance above $3 million, plus a further 10% (40% total) on the portion above $10 million. Both thresholds are indexed to CPI. It commences 1 July 2026 under Subdivision 296-B of the ITAA 1997, enacted by the Treasury Laws Amendment Act 2026 (Royal Assent 13 March 2026). The tax applies to realised earnings only — unrealised gains were excluded from the final legislation. Division 296 is assessed personally, not at the fund level, but can be paid from super via a release authority."
   },
   {
     "question": "What is the SMSF cost-base reset election?",
@@ -125,8 +125,8 @@ const workedExamples = [
   },
   {
     "name": "$12M, high growth fund",
-    "setup": "Above $10M — additional 10% band active",
-    "income": "25% total on portion above $10M",
+    "setup": "Above $10M — further 10% band active",
+    "income": "40% total on portion above $10M",
     "status": "CRITICAL — BOTH BANDS"
   }
 ];
@@ -199,7 +199,7 @@ const geoFacts = [
   },
   {
     "label": "Rate above $10M",
-    "value": "Additional 10% (25% total)"
+    "value": "Further 10% Div 296 — 40% total (incl. 15% fund tax)"
   },
   {
     "label": "Legal anchor",
@@ -220,6 +220,14 @@ const geoFacts = [
   {
     "label": "Reversibility",
     "value": "Irrevocable once made"
+  },
+  {
+    "label": "First-year rule (2026-27)",
+    "value": "Only the 30 June 2027 TSB counts; first assessments 2027-28"
+  },
+  {
+    "label": "May 2026 Budget transition",
+    "value": "APRA-regulated funds phase in realised gains 20/40/60/80% over 4 years"
   }
 ];
 
@@ -230,7 +238,7 @@ const sidebarNumbers = [
   },
   {
     "label": "Additional rate above $10M",
-    "value": "10% (25% total)"
+    "value": "further 10% (40% total)"
   },
   {
     "label": "Threshold indexation",
@@ -266,7 +274,7 @@ const countdownStats = [
   {
     "label": "Higher tier threshold",
     "value": "$10M",
-    "sub": "Additional 10% (25% total) above this"
+    "sub": "Further 10% (40% total) above this"
   },
   {
     "label": "$3M threshold indexed",
@@ -301,7 +309,7 @@ export default function Div296WealthEraserPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Division 296 Wealth Eraser Engine — Rules April 2026",
+    name: "Division 296 Wealth Eraser Engine — Rules 2026-06-05",
     description: "From 1 July 2026, Division 296 adds 15% tax on super earnings above $3M — including pre-2026 gains unless your SMSF elects the cost-base reset. The election is all-or-nothing, irrevocable, and must be decided based on 30 June 2026 valuations. Run your check in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
@@ -373,7 +381,7 @@ export default function Div296WealthEraserPage() {
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance 2026-06-05"
     ],
     "offers": {
       "@type": "Offer",
@@ -453,7 +461,7 @@ export default function Div296WealthEraserPage() {
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          From 1 July 2026, Division 296 applies an additional 15% tax on realised superannuation earnings attributable to the portion of Total Super Balance above $3 million (additional 10% on the portion above $10M). Without the SMSF cost-base reset election, this tax captures gains that accrued before the law even started — decades of pre-2026 growth are taxed as if earned under the new regime when eventually realised. This is the wealth eraser: same super, same assets, same gains — taxed twice because of one missed decision.
+          From 1 July 2026, Division 296 applies an additional 15% tax on realised superannuation earnings attributable to the portion of Total Super Balance above $3 million (further 10% on the portion above $10M). Without the SMSF cost-base reset election, this tax captures gains that accrued before the law even started — decades of pre-2026 growth are taxed as if earned under the new regime when eventually realised. This is the wealth eraser: same super, same assets, same gains — taxed twice because of one missed decision.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -480,7 +488,7 @@ export default function Div296WealthEraserPage() {
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Additional rate above $10M</dt>
-                  <dd className="font-bold">10% (25% total)</dd>
+                  <dd className="font-bold">further 10% (40% total)</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Threshold indexation</dt>
@@ -548,7 +556,7 @@ export default function Div296WealthEraserPage() {
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 $10M
               </p>
-              <p className="text-xs text-neutral-400">Additional 10% (25% total) above this</p>
+              <p className="text-xs text-neutral-400">Further 10% (40% total) above this</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
@@ -583,7 +591,7 @@ export default function Div296WealthEraserPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <p className="mb-1 text-xs text-neutral-800">✓ Rule 1: Div 296 adds 15% on realised earnings above $3M TSB from 1 July 2026 (Subdiv 296-B)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 2: Additional 10% (25% total) on earnings above $10M TSB</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 2: Further 10% (40% total) on earnings above $10M TSB</p>
               <p className="mb-1 text-xs text-neutral-800">✓ Rule 3: SMSF cost-base reset is all-or-nothing at fund level, irrevocable once made</p>
               <p className="mb-1 text-xs text-neutral-800">✓ Rule 4: Reset values = market value at 30 June 2026 (not current date, not sale date)</p>
               <p className="mb-1 text-xs text-neutral-800">✓ Rule 5: Election for Div 296 purposes only — ordinary CGT cost base unchanged (two sets of records)</p>
@@ -605,7 +613,7 @@ export default function Div296WealthEraserPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The Division 296 cost-base reset election — SMSF trustees' one-time chance to protect decades of growth
           </p>
-          <p className="mb-2 text-neutral-900">From 1 July 2026, Division 296 applies an additional 15% tax on realised superannuation earnings attributable to the portion of Total Super Balance above $3 million (additional 10% on the portion above $10M). Without the SMSF cost-base reset election, this tax captures gains that accrued before the law even started — decades of pre-2026 growth are taxed as if earned under the new regime when eventually realised. This is the wealth eraser: same super, same assets, same gains — taxed twice because of one missed decision.</p>
+          <p className="mb-2 text-neutral-900">From 1 July 2026, Division 296 applies an additional 15% tax on realised superannuation earnings attributable to the portion of Total Super Balance above $3 million (further 10% on the portion above $10M). Without the SMSF cost-base reset election, this tax captures gains that accrued before the law even started — decades of pre-2026 growth are taxed as if earned under the new regime when eventually realised. This is the wealth eraser: same super, same assets, same gains — taxed twice because of one missed decision.</p>
           <p className="mb-2 text-neutral-900">SMSFs have a one-time election under the Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 to reset the cost base of ALL CGT assets to their 30 June 2026 market value for Division 296 purposes only. Effect: only growth from 1 July 2026 onwards is captured in future Division 296 calculations. Pre-2026 gains are excluded. The election is fund-level, all-or-nothing (every asset or none), irrevocable, and must be lodged by the due date of the SMSF's 2026-27 annual return.</p>
           <p className="mb-2 text-neutral-900">The trap is in the 'all-or-nothing' structure. For assets with large unrealised gains, the reset is clearly beneficial. But for assets currently sitting in a loss position, resetting to today's lower value LOCKS IN that lower cost base permanently — you lose the ability to use the higher original cost against Division 296. Any asset-level disposal decisions (sell loss-position assets before 30 June) must be made BEFORE the valuation date. After 30 June 2026, the decision is based on market value on that exact day. No second chance. No asset-level opt-in. No reversal.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Division 296 · ITAA 1997 Subdiv 296-B · Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 · Confirmed April 2026</p>
@@ -685,18 +693,18 @@ export default function Div296WealthEraserPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Division 296 Tax and SMSF Cost-Base Reset Election — Confirmed April 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Division 296 is an additional personal income tax on superannuation earnings attributable to the portion of an individual's Total Super Balance above $3 million. It commences 1 July 2026 under Subdivision 296-B of the Income Tax Assessment Act 1997, enacted by the Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 (Royal Assent 13 March 2026). The tax rate is 15% on the proportion of realised earnings attributable to TSB above $3 million, plus an additional 10% (total 25%) on the portion above $10 million. Both thresholds are indexed to CPI in $150,000 and $500,000 increments respectively. Division 296 is assessed on the individual member, not the fund, but can be paid from super via a release authority. Only realised earnings are taxable — unrealised gains were removed from the final legislation. For the first year (2026-27) only, a transitional rule uses TSB at 30 June 2027 only. From 2027-28 onwards, the higher of the opening or closing TSB is used. SMSFs have a one-off cost-base reset election under the legislation: trustees can elect to reset the cost base of all CGT assets held at 30 June 2026 to their market value at that date, for Division 296 purposes only. This election is fund-level and all-or-nothing — it applies to every CGT asset held on 30 June 2026, or none. Once made, it is irrevocable. It must be lodged in the approved form by the due date of the SMSF's 2026-27 annual return. The election does not change the asset's cost base for ordinary income tax or CGT purposes — two sets of records must be maintained. The election is available to any SMSF regardless of current member balances, offering forward-looking protection for funds whose balances may cross $3 million in the future. The election does NOT extend to underlying assets held indirectly through unit trusts or companies unless existing statutory look-through rules apply. Assets in a loss position at 30 June 2026 are penalised by the all-or-nothing structure — their cost base is reset to the lower market value. For funds holding mixed gain and loss assets, loss-position assets often need to be disposed of before 30 June 2026 to optimise the election outcome.</p>
+          <p className="mb-4 text-neutral-800">Division 296 is an additional personal income tax on superannuation earnings attributable to the portion of an individual's Total Super Balance above $3 million. It commences 1 July 2026 under Subdivision 296-B of the Income Tax Assessment Act 1997, enacted by the Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 (Royal Assent 13 March 2026). The tax rate is 15% on the proportion of realised earnings attributable to TSB above $3 million, plus a further 10% (total 40%) on the portion above $10 million. Both thresholds are indexed to CPI in $150,000 and $500,000 increments respectively. Division 296 is assessed on the individual member, not the fund, but can be paid from super via a release authority. Only realised earnings are taxable — unrealised gains were removed from the final legislation. For the first year (2026-27) only, a transitional rule uses TSB at 30 June 2027 only. From 2027-28 onwards, the higher of the opening or closing TSB is used. SMSFs have a one-off cost-base reset election under the legislation: trustees can elect to reset the cost base of all CGT assets held at 30 June 2026 to their market value at that date, for Division 296 purposes only. This election is fund-level and all-or-nothing — it applies to every CGT asset held on 30 June 2026, or none. Once made, it is irrevocable. It must be lodged in the approved form by the due date of the SMSF's 2026-27 annual return. The election does not change the asset's cost base for ordinary income tax or CGT purposes — two sets of records must be maintained. The election is available to any SMSF regardless of current member balances, offering forward-looking protection for funds whose balances may cross $3 million in the future. The election does NOT extend to underlying assets held indirectly through unit trusts or companies unless existing statutory look-through rules apply. Assets in a loss position at 30 June 2026 are penalised by the all-or-nothing structure — their cost base is reset to the lower market value. For funds holding mixed gain and loss assets, loss-position assets often need to be disposed of before 30 June 2026 to optimise the election outcome.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Division 296 tax = Realised earnings × ((TSB − $3,000,000) / TSB) × 15% (plus additional 10% for TSB portion above $10M). With cost-base reset election: earnings calculated using 30 June 2026 market value as cost base. Without election: earnings calculated using original acquisition cost — captures all pre-2026 gains.
+            Division 296 tax = Realised earnings × ((TSB − $3,000,000) / TSB) × 15% (plus further 10% for TSB portion above $10M). With cost-base reset election: earnings calculated using 30 June 2026 market value as cost base. Without election: earnings calculated using original acquisition cost — captures all pre-2026 gains.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (2026-06-05)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -724,7 +732,7 @@ export default function Div296WealthEraserPage() {
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Rate above $10M</td>
-                  <td className="p-2">Additional 10% (25% total)</td>
+                  <td className="p-2">Further 10% Div 296 — 40% total (incl. 15% fund tax)</td>
                   <td className="p-2 text-neutral-500">ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -750,6 +758,16 @@ export default function Div296WealthEraserPage() {
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Reversibility</td>
                   <td className="p-2">Irrevocable once made</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">First-year rule (2026-27)</td>
+                  <td className="p-2">Only the 30 June 2027 TSB counts; first assessments 2027-28</td>
+                  <td className="p-2 text-neutral-500">ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">May 2026 Budget transition</td>
+                  <td className="p-2">APRA-regulated funds phase in realised gains 20/40/60/80% over 4 years</td>
                   <td className="p-2 text-neutral-500">ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M</td>
                 </tr>
               </tbody>
@@ -823,8 +841,8 @@ export default function Div296WealthEraserPage() {
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">$12M, high growth fund</td>
-                <td className="p-3 text-neutral-700">Above $10M — additional 10% band active</td>
-                <td className="p-3 font-mono">25% total on portion above $10M</td>
+                <td className="p-3 text-neutral-700">Above $10M — further 10% band active</td>
+                <td className="p-3 font-mono">40% total on portion above $10M</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
                     CRITICAL — BOTH BANDS
@@ -1035,7 +1053,7 @@ export default function Div296WealthEraserPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Division 296: Additional 15% tax on realised super earnings attributable to TSB above $3M from 1 July 2026 (additional 10% above $10M — 25% total). Enacted by Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026, Royal Assent 13 March 2026. Thresholds indexed ($150k / $500k steps). Realised earnings only — unrealised gains excluded. Key planning lever: SMSFs can elect a cost-base reset to 30 June 2026 market value for Division 296 purposes only — fund-level, all-or-nothing, irrevocable, lodged with 2026-27 annual return. The election excludes pre-2026 gains from future Division 296 tax. Transitional 2026-27 year uses TSB at 30 June 2027 only.
+            Division 296: Additional 15% tax on realised super earnings attributable to TSB above $3M from 1 July 2026 (further 10% Div 296 above $10M — 40% total, incl. 15% fund tax). Enacted by Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026, Royal Assent 13 March 2026. Thresholds indexed ($150k / $500k steps). Realised earnings only — unrealised gains excluded. Key planning lever: SMSFs can elect a cost-base reset to 30 June 2026 market value for Division 296 purposes only — fund-level, all-or-nothing, irrevocable, lodged with 2026-27 annual return. The election excludes pre-2026 gains from future Division 296 tax. Transitional 2026-27 year uses TSB at 30 June 2027 only.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1085,7 +1103,7 @@ export default function Div296WealthEraserPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for 2026-06-05.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1099,7 +1117,7 @@ export default function Div296WealthEraserPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. 2026-06-05.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

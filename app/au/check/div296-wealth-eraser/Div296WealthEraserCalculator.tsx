@@ -8,7 +8,7 @@
  *
  * Key facts (ATO confirmed April 2026):
  *   Div 296: additional 15% on realised earnings above $3M TSB from 1 July 2026
- *   Additional 10% (25% total) above $10M
+ *   Additional 10% (40% total) above $10M
  *   Thresholds indexed $150k / $500k steps
  *   Cost-base reset election: fund-level, all-or-nothing, irrevocable
  *   Based on 30 June 2026 market values; lodged via 2026-27 SMSF annual return
@@ -74,7 +74,7 @@ interface PopupAnswers {
 const DIV296_THRESHOLD_LOW = 3_000_000;       // $3M TSB
 const DIV296_THRESHOLD_HIGH = 10_000_000;     // $10M TSB (additional 10%)
 const DIV296_RATE_LOW = 0.15;                 // 15% additional on earnings above $3M
-const DIV296_RATE_HIGH = 0.10;                // additional 10% (25% total) above $10M
+const DIV296_RATE_HIGH = 0.10;                // additional 10% (40% total) above $10M
 const ASSUMED_EARNINGS_RATE = 0.045;          // 4.5% realised earnings p.a.
 const ASSUMED_REALISATION_RATE = 0.10;        // 10% of embedded gains realised per year (for exposed growth tax)
 
@@ -263,7 +263,7 @@ function calcVerdict(answers: AnswerMap): VerdictResult {
         { label: "Annual Div 296 drain", value: formatAUD(result.annualDiv296), highlight: true },
       ],
       consequences: [
-        `🔒 Two Division 296 bands active: 15% above $3M AND additional 10% above $10M (25% total on the portion above $10M). Annual drain ~${formatAUD(result.annualDiv296)} compounding every year.`,
+        `🔒 Two Division 296 bands active: 15% above $3M AND additional 10% above $10M (40% total on the portion above $10M). Annual drain ~${formatAUD(result.annualDiv296)} compounding every year.`,
         `🔒 ${formatAUD(result.exposedGrowthTax)} of avoidable tax sits in pre-2026 embedded gains — permanently exposed unless you elect the cost-base reset`,
         `⚠ The all-or-nothing trap — if you elect WITHOUT disposing of loss-position assets first, those assets' cost base locks in at today's lower value. You lose approximately ${formatAUD(result.lossAssetPenalty)} of future protection.`,
         "Optimal path: asset-level modelling → sell loss-position assets before 30 June 2026 → elect the reset on remaining (gain-position) assets → set up two-track record-keeping",
@@ -392,7 +392,7 @@ const QUESTIONS: Q[] = [
       { label: "Under $1.5M", value: "under_1_5m", subLabel: "Forward protection only" },
       { label: "$1.5M–$3M", value: "1_5m_to_3m", subLabel: "Under threshold today, may cross later" },
       { label: "$3M–$10M", value: "3m_to_10m", subLabel: "15% additional Div 296 applies" },
-      { label: "Over $10M", value: "over_10m", subLabel: "Both bands active (25% total above $10M)" },
+      { label: "Over $10M", value: "over_10m", subLabel: "Both bands active (40% total above $10M)" },
     ],
     required: true,
   },

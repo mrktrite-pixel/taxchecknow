@@ -547,7 +547,7 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australia tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
+            Based on ATO guidance 2026-06-05.{" "}
             <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" target="_blank" rel="noopener noreferrer" className="underline">ATO — Key superannuation rates and thresholds (includes Division 296)</a> · <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families" target="_blank" rel="noopener noreferrer" className="underline">ATO — Division 296 tax on super balances above $3 million</a>
           </p>
         </div>

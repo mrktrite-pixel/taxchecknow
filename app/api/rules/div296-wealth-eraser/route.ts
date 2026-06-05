@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "2026-06-05",
     "legislation": "Income Tax Assessment Act 1997 Subdivision 296-B (Division 296 tax) · Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 (Royal Assent 13 March 2026, commences 1 July 2026) · Superannuation (Building a Stronger and Fairer Super System) Imposition Act 2026 · SMSF cost-base reset election (fund-level, all-or-nothing, irrevocable, due by 2026-27 SMSF annual return)",
     "legal_anchor": "ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M",
     "deadline": {
@@ -33,14 +33,16 @@ export async function GET() {
         "lower_threshold": "$3M TSB (indexed $150k)",
         "higher_threshold": "$10M TSB (indexed $500k)",
         "rate_on_3m_10m_portion": "Additional 15%",
-        "rate_above_10m": "Additional 10% (25% total)",
+        "rate_above_10m": "Further 10% Div 296 — 40% total (incl. 15% fund tax)",
         "legal_anchor": "ITAA 1997 Subdivision 296-B",
         "cost_base_reset_scope": "All fund CGT assets or none",
         "cost_base_reset_deadline": "2026-27 SMSF annual return due date",
         "reset_valuation_date": "30 June 2026",
-        "reversibility": "Irrevocable once made"
+        "reversibility": "Irrevocable once made",
+        "first_year_rule_2026_27": "Only the 30 June 2027 TSB counts; first assessments 2027-28",
+        "may_2026_budget_transition": "APRA-regulated funds phase in realised gains 20/40/60/80% over 4 years"
     },
-    "formula": "Division 296 tax = Realised earnings × ((TSB − $3,000,000) / TSB) × 15% (plus additional 10% for TSB portion above $10M). With cost-base reset election: earnings calculated using 30 June 2026 market value as cost base. Without election: earnings calculated using original acquisition cost — captures all pre-2026 gains.",
+    "formula": "Division 296 tax = Realised earnings × ((TSB − $3,000,000) / TSB) × 15% (plus further 10% for TSB portion above $10M). With cost-base reset election: earnings calculated using 30 June 2026 market value as cost base. Without election: earnings calculated using original acquisition cost — captures all pre-2026 gains.",
     "thresholds": [
         {
             "label": "TSB under $1.5M — election available but minimal urgency",
@@ -58,7 +60,7 @@ export async function GET() {
             "status": "trap"
         },
         {
-            "label": "TSB over $10M — additional 10% band also active (25% total)",
+            "label": "TSB over $10M — further 10% band also active (40% total)",
             "value": 4,
             "status": "deep_trap"
         },
@@ -89,7 +91,7 @@ export async function GET() {
         {
             "id": 1,
             "question": "What is Division 296?",
-            "answer": "Division 296 is an additional 15% personal tax on superannuation earnings attributable to the portion of an individual's Total Super Balance above $3 million, plus an additional 10% (25% total) on the portion above $10 million. Both thresholds are indexed to CPI. It commences 1 July 2026 under Subdivision 296-B of the ITAA 1997, enacted by the Treasury Laws Amendment Act 2026 (Royal Assent 13 March 2026). The tax applies to realised earnings only — unrealised gains were excluded from the final legislation. Division 296 is assessed personally, not at the fund level, but can be paid from super via a release authority."
+            "answer": "Division 296 is an additional 15% personal tax on superannuation earnings attributable to the portion of an individual's Total Super Balance above $3 million, plus a further 10% (40% total) on the portion above $10 million. Both thresholds are indexed to CPI. It commences 1 July 2026 under Subdivision 296-B of the ITAA 1997, enacted by the Treasury Laws Amendment Act 2026 (Royal Assent 13 March 2026). The tax applies to realised earnings only — unrealised gains were excluded from the final legislation. Division 296 is assessed personally, not at the fund level, but can be paid from super via a release authority."
         },
         {
             "id": 2,
@@ -147,7 +149,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/div296-wealth-eraser",
     "api_endpoint": "/api/rules/div296-wealth-eraser",
-    "generated_at": "2026-04-22T13:02:43.105Z"
+    "generated_at": "2026-06-05T15:11:19.070Z"
 };
 
   return NextResponse.json(rules, {
@@ -157,7 +159,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "div296-wealth-eraser",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "2026-06-05",
     },
   });
 }

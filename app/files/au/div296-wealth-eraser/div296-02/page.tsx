@@ -77,7 +77,7 @@ export default function Div296WealthEraserFile02() {
               🇬🇧 ATO · ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: 2026-06-05
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 02 of 8
@@ -205,7 +205,7 @@ export default function Div296WealthEraserFile02() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance 2026-06-05.
           </p>
         </div>
 
