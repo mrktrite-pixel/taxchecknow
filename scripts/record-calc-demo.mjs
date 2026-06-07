@@ -33,6 +33,26 @@ const CONFIGS = {
     stepWaitMs: 2500,
     dwellMs: 3800,
   },
+  "cgt-main-residence-trap": {
+    url: "https://www.taxchecknow.com/au/check/cgt-main-residence-trap",
+    // A couple who moved out + rented >6 years -> partial-exemption TAXABLE
+    // verdict (6-year rule exceeded). Matches the Sarah/Tom story. 6 steps.
+    answers: [
+      /Lived in it then moved out/i,          // 1 pathway
+      /Part of the ownership period/i,         // 2 main_residence_use = partial
+      /Australian resident at time of sale/i,  // 3 foreign_resident: No
+      /Whole property rented/i,                // 4 income_use
+      /Rented out/i,                           // 5 absence_action
+      /More than 6 years/i,                    // 6 absence_years -> taxable
+      /moved in first, then rented later/i,    // 7 first_use_income: No
+      /standard working from home/i,           // 8 business_use: No
+      /only one property at a time/i,          // 9 overlap_property: No -> verdict
+    ],
+    out: "calc-demo-cgtmr-v1.mp4",
+    // 9 steps — pace fast so the verdict lands before the demo's ~22s window.
+    stepWaitMs: 1900,
+    dwellMs: 6000,
+  },
   "super-death-tax-trap": {
     url: "https://www.taxchecknow.com/au/check/super-death-tax-trap",
     // Max double-tax trap: adult kids inherit, >$5M, >90% taxable, age 75+ ->
