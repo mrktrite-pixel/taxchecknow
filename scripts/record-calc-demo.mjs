@@ -33,6 +33,22 @@ const CONFIGS = {
     stepWaitMs: 2500,
     dwellMs: 3800,
   },
+  "super-death-tax-trap": {
+    url: "https://www.taxchecknow.com/au/check/super-death-tax-trap",
+    // Max double-tax trap: adult kids inherit, >$5M, >90% taxable, age 75+ ->
+    // death tax + Div 296 verdict. NB step 4 (partner-dies-first) is showIf
+    // spouse/mixed only, so it's auto-skipped for adult_kids — 5 clicks.
+    answers: [
+      /Adult children/i,        // beneficiaries (17% tax)
+      /Over \$5M/i,             // TSB band — full double tax
+      /Over 90/i,               // taxable % — max exposure
+      /75 or over/i,            // age (step 5; step 4 auto-skipped)
+      /never been discussed/i,  // accountant aware: No
+    ],
+    out: "calc-demo-superdeath-v1.mp4",
+    stepWaitMs: 2800,
+    dwellMs: 6500,
+  },
   "tax-treaty-navigator": {
     url: "https://www.taxchecknow.com/nomad/check/tax-treaty-navigator",
     // Dual UK/AU residency that exhausts all 4 tie-breaker tests → Test 5
