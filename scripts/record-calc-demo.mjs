@@ -33,6 +33,26 @@ const CONFIGS = {
     stepWaitMs: 2500,
     dwellMs: 3800,
   },
+  "tax-treaty-navigator": {
+    url: "https://www.taxchecknow.com/nomad/check/tax-treaty-navigator",
+    // Dual UK/AU residency that exhausts all 4 tie-breaker tests → Test 5
+    // "MUTUAL AGREEMENT PROCEDURE REQUIRED — MAP 2-3 years — HIGH". country_a +
+    // country_b share option labels on step 1, so country_b uses nth:1.
+    answers: [
+      /United Kingdom/i,               // country_a (1st occurrence)
+      { name: /Australia/i, nth: 1 },  // country_b (2nd occurrence)
+      /Permanent home in BOTH/i,       // Test 1 — not resolved
+      /Ties split/i,                   // Test 2 — not resolved
+      /Roughly equal time/i,           // Test 3 — not resolved
+      /National of BOTH/i,             // Test 4 (nationality) — not resolved
+      /I know a treaty exists/i,       // step 6 treaty_status → Test 5 MAP verdict
+    ],
+    out: "calc-demo-treaty-v1.mp4",
+    // 7 clicks — pace tighter so the verdict reveals before the demo template's
+    // ~22s window (seek 2.5 + 19.5s scene).
+    stepWaitMs: 2200,
+    dwellMs: 6000,
+  },
   "frcgw-clearance-certificate": {
     url: "https://www.taxchecknow.com/au/check/frcgw-clearance-certificate",
     // Most dramatic path → VERDICT 3 "CRITICAL: SETTLEMENT IN LESS THAN 28 DAYS":
@@ -113,9 +133,13 @@ async function main() {
   await page.waitForTimeout(700);
 
   for (const a of cfg.answers) {
-    const btn = page.getByRole("button", { name: a }).first();
+    // answer = RegExp (click first match) OR { name, nth } when a step has
+    // duplicate labels (e.g. treaty's country_a + country_b share option lists).
+    const name = a instanceof RegExp ? a : a.name;
+    const nth = a instanceof RegExp ? 0 : (a.nth ?? 0);
+    const btn = page.getByRole("button", { name }).nth(nth);
     await btn.scrollIntoViewIfNeeded().catch(() => {});
-    await btn.click({ timeout: 8000 }).catch((e) => console.log("click miss:", String(a), e.message));
+    await btn.click({ timeout: 8000 }).catch((e) => console.log("click miss:", String(name), e.message));
     await page.waitForTimeout(cfg.stepWaitMs); // human pacing + 300ms auto-advance
   }
   await page.waitForTimeout(cfg.dwellMs); // dwell on the verdict reveal
