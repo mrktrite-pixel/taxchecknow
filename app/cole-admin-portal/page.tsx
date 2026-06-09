@@ -96,11 +96,10 @@ const VERDICT_META: Record<string, { order: number; label: string; head: string;
 function verdictMeta(v: string | null) {
   return VERDICT_META[v ?? ""] ?? { order: 9, label: (v ?? "—").toUpperCase(), head: "text-neutral-500", badge: "bg-neutral-100 text-neutral-500", row: "bg-white" };
 }
-// avg_view_pct / impressions_ctr may be stored 0-1 (fraction) or 0-100 (percent).
+// avg_view_pct + impressions_ctr are stored 0-100 (CTR e.g. 2.56/18.18; derived
+// retention e.g. 3.4). No fraction heuristic — it would inflate sub-1% values.
 function pct(v: number | null): string {
-  if (v == null) return "—";
-  const n = v <= 1 ? v * 100 : v;
-  return `${n.toFixed(1)}%`;
+  return v == null ? "—" : `${v.toFixed(1)}%`;
 }
 function num(v: number | null): string {
   return v == null ? "—" : Math.round(v).toLocaleString();
