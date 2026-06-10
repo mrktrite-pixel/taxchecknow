@@ -89,7 +89,8 @@ async function main() {
     const avg_view_pct = duration_s && duration_s > 0 && avg_view_dur_s != null ? (avg_view_dur_s / duration_s) * 100 : null;
     // content_performance / youtube_snapshots convention: watch_time_minutes is
     // TOTAL minutes; ctr is a FRACTION (0-1; the YouTubeTab does ×100).
-    const watch_time_minutes = watch_time_hrs != null ? Math.round(watch_time_hrs * 60) : null;
+    const watch_time_minutes = watch_time_hrs != null ? Math.round(watch_time_hrs * 60) : null;        // content_performance int column (display only)
+    const watch_time_minutes_precise = watch_time_hrs != null ? watch_time_hrs * 60 : null;            // snapshot series — un-rounded (the bee reads this)
     const ctr_fraction = toNum(r[COL.impressions_ctr]) != null ? toNum(r[COL.impressions_ctr]) / 100 : null;
 
     const perf = {
@@ -129,10 +130,14 @@ async function main() {
       url: `https://www.youtube.com/watch?v=${video_id}`, content_version: 1, views_7d: null, ...engagement,
     });
 
-    // (3) youtube_snapshots — append-only view-history (tolerant of pending DDL)
-    const snap = { youtube_video_id: video_id, snapshot_at: nowIso, views, watch_time_minutes, ctr: ctr_fraction, likes: null, comments: null, subs_gained: toInt(r[COL.subs_gained]), source: "csv_manual" };
-    const { error: snapErr } = await sb.from("youtube_snapshots").insert(snap);
-    if (snapErr) console.log(`  ⚠ youtube_snapshots append skipped (${snapErr.message.slice(0, 60)}) — run the migration, then re-ingest`);
+    // (3) youtube_snapshots — view-history series. UPSERT keyed on (video, snapshot DAY):
+    // update today's row in place, else insert. watch_time_minutes precise (un-rounded);
+    // carries duration_s so retention is derivable without a shorts_videos join.
+    const snap = { youtube_video_id: video_id, snapshot_at: nowIso, views, watch_time_minutes: watch_time_minutes_precise, ctr: ctr_fraction, duration_s: duration_s ?? null, likes: null, comments: null, subs_gained: toInt(r[COL.subs_gained]), source: "csv_manual" };
+    const { data: snapEx } = await sb.from("youtube_snapshots").select("id").eq("youtube_video_id", video_id).gte("snapshot_at", `${today}T00:00:00Z`).lt("snapshot_at", `${today}T23:59:59.999Z`).maybeSingle();
+    const snapRes = snapEx ? await sb.from("youtube_snapshots").update(snap).eq("id", snapEx.id) : await sb.from("youtube_snapshots").insert(snap);
+    const snapErr = snapRes.error;
+    if (snapErr) console.log(`  ⚠ youtube_snapshots ${snapEx ? "update" : "insert"} skipped (${snapErr.message.slice(0, 60)})`);
 
     console.log(`${existing ? "updated" : "inserted"} ${video_id}  views30d=${views} watch_min=${watch_time_minutes} ctr_frac=${ctr_fraction}${snapErr ? " [snap pending]" : " [+snap]"}`);
     ingested++;
