@@ -64,6 +64,7 @@ const round = (n, d = 2) => (n == null ? null : Math.round(n * 10 ** d) / 10 ** 
 
 async function main() {
   const today = new Date().toISOString().slice(0, 10);
+  const nowIso = new Date().toISOString();
 
   // 1 — register known-new videos (idempotent)
   for (const v of REGISTER) {
@@ -86,6 +87,10 @@ async function main() {
     const title = (r[COL.title] ?? "") || null;
     const avg_view_dur_s = views && views > 0 && watch_time_hrs != null ? (watch_time_hrs * 3600) / views : null;
     const avg_view_pct = duration_s && duration_s > 0 && avg_view_dur_s != null ? (avg_view_dur_s / duration_s) * 100 : null;
+    // content_performance / youtube_snapshots convention: watch_time_minutes is
+    // TOTAL minutes; ctr is a FRACTION (0-1; the YouTubeTab does ×100).
+    const watch_time_minutes = watch_time_hrs != null ? Math.round(watch_time_hrs * 60) : null;
+    const ctr_fraction = toNum(r[COL.impressions_ctr]) != null ? toNum(r[COL.impressions_ctr]) / 100 : null;
 
     const perf = {
       video_id, snapshot_date: today, source: "csv_manual",
@@ -98,19 +103,38 @@ async function main() {
       likes: null, comments: null, shares: null,
     };
 
-    if (DRY) { console.log(`[dry] ${video_id} dur=${duration_s}s ret=${perf.avg_view_pct}% ctr=${perf.impressions_ctr}% views=${views} -> backfill title="${title}"`); ingested++; continue; }
+    if (DRY) { console.log(`[dry] ${video_id} dur=${duration_s}s ret=${perf.avg_view_pct}% views30d=${views} watch_min=${watch_time_minutes} ctr_frac=${ctr_fraction} -> shorts_performance + content_performance + youtube_snapshots`); ingested++; continue; }
 
-    const { data: vid } = await sb.from("shorts_videos").select("video_id").eq("video_id", video_id).maybeSingle();
+    const { data: vid } = await sb.from("shorts_videos").select("video_id, product_slug, country").eq("video_id", video_id).maybeSingle();
     if (!vid) { console.log(`UNMATCHED video_id ${video_id} — skipped (register it first)`); unmatched++; continue; }
 
     await sb.from("shorts_videos").update({ duration_s: duration_s ?? null, title }).eq("video_id", video_id);
 
+    // (1) shorts_performance — point-in-time snapshot (legacy shorts_* system)
     const { data: existing } = await sb.from("shorts_performance").select("id").eq("video_id", video_id).eq("snapshot_date", today).maybeSingle();
     const res = existing
       ? await sb.from("shorts_performance").update(perf).eq("id", existing.id)
       : await sb.from("shorts_performance").insert(perf);
-    if (res.error) { console.log(`${video_id} upsert ERR ${res.error.message}`); continue; }
-    console.log(`${existing ? "updated" : "inserted"} ${video_id}  ret=${perf.avg_view_pct}% ctr=${perf.impressions_ctr}% views=${views}`);
+    if (res.error) { console.log(`${video_id} shorts_performance ERR ${res.error.message}`); continue; }
+
+    // (2) content_performance — CURRENT state (the soverella YouTube tab reads this).
+    // Update engagement only when the row exists (the bridge owns baseline:
+    // published_at/url/slug); insert a full baseline if it doesn't yet.
+    const engagement = { views_30d: views, watch_time_minutes, ctr: ctr_fraction, impressions: toInt(r[COL.impressions]), subscribers_gained: toInt(r[COL.subs_gained]) };
+    const { data: cp } = await sb.from("content_performance").select("id").eq("platform", "youtube").eq("youtube_video_id", video_id).maybeSingle();
+    if (cp) await sb.from("content_performance").update(engagement).eq("id", cp.id);
+    else await sb.from("content_performance").insert({
+      site: "taxchecknow", platform: "youtube", format_type: "short", status: "published",
+      youtube_video_id: video_id, slug: vid.product_slug, country: vid.country, product_key: null,
+      url: `https://www.youtube.com/watch?v=${video_id}`, content_version: 1, views_7d: null, ...engagement,
+    });
+
+    // (3) youtube_snapshots — append-only view-history (tolerant of pending DDL)
+    const snap = { youtube_video_id: video_id, snapshot_at: nowIso, views, watch_time_minutes, ctr: ctr_fraction, likes: null, comments: null, subs_gained: toInt(r[COL.subs_gained]), source: "csv_manual" };
+    const { error: snapErr } = await sb.from("youtube_snapshots").insert(snap);
+    if (snapErr) console.log(`  ⚠ youtube_snapshots append skipped (${snapErr.message.slice(0, 60)}) — run the migration, then re-ingest`);
+
+    console.log(`${existing ? "updated" : "inserted"} ${video_id}  views30d=${views} watch_min=${watch_time_minutes} ctr_frac=${ctr_fraction}${snapErr ? " [snap pending]" : " [+snap]"}`);
     ingested++;
   }
   console.log(`\nDONE — ${ingested} ingested, ${skipped} skipped (Total/blank), ${unmatched} unmatched. snapshot_date=${today} source=csv_manual${DRY ? " [DRY-RUN, no writes]" : ""}`);
