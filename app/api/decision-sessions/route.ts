@@ -33,6 +33,15 @@ interface PostBody {
   recommended_tier?:      number;
   tier_intended?:         number;
   email?:                 string;
+  utm_source?:            string;
+  utm_medium?:            string;
+  utm_campaign?:          string;
+  utm_content?:           string;
+}
+
+// UTM fields (8b): optional, trimmed, length-capped to 100; null when absent.
+function capUtm(v: unknown): string | null {
+  return typeof v === "string" && v.trim().length > 0 ? v.trim().slice(0, 100) : null;
 }
 
 interface PatchBody extends PostBody {
@@ -77,6 +86,10 @@ export async function POST(req: Request) {
     recommended_tier:      body.recommended_tier      ?? null,
     tier_intended:         body.tier_intended         ?? null,
     email:                 body.email                 ?? null,
+    utm_source:            capUtm(body.utm_source),
+    utm_medium:            capUtm(body.utm_medium),
+    utm_campaign:          capUtm(body.utm_campaign),
+    utm_content:           capUtm(body.utm_content),
     completed:             false,
     converted:             false,
     re_engagement_sent:    false,
