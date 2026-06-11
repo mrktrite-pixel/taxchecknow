@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Playfair_Display, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 import CookieBanner from "@/components/CookieBanner";
+import UtmCapture from "@/components/UtmCapture";
 
 const GTM_ID = "GTM-NLCWQJ6D";
 // GA4 (G-Y2E57DRHZ5) is configured inside the GTM container — no standalone gtag here.
@@ -77,6 +78,7 @@ export default function RootLayout({
           />
         </noscript>
 
+        <UtmCapture />
         {children}
         <CookieBanner />
 
