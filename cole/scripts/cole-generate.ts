@@ -26,12 +26,64 @@ import { generateSuccessAssess, getSuccessAssessPath,
 import { generateAllProductFiles                      } from "../generators/generate-product-files";
 import { generateRulesRoute,    getRulesRoutePath     } from "../generators/generate-rules-route";
 import type { ProductConfig } from "../types/product-config";
+import { createClient } from "@supabase/supabase-js";
+import type { GeoBake } from "../generators/generate-gate-page";
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
 const APP_ROOT        = path.join(__dirname, "../../app");
 const CONFIG_DIR      = path.join(__dirname, "../config");
 const CALCULATORS_DIR = path.join(__dirname, "../calculators"); // hand-built calculators live here
 const SUPABASE_URL    = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY    = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// ── GEO BAKE — fetch transcript + published-video facts at generate time ──────
+// Best-effort: any miss (no DB env, no match, fetch error) returns nulls → the page
+// generates unchanged. content_jobs product_key is <country>-<NN>-<slug>; config.id is the
+// slug, so match product_key ending in `-<id>`. Transcript prefers the long script (rich,
+// chapter-joined) over the short script (thin). Video = newest published youtube row with a
+// resolved youtube_video_id (prefer long).
+async function fetchGeoBake(config: ProductConfig): Promise<GeoBake> {
+  const empty: GeoBake = { transcript: null, video: null };
+  if (!SUPABASE_URL || !SUPABASE_KEY) return empty;
+  const slug = config.id;
+  try {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const pick = <T extends { product_key?: string }>(rows: T[]): T | undefined =>
+      rows.find((r) => typeof r.product_key === "string" && r.product_key.endsWith(`-${slug}`)) ?? rows[0];
+
+    // transcript (+ title) from content_jobs
+    const { data: cj } = await supabase
+      .from("content_jobs").select("product_key, output_data").ilike("product_key", `%${slug}`);
+    const od = (pick((cj ?? []) as Array<{ product_key: string; output_data: any }>)?.output_data) ?? {};
+    let transcript: string | null = null;
+    let title: string | undefined;
+    if (od.ytl_script?.script_text) {
+      const ch: Array<{ heading?: string; body?: string }> = Array.isArray(od.ytl_script.chapters) ? od.ytl_script.chapters : [];
+      transcript = ch.length
+        ? ch.map((c) => `${c.heading ? c.heading + "\n" : ""}${c.body ?? ""}`.trim()).filter(Boolean).join("\n\n")
+        : String(od.ytl_script.script_text);
+      title = od.ytl_script.chosen_title;
+    } else if (od.youtube_short_script?.script_text) {
+      transcript = String(od.youtube_short_script.script_text);
+      title = od.youtube_short_script.title;
+    }
+
+    // published video from content_performance (prefer long)
+    const { data: cp } = await supabase
+      .from("content_performance").select("product_key, youtube_video_id, published_at, format_type")
+      .eq("platform", "youtube").eq("status", "published").not("youtube_video_id", "is", null)
+      .ilike("product_key", `%${slug}`).order("published_at", { ascending: false });
+    const pubRows = ((cp ?? []) as Array<{ product_key: string; youtube_video_id: string; published_at: string; format_type: string }>)
+      .filter((r) => r.product_key.endsWith(`-${slug}`));
+    const vrow = pubRows.find((r) => r.format_type === "long") ?? pubRows[0];
+    const video = vrow?.youtube_video_id
+      ? { id: vrow.youtube_video_id, uploadDate: vrow.published_at, name: title ?? config.name, description: config.metaDescription }
+      : null;
+
+    return { transcript, video };
+  } catch {
+    return empty;
+  }
+}
 
 // ── PASCAL HELPER (mirrors generate-calculator.ts) ────────────────────────────
 function toPascal(str: string): string {
@@ -88,7 +140,8 @@ async function cole(productId: string) {
   // ── STEP 2: Generate gate page ────────────────────────────────────────────
   try {
     const filePath = getGatePagePath(config, APP_ROOT);
-    writeFile(filePath, generateGatePage(config));
+    const geo = await fetchGeoBake(config); // transcript + published-video facts (best-effort; null if absent/no DB)
+    writeFile(filePath, generateGatePage(config, geo));
     filesGenerated.push(filePath);
     console.log(`   ✅ Gate page\n      → ${relativePath(filePath)}`);
   } catch (err) {
