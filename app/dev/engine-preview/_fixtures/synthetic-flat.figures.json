@@ -1,0 +1,4 @@
+[
+  { "id": "sf_rate", "label": "Standard handling rate", "value": "32.5%", "unit": null, "fact_role": "rate" },
+  { "id": "sf_threshold", "label": "Standard handling threshold", "value": "$18,200", "unit": null, "fact_role": "threshold" }
+]

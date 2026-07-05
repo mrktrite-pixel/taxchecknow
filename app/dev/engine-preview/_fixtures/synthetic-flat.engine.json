@@ -20,7 +20,8 @@
       "text": "How long has this applied to you?",
       "options": [
         { "label": "Less than a year", "value": "short", "routes_to": "q3-decision", "sub_label": "Recent" },
-        { "label": "A year or more", "value": "long", "routes_to": "q3-decision", "sub_label": "Established" }
+        { "label": "A year or more", "value": "long", "routes_to": "q3-decision", "sub_label": "Established" },
+        { "label": "I'm not sure how long", "value": "unsure-duration", "routes_to": "q3-decision", "sub_label": "Can't say" }
       ]
     },
     {
@@ -35,8 +36,8 @@
   ],
   "escape_states": ["insufficient_information"],
   "result_states": [
-    { "menu_id": "outcome-standard-path", "indicated_result": "Standard handling is indicated based on your answers. The ordinary conditions appear to be met; confirm the specifics against your own records before relying on this." },
-    { "menu_id": "outcome-review-path", "indicated_result": "A closer review is indicated. One or more conditions may not be met, so the ordinary treatment may not apply to your situation." }
+    { "menu_id": "outcome-standard-path", "indicated_result": "Standard handling is indicated based on your answers. The ordinary standard rate applies to your situation; confirm the specifics against your own records before relying on this." },
+    { "menu_id": "outcome-review-path", "indicated_result": "A closer review is indicated. Your balance may fall below the relevant standard threshold, so the ordinary treatment may not apply to your situation." }
   ],
   "routing_logic": "Linear: q1-entry → q2-detail → q3-decision → terminal. No branching between questions, so every path is exactly 3 steps (static M)."
 }

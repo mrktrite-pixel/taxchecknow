@@ -24,6 +24,13 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import EngineVerdictPanel from "@/app/_components/EngineVerdictPanel";
+import {
+  deriveConfidence,
+  resolveTerminalFigures,
+  type EngineConfidence,
+  type EngineFigure,
+} from "@/app/_components/engine-terms";
 
 // ── engine contract (permissive — extra fields tolerated) ────────────────────
 export interface EngineOption {
@@ -61,6 +68,7 @@ export interface Engine {
   escape_states?: string[];
   result_states?: EngineResultState[];
   routing_logic?: string;
+  figures?: EngineFigure[]; // optional embedded pool; the `figures` prop takes precedence
 }
 
 export type TerminalKind = "menu" | "escape" | "unknown";
@@ -72,6 +80,8 @@ export interface EngineTerminal {
 export interface EngineCompletion {
   answers: Record<string, string>;
   terminal: EngineTerminal;
+  confidence: EngineConfidence | null; // stage 3 input (inert now)
+  statFigures: EngineFigure[];         // stage 3 input (inert now)
 }
 
 interface TrailEntry {
@@ -95,9 +105,11 @@ function optSubLabel(o: EngineOption): string | undefined {
 // ── main ─────────────────────────────────────────────────────────────────────
 export default function EngineCalculator({
   engine,
+  figures,
   onComplete,
 }: {
   engine: Engine;
+  figures?: EngineFigure[];
   onComplete?: (c: EngineCompletion) => void;
 }) {
   const questions = useMemo(() => engine.questions ?? [], [engine.questions]);
@@ -112,6 +124,10 @@ export default function EngineCalculator({
     [results],
   );
   const escapeSet = useMemo(() => new Set(escapes), [escapes]);
+  const pool = useMemo<EngineFigure[]>(
+    () => figures ?? engine.figures ?? [],
+    [figures, engine.figures],
+  );
 
   const classify = useCallback(
     (id: string): TerminalKind | "question" => {
@@ -194,16 +210,44 @@ export default function EngineCalculator({
   const kind = classify(node);
   const isTerminal = kind !== "question";
 
-  // fire onComplete once per terminal arrival (inert consumer in stage 1).
+  // terminal derivation (code-only): heading + verbatim result + stat figures + confidence.
+  const terminal = useMemo(() => {
+    if (!isTerminal || !node) return null;
+    const menuItem = kind === "menu" ? menuById.get(node) : undefined;
+    const label = menuItem?.label ?? humanize(node);
+    const indicatedResult =
+      kind === "menu" ? resultByMenuId.get(node) ?? menuItem?.description ?? "" : "";
+    // provenance-first figure ids on the dish (forward-compat; absent on today's engines).
+    const figureIds = (menuItem as { figure_ids?: string[] } | undefined)?.figure_ids;
+    // Context for term-matching: terminal id + label + the VERBATIM result text + the answers
+    // taken. Deliberately NOT the menu description — dish descriptions carry cross-category
+    // comparison clauses ("higher than the ordinary rates") that leak a sibling's discriminating
+    // terms; indicatedResult already falls back to the description only when no result_state exists.
+    const context = [
+      node,
+      label,
+      indicatedResult,
+      ...trail.flatMap((t) => [t.value, t.label]),
+    ].join(" ");
+    const statFigures =
+      kind === "menu" ? resolveTerminalFigures(pool, context, { figureIds, maxN: 3 }) : [];
+    const confidence = deriveConfidence(trail, kind as TerminalKind);
+    return { kind: kind as TerminalKind, id: node, label, indicatedResult, statFigures, confidence };
+  }, [isTerminal, node, kind, menuById, resultByMenuId, pool, trail]);
+
+  // fire onComplete once per terminal arrival (inert consumer in stages 1-2).
   const firedFor = useRef<string | null>(null);
   useEffect(() => {
-    if (!isTerminal || !node) return;
-    if (firedFor.current === node) return;
-    firedFor.current = node;
-    const label =
-      kind === "menu" ? menuById.get(node)?.label ?? humanize(node) : humanize(node);
-    onComplete?.({ answers, terminal: { kind: kind as TerminalKind, id: node, label } });
-  }, [isTerminal, node, kind, answers, menuById, onComplete]);
+    if (!terminal) return;
+    if (firedFor.current === terminal.id) return;
+    firedFor.current = terminal.id;
+    onComplete?.({
+      answers,
+      terminal: { kind: terminal.kind, id: terminal.id, label: terminal.label },
+      confidence: terminal.confidence,
+      statFigures: terminal.statFigures,
+    });
+  }, [terminal, answers, onComplete]);
 
   useEffect(() => {
     if (!isTerminal) firedFor.current = null;
@@ -306,29 +350,18 @@ export default function EngineCalculator({
     );
   }
 
-  // ── TERMINAL VIEW (stage-1 plain card — no verdict styling) ─────────────────
-  const isMenu = kind === "menu";
-  const heading = isMenu ? menuById.get(node)?.label ?? humanize(node) : humanize(node);
-  const menuResult = isMenu ? resultByMenuId.get(node) : undefined;
-  const menuDesc = isMenu ? menuById.get(node)?.description : undefined;
-  const tag = isMenu ? "Result" : "No match";
-  const body = isMenu
-    ? menuResult ?? menuDesc ?? ""
-    : "Based on your answers, this tool can't fully resolve your situation. A closer review of your circumstances is indicated.";
-
-  return (
-    <div className="space-y-4">
-      <button
-        onClick={reset}
-        className="font-mono text-xs text-neutral-400 transition hover:text-neutral-700"
-      >
-        ← Change my answers
-      </button>
-      <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6">
-        <p className="mb-1 font-mono text-xs uppercase tracking-widest text-neutral-400">{tag}</p>
-        <h3 className="mb-3 font-serif text-xl font-bold text-neutral-950">{heading}</h3>
-        {body && <p className="text-sm leading-relaxed text-neutral-700">{body}</p>}
-      </div>
-    </div>
-  );
+  // ── TERMINAL VIEW (stage-2 VerdictPanel) ────────────────────────────────────
+  if (terminal) {
+    return (
+      <EngineVerdictPanel
+        kind={terminal.kind}
+        heading={terminal.label}
+        indicatedResult={terminal.indicatedResult}
+        statFigures={terminal.statFigures}
+        confidence={terminal.confidence}
+        onReset={reset}
+      />
+    );
+  }
+  return null;
 }

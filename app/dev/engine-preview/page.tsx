@@ -11,8 +11,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import EngineCalculator, { type Engine } from "@/app/_components/EngineCalculator";
+import type { EngineFigure } from "@/app/_components/engine-terms";
 import aabca693 from "./_fixtures/aabca693.engine.json";
+import aabca693Figures from "./_fixtures/aabca693.figures.json";
 import syntheticFlat from "./_fixtures/synthetic-flat.engine.json";
+import syntheticFlatFigures from "./_fixtures/synthetic-flat.figures.json";
 
 // Checked per-request (not baked at build) so the gate reflects the live env.
 export const dynamic = "force-dynamic";
@@ -28,18 +31,20 @@ function previewEnabled(): boolean {
   return process.env.ENGINE_PREVIEW_ENABLED === "1" || process.env.VERCEL_ENV !== "production";
 }
 
-const FIXTURES: { key: string; title: string; note: string; engine: Engine }[] = [
+const FIXTURES: { key: string; title: string; note: string; engine: Engine; figures: EngineFigure[] }[] = [
   {
     key: "aabca693",
     title: "aabca693 — real Bee D engine (chained routing)",
-    note: "Dynamic STEP N OF M: M narrows as answers pick a shorter branch. q1→q2→dish is 2 steps; q1→q4→q5→dish is 3.",
+    note: "Dynamic STEP N OF M + verdict panel. Decisive tax path → HIGH + rate stat boxes; a 'not sure' answer routes to a neutral escape.",
     engine: aabca693 as Engine,
+    figures: aabca693Figures as EngineFigure[],
   },
   {
     key: "synthetic-flat",
     title: "synthetic — flat/linear engine",
-    note: "Static STEP N OF M (M=3): no branching, every path is the same length.",
+    note: "Static STEP N OF M (M=3). Decisive → HIGH + stat box; the 'not sure how long' answer still lands a dish → MEDIUM; q3 'not sure' → neutral escape.",
     engine: syntheticFlat as Engine,
+    figures: syntheticFlatFigures as EngineFigure[],
   },
 ];
 
@@ -60,7 +65,7 @@ export default function EnginePreviewPage() {
           <section key={f.key}>
             <h2 className="mb-1 font-mono text-sm font-bold text-neutral-700">{f.title}</h2>
             <p className="mb-4 text-xs text-neutral-500">{f.note}</p>
-            <EngineCalculator engine={f.engine} />
+            <EngineCalculator engine={f.engine} figures={f.figures} />
           </section>
         ))}
       </div>
