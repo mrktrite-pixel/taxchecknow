@@ -1,0 +1,350 @@
+{
+  "menu": [
+    {
+      "id": "dasp-eligibility-check",
+      "label": "Am I eligible to claim DASP after leaving Australia?",
+      "provenance": {
+        "market_ref": {
+          "kind": "faq_seed",
+          "value": "What happens to my super when I lose permanent resident status and leave Australia?"
+        },
+        "authority_ref": {
+          "law_ref": "DASP — Migration Act 1958",
+          "source_url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp",
+          "snapshot_id": "989b6dbe-90ff-4188-a6a3-af2251b5a5e0"
+        }
+      },
+      "description": "Covers the three core eligibility conditions under the DASP legal anchor: you held a temporary visa (excluding subclasses 405 and 410), your visa has ceased, and you have left Australia. Also addresses the situation raised in market research where a former permanent resident loses that status overseas and asks whether they can then access super as a temporary resident would."
+    },
+    {
+      "id": "dasp-tax-ordinary-visa",
+      "label": "How much tax is withheld on DASP for non-working-holiday-maker visa holders?",
+      "provenance": {
+        "market_ref": {
+          "kind": "competitor_gap",
+          "value": "Exact DASP tax rates by visa type are not stated (e.g., what percentage is deducted for 417 vs 482 vs NZ citizen)"
+        },
+        "authority_ref": {
+          "law_ref": "DASP — Migration Act 1958",
+          "source_url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp",
+          "snapshot_id": "989b6dbe-90ff-4188-a6a3-af2251b5a5e0"
+        }
+      },
+      "description": "For temporary residents who did not hold a working holiday maker visa, the taxable component (taxed element) is taxed at 35% and the taxable component (untaxed element) is taxed at 45% at the time of DASP payment. Addresses the competitor gap that exact DASP tax rates by visa type are not stated on common guidance sites."
+    },
+    {
+      "id": "dasp-tax-whm-visa",
+      "label": "How much tax is withheld on DASP for working holiday maker visa holders?",
+      "provenance": {
+        "market_ref": {
+          "kind": "competitor_gap",
+          "value": "Exact DASP tax rates by visa type are not stated (e.g., what percentage is deducted for 417 vs 482 vs NZ citizen)"
+        },
+        "authority_ref": {
+          "law_ref": "DASP — Migration Act 1958",
+          "source_url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp",
+          "snapshot_id": "989b6dbe-90ff-4188-a6a3-af2251b5a5e0"
+        }
+      },
+      "description": "For working holiday maker visa holders, both the taxable component (taxed element) and the taxable component (untaxed element) are taxed at 65% at the time of DASP payment — significantly higher than the ordinary rates. Addresses the competitor gap that exact DASP tax rates by visa type are not stated."
+    },
+    {
+      "id": "dasp-id-requirements-high-balance",
+      "label": "What identification documents do I need to claim DASP if my super balance is $5,000 or more?",
+      "provenance": {
+        "market_ref": {
+          "kind": "competitor_gap",
+          "value": "No guidance on tax file number (TFN) requirements or consequences of not providing one before departure"
+        },
+        "authority_ref": {
+          "law_ref": "DASP — Migration Act 1958",
+          "source_url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp",
+          "snapshot_id": "989b6dbe-90ff-4188-a6a3-af2251b5a5e0"
+        }
+      },
+      "description": "Where the super balance is $5,000 or more, the super fund may require certified copies of proof of identification documents, and paper applications to super funds may also require a Certification of Immigration Status from Home Affairs. The ATO authority notes it is easier to certify these documents while still in Australia, making this a time-sensitive step."
+    },
+    {
+      "id": "dasp-payment-timeline",
+      "label": "How long does it take to receive my DASP after applying?",
+      "provenance": {
+        "market_ref": {
+          "kind": "competitor_gap",
+          "value": "No timeline clarity on how long DASP processing takes and when funds are received after application"
+        },
+        "authority_ref": {
+          "law_ref": "DASP — Migration Act 1958",
+          "source_url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp",
+          "snapshot_id": "989b6dbe-90ff-4188-a6a3-af2251b5a5e0"
+        }
+      },
+      "description": "DASP is generally paid within 28 days of a completed application being received. After payment is made, the payer must issue a DASP payment summary within 14 days. Addresses the competitor gap that there is no timeline clarity on how long DASP processing takes and when funds are received after application."
+    },
+    {
+      "id": "dasp-unclaimed-super-ato-transfer",
+      "label": "What happens to my super if I leave Australia and never claim DASP?",
+      "provenance": {
+        "market_ref": {
+          "kind": "faq_seed",
+          "value": "Can I access my super as a permanent resident who is no longer a permanent resident?"
+        },
+        "authority_ref": {
+          "law_ref": "DASP — Migration Act 1958",
+          "source_url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp",
+          "snapshot_id": "989b6dbe-90ff-4188-a6a3-af2251b5a5e0"
+        }
+      },
+      "description": "If it has been 6 months or more since you left Australia and your visa has ceased, your super fund will transfer your super to the ATO as unclaimed super money. You can still claim it from the ATO, but the process differs from claiming directly from your fund. This addresses the market question about what happens when a former permanent resident's super is sent to the ATO."
+    }
+  ],
+  "notes": {
+    "model": "claude-sonnet-4-6",
+    "doctrine": "#25/#27 route-first menu-curation",
+    "generated_at": "2026-07-04T08:20:48.052Z"
+  },
+  "questions": [
+    {
+      "id": "q1-dasp-starting-point",
+      "axis": "routing",
+      "text": "What is the main thing you want to understand about your superannuation after leaving Australia?",
+      "options": [
+        {
+          "label": "Whether I am eligible to claim my super back (DASP)",
+          "value": "eligibility",
+          "routes_to": "dasp-eligibility-check"
+        },
+        {
+          "label": "How much tax will be withheld when I receive my DASP payment",
+          "value": "tax",
+          "routes_to": "q2-visa-type-tax"
+        },
+        {
+          "label": "What documents I need to make a DASP claim",
+          "value": "id-docs",
+          "routes_to": "q3-balance-threshold"
+        },
+        {
+          "label": "How long it will take to receive my DASP payment",
+          "value": "timeline",
+          "routes_to": "dasp-payment-timeline"
+        },
+        {
+          "label": "What happens if I never claimed DASP and my super may have been sent somewhere",
+          "value": "unclaimed",
+          "routes_to": "q4-unclaimed-check"
+        },
+        {
+          "label": "Something else or I am not sure",
+          "value": "unsure",
+          "routes_to": "insufficient_information"
+        }
+      ],
+      "certainty_check": false
+    },
+    {
+      "id": "q2-visa-type-tax",
+      "axis": "routing",
+      "text": "When you worked in Australia, which type of visa did you hold? This determines the DASP tax rate that applies to your payment.",
+      "options": [
+        {
+          "label": "A working holiday maker visa (subclass 417 or 462)",
+          "value": "whm",
+          "routes_to": "dasp-tax-whm-visa"
+        },
+        {
+          "label": "A temporary visa other than a working holiday maker visa (e.g. student, skilled, sponsored worker)",
+          "value": "ordinary-temp",
+          "routes_to": "dasp-tax-ordinary-visa"
+        },
+        {
+          "label": "A permanent resident visa or Australian citizenship",
+          "value": "permanent",
+          "routes_to": "none_fit"
+        },
+        {
+          "label": "I held subclass 405 or 410",
+          "value": "excluded-subclass",
+          "routes_to": "none_fit"
+        },
+        {
+          "label": "I am not sure what visa type I held",
+          "value": "unsure-visa",
+          "routes_to": "insufficient_information"
+        }
+      ],
+      "certainty_check": true
+    },
+    {
+      "id": "q3-balance-threshold",
+      "axis": "data-sufficiency",
+      "text": "What is the approximate balance of the super account you are claiming? This affects what identification documents may be required.",
+      "options": [
+        {
+          "label": "My balance is $5,000 or more",
+          "value": "at-or-above-threshold",
+          "routes_to": "dasp-id-requirements-high-balance"
+        },
+        {
+          "label": "My balance is less than $5,000",
+          "value": "below-threshold",
+          "routes_to": "none_fit"
+        },
+        {
+          "label": "I do not know my super balance",
+          "value": "unknown-balance",
+          "routes_to": "insufficient_information"
+        }
+      ],
+      "certainty_check": true
+    },
+    {
+      "id": "q4-unclaimed-check",
+      "axis": "exposure",
+      "text": "How long has it been since you left Australia and your visa ceased?",
+      "options": [
+        {
+          "label": "6 months or more",
+          "value": "six-months-plus",
+          "routes_to": "dasp-unclaimed-super-ato-transfer"
+        },
+        {
+          "label": "Less than 6 months",
+          "value": "under-six-months",
+          "routes_to": "q5-recent-leaver"
+        },
+        {
+          "label": "I am not sure how long it has been",
+          "value": "unsure-time",
+          "routes_to": "insufficient_information"
+        }
+      ],
+      "certainty_check": false
+    },
+    {
+      "id": "q5-recent-leaver",
+      "axis": "routing",
+      "text": "You left Australia less than 6 months ago. What would you like to do next regarding your super?",
+      "options": [
+        {
+          "label": "Check whether I am eligible to claim DASP now",
+          "value": "check-eligibility",
+          "routes_to": "dasp-eligibility-check"
+        },
+        {
+          "label": "Understand how long the DASP payment process takes",
+          "value": "check-timeline",
+          "routes_to": "dasp-payment-timeline"
+        },
+        {
+          "label": "Understand the tax that will be withheld on my DASP",
+          "value": "check-tax",
+          "routes_to": "q2-visa-type-tax"
+        },
+        {
+          "label": "None of these apply to my situation",
+          "value": "none-apply",
+          "routes_to": "none_fit"
+        }
+      ],
+      "certainty_check": false
+    }
+  ],
+  "figures_used": [
+    {
+      "unit": "%",
+      "value": "35",
+      "grounded_in_verified_fact_id": "fig_4"
+    },
+    {
+      "unit": "%",
+      "value": "45",
+      "grounded_in_verified_fact_id": "fig_6"
+    },
+    {
+      "unit": "%",
+      "value": "65",
+      "grounded_in_verified_fact_id": "fig_5"
+    },
+    {
+      "unit": "%",
+      "value": "65",
+      "grounded_in_verified_fact_id": "fig_7"
+    },
+    {
+      "unit": "days",
+      "value": "28",
+      "grounded_in_verified_fact_id": "fig_3"
+    },
+    {
+      "unit": "days",
+      "value": "14",
+      "grounded_in_verified_fact_id": "fig_8"
+    },
+    {
+      "unit": "months",
+      "value": "6",
+      "grounded_in_verified_fact_id": "fig_0"
+    },
+    {
+      "unit": "$",
+      "value": "$5,000",
+      "grounded_in_verified_fact_id": "fig_1"
+    },
+    {
+      "unit": "$",
+      "value": "$5,000",
+      "grounded_in_verified_fact_id": "fig_2"
+    },
+    {
+      "unit": null,
+      "value": "6 months",
+      "grounded_in_verified_fact_id": "fig_0"
+    },
+    {
+      "unit": null,
+      "value": "28 days",
+      "grounded_in_verified_fact_id": "fig_3"
+    },
+    {
+      "unit": null,
+      "value": "14 days",
+      "grounded_in_verified_fact_id": "fig_8"
+    }
+  ],
+  "escape_states": [
+    "none_fit",
+    "insufficient_information",
+    "mixed_profile",
+    "high_complexity",
+    "manual_review_required"
+  ],
+  "result_states": [
+    {
+      "menu_id": "dasp-eligibility-check",
+      "indicated_result": "Review recommended: indicated risk that one or more of the three core DASP eligibility conditions (temporary visa held, visa ceased, departed Australia) may not be met or may be unclear for your situation. A review of your visa history and departure record is indicated before proceeding."
+    },
+    {
+      "menu_id": "dasp-tax-ordinary-visa",
+      "indicated_result": "High-risk signal for tax withholding: for non-working-holiday-maker temporary visa holders, the taxable component (taxed element) is subject to a 35% withholding rate and the taxable component (untaxed element) is subject to a 45% withholding rate at the time of DASP payment. Review recommended to confirm which components apply to your super balance."
+    },
+    {
+      "menu_id": "dasp-tax-whm-visa",
+      "indicated_result": "High-risk signal for tax withholding: for working holiday maker visa holders, both the taxable component (taxed element) and the taxable component (untaxed element) are subject to a 65% withholding rate at the time of DASP payment. Review recommended to confirm the components that apply to your balance."
+    },
+    {
+      "menu_id": "dasp-id-requirements-high-balance",
+      "indicated_result": "Review recommended: where a super balance is $5,000 or more, indicated risk that certified proof of identification documents and, for paper applications, a Certification of Immigration Status from Home Affairs may be required. Time-sensitive review indicated — certifying documents while still in Australia is noted as easier."
+    },
+    {
+      "menu_id": "dasp-payment-timeline",
+      "indicated_result": "Review recommended: DASP is generally paid within 28 days of a completed application being received; a DASP payment summary is indicated to be issued within 14 days of payment being made. Indicated risk of delay if the application is incomplete."
+    },
+    {
+      "menu_id": "dasp-unclaimed-super-ato-transfer",
+      "indicated_result": "High-risk signal: where 6 months or more have passed since departure and visa cessation, indicated risk that your super fund has already transferred your balance to the ATO as unclaimed super money. Review recommended to determine whether to claim from the ATO rather than directly from your fund."
+    }
+  ],
+  "routing_logic": "Q1 is the entry point and routes users by their primary intent: eligibility goes directly to dasp-eligibility-check; tax questions go to Q2 (visa type discriminator); document questions go to Q3 (balance threshold discriminator); timeline questions go directly to dasp-payment-timeline; unclaimed super questions go to Q4 (time-since-leaving discriminator). Q2 separates working holiday maker visa holders (routes to dasp-tax-whm-visa) from other temporary visa holders (routes to dasp-tax-ordinary-visa); permanent residents and excluded subclass holders route to none_fit; unsure users route to insufficient_information. Q3 routes users with a balance at or above $5,000 to dasp-id-requirements-high-balance; those below the threshold route to none_fit (the high-balance ID content does not apply); unknown balance routes to insufficient_information. Q4 checks time elapsed since leaving: 6 months or more routes to dasp-unclaimed-super-ato-transfer; less than 6 months routes to Q5 (intent clarifier for recent leavers); unsure routes to insufficient_information. Q5 gives recent leavers a secondary routing to eligibility, timeline, or tax questions, with a none_fit escape. All chains terminate within 6 steps; no cycles; all questions are reachable from Q1.",
+  "topic_summary": "Departing Australia Superannuation Payment (DASP) covers distinct situations a temporary-resident worker faces when leaving Australia: confirming eligibility, understanding the tax withheld (35% or 45% for ordinary visa holders; 65% for working holiday makers), meeting identification requirements for balances of $5,000 or more, knowing the 28-day payment window and 14-day payment summary window, and understanding what happens if no claim is made within 6 months of departure.",
+  "provenance_mode": "independent_voice"
+}

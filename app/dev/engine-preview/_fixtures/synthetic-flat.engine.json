@@ -1,0 +1,42 @@
+{
+  "topic_summary": "SYNTHETIC flat/linear engine — no branching, so every path is 3 questions and STEP N OF M is static (M=3). Proves the non-chained shape alongside the real aabca693 chained engine. Not a real product.",
+  "provenance_mode": "synthetic_fixture",
+  "menu": [
+    { "id": "outcome-standard-path", "label": "Standard handling applies to your situation", "description": "The ordinary treatment applies." },
+    { "id": "outcome-review-path", "label": "A closer review is indicated for your situation", "description": "Your answers indicate a review is worthwhile." }
+  ],
+  "questions": [
+    {
+      "id": "q1-entry",
+      "text": "Which best describes your situation?",
+      "options": [
+        { "label": "Situation A", "value": "a", "routes_to": "q2-detail", "sub_label": "The first common case" },
+        { "label": "Situation B", "value": "b", "routes_to": "q2-detail", "sub_label": "The second common case" },
+        { "label": "None of these", "value": "none", "routes_to": "q2-detail", "sub_label": "Something else entirely" }
+      ]
+    },
+    {
+      "id": "q2-detail",
+      "text": "How long has this applied to you?",
+      "options": [
+        { "label": "Less than a year", "value": "short", "routes_to": "q3-decision", "sub_label": "Recent" },
+        { "label": "A year or more", "value": "long", "routes_to": "q3-decision", "sub_label": "Established" }
+      ]
+    },
+    {
+      "id": "q3-decision",
+      "text": "Do the standard conditions all clearly apply?",
+      "options": [
+        { "label": "Yes — all conditions clearly met", "value": "clear", "routes_to": "outcome-standard-path", "sub_label": "No ambiguity" },
+        { "label": "No — one or more may not be met", "value": "unclear", "routes_to": "outcome-review-path", "sub_label": "Some doubt" },
+        { "label": "I'm not sure", "value": "unsure", "routes_to": "insufficient_information", "sub_label": "Can't say" }
+      ]
+    }
+  ],
+  "escape_states": ["insufficient_information"],
+  "result_states": [
+    { "menu_id": "outcome-standard-path", "indicated_result": "Standard handling is indicated based on your answers. The ordinary conditions appear to be met; confirm the specifics against your own records before relying on this." },
+    { "menu_id": "outcome-review-path", "indicated_result": "A closer review is indicated. One or more conditions may not be met, so the ordinary treatment may not apply to your situation." }
+  ],
+  "routing_logic": "Linear: q1-entry → q2-detail → q3-decision → terminal. No branching between questions, so every path is exactly 3 steps (static M)."
+}
