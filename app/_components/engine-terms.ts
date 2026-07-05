@@ -135,6 +135,28 @@ export function deriveConfidence(
   return { level: hedged ? "MEDIUM" : "HIGH", checklist: trail.map((t) => t.label) };
 }
 
+// ── quasi-escape (S3 rider) ──────────────────────────────────────────────────
+// A menu dish with ZERO resolvable figures whose result is PURELY REFERRAL is
+// functionally an escape (no quantitative substance — just "go get reviewed").
+// Derived from PROPERTIES only: no figures + referral-language + no numeric token.
+// No dish-id/name matching.
+const REFERRAL_CUE =
+  /\b(review recommended|review is indicated|a review of|further review|before proceeding|consult|seek advice|outside this tool|manual review|cannot|can'?t|may not apply|does not apply|indicated risk)\b/i;
+
+export function isReferralOnly(text: string): boolean {
+  if (!text) return false;
+  return REFERRAL_CUE.test(text) && !/\d/.test(text);
+}
+
+/** True when a resolved dish should be treated as escape-class (neutral, no CTA). */
+export function isQuasiEscape(
+  kind: "menu" | "escape" | "unknown",
+  statFigures: EngineFigure[],
+  indicatedResult: string,
+): boolean {
+  return kind === "menu" && statFigures.length === 0 && isReferralOnly(indicatedResult);
+}
+
 /** Split verbatim engine text into sentence lines (for arrow rendering); no paraphrase. */
 export function toArrowLines(text: string): string[] {
   return text

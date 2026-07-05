@@ -23,6 +23,9 @@ export interface EngineVerdictPanelProps {
   statFigures: EngineFigure[];
   confidence: EngineConfidence | null;
   onReset: () => void;
+  ctaLabel?: string;       // rendered only for real dishes (not escape/quasi-escape)
+  ctaNote?: string;        // small line under the CTA (e.g. "$67 · one-time")
+  onCta?: () => void;
 }
 
 function figureText(f: EngineFigure): string {
@@ -36,11 +39,14 @@ export default function EngineVerdictPanel({
   statFigures,
   confidence,
   onReset,
+  ctaLabel,
+  ctaNote,
+  onCta,
 }: EngineVerdictPanelProps) {
   const isEscape = kind !== "menu";
   const lines = indicatedResult ? toArrowLines(indicatedResult) : [];
 
-  // ── ESCAPE: distinct neutral, boxless, no confidence ──
+  // ── ESCAPE / QUASI-ESCAPE: distinct neutral, boxless, no confidence, NO CTA ──
   if (isEscape) {
     return (
       <div className="space-y-4">
@@ -56,10 +62,19 @@ export default function EngineVerdictPanel({
             <p className="font-mono text-xs uppercase tracking-widest text-neutral-400">No match</p>
           </div>
           <h3 className="mb-2 font-serif text-xl font-bold text-neutral-950">{heading}</h3>
-          <p className="text-sm leading-relaxed text-neutral-600">
-            This check can&apos;t resolve your situation from the answers given. A closer review of
-            your circumstances is indicated.
-          </p>
+          {/* quasi-escape shows its own verbatim referral text; a bare escape shows the generic frame */}
+          {lines.length > 0 ? (
+            <ul className="space-y-1 text-sm leading-relaxed text-neutral-600">
+              {lines.map((l, i) => (
+                <li key={i}>{l}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm leading-relaxed text-neutral-600">
+              This check can&apos;t resolve your situation from the answers given. A closer review of
+              your circumstances is indicated.
+            </p>
+          )}
         </div>
       </div>
     );
@@ -134,6 +149,19 @@ export default function EngineVerdictPanel({
               </ul>
             )}
           </div>
+        )}
+
+        {/* CTA — real dishes only (escape/quasi-escape branch returns above) */}
+        {onCta && ctaLabel && (
+          <>
+            <button
+              onClick={onCta}
+              className="mt-4 w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800"
+            >
+              {ctaLabel}
+            </button>
+            {ctaNote && <p className="mt-2 text-center text-xs text-neutral-400">{ctaNote}</p>}
+          </>
         )}
       </div>
     </div>

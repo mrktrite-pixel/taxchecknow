@@ -10,8 +10,10 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import EngineCalculator, { type Engine } from "@/app/_components/EngineCalculator";
+import type { Engine } from "@/app/_components/EngineCalculator";
 import type { EngineFigure } from "@/app/_components/engine-terms";
+import type { EngineConfig } from "@/app/_components/engine-config";
+import EnginePreviewList, { type PreviewFixture } from "./EnginePreviewList";
 import aabca693 from "./_fixtures/aabca693.engine.json";
 import aabca693Figures from "./_fixtures/aabca693.figures.json";
 import syntheticFlat from "./_fixtures/synthetic-flat.engine.json";
@@ -31,20 +33,45 @@ function previewEnabled(): boolean {
   return process.env.ENGINE_PREVIEW_ENABLED === "1" || process.env.VERCEL_ENV !== "production";
 }
 
-const FIXTURES: { key: string; title: string; note: string; engine: Engine; figures: EngineFigure[] }[] = [
+const AABCA693_CONFIG: EngineConfig = {
+  productSlug: "dev-engine-preview-aabca693",
+  sourcePath: "/dev/engine-preview",
+  country: "AU",
+  currency: "AUD",
+  site: "taxchecknow",
+  defaultTier: 67,
+  tierMap: {
+    "dasp-tax-whm-visa": 147,
+    "dasp-tax-ordinary-visa": 67,
+    "dasp-id-requirements-high-balance": 67,
+    "dasp-payment-timeline": 67,
+    "dasp-unclaimed-super-ato-transfer": 147,
+  },
+};
+
+const SYNTHETIC_CONFIG: EngineConfig = {
+  productSlug: "dev-engine-preview-synthetic",
+  sourcePath: "/dev/engine-preview",
+  defaultTier: 67,
+  tierMap: { "outcome-standard-path": 67, "outcome-review-path": 147 },
+};
+
+const FIXTURES: PreviewFixture[] = [
   {
     key: "aabca693",
     title: "aabca693 — real Bee D engine (chained routing)",
-    note: "Dynamic STEP N OF M + verdict panel. Decisive tax path → HIGH + rate stat boxes; a 'not sure' answer routes to a neutral escape.",
+    note: "Decisive tax path → HIGH + rate boxes + CTA (whm=tier147, ordinary=tier67); eligibility dish → quasi-escape (no boxes, NO CTA); 'not sure' → neutral escape.",
     engine: aabca693 as Engine,
     figures: aabca693Figures as EngineFigure[],
+    config: AABCA693_CONFIG,
   },
   {
     key: "synthetic-flat",
     title: "synthetic — flat/linear engine",
-    note: "Static STEP N OF M (M=3). Decisive → HIGH + stat box; the 'not sure how long' answer still lands a dish → MEDIUM; q3 'not sure' → neutral escape.",
+    note: "Decisive → HIGH + box + CTA (standard=tier67); hedged → MEDIUM + CTA; review dish → tier147; q3 'not sure' → neutral escape.",
     engine: syntheticFlat as Engine,
     figures: syntheticFlatFigures as EngineFigure[],
+    config: SYNTHETIC_CONFIG,
   },
 ];
 
@@ -56,19 +83,11 @@ export default function EnginePreviewPage() {
         <p className="font-mono text-xs uppercase tracking-widest text-neutral-400">Dev · noindex</p>
         <h1 className="mt-1 font-serif text-2xl font-bold text-neutral-950">EngineCalculator preview</h1>
         <p className="mt-1 text-sm text-neutral-500">
-          Stage 1: engine consumption + step flow. No verdict panel, popup, sessions, or Stripe.
+          Stage 3: engine flow → verdict panel → qualification popup → pinned tier/price. Stripe is stubbed.
         </p>
       </div>
 
-      <div className="space-y-12">
-        {FIXTURES.map((f) => (
-          <section key={f.key}>
-            <h2 className="mb-1 font-mono text-sm font-bold text-neutral-700">{f.title}</h2>
-            <p className="mb-4 text-xs text-neutral-500">{f.note}</p>
-            <EngineCalculator engine={f.engine} figures={f.figures} />
-          </section>
-        ))}
-      </div>
+      <EnginePreviewList fixtures={FIXTURES} />
     </main>
   );
 }

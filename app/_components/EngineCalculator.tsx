@@ -25,12 +25,23 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import EngineVerdictPanel from "@/app/_components/EngineVerdictPanel";
+import EngineQualPopup from "@/app/_components/EngineQualPopup";
 import {
   deriveConfidence,
+  isQuasiEscape,
   resolveTerminalFigures,
   type EngineConfidence,
   type EngineFigure,
 } from "@/app/_components/engine-terms";
+import {
+  ctaLabelFor,
+  fmtPrice,
+  payLabelFor,
+  qualFields,
+  resolveTier,
+  type EngineConfig,
+  type PinnedTier,
+} from "@/app/_components/engine-config";
 
 // ── engine contract (permissive — extra fields tolerated) ────────────────────
 export interface EngineOption {
@@ -80,8 +91,18 @@ export interface EngineTerminal {
 export interface EngineCompletion {
   answers: Record<string, string>;
   terminal: EngineTerminal;
-  confidence: EngineConfidence | null; // stage 3 input (inert now)
-  statFigures: EngineFigure[];         // stage 3 input (inert now)
+  confidence: EngineConfidence | null;
+  statFigures: EngineFigure[];
+}
+
+// Stub handoff to the (C2-scope) Stripe checkout — carries everything checkout needs.
+export interface EngineCheckout {
+  sessionId: string | null;
+  terminal: EngineTerminal;
+  tier: number;
+  price: number;
+  answers: Record<string, string>;
+  qualification: Record<string, string>;
 }
 
 interface TrailEntry {
@@ -106,11 +127,15 @@ function optSubLabel(o: EngineOption): string | undefined {
 export default function EngineCalculator({
   engine,
   figures,
+  config,
   onComplete,
+  onCheckout,
 }: {
   engine: Engine;
   figures?: EngineFigure[];
+  config?: EngineConfig;
   onComplete?: (c: EngineCompletion) => void;
+  onCheckout?: (c: EngineCheckout) => void;
 }) {
   const questions = useMemo(() => engine.questions ?? [], [engine.questions]);
   const menu = useMemo(() => engine.menu ?? [], [engine.menu]);
@@ -192,16 +217,54 @@ export default function EngineCalculator({
     [qById, questions.length, showIfPasses],
   );
 
+  // Deterministically replay a completed answer-map back into a trail (hydration).
+  const replayTrail = useCallback(
+    (ans: Record<string, string>): { trail: TrailEntry[]; node: string } => {
+      const t: TrailEntry[] = [];
+      let cur = resolveNode(entryId, ans);
+      const seen = new Set<string>();
+      while (qById.has(cur) && !seen.has(cur)) {
+        seen.add(cur);
+        const q = qById.get(cur)!;
+        const o = (q.options ?? []).find((x) => x.value === ans[cur]);
+        if (!o) break; // no stored answer for this question → stop (partial)
+        t.push({ qId: cur, value: o.value, label: o.label });
+        cur = resolveNode(o.routes_to, ans);
+      }
+      return { trail: t, node: cur };
+    },
+    [qById, resolveNode, entryId],
+  );
+
   const [trail, setTrail] = useState<TrailEntry[]>([]);
   const [node, setNode] = useState<string>(entryId);
   const [pending, setPending] = useState<string | null>(null); // selected value mid-auto-advance
+
+  // ── session / tier / popup state (stage 3) ──
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [pinnedTier, setPinnedTier] = useState<PinnedTier | null>(null); // return-path pin
+  const [qual, setQual] = useState<Record<string, string>>({});
+  const [showPopup, setShowPopup] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  const postedFor = useRef<string | null>(null);
+
+  const clearSession = useCallback(() => {
+    setSessionId(null);
+    setPinnedTier(null);
+    setQual({});
+    setShowPopup(false);
+    setPaying(false);
+    postedFor.current = null;
+  }, []);
 
   // reset when the engine (or its entry) changes.
   useEffect(() => {
     setTrail([]);
     setNode(entryId);
     setPending(null);
-  }, [entryId]);
+    clearSession();
+  }, [entryId, clearSession]);
 
   const answers = useMemo(
     () => Object.fromEntries(trail.map((t) => [t.qId, t.value])),
@@ -253,6 +316,112 @@ export default function EngineCalculator({
     if (!isTerminal) firedFor.current = null;
   }, [isTerminal]);
 
+  // ── effective terminal presentation (quasi-escape rider + pinned tier) ──
+  const quasiEscape =
+    !!terminal && isQuasiEscape(terminal.kind, terminal.statFigures, terminal.indicatedResult);
+  const effKind: TerminalKind | null = terminal ? (quasiEscape ? "escape" : terminal.kind) : null;
+  const sellable = !!terminal && effKind === "menu";
+  const liveTier = sellable && terminal ? resolveTier(config, terminal.id) : null;
+  const tierInfo = pinnedTier ?? liveTier; // return-path pin wins over live re-derivation
+
+  // ── HYDRATION: ?session_id= → rebuild trail from inputs; tier/price from the PINNED output ──
+  useEffect(() => {
+    if (typeof window === "undefined") { setHydrated(true); return; }
+    const sid = new URLSearchParams(window.location.search).get("session_id");
+    if (!sid || sid.startsWith("fallback_")) { setHydrated(true); return; }
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/decision-sessions/${encodeURIComponent(sid)}`);
+        if (!res.ok || cancelled) return;
+        const row = await res.json();
+        if (cancelled || !row?.inputs) return;
+        const { trail: t, node: n } = replayTrail(row.inputs as Record<string, string>);
+        setTrail(t);
+        setNode(n);
+        setSessionId(sid);
+        postedFor.current = n; // hydrated terminal — never re-POST
+        firedFor.current = n;  // and don't re-fire onComplete
+        const out = (row.output ?? {}) as { tier?: number; price?: number };
+        if (typeof out.tier === "number") {
+          setPinnedTier({ tier: out.tier, price: typeof out.price === "number" ? out.price : out.tier });
+        }
+      } catch { /* non-blocking */ } finally {
+        if (!cancelled) setHydrated(true);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [replayTrail]);
+
+  // ── POST a decision session when a SELLABLE terminal is reached (tier PINNED) ──
+  useEffect(() => {
+    if (!hydrated || !sellable || !terminal || !tierInfo) return;
+    if (!config?.productSlug || sessionId) return;
+    if (postedFor.current === terminal.id) return;
+    postedFor.current = terminal.id;
+    const slug = config.productSlug;
+    try {
+      sessionStorage.setItem(`${slug}_answers`, JSON.stringify(answers));
+      sessionStorage.setItem(`${slug}_terminal`, terminal.id);
+      sessionStorage.setItem(`${slug}_status`, terminal.label);
+      sessionStorage.setItem(`${slug}_tier`, String(tierInfo.tier));
+      if (terminal.confidence) sessionStorage.setItem(`${slug}_confidence`, terminal.confidence.level);
+    } catch { /* ignore */ }
+    fetch("/api/decision-sessions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        product_slug: slug,
+        source_path: config.sourcePath ?? window.location.pathname,
+        country_code: config.country ?? "AU",
+        currency_code: config.currency ?? "AUD",
+        site: config.site ?? "taxchecknow",
+        inputs: answers,
+        output: {
+          terminal_id: terminal.id,
+          terminal_label: terminal.label,
+          status: terminal.label,
+          confidence: terminal.confidence?.level ?? null,
+          tier: tierInfo.tier,   // PINNED
+          price: tierInfo.price, // PINNED
+        },
+        recommended_tier: tierInfo.tier,
+      }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (d?.id) { setSessionId(d.id); setPinnedTier(tierInfo); } })
+      .catch(() => {});
+  }, [hydrated, sellable, terminal, tierInfo, config, sessionId, answers]);
+
+  function openPopup() { setShowPopup(true); }
+  function closePopup() { setShowPopup(false); }
+  function setQualField(k: string, v: string) { setQual((p) => ({ ...p, [k]: v })); }
+
+  function pay() {
+    if (!terminal || !tierInfo) return;
+    setPaying(true);
+    if (sessionId) {
+      fetch("/api/decision-sessions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: sessionId, tier_intended: tierInfo.tier, questionnaire_payload: qual }),
+      }).catch(() => {});
+    }
+    try {
+      if (config?.productSlug) sessionStorage.setItem(`${config.productSlug}_qualification`, JSON.stringify(qual));
+    } catch { /* ignore */ }
+    // STUB handoff — real Stripe checkout is C2 scope.
+    onCheckout?.({
+      sessionId,
+      terminal: { kind: terminal.kind, id: terminal.id, label: terminal.label },
+      tier: tierInfo.tier,
+      price: tierInfo.price,
+      answers,
+      qualification: qual,
+    });
+    setPaying(false);
+  }
+
   const currentQ = qById.get(node);
 
   function choose(o: EngineOption) {
@@ -272,6 +441,7 @@ export default function EngineCalculator({
     setTrail((t) => t.slice(0, -1));
     setNode(prev.qId);
     firedFor.current = null;
+    if (isTerminal) clearSession(); // re-deciding from a terminal starts a fresh session
   }
 
   function reset() {
@@ -279,6 +449,7 @@ export default function EngineCalculator({
     setTrail([]);
     setNode(entryId);
     firedFor.current = null;
+    clearSession();
   }
 
   if (!questions.length || !entryId) {
@@ -350,17 +521,39 @@ export default function EngineCalculator({
     );
   }
 
-  // ── TERMINAL VIEW (stage-2 VerdictPanel) ────────────────────────────────────
-  if (terminal) {
+  // ── TERMINAL VIEW (stage-3: verdict panel + qualification popup) ─────────────
+  if (terminal && effKind) {
+    const showCta = sellable && !!tierInfo;
     return (
-      <EngineVerdictPanel
-        kind={terminal.kind}
-        heading={terminal.label}
-        indicatedResult={terminal.indicatedResult}
-        statFigures={terminal.statFigures}
-        confidence={terminal.confidence}
-        onReset={reset}
-      />
+      <>
+        <EngineVerdictPanel
+          kind={effKind}
+          heading={terminal.label}
+          indicatedResult={terminal.indicatedResult}
+          statFigures={quasiEscape ? [] : terminal.statFigures}
+          confidence={quasiEscape ? null : terminal.confidence}
+          onReset={reset}
+          ctaLabel={showCta ? ctaLabelFor(config, tierInfo!.price) : undefined}
+          ctaNote={showCta ? `${fmtPrice(tierInfo!.price)} · one-time · built around your answers` : undefined}
+          onCta={showCta ? openPopup : undefined}
+        />
+        {showPopup && tierInfo && (
+          <EngineQualPopup
+            fields={qualFields(config)}
+            answers={qual}
+            onChange={setQualField}
+            tier={tierInfo.tier}
+            price={tierInfo.price}
+            heading={config?.copy?.popupHeading ?? "Your personalised plan"}
+            subhead={config?.copy?.popupSubhead ?? "A few quick questions, then checkout"}
+            payLabel={payLabelFor(config, tierInfo.price)}
+            dismissLabel={config?.copy?.dismissLabel ?? "Not now — keep reading"}
+            paying={paying}
+            onPay={pay}
+            onDismiss={closePopup}
+          />
+        )}
+      </>
     );
   }
   return null;
