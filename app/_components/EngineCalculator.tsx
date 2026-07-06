@@ -34,11 +34,22 @@ import {
   type EngineFigure,
 } from "@/app/_components/engine-terms";
 import {
+  altTier,
+  bridgeCopyFor,
   ctaLabelFor,
+  escapeBodyFor,
+  escapeCtaLabelFor,
+  escapeLabelFor,
   fmtPrice,
   payLabelFor,
+  planChecklistFor,
+  priceForTier,
   qualFields,
   resolveTier,
+  resultLabelFor,
+  saveHeadingFor,
+  saveSubcopyFor,
+  secondaryTierLabelFor,
   type EngineConfig,
   type PinnedTier,
 } from "@/app/_components/engine-config";
@@ -240,13 +251,16 @@ export default function EngineCalculator({
   const [node, setNode] = useState<string>(entryId);
   const [pending, setPending] = useState<string | null>(null); // selected value mid-auto-advance
 
-  // ── session / tier / popup state (stage 3) ──
+  // ── session / tier / popup / email state ──
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [pinnedTier, setPinnedTier] = useState<PinnedTier | null>(null); // return-path pin
   const [qual, setQual] = useState<Record<string, string>>({});
   const [showPopup, setShowPopup] = useState(false);
+  const [popupTier, setPopupTier] = useState<PinnedTier | null>(null); // which tier the popup buys (alt-tier aware)
   const [paying, setPaying] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
   const postedFor = useRef<string | null>(null);
 
   const clearSession = useCallback(() => {
@@ -254,7 +268,10 @@ export default function EngineCalculator({
     setPinnedTier(null);
     setQual({});
     setShowPopup(false);
+    setPopupTier(null);
     setPaying(false);
+    setEmail("");
+    setEmailSent(false);
     postedFor.current = null;
   }, []);
 
@@ -269,6 +286,12 @@ export default function EngineCalculator({
   const answers = useMemo(
     () => Object.fromEntries(trail.map((t) => [t.qId, t.value])),
     [trail],
+  );
+  // Human-readable answers for the assessment/webhook + success-page fallback:
+  // "<question text>" → "<chosen option label>" (not raw ids). Manual-equivalent depth.
+  const labeledAnswers = useMemo(
+    () => Object.fromEntries(trail.map((t) => [qById.get(t.qId)?.text ?? t.qId, t.label])),
+    [trail, qById],
   );
   const kind = classify(node);
   const isTerminal = kind !== "question";
@@ -320,9 +343,16 @@ export default function EngineCalculator({
   const quasiEscape =
     !!terminal && isQuasiEscape(terminal.kind, terminal.statFigures, terminal.indicatedResult);
   const effKind: TerminalKind | null = terminal ? (quasiEscape ? "escape" : terminal.kind) : null;
-  const sellable = !!terminal && effKind === "menu";
-  const liveTier = sellable && terminal ? resolveTier(config, terminal.id) : null;
+  const isEscape = effKind === "escape";
+  // BOTH resolved dishes and escapes monetise now. Resolved → operator tierMap;
+  // escape/quasi-escape → FORCED $67 ("a closer look"), never $147.
+  const liveTier: PinnedTier | null = !terminal
+    ? null
+    : isEscape
+      ? { tier: 67, price: priceForTier(config, 67) }
+      : resolveTier(config, terminal.id);
   const tierInfo = pinnedTier ?? liveTier; // return-path pin wins over live re-derivation
+  const monetizable = !!terminal && !!tierInfo; // resolved OR escape
 
   // ── HYDRATION: ?session_id= → rebuild trail from inputs; tier/price from the PINNED output ──
   useEffect(() => {
@@ -335,14 +365,16 @@ export default function EngineCalculator({
         const res = await fetch(`/api/decision-sessions/${encodeURIComponent(sid)}`);
         if (!res.ok || cancelled) return;
         const row = await res.json();
-        if (cancelled || !row?.inputs) return;
-        const { trail: t, node: n } = replayTrail(row.inputs as Record<string, string>);
+        const out = (row?.output ?? {}) as { tier?: number; price?: number; raw_answers?: Record<string, string> };
+        // replay from the RAW {qId: value} answers (inputs is now human-labeled for the assessment).
+        const rawForReplay = out.raw_answers ?? (row?.inputs as Record<string, string> | undefined);
+        if (cancelled || !rawForReplay) return;
+        const { trail: t, node: n } = replayTrail(rawForReplay);
         setTrail(t);
         setNode(n);
         setSessionId(sid);
         postedFor.current = n; // hydrated terminal — never re-POST
         firedFor.current = n;  // and don't re-fire onComplete
-        const out = (row.output ?? {}) as { tier?: number; price?: number };
         if (typeof out.tier === "number") {
           setPinnedTier({ tier: out.tier, price: typeof out.price === "number" ? out.price : out.tier });
         }
@@ -353,15 +385,17 @@ export default function EngineCalculator({
     return () => { cancelled = true; };
   }, [replayTrail]);
 
-  // ── POST a decision session when a SELLABLE terminal is reached (tier PINNED) ──
+  // ── POST a decision session when a MONETIZABLE terminal is reached (tier PINNED) ──
+  // Both resolved dishes and escapes now create a session (needed for email + checkout).
   useEffect(() => {
-    if (!hydrated || !sellable || !terminal || !tierInfo) return;
+    if (!hydrated || !monetizable || !terminal || !tierInfo) return;
     if (!config?.productSlug || sessionId) return;
     if (postedFor.current === terminal.id) return;
     postedFor.current = terminal.id;
     const slug = config.productSlug;
     try {
-      sessionStorage.setItem(`${slug}_answers`, JSON.stringify(answers));
+      // fallback path reads _answers = the LABELED answers (personalised pre-webhook render).
+      sessionStorage.setItem(`${slug}_answers`, JSON.stringify(labeledAnswers));
       sessionStorage.setItem(`${slug}_terminal`, terminal.id);
       sessionStorage.setItem(`${slug}_status`, terminal.label);
       sessionStorage.setItem(`${slug}_tier`, String(tierInfo.tier));
@@ -376,14 +410,15 @@ export default function EngineCalculator({
         country_code: config.country ?? "AU",
         currency_code: config.currency ?? "AUD",
         site: config.site ?? "taxchecknow",
-        inputs: answers,
+        inputs: labeledAnswers,               // human-readable — webhook feeds this to /api/assess
         output: {
           terminal_id: terminal.id,
           terminal_label: terminal.label,
           status: terminal.label,
           confidence: terminal.confidence?.level ?? null,
-          tier: tierInfo.tier,   // PINNED
-          price: tierInfo.price, // PINNED
+          tier: tierInfo.tier,                // PINNED
+          price: tierInfo.price,              // PINNED
+          raw_answers: answers,               // {qId: value} — used by hydration replay only
         },
         recommended_tier: tierInfo.tier,
       }),
@@ -391,33 +426,66 @@ export default function EngineCalculator({
       .then((r) => r.json())
       .then((d) => { if (d?.id) { setSessionId(d.id); setPinnedTier(tierInfo); } })
       .catch(() => {});
-  }, [hydrated, sellable, terminal, tierInfo, config, sessionId, answers]);
+  }, [hydrated, monetizable, terminal, tierInfo, config, sessionId, answers, labeledAnswers]);
 
-  function openPopup() { setShowPopup(true); }
+  function openPopup(tier: PinnedTier) { setPopupTier(tier); setShowPopup(true); }
   function closePopup() { setShowPopup(false); }
   function setQualField(k: string, v: string) { setQual((p) => ({ ...p, [k]: v })); }
 
-  function pay() {
-    if (!terminal || !tierInfo) return;
-    setPaying(true);
+  // Save box → free-result email (/api/leads: Resend + d3/d7/d14 nurture server-side)
+  // + PATCH the pinned decision_session with the email. Ported from the manual calculator.
+  function handleSaveEmail() {
+    if (!email || !config?.productSlug) return;
+    fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        source: config.productSlug.replace(/-/g, "_"),
+        country_code: config.country ?? "AU",
+        site: config.site ?? "taxchecknow",
+        session_id: sessionId ?? "",
+        verdict_status: terminal?.label ?? "",
+      }),
+    }).catch(() => {});
     if (sessionId) {
       fetch("/api/decision-sessions", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: sessionId, tier_intended: tierInfo.tier, questionnaire_payload: qual }),
+        body: JSON.stringify({ id: sessionId, email }),
+      }).catch(() => {});
+    }
+    setEmailSent(true);
+  }
+
+  function pay() {
+    if (!terminal) return;
+    const buyTier = popupTier ?? tierInfo;
+    if (!buyTier) return;
+    setPaying(true);
+    // qualification labeled ("<field label>" → "<chosen option label>") for the assessment.
+    const qualLabeled = Object.fromEntries(
+      qualFields(config)
+        .map((f) => [f.label, f.options.find((o) => o.value === qual[f.key])?.label ?? qual[f.key]] as const)
+        .filter(([, v]) => v !== undefined && v !== ""),
+    );
+    if (sessionId) {
+      fetch("/api/decision-sessions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: sessionId, tier_intended: buyTier.tier, questionnaire_payload: qualLabeled }),
       }).catch(() => {});
     }
     try {
-      if (config?.productSlug) sessionStorage.setItem(`${config.productSlug}_qualification`, JSON.stringify(qual));
+      if (config?.productSlug) sessionStorage.setItem(`${config.productSlug}_qualification`, JSON.stringify(qualLabeled));
     } catch { /* ignore */ }
-    // STUB handoff — real Stripe checkout is C2 scope.
     onCheckout?.({
       sessionId,
       terminal: { kind: terminal.kind, id: terminal.id, label: terminal.label },
-      tier: tierInfo.tier,
-      price: tierInfo.price,
-      answers,
-      qualification: qual,
+      tier: buyTier.tier,
+      price: buyTier.price,
+      answers: labeledAnswers,
+      qualification: qualLabeled,
     });
     setPaying(false);
   }
@@ -521,32 +589,45 @@ export default function EngineCalculator({
     );
   }
 
-  // ── TERMINAL VIEW (stage-3: verdict panel + qualification popup) ─────────────
-  if (terminal && effKind) {
-    const showCta = sellable && !!tierInfo;
+  // ── TERMINAL VIEW: verdict panel (full parity) + qualification popup ─────────
+  if (terminal && effKind && tierInfo) {
+    const alt = altTier(config, tierInfo.tier);
     return (
       <>
         <EngineVerdictPanel
           kind={effKind}
           heading={terminal.label}
           indicatedResult={terminal.indicatedResult}
-          statFigures={quasiEscape ? [] : terminal.statFigures}
-          confidence={quasiEscape ? null : terminal.confidence}
+          statFigures={isEscape ? [] : terminal.statFigures}
+          confidence={isEscape ? null : terminal.confidence}
           onReset={reset}
-          ctaLabel={showCta ? ctaLabelFor(config, tierInfo!.price) : undefined}
-          ctaNote={showCta ? `${fmtPrice(tierInfo!.price)} · one-time · built around your answers` : undefined}
-          onCta={showCta ? openPopup : undefined}
+          resultLabel={resultLabelFor(config)}
+          escapeLabel={escapeLabelFor(config)}
+          escapeBody={escapeBodyFor(config)}
+          ctaLabel={isEscape ? escapeCtaLabelFor(config, tierInfo.price) : ctaLabelFor(config, tierInfo.price)}
+          ctaNote={`${fmtPrice(tierInfo.price)} · one-time · built around your answers`}
+          onCta={() => openPopup(tierInfo)}
+          secondaryLabel={isEscape ? undefined : secondaryTierLabelFor(config, alt.price)}
+          onSecondary={isEscape ? undefined : () => openPopup(alt)}
+          bridgeCopy={isEscape ? undefined : bridgeCopyFor(config)}
+          planChecklist={isEscape ? undefined : planChecklistFor(config)}
+          saveHeading={saveHeadingFor(config)}
+          saveSubcopy={saveSubcopyFor(config)}
+          email={email}
+          emailSent={emailSent}
+          onEmailChange={setEmail}
+          onSaveEmail={handleSaveEmail}
         />
-        {showPopup && tierInfo && (
+        {showPopup && popupTier && (
           <EngineQualPopup
             fields={qualFields(config)}
             answers={qual}
             onChange={setQualField}
-            tier={tierInfo.tier}
-            price={tierInfo.price}
+            tier={popupTier.tier}
+            price={popupTier.price}
             heading={config?.copy?.popupHeading ?? "Your personalised plan"}
             subhead={config?.copy?.popupSubhead ?? "A few quick questions, then checkout"}
-            payLabel={payLabelFor(config, tierInfo.price)}
+            payLabel={payLabelFor(config, popupTier.price)}
             dismissLabel={config?.copy?.dismissLabel ?? "Not now — keep reading"}
             paying={paying}
             onPay={pay}

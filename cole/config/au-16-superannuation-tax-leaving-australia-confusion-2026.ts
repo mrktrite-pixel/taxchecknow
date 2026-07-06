@@ -372,6 +372,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-01",
       "name": "Your DASP Tax Position",
       "desc": "Your withholding rate by visa class and component (taxed vs untaxed element).",
+      "content": "<h2>Your DASP Withholding Position</h2><div class='action-box'><h3>Rates by visa class and component</h3><p>Working holiday maker (subclass 417/462): taxed element 65%, untaxed element 65%.</p><p>Other temporary visas (student, skilled, sponsored): taxed element 35%, untaxed element 45%.</p><p>Tax-free component: 0%.</p></div><h3>What this means for you</h3><p>Your DASP is withheld at the time of payment based on your visa class and how your balance splits between taxed and untaxed elements. Confirm which components make up your balance before you claim.</p><p>Source: <a href='https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp'>ATO — Departing Australia Superannuation Payment</a> · Migration Act 1958.</p>",
       "tier": 1
     },
     {
@@ -379,6 +380,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-02",
       "name": "Claim Timing & Payment Window",
       "desc": "The 28-day payment window and the 14-day payment-summary window, applied to your situation.",
+      "content": "<h2>Claim Timing &amp; Payment Windows</h2><table><tr><th>Milestone</th><th>Window</th></tr><tr><td>DASP paid after a completed application is received</td><td>within 28 days</td></tr><tr><td>DASP payment summary issued after payment is made</td><td>within 14 days</td></tr></table><div class='info-box'>Incomplete applications are the most common cause of delay. Prepare your identity documents and fund details before you submit.</div><p>Source: ATO — Departing Australia Superannuation Payment.</p>",
       "tier": 1
     },
     {
@@ -386,6 +388,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-03",
       "name": "ID & Certification Checklist",
       "desc": "What certified documents your balance requires and how to prepare them before you leave.",
+      "content": "<h2>Identification &amp; Certification Checklist</h2><div class='action-box'><h3>Where your super balance is $5,000 or more</h3><p>Your fund may require certified copies of your proof-of-identity documents.</p><p>Paper applications may also require a Certification of Immigration Status from Home Affairs.</p></div><ul class='checklist'><li>Certify your identity documents while still in Australia — it is materially easier before you leave.</li><li>Confirm your fund's specific certified-copy requirements.</li><li>For paper claims, request the Certification of Immigration Status early.</li></ul>",
       "tier": 1
     },
     {
@@ -393,6 +396,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-04",
       "name": "Unclaimed Super Risk Brief",
       "desc": "What happens after 6 months and how to claim back from the ATO if it has already transferred.",
+      "content": "<h2>Unclaimed Super — the 6-Month Rule</h2><p>Where 6 months or more have passed since you left Australia and your visa ceased, your super fund may transfer your balance to the ATO as unclaimed super money.</p><h3>If it has already transferred</h3><p>You then claim your DASP from the ATO directly rather than from your fund. The DASP withholding rates still apply — working holiday makers face the 65% rate on ATO-held unclaimed money.</p><p>Source: ATO — Departing Australia Superannuation Payment and unclaimed super.</p>",
       "tier": 1
     },
     {
@@ -400,6 +404,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-05",
       "name": "Your Accountant Brief",
       "desc": "DASP questions to take to your adviser, written for your exact situation.",
+      "content": "<div class='info-box'>Take these to your accountant or adviser before you claim.</div><div class='action-box'><h3>Question 1</h3><p>Given my visa class, what withholding rate applies to the taxed and untaxed elements of my balance?</p></div><h3>Question 2</h3><p>Has 6 months passed since I left and my visa ceased — has my super already moved to the ATO as unclaimed money?</p><h3>Question 3</h3><p>Do I need certified identity documents or a Certification of Immigration Status for my balance, and how do I prepare them from overseas?</p>",
       "tier": 1
     },
     {
@@ -407,6 +412,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-06",
       "name": "Taxed vs Untaxed Element Breakdown",
       "desc": "How your balance splits and the exact rate on each portion.",
+      "content": "<h2>Taxed vs Untaxed Element — Full Breakdown</h2><p>Your DASP tax depends on how your balance splits between the taxed and untaxed elements of the taxable component.</p><table><tr><th>Visa class</th><th>Taxed element</th><th>Untaxed element</th></tr><tr><td>Working holiday maker (417/462)</td><td>65%</td><td>65%</td></tr><tr><td>Other temporary visa</td><td>35%</td><td>45%</td></tr></table><p>Request a component statement from your fund so the split — and therefore your exact withholding — is known before you claim.</p>",
       "tier": 2
     },
     {
@@ -414,6 +420,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-07",
       "name": "Residency & Departure Interaction",
       "desc": "How ceasing residency interacts with your super and other departure obligations.",
+      "content": "<h2>Residency &amp; Departure Interaction</h2><p>DASP eligibility requires that you held a temporary visa (excluding subclasses 405 and 410), your visa has ceased, and you have left Australia. Permanent residents and Australian citizens are not eligible.</p><ul class='checklist'><li>Confirm your visa has actually ceased, not merely lapsed in practice.</li><li>Both departure and visa cessation need to have occurred before a DASP claim.</li><li>Losing permanent-resident status while overseas changes your position — check eligibility carefully.</li></ul>",
       "tier": 2
     },
     {
@@ -421,6 +428,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-08",
       "name": "Adviser Decision Framework",
       "desc": "A structured framework to plan DASP timing with your adviser and any planned return.",
+      "content": "<h2>Adviser Decision Framework</h2><ol><li><strong>Confirm eligibility:</strong> temporary visa held (not subclass 405/410), visa ceased, departed Australia.</li><li><strong>Establish your rate:</strong> visa class × component (taxed vs untaxed element).</li><li><strong>Check the clock:</strong> more than 6 months since leaving and cessation → claim from the ATO, not the fund.</li><li><strong>Prepare documents:</strong> certified identity / Certification of Immigration Status if your balance is $5,000 or more.</li><li><strong>If you plan to return:</strong> model how a future return affects your super position before you claim.</li></ol><p>Use this with your adviser to sequence your DASP claim.</p>",
       "tier": 2
     }
   ],

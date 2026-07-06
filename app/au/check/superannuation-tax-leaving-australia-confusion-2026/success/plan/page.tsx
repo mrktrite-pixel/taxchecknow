@@ -121,16 +121,13 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const visa_class = sessionStorage.getItem("superannuation-tax-leaving-australia-confusion-2026_visa_class") || "temporary";
-      const time_since_leaving = sessionStorage.getItem("superannuation-tax-leaving-australia-confusion-2026_time_since_leaving") || "unknown";
-      const super_balance_band = sessionStorage.getItem("superannuation-tax-leaving-australia-confusion-2026_super_balance_band") || "unknown";
-
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-        "visa_class": visa_class,
-        "time_since_leaving": time_since_leaving,
-        "super_balance_band": super_balance_band,
-      }).some(v => v && v !== "temporary");
+      // Personalised fallback: read the LABELED answers the calculator wrote
+      // (<slug>_answers = "<question>" → "<chosen option>"). Not raw ids, not defaults.
+      let inputs: Record<string, string> = {};
+      try {
+        const raw = sessionStorage.getItem("superannuation-tax-leaving-australia-confusion-2026_answers");
+        if (raw) inputs = JSON.parse(raw) as Record<string, string>;
+      } catch { inputs = {}; }
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -141,11 +138,7 @@ export default function SuccessPlan() {
           authority:  "ATO",
           tier:       2,
           name,
-          inputs: {
-        "Visa class held": visa_class,
-        "Time since leaving Australia": time_since_leaving,
-        "Super balance band": super_balance_band,
-          },
+          inputs,
           fields: ["daspStatus","taxByVisaClass","taxedVsUntaxedBreakdown","paymentTimeline","idDocRequirements","unclaimedSuperRisk","residencyInteraction","superBalanceStrategy","adviserDecisionFramework","returnPlanningNote","nextStepsCalendar","strongestRiskTrigger","confidenceLevel","firstAction"],
         }),
       });

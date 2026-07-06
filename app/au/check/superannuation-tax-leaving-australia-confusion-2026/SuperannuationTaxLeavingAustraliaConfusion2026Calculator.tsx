@@ -65,6 +65,24 @@ const ENGINE_CONFIG: EngineConfig = {
     popupSubhead: "A few quick questions, then checkout",
     payLabel: "Pay {price} →",
     dismissLabel: "Not now — keep reading",
+    // ── result-panel parity (DASP-flavoured) ──
+    resultLabel: "Your DASP position",
+    bridgeCopy:
+      "Most people leaving Australia either leave super sitting unclaimed or get the visa-class tax wrong — and only find out later. This shows your exact DASP position and what to do about it.",
+    planChecklist: [
+      "Your DASP tax position by visa class — taxed and untaxed elements",
+      "The 28-day payment window and what to prepare before you claim",
+      "What happens to unclaimed super after 6 months (ATO transfer)",
+      "Questions to take to your accountant or adviser",
+    ],
+    secondaryTierLabel: "Want the full departure tax & super optimisation system? — {price}",
+    saveHeading: "Save your DASP result to show your adviser.",
+    saveSubcopy: "Get a copy of your position by email — free.",
+    // ── escape / quasi-escape (a "closer look", never a confirmed position) ──
+    escapeLabel: "A closer look at your super",
+    escapeBody:
+      "Your answers don't point to a single clear DASP path — which usually means your situation needs a closer look. A short personalised review shows what applies to your circumstances after leaving Australia, and the steps to take next.",
+    escapeCtaLabel: "Get my personalised super review — {price} →",
   },
 };
 
