@@ -40,7 +40,15 @@ export interface EngineCopy {
   escapeLabel?: string;       // escape banner label
   escapeBody?: string;        // escape framed body (a "closer look")
   escapeCtaLabel?: string;    // escape $67 CTA; "{price}" substituted
+  // ── two-popup flow: popup 1 = WHAT-YOU-GET sell panel ──
+  sellHeading?: string;       // popup-1 heading (falls back to the tier name)
+  sellSubhead?: string;       // popup-1 sub-line
+  getItLabel?: string;        // popup-1 primary button; "{price}" substituted
 }
+
+// Operator-approved severity class carried PER-TERMINAL in config (renderer never
+// self-assigns) → traffic-light banner colour on resolved dishes. Escapes are neutral.
+export type Severity = "clear" | "warning" | "urgent";
 export interface EngineConfig {
   productSlug: string;                  // required — session + sessionStorage keys
   sourcePath?: string;                  // e.g. /au/check/<slug>
@@ -51,6 +59,8 @@ export interface EngineConfig {
   defaultTier?: number;                 // when a terminal isn't in the map (default 67)
   prices?: Record<string, number>;      // tier → price (default {67:67,147:147})
   qualification?: QualField[];          // the 3 dropdowns (generic default provided)
+  severity?: Record<string, Severity>;  // terminal id → operator-approved severity class
+  tierNames?: Record<string, string>;   // tier → customer-facing product name (sell panel)
   copy?: EngineCopy;
 }
 
@@ -169,4 +179,21 @@ export function saveHeadingFor(config: EngineConfig | undefined): string {
 }
 export function saveSubcopyFor(config: EngineConfig | undefined): string {
   return config?.copy?.saveSubcopy ?? "Get a copy by email — free.";
+}
+
+/** Operator-approved severity for a resolved terminal; default "clear" when unmapped. */
+export function severityFor(config: EngineConfig | undefined, terminalId: string): Severity {
+  return config?.severity?.[terminalId] ?? "clear";
+}
+export function tierNameFor(config: EngineConfig | undefined, tier: number): string {
+  return config?.tierNames?.[String(tier)] ?? `Personalised plan (tier ${tier})`;
+}
+export function sellHeadingFor(config: EngineConfig | undefined, tier: number): string {
+  return config?.copy?.sellHeading ?? tierNameFor(config, tier);
+}
+export function sellSubheadFor(config: EngineConfig | undefined): string {
+  return config?.copy?.sellSubhead ?? "Here's what's included — built around your answers.";
+}
+export function getItLabelFor(config: EngineConfig | undefined, price: number): string {
+  return withPrice(config?.copy?.getItLabel ?? "Get it — {price} →", price);
 }

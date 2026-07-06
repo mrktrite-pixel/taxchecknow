@@ -6,6 +6,11 @@
 
 import type { ProductConfig, ProductFile } from "../types/product-config";
 
+// Jurisdiction flag from config.country — NEVER hardcode a flag (was leaking 🇬🇧 on AU).
+function countryFlag(country: string): string {
+  return ({ au: "🇦🇺", uk: "🇬🇧", us: "🇺🇸", nz: "🇳🇿", ca: "🇨🇦" } as Record<string, string>)[country?.toLowerCase()] ?? "🏳️";
+}
+
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 
 export function generateProductFile(
@@ -132,7 +137,7 @@ export default function ${toPascal(config.id)}File${file.num}() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 ${config.authority} · ${config.legalAnchor}
+              ${countryFlag(config.country)} ${config.authority} · ${config.legalAnchor}
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: ${config.lastVerified}
@@ -192,7 +197,7 @@ export default function ${toPascal(config.id)}File${file.num}() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
+            Always consult a qualified ${config.market} tax adviser for your personal situation.
             Based on ${config.authority} guidance ${config.lastVerified}.
           </p>
         </div>

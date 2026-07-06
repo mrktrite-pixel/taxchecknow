@@ -20,13 +20,32 @@ const ENGINE_CONFIG: EngineConfig = {
   currency: "AUD",
   site: "taxchecknow",
   defaultTier: 67,
-  // REAL engine ids. dasp-eligibility-check is a quasi-escape → unmapped (CTA-less); escapes unmapped.
+  // REAL engine ids. Escapes/quasi-escapes unmapped → forced $67 "closer look".
   tierMap: {
+    "dasp-eligibility-check": 67,
     "dasp-tax-whm-visa": 67,
     "dasp-tax-ordinary-visa": 67,
     "dasp-payment-timeline": 67,
     "dasp-id-requirements-high-balance": 67,
     "dasp-unclaimed-super-ato-transfer": 147,
+    // named-complexity 147 dishes (PQ-MAZE-1 phase 2)
+    "dasp-mixed-visa-apportionment": 147,
+    "dasp-multi-fund-or-former-pr": 147,
+  },
+  // Operator-APPROVED severity classes (judgment gate) → traffic-light banner colour.
+  severity: {
+    "dasp-eligibility-check": "warning",
+    "dasp-tax-ordinary-visa": "warning",
+    "dasp-tax-whm-visa": "urgent",
+    "dasp-id-requirements-high-balance": "warning",
+    "dasp-payment-timeline": "clear",
+    "dasp-unclaimed-super-ato-transfer": "urgent",
+    "dasp-mixed-visa-apportionment": "urgent",
+    "dasp-multi-fund-or-former-pr": "urgent",
+  },
+  tierNames: {
+    "67": "DASP & Departure Super Plan",
+    "147": "Departure Tax & Super Optimisation System",
   },
   qualification: [
     {

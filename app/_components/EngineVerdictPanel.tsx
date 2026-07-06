@@ -18,9 +18,19 @@
 
 import type { EngineConfidence, EngineFigure } from "@/app/_components/engine-terms";
 import { toArrowLines } from "@/app/_components/engine-terms";
+import type { Severity } from "@/app/_components/engine-config";
+
+// Operator-approved severity class → traffic-light palette (matches manual getStatusStyle).
+// Renderer only maps class → colour; it never assigns severity (config-supplied).
+const SEVERITY_STYLE: Record<Severity, { panel: string; label: string }> = {
+  clear: { panel: "border-emerald-200 bg-emerald-50", label: "text-emerald-700" },
+  warning: { panel: "border-amber-200 bg-amber-50", label: "text-amber-700" },
+  urgent: { panel: "border-red-200 bg-red-50", label: "text-red-700" },
+};
 
 export interface EngineVerdictPanelProps {
   kind: "menu" | "escape" | "unknown";
+  severity?: Severity; // resolved-dish banner colour (config-supplied); escapes ignore it
   heading: string;
   indicatedResult: string; // verbatim engine text ("" if none)
   statFigures: EngineFigure[];
@@ -100,7 +110,7 @@ function EmailCapture({
 
 export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
   const {
-    kind, heading, indicatedResult, statFigures, confidence, onReset,
+    kind, severity, heading, indicatedResult, statFigures, confidence, onReset,
     resultLabel, escapeLabel, escapeBody,
     ctaLabel, ctaNote, onCta, secondaryLabel, onSecondary,
     bridgeCopy, planChecklist,
@@ -163,11 +173,11 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
         ← Change my answers
       </button>
 
-      <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6">
-        {/* BANNER — neutral, structural only */}
+      <div className={`rounded-2xl border p-5 sm:p-6 ${SEVERITY_STYLE[severity ?? "clear"].panel}`}>
+        {/* BANNER — colour driven by operator-approved severity class */}
         <div className="mb-1 flex items-center gap-2">
-          <span aria-hidden className="text-neutral-950">◆</span>
-          <p className="font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">{resultLabel}</p>
+          <span aria-hidden className={SEVERITY_STYLE[severity ?? "clear"].label}>◆</span>
+          <p className={`font-mono text-xs font-bold uppercase tracking-widest ${SEVERITY_STYLE[severity ?? "clear"].label}`}>{resultLabel}</p>
         </div>
         <h3 className="mb-4 font-serif text-xl font-bold text-neutral-950">{heading}</h3>
 

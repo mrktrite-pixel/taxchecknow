@@ -74,7 +74,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File04() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 ATO · DASP
+              🇦🇺 ATO · DASP
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: July 2026
@@ -204,7 +204,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File04() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
+            Always consult a qualified Australia tax adviser for your personal situation.
             Based on ATO guidance July 2026.
           </p>
         </div>

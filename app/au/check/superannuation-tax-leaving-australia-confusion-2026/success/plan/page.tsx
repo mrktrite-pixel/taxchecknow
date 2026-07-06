@@ -137,7 +137,7 @@ export default function SuccessPlan() {
           market:     "Australia",
           authority:  "ATO",
           tier:       2,
-          name,
+          name: name === "there" ? "" : name,
           inputs,
           fields: ["daspStatus","taxByVisaClass","taxedVsUntaxedBreakdown","paymentTimeline","idDocRequirements","unclaimedSuperRisk","residencyInteraction","superBalanceStrategy","adviserDecisionFramework","returnPlanningNote","nextStepsCalendar","strongestRiskTrigger","confidenceLevel","firstAction"],
         }),
@@ -220,7 +220,7 @@ export default function SuccessPlan() {
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "Your";
+  const greeting = firstName !== "there" ? `${firstName}` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">

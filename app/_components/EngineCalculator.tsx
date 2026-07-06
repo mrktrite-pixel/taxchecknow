@@ -26,6 +26,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import EngineVerdictPanel from "@/app/_components/EngineVerdictPanel";
 import EngineQualPopup from "@/app/_components/EngineQualPopup";
+import EngineSellPopup from "@/app/_components/EngineSellPopup";
 import {
   deriveConfidence,
   isQuasiEscape,
@@ -50,6 +51,10 @@ import {
   saveHeadingFor,
   saveSubcopyFor,
   secondaryTierLabelFor,
+  severityFor,
+  sellHeadingFor,
+  sellSubheadFor,
+  getItLabelFor,
   type EngineConfig,
   type PinnedTier,
 } from "@/app/_components/engine-config";
@@ -255,7 +260,7 @@ export default function EngineCalculator({
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [pinnedTier, setPinnedTier] = useState<PinnedTier | null>(null); // return-path pin
   const [qual, setQual] = useState<Record<string, string>>({});
-  const [showPopup, setShowPopup] = useState(false);
+  const [popupStage, setPopupStage] = useState<0 | 1 | 2>(0); // 0=closed · 1=WHAT-YOU-GET sell · 2=questions+Pay
   const [popupTier, setPopupTier] = useState<PinnedTier | null>(null); // which tier the popup buys (alt-tier aware)
   const [paying, setPaying] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -267,7 +272,7 @@ export default function EngineCalculator({
     setSessionId(null);
     setPinnedTier(null);
     setQual({});
-    setShowPopup(false);
+    setPopupStage(0);
     setPopupTier(null);
     setPaying(false);
     setEmail("");
@@ -340,8 +345,12 @@ export default function EngineCalculator({
   }, [isTerminal]);
 
   // ── effective terminal presentation (quasi-escape rider + pinned tier) ──
+  // A dish the operator placed in the tierMap is a RESOLVED dish by judgment (nameable),
+  // never a quasi-escape — even when it abstains from figures (named-complexity dishes).
+  const operatorResolved = !!terminal && !!config?.tierMap && terminal.id in config.tierMap;
   const quasiEscape =
-    !!terminal && isQuasiEscape(terminal.kind, terminal.statFigures, terminal.indicatedResult);
+    !!terminal && !operatorResolved &&
+    isQuasiEscape(terminal.kind, terminal.statFigures, terminal.indicatedResult);
   const effKind: TerminalKind | null = terminal ? (quasiEscape ? "escape" : terminal.kind) : null;
   const isEscape = effKind === "escape";
   // BOTH resolved dishes and escapes monetise now. Resolved → operator tierMap;
@@ -428,8 +437,8 @@ export default function EngineCalculator({
       .catch(() => {});
   }, [hydrated, monetizable, terminal, tierInfo, config, sessionId, answers, labeledAnswers]);
 
-  function openPopup(tier: PinnedTier) { setPopupTier(tier); setShowPopup(true); }
-  function closePopup() { setShowPopup(false); }
+  function openPopup(tier: PinnedTier) { setPopupTier(tier); setPopupStage(1); } // → sell panel
+  function closePopup() { setPopupStage(0); }
   function setQualField(k: string, v: string) { setQual((p) => ({ ...p, [k]: v })); }
 
   // Save box → free-result email (/api/leads: Resend + d3/d7/d14 nurture server-side)
@@ -596,6 +605,7 @@ export default function EngineCalculator({
       <>
         <EngineVerdictPanel
           kind={effKind}
+          severity={isEscape ? undefined : severityFor(config, terminal.id)}
           heading={terminal.label}
           indicatedResult={terminal.indicatedResult}
           statFigures={isEscape ? [] : terminal.statFigures}
@@ -618,7 +628,24 @@ export default function EngineCalculator({
           onEmailChange={setEmail}
           onSaveEmail={handleSaveEmail}
         />
-        {showPopup && popupTier && (
+        {/* POPUP 1 — WHAT-YOU-GET sell panel (alt-tier link only for resolved dishes) */}
+        {popupStage === 1 && popupTier && (
+          <EngineSellPopup
+            heading={sellHeadingFor(config, popupTier.tier)}
+            subhead={sellSubheadFor(config)}
+            tier={popupTier.tier}
+            price={popupTier.price}
+            bullets={planChecklistFor(config)}
+            getItLabel={getItLabelFor(config, popupTier.price)}
+            onGetIt={() => setPopupStage(2)}
+            dismissLabel={config?.copy?.dismissLabel ?? "Not now — keep reading"}
+            onDismiss={closePopup}
+            altLabel={isEscape ? undefined : secondaryTierLabelFor(config, alt.price)}
+            onAlt={isEscape ? undefined : () => setPopupTier(alt)}
+          />
+        )}
+        {/* POPUP 2 — 3 qualification questions + Pay */}
+        {popupStage === 2 && popupTier && (
           <EngineQualPopup
             fields={qualFields(config)}
             answers={qual}

@@ -116,7 +116,7 @@ export default function SuccessAssess() {
           market:     "Australia",
           authority:  "ATO",
           tier:       1,
-          name,
+          name: name === "there" ? "" : name,
           inputs,
           fields: ["daspStatus","taxByVisaClass","paymentTimeline","idDocRequirements","unclaimedSuperRisk","confidenceLevel","firstAction"],
         }),
@@ -201,7 +201,7 @@ export default function SuccessAssess() {
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "Your";
+  const greeting = firstName !== "there" ? `${firstName}` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">

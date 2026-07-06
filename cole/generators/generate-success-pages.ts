@@ -152,7 +152,7 @@ ${promptFields.map(f => `        "${f.key}": ${f.key},`).join("\n")}
           market:     "${config.market}",
           authority:  "${config.authority}",
           tier:       ${isTier2 ? 2 : 1},
-          name,
+          name: name === "there" ? "" : name,
           inputs: {
 ${inputsObj}
           },
@@ -213,7 +213,7 @@ ${calReads}
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? \`\${firstName}\` : "Your";
+  const greeting = firstName !== "there" ? \`\${firstName}\` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
