@@ -3,9 +3,16 @@ import Stripe from "stripe";
 
 // Stripe initialised inside handler — not at module level
 // Prevents build failures when env variables not yet set in Vercel
+//
+// SANDBOX SAFETY: STRIPE_SECRET_KEY is Production-only scope, so on Vercel Preview it
+// is undefined — there we MUST use STRIPE_SECRET_TEST_KEY (sandbox). Production is
+// unchanged (uses STRIPE_SECRET_KEY, no test fallback). Consequence: Preview literally
+// cannot reach live Stripe.
+const isPreview = (): boolean => process.env.VERCEL_ENV === "preview";
+
 function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) throw new Error("Missing STRIPE_SECRET_KEY — add to Vercel environment variables");
+  const key = isPreview() ? process.env.STRIPE_SECRET_TEST_KEY : process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error(isPreview() ? "Missing STRIPE_SECRET_TEST_KEY (Preview sandbox)" : "Missing STRIPE_SECRET_KEY — add to Vercel environment variables");
   return new Stripe(key, { apiVersion: "2026-03-25.dahlia" });
 }
 
@@ -18,7 +25,27 @@ function getStripe() {
 //      so they never accidentally catch au_xxx product keys
 //   3. Add new AU products in the AU section below, before the legacy blocks
 // ─────────────────────────────────────────────────────────────────────────────
+// EXACT-MATCH price registry (machine products + any product wanting deterministic
+// resolution). Consulted FIRST; a hit returns its env var, bypassing the legacy
+// includes()-matching entirely. Legacy blocks below are UNTOUCHED — manual products
+// keep resolving exactly as before via fall-through.
+const PRICE_ENV_REGISTRY: Record<string, string> = {
+  au_67_superannuation_tax_leaving_australia_confusion_2026:  "STRIPE_AU_SUPERLEAVE_67",
+  au_147_superannuation_tax_leaving_australia_confusion_2026: "STRIPE_AU_SUPERLEAVE_147",
+};
+
 function getPriceId(tier: number, productKey: string): string | undefined {
+  const registered = PRICE_ENV_REGISTRY[productKey];
+  if (registered) {
+    const val = process.env[registered];
+    if (val) return val;
+    // PREVIEW-ONLY sandbox fallback: registered prod var (e.g. STRIPE_AU_SUPERLEAVE_*)
+    // isn't set on Preview → use the generic sandbox test price. Production: no fallback
+    // (missing var → undefined → loud 500).
+    if (isPreview()) return process.env[`STRIPE_AU_TEST_${tier}`];
+    return undefined;
+  }
+
   const key = productKey.toLowerCase();
 
   // ─── TAXCHECKNOW UK ────────────────────────────────────────────────────────

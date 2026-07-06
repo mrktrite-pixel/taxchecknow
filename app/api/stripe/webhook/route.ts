@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { sendDeliveryEmail } from "@/lib/cole-email";
 import { getMarketContext } from "@/lib/email-context";
+import { getAssessmentFields } from "@/lib/assessment-fields";
 import { lookupDeadline } from "@/lib/product-deadlines";
 
 // ── PRODUCT DELIVERY MAP — all 25 TaxCheckNow + 5 SuperTaxCheck ─────────────
@@ -115,6 +116,8 @@ const DELIVERY_MAP: Record<string, {
   "au_147_super_to_trust_exit":  { subject: "Your Full Exit Decision Model — TaxCheckNow", productName: "Your Full Exit Decision Model", driveUrl: "", tierLabel: "$147", market: "Australia", authority: "ATO", productId: "super-to-trust-exit" },
   "au_67_transfer_balance_cap":  { subject: "Your TBC Position Pack — TaxCheckNow", productName: "Your TBC Position Pack", driveUrl: "", tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "transfer-balance-cap" },
   "au_147_transfer_balance_cap": { subject: "Your Full TBC Strategy — TaxCheckNow", productName: "Your Full TBC Strategy", driveUrl: "", tierLabel: "$147", market: "Australia", authority: "ATO", productId: "transfer-balance-cap" },
+  "au_67_superannuation_tax_leaving_australia_confusion_2026":  { subject: "Your DASP & Departure Super Plan — TaxCheckNow", productName: "Your DASP & Departure Super Plan", driveUrl: "", tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "superannuation-tax-leaving-australia-confusion-2026" },
+  "au_147_superannuation_tax_leaving_australia_confusion_2026": { subject: "Your Departure Tax & Super Optimisation System — TaxCheckNow", productName: "Your Departure Tax & Super Optimisation System", driveUrl: "", tierLabel: "$147", market: "Australia", authority: "ATO", productId: "superannuation-tax-leaving-australia-confusion-2026" },
   // ── SUPERTAXCHECK ─────────────────────────────────────────────────────────
   "supertax_67_div296_wealth_eraser":  { subject: "Your Div 296 Wealth Eraser — SuperTaxCheck",  productName: "Your Div 296 Wealth Eraser",  driveUrl: process.env.DRIVE_DIV296_67 || "",  tierLabel: "$67",  market: "Australia", authority: "ATO", productId: "div296-wealth-eraser" },
   "supertax_147_div296_wealth_eraser": { subject: "Your Div 296 Strategy System — SuperTaxCheck", productName: "Your Div 296 Strategy System", driveUrl: process.env.DRIVE_DIV296_147 || "", tierLabel: "$147", market: "Australia", authority: "ATO", productId: "div296-wealth-eraser" },
@@ -125,9 +128,13 @@ const DELIVERY_MAP: Record<string, {
 
 const REMINDER_DAYS = [30, 7, 1];
 
+// SANDBOX SAFETY: on Vercel Preview STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET are unset
+// (Production-only scope) → Preview uses the TEST sandbox key + test signing secret.
+const isPreview = (): boolean => process.env.VERCEL_ENV === "preview";
+
 function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) throw new Error("Missing STRIPE_SECRET_KEY");
+  const key = isPreview() ? process.env.STRIPE_SECRET_TEST_KEY : process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error(isPreview() ? "Missing STRIPE_SECRET_TEST_KEY (Preview sandbox)" : "Missing STRIPE_SECRET_KEY");
   return new Stripe(key, { apiVersion: "2026-03-25.dahlia" });
 }
 
@@ -177,9 +184,9 @@ async function generateAndStoreAssessment(
         tier:       tier >= 147 ? 2 : 1,
         name:       customerName,
         inputs,
-        fields:     tier >= 147
-          ? ["status","keyFinding","exposureAmount","mainRiskTrigger","recommendedAction","confidenceLevel","implementationPlan","scenarioAnalysis","evidenceRequired","timelineStrategy"]
-          : ["status","keyFinding","exposureAmount","mainRiskTrigger","recommendedAction","confidenceLevel","firstAction"],
+        // PQ-C0 fix: per-product fields (== the client success-page list) so the paid
+        // deliverable is identical regardless of path; generic fallback = old behavior.
+        fields:     getAssessmentFields(delivery.productId, tier),
       }),
     });
 
@@ -259,7 +266,7 @@ async function queueReminders(
 export async function POST(req: Request) {
   const body      = await req.text();
   const signature = req.headers.get("stripe-signature");
-  const secret    = process.env.STRIPE_WEBHOOK_SECRET;
+  const secret    = isPreview() ? process.env.STRIPE_WEBHOOK_TEST_SECRET : process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!signature || !secret) {
     return NextResponse.json({ error: "Missing signature" }, { status: 400 });
