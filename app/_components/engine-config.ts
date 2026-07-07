@@ -44,23 +44,27 @@ export interface EngineCopy {
   sellHeading?: string;       // popup-1 heading (falls back to the tier name)
   sellSubhead?: string;       // popup-1 sub-line
   getItLabel?: string;        // popup-1 primary button; "{price}" substituted
+  reviewGuideTitle?: string;  // escape $67 product title ("Review Guide", never "Decision Pack")
+  heroCopy?: string;          // maze-defense intro above the gates (no shortcuts, all facts)
 }
 
-// Operator-approved severity class carried PER-TERMINAL in config (renderer never
-// self-assigns) → traffic-light banner colour on resolved dishes. Escapes are neutral.
-export type Severity = "clear" | "warning" | "urgent";
+// v2 severity — 4 classes matching the manual renderer's style groups. Carried PER-TERMINAL
+// in the ENGINE (operator-approved at the judgment gate); the renderer only maps class→colour.
+export type Severity = "blue" | "green" | "amber" | "red";
 export interface EngineConfig {
   productSlug: string;                  // required — session + sessionStorage keys
   sourcePath?: string;                  // e.g. /au/check/<slug>
   country?: string;                     // default "AU"
   currency?: string;                    // default "AUD"
   site?: string;                        // default "taxchecknow"
-  tierMap?: Record<string, number>;     // terminal id → tier (operator-set data)
+  tierMap?: Record<string, number>;     // legacy (v1); v2 tier lives on the terminal
   defaultTier?: number;                 // when a terminal isn't in the map (default 67)
   prices?: Record<string, number>;      // tier → price (default {67:67,147:147})
   qualification?: QualField[];          // the 3 dropdowns (generic default provided)
-  severity?: Record<string, Severity>;  // terminal id → operator-approved severity class
+  severity?: Record<string, Severity>;  // legacy (v1); v2 severity lives on the terminal
   tierNames?: Record<string, string>;   // tier → customer-facing product name (sell panel)
+  monetizeEveryResolved?: boolean;      // default true — every resolved outcome gets a CTA
+  heroCopy?: string;                    // maze-defense hero (config, not renderer-embedded)
   copy?: EngineCopy;
 }
 
@@ -181,15 +185,23 @@ export function saveSubcopyFor(config: EngineConfig | undefined): string {
   return config?.copy?.saveSubcopy ?? "Get a copy by email — free.";
 }
 
-/** Operator-approved severity for a resolved terminal; default "clear" when unmapped. */
-export function severityFor(config: EngineConfig | undefined, terminalId: string): Severity {
-  return config?.severity?.[terminalId] ?? "clear";
-}
 export function tierNameFor(config: EngineConfig | undefined, tier: number): string {
   return config?.tierNames?.[String(tier)] ?? `Personalised plan (tier ${tier})`;
 }
-export function sellHeadingFor(config: EngineConfig | undefined, tier: number): string {
-  return config?.copy?.sellHeading ?? tierNameFor(config, tier);
+/** Escape $67 product title — a "Review Guide", never a "Decision Pack" (ruling 4). */
+export function reviewGuideTitleFor(config: EngineConfig | undefined): string {
+  return config?.copy?.reviewGuideTitle ?? "Review Guide";
+}
+/** Sell-panel title from the terminal's title_key: resolved → product name; escape → Review Guide. */
+export function sellTitleFor(config: EngineConfig | undefined, titleKey: string | undefined, tier: number): string {
+  if (config?.copy?.sellHeading) return config.copy.sellHeading;
+  return titleKey === "review_guide" ? reviewGuideTitleFor(config) : tierNameFor(config, tier);
+}
+export function monetizeEveryResolved(config: EngineConfig | undefined): boolean {
+  return config?.monetizeEveryResolved ?? true;
+}
+export function heroCopyFor(config: EngineConfig | undefined): string | undefined {
+  return config?.heroCopy;
 }
 export function sellSubheadFor(config: EngineConfig | undefined): string {
   return config?.copy?.sellSubhead ?? "Here's what's included — built around your answers.";

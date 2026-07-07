@@ -23,14 +23,16 @@ import type { Severity } from "@/app/_components/engine-config";
 // Operator-approved severity class → traffic-light palette (matches manual getStatusStyle).
 // Renderer only maps class → colour; it never assigns severity (config-supplied).
 const SEVERITY_STYLE: Record<Severity, { panel: string; label: string }> = {
-  clear: { panel: "border-emerald-200 bg-emerald-50", label: "text-emerald-700" },
-  warning: { panel: "border-amber-200 bg-amber-50", label: "text-amber-700" },
-  urgent: { panel: "border-red-200 bg-red-50", label: "text-red-700" },
+  blue: { panel: "border-blue-200 bg-blue-50", label: "text-blue-700" },
+  green: { panel: "border-emerald-200 bg-emerald-50", label: "text-emerald-700" },
+  amber: { panel: "border-amber-200 bg-amber-50", label: "text-amber-700" },
+  red: { panel: "border-red-200 bg-red-50", label: "text-red-700" },
 };
 
 export interface EngineVerdictPanelProps {
   kind: "menu" | "escape" | "unknown";
   severity?: Severity; // resolved-dish banner colour (config-supplied); escapes ignore it
+  whyFacts?: string[]; // B5 — the answered facts (trail labels) shown as a ✓-list above the verdict
   heading: string;
   indicatedResult: string; // verbatim engine text ("" if none)
   statFigures: EngineFigure[];
@@ -42,10 +44,11 @@ export interface EngineVerdictPanelProps {
   escapeLabel: string;   // escape banner label
   escapeBody: string;    // escape framed body (used when no verbatim referral lines)
 
-  // primary CTA (both classes; escape = $67 only)
-  ctaLabel: string;
-  ctaNote: string;
-  onCta: () => void;
+  // primary CTA (both classes; escape = $67 only). Optional so monetize-off blue
+  // (informational) terminals render CTA-less.
+  ctaLabel?: string;
+  ctaNote?: string;
+  onCta?: () => void;
   // secondary alt-tier link (resolved only)
   secondaryLabel?: string;
   onSecondary?: () => void;
@@ -110,7 +113,7 @@ function EmailCapture({
 
 export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
   const {
-    kind, severity, heading, indicatedResult, statFigures, confidence, onReset,
+    kind, severity, whyFacts, heading, indicatedResult, statFigures, confidence, onReset,
     resultLabel, escapeLabel, escapeBody,
     ctaLabel, ctaNote, onCta, secondaryLabel, onSecondary,
     bridgeCopy, planChecklist,
@@ -154,13 +157,17 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
 
           {emailBlock}
 
-          <button
-            onClick={onCta}
-            className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800"
-          >
-            {ctaLabel}
-          </button>
-          <p className="mt-2 text-center text-xs text-neutral-400">{ctaNote}</p>
+          {onCta && ctaLabel && (
+            <>
+              <button
+                onClick={onCta}
+                className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800"
+              >
+                {ctaLabel}
+              </button>
+              {ctaNote && <p className="mt-2 text-center text-xs text-neutral-400">{ctaNote}</p>}
+            </>
+          )}
         </div>
       </div>
     );
@@ -173,13 +180,28 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
         ← Change my answers
       </button>
 
-      <div className={`rounded-2xl border p-5 sm:p-6 ${SEVERITY_STYLE[severity ?? "clear"].panel}`}>
+      <div className={`rounded-2xl border p-5 sm:p-6 ${SEVERITY_STYLE[severity ?? "green"].panel}`}>
         {/* BANNER — colour driven by operator-approved severity class */}
         <div className="mb-1 flex items-center gap-2">
-          <span aria-hidden className={SEVERITY_STYLE[severity ?? "clear"].label}>◆</span>
-          <p className={`font-mono text-xs font-bold uppercase tracking-widest ${SEVERITY_STYLE[severity ?? "clear"].label}`}>{resultLabel}</p>
+          <span aria-hidden className={SEVERITY_STYLE[severity ?? "green"].label}>◆</span>
+          <p className={`font-mono text-xs font-bold uppercase tracking-widest ${SEVERITY_STYLE[severity ?? "green"].label}`}>{resultLabel}</p>
         </div>
         <h3 className="mb-4 font-serif text-xl font-bold text-neutral-950">{heading}</h3>
+
+        {/* B5 — WHY WE REACHED THIS RESULT: the answered facts as a ✓-list, above the verdict detail */}
+        {whyFacts && whyFacts.length > 0 && (
+          <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Why we reached this result</p>
+            <ul className="space-y-1 text-xs text-neutral-700">
+              {whyFacts.map((f, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span aria-hidden className="mt-0.5 shrink-0 text-emerald-600">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {statFigures.length > 0 && (
           <div className="mb-4 grid gap-2 sm:grid-cols-3">
@@ -209,16 +231,6 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
                 <span className="font-normal text-neutral-500"> — one or more answers were unsure</span>
               )}
             </p>
-            {confidence.checklist.length > 0 && (
-              <ul className="mt-1.5 space-y-1 text-neutral-600">
-                {confidence.checklist.map((c, i) => (
-                  <li key={i} className="flex items-start gap-1.5">
-                    <span aria-hidden className="mt-0.5 shrink-0 text-neutral-400">✓</span>
-                    <span>{c}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
         )}
 
@@ -248,17 +260,21 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
           </div>
         )}
 
-        {/* PRIMARY CTA (pinned tier) */}
-        <button
-          onClick={onCta}
-          className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800"
-        >
-          {ctaLabel}
-        </button>
-        <p className="mt-2 text-center text-xs text-neutral-400">{ctaNote}</p>
+        {/* PRIMARY CTA (pinned tier) — omitted when monetize-off (informational) */}
+        {onCta && ctaLabel && (
+          <>
+            <button
+              onClick={onCta}
+              className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800"
+            >
+              {ctaLabel}
+            </button>
+            {ctaNote && <p className="mt-2 text-center text-xs text-neutral-400">{ctaNote}</p>}
+          </>
+        )}
 
         {/* SECONDARY ALT-TIER LINK */}
-        {secondaryLabel && onSecondary && (
+        {onCta && secondaryLabel && onSecondary && (
           <p className="mt-2 text-center">
             <button onClick={onSecondary} className="text-xs text-neutral-400 underline transition hover:text-neutral-600">
               {secondaryLabel}

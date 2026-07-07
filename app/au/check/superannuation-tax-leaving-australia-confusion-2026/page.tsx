@@ -312,7 +312,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
     distribution: [{
       "@type": "DataDownload",
       encodingFormat: "application/json",
-      contentUrl: "https://taxchecknow.com/au/check/superannuation-tax-leaving-australia-confusion-2026/api/rules/superannuation-tax-leaving-australia-confusion-2026",
+      contentUrl: "https://taxchecknow.com/au/check/superannuation-tax-leaving-australia-confusion-2026",
     }],
     spatialCoverage: { "@type": "Place", name: "Australia" },
   };
@@ -463,7 +463,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
         <div className="grid gap-8 lg:grid-cols-[1fr_280px] lg:items-start">
 
           {/* Left — Calculator (client component) */}
-          <div id="calculator" className="min-w-0">
+          <div id="calculator" className="min-w-0 scroll-mt-6">
             <SuperannuationTaxLeavingAustraliaConfusion2026Calculator />
           </div>
 
@@ -730,10 +730,6 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
             <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
               ATO — Departing Australia Superannuation Payment (DASP)
-            </a>
-            {" · "}Machine-readable JSON:{" "}
-            <a href="/api/rules/superannuation-tax-leaving-australia-confusion-2026" className="font-mono text-blue-700 hover:underline">
-              /api/rules/superannuation-tax-leaving-australia-confusion-2026
             </a>
           </p>
         </div>
@@ -1022,7 +1018,6 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
             <Link href="/au/check/allowance-sniper" className="hover:text-neutral-900">Allowance Sniper</Link>
             <Link href="/au/check/digital-link-auditor" className="hover:text-neutral-900">Digital Links</Link>
-            <a href="/api/rules/superannuation-tax-leaving-australia-confusion-2026" className="font-mono text-xs hover:text-neutral-900">/api/rules/superannuation-tax-leaving-australia-confusion-2026</a>
             <Link href="/privacy" className="hover:text-neutral-900">Privacy</Link>
             <Link href="/terms" className="hover:text-neutral-900">Terms</Link>
           </div>

@@ -20,33 +20,16 @@ const ENGINE_CONFIG: EngineConfig = {
   currency: "AUD",
   site: "taxchecknow",
   defaultTier: 67,
-  // REAL engine ids. Escapes/quasi-escapes unmapped → forced $67 "closer look".
-  tierMap: {
-    "dasp-eligibility-check": 67,
-    "dasp-tax-whm-visa": 67,
-    "dasp-tax-ordinary-visa": 67,
-    "dasp-payment-timeline": 67,
-    "dasp-id-requirements-high-balance": 67,
-    "dasp-unclaimed-super-ato-transfer": 147,
-    // named-complexity 147 dishes (PQ-MAZE-1 phase 2)
-    "dasp-mixed-visa-apportionment": 147,
-    "dasp-multi-fund-or-former-pr": 147,
-  },
-  // Operator-APPROVED severity classes (judgment gate) → traffic-light banner colour.
-  severity: {
-    "dasp-eligibility-check": "warning",
-    "dasp-tax-ordinary-visa": "warning",
-    "dasp-tax-whm-visa": "urgent",
-    "dasp-id-requirements-high-balance": "warning",
-    "dasp-payment-timeline": "clear",
-    "dasp-unclaimed-super-ato-transfer": "urgent",
-    "dasp-mixed-visa-apportionment": "urgent",
-    "dasp-multi-fund-or-former-pr": "urgent",
-  },
+  monetizeEveryResolved: true, // every resolved outcome gets a CTA (default ON)
+  // v2: tier + severity live PER-TERMINAL in engine.json (the Decision Graph); the config
+  // supplies the commercial/presentation layer only.
   tierNames: {
     "67": "DASP & Departure Super Plan",
     "147": "Departure Tax & Super Optimisation System",
   },
+  // Fact-first maze — the tool asks facts about your situation, never "what do you want to know".
+  heroCopy:
+    "This check asks five quick questions about your situation — your visa, whether you've left, your balance, and how long it's been. There are no shortcuts: your answers together work out exactly where you stand with your departing-Australia super.",
   qualification: [
     {
       key: "situation",
@@ -102,6 +85,7 @@ const ENGINE_CONFIG: EngineConfig = {
     escapeBody:
       "Your answers don't point to a single clear DASP path — which usually means your situation needs a closer look. A short personalised review shows what applies to your circumstances after leaving Australia, and the steps to take next.",
     escapeCtaLabel: "Get my personalised super review — {price} →",
+    reviewGuideTitle: "DASP Review Guide", // escape $67 title (never "Decision Pack")
   },
 };
 
