@@ -382,11 +382,15 @@ export async function POST(req: Request) {
     tagline:           marketContext.tagline,
   });
 
-  // 5. Log email status
+  // 5. Log email status.
+  // supabase-js .insert() RESOLVES with { error } rather than throwing, so an unchecked
+  // insert failed SILENTLY here (email_log stayed empty even when delivery_status went "sent").
+  // Surface both errors like the purchases insert (line ~324). Diagnostic confirmed the live
+  // email_log schema accepts this exact payload, so any future error is a real signal.
   if (purchaseId) {
     try {
       const supabase2 = getSupabase();
-      await (supabase2 as any).from("email_log").insert({
+      const { error: logErr } = await (supabase2 as any).from("email_log").insert({
         purchase_id:     purchaseId,
         recipient_email: customerEmail,
         email_type:      "delivery",
@@ -394,10 +398,12 @@ export async function POST(req: Request) {
         resend_id:       emailResult.resendId || null,
         status:          emailResult.success ? "sent" : "failed",
       });
-      await supabase2.from("purchases").update({
+      if (logErr) console.error("[webhook] email_log insert error:", logErr.message);
+      const { error: updErr } = await supabase2.from("purchases").update({
         delivery_status:  emailResult.success ? "sent" : "failed",
         delivery_sent_at: emailResult.success ? new Date().toISOString() : null,
       }).eq("id", purchaseId);
+      if (updErr) console.error("[webhook] purchases delivery_status update error:", updErr.message);
     } catch (err) {
       console.error("[webhook] Log error:", err);
     }
