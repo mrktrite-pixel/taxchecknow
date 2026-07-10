@@ -316,11 +316,14 @@ export async function POST(req: Request) {
         amount_gbp:            amountPaid,
         currency:              session.currency || "aud",
         customer_email:        customerEmail,
-        customer_name:         customerName,
+        // NOTE: purchases has NO customer_name column — including it made the ENTIRE insert
+        // throw (root cause of the never-passed delivery check: no purchase row → no
+        // purchaseId → no email_log → delivery_status stuck). Name is preserved in metadata
+        // and still flows to the delivery email + assessments (which does have the column).
         site:                  "taxchecknow",
         country_code:          delivery?.market?.slice(0,2).toUpperCase() || "AU",
         delivery_status:       "pending",
-        metadata:              session.metadata,
+        metadata:              { ...(session.metadata || {}), customer_name: customerName },
       })
       .select("id")
       .single();
