@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { sendDeliveryEmail } from "@/lib/cole-email";
 import { getMarketContext } from "@/lib/email-context";
 import { getAssessmentFields } from "@/lib/assessment-fields";
+import { buildComposerInputs } from "@/lib/composer-inputs";
 import { lookupDeadline } from "@/lib/product-deadlines";
 
 // ── PRODUCT DELIVERY MAP — all 25 TaxCheckNow + 5 SuperTaxCheck ─────────────
@@ -168,10 +169,13 @@ async function generateAndStoreAssessment(
       .eq("id", decisionSessionId)
       .single() as { data: { inputs: Record<string, unknown>; questionnaire_payload: Record<string, unknown> } | null };
 
-    const inputs = {
-      ...(ds?.inputs || {}),
-      ...(ds?.questionnaire_payload || {}),
-    };
+    // F5 contract: maze flags are AUTHORITATIVE. Popup answers travel under a namespaced
+    // key (qualification.*) and NEVER merge into or override a maze flag. Both composer
+    // paths (this webhook + the client success-page fallback) build inputs identically.
+    const inputs = buildComposerInputs(
+      (ds?.inputs || {}) as Record<string, unknown>,
+      (ds?.questionnaire_payload || {}) as Record<string, unknown>,
+    );
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
     const res = await fetch(`${baseUrl}/api/assess`, {
