@@ -14,6 +14,9 @@
  *    framed copy — never $147, never "confirmed position", no secondary link.
  *
  * STRUCTURE lives here; all DOMAIN WORDS arrive via props (config-supplied).
+ * PRESENTATION: "the engine look" (operator reel) — sans throughout, canvas-owned by
+ * EngineCalculator; tokens navy #0B1F44 / accent #2563EB / ink #0F172A / muted #64748B
+ * / hairline #E2E8F0. Severity mapping unchanged (config-supplied; renderer never assigns).
  */
 
 import type { EngineConfidence, EngineFigure } from "@/app/_components/engine-terms";
@@ -28,6 +31,11 @@ const SEVERITY_STYLE: Record<Severity, { panel: string; label: string }> = {
   amber: { panel: "border-amber-200 bg-amber-50", label: "text-amber-700" },
   red: { panel: "border-red-200 bg-red-50", label: "text-red-700" },
 };
+
+// shared presentation atoms (engine look)
+const GHOST_BACK = "rounded-md text-[11px] font-medium uppercase tracking-widest text-[#64748B] transition-colors hover:text-[#0F172A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 motion-reduce:transition-none";
+const PRIMARY_CTA = "w-full rounded-xl bg-[#0B1F44] py-4 text-[16px] font-semibold text-white transition-colors hover:bg-[#132F62] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 motion-reduce:transition-none";
+const MICRO_CAPS = "text-[10px] font-semibold uppercase tracking-widest text-[#64748B]";
 
 export interface EngineVerdictPanelProps {
   kind: "menu" | "escape" | "unknown";
@@ -85,21 +93,21 @@ function EmailCapture({
   onSaveEmail: () => void;
 }) {
   return (
-    <div className="mb-4 rounded-xl border border-neutral-200 bg-white p-3">
-      <p className="mb-1 text-sm font-semibold text-neutral-800">{heading}</p>
-      <p className="mb-2 text-xs text-neutral-500">{subcopy}</p>
+    <div className="mb-4 rounded-2xl border border-[#E2E8F0] bg-white p-4">
+      <p className="mb-1 text-sm font-semibold text-[#0F172A]">{heading}</p>
+      <p className="mb-3 text-xs text-[#64748B]">{subcopy}</p>
       {!emailSent ? (
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <input
             type="email"
             placeholder="Your email"
             value={email}
             onChange={(e) => onEmailChange(e.target.value)}
-            className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm outline-none focus:border-neutral-400"
+            className="min-h-[44px] flex-1 rounded-lg border border-[#E2E8F0] bg-[#F4F6FB] px-3 py-2 text-sm text-[#0F172A] outline-none transition-colors focus-visible:border-[#2563EB] focus-visible:ring-2 focus-visible:ring-[#2563EB] motion-reduce:transition-none"
           />
           <button
             onClick={onSaveEmail}
-            className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
+            className="min-h-[44px] rounded-lg bg-[#0B1F44] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#132F62] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             Save
           </button>
@@ -134,38 +142,32 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
   );
 
   // ── ESCAPE / QUASI-ESCAPE: escape-framed, email + single $67 CTA, no secondary ──
+  // distinct NON-severity framing (neutral slate card, diamond glyph) — never traffic-light.
   if (isEscape) {
     return (
       <div className="space-y-4">
-        <button onClick={onReset} className="font-mono text-xs text-neutral-400 transition hover:text-neutral-700">
-          ← Change my answers
-        </button>
-        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6">
-          <div className="mb-2 flex items-center gap-2">
-            <span aria-hidden className="text-neutral-400">◇</span>
-            <p className="font-mono text-xs uppercase tracking-widest text-neutral-400">{escapeLabel}</p>
+        <button onClick={onReset} className={GHOST_BACK}>← Change my answers</button>
+        <div className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 sm:p-7">
+          <div className="mb-2 flex items-center gap-2" aria-live="polite">
+            <span aria-hidden className="text-[#64748B]">◇</span>
+            <p className={MICRO_CAPS}>{escapeLabel}</p>
           </div>
-          <h3 className="mb-3 font-serif text-xl font-bold text-neutral-950">{heading}</h3>
+          <h3 className="mb-3 text-[23px] font-bold leading-snug text-[#0F172A]">{heading}</h3>
           {/* quasi-escape shows its own verbatim referral text; a bare escape shows the framed body */}
           {lines.length > 0 ? (
-            <ul className="mb-4 space-y-1 text-sm leading-relaxed text-neutral-600">
+            <ul className="mb-4 space-y-1 text-[15px] leading-relaxed text-[#334155]">
               {lines.map((l, i) => <li key={i}>{l}</li>)}
             </ul>
           ) : (
-            <p className="mb-4 text-sm leading-relaxed text-neutral-600">{escapeBody}</p>
+            <p className="mb-4 text-[15px] leading-relaxed text-[#334155]">{escapeBody}</p>
           )}
 
           {emailBlock}
 
           {onCta && ctaLabel && (
             <>
-              <button
-                onClick={onCta}
-                className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800"
-              >
-                {ctaLabel}
-              </button>
-              {ctaNote && <p className="mt-2 text-center text-xs text-neutral-400">{ctaNote}</p>}
+              <button onClick={onCta} className={PRIMARY_CTA}>{ctaLabel}</button>
+              {ctaNote && <p className={`mt-2 text-center ${MICRO_CAPS}`}>{ctaNote}</p>}
             </>
           )}
         </div>
@@ -173,26 +175,24 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
     );
   }
 
-  // ── RESOLVED DISH: neutral banner + boxes + meaning + confidence + email + bridge + plan + CTA + secondary ──
+  // ── RESOLVED DISH: severity-tinted banner + boxes + meaning + confidence + email + bridge + plan + CTA + secondary ──
   return (
     <div className="space-y-4">
-      <button onClick={onReset} className="font-mono text-xs text-neutral-400 transition hover:text-neutral-700">
-        ← Change my answers
-      </button>
+      <button onClick={onReset} className={GHOST_BACK}>← Change my answers</button>
 
-      <div className={`rounded-2xl border p-5 sm:p-6 ${SEVERITY_STYLE[severity ?? "green"].panel}`}>
+      <div className={`rounded-3xl border p-5 sm:p-7 ${SEVERITY_STYLE[severity ?? "green"].panel}`}>
         {/* BANNER — colour driven by operator-approved severity class */}
-        <div className="mb-1 flex items-center gap-2">
+        <div className="mb-1 flex items-center gap-2" aria-live="polite">
           <span aria-hidden className={SEVERITY_STYLE[severity ?? "green"].label}>◆</span>
-          <p className={`font-mono text-xs font-bold uppercase tracking-widest ${SEVERITY_STYLE[severity ?? "green"].label}`}>{resultLabel}</p>
+          <p className={`text-[10px] font-bold uppercase tracking-widest ${SEVERITY_STYLE[severity ?? "green"].label}`}>{resultLabel}</p>
         </div>
-        <h3 className="mb-4 font-serif text-xl font-bold text-neutral-950">{heading}</h3>
+        <h3 className="mb-4 text-[23px] font-bold leading-snug text-[#0F172A]">{heading}</h3>
 
         {/* B5 — WHY WE REACHED THIS RESULT: the answered facts as a ✓-list, above the verdict detail */}
         {whyFacts && whyFacts.length > 0 && (
-          <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3">
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Why we reached this result</p>
-            <ul className="space-y-1 text-xs text-neutral-700">
+          <div className="mb-4 rounded-2xl border border-[#E2E8F0] bg-white px-4 py-3">
+            <p className={`mb-2 ${MICRO_CAPS}`}>Why we reached this result</p>
+            <ul className="grid gap-x-6 gap-y-1 text-[13px] text-[#334155] sm:grid-cols-2">
               {whyFacts.map((f, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span aria-hidden className="mt-0.5 shrink-0 text-emerald-600">✓</span>
@@ -206,29 +206,30 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
         {statFigures.length > 0 && (
           <div className="mb-4 grid gap-2 sm:grid-cols-3">
             {statFigures.map((f) => (
-              <div key={f.id ?? f.label} className="rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
-                <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">{f.label}</p>
-                <p className="font-serif text-lg font-bold text-neutral-950">{figureText(f)}</p>
+              <div key={f.id ?? f.label} className="rounded-2xl border border-[#E2E8F0] bg-white px-4 py-3">
+                <p className={`mb-1 ${MICRO_CAPS}`}>{f.label}</p>
+                <p className="text-lg font-bold text-[#0F172A]">{figureText(f)}</p>
               </div>
             ))}
           </div>
         )}
 
         {lines.length > 0 && (
-          <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm">
-            <strong className="text-neutral-950">What this means:</strong>
-            <ul className="mt-1.5 space-y-1 text-xs text-neutral-700">
+          <div className="mb-4 rounded-2xl border border-[#E2E8F0] bg-white px-4 py-3">
+            <strong className="text-sm text-[#0F172A]">What this means:</strong>
+            <ul className="mt-1.5 space-y-1.5 text-[15px] leading-relaxed text-[#334155]">
               {lines.map((l, i) => <li key={i}>→ {l}</li>)}
             </ul>
           </div>
         )}
 
         {confidence && (
-          <div className="mb-4 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-xs">
-            <p className="font-semibold text-neutral-800">
+          <div className="mb-4 flex items-start gap-2 rounded-2xl border border-[#BFDBFE] bg-[#EFF5FF] px-4 py-3 text-xs">
+            <span aria-hidden className="mt-px shrink-0 text-[#2563EB]">ⓘ</span>
+            <p className="font-semibold text-[#0F172A]">
               Confidence: {confidence.level}
               {confidence.level === "MEDIUM" && (
-                <span className="font-normal text-neutral-500"> — one or more answers were unsure</span>
+                <span className="font-normal text-[#64748B]"> — one or more answers were unsure</span>
               )}
             </p>
           </div>
@@ -238,21 +239,19 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
 
         {/* BRIDGE COPY */}
         {bridgeCopy && (
-          <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
-            <p className="text-sm leading-relaxed text-neutral-700">{bridgeCopy}</p>
+          <div className="mb-3 rounded-2xl border border-[#E2E8F0] bg-white px-4 py-3">
+            <p className="text-sm leading-relaxed text-[#334155]">{bridgeCopy}</p>
           </div>
         )}
 
         {/* PLAN CHECKLIST */}
         {planChecklist && planChecklist.length > 0 && (
-          <div className="mb-3 rounded-xl border border-neutral-200 bg-white px-4 py-3">
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-              What&apos;s in your personalised plan
-            </p>
-            <ul className="space-y-1 text-xs text-neutral-700">
+          <div className="mb-3 rounded-2xl border border-[#E2E8F0] bg-white px-4 py-3">
+            <p className={`mb-2 ${MICRO_CAPS}`}>What&apos;s in your personalised plan</p>
+            <ul className="space-y-1 text-[13px] text-[#334155]">
               {planChecklist.map((item, i) => (
                 <li key={i} className="flex items-start gap-2">
-                  <span className="mt-0.5 shrink-0 text-emerald-600">✓</span>
+                  <span aria-hidden className="mt-0.5 shrink-0 text-emerald-600">✓</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -263,20 +262,15 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
         {/* PRIMARY CTA (pinned tier) — omitted when monetize-off (informational) */}
         {onCta && ctaLabel && (
           <>
-            <button
-              onClick={onCta}
-              className="w-full rounded-xl bg-neutral-950 py-4 text-sm font-bold text-white transition hover:bg-neutral-800"
-            >
-              {ctaLabel}
-            </button>
-            {ctaNote && <p className="mt-2 text-center text-xs text-neutral-400">{ctaNote}</p>}
+            <button onClick={onCta} className={PRIMARY_CTA}>{ctaLabel}</button>
+            {ctaNote && <p className={`mt-2 text-center ${MICRO_CAPS}`}>{ctaNote}</p>}
           </>
         )}
 
         {/* SECONDARY ALT-TIER LINK */}
         {onCta && secondaryLabel && onSecondary && (
           <p className="mt-2 text-center">
-            <button onClick={onSecondary} className="text-xs text-neutral-400 underline transition hover:text-neutral-600">
+            <button onClick={onSecondary} className="rounded-md text-xs text-[#64748B] underline transition-colors hover:text-[#0F172A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 motion-reduce:transition-none">
               {secondaryLabel}
             </button>
           </p>

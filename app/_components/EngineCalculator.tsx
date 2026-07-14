@@ -99,6 +99,11 @@ function optSubLabel(o: EngineOption): string | undefined {
   return o.sub_label ?? o.subLabel;
 }
 
+// ── design tokens — "the engine look" (operator-approved reel); Tailwind v4 arbitrary values, no config file ──
+// canvas #F4F6FB · card #FFFFFF · ink #0F172A · muted #64748B · navy #0B1F44 · accent #2563EB · accentSoft #EFF5FF · hairline #E2E8F0
+const ENGINE_CANVAS = "mx-auto w-full max-w-[820px] rounded-[28px] bg-[#F4F6FB] p-3 sm:p-6";
+const ENGINE_CARD = "rounded-3xl border border-[#E2E8F0] bg-white p-6 sm:p-8 shadow-[0_20px_60px_rgba(15,23,42,0.08)]";
+
 // ── main ─────────────────────────────────────────────────────────────────────
 export default function EngineCalculator({
   engine,
@@ -374,7 +379,13 @@ export default function EngineCalculator({
   function reset() { setPending(null); setTrail([]); firedFor.current = null; clearSession(); }
 
   if (!questions.length) {
-    return <div className="rounded-2xl border border-neutral-200 bg-white p-5 text-sm text-neutral-500">This tool has no questions to display.</div>;
+    return (
+      <div className={ENGINE_CANVAS}>
+        <div className={ENGINE_CARD}>
+          <p className="text-sm text-[#64748B]">This tool has no questions to display.</p>
+        </div>
+      </div>
+    );
   }
 
   const hero = heroCopyFor(config);
@@ -385,29 +396,34 @@ export default function EngineCalculator({
     const m = Math.max(remainingDepth, n);
     const prevValue = answers[currentQ.id];
     return (
-      <div className="space-y-3">
-        {hero && trail.length === 0 && <p className="text-sm leading-relaxed text-neutral-500">{hero}</p>}
-        <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <p className="font-mono text-xs uppercase tracking-widest text-neutral-400">Step {n} of {m}</p>
+      <div className={ENGINE_CANVAS}>
+        {hero && trail.length === 0 && <p className="mb-3 px-1 text-sm leading-relaxed text-[#64748B]">{hero}</p>}
+        <div className={ENGINE_CARD}>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <p aria-live="polite" className="text-[11px] font-medium uppercase tracking-widest text-[#64748B]">Step {n} of {m}</p>
             {trail.length > 0 && (
-              <button onClick={back} className="font-mono text-xs text-neutral-400 transition hover:text-neutral-700">← Back</button>
+              <button onClick={back} className="rounded-md text-[11px] font-medium uppercase tracking-widest text-[#64748B] transition-colors hover:text-[#0F172A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 motion-reduce:transition-none">← Back</button>
             )}
           </div>
-          <div className="mb-5 h-1 w-full overflow-hidden rounded-full bg-neutral-100">
-            <div className="h-full bg-neutral-950 transition-all duration-300" style={{ width: `${(trail.length / Math.max(m, 1)) * 100}%` }} />
+          <div className="mb-6 h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
+            <div className="h-full rounded-full bg-[#2563EB] transition-[width] duration-500 ease-out motion-reduce:transition-none" style={{ width: `${(trail.length / Math.max(m, 1)) * 100}%` }} />
           </div>
-          <h2 className="mb-1 font-serif text-xl font-bold text-neutral-950">{currentQ.text}</h2>
-          {currentQ.sub_label && <p className="mb-4 text-sm text-neutral-500">{currentQ.sub_label}</p>}
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
+          <h2 className="mb-1 text-[21px] font-semibold leading-snug text-[#0F172A]">{currentQ.text}</h2>
+          {currentQ.sub_label && <p className="mb-4 text-[13px] text-[#64748B]">{currentQ.sub_label}</p>}
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {(currentQ.options ?? []).map((o) => {
               const selected = pending === o.value || (pending === null && prevValue === o.value);
               const sub = optSubLabel(o);
               return (
-                <button key={o.value} onClick={() => choose(o)}
-                  className={`rounded-xl border px-4 py-3 text-left transition ${selected ? "border-neutral-950 bg-neutral-950 text-white" : "border-neutral-200 bg-white text-neutral-800 hover:border-neutral-400"}`}>
-                  <span className="block text-sm font-medium">{o.label}</span>
-                  {sub && <span className={`mt-0.5 block text-xs ${selected ? "text-neutral-300" : "text-neutral-500"}`}>{sub}</span>}
+                <button key={o.value} onClick={() => choose(o)} aria-pressed={selected}
+                  className={`group flex min-h-[56px] items-start gap-3 rounded-2xl border p-4 text-left transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 motion-reduce:transition-none ${selected ? "border-[#2563EB] bg-[#EFF5FF]" : "border-[#E2E8F0] bg-white hover:-translate-y-0.5 hover:border-[#2563EB]/40"}`}>
+                  <span aria-hidden className={`mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-150 motion-reduce:transition-none ${selected ? "border-[#2563EB] bg-[#2563EB] text-white" : "border-slate-300 bg-white text-transparent"}`}>
+                    <span className="text-[10px] leading-none">✓</span>
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[15px] font-medium text-[#0F172A]">{o.label}</span>
+                    {sub && <span className={`mt-0.5 block text-[12px] ${selected ? "text-[#2563EB]" : "text-[#64748B]"}`}>{sub}</span>}
+                  </span>
                 </button>
               );
             })}
@@ -422,7 +438,7 @@ export default function EngineCalculator({
     const alt = altTier(config, tierInfo.tier);
     const escape = terminal.escape;
     return (
-      <>
+      <div className={ENGINE_CANVAS}>
         <EngineVerdictPanel
           kind={escape ? "escape" : "menu"}
           severity={escape ? undefined : terminal.severity}
@@ -480,7 +496,7 @@ export default function EngineCalculator({
             onDismiss={closePopup}
           />
         )}
-      </>
+      </div>
     );
   }
   return null;
