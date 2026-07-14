@@ -1,0 +1,166 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "DASP (Departing Australia Superannuation Payment) — fact-first decision maze. Five legal fact gates emit flags; terminals are rule expressions over consolidated flag state (no path enumeration). Intent lives only in the qualification popup.",
+  "provenance_mode": "cole_v2_flag_routed",
+  "derived_flags": [
+    { "name": "eligible", "when": { "all": ["visa:temp", "departed:yes"], "none": ["unsure:visa", "unsure:departed"] } }
+  ],
+  "questions": [
+    {
+      "id": "q1-visa-status",
+      "text": "What visa status did you hold while working in Australia?",
+      "criticality": "critical",
+      "sub_label": "DASP is for temporary residents. Permanent residents and citizens are treated differently.",
+      "options": [
+        { "label": "A temporary visa", "value": "temp", "flags": ["visa:temp"], "sub_label": "Student, skilled, sponsored, or working holiday" },
+        { "label": "A working holiday maker visa (subclass 417 or 462)", "value": "whm", "flags": ["visa:temp", "class:whm"], "sub_label": "Backpacker visa — a higher DASP tax rate applies" },
+        { "label": "A permanent resident visa or Australian citizenship", "value": "pr", "flags": ["visa:pr"], "sub_label": "DASP does not apply — different rules" },
+        { "label": "I'm not sure", "value": "unsure", "flags": ["unsure:visa"], "sub_label": "We'll flag this for review" }
+      ]
+    },
+    {
+      "id": "q2-departed",
+      "text": "Have you permanently left Australia, and has your visa ceased or been cancelled?",
+      "criticality": "critical",
+      "sub_label": "Both must be true to claim DASP — you must have departed AND your visa must no longer be active.",
+      "options": [
+        { "label": "Yes — both", "value": "yes", "flags": ["departed:yes"], "sub_label": "Departed and visa ceased" },
+        { "label": "No — I'm still in Australia or my visa is active", "value": "no", "flags": ["departed:no"], "sub_label": "DASP isn't available yet" },
+        { "label": "I'm not sure", "value": "unsure", "flags": ["unsure:departed"], "sub_label": "We'll flag this for review" }
+      ]
+    },
+    {
+      "id": "q3-visa-detail",
+      "text": "Which type of temporary visa did you hold?",
+      "criticality": "critical",
+      "showIf": { "all": ["visa:temp"] },
+      "sub_label": "The DASP withholding rate depends on your visa class.",
+      "options": [
+        { "label": "A working holiday maker visa", "value": "whm", "flags": ["class:whm"], "sub_label": "Subclass 417 or 462 — 65% rate" },
+        { "label": "Another temporary visa (student, skilled, sponsored)", "value": "ordinary", "flags": ["class:ordinary"], "sub_label": "Ordinary rates — 35% / 45%" },
+        { "label": "I held more than one type over time", "value": "multiple", "flags": ["class:multiple"], "sub_label": "Rate may apportion across periods" },
+        { "label": "I'm not sure", "value": "unsure", "flags": ["unsure:class"], "sub_label": "We'll flag this for review" }
+      ]
+    },
+    {
+      "id": "q4-balance",
+      "text": "What is the balance of the super you're claiming?",
+      "criticality": "standard",
+      "showIf": { "none": ["visa:pr", "departed:no", "unsure:visa", "unsure:departed"] },
+      "sub_label": "Balances of $5,000 or more usually need certified identification documents.",
+      "options": [
+        { "label": "$5,000 or more", "value": "ge5k", "flags": ["balance:ge5k"], "sub_label": "Certified ID likely required" },
+        { "label": "Under $5,000", "value": "lt5k", "flags": ["balance:lt5k"], "sub_label": "Simpler ID requirements" },
+        { "label": "I have more than one super fund", "value": "multiple", "flags": ["funds:multiple"], "sub_label": "Each fund is claimed separately" },
+        { "label": "I'm not sure", "value": "unsure", "flags": ["unsure:balance"], "sub_label": "We'll flag this for review" }
+      ]
+    },
+    {
+      "id": "q5-time",
+      "text": "How long has it been since you left Australia and your visa ceased?",
+      "criticality": "standard",
+      "showIf": { "none": ["visa:pr", "departed:no", "unsure:visa", "unsure:departed"] },
+      "sub_label": "After six months, your fund may transfer unclaimed super to the ATO.",
+      "options": [
+        { "label": "Less than 6 months", "value": "lt6mo", "flags": ["time:lt6mo"], "sub_label": "Still with your fund" },
+        { "label": "6 months or more", "value": "ge6mo", "flags": ["time:ge6mo"], "sub_label": "May already be at the ATO" },
+        { "label": "I'm not sure", "value": "unsure", "flags": ["unsure:time"], "sub_label": "We'll flag this for review" }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "E1-not-applicable",
+      "when": { "any": ["visa:pr"] },
+      "tier": 67, "severity": "blue", "criticality": "critical", "escape": false, "title_key": "product",
+      "heading": "DASP does not apply to you",
+      "result_copy": "You held permanent residence or Australian citizenship, so DASP does not apply — your super stays in the Australian system and the ordinary preservation and withdrawal rules apply instead. There are still things worth checking about accessing your super, which this plan walks through."
+    },
+    {
+      "id": "E3-eligibility-unclear",
+      "when": { "any": ["unsure:visa", "unsure:departed"] },
+      "tier": 67, "severity": "amber", "criticality": "critical", "escape": true, "title_key": "review_guide",
+      "heading": "Your eligibility needs a check",
+      "result_copy": "Your answers don't yet confirm the three core DASP conditions — that you held a temporary visa, that the visa has ceased, and that you've permanently departed. A short personalised review confirms where you stand and exactly what to check before you claim."
+    },
+    {
+      "id": "E2-not-yet-eligible",
+      "when": { "any": ["departed:no"] },
+      "tier": 67, "severity": "amber", "criticality": "critical", "escape": false, "title_key": "product",
+      "heading": "Not yet — but here's how to prepare",
+      "result_copy": "DASP becomes available once you've permanently left Australia and your temporary visa has ceased or been cancelled. Because you haven't met both conditions yet, you can't claim right now — but you can prepare so you're ready to claim without delay, including certifying your identification documents while you're still in Australia."
+    },
+    {
+      "id": "R4-mixed-visa",
+      "when": { "all": ["eligible", "class:multiple"] },
+      "tier": 147, "severity": "red", "criticality": "critical", "escape": false, "title_key": "product",
+      "complexity_name": "mixed visa types",
+      "heading": "Mixed visa types — your rate may vary",
+      "result_copy": "Your situation involves more than one visa type across your working period. The DASP withholding rate can differ depending on which visa you held during each period, and how your payment splits across those periods generally depends on your specific visa history — so a single rate may not apply to your whole payment. It's worth working through your visa timeline before you claim.",
+      "modifiers": [
+        { "when": { "any": ["balance:ge5k"] }, "append": "Because your balance is $5,000 or more, you'll likely also need certified proof of identification and, for paper claims, a Certification of Immigration Status." }
+      ]
+    },
+    {
+      "id": "R5-multiple-funds",
+      "when": { "all": ["eligible", "funds:multiple"] },
+      "tier": 147, "severity": "red", "criticality": "critical", "escape": false, "title_key": "product",
+      "complexity_name": "multiple super funds",
+      "heading": "Multiple funds — claim each one",
+      "result_copy": "Your situation involves more than one super fund. Each super fund is generally claimed separately, and the tax and timing can differ between them, so it's worth working through fund by fund. Some funds may also have already transferred smaller or older balances to the ATO."
+    },
+    {
+      "id": "R3-unclaimed-ato",
+      "when": { "all": ["eligible", "time:ge6mo"] },
+      "tier": 147, "severity": "red", "criticality": "critical", "escape": false, "title_key": "product",
+      "heading": "Your super may already be at the ATO",
+      "result_copy": "It's been six months or more since you left Australia and your visa ceased, so there's a high chance your super fund has already transferred your balance to the ATO as unclaimed super money. Claiming from the ATO works differently to claiming from your fund, and this needs checking before you proceed so you claim from the right place.",
+      "modifiers": [
+        { "when": { "any": ["class:whm"] }, "append": "As a working holiday maker, the 65% withholding rate applies to what you eventually receive." },
+        { "when": { "any": ["balance:ge5k"] }, "append": "With a balance of $5,000 or more, certified identification will generally be required." }
+      ]
+    },
+    {
+      "id": "R0-clean-simple",
+      "when": { "all": ["eligible"], "none": ["class:multiple", "funds:multiple", "balance:ge5k", "time:ge6mo", "unsure:class", "unsure:balance", "unsure:time"] },
+      "tier": 67, "severity": "green", "criticality": "standard", "escape": false, "title_key": "product",
+      "heading": "A clean, straightforward claim",
+      "result_copy": "Good news — nothing in your answers complicates your DASP claim. You're eligible, your balance is under the $5,000 identification threshold, your super is still with your fund rather than transferred to the ATO, and you held a single visa type, so your withholding rate applies cleanly with no apportionment across periods. Your rate still applies at the time of payment (shown above), and DASP is generally paid within 28 days of a completed application — this is the standard, low-friction path."
+    },
+    {
+      "id": "R2-whm-rate",
+      "when": { "all": ["eligible", "class:whm"] },
+      "tier": 67, "severity": "red", "criticality": "critical", "escape": false, "title_key": "product",
+      "heading": "Working holiday maker — 65% withholding",
+      "result_copy": "As a working holiday maker visa holder (subclass 417 or 462), both the taxed element and the untaxed element of your DASP are generally withheld at 65% at the time of payment — significantly higher than the rates for other temporary visas. DASP is generally paid within 28 days of a completed application.",
+      "modifiers": [
+        { "when": { "any": ["balance:ge5k"] }, "append": "Because your balance is $5,000 or more, you'll likely need certified proof of identification and, for paper claims, a Certification of Immigration Status." },
+        { "when": { "any": ["balance:lt5k"] }, "append": "Because your balance is under $5,000, the identification requirements are generally simpler." }
+      ]
+    },
+    {
+      "id": "R1-ordinary-rate",
+      "when": { "all": ["eligible", "class:ordinary"] },
+      "tier": 67, "severity": "amber", "criticality": "critical", "escape": false, "title_key": "product",
+      "heading": "Ordinary temporary visa — 35% / 45%",
+      "result_copy": "As the holder of a temporary visa other than a working holiday maker visa, your DASP is generally withheld at 35% on the taxable component (taxed element) and 45% on the untaxed element at the time of payment. DASP is generally paid within 28 days of a completed application.",
+      "modifiers": [
+        { "when": { "any": ["balance:ge5k"] }, "append": "Because your balance is $5,000 or more, you'll likely need certified proof of identification and, for paper claims, a Certification of Immigration Status." },
+        { "when": { "any": ["balance:lt5k"] }, "append": "Because your balance is under $5,000, the identification requirements are generally simpler." }
+      ]
+    },
+    {
+      "id": "EXC-class-unclear",
+      "when": { "all": ["eligible"], "any": ["unsure:class"] },
+      "tier": 67, "severity": "amber", "criticality": "standard", "escape": true, "title_key": "review_guide",
+      "heading": "We couldn't pin down your visa class",
+      "result_copy": "You appear eligible for DASP, but we couldn't work out your visa class from your answers — and the withholding rate depends on it (65% for working holiday makers, 35% / 45% for other temporary visas). A short personalised review works out which rate applies to your situation."
+    },
+    {
+      "id": "X-review",
+      "tier": 67, "severity": "blue", "criticality": "cosmetic", "escape": true, "title_key": "review_guide",
+      "heading": "A closer look at your super",
+      "result_copy": "Your answers don't point to a single clear DASP position yet. A short personalised review works through what applies to your circumstances after leaving Australia and the steps to take next."
+    }
+  ]
+}
