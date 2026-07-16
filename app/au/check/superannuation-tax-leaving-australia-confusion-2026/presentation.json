@@ -1,0 +1,27 @@
+{
+  "_doc": "OPERATOR presentation overlay (commerce + presentation, operator-owned). The soverella emitter MERGES the machine-made engine (content + routing) with this overlay to produce engine.json in the runtime's terminals schema. Bee-D never sets tier/severity. Dishes take heading from the menu label and result_copy from the grounded result_state unless overridden here. Escapes REQUIRE heading + result_copy here (the engine carries none). tier=67 is FORCED on every escape by the translator regardless of this file. SEED map (old terminal -> new state) is a PROPOSAL for operator approval at the diff HOLD.",
+  "states": {
+    "dasp-eligibility-check":            { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product", "_seed_from": "R0-clean-simple" },
+    "dasp-tax-rate-whm":                 { "tier": 67,  "severity": "red",   "criticality": "critical", "title_key": "product", "_seed_from": "R2-whm-rate" },
+    "dasp-tax-rate-non-whm":             { "tier": 67,  "severity": "amber", "criticality": "critical", "title_key": "product", "_seed_from": "R1-ordinary-rate" },
+    "dasp-id-requirements-high-balance": { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product", "_seed_from": "R2/R1 balance:ge5k modifier (no direct old terminal)" },
+    "dasp-timing-transfer-to-ato":       { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product", "_seed_from": "R3-unclaimed-ato" },
+    "dasp-payment-timeline":             { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product", "_seed_from": "informational (no direct old terminal)" },
+
+    "none_fit": {
+      "severity": "blue", "criticality": "standard", "title_key": "review_guide", "_seed_from": "E1-not-applicable",
+      "heading": "DASP may not apply to your situation",
+      "result_copy": "Your answers suggest DASP may not fit — for example you are still in Australia, or you held permanent residence or citizenship, so the ordinary Australian super rules apply instead. A short personalised review works through what does apply to your circumstances and the steps to take next."
+    },
+    "insufficient_information": {
+      "severity": "amber", "criticality": "critical", "title_key": "review_guide", "_seed_from": "E3-eligibility-unclear",
+      "heading": "Your situation needs a closer look",
+      "result_copy": "Your answers do not yet confirm which DASP position applies to you — a key detail (such as your visa type, balance, or status) is unconfirmed. A short personalised review confirms where you stand and exactly what to check before you claim."
+    },
+    "high_complexity": {
+      "severity": "red", "criticality": "critical", "title_key": "review_guide", "_seed_from": "R4-mixed-visa (red; escape forced to $67)",
+      "heading": "A more complex situation",
+      "result_copy": "Your answers point to more than one factor at play (for example mixed visa types, or more than one timeline concern), so a single clean answer does not apply. A short personalised review works through the interacting parts of your situation before you claim."
+    }
+  }
+}
