@@ -441,7 +441,7 @@ export default function EngineCalculator({
       <div className={ENGINE_CANVAS}>
         <EngineVerdictPanel
           kind={escape ? "escape" : "menu"}
-          severity={escape ? undefined : terminal.severity}
+          severity={terminal.severity}
           whyFacts={escape ? undefined : trail.map((t) => t.label)}
           heading={terminal.heading}
           indicatedResult={terminal.copy}

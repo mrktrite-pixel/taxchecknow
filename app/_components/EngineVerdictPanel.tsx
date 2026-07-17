@@ -142,15 +142,18 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
   );
 
   // ── ESCAPE / QUASI-ESCAPE: escape-framed, email + single $67 CTA, no secondary ──
-  // distinct NON-severity framing (neutral slate card, diamond glyph) — never traffic-light.
+  // Distinct escape identity kept (diamond-OUTLINE ◇ glyph, escape label, $67-only, no why-facts/secondary),
+  // now SEVERITY-TINTED per the operator walk verdict (2026-07-17): escapes carry their mapped severity
+  // colour (was a neutral slate card — the "never traffic-light" escape doctrine is superseded).
   if (isEscape) {
+    const esc = SEVERITY_STYLE[severity ?? "blue"];
     return (
       <div className="space-y-4">
         <button onClick={onReset} className={GHOST_BACK}>← Change my answers</button>
-        <div className="rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 sm:p-7">
+        <div className={`rounded-3xl border p-5 sm:p-7 ${esc.panel}`}>
           <div className="mb-2 flex items-center gap-2" aria-live="polite">
-            <span aria-hidden className="text-[#64748B]">◇</span>
-            <p className={MICRO_CAPS}>{escapeLabel}</p>
+            <span aria-hidden className={esc.label}>◇</span>
+            <p className={`text-[10px] font-semibold uppercase tracking-widest ${esc.label}`}>{escapeLabel}</p>
           </div>
           <h3 className="mb-3 text-[23px] font-bold leading-snug text-[#0F172A]">{heading}</h3>
           {/* quasi-escape shows its own verbatim referral text; a bare escape shows the framed body */}
