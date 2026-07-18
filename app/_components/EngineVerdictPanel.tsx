@@ -231,8 +231,9 @@ export default function EngineVerdictPanel(props: EngineVerdictPanelProps) {
             <span aria-hidden className="mt-px shrink-0 text-[#2563EB]">ⓘ</span>
             <p className="font-semibold text-[#0F172A]">
               Confidence: {confidence.level}
+              <span className="font-normal text-[#64748B]"> — based on the answers you entered</span>
               {confidence.level === "MEDIUM" && (
-                <span className="font-normal text-[#64748B]"> — one or more answers were unsure</span>
+                <span className="font-normal text-[#64748B]"> (one or more were unsure)</span>
               )}
             </p>
           </div>
