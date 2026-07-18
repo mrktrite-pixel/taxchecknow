@@ -1,21 +1,21 @@
 [
   {
     "id": "fig_0",
-    "label": "Super fund transfer to ATO threshold (time since leaving)",
+    "label": "Six-month ATO transfer threshold",
     "value": "6",
     "unit": "months",
-    "fact_role": "threshold"
+    "fact_role": "duration"
   },
   {
     "id": "fig_1",
-    "label": "Proof of identification threshold (super balance)",
+    "label": "Super balance threshold for certified ID (paper applications)",
     "value": "$5,000",
     "unit": null,
     "fact_role": "threshold"
   },
   {
     "id": "fig_2",
-    "label": "Certification of Immigration Status threshold (super balance)",
+    "label": "Super balance threshold for Certification of Immigration Status (paper to fund)",
     "value": "$5,000",
     "unit": null,
     "fact_role": "threshold"
@@ -29,28 +29,28 @@
   },
   {
     "id": "fig_4",
-    "label": "DASP ordinary tax rate — taxable component (taxed element)",
+    "label": "DASP ordinary tax rate — taxable taxed element",
     "value": "35",
     "unit": "%",
     "fact_role": "rate"
   },
   {
     "id": "fig_5",
-    "label": "DASP WHM tax rate — taxable component (taxed element)",
+    "label": "DASP WHM tax rate — taxable taxed element",
     "value": "65",
     "unit": "%",
     "fact_role": "rate"
   },
   {
     "id": "fig_6",
-    "label": "DASP ordinary tax rate — taxable component (untaxed element)",
+    "label": "DASP ordinary tax rate — taxable untaxed element",
     "value": "45",
     "unit": "%",
     "fact_role": "rate"
   },
   {
     "id": "fig_7",
-    "label": "DASP WHM tax rate — taxable component (untaxed element)",
+    "label": "DASP WHM tax rate — taxable untaxed element",
     "value": "65",
     "unit": "%",
     "fact_role": "rate"

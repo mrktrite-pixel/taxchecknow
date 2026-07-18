@@ -1,200 +1,233 @@
 {
   "schema_version": "v2-flag-routed",
-  "topic_summary": "The Departing Australia Superannuation Payment (DASP) allows temporary residents who have left Australia and whose visa has ceased to claim their accumulated superannuation. Key decision points include visa type (which determines tax rates: non-WHM holders face 35% on the taxable component (taxed element) and 45% on the taxable component (untaxed element); WHM holders face 65% on both elements), super balance (balances of $5,000 or more trigger additional identification and certification requirements), timing (super funds transfer to the ATO as unclaimed money if 6 months or more have passed since departure), and whether super is held with a fund or the ATO. Payment is generally made within 28 days of a completed application being received, and the payer must issue a DASP payment summary within 14 days of making the payment.",
+  "topic_summary": "Departing Australia Superannuation Payment (DASP) — a menu of distinct situations a temporary-resident leaver can land on, covering eligibility, tax rates by visa type, the unclaimed-super transfer trigger (6 months), paper-application ID thresholds ($5,000), processing timelines (28 days payment / 14 days payment summary), and what happens when super is held across multiple funds. Every dish is grounded in the ATO DASP authority (snapshot 23de057f-7b08-4fcd-9b3c-4f5c19fac179) and a verbatim market signal.",
   "provenance_mode": "independent_voice",
   "derived_flags": [],
   "questions": [
     {
-      "id": "q1",
-      "text": "What best describes your current situation with Australia?",
+      "id": "q1-scope",
+      "text": "Which of the following best describes your situation with Australian superannuation?",
       "criticality": "critical",
       "options": [
         {
-          "label": "I visited Australia on a temporary visa, my visa has ceased, and I have already left Australia",
-          "value": "departed_temp",
+          "label": "I held a temporary resident visa, my visa has ceased, I have left (or am about to leave) Australia, and I am not an Australian/New Zealand citizen or permanent resident",
+          "value": "in_scope_temp",
           "flags": [
-            "q1:departed_temp"
+            "q1-scope:in_scope_temp"
           ]
         },
         {
-          "label": "I am still in Australia",
-          "value": "still_in_australia",
+          "label": "I am an Australian citizen, New Zealand citizen, or Australian permanent resident",
+          "value": "aus_nz_pr",
           "flags": [
-            "q1:still_in_australia"
+            "q1-scope:aus_nz_pr"
           ]
         },
         {
-          "label": "I held a permanent Australian visa or am an Australian citizen",
-          "value": "permanent_resident",
+          "label": "I held visa subclass 405 or 410",
+          "value": "excluded_visa",
           "flags": [
-            "q1:permanent_resident"
+            "q1-scope:excluded_visa"
           ]
         },
         {
-          "label": "I am not sure about my visa type or residency status",
-          "value": "unsure_status",
+          "label": "I am not sure whether I meet all the eligibility conditions",
+          "value": "unsure_eligibility",
           "flags": [
-            "q1:unsure_status"
+            "q1-scope:unsure_eligibility"
+          ]
+        },
+        {
+          "label": "None of these describe me",
+          "value": "no_fit",
+          "flags": [
+            "q1-scope:no_fit"
           ]
         }
       ]
     },
     {
-      "id": "q2",
+      "id": "q2-topic",
       "text": "What is your main question about your Departing Australia Superannuation Payment (DASP)?",
       "criticality": "critical",
       "showIf": {
         "any": [
-          "q1:departed_temp"
+          "q1-scope:in_scope_temp"
         ]
       },
       "options": [
         {
-          "label": "I want to confirm whether I am eligible to claim DASP",
-          "value": "eligibility",
-          "flags": [
-            "q2:eligibility"
-          ]
-        },
-        {
-          "label": "I want to know how much tax will be deducted from my DASP",
+          "label": "How much tax will be deducted from my DASP?",
           "value": "tax_rate",
           "flags": [
-            "q2:tax_rate"
+            "q2-topic:tax_rate"
           ]
         },
         {
-          "label": "I want to know what identification documents I need to apply",
-          "value": "id_docs",
+          "label": "My super hasn't been paid yet — I want to know when my fund sends it to the ATO",
+          "value": "unclaimed_transfer",
           "flags": [
-            "q2:id_docs"
+            "q2-topic:unclaimed_transfer"
           ]
         },
         {
-          "label": "I want to know how long DASP takes to process and when I will be paid",
+          "label": "What ID documents do I need for a paper application?",
+          "value": "paper_id",
+          "flags": [
+            "q2-topic:paper_id"
+          ]
+        },
+        {
+          "label": "How long will it take to receive my payment after I apply?",
           "value": "timeline",
           "flags": [
-            "q2:timeline"
+            "q2-topic:timeline"
           ]
         },
         {
-          "label": "I want to know what happens if I do not apply for DASP",
-          "value": "no_apply",
+          "label": "I have super in more than one fund — how does DASP work across all of them?",
+          "value": "multiple_funds",
           "flags": [
-            "q2:no_apply"
+            "q2-topic:multiple_funds"
+          ]
+        },
+        {
+          "label": "I am not sure / my question is different",
+          "value": "unsure_topic",
+          "flags": [
+            "q2-topic:unsure_topic"
           ]
         }
       ]
     },
     {
-      "id": "q3",
-      "text": "Did you hold a Working Holiday Maker (WHM) visa (subclass 417 or 462) at any point during your time working in Australia?",
+      "id": "q3-visa-type",
+      "text": "What type of temporary visa did you hold when your super contributions were made?",
       "criticality": "critical",
       "showIf": {
         "any": [
-          "q2:tax_rate"
+          "q2-topic:tax_rate"
         ]
       },
       "options": [
         {
-          "label": "Yes, I held a Working Holiday Maker visa",
-          "value": "whm_yes",
+          "label": "Working Holiday Maker visa (subclass 417 or 462) — for all or part of my time",
+          "value": "whm_visa",
           "flags": [
-            "q3:whm_yes"
+            "q3-visa-type:whm_visa"
           ]
         },
         {
-          "label": "No, I held a different type of temporary visa (e.g. student, skilled, sponsored)",
-          "value": "whm_no",
+          "label": "A temporary visa other than subclass 417 or 462 (e.g. student, skilled, sponsored worker)",
+          "value": "non_whm_visa",
           "flags": [
-            "q3:whm_no"
+            "q3-visa-type:non_whm_visa"
           ]
         },
         {
-          "label": "I held both a WHM visa and another temporary visa at different times",
-          "value": "whm_mixed",
+          "label": "I am not sure which visa subclass I held",
+          "value": "unsure_visa",
           "flags": [
-            "q3:whm_mixed"
-          ]
-        },
-        {
-          "label": "I am not sure what visa subclass I held",
-          "value": "whm_unsure",
-          "flags": [
-            "q3:whm_unsure"
+            "q3-visa-type:unsure_visa"
           ]
         }
       ]
     },
     {
-      "id": "q4",
+      "id": "q4-time-since-departure",
+      "text": "Has it been 6 months or more since you left Australia AND your visa has ceased?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q2-topic:unclaimed_transfer"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — it has been 6 months or more since I left and my visa has ceased",
+          "value": "past_threshold",
+          "flags": [
+            "q4-time-since-departure:past_threshold"
+          ]
+        },
+        {
+          "label": "No — it has been less than 6 months since I left, or my visa has not yet ceased",
+          "value": "before_threshold",
+          "flags": [
+            "q4-time-since-departure:before_threshold"
+          ]
+        },
+        {
+          "label": "I am not sure how long it has been or whether my visa has ceased",
+          "value": "unsure_time",
+          "flags": [
+            "q4-time-since-departure:unsure_time"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5-balance-threshold",
       "text": "Is your super balance $5,000 or more?",
       "criticality": "standard",
       "showIf": {
         "any": [
-          "q2:id_docs"
+          "q2-topic:paper_id"
         ]
       },
       "options": [
         {
-          "label": "Yes, my super balance is $5,000 or more",
-          "value": "balance_high",
+          "label": "Yes — my balance is $5,000 or more",
+          "value": "at_or_above_threshold",
           "flags": [
-            "q4:balance_high"
+            "q5-balance-threshold:at_or_above_threshold"
           ]
         },
         {
-          "label": "No, my super balance is below $5,000",
-          "value": "balance_low",
+          "label": "No — my balance is below $5,000",
+          "value": "below_threshold",
           "flags": [
-            "q4:balance_low"
+            "q5-balance-threshold:below_threshold"
           ]
         },
         {
-          "label": "I do not know my super balance",
-          "value": "balance_unknown",
+          "label": "I do not know my current balance",
+          "value": "unsure_balance",
           "flags": [
-            "q4:balance_unknown"
+            "q5-balance-threshold:unsure_balance"
           ]
         }
       ]
     },
     {
-      "id": "q5",
-      "text": "Which aspect of the DASP timeline are you most interested in?",
-      "criticality": "standard",
+      "id": "q6-whm-mixed",
+      "text": "Did you hold ONLY a Working Holiday Maker visa (subclass 417 or 462), or did you also hold other temporary visa types during your time in Australia?",
+      "criticality": "critical",
       "showIf": {
         "any": [
-          "q2:timeline"
+          "q3-visa-type:whm_visa"
         ]
       },
       "options": [
         {
-          "label": "How long after I apply until I receive my payment (the 28-day processing window)",
-          "value": "payment_window",
+          "label": "I held only a Working Holiday Maker visa (subclass 417 or 462) the entire time",
+          "value": "whm_only",
           "flags": [
-            "q5:payment_window"
+            "q6-whm-mixed:whm_only"
           ]
         },
         {
-          "label": "What happens if I wait too long — I am concerned about the 6-month threshold for transfer to the ATO",
-          "value": "ato_transfer",
+          "label": "I held a Working Holiday Maker visa AND another temporary visa type at different times",
+          "value": "whm_and_other",
           "flags": [
-            "q5:ato_transfer"
+            "q6-whm-mixed:whm_and_other"
           ]
         },
         {
-          "label": "Both of the above apply to my situation",
-          "value": "both_timeline",
+          "label": "I am not sure of my full visa history",
+          "value": "unsure_history",
           "flags": [
-            "q5:both_timeline"
-          ]
-        },
-        {
-          "label": "Neither of these — I have a different question",
-          "value": "neither_timeline",
-          "flags": [
-            "q5:neither_timeline"
+            "q6-whm-mixed:unsure_history"
           ]
         }
       ]
@@ -205,8 +238,7 @@
       "id": "dasp-eligibility-check",
       "when": {
         "any": [
-          "q2:eligibility",
-          "q4:balance_low"
+          "q1-scope:unsure_eligibility"
         ]
       },
       "tier": 67,
@@ -214,14 +246,14 @@
       "criticality": "standard",
       "escape": false,
       "title_key": "product",
-      "heading": "Am I eligible to claim DASP? (Visa status and departure check)",
-      "result_copy": "Review recommended: based on your answers, your situation shows signals consistent with DASP eligibility criteria (temporary visa, visa ceased, departed Australia). The dasp-eligibility-check dish covers the conditions that must be met and addresses edge cases such as former permanent residents whose status has lapsed."
+      "heading": "Am I eligible for DASP? — visa, departure, and citizenship gate",
+      "result_copy": "Review recommended: your answers indicate uncertainty about one or more of the four DASP eligibility conditions (temporary visa type, visa cessation, departure from Australia, and citizenship/residency status). This dish outlines each condition — including the excluded visa subclasses 405 and 410 — so you can assess whether a DASP claim is indicated for your situation."
     },
     {
-      "id": "dasp-tax-rate-non-whm",
+      "id": "dasp-tax-rate-ordinary",
       "when": {
         "any": [
-          "q3:whm_no"
+          "q3-visa-type:non_whm_visa"
         ]
       },
       "tier": 67,
@@ -229,14 +261,15 @@
       "criticality": "critical",
       "escape": false,
       "title_key": "product",
-      "heading": "What tax will be deducted from my DASP? (Non-working holiday maker visa holders)",
-      "result_copy": "Indicated risk of tax deduction: your profile indicates you did not hold a Working Holiday Maker visa. The applicable DASP tax rate indicated for the taxable component (taxed element) is 35%, and for the taxable component (untaxed element) is 45%. Review recommended before submitting your claim."
+      "heading": "How much tax is deducted? — standard (non-WHM) visa holders: 35% and 45%",
+      "result_copy": "Indicated result: for temporary visa holders who are not Working Holiday Makers, the taxable taxed element of your DASP is subject to a 35% rate and the taxable untaxed element is subject to a 45% rate. Review recommended to confirm which elements apply to your specific super fund balance."
     },
     {
       "id": "dasp-tax-rate-whm",
       "when": {
         "any": [
-          "q3:whm_yes"
+          "q6-whm-mixed:whm_only",
+          "q6-whm-mixed:whm_and_other"
         ]
       },
       "tier": 67,
@@ -244,14 +277,31 @@
       "criticality": "critical",
       "escape": false,
       "title_key": "product",
-      "heading": "What tax will be deducted from my DASP? (Working holiday maker visa holders)",
-      "result_copy": "High-risk signal for tax deduction: your profile indicates you held a Working Holiday Maker visa. The applicable DASP tax rate indicated for the taxable component (taxed element) is 65%, and for the taxable component (untaxed element) is 65%. Review recommended before submitting your claim."
+      "heading": "How much tax is deducted? — Working Holiday Maker (subclass 417/462): 65% on both elements",
+      "result_copy": "Indicated result: for Working Holiday Maker (subclass 417 or 462) visa holders, both the taxable taxed element and the taxable untaxed element are subject to a 65% rate. Where a DASP spans both WHM and non-WHM periods, each fund individually assesses which contributions were made during a WHM visa period. Review recommended to confirm how your fund will attribute contributions across visa periods."
     },
     {
-      "id": "dasp-id-requirements-high-balance",
+      "id": "dasp-unclaimed-super-transfer",
       "when": {
         "any": [
-          "q4:balance_high"
+          "q4-time-since-departure:past_threshold",
+          "q4-time-since-departure:before_threshold"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I haven't claimed yet — when does my fund send my super to the ATO?",
+      "result_copy": "Indicated result: if 6 months or more have passed since you left Australia and your visa has ceased, your fund is required to transfer your super to the ATO as unclaimed super money — you would then claim from the ATO rather than your fund. If that threshold has not yet been reached, claiming directly from your fund may still be available. Review recommended to confirm the current status of your super and which pathway applies."
+    },
+    {
+      "id": "dasp-paper-id-threshold",
+      "when": {
+        "any": [
+          "q5-balance-threshold:at_or_above_threshold",
+          "q5-balance-threshold:below_threshold"
         ]
       },
       "tier": 67,
@@ -259,15 +309,29 @@
       "criticality": "standard",
       "escape": false,
       "title_key": "product",
-      "heading": "What identification documents do I need for DASP if my super balance is $5,000 or more?",
-      "result_copy": "Review recommended: your balance is at or above $5,000, which indicates your super fund may require certified copies of proof of identification documents. For paper applications to super funds, a Certification of Immigration Status from Home Affairs may also be required. Early action is indicated as these documents are easier to certify while still in Australia."
+      "heading": "My super balance is $5,000 or more — what extra ID documents do I need for a paper application?",
+      "result_copy": "Indicated result: for paper applications where your super balance is $5,000 or more, your fund may require certified copies of proof-of-identification documents and may also require a Certification of Immigration Status from Home Affairs. Document requirements depend on the fund and the pathway. Review recommended — the authority notes it is easier to certify documents while still in Australia."
     },
     {
-      "id": "dasp-timing-transfer-to-ato",
+      "id": "dasp-processing-timeline",
       "when": {
         "any": [
-          "q2:no_apply",
-          "q5:ato_transfer"
+          "q2-topic:timeline"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How long will it take to receive my DASP payment and payment summary?",
+      "result_copy": "Indicated result: a completed DASP application is generally paid within 28 days of receipt. The payer must then issue a DASP payment summary within 14 days of making the payment. Review recommended to confirm your application is complete, as the 28-day window begins only upon receipt of a completed application."
+    },
+    {
+      "id": "dasp-multiple-funds",
+      "when": {
+        "any": [
+          "q2-topic:multiple_funds"
         ]
       },
       "tier": 147,
@@ -275,31 +339,16 @@
       "criticality": "critical",
       "escape": false,
       "title_key": "product",
-      "heading": "What happens if I don't apply for DASP? (Super transferred to ATO after 6 months)",
-      "result_copy": "Indicated risk: if 6 months or more have passed since you left Australia and your visa has ceased, your super fund is indicated to transfer your super to the ATO as unclaimed super money. Review recommended to determine whether this threshold applies to your situation."
-    },
-    {
-      "id": "dasp-payment-timeline",
-      "when": {
-        "any": [
-          "q5:payment_window"
-        ]
-      },
-      "tier": 67,
-      "severity": "green",
-      "criticality": "standard",
-      "escape": false,
-      "title_key": "product",
-      "heading": "How long does DASP take to process and when will I receive my payment?",
-      "result_copy": "Review recommended: your DASP will generally be paid within 28 days of your completed application being received. After payment, the payer is indicated to issue a DASP payment summary within 14 days of making the payment. These are the indicated timeframes; individual circumstances may vary."
+      "heading": "I have super in multiple funds — how does DASP work across all of them?",
+      "result_copy": "Indicated result: each super fund individually assesses your DASP application, including any WHM mixed-visa attribution. The DASP online system automatically confirms immigration status with the Department of Home Affairs for each fund. Review recommended to ensure a separate application is lodged for each fund holding your super."
     },
     {
       "id": "none_fit",
       "when": {
         "any": [
-          "q1:still_in_australia",
-          "q1:permanent_resident",
-          "q5:neither_timeline"
+          "q1-scope:aus_nz_pr",
+          "q1-scope:excluded_visa",
+          "q1-scope:no_fit"
         ]
       },
       "tier": 67,
@@ -308,15 +357,17 @@
       "escape": true,
       "title_key": "review_guide",
       "heading": "DASP may not apply to your situation",
-      "result_copy": "Your answers suggest DASP may not fit — for example you are still in Australia, or you held permanent residence or citizenship, so the ordinary Australian super rules apply instead. A short personalised review works through what does apply to your circumstances and the steps to take next."
+      "result_copy": "Your answers suggest DASP may not fit — for example you are an Australian or New Zealand citizen or permanent resident, or you held an excluded visa subclass (405 or 410), so the ordinary Australian super rules apply instead. A short personalised review works through what does apply to your circumstances and the steps to take next."
     },
     {
       "id": "insufficient_information",
       "when": {
         "any": [
-          "q1:unsure_status",
-          "q3:whm_unsure",
-          "q4:balance_unknown"
+          "q2-topic:unsure_topic",
+          "q3-visa-type:unsure_visa",
+          "q4-time-since-departure:unsure_time",
+          "q5-balance-threshold:unsure_balance",
+          "q6-whm-mixed:unsure_history"
         ]
       },
       "tier": 67,
@@ -325,23 +376,7 @@
       "escape": true,
       "title_key": "review_guide",
       "heading": "Your situation needs a closer look",
-      "result_copy": "Your answers do not yet confirm which DASP position applies to you — a key detail (such as your visa type, balance, or status) is unconfirmed. A short personalised review confirms where you stand and exactly what to check before you claim."
-    },
-    {
-      "id": "high_complexity",
-      "when": {
-        "any": [
-          "q3:whm_mixed",
-          "q5:both_timeline"
-        ]
-      },
-      "tier": 67,
-      "severity": "red",
-      "criticality": "critical",
-      "escape": true,
-      "title_key": "review_guide",
-      "heading": "A more complex situation",
-      "result_copy": "Your answers point to more than one factor at play (for example mixed visa types, or more than one timeline concern), so a single clean answer does not apply. A short personalised review works through the interacting parts of your situation before you claim."
+      "result_copy": "Your answers do not yet confirm which DASP position applies to you — a key detail (such as your visa type, how long since you left, or your balance) is unconfirmed. A short personalised review confirms where you stand and exactly what to check before you claim."
     }
   ]
 }
