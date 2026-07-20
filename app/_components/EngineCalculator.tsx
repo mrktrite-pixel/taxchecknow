@@ -65,6 +65,7 @@ export interface EngineTerminalDef {
   result_copy: string;
   complexity_name?: string;
   modifiers?: { when: FlagExpr; append: string }[];
+  figure_ids?: string[]; // P2.5: figures bound to this terminal at emit (deterministic); absent → runtime resolve
 }
 export interface DerivedFlag { name: string; when: FlagExpr }
 export interface Engine {
@@ -193,7 +194,13 @@ export default function EngineCalculator({
     for (const m of matched.modifiers ?? []) if (matchExpr(m.when, flags)) copy += ` ${m.append}`;
     const escape = !!matched.escape;
     const context = [matched.id, matched.heading, copy, ...trail.flatMap((t) => [t.value, t.label])].join(" ");
-    const statFigures = escape ? [] : resolveTerminalFigures(pool, context, { maxN: 3 });
+    // P2.5: prefer the emit-time deterministic binding (figure_ids). Absent (e.g. NZ, pre-P2.5 engines) →
+    // fall back to the runtime resolver — identical behaviour, zero regression.
+    const statFigures = escape
+      ? []
+      : matched.figure_ids && matched.figure_ids.length
+        ? pool.filter((f) => f.id != null && matched.figure_ids!.includes(f.id)).slice(0, 3)
+        : resolveTerminalFigures(pool, context, { maxN: 3 });
     const confidence: EngineConfidence | null = escape
       ? null
       : { level: anyUnsure ? "MEDIUM" : "HIGH", checklist: trail.map((t) => t.label) };
@@ -441,7 +448,7 @@ export default function EngineCalculator({
       <div className={ENGINE_CANVAS}>
         <EngineVerdictPanel
           kind={escape ? "escape" : "menu"}
-          severity={escape ? undefined : terminal.severity}
+          severity={terminal.severity}
           whyFacts={escape ? undefined : trail.map((t) => t.label)}
           heading={terminal.heading}
           indicatedResult={terminal.copy}

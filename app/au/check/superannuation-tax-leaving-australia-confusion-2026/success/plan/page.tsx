@@ -78,9 +78,6 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-10-31T23:59:59.000+11:00").getTime() - Date.now()) / 86_400_000
-  ));
 
   useEffect(() => { init(); }, []);
 
@@ -165,7 +162,7 @@ export default function SuccessPlan() {
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
-          "What is the single most important action I should take before 31 October 2026?",
+          "What is the single most important action I should take before my super is transferred to the ATO as unclaimed super money?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -250,10 +247,6 @@ export default function SuccessPlan() {
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
-          <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 31 October 2026</span>
-            <span className="font-mono text-sm font-bold text-white">31 Oct 2026</span>
-          </div>
         </div>
 
         {/* ── LOADING ── */}
@@ -310,7 +303,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 31 October 2026
+                  What to do — in order
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
@@ -445,7 +438,6 @@ export default function SuccessPlan() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                {daysToDeadline} days to 31 October 2026.
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}

@@ -57,9 +57,6 @@ export default function SuccessAssess() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2026-10-31T23:59:59.000+11:00").getTime() - Date.now()) / 86_400_000
-  ));
 
   useEffect(() => { init(); }, []);
 
@@ -137,7 +134,7 @@ export default function SuccessAssess() {
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
-          "What is the single most important action I should take before 31 October 2026?",
+          "What is the single most important action I should take before my super is transferred to the ATO as unclaimed super money?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
@@ -231,10 +228,6 @@ export default function SuccessAssess() {
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.
           </p>
-          <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 31 October 2026</span>
-            <span className="font-mono text-sm font-bold text-white">31 Oct 2026</span>
-          </div>
         </div>
 
         {/* ── LOADING ── */}
@@ -349,7 +342,7 @@ export default function SuccessAssess() {
                     <p className="text-xs text-neutral-500">6 months after departure with your visa ceased, your fund may transfer your super to the ATO as unclaimed money.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Oct 2026
+                    6-month window
                   </span>
                 </div>
               </div>
@@ -404,8 +397,6 @@ export default function SuccessAssess() {
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
-                
-                {daysToDeadline} days to 31 October 2026.
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}

@@ -1,65 +1,58 @@
 [
   {
     "id": "fig_0",
-    "label": "Super fund transfer to ATO threshold (time since leaving)",
+    "label": "ATO transfer threshold — time since departure",
     "value": "6",
     "unit": "months",
     "fact_role": "threshold"
   },
   {
     "id": "fig_1",
-    "label": "Proof of identification threshold (super balance)",
-    "value": "$5,000",
-    "unit": null,
-    "fact_role": "threshold"
-  },
-  {
-    "id": "fig_2",
-    "label": "Certification of Immigration Status threshold (super balance)",
-    "value": "$5,000",
-    "unit": null,
-    "fact_role": "threshold"
-  },
-  {
-    "id": "fig_3",
-    "label": "DASP payment window",
+    "label": "DASP payment deadline",
     "value": "28",
     "unit": "days",
     "fact_role": "duration"
   },
   {
+    "id": "fig_2",
+    "label": "DASP ordinary tax rate — taxable component taxed element",
+    "value": "35%",
+    "unit": null,
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_3",
+    "label": "DASP WHM tax rate — taxable component taxed element",
+    "value": "65%",
+    "unit": null,
+    "fact_role": "rate"
+  },
+  {
     "id": "fig_4",
-    "label": "DASP ordinary tax rate — taxable component (taxed element)",
-    "value": "35",
-    "unit": "%",
+    "label": "DASP ordinary tax rate — taxable component untaxed element",
+    "value": "45%",
+    "unit": null,
     "fact_role": "rate"
   },
   {
     "id": "fig_5",
-    "label": "DASP WHM tax rate — taxable component (taxed element)",
-    "value": "65",
-    "unit": "%",
+    "label": "DASP WHM tax rate — taxable component untaxed element",
+    "value": "65%",
+    "unit": null,
     "fact_role": "rate"
   },
   {
     "id": "fig_6",
-    "label": "DASP ordinary tax rate — taxable component (untaxed element)",
-    "value": "45",
-    "unit": "%",
-    "fact_role": "rate"
-  },
-  {
-    "id": "fig_7",
-    "label": "DASP WHM tax rate — taxable component (untaxed element)",
-    "value": "65",
-    "unit": "%",
-    "fact_role": "rate"
-  },
-  {
-    "id": "fig_8",
-    "label": "DASP payment summary issuance window",
+    "label": "DASP payment summary issuance deadline",
     "value": "14",
     "unit": "days",
     "fact_role": "duration"
+  },
+  {
+    "id": "fig_7",
+    "label": "Super value threshold — certified ID / Immigration Status certificate required",
+    "value": "$5,000",
+    "unit": null,
+    "fact_role": "threshold"
   }
 ]
