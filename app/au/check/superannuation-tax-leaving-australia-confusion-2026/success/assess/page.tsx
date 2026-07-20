@@ -134,7 +134,7 @@ export default function SuccessAssess() {
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
-          "What is the single most important action I should take before 31 October 2026?",
+          "What is the single most important action I should take before my super is transferred to the ATO as unclaimed super money?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
@@ -342,7 +342,7 @@ export default function SuccessAssess() {
                     <p className="text-xs text-neutral-500">6 months after departure with your visa ceased, your fund may transfer your super to the ATO as unclaimed money.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Oct 2026
+                    6-month window
                   </span>
                 </div>
               </div>

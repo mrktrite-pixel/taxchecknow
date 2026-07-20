@@ -162,7 +162,7 @@ export default function SuccessPlan() {
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
-          "What is the single most important action I should take before 31 October 2026?",
+          "What is the single most important action I should take before my super is transferred to the ATO as unclaimed super money?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -303,7 +303,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 31 October 2026
+                  What to do — in order
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
