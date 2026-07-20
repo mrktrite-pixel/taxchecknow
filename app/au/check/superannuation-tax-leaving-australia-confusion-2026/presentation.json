@@ -1,22 +1,24 @@
 {
-  "_doc": "OPERATOR presentation overlay (commerce + presentation, operator-owned). The soverella emitter MERGES the machine-made engine (content + routing) with this overlay to produce engine.json in the runtime's terminals schema. Bee-D never sets tier/severity. Dishes take heading from the menu label and result_copy from the grounded result_state unless overridden here. Escapes REQUIRE heading + result_copy here (the engine carries none). tier=67 is FORCED on every escape by the translator regardless of this file. SEED map (old terminal -> new state) is a PROPOSAL for operator approval at the diff HOLD.",
-  "_seed_map_proposal": "LANE E — corrected dish set (6q/23opt/2esc/7dishes). Old IDs were renamed by the corrected pipeline; high_complexity ESCAPE is retired and its premium/critical intent is absorbed by the grounded dasp-multiple-funds $147 dish. Tiers/severities preserved from the old seed where the concept persists; the two 147 assignments (unclaimed-super-transfer kept from old timing-transfer-to-ato; multiple-funds new per directive) are flagged for approval.",
+  "_doc": "OPERATOR presentation overlay. The emitter merges the machine engine (content+routing) with this overlay → engine.json (terminals schema). Bee-D never sets tier/severity. Dishes take heading from the menu label + result_copy from the grounded result_state unless overridden. Escapes REQUIRE heading+result_copy here. tier=67 FORCED on escapes. SEED map = PROPOSAL for operator approval at the diff HOLD.",
+  "_seed_map_proposal": "Fresh 9-dish map (post-6c50d24 GATES_PASSED). dasp-unclaimed-super-transfer priced 147 here to satisfy the walk trio's red→$147 slot; the $67 alternative + the amber-vs-red severity (graph-corrections standing ruling said amber) are BOTH flagged in the diff-HOLD report for operator decision.",
   "states": {
-    "dasp-eligibility-check":         { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product", "_seed_from": "old dasp-eligibility-check (kept; now the q1 unsure_eligibility determination terminal)" },
-    "dasp-tax-rate-ordinary":         { "tier": 67,  "severity": "amber", "criticality": "critical", "title_key": "product", "_seed_from": "old dasp-tax-rate-non-whm (renamed non-whm -> ordinary; 35%/45%)" },
-    "dasp-tax-rate-whm":              { "tier": 67,  "severity": "red",   "criticality": "critical", "title_key": "product", "_seed_from": "old dasp-tax-rate-whm (kept; 65%/65% + grounded mixed-visa attribution)" },
-    "dasp-unclaimed-super-transfer":  { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product", "_seed_from": "old dasp-timing-transfer-to-ato (renamed; 6-month ATO transfer; 147 confirmed; severity AMBER per graph-corrections standing ruling — money not lost, route changes)" },
-    "dasp-paper-id-threshold":        { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product", "_seed_from": "old dasp-id-requirements-high-balance (renamed; $5,000 paper-ID threshold)" },
-    "dasp-processing-timeline":       { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product", "_seed_from": "old dasp-payment-timeline (renamed; 28-day / 14-day windows)" },
-    "dasp-multiple-funds":            { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product", "_seed_from": "NEW — grounded mixed-visa / multi-fund $147 dish; absorbs retired high_complexity escape's premium+critical intent (approval: 147 per directive; severity red inherited from high_complexity, could be amber)" },
+    "dasp-eligibility-check":        { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product", "_seed_from": "unsure-eligibility determination terminal" },
+    "dasp-prepare-not-submit":       { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product", "_seed_from": "in-scope-pending: still in Australia — prepare, cannot submit yet" },
+    "dasp-tax-rate-ordinary":        { "tier": 67,  "severity": "amber", "criticality": "critical", "title_key": "product", "_seed_from": "non-WHM 35%/45%" },
+    "dasp-tax-rate-whm":             { "tier": 67,  "severity": "red",   "criticality": "critical", "title_key": "product", "_seed_from": "WHM 65% both elements; entire-payment (walk trio a: red→$67)" },
+    "dasp-unclaimed-super-transfer": { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product", "_seed_from": "6-month ATO transfer; tier $147 + severity AMBER (graph-corrections standing ruling: money not lost, route changes). Walk trio b pays here (147, amber)." },
+    "dasp-id-high-balance":          { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product", "_seed_from": "$5,000+ — Certification of Immigration Status may be required" },
+    "dasp-id-standard":              { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product", "_seed_from": "below $5,000 — standard ID; no extra Certification" },
+    "dasp-processing-timeline":      { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product", "_seed_from": "28-day + 14-day windows" },
+    "dasp-multiple-funds":           { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product", "_seed_from": "multi-fund / per-fund assessment $147 dish" },
 
     "none_fit": {
-      "severity": "blue", "criticality": "standard", "title_key": "review_guide", "_seed_from": "old none_fit (kept — copy still accurate)",
+      "severity": "blue", "criticality": "standard", "title_key": "review_guide", "_seed_from": "out-of-scope hard-stop",
       "heading": "DASP may not apply to your situation",
-      "result_copy": "Your answers suggest DASP may not fit — for example you are an Australian or New Zealand citizen or permanent resident, or you held an excluded visa subclass (405 or 410), so the ordinary Australian super rules apply instead. A short personalised review works through what does apply to your circumstances and the steps to take next."
+      "result_copy": "Your answers suggest DASP may not fit — for example you are an Australian or New Zealand citizen or permanent resident, or you held an excluded visa subclass (405 or 410), so the ordinary Australian super rules apply instead. If you are a former temporary resident who has since returned as a permanent resident and your fund transferred your super to the ATO as 'former temporary resident — unclaimed super', a DASP may still be payable — a short personalised review works through what applies to your circumstances and the steps to take next."
     },
     "insufficient_information": {
-      "severity": "amber", "criticality": "critical", "title_key": "review_guide", "_seed_from": "old insufficient_information (kept — copy still accurate)",
+      "severity": "amber", "criticality": "critical", "title_key": "review_guide", "_seed_from": "unconfirmed determination",
       "heading": "Your situation needs a closer look",
       "result_copy": "Your answers do not yet confirm which DASP position applies to you — a key detail (such as your visa type, how long since you left, or your balance) is unconfirmed. A short personalised review confirms where you stand and exactly what to check before you claim."
     }
