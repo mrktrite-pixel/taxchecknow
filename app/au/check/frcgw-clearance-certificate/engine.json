@@ -1,0 +1,370 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Australian residents selling real property must obtain a clearance certificate from the ATO and provide it to the purchaser at or before settlement to avoid the purchaser withholding 15% of the sale proceeds under the Foreign Resident Capital Gains Withholding (FRCGW) rules (from 1 January 2025). Applications should be lodged at least 28 days before settlement as processing can take up to 28 days. Each co-owner must apply separately, and certificates are valid for 12 months from issue.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_scope",
+      "text": "Are you selling (or planning to sell) Australian real property?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Yes, I am selling or about to sell Australian real property",
+          "value": "in_scope",
+          "flags": [
+            "q1_scope:in_scope"
+          ]
+        },
+        {
+          "label": "No, I am not selling Australian real property",
+          "value": "out_of_scope",
+          "flags": [
+            "q1_scope:out_of_scope"
+          ]
+        },
+        {
+          "label": "I'm not sure whether my property qualifies",
+          "value": "unsure",
+          "flags": [
+            "q1_scope:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_knowledge",
+      "text": "What best describes where you are in the clearance certificate process?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_scope:in_scope"
+        ]
+      },
+      "options": [
+        {
+          "label": "I don't know what a clearance certificate is or why I need one",
+          "value": "need_explainer",
+          "flags": [
+            "q2_knowledge:need_explainer"
+          ]
+        },
+        {
+          "label": "I know what it is, but I haven't applied yet and want to know when to apply",
+          "value": "timing",
+          "flags": [
+            "q2_knowledge:timing"
+          ]
+        },
+        {
+          "label": "I have already applied and my application is still pending",
+          "value": "pending",
+          "flags": [
+            "q2_knowledge:pending"
+          ]
+        },
+        {
+          "label": "I have a clearance certificate and provided it to the purchaser at or before settlement",
+          "value": "provided",
+          "flags": [
+            "q2_knowledge:provided"
+          ]
+        },
+        {
+          "label": "Settlement has passed and I did not provide a clearance certificate",
+          "value": "no_cert",
+          "flags": [
+            "q2_knowledge:no_cert"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_timing",
+      "text": "How many vendors (owners) are selling the property?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2_knowledge:timing"
+        ]
+      },
+      "options": [
+        {
+          "label": "Just me — I am the sole vendor",
+          "value": "sole",
+          "flags": [
+            "q3_timing:sole"
+          ]
+        },
+        {
+          "label": "Two or more co-owners (e.g. a couple or joint owners)",
+          "value": "co_owners",
+          "flags": [
+            "q3_timing:co_owners"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q3_timing:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4_residency",
+      "text": "Do you know whether you are an Australian resident for tax purposes?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q3_timing:sole"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes, I am confident I am an Australian resident for tax purposes",
+          "value": "resident",
+          "flags": [
+            "q4_residency:resident"
+          ]
+        },
+        {
+          "label": "No, I am not an Australian resident for tax purposes",
+          "value": "non_resident",
+          "flags": [
+            "q4_residency:non_resident"
+          ]
+        },
+        {
+          "label": "I'm not sure about my tax residency status",
+          "value": "unsure_residency",
+          "flags": [
+            "q4_residency:unsure_residency"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5_contract_length",
+      "text": "Is the period between signing the contract and settlement expected to be longer than 12 months?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q4_residency:resident",
+          "q4_residency:non_resident"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes, the contract period is longer than 12 months",
+          "value": "long_contract",
+          "flags": [
+            "q5_contract_length:long_contract"
+          ]
+        },
+        {
+          "label": "No, settlement is expected within 12 months of signing",
+          "value": "standard_contract",
+          "flags": [
+            "q5_contract_length:standard_contract"
+          ]
+        },
+        {
+          "label": "I'm not sure how long the contract period will be",
+          "value": "unsure_length",
+          "flags": [
+            "q5_contract_length:unsure_length"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "what-is-clearance-certificate",
+      "when": {
+        "any": [
+          "q2_knowledge:need_explainer"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is a clearance certificate and why do I need one?",
+      "result_copy": "Review recommended: All Australian residents selling Australian real property must have a clearance certificate and give it to the purchaser at, or before settlement. Without a clearance certificate, the purchaser must withhold up to 15% of the sale proceeds (or market value if not sold at arm's length) for foreign resident capital gains withholding (FRCGW) purposes. On and after 1 January 2025, a rate of 15% applies to the value of all property. This dish explains what the certificate is and why it is required.",
+      "figure_ids": [
+        "fig_0",
+        "fig_14"
+      ]
+    },
+    {
+      "id": "when-to-apply-timeline",
+      "when": {
+        "any": [
+          "q5_contract_length:standard_contract"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "When should I apply? Understanding the 28-day lead time before settlement",
+      "result_copy": "Review recommended: It can take up to 28 days to process and issue a clearance certificate. Applications must be lodged at least 28 days before settlement to ensure you have your clearance certificate in time. This dish explains the timing requirements in detail.",
+      "figure_ids": [
+        "fig_11",
+        "fig_12",
+        "fig_19"
+      ]
+    },
+    {
+      "id": "certificate-pending-at-settlement",
+      "when": {
+        "any": [
+          "q2_knowledge:pending"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My clearance certificate application is still pending — what happens at settlement?",
+      "result_copy": "Indicated risk: If your clearance certificate has not been issued by settlement, the purchaser is required to withhold 15% of the sale proceeds and pay that amount to the ATO. This dish explains your options and next steps while your application is pending.",
+      "figure_ids": [
+        "fig_0",
+        "fig_14"
+      ]
+    },
+    {
+      "id": "certificate-provided-no-withholding",
+      "when": {
+        "any": [
+          "q2_knowledge:provided"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I provided a valid clearance certificate at or before settlement — no withholding applies",
+      "result_copy": "Indicated result: If you provided a valid clearance certificate to the purchaser at or before settlement, the purchaser is not required to withhold any amount under FRCGW. Clearance certificates are valid for 12 months from their date of issue (as long as the vendor's residency status doesn't change during that time).",
+      "figure_ids": [
+        "fig_7"
+      ]
+    },
+    {
+      "id": "no-certificate-withholding-applies",
+      "when": {
+        "any": [
+          "q2_knowledge:no_cert"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I did not provide a clearance certificate — 15% of sale proceeds will be withheld",
+      "result_copy": "Indicated risk: Without a clearance certificate, the purchaser must withhold up to 15% of the sale proceeds (or market value if not sold at arm's length) for foreign resident capital gains withholding (FRCGW) purposes. On and after 1 January 2025, a rate of 15% applies to the value of all property. This applies regardless of your actual residency status.",
+      "figure_ids": [
+        "fig_0",
+        "fig_14"
+      ]
+    },
+    {
+      "id": "co-owners-separate-certificates",
+      "when": {
+        "any": [
+          "q3_timing:co_owners"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I co-own the property — do we each need our own clearance certificate?",
+      "result_copy": "Review recommended: Each vendor, including co-owners, must apply for and provide their own separate clearance certificate. If one co-owner does not provide a valid certificate at or before settlement, the purchaser must withhold 15% of that co-owner's share of the sale proceeds. Applications must be lodged at least 28 days before settlement to ensure certificates are ready in time.",
+      "figure_ids": [
+        "fig_0",
+        "fig_11",
+        "fig_12",
+        "fig_14",
+        "fig_19"
+      ]
+    },
+    {
+      "id": "certificate-expired-long-contract",
+      "when": {
+        "any": [
+          "q5_contract_length:long_contract"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My contract period is longer than 12 months — will my clearance certificate expire before settlement?",
+      "result_copy": "Indicated risk: Clearance certificates are valid for 12 months from their date of issue (as long as the vendor's residency status doesn't change during that time). If your contract period exceeds 12 months, your certificate may expire before settlement. This dish explains how to assess whether your certificate will remain valid and what steps to consider.",
+      "figure_ids": [
+        "fig_7"
+      ]
+    },
+    {
+      "id": "unsure-tax-residency-status",
+      "when": {
+        "any": [
+          "q4_residency:unsure_residency"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure if I qualify as an Australian resident for tax purposes",
+      "result_copy": "Review recommended: Tax residency for FRCGW purposes is different from social security or immigration residency. The ATO will confirm your residency status when you apply for a clearance certificate. This dish explains the general indicators and what to do if you are uncertain.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1_scope:out_of_scope"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "FRCGW may not apply to your situation",
+      "result_copy": "Your answers suggest Foreign Resident Capital Gains Withholding may not fit — for example you are not selling Australian real property, or your sale contract was signed before 1 January 2025 under the earlier threshold rules. If you are selling Australian property under a contract dated on or after 1 January 2025, a clearance certificate almost certainly applies — a short personalised review confirms whether it does and the exact steps to take before settlement.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1_scope:unsure",
+          "q3_timing:unsure",
+          "q5_contract_length:unsure_length"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your situation needs a closer look",
+      "result_copy": "Your answers do not yet confirm your FRCGW position — a key detail (your tax residency, your settlement date, or whether you have already applied for the certificate) is unconfirmed. A short personalised review confirms where you stand and exactly what to lodge, and by when, before settlement.",
+      "figure_ids": []
+    }
+  ]
+}

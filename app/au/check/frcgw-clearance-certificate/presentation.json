@@ -1,0 +1,25 @@
+{
+  "_doc": "OPERATOR presentation overlay (FRCGW migration — ruled 2026-07-22). The emitter merges the machine engine (content+routing) with this overlay → engine.json (terminals schema). Bee-D never sets tier/severity. Dishes take heading from the menu label + result_copy from the grounded result_state unless overridden. Escapes REQUIRE heading+result_copy here; tier=67 FORCED on escapes.",
+  "_ruling": "Flag 1 certificate-pending-at-settlement → tier 147/amber/critical (live deadline, 15% conditionally at stake — Execution Pack). Flag 2 unsure-tax-residency-status → 67/amber/standard (guidance dish, asserts no outcome). Other 6 rows + escape copy approved as drafted. Seeded from the live bespoke FrcgwClearanceCertificateCalculator.tsx (RATE 0.15, THRESHOLD 0; cert-provided→67/green, no-cert/foreign→147/red).",
+  "states": {
+    "what-is-clearance-certificate":        { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product" },
+    "when-to-apply-timeline":               { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
+    "certificate-pending-at-settlement":    { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "certificate-provided-no-withholding":  { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product" },
+    "no-certificate-withholding-applies":   { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product" },
+    "co-owners-separate-certificates":      { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
+    "certificate-expired-long-contract":    { "tier": 67,  "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "unsure-tax-residency-status":          { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
+
+    "none_fit": {
+      "severity": "blue", "criticality": "standard", "title_key": "review_guide",
+      "heading": "FRCGW may not apply to your situation",
+      "result_copy": "Your answers suggest Foreign Resident Capital Gains Withholding may not fit — for example you are not selling Australian real property, or your sale contract was signed before 1 January 2025 under the earlier threshold rules. If you are selling Australian property under a contract dated on or after 1 January 2025, a clearance certificate almost certainly applies — a short personalised review confirms whether it does and the exact steps to take before settlement."
+    },
+    "insufficient_information": {
+      "severity": "amber", "criticality": "critical", "title_key": "review_guide",
+      "heading": "Your situation needs a closer look",
+      "result_copy": "Your answers do not yet confirm your FRCGW position — a key detail (your tax residency, your settlement date, or whether you have already applied for the certificate) is unconfirmed. A short personalised review confirms where you stand and exactly what to lodge, and by when, before settlement."
+    }
+  }
+}
