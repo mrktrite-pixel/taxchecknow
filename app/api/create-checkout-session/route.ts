@@ -44,13 +44,14 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
 function getPriceId(tier: number, productKey: string): string | undefined {
   const registered = PRICE_ENV_REGISTRY[productKey];
   if (registered) {
-    const val = process.env[registered];
-    if (val) return val;
-    // PREVIEW-ONLY sandbox fallback: registered prod var (e.g. STRIPE_AU_SUPERLEAVE_*)
-    // isn't set on Preview → use the generic sandbox test price. Production: no fallback
-    // (missing var → undefined → loud 500).
+    // INVARIANT: a Preview deployment runs the TEST secret key and must NEVER be handed a live price ID,
+    // regardless of env scoping. So on Preview → the sandbox TEST price FIRST + UNCONDITIONALLY; the
+    // registered prod var is consulted ONLY off-preview. (Round-1 bug: prod vars added Production+Preview
+    // — STRIPE_AU_FRCGW_* present in Preview scope → the old "if (val) return val" handed the LIVE price to
+    // the test key → "No such price" 500. This inversion is the durable fix for ALL 42 future migrations —
+    // any product with Preview-scoped live vars would hit it identically.)
     if (isPreview()) return process.env[`STRIPE_AU_TEST_${tier}`];
-    return undefined;
+    return process.env[registered]; // production: the registered live price (undefined → loud 500)
   }
 
   const key = productKey.toLowerCase();
