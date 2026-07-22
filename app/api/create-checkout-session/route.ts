@@ -32,6 +32,13 @@ function getStripe() {
 const PRICE_ENV_REGISTRY: Record<string, string> = {
   au_67_superannuation_tax_leaving_australia_confusion_2026:  "STRIPE_AU_SUPERLEAVE_67",
   au_147_superannuation_tax_leaving_australia_confusion_2026: "STRIPE_AU_SUPERLEAVE_147",
+  // FRCGW is now engine-native (PANELBEAT migration) — register it so it uses the SAME preview-test-rig
+  // fallback SUPERLEAVE does. Production resolves STRIPE_AU_FRCGW_67/147 (live, unchanged, added Apr 29);
+  // PREVIEW (where those prod vars aren't scoped and the deploy runs the TEST secret key) falls back to
+  // STRIPE_AU_TEST_<tier> so a branch-preview buy completes against the sandbox instead of a live-price/
+  // test-key 500. The legacy frcgw includes()-block below is now dead for these keys (registry hits first).
+  au_67_frcgw_clearance_certificate:  "STRIPE_AU_FRCGW_67",
+  au_147_frcgw_clearance_certificate: "STRIPE_AU_FRCGW_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {

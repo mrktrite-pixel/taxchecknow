@@ -117,7 +117,7 @@ export default function EngineCalculator({
   figures?: EngineFigure[];
   config?: EngineConfig;
   onComplete?: (c: EngineCompletion) => void;
-  onCheckout?: (c: EngineCheckout) => void;
+  onCheckout?: (c: EngineCheckout) => void | Promise<boolean | void>;
 }) {
   const questions = useMemo(() => engine.questions ?? [], [engine.questions]);
   const terminals = useMemo(() => engine.terminals ?? [], [engine.terminals]);
@@ -135,6 +135,7 @@ export default function EngineCalculator({
   const [popupStage, setPopupStage] = useState<0 | 1 | 2>(0);
   const [popupTier, setPopupTier] = useState<PinnedTier | null>(null);
   const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [email, setEmail] = useState("");
   const [emailSent, setEmailSent] = useState(false);
@@ -342,11 +343,12 @@ export default function EngineCalculator({
     setEmailSent(true);
   }
 
-  function pay() {
+  async function pay() {
     if (!terminal) return;
     const buyTier = popupTier ?? tierInfo;
     if (!buyTier) return;
     setPaying(true);
+    setPayError(null);
     const qualLabeled = Object.fromEntries(
       qualFields(config)
         .map((f) => [f.label, f.options.find((o) => o.value === qual[f.key])?.label ?? qual[f.key]] as const)
@@ -359,10 +361,17 @@ export default function EngineCalculator({
       }).catch(() => {});
     }
     try { if (config?.productSlug) sessionStorage.setItem(`${config.productSlug}_qualification`, JSON.stringify(qualLabeled)); } catch { /* ignore */ }
-    onCheckout?.({
-      sessionId, terminal: { kind: terminal.escape ? "escape" : "menu", id: terminal.id, label: terminal.heading },
-      tier: buyTier.tier, price: buyTier.price, answers: labeledAnswers, qualification: qualLabeled,
-    });
+    // AWAIT the checkout handoff. On success it redirects (page unloads). A falsy result or a throw means
+    // checkout could NOT start (e.g. the API 500'd) — surface it instead of a silent dead button.
+    try {
+      const ok = await onCheckout?.({
+        sessionId, terminal: { kind: terminal.escape ? "escape" : "menu", id: terminal.id, label: terminal.heading },
+        tier: buyTier.tier, price: buyTier.price, answers: labeledAnswers, qualification: qualLabeled,
+      });
+      if (ok === false) setPayError("Payment couldn't start — please try again.");
+    } catch {
+      setPayError("Payment couldn't start — please try again.");
+    }
     setPaying(false);
   }
 
@@ -499,6 +508,7 @@ export default function EngineCalculator({
             payLabel={payLabelFor(config, popupTier.price)}
             dismissLabel={config?.copy?.dismissLabel ?? "Not now — keep reading"}
             paying={paying}
+            payError={payError}
             onPay={pay}
             onDismiss={closePopup}
           />

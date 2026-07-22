@@ -87,7 +87,7 @@ const ENGINE_CONFIG: EngineConfig = {
   },
 };
 
-async function handleCheckout(c: EngineCheckout): Promise<void> {
+async function handleCheckout(c: EngineCheckout): Promise<boolean> {
   const productKey = `au_${c.tier}_frcgw_clearance_certificate`;
   const origin = window.location.origin;
   const successPath = c.tier === 147 ? "plan" : "assess";
@@ -103,10 +103,12 @@ async function handleCheckout(c: EngineCheckout): Promise<void> {
         cancel_url: `${origin}/au/check/${SLUG}`,
       }),
     });
+    if (!res.ok) return false; // API 500/4xx — the pay button surfaces the failure instead of no-oping
     const data = await res.json();
-    if (data.url) window.location.href = data.url;
+    if (data.url) { window.location.href = data.url; return true; }
+    return false;
   } catch {
-    /* non-blocking — surfaced by the checkout endpoint */
+    return false;
   }
 }
 
