@@ -103,7 +103,12 @@ async function cole(productId: string, successOnly = false) {
     let configPath = path.join(CONFIG_DIR, `${productId}.ts`);
     if (!fs.existsSync(configPath)) {
       const allConfigs = fs.readdirSync(CONFIG_DIR).filter(f => f.endsWith(".ts"));
-      const match      = allConfigs.find(f => f.startsWith(productId));
+      // Resolve by filename prefix (au-19), OR by the slug TAIL (config files are
+      // "<country>-<NN>-<slug>.ts", so the basename ends with the slug). The tail form lets the
+      // update-emit mechanics pass the storefront slug tail (e.g. frcgw-clearance-certificate).
+      const base = (f: string) => f.replace(/\.ts$/, "");
+      const match      = allConfigs.find(f => f.startsWith(productId))
+                      ?? allConfigs.find(f => base(f).endsWith(`-${productId}`) || base(f) === productId);
       if (match) {
         configPath = path.join(CONFIG_DIR, match);
         console.log(`   → Resolved to: ${match}`);
