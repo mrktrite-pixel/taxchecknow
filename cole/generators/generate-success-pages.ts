@@ -2,8 +2,35 @@
 // COLE Generator — generate-success-pages.ts
 // Produces story-driven, personalised success pages for all products.
 // Claude is called server-side via /api/assess — API key never exposed.
-// ─────────────────────────────────────────────────────────────────────────────
+//
+// ┌── HARD RULE (Strategy ruling, 2026-07-23) ─────────────────────────────────┐
+// │ NO success-page regeneration runs for ANY product until BOTH land HERE:    │
+// │   R-A2  the template emits `buildComposerInputsFromSession("<id>")` for the │
+// │         /api/assess `inputs` — NOT the phantom `sessionStorage.getItem(     │
+// │         "<id>_<key>") || "<default>"` reads below. Those keys are the OLD   │
+// │         bespoke-calculator contract; engine-native calculators write        │
+// │         <id>_answers / <id>_qualification instead, so the phantom reads     │
+// │         always fall back to defaults → a generic, corpus-contradicting      │
+// │         assessment. (Fixed by hand on the two FRCGW pages, commit 50eced7.) │
+// │         CAVEAT: R-A2 is safe ONLY for ENGINE-NATIVE products. A legacy      │
+// │         bespoke-calculator product still writes the phantom keys, so this   │
+// │         switch must be GATED per-product on engine-native status — it is    │
+// │         NOT an unconditional template edit. That gating is the open work.   │
+// │   R-A3  no hardcoded / stale dates: the fixed `daysToDeadline` countdown    │
+// │         off `config.deadline.isoDate` shows "0 days" once the date passes   │
+// │         (FRCGW's 2025-12-31 was already past). Per-user-deadline products   │
+// │         (e.g. FRCGW settlement) must suppress the countdown; true per-user  │
+// │         date capture is R-A4 (backlog).                                     │
+// │ Regenerating before R-A2/R-A3 land silently OVERWRITES the FRCGW hand-patch │
+// │ with the broken template. The guard below machine-enforces this rule.      │
+// │ See reports/2026-07-23-frcgw-success-content-migration-scope.txt           │
+// └────────────────────────────────────────────────────────────────────────────┘
 import type { ProductConfig } from "../types/product-config";
+
+// Machine-enforced hard rule. buildSuccessPage() THROWS unless the template has been
+// upgraded (R-A2/R-A3) and the operator opts in with COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
+// Deliberate tripwire — a broken template must not silently re-emit over a fixed page.
+const RA2_RA3_LANDED = process.env.COLE_SUCCESS_TEMPLATE_RA2_RA3 === "1";
 
 export function generateSuccessAssess(config: ProductConfig): string {
   return buildSuccessPage(config, "tier1");
@@ -25,6 +52,27 @@ function sym(config: ProductConfig): string {
 }
 
 function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): string {
+  // ── HARD-RULE GUARD (2026-07-23) ──────────────────────────────────────────
+  if (!RA2_RA3_LANDED) {
+    throw new Error(
+      `[COLE hard rule 2026-07-23] Success-page regeneration is BLOCKED (product "${config.id}", ${tier}). ` +
+      `R-A2 (emit buildComposerInputsFromSession) and R-A3 (no hardcoded/stale dates) are not yet landed in ` +
+      `generate-success-pages.ts. Regenerating now would overwrite the FRCGW hand-patch (commit 50eced7) with ` +
+      `the still-broken template. Land R-A2 (gated on the product being engine-native) + R-A3, verify, then set ` +
+      `COLE_SUCCESS_TEMPLATE_RA2_RA3=1. See reports/2026-07-23-frcgw-success-content-migration-scope.txt`
+    );
+  }
+  // Correctness tripwire that survives even after the opt-in: a fixed deadline countdown that
+  // is already in the past renders "0 days (Critical)". Block it rather than ship a stale page.
+  const dl = Date.parse(config.deadline?.isoDate ?? "");
+  if (!Number.isNaN(dl) && dl < Date.now()) {
+    throw new Error(
+      `[COLE R-A3] Product "${config.id}" has a PAST deadline.isoDate (${config.deadline.isoDate}) — the ` +
+      `success-page countdown would render "0 days". Update the config to a future date, or (for a per-user ` +
+      `deadline like FRCGW settlement) suppress the fixed countdown before regenerating.`
+    );
+  }
+
   const isTier2      = tier === "tier2";
   const tierConfig   = isTier2 ? config.tier2 : config.tier1;
   const price        = tierConfig.price;
