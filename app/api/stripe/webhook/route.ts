@@ -5,6 +5,7 @@ import { sendDeliveryEmail } from "@/lib/cole-email";
 import { getMarketContext } from "@/lib/email-context";
 import { getAssessmentFields } from "@/lib/assessment-fields";
 import { buildComposerInputs } from "@/lib/composer-inputs";
+import { generateAssessment } from "@/lib/assess-core";
 import { lookupDeadline } from "@/lib/product-deadlines";
 
 // ── PRODUCT DELIVERY MAP — all 25 TaxCheckNow + 5 SuperTaxCheck ─────────────
@@ -177,32 +178,27 @@ async function generateAndStoreAssessment(
       (ds?.questionnaire_payload || {}) as Record<string, unknown>,
     );
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
-    const res = await fetch(`${baseUrl}/api/assess`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        product_id: delivery.productId,
-        market:     delivery.market,
-        authority:  delivery.authority,
-        tier:       tier >= 147 ? 2 : 1,
-        name:       customerName,
-        inputs,
-        // PQ-C0 fix: per-product fields (== the client success-page list) so the paid
-        // deliverable is identical regardless of path; generic fallback = old behavior.
-        fields:     getAssessmentFields(delivery.productId, tier),
-      }),
+    // IN-PROCESS generation (2026-07-23): call the generator directly, NOT
+    // fetch(`${NEXT_PUBLIC_SITE_URL}/api/assess`). The HTTP self-call hit PRODUCTION, so a branch
+    // webhook ran against pre-merge prod assess semantics (no `grounded` field → every store
+    // skipped). Direct call = same deployment's code always runs; holds on prod after merge and on
+    // every preview. fields: per-product list (== the client success-page list, PQ-C0) so the paid
+    // deliverable is identical regardless of path.
+    const result = await generateAssessment({
+      product_id: delivery.productId,
+      market:     delivery.market,
+      authority:  delivery.authority,
+      tier:       tier >= 147 ? 2 : 1,
+      name:       customerName,
+      inputs,
+      fields:     getAssessmentFields(delivery.productId, tier),
     });
 
-    // FAIL-CLOSED: /api/assess returns 424 when the corpus is unreachable/malformed — we do NOT
-    // store an ungrounded (confidently-wrong-law) assessment. The success page then shows a
-    // retry/support state instead. (2026-07-23 ruling.)
-    if (!res.ok) { console.error(`[webhook] /api/assess ${res.status} for ${stripeSessionId} — NOT stored (fail-closed)`); return; }
-
-    const { assessment, grounded, corpus_source, corpus_verified } = await res.json();
-
-    // Belt-and-suspenders: never persist an assessment the generator did not mark grounded.
-    if (grounded !== true) { console.error(`[webhook] assessment for ${stripeSessionId} not grounded — NOT stored`); return; }
+    // FAIL-CLOSED: on any generator failure (corpus unreachable/malformed = status 424, etc.) we
+    // do NOT store an ungrounded assessment. result.ok===true GUARANTEES grounded===true. The
+    // success page then shows a retry/support state instead of confidently-wrong law. (Ruling.)
+    if (!result.ok) { console.error(`[webhook] assess ${result.status} (${result.error}) for ${stripeSessionId} — NOT stored (fail-closed)`); return; }
+    const { assessment, corpus_source, corpus_verified } = result;
 
     await (supabase as any).from("assessments").upsert({
       stripe_session_id:   stripeSessionId,
