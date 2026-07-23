@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { sendDeliveryEmail } from "@/lib/cole-email";
@@ -334,18 +334,26 @@ export async function POST(req: Request) {
     console.error("[webhook] Supabase purchase error:", err);
   }
 
-  // 2. Generate + store assessment (non-blocking — fires and continues)
+  // 2. Generate + store assessment — deferred to after() (post-response, platform-kept-alive).
+  // ROOT CAUSE FIX (2026-07-23): this was fire-and-forget (`...catch(()=>{})`). On Vercel the
+  // function is FROZEN once the response returns, so the un-awaited store only landed if it
+  // happened to finish during the awaited email — a RACE the SLOWER tier lost (tier 147's
+  // /api/assess uses max_tokens 2500 + more fields → slower than tier 67's 1500 → its store was
+  // routinely cut off → has_assessment=false, no error logged). Latency-dependent, so which tier
+  // "lost" could flip between runs. `after()` keeps the lambda alive until the store completes
+  // for EVERY tier, while the response still returns fast (no Stripe-timeout retry → no duplicate
+  // delivery emails, which an `await` here would have risked since the purchase insert is not
+  // idempotent). Its own try/catch logs any real failure.
   if (delivery && decisionSid && customerEmail) {
-    generateAndStoreAssessment(
+    after(() => generateAndStoreAssessment(
       supabase, session.id, decisionSid, productKey,
       tier, delivery, customerEmail, customerName
-    ).catch(() => {});
+    ));
   }
 
-  // 3. Queue reminder emails (non-blocking)
+  // 3. Queue reminder emails — same deferral (same latent race).
   if (delivery && customerEmail) {
-    queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery, decisionSid)
-      .catch(() => {});
+    after(() => queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery, decisionSid));
   }
 
   // 4. Send delivery email

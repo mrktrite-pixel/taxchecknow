@@ -56,12 +56,16 @@ export async function POST(req: Request) {
     // which the corpus explicitly flags as a known AI error. Product-general: every
     // product has a corpus at /api/rules/<product_id>. Fails OPEN — if the corpus is
     // unreachable, we fall back to the prior ungrounded prompt (no regression).
+    //
+    // Origin: fetch from the PUBLIC site origin, NOT the request origin. On a Vercel
+    // Preview the request origin sits behind Deployment Protection, so a self-fetch there
+    // returns 401 and grounding silently no-ops (observed 2026-07-23: "corpus fetch → 401;
+    // proceeding ungrounded" on the branch preview). The corpus is env-independent public
+    // JSON (force-static), so the production domain — which has no auth wall — is the
+    // correct, stable source from every environment. req.url origin is only a last resort.
     let corpusBlock = "";
     try {
-      const origin =
-        new URL(req.url).origin ||
-        process.env.NEXT_PUBLIC_SITE_URL ||
-        "https://taxchecknow.com";
+      const origin = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
       const cr = await fetch(`${origin}/api/rules/${product_id}`, {
         headers: { accept: "application/json" },
       });
