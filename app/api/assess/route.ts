@@ -48,6 +48,54 @@ export async function POST(req: Request) {
       .map(([k, v]) => `- ${k.replace(/_/g, " ")}: ${v}`)
       .join("\n");
 
+    // ── CORPUS GROUNDING (P2) ────────────────────────────────────────────────
+    // Bind the assessment to the product's VERIFIED fact corpus (/api/rules/<id>)
+    // so the model states CURRENT law and cannot regurgitate superseded figures from
+    // its training data. Without this, an ungrounded "reference ATO thresholds" prompt
+    // free-associates stale law — e.g. the pre-2025 FRCGW $750k threshold / 12.5% rate,
+    // which the corpus explicitly flags as a known AI error. Product-general: every
+    // product has a corpus at /api/rules/<product_id>. Fails OPEN — if the corpus is
+    // unreachable, we fall back to the prior ungrounded prompt (no regression).
+    let corpusBlock = "";
+    try {
+      const origin =
+        new URL(req.url).origin ||
+        process.env.NEXT_PUBLIC_SITE_URL ||
+        "https://taxchecknow.com";
+      const cr = await fetch(`${origin}/api/rules/${product_id}`, {
+        headers: { accept: "application/json" },
+      });
+      if (cr.ok) {
+        const rules = await cr.json();
+        const facts = rules.key_facts
+          ? Object.entries(rules.key_facts)
+              .map(([k, v]) => `- ${k.replace(/_/g, " ")}: ${v}`)
+              .join("\n")
+          : "";
+        const errs = Array.isArray(rules.common_ai_errors)
+          ? rules.common_ai_errors
+              .map((e: { ai_says?: string; correct?: string }) => `- WRONG: ${e.ai_says}\n  RIGHT: ${e.correct}`)
+              .join("\n")
+          : "";
+        corpusBlock = `
+CURRENT VERIFIED LAW — AUTHORITATIVE (product corpus, last verified ${rules.last_verified ?? "recently"}).
+This OVERRIDES your training data. If your training data disagrees with anything below, your
+training data is STALE — use ONLY the figures, rates, thresholds and dates stated here.
+${rules.legislation ? `Legislation: ${rules.legislation}` : ""}
+${facts ? `Key facts:\n${facts}` : ""}
+${errs ? `Do NOT repeat these known AI mistakes — they are WRONG:\n${errs}` : ""}
+
+HARD RULE: every rate, threshold, amount and date you write MUST match the corpus above.
+Never state a superseded threshold or rate as current. Never contradict the corpus or the
+taxpayer's own calculator answers.
+`;
+      } else {
+        console.warn(`[assess] corpus fetch ${product_id} → ${cr.status}; proceeding ungrounded`);
+      }
+    } catch (e) {
+      console.warn(`[assess] corpus fetch failed for ${product_id}; proceeding ungrounded`, e);
+    }
+
     // Build required fields for the JSON response
     const fieldsList = [
       ...fields,
@@ -56,16 +104,16 @@ export async function POST(req: Request) {
     ];
 
     const prompt = `You are a ${market} ${authority} tax expert writing a personalised ${isTier2 ? "action plan" : "tax assessment"} for ${displayName}.
-
+${corpusBlock}
 THEIR CALCULATOR ANSWERS:
 ${inputsSummary}
 
 YOUR JOB:
 Write a personalised, specific assessment for this exact person based on their answers above.
 - Use ${market} tax terminology throughout
-- Reference ${authority} rules, thresholds, and legislation specifically
+- Reference ${authority} rules, thresholds, and legislation specifically — but ONLY as stated in the verified corpus above; never quote a figure that contradicts it
 - Use their name (${displayName}) naturally in the text
-- Reference their specific numbers — do not give generic advice
+- Reference their specific answers — do not give generic advice, and do not invent numbers they did not provide
 - Be direct, specific, and actionable — this person just paid money for this
 - Make it feel like a personal memo from their accountant, not a PDF guide
 
