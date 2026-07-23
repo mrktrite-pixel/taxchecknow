@@ -48,40 +48,61 @@ export async function POST(req: Request) {
       .map(([k, v]) => `- ${k.replace(/_/g, " ")}: ${v}`)
       .join("\n");
 
-    // ── CORPUS GROUNDING (P2) ────────────────────────────────────────────────
-    // Bind the assessment to the product's VERIFIED fact corpus (/api/rules/<id>)
-    // so the model states CURRENT law and cannot regurgitate superseded figures from
-    // its training data. Without this, an ungrounded "reference ATO thresholds" prompt
-    // free-associates stale law — e.g. the pre-2025 FRCGW $750k threshold / 12.5% rate,
-    // which the corpus explicitly flags as a known AI error. Product-general: every
-    // product has a corpus at /api/rules/<product_id>. Fails OPEN — if the corpus is
-    // unreachable, we fall back to the prior ungrounded prompt (no regression).
+    // ── CORPUS GROUNDING (P2) — FAIL CLOSED (ruling 2026-07-23) ──────────────
+    // Bind the assessment to the product's VERIFIED fact corpus (/api/rules/<id>) so the
+    // model states CURRENT law and cannot regurgitate superseded figures (e.g. the pre-2025
+    // FRCGW $750k threshold / 12.5% rate the corpus flags as a known AI error).
     //
-    // Origin: fetch from the PUBLIC site origin, NOT the request origin. On a Vercel
-    // Preview the request origin sits behind Deployment Protection, so a self-fetch there
-    // returns 401 and grounding silently no-ops (observed 2026-07-23: "corpus fetch → 401;
-    // proceeding ungrounded" on the branch preview). The corpus is env-independent public
-    // JSON (force-static), so the production domain — which has no auth wall — is the
-    // correct, stable source from every environment. req.url origin is only a last resort.
+    // RULING: this is PAID content. If the corpus is unreachable or malformed we DO NOT fall
+    // back to an ungrounded prompt — that ships confidently-wrong law. We FAIL CLOSED: return
+    // an error, store NO assessment, and let the success page show a retry/support state.
+    // "A wrong $147 tax report is worse than a delayed one." Every success caller stamps
+    // grounded:true + corpus_source so groundedness is auditable in SQL, not inferred.
+    //
+    // Origin: the PUBLIC site origin, not the request origin — on a Vercel Preview the request
+    // origin sits behind Deployment Protection (self-fetch → 401). The corpus is env-independent
+    // force-static public JSON, so the production domain is the correct source from every env.
+    const corpusOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
+    const corpusUrl = `${corpusOrigin}/api/rules/${product_id}`;
     let corpusBlock = "";
+    let rules: Record<string, unknown> | null = null;
     try {
-      const origin = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
-      const cr = await fetch(`${origin}/api/rules/${product_id}`, {
-        headers: { accept: "application/json" },
-      });
-      if (cr.ok) {
-        const rules = await cr.json();
-        const facts = rules.key_facts
-          ? Object.entries(rules.key_facts)
-              .map(([k, v]) => `- ${k.replace(/_/g, " ")}: ${v}`)
-              .join("\n")
-          : "";
-        const errs = Array.isArray(rules.common_ai_errors)
-          ? rules.common_ai_errors
-              .map((e: { ai_says?: string; correct?: string }) => `- WRONG: ${e.ai_says}\n  RIGHT: ${e.correct}`)
-              .join("\n")
-          : "";
-        corpusBlock = `
+      const cr = await fetch(corpusUrl, { headers: { accept: "application/json" } });
+      if (!cr.ok) {
+        console.error(`[assess] FAIL-CLOSED: corpus fetch ${product_id} → ${cr.status} (${corpusUrl})`);
+        return NextResponse.json(
+          { error: "corpus_unreachable", detail: `rules route returned ${cr.status}`, product_id, grounded: false },
+          { status: 424 },
+        );
+      }
+      rules = await cr.json();
+    } catch (e) {
+      console.error(`[assess] FAIL-CLOSED: corpus fetch threw for ${product_id} (${corpusUrl})`, e);
+      return NextResponse.json(
+        { error: "corpus_unreachable", detail: e instanceof Error ? e.message : "fetch failed", product_id, grounded: false },
+        { status: 424 },
+      );
+    }
+    // Guard against a 200 that is not a usable corpus (e.g. an auth HTML page slipping through).
+    if (!rules || typeof rules !== "object" || (!rules.legislation && !rules.key_facts)) {
+      console.error(`[assess] FAIL-CLOSED: corpus for ${product_id} is malformed / missing legislation+key_facts`);
+      return NextResponse.json(
+        { error: "corpus_malformed", detail: "missing legislation and key_facts", product_id, grounded: false },
+        { status: 424 },
+      );
+    }
+    {
+      const facts = rules.key_facts
+        ? Object.entries(rules.key_facts as Record<string, unknown>)
+            .map(([k, v]) => `- ${k.replace(/_/g, " ")}: ${v}`)
+            .join("\n")
+        : "";
+      const errs = Array.isArray(rules.common_ai_errors)
+        ? (rules.common_ai_errors as Array<{ ai_says?: string; correct?: string }>)
+            .map((e) => `- WRONG: ${e.ai_says}\n  RIGHT: ${e.correct}`)
+            .join("\n")
+        : "";
+      corpusBlock = `
 CURRENT VERIFIED LAW — AUTHORITATIVE (product corpus, last verified ${rules.last_verified ?? "recently"}).
 This OVERRIDES your training data. If your training data disagrees with anything below, your
 training data is STALE — use ONLY the figures, rates, thresholds and dates stated here.
@@ -93,11 +114,6 @@ HARD RULE: every rate, threshold, amount and date you write MUST match the corpu
 Never state a superseded threshold or rate as current. Never contradict the corpus or the
 taxpayer's own calculator answers.
 `;
-      } else {
-        console.warn(`[assess] corpus fetch ${product_id} → ${cr.status}; proceeding ungrounded`);
-      }
-    } catch (e) {
-      console.warn(`[assess] corpus fetch failed for ${product_id}; proceeding ungrounded`, e);
     }
 
     // Build required fields for the JSON response
@@ -202,7 +218,12 @@ If their name is provided, use it. Reference their income band, cover status, fa
       );
     }
 
-    return NextResponse.json({ assessment });
+    // Groundedness stamp — reaching here means the corpus was fetched, valid, and injected
+    // (any failure fail-closed above). grounded is therefore always true on this path.
+    const grounded = true;
+    const corpus_source = corpusUrl;
+    const corpus_verified = (rules?.last_verified as string) ?? null;
+    return NextResponse.json({ assessment, grounded, corpus_source, corpus_verified });
 
   } catch (err: unknown) {
     console.error("Assess API error:", err);

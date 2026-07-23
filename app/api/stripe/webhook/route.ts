@@ -194,9 +194,15 @@ async function generateAndStoreAssessment(
       }),
     });
 
-    if (!res.ok) { console.error("[webhook] /api/assess failed:", res.status); return; }
+    // FAIL-CLOSED: /api/assess returns 424 when the corpus is unreachable/malformed — we do NOT
+    // store an ungrounded (confidently-wrong-law) assessment. The success page then shows a
+    // retry/support state instead. (2026-07-23 ruling.)
+    if (!res.ok) { console.error(`[webhook] /api/assess ${res.status} for ${stripeSessionId} — NOT stored (fail-closed)`); return; }
 
-    const { assessment } = await res.json();
+    const { assessment, grounded, corpus_source, corpus_verified } = await res.json();
+
+    // Belt-and-suspenders: never persist an assessment the generator did not mark grounded.
+    if (grounded !== true) { console.error(`[webhook] assessment for ${stripeSessionId} not grounded — NOT stored`); return; }
 
     await (supabase as any).from("assessments").upsert({
       stripe_session_id:   stripeSessionId,
@@ -206,11 +212,13 @@ async function generateAndStoreAssessment(
       tier,
       customer_email:      customerEmail,
       customer_name:       customerName,
-      assessment_json:     assessment,
+      // Stamp groundedness INTO the stored JSON so it is auditable in SQL without a schema
+      // change: `assessment_json->'_meta'->>'grounded'`, `->>'corpus_source'`.
+      assessment_json:     { ...assessment, _meta: { grounded: true, corpus_source, corpus_verified } },
       created_at:          new Date().toISOString(),
     }, { onConflict: "stripe_session_id" });
 
-    console.log("[webhook] Assessment stored:", stripeSessionId);
+    console.log(`[webhook] Assessment stored (grounded, ${corpus_source}):`, stripeSessionId);
   } catch (err) {
     console.error("[webhook] Assessment failed (non-blocking):", err);
   }
