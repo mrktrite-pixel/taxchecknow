@@ -63,7 +63,21 @@ export async function POST(req: Request) {
     // origin sits behind Deployment Protection (self-fetch → 401). The corpus is env-independent
     // force-static public JSON, so the production domain is the correct source from every env.
     const corpusOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
-    const corpusUrl = `${corpusOrigin}/api/rules/${product_id}`;
+    // productId → /api/rules SLUG. Seven products carry a DELIVERY_MAP productId that differs from
+    // their rules-route slug; without this map fail-closed would 404 their (existing) corpus. Each
+    // mapping was VERIFIED against the target route's own product_id/title (2026-07-23) so we never
+    // ground a product with another product's corpus. Unlisted product_ids resolve to themselves.
+    const RULES_SLUG: Record<string, string> = {
+      "183-day-rule": "day-183-rule",
+      "amt-shock-auditor": "can-amt-shock",
+      "departure-tax-trap": "can-departure-tax",
+      "eot-exit-optimizer": "can-eot-exit",
+      "non-resident-landlord-withholding": "can-nrls",
+      "property-flipping-tax-trap": "can-property-flipping",
+      "spain-beckham-eligibility": "spain-beckham",
+    };
+    const corpusSlug = RULES_SLUG[product_id as string] ?? product_id;
+    const corpusUrl = `${corpusOrigin}/api/rules/${corpusSlug}`;
     let corpusBlock = "";
     let rules: Record<string, unknown> | null = null;
     try {
