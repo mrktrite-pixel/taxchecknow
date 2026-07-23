@@ -91,7 +91,7 @@ function toPascal(str: string): string {
 }
 
 // ── MAIN ──────────────────────────────────────────────────────────────────────
-async function cole(productId: string) {
+async function cole(productId: string, successOnly = false) {
   const startTime      = Date.now();
   const filesGenerated: string[] = [];
   const errors:         string[] = [];
@@ -137,6 +137,27 @@ async function cole(productId: string) {
     console.error(`   ❌ Config error: ${err}`);
     process.exit(1);
   }
+
+  // ── UPDATE/MIGRATION EMIT (--success-only) ────────────────────────────────
+  // DOCTRINE: an update is a full new build that retains the URL — the emit delivers the
+  // calculator AND regenerated success pages, never a partial transplant. emit-engine.ts writes
+  // engine.json/figures.json only; this step regenerates the paid success pages with the SAME
+  // generator the new build uses, so a migrated product's deliverable is never left legacy.
+  // Runs ONLY success pages (not gate/calculator/files) so it cannot clobber the engine-native
+  // calculator or gate. Gated by the R-A2/R-A3 tripwire inside buildSuccessPage().
+  if (successOnly) {
+    console.log(`   → --success-only: regenerating success pages for ${config.id} (calculator/gate untouched)\n`);
+    emitSuccessPages(config, filesGenerated, errors);
+    const ok = errors.length === 0;
+    console.log(`\n${"─".repeat(60)}`);
+    console.log(ok
+      ? `\n✅ Success pages regenerated: ${productId} (${filesGenerated.length} files)`
+      : `\n⚠️  Success-only completed with ${errors.length} error(s):`);
+    errors.forEach(e => console.log(`   • ${e}`));
+    if (!ok) process.exitCode = 1;
+    return;
+  }
+
   // ── STEP 2: Generate gate page ────────────────────────────────────────────
   try {
     const filePath = getGatePagePath(config, APP_ROOT);
@@ -176,24 +197,7 @@ async function cole(productId: string) {
     console.error(`   ❌ ${msg}`);
   }
   // ── STEP 4: Generate success pages ────────────────────────────────────────
-  try {
-    const p = getSuccessAssessPath(config, APP_ROOT);
-    writeFile(p, generateSuccessAssess(config));
-    filesGenerated.push(p);
-    console.log(`   ✅ Success page (tier 1 — ${config.tier1.successPath})\n      → ${relativePath(p)}`);
-  } catch (err) {
-    errors.push(`Success assess: ${err}`);
-    console.error(`   ❌ Success assess: ${err}`);
-  }
-  try {
-    const p = getSuccessPlanPath(config, APP_ROOT);
-    writeFile(p, generateSuccessPlan(config));
-    filesGenerated.push(p);
-    console.log(`   ✅ Success page (tier 2 — ${config.tier2.successPath})\n      → ${relativePath(p)}`);
-  } catch (err) {
-    errors.push(`Success plan: ${err}`);
-    console.error(`   ❌ Success plan: ${err}`);
-  }
+  emitSuccessPages(config, filesGenerated, errors);
   // ── STEP 5: Generate product files ────────────────────────────────────────
   try {
     const productFiles = generateAllProductFiles(config);
@@ -296,6 +300,30 @@ async function cole(productId: string) {
   console.log(`\n${"─".repeat(60)}\n`);
 }
 // ── HELPERS ───────────────────────────────────────────────────────────────────
+// Success-page emit — the SAME generation the new-build flow runs (STEP 4). Extracted so the
+// update/migration emit (--success-only) regenerates success pages IDENTICALLY, never a partial
+// transplant. buildSuccessPage() carries the R-A2/R-A3 hard-rule tripwire, so a premature regen
+// throws here (recorded as an error) until the template is upgraded + COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
+function emitSuccessPages(config: ProductConfig, filesGenerated: string[], errors: string[]): void {
+  try {
+    const p = getSuccessAssessPath(config, APP_ROOT);
+    writeFile(p, generateSuccessAssess(config));
+    filesGenerated.push(p);
+    console.log(`   ✅ Success page (tier 1 — ${config.tier1.successPath})\n      → ${relativePath(p)}`);
+  } catch (err) {
+    errors.push(`Success assess: ${err}`);
+    console.error(`   ❌ Success assess: ${err}`);
+  }
+  try {
+    const p = getSuccessPlanPath(config, APP_ROOT);
+    writeFile(p, generateSuccessPlan(config));
+    filesGenerated.push(p);
+    console.log(`   ✅ Success page (tier 2 — ${config.tier2.successPath})\n      → ${relativePath(p)}`);
+  } catch (err) {
+    errors.push(`Success plan: ${err}`);
+    console.error(`   ❌ Success plan: ${err}`);
+  }
+}
 function writeFile(filePath: string, content: string): void {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, content, "utf8");
@@ -304,10 +332,14 @@ function relativePath(absolutePath: string): string {
   return absolutePath.replace(path.join(__dirname, "../../"), "");
 }
 // ── ENTRY POINT ───────────────────────────────────────────────────────────────
-const productId = process.argv[2];
+const args        = process.argv.slice(2);
+const successOnly  = args.includes("--success-only");
+const productId    = args.find(a => !a.startsWith("--"));
 if (!productId) {
-  console.error("\n❌ Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id]");
-  console.error("   Example: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-03\n");
+  console.error("\n❌ Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id] [--success-only]");
+  console.error("   Full build:    cole-generate.ts uk-03");
+  console.error("   Update emit:   cole-generate.ts au-19-frcgw-clearance-certificate --success-only");
+  console.error("                  (regenerates ONLY the success pages — for a migrated/engine-native product)\n");
   console.error("   Available configs:");
   try {
     fs.readdirSync(CONFIG_DIR)
@@ -316,7 +348,7 @@ if (!productId) {
   } catch { /* ignore */ }
   process.exit(1);
 }
-cole(productId).catch(err => {
+cole(productId, successOnly).catch(err => {
   console.error(`\n❌ COLE fatal error: ${err}\n`);
   process.exit(1);
 });
