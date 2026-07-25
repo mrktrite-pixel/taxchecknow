@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { sendDeliveryEmail } from "@/lib/cole-email";
 import { getMarketContext } from "@/lib/email-context";
 import { getAssessmentFields } from "@/lib/assessment-fields";
 import { buildComposerInputs } from "@/lib/composer-inputs";
+import { generateAssessment } from "@/lib/assess-core";
 import { lookupDeadline } from "@/lib/product-deadlines";
 
 // ── PRODUCT DELIVERY MAP — all 25 TaxCheckNow + 5 SuperTaxCheck ─────────────
@@ -177,26 +178,27 @@ async function generateAndStoreAssessment(
       (ds?.questionnaire_payload || {}) as Record<string, unknown>,
     );
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
-    const res = await fetch(`${baseUrl}/api/assess`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        product_id: delivery.productId,
-        market:     delivery.market,
-        authority:  delivery.authority,
-        tier:       tier >= 147 ? 2 : 1,
-        name:       customerName,
-        inputs,
-        // PQ-C0 fix: per-product fields (== the client success-page list) so the paid
-        // deliverable is identical regardless of path; generic fallback = old behavior.
-        fields:     getAssessmentFields(delivery.productId, tier),
-      }),
+    // IN-PROCESS generation (2026-07-23): call the generator directly, NOT
+    // fetch(`${NEXT_PUBLIC_SITE_URL}/api/assess`). The HTTP self-call hit PRODUCTION, so a branch
+    // webhook ran against pre-merge prod assess semantics (no `grounded` field → every store
+    // skipped). Direct call = same deployment's code always runs; holds on prod after merge and on
+    // every preview. fields: per-product list (== the client success-page list, PQ-C0) so the paid
+    // deliverable is identical regardless of path.
+    const result = await generateAssessment({
+      product_id: delivery.productId,
+      market:     delivery.market,
+      authority:  delivery.authority,
+      tier:       tier >= 147 ? 2 : 1,
+      name:       customerName,
+      inputs,
+      fields:     getAssessmentFields(delivery.productId, tier),
     });
 
-    if (!res.ok) { console.error("[webhook] /api/assess failed:", res.status); return; }
-
-    const { assessment } = await res.json();
+    // FAIL-CLOSED: on any generator failure (corpus unreachable/malformed = status 424, etc.) we
+    // do NOT store an ungrounded assessment. result.ok===true GUARANTEES grounded===true. The
+    // success page then shows a retry/support state instead of confidently-wrong law. (Ruling.)
+    if (!result.ok) { console.error(`[webhook] assess ${result.status} (${result.error}) for ${stripeSessionId} — NOT stored (fail-closed)`); return; }
+    const { assessment, corpus_source, corpus_verified } = result;
 
     await (supabase as any).from("assessments").upsert({
       stripe_session_id:   stripeSessionId,
@@ -206,11 +208,13 @@ async function generateAndStoreAssessment(
       tier,
       customer_email:      customerEmail,
       customer_name:       customerName,
-      assessment_json:     assessment,
+      // Stamp groundedness INTO the stored JSON so it is auditable in SQL without a schema
+      // change: `assessment_json->'_meta'->>'grounded'`, `->>'corpus_source'`.
+      assessment_json:     { ...assessment, _meta: { grounded: true, corpus_source, corpus_verified } },
       created_at:          new Date().toISOString(),
     }, { onConflict: "stripe_session_id" });
 
-    console.log("[webhook] Assessment stored:", stripeSessionId);
+    console.log(`[webhook] Assessment stored (grounded, ${corpus_source}):`, stripeSessionId);
   } catch (err) {
     console.error("[webhook] Assessment failed (non-blocking):", err);
   }
@@ -334,18 +338,26 @@ export async function POST(req: Request) {
     console.error("[webhook] Supabase purchase error:", err);
   }
 
-  // 2. Generate + store assessment (non-blocking — fires and continues)
+  // 2. Generate + store assessment — deferred to after() (post-response, platform-kept-alive).
+  // ROOT CAUSE FIX (2026-07-23): this was fire-and-forget (`...catch(()=>{})`). On Vercel the
+  // function is FROZEN once the response returns, so the un-awaited store only landed if it
+  // happened to finish during the awaited email — a RACE the SLOWER tier lost (tier 147's
+  // /api/assess uses max_tokens 2500 + more fields → slower than tier 67's 1500 → its store was
+  // routinely cut off → has_assessment=false, no error logged). Latency-dependent, so which tier
+  // "lost" could flip between runs. `after()` keeps the lambda alive until the store completes
+  // for EVERY tier, while the response still returns fast (no Stripe-timeout retry → no duplicate
+  // delivery emails, which an `await` here would have risked since the purchase insert is not
+  // idempotent). Its own try/catch logs any real failure.
   if (delivery && decisionSid && customerEmail) {
-    generateAndStoreAssessment(
+    after(() => generateAndStoreAssessment(
       supabase, session.id, decisionSid, productKey,
       tier, delivery, customerEmail, customerName
-    ).catch(() => {});
+    ));
   }
 
-  // 3. Queue reminder emails (non-blocking)
+  // 3. Queue reminder emails — same deferral (same latent race).
   if (delivery && customerEmail) {
-    queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery, decisionSid)
-      .catch(() => {});
+    after(() => queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery, decisionSid));
   }
 
   // 4. Send delivery email

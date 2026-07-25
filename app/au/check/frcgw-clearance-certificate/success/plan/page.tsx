@@ -3,6 +3,11 @@
 // Product: frcgw-clearance-certificate · Tier 2 Success Page
 import { useEffect, useState } from "react";
 import Link from "next/link";
+// NOTE: hand-patched post-migration to fix the legacy success-page defects (ungrounded
+// content + phantom numeric inputs + hardcoded past countdown/calendar). The DURABLE fix
+// belongs in the COLE success-page template so regeneration does not reintroduce these.
+// See report 2026-07-23-frcgw-success-content-migration-scope.
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -78,9 +83,9 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2025-12-31T23:59:59.000+10:00").getTime() - Date.now()) / 86_400_000
-  ));
+  // Countdown removed — see success/assess/page.tsx: the engine captures a qualitative
+  // settlement window, not an exact date, so we state the corpus-true rule rather than a
+  // fabricated day-count (the old 2025-12-31 anchor was already in the past → "0 days").
 
   useEffect(() => { init(); }, []);
 
@@ -120,27 +125,11 @@ export default function SuccessPlan() {
       }
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
-      // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const sale_price = sessionStorage.getItem("frcgw-clearance-certificate_sale_price") || "900000";
-      const withholding_amount = sessionStorage.getItem("frcgw-clearance-certificate_withholding_amount") || "135000";
-      const residency_status = sessionStorage.getItem("frcgw-clearance-certificate_residency_status") || "au_resident";
-      const certificate_status = sessionStorage.getItem("frcgw-clearance-certificate_certificate_status") || "not_applied";
-      const days_to_settlement = sessionStorage.getItem("frcgw-clearance-certificate_days_to_settlement") || "30";
-      const certificate_required = sessionStorage.getItem("frcgw-clearance-certificate_certificate_required") || "true";
-      const urgency_level = sessionStorage.getItem("frcgw-clearance-certificate_urgency_level") || "high";
-      const tier = sessionStorage.getItem("frcgw-clearance-certificate_tier") || "147";
-
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-        "sale_price": sale_price,
-        "withholding_amount": withholding_amount,
-        "residency_status": residency_status,
-        "certificate_status": certificate_status,
-        "days_to_settlement": days_to_settlement,
-        "certificate_required": certificate_required,
-        "urgency_level": urgency_level,
-        "tier": tier,
-      }).some(v => v && v !== "900000");
+      // Bind to the user's REAL engine answers via the same composer the webhook uses
+      // (F5 contract) — see success/assess/page.tsx for the full rationale. The legacy
+      // phantom numeric keys were never written by the engine calculator → old reads
+      // defaulted to $900k/30d → generic, corpus-contradicting assessment.
+      const inputs = buildComposerInputsFromSession("frcgw-clearance-certificate");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -151,16 +140,7 @@ export default function SuccessPlan() {
           authority:  "ATO",
           tier:       2,
           name,
-          inputs: {
-        "Property sale price": sale_price,
-        "Withholding exposure at 15%": withholding_amount,
-        "Tax residency status": residency_status,
-        "Clearance certificate status": certificate_status,
-        "Days until settlement": days_to_settlement,
-        "Certificate application recommended": certificate_required,
-        "Application urgency": urgency_level,
-        "Product tier purchased": tier,
-          },
+          inputs,
           fields: ["salePrice","witholdingExposure","residencyStatusConfirm","certificateEligibility","certificateProcessingTime","daysToSettlementAnalysis","applicationUrgency","cashFlowImpact","preSettlementExecutionPlan","evidenceGatheringChecklist","buyerSolicitorInstruction","witholdingContingencyPlan","accountantImplementationCheckIist"],
         }),
       });
@@ -198,14 +178,8 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const sale_price = sessionStorage.getItem("frcgw-clearance-certificate_sale_price") || "900000";
-    const withholding_amount = sessionStorage.getItem("frcgw-clearance-certificate_withholding_amount") || "135000";
-    const residency_status = sessionStorage.getItem("frcgw-clearance-certificate_residency_status") || "au_resident";
-    const certificate_status = sessionStorage.getItem("frcgw-clearance-certificate_certificate_status") || "not_applied";
-    const days_to_settlement = sessionStorage.getItem("frcgw-clearance-certificate_days_to_settlement") || "30";
-    const certificate_required = sessionStorage.getItem("frcgw-clearance-certificate_certificate_required") || "true";
-    const urgency_level = sessionStorage.getItem("frcgw-clearance-certificate_urgency_level") || "high";
-    const tier = sessionStorage.getItem("frcgw-clearance-certificate_tier") || "147";
+    // Relative to today — we do NOT fabricate a settlement date (the engine captures a
+    // qualitative window, not a date). Offsets are grounded in the corpus 28-day lead time.
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -216,29 +190,29 @@ export default function SuccessPlan() {
       `X-WR-CALNAME:Foreign Resident CGT Withholding Clearance Certificate — Deadlines`,
       "BEGIN:VEVENT",
       `UID:frcgw-apply-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20250220"}`,
-      `DTEND;VALUE=DATE:${"20250220"}`,
+      `DTSTART;VALUE=DATE:${relativeDate(0)}`,
+      `DTEND;VALUE=DATE:${relativeDate(0)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:FRCGW — apply for clearance certificate",
+      "SUMMARY:FRCGW — apply for clearance certificate now",
       "DESCRIPTION:Do not wait. Processing takes 1–4 weeks. Apply to the ATO for your clearance certificate now. Assemble residency evidence first.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
       `UID:frcgw-confirm-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20250427"}`,
-      `DTEND;VALUE=DATE:${"20250427"}`,
+      `DTSTART;VALUE=DATE:${relativeDate(21)}`,
+      `DTEND;VALUE=DATE:${relativeDate(21)}`,
       `DTSTAMP:${now}`,
       "SUMMARY:FRCGW — confirm certificate arrival with buyer's solicitor",
-      "DESCRIPTION:Call the buyer's solicitor to confirm the certificate has been received and is in the right form. Do not assume.",
+      "DESCRIPTION:Call the buyer's solicitor to confirm the certificate has been received and is in the right form. Do not assume. Move this to a few days before your actual settlement.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
       `UID:frcgw-settlement-b-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20250430"}`,
-      `DTEND;VALUE=DATE:${"20250430"}`,
+      `DTSTART;VALUE=DATE:${relativeDate(28)}`,
+      `DTEND;VALUE=DATE:${relativeDate(28)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:FRCGW — settlement date (certificate delivery deadline)",
-      "DESCRIPTION:Your ATO clearance certificate must be issued and in the buyer's solicitor's office BEFORE 9 am on this date. After settlement, 15% is withheld automatically.",
+      "SUMMARY:FRCGW — settlement date (SET TO YOUR ACTUAL SETTLEMENT DATE)",
+      "DESCRIPTION:Placeholder 28 days out — move it to your real settlement date. Your ATO clearance certificate must be issued and in the buyer's solicitor's office BEFORE settlement. After settlement\\, 15% is withheld automatically.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -295,8 +269,8 @@ export default function SuccessPlan() {
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to Settlement Date (Critical)</span>
-            <span className="font-mono text-sm font-bold text-white">Settlement</span>
+            <span className="text-sm font-bold text-white">🔴 Certificate must reach the buyer's solicitor BEFORE settlement</span>
+            <span className="font-mono text-sm font-bold text-white">Lodge ≥28 days out</span>
           </div>
         </div>
 
@@ -429,29 +403,29 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">FRCGW — apply for clearance certificate</p>
+                    <p className="text-sm font-semibold text-neutral-900">FRCGW — apply for clearance certificate now</p>
                     <p className="text-xs text-neutral-500">Do not wait. Processing takes 1–4 weeks. Apply to the ATO for your clearance certificate now. Assemble residency evidence first.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    20 Feb 2025
+                    Today
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold text-neutral-900">FRCGW — confirm certificate arrival with buyer's solicitor</p>
-                    <p className="text-xs text-neutral-500">Call the buyer's solicitor to confirm the certificate has been received and is in the right form. Do not assume.</p>
+                    <p className="text-xs text-neutral-500">Call the buyer's solicitor to confirm the certificate has been received and is in the right form. Do not assume. Move this to a few days before your actual settlement.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    27 Apr 2025
+                    ~3 weeks
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">FRCGW — settlement date (certificate delivery deadline)</p>
-                    <p className="text-xs text-neutral-500">Your ATO clearance certificate must be issued and in the buyer's solicitor's office BEFORE 9 am on this date. After settlement, 15% is withheld automatically.</p>
+                    <p className="text-sm font-semibold text-neutral-900">FRCGW — your settlement date (set this to your actual date)</p>
+                    <p className="text-xs text-neutral-500">Placeholder — move it to your real settlement date. Your ATO clearance certificate must be issued and in the buyer's solicitor's office BEFORE settlement. After settlement, 15% is withheld automatically.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    30 Apr 2025
+                    Your date
                   </span>
                 </div>
               </div>
@@ -507,7 +481,7 @@ export default function SuccessPlan() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                {daysToDeadline} days to Settlement Date (Critical).
+                Lodge your clearance certificate now — it must reach the buyer's solicitor before settlement.
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}

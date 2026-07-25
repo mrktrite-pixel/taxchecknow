@@ -27,6 +27,7 @@ export interface EngineQualPopupProps {
   payLabel: string;
   dismissLabel: string;
   paying?: boolean;
+  payError?: string | null;
   onPay: () => void;
   onDismiss: () => void;
 }
@@ -42,6 +43,7 @@ export default function EngineQualPopup({
   payLabel,
   dismissLabel,
   paying,
+  payError,
   onPay,
   onDismiss,
 }: EngineQualPopupProps) {
@@ -97,6 +99,11 @@ export default function EngineQualPopup({
           >
             {paying ? "Redirecting…" : payLabel}
           </button>
+          {payError ? (
+            <p role="alert" className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[13px] font-medium text-red-700">
+              {payError}
+            </p>
+          ) : null}
         </div>
 
         <button

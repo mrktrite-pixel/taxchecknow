@@ -1,0 +1,163 @@
+[
+  {
+    "id": "fig_0",
+    "label": "FRCGW withholding rate (from 1 January 2025)",
+    "value": "15",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_1",
+    "label": "FRCGW withholding rate (1 July 2017 to 31 December 2024)",
+    "value": "12.5",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_2",
+    "label": "Property value threshold for 12.5% rate (1 July 2017 to 31 December 2024)",
+    "value": "750000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_3",
+    "label": "FRCGW withholding rate (1 July 2016 to 30 June 2017)",
+    "value": "10",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_4",
+    "label": "Property value threshold for 10% rate (1 July 2016 to 30 June 2017)",
+    "value": "2000000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_5",
+    "label": "Settlement period in example (contract to settlement)",
+    "value": "30",
+    "unit": "days",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_6",
+    "label": "Amount withheld from Stanley's share (15% of $300,000 share of $600,000 sale)",
+    "value": "45000",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_7",
+    "label": "Clearance certificate validity period",
+    "value": "12",
+    "unit": "months",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_8",
+    "label": "Sale price in second example (Maisie and Max)",
+    "value": "650000",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_9",
+    "label": "Total FRCGW that would have been withheld on $650,000 sale",
+    "value": "97500",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_10",
+    "label": "FRCGW per owner on $650,000 sale (each of two owners)",
+    "value": "48750",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_11",
+    "label": "Maximum processing time for clearance certificate",
+    "value": "28",
+    "unit": "days",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_12",
+    "label": "Minimum lodgement lead time before settlement",
+    "value": "28",
+    "unit": "days",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_13",
+    "label": "Australian residency test — continuous presence in Australia",
+    "value": "6",
+    "unit": "months",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_14",
+    "label": "FRCGW rate from 1 January 2025",
+    "value": "15",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_15",
+    "label": "FRCGW rate from 1 July 2017 to 31 December 2024",
+    "value": "12.5",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_16",
+    "label": "Property value threshold for 12.5% rate (1 July 2017 – 31 December 2024)",
+    "value": "750000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_17",
+    "label": "FRCGW rate from 1 July 2016 to 30 June 2017",
+    "value": "10",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_18",
+    "label": "Property value threshold for 10% rate (1 July 2016 – 30 June 2017)",
+    "value": "2000000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_19",
+    "label": "Example settlement period",
+    "value": "28",
+    "unit": "days",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_20",
+    "label": "Example withholding amount at 12.5% of $1.2 million",
+    "value": "150000",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_21",
+    "label": "Example withholding amount at 15% of $1.2 million",
+    "value": "180000",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_22",
+    "label": "Australian residency duration test (continuous presence)",
+    "value": "6",
+    "unit": "months",
+    "fact_role": "duration"
+  }
+]

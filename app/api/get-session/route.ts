@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
+// DOCTRINE INVARIANT (key layer): Preview authenticates with the TEST key, Production with
+// the live key — unconditionally, decided by the environment. This route retrieves the
+// checkout session on the success page; a Preview success page must query the SAME (test)
+// account create-checkout-session wrote to, or session.retrieve returns "No such session"
+// and the name/email personalization silently falls back to defaults.
+const isPreview = (): boolean => process.env.VERCEL_ENV === "preview";
+
 function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) throw new Error("Missing STRIPE_SECRET_KEY");
+  const key = isPreview() ? process.env.STRIPE_SECRET_TEST_KEY : process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error(isPreview() ? "Missing STRIPE_SECRET_TEST_KEY (Preview sandbox)" : "Missing STRIPE_SECRET_KEY");
   return new Stripe(key, { apiVersion: "2026-03-25.dahlia" });
 }
 

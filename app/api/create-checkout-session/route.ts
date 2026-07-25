@@ -4,16 +4,21 @@ import Stripe from "stripe";
 // Stripe initialised inside handler — not at module level
 // Prevents build failures when env variables not yet set in Vercel
 //
-// SANDBOX SAFETY: STRIPE_SECRET_KEY is Production-only scope, so on Vercel Preview it
-// is undefined — there we MUST use STRIPE_SECRET_TEST_KEY (sandbox). Production is
-// unchanged (uses STRIPE_SECRET_KEY, no test fallback). Consequence: Preview literally
-// cannot reach live Stripe.
+// DOCTRINE INVARIANT (key layer — mirror of the price layer in getPriceId):
+//   Preview authenticates with the TEST key and resolves TEST prices — both
+//   unconditionally. Production uses the live pair. The environment decides the
+//   rail; the operator never toggles commerce per product.
+// Preview → STRIPE_SECRET_TEST_KEY unconditionally; STRIPE_SECRET_KEY only off-preview.
 const isPreview = (): boolean => process.env.VERCEL_ENV === "preview";
 
-function getStripe() {
+// keyMode is derived from the key PREFIX only (never the secret itself) — safe to log.
+// It exposes a mislabeled/stale var (e.g. STRIPE_SECRET_TEST_KEY holding an sk_live_ value,
+// as happened in the Jul-20 live swap) that isPreview() alone cannot reveal.
+function getStripe(): { stripe: Stripe; keyMode: string } {
   const key = isPreview() ? process.env.STRIPE_SECRET_TEST_KEY : process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error(isPreview() ? "Missing STRIPE_SECRET_TEST_KEY (Preview sandbox)" : "Missing STRIPE_SECRET_KEY — add to Vercel environment variables");
-  return new Stripe(key, { apiVersion: "2026-03-25.dahlia" });
+  const keyMode = key.startsWith("sk_live_") ? "live" : key.startsWith("sk_test_") ? "test" : "unknown";
+  return { stripe: new Stripe(key, { apiVersion: "2026-03-25.dahlia" }), keyMode };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -32,18 +37,26 @@ function getStripe() {
 const PRICE_ENV_REGISTRY: Record<string, string> = {
   au_67_superannuation_tax_leaving_australia_confusion_2026:  "STRIPE_AU_SUPERLEAVE_67",
   au_147_superannuation_tax_leaving_australia_confusion_2026: "STRIPE_AU_SUPERLEAVE_147",
+  // FRCGW is now engine-native (PANELBEAT migration) — register it so it uses the SAME preview-test-rig
+  // fallback SUPERLEAVE does. Production resolves STRIPE_AU_FRCGW_67/147 (live, unchanged, added Apr 29);
+  // PREVIEW (where those prod vars aren't scoped and the deploy runs the TEST secret key) falls back to
+  // STRIPE_AU_TEST_<tier> so a branch-preview buy completes against the sandbox instead of a live-price/
+  // test-key 500. The legacy frcgw includes()-block below is now dead for these keys (registry hits first).
+  au_67_frcgw_clearance_certificate:  "STRIPE_AU_FRCGW_67",
+  au_147_frcgw_clearance_certificate: "STRIPE_AU_FRCGW_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {
   const registered = PRICE_ENV_REGISTRY[productKey];
   if (registered) {
-    const val = process.env[registered];
-    if (val) return val;
-    // PREVIEW-ONLY sandbox fallback: registered prod var (e.g. STRIPE_AU_SUPERLEAVE_*)
-    // isn't set on Preview → use the generic sandbox test price. Production: no fallback
-    // (missing var → undefined → loud 500).
+    // INVARIANT: a Preview deployment runs the TEST secret key and must NEVER be handed a live price ID,
+    // regardless of env scoping. So on Preview → the sandbox TEST price FIRST + UNCONDITIONALLY; the
+    // registered prod var is consulted ONLY off-preview. (Round-1 bug: prod vars added Production+Preview
+    // — STRIPE_AU_FRCGW_* present in Preview scope → the old "if (val) return val" handed the LIVE price to
+    // the test key → "No such price" 500. This inversion is the durable fix for ALL 42 future migrations —
+    // any product with Preview-scoped live vars would hit it identically.)
     if (isPreview()) return process.env[`STRIPE_AU_TEST_${tier}`];
-    return undefined;
+    return process.env[registered]; // production: the registered live price (undefined → loud 500)
   }
 
   const key = productKey.toLowerCase();
@@ -311,7 +324,7 @@ function getSuccessPath(productKey: string, tier: number): string {
 
 export async function POST(req: Request) {
   try {
-    const stripe = getStripe();
+    const { stripe, keyMode } = getStripe();
     const body = await req.json();
     const { decision_session_id, tier, product_key, success_url, cancel_url } = body;
 
@@ -352,7 +365,19 @@ export async function POST(req: Request) {
 
     const resolvedCancelUrl = cancel_url || `${baseUrl}/check/div296-wealth-eraser`;
 
-    console.log("Creating Stripe session:", { priceId, productKey, successPath });
+    // DIAGNOSTIC (item-4 evidence): report the ACTUAL rail resolved on this invocation —
+    // vercelEnv + isPreview (the selector), keyMode (prefix of the key that will authenticate),
+    // and priceId (which price env var resolved). On a Preview walk this must read
+    // isPreview:true / keyMode:"test"; a keyMode:"live" here proves a stale-or-mislabeled
+    // STRIPE_SECRET_TEST_KEY (test price + live key → Stripe "No such price" → no session).
+    console.log("Creating Stripe session:", {
+      priceId,
+      productKey,
+      successPath,
+      vercelEnv: process.env.VERCEL_ENV ?? "(unset/local)",
+      isPreview: isPreview(),
+      keyMode,
+    });
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
