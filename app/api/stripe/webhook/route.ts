@@ -306,12 +306,28 @@ export async function POST(req: Request) {
   const delivery = DELIVERY_MAP[productKey];
   const supabase = getSupabase();
 
-  // 1. Record purchase
+  // IDEMPOTENCY (2026-07-25): a live webhook can fire repeatedly (Stripe retries / endpoint
+  // re-points) — the FRCGW live session (cs_live_a1IwsaHbvx…) landed 5 purchase rows over ~4h.
+  // If this session was ALREADY processed (a purchase exists), do NOTHING more: no duplicate
+  // purchase, no duplicate DELIVERY EMAIL, no duplicate assessment. We return BEFORE the email
+  // send below, so a re-fire cannot re-deliver. The UNIQUE constraint on
+  // purchases.stripe_session_id (migration) is the concurrent-race backstop; this pre-check
+  // handles the common sequential retry.
+  {
+    const { data: existing } = await supabase
+      .from("purchases").select("id").eq("stripe_session_id", session.id).maybeSingle();
+    if (existing) {
+      console.log("[webhook] duplicate — session already processed, skipping:", session.id);
+      return NextResponse.json({ received: true, duplicate: true });
+    }
+  }
+
+  // 1. Record purchase (upsert on stripe_session_id — belt to the pre-check for concurrent races).
   let purchaseId: string | null = null;
   try {
     const { data, error } = await supabase
       .from("purchases")
-      .insert({
+      .upsert({
         stripe_session_id:     session.id,
         stripe_payment_intent: String(session.payment_intent || ""),
         decision_session_id:   decisionSid,
@@ -328,7 +344,7 @@ export async function POST(req: Request) {
         country_code:          delivery?.market?.slice(0,2).toUpperCase() || "AU",
         delivery_status:       "pending",
         metadata:              { ...(session.metadata || {}), customer_name: customerName },
-      })
+      }, { onConflict: "stripe_session_id" })
       .select("id")
       .single();
 
