@@ -54,6 +54,32 @@ function todayIso(): string {
   return new Date().toISOString().split("T")[0];
 }
 
+// TEMPORAL v1 Phase 1.2 — sender floor + expiry. A queued row that is past its window must NOT be
+// sent; it is set to 'skipped' with a reason (an upstream defect signal, visible in the report),
+// never delivered. Two ways a row is "past window":
+//   · deadline_passed — a deadline-anchored reminder (days_before_deadline set) whose DEADLINE
+//     (trigger_date + days_before_deadline) is already in the past. This is the FRCGW class:
+//     d-30/d-7/d-1 all fired AFTER the deadline.
+//   · trigger_stale  — more than STALE_GRACE_DAYS past its intended send date (the cron was down,
+//     or the row was deferred repeatedly). Sending a stale "N days" reminder days late misleads.
+const STALE_GRACE_DAYS = 2;
+function addDaysIso(iso: string, n: number): string {
+  const d = new Date(iso + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().split("T")[0];
+}
+function windowSkipReason(row: QueueRow, todayStr: string): string | null {
+  const trig = row.trigger_date;
+  if (!trig) return null;
+  if (row.days_before_deadline != null) {
+    const deadlineStr = addDaysIso(trig, row.days_before_deadline);
+    if (todayStr > deadlineStr) return `deadline_passed:${deadlineStr}`;
+  }
+  const floorStr = addDaysIso(todayStr, -STALE_GRACE_DAYS);
+  if (trig < floorStr) return `trigger_stale:${trig}<${floorStr}`;
+  return null;
+}
+
 // Resolve the email_type for a row.
 //   - Nurture rows from /api/leads carry `email_type` already.
 //   - Reminder rows from /api/stripe/webhook carry `days_before_deadline` (number).
@@ -190,8 +216,28 @@ export async function GET(request: Request) {
   const queueRows: QueueRow[] = rows ?? [];
   let sent     = 0;
   let failed    = 0;
-  let skipped    = 0;
-  const failures: string[] = [];
+  let skipped    = 0;      // unresolvable email_type
+  let windowSkipped = 0;   // Phase 1.2 — past-window rows set to 'skipped'
+  let deferred = 0;        // Phase 1.3 — over the per-recipient 24h cap, left queued
+  const failures: string[]   = [];
+  const windowSkips: string[] = [];
+  const deferrals: string[]   = [];
+  const today = todayIso();
+
+  // Phase 1.3 — per-recipient cap: max ONE email per recipient per 24h across ALL types.
+  // Recipients already emailed in the last 24h (any email_log 'sent' row — includes the webhook
+  // delivery email, since 1.4a now stamps email_log.sent_at) are deferred, not dropped. Combined
+  // with the run-local set below, a recipient can receive at most one email per run.
+  const dayAgoIso = new Date(Date.now() - 86_400_000).toISOString();
+  const recent24h = new Set<string>();
+  try {
+    const { data: recent } = await sb.from("email_log")
+      .select("recipient_email").eq("status", "sent").gte("sent_at", dayAgoIso);
+    (recent ?? []).forEach((r: { recipient_email?: string | null }) => {
+      if (r.recipient_email) recent24h.add(r.recipient_email.toLowerCase());
+    });
+  } catch { /* non-fatal: the run-local cap below still bounds this run to 1/recipient */ }
+  const emailedThisRun = new Set<string>();
 
   // 3. Process each row
   for (const row of queueRows) {
@@ -203,6 +249,26 @@ export async function GET(request: Request) {
         await sb.from("email_queue").update({ status: "skipped", error_message: "Could not resolve email_type" }).eq("id", row.id);
       } catch { /* ignore */ }
       continue;
+    }
+
+    // Phase 1.2 — sender floor + expiry. Past-window rows are marked 'skipped' (visible), never sent.
+    const skipReason = windowSkipReason(row, today);
+    if (skipReason) {
+      windowSkipped++;
+      windowSkips.push(`${row.id} | ${emailType} | ${row.customer_email} | ${skipReason}`);
+      try {
+        await sb.from("email_queue").update({ status: "skipped", error_message: `window:${skipReason}` }).eq("id", row.id);
+      } catch { /* ignore */ }
+      continue;
+    }
+
+    // Phase 1.3 — per-recipient 24h cap. Defer (leave 'queued'), never drop; next run retries once
+    // the 24h window has elapsed. Bounds each recipient to at most one email per run.
+    const rcpt = row.customer_email.toLowerCase();
+    if (recent24h.has(rcpt) || emailedThisRun.has(rcpt)) {
+      deferred++;
+      deferrals.push(`${row.id} | ${emailType} | ${row.customer_email} | ${emailedThisRun.has(rcpt) ? "already_sent_this_run" : "sent_within_24h"}`);
+      continue; // status stays 'queued'
     }
 
     const product = resolveProduct(row);
@@ -289,6 +355,8 @@ export async function GET(request: Request) {
         product_key:             row.product_key ?? null,
         resend_id:                  result.resendId ?? null,
         error_message:                 errorMessage,
+        // Phase 1.3 — stamp sent_at so the per-recipient 24h cap can see this send next run.
+        sent_at:                        result.success ? new Date().toISOString() : null,
       });
     } catch (err) {
       console.error("[cron] Failed to write email_log", err);
@@ -296,19 +364,26 @@ export async function GET(request: Request) {
 
     if (result.success) {
       sent++;
+      emailedThisRun.add(rcpt); // Phase 1.3 — enforce one-per-recipient for the rest of this run
     } else {
       failed++;
       failures.push(`${row.id} | ${emailType} | ${row.customer_email} | ${result.error}`);
     }
   }
 
-  // 4. Operator alert if any failures
-  if (failed > 0) {
+  // 4. Operator alert on failures OR window-skips. A window-skip is an upstream defect signal
+  //    (a reminder should never have reached its send date past-window) — surface it, don't bury it.
+  if (failed > 0 || windowSkipped > 0) {
     await alertOperator(
-      `Cron run at ${new Date().toISOString()}\nSent: ${sent}\nFailed: ${failed}\nSkipped: ${skipped}\n\nFailures:\n${failures.join("\n")}`,
+      `Cron run at ${new Date().toISOString()}\n` +
+      `Sent: ${sent}  Failed: ${failed}  Skipped(unresolvable): ${skipped}  ` +
+      `WindowSkipped: ${windowSkipped}  Deferred(24h cap): ${deferred}\n\n` +
+      (failures.length     ? `Failures:\n${failures.join("\n")}\n\n`         : "") +
+      (windowSkips.length  ? `Window-skips:\n${windowSkips.join("\n")}\n\n`  : "") +
+      (deferrals.length    ? `Deferred:\n${deferrals.join("\n")}`            : ""),
       resendKey,
     );
   }
 
-  return NextResponse.json({ sent, failed, skipped, processed: queueRows.length });
+  return NextResponse.json({ sent, failed, skipped, windowSkipped, deferred, processed: queueRows.length });
 }

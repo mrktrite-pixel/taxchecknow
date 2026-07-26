@@ -245,6 +245,8 @@ export async function POST(req: Request) {
           product_key:     source ?? null,
           resend_id:       emailResult.resendId ?? null,
           error_message:   emailResult.error   ?? null,
+          // Phase 1.3 — stamp sent_at so this send counts toward the cron's per-recipient 24h cap.
+          sent_at:         emailResult.success ? new Date().toISOString() : null,
         });
       } catch { /* non-fatal */ }
 

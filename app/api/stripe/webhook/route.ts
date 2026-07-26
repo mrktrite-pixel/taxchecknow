@@ -221,6 +221,34 @@ async function generateAndStoreAssessment(
 }
 
 // ── QUEUE REMINDER EMAILS ────────────────────────────────────────────────────
+// TEMPORAL v1 Phase 1.4a — operator alert for delivery-side email_log failures. The webhook's
+// email_log insert previously failed SILENTLY (delivery_status went "sent" with zero log rows —
+// the FRCGW live session had 0 email_log rows). Surface it loudly so a missing delivery record
+// pages the operator instead of vanishing.
+const OPERATOR_FROM_ADDRESS = "TaxCheckNow <hello@taxchecknow.com>";
+async function alertOperator(summary: string): Promise<void> {
+  const operator  = process.env.OPERATOR_EMAIL;
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!operator || !resendKey) {
+    console.error("[webhook] OPERATOR ALERT (no OPERATOR_EMAIL/RESEND_API_KEY configured):", summary);
+    return;
+  }
+  try {
+    await fetch("https://api.resend.com/emails", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendKey}` },
+      body: JSON.stringify({
+        from:    OPERATOR_FROM_ADDRESS,
+        to:      [operator],
+        subject: "[TaxCheckNow webhook] Delivery email_log failure",
+        html:    `<pre style="font-family:monospace;font-size:12px;white-space:pre-wrap;">${summary.replace(/</g, "&lt;")}</pre>`,
+      }),
+    });
+  } catch (e) {
+    console.error("[webhook] operator alert send failed:", e);
+  }
+}
+
 async function queueReminders(
   supabase: any,
   stripeSessionId: string,
@@ -244,7 +272,12 @@ async function queueReminders(
         : null;
 
     const deadline = new Date(deadlineEntry.date);
-    const rows = REMINDER_DAYS.map(days => {
+    // TEMPORAL v1 Phase 1.1 — queue-time future guard. Never insert a reminder whose trigger
+    // is already past at insert time. Checked PER OFFSET (d-30/d-7/d-1), not just the deadline,
+    // so a d-30 whose window has closed is dropped even when d-1 is still future. This is what
+    // sent d-30/d-7/d-1 "deadline" reminders for an already-passed FRCGW deadline.
+    const todayStr = new Date().toISOString().split("T")[0];
+    const allRows = REMINDER_DAYS.map(days => {
       const trigger = new Date(deadline);
       trigger.setDate(trigger.getDate() - days);
       return {
@@ -262,9 +295,29 @@ async function queueReminders(
       };
     });
 
+    const rows = allRows.filter(r => {
+      if (r.trigger_date < todayStr) {
+        console.warn("[webhook] TEMPORAL queue-guard: suppressed reminder (trigger already past)", {
+          product:           delivery.productId,
+          resolved_deadline: deadlineEntry.date,
+          offset_days:       r.days_before_deadline,
+          trigger_date:      r.trigger_date,
+          reason:            "trigger_date < today at insert",
+        });
+        return false;
+      }
+      return true;
+    });
+
+    if (rows.length === 0) {
+      console.warn("[webhook] TEMPORAL queue-guard: ALL reminders suppressed (deadline already past) for",
+        customerEmail, delivery.productId, "deadline", deadlineEntry.date);
+      return;
+    }
+
     const { error } = await (supabase as any).from("email_queue").insert(rows);
     if (error) console.error("[webhook] Queue error:", error.message);
-    else console.log("[webhook] Queued", rows.length, "reminders for", customerEmail);
+    else console.log("[webhook] Queued", rows.length, "of", allRows.length, "reminders for", customerEmail);
   } catch (err) {
     console.error("[webhook] Queue failed (non-blocking):", err);
   }
@@ -425,8 +478,17 @@ export async function POST(req: Request) {
         subject:         delivery.subject,
         resend_id:       emailResult.resendId || null,
         status:          emailResult.success ? "sent" : "failed",
+        // Phase 1.4a/1.3 — stamp sent_at so the per-recipient 24h cap can see this delivery.
+        sent_at:         emailResult.success ? new Date().toISOString() : null,
       });
-      if (logErr) console.error("[webhook] email_log insert error:", logErr.message);
+      // Phase 1.4a — fail LOUDLY: a delivery went out but left no log record. Page the operator.
+      if (logErr) {
+        console.error("[webhook] email_log insert error:", logErr.message);
+        await alertOperator(
+          `email_log insert FAILED after delivery send.\nsession: ${session.id}\npurchase: ${purchaseId}\n` +
+          `recipient: ${customerEmail}\nproduct: ${productKey}\ndelivery_sent: ${emailResult.success}\nerror: ${logErr.message}`,
+        );
+      }
       const { error: updErr } = await supabase2.from("purchases").update({
         delivery_status:  emailResult.success ? "sent" : "failed",
         delivery_sent_at: emailResult.success ? new Date().toISOString() : null,
@@ -434,7 +496,17 @@ export async function POST(req: Request) {
       if (updErr) console.error("[webhook] purchases delivery_status update error:", updErr.message);
     } catch (err) {
       console.error("[webhook] Log error:", err);
+      await alertOperator(`Delivery log path threw for session ${session.id} (${customerEmail}): ${err instanceof Error ? err.message : String(err)}`);
     }
+  } else if (emailResult.success) {
+    // Phase 1.4a — delivery email SENT but purchaseId is null (purchase upsert failed), so no
+    // email_log record can be written. This is the exact FRCGW-live silent-failure mode: a paid
+    // delivery with zero delivery record. Never let it pass quietly.
+    console.error("[webhook] delivery sent but purchaseId is null — no email_log record written:", session.id);
+    await alertOperator(
+      `Delivery email SENT but NO purchase row (purchaseId null) — no email_log record written.\n` +
+      `session: ${session.id}\nrecipient: ${customerEmail}\nproduct: ${productKey}\nresendId: ${emailResult.resendId || "?"}`,
+    );
   }
 
   console.log("[webhook] Complete. Email:", emailResult.success);
