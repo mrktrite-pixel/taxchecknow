@@ -32,9 +32,13 @@ export default function SuccessDecide() {
   const [copied,     setCopied]     = useState(false);
   const [calDone,    setCalDone]    = useState(false);
 
-  const daysToYearEnd = Math.max(0, Math.floor(
-    (new Date("2027-04-05T23:59:59.000+01:00").getTime() - Date.now()) / 86_400_000
-  ));
+  const daysToYearEnd: number | null = (() => {
+    const _end = new Date("2027-04-05T23:59:59.000+01:00").getTime();
+    if (Number.isNaN(_end)) return null;
+    const _d = Math.floor((_end - Date.now()) / 86_400_000);
+    return _d > 0 ? _d : null;
+  })();
+  const deadlineLive = daysToYearEnd !== null;
 
   useEffect(() => { init(); }, []);
 
@@ -266,10 +270,12 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
         </div>
 
         {/* ── DEADLINE ── */}
+        {deadlineLive && (
         <div className="print-section flex items-center justify-between rounded-xl bg-red-700 px-5 py-3">
           <span className="text-sm font-bold text-white">🔴 {daysToYearEnd} days to tax year end</span>
           <span className="font-mono text-sm font-bold text-white">5 April 2027</span>
         </div>
+        )}
 
         {loading ? (
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
@@ -470,6 +476,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                   ⬇ Save this page as PDF
                 </button>
               </div>
+              {deadlineLive && (
               <div className="rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-neutral-400">Days remaining to act</span>
@@ -481,6 +488,7 @@ Respond ONLY with a valid JSON object. No markdown. No backticks. No preamble. J
                 </div>
                 <p className="mt-2 text-xs text-neutral-500">5 April 2027 · No backdating after this date</p>
               </div>
+              )}
             </div>
 
             {/* ── UPGRADE ── */}

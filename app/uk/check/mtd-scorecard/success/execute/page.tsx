@@ -53,9 +53,13 @@ export default function SuccessExecute() {
   const [checked, setChecked] = useState<Record<number, boolean>>({});
   const [dlChecked, setDlChecked] = useState<Record<number, boolean>>({});
 
-  const days = Math.max(0, Math.floor(
-    (new Date("2026-08-07").getTime() - Date.now()) / 86_400_000
-  ));
+  const days: number | null = (() => {
+    const _end = new Date("2026-08-07").getTime();
+    if (Number.isNaN(_end)) return null;
+    const _d = Math.floor((_end - Date.now()) / 86_400_000);
+    return _d > 0 ? _d : null;
+  })();
+  const deadlineLive = days !== null;
 
   useEffect(() => { init(); }, []);
 
@@ -318,10 +322,12 @@ Respond ONLY with a JSON object, no markdown:
         </div>
 
         {/* DEADLINE */}
+        {deadlineLive && (
         <div className="rounded-xl bg-red-700 px-5 py-3 flex items-center justify-between">
           <span className="text-sm font-bold text-white">🔴 {days} days to your first MTD deadline</span>
           <span className="font-mono text-sm font-bold text-white">7 August 2026</span>
         </div>
+        )}
 
         {loading ? (
           <div className="rounded-2xl border border-neutral-200 bg-white p-8 text-center">
@@ -551,7 +557,7 @@ Respond ONLY with a JSON object, no markdown:
                 </button>
               </div>
               <p className="mt-3 text-sm text-neutral-400">
-                {days} days to 7 August. Your calendar reminders are set. Start today.
+                {deadlineLive ? `${days} days to 7 August. ` : ""}Your calendar reminders are set. Start today.
               </p>
             </div>
 

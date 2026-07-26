@@ -62,14 +62,15 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
       `COLE_SUCCESS_TEMPLATE_RA2_RA3=1. See reports/2026-07-23-frcgw-success-content-migration-scope.txt`
     );
   }
-  // Correctness tripwire that survives even after the opt-in: a fixed deadline countdown that
-  // is already in the past renders "0 days (Critical)". Block it rather than ship a stale page.
+  // TEMPORAL v1 Phase 0 supersedes the R-A3 hard block: the countdown now fail-closes on time
+  // (daysToDeadline → null suppresses the whole block), so a past deadline.isoDate no longer
+  // renders "0 days" and is safe to regenerate. It is still a STALE DECLARATION — surface it
+  // loudly (Phase 3 migrates such entries to provisional-with-expiry / undeclared).
   const dl = Date.parse(config.deadline?.isoDate ?? "");
   if (!Number.isNaN(dl) && dl < Date.now()) {
-    throw new Error(
-      `[COLE R-A3] Product "${config.id}" has a PAST deadline.isoDate (${config.deadline.isoDate}) — the ` +
-      `success-page countdown would render "0 days". Update the config to a future date, or (for a per-user ` +
-      `deadline like FRCGW settlement) suppress the fixed countdown before regenerating.`
+    console.warn(
+      `[COLE R-A3 → TEMPORAL] Product "${config.id}" has a PAST deadline.isoDate (${config.deadline.isoDate}). ` +
+      `The countdown is suppressed at render, but the declaration is stale — migrate it (Phase 3).`
     );
   }
 
@@ -142,11 +143,24 @@ export default function Success${isTier2 ? "Plan" : "Assess"}() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("${config.deadline.isoDate}").getTime() - Date.now()) / 86_400_000
-  ));
+  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
+  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
+  // (never "0 days", never a negative, never a stale label).
+  const daysToDeadline: number | null = (() => {
+    const end = new Date("${config.deadline.isoDate}").getTime();
+    if (Number.isNaN(end)) return null;
+    const d = Math.floor((end - Date.now()) / 86_400_000);
+    return d > 0 ? d : null;
+  })();
+  const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
+
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline is suppressed
+  // above; surface it so it is never silent. Phase 5 replaces this with real alerting.
+  useEffect(() => {
+    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "${config.id}", deadlineIso: "${config.deadline.isoDate}" });
+  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -293,10 +307,12 @@ ${calReads}
               ? "This is your full implementation plan — built around your specific inputs, not the average taxpayer."
               : "This is your personalised assessment — built around your exact answers, not a generic guide."}
           </p>
+          {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to ${config.deadline.display}</span>
             <span className="font-mono text-sm font-bold text-white">${config.deadline.short}</span>
           </div>
+          )}
         </div>
 
         {/* ── LOADING ── */}
@@ -499,7 +515,7 @@ ${isTier2 ? `
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 ${isTier2 ? "Work through the checklist above." : ""}
-                {daysToDeadline} days to ${config.deadline.display}.
+                {deadlineLive ? \`\${daysToDeadline} days to ${config.deadline.display}.\` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}

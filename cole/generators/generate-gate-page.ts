@@ -74,11 +74,15 @@ const LAST_VERIFIED  = "${config.lastVerified}";
 const DEADLINE_LABEL = "${config.deadline.display}";
 const DEADLINE_ISO   = "${config.deadline.isoDate}";
 
-function daysToDeadline(): number {
-  if (!DEADLINE_ISO) return 0;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  return Math.max(0, Math.ceil((end.getTime() - now.getTime()) / 86_400_000));
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
+function daysToDeadline(): number | null {
+  if (!DEADLINE_ISO) return null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -118,6 +122,12 @@ const countdownStats = ${JSON.stringify(config.countdownStats, null, 2)};
 export default function ${calculatorName.replace("Calculator", "")}Page() {
   const countdown = daysToDeadline();
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "${config.slug}", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -230,9 +240,11 @@ ${videoSchemaConst}
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Link href="/" className="text-lg font-bold text-neutral-900">TaxCheckNow</Link>
           <div className="flex items-center gap-4 text-sm">
+            {deadlineLive && (
             <span className="hidden items-center gap-1 text-neutral-600 md:flex">
               <span className="font-bold text-red-600">{countdown}</span> days to {DEADLINE_LABEL}
             </span>
+            )}
             <Link href="/${config.country}" className="text-neutral-600 hover:text-neutral-900">
               ← ${config.market} tools
             </Link>
@@ -241,9 +253,11 @@ ${videoSchemaConst}
       </nav>
 
       {/* Mobile red bar */}
+      {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
         🔴 {countdown} days · {DEADLINE_LABEL} · ${config.deadline.urgencyLabel}
       </div>
+      )}
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 2 — HERO + CALCULATOR GRID                                    */}
@@ -321,6 +335,7 @@ ${videoSchemaConst}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* COUNTDOWN BOX — just below calculator, above answer content            */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
+      {deadlineLive && (
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
@@ -347,6 +362,7 @@ ${videoSchemaConst}
           </div>
         </div>
       </section>
+      )}
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">

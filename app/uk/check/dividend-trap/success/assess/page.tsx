@@ -57,9 +57,13 @@ export default function SuccessAssess() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  const daysToDeadline = Math.max(0, Math.floor(
-    (new Date("2027-04-05T23:59:59.000+01:00").getTime() - Date.now()) / 86_400_000
-  ));
+  const daysToDeadline: number | null = (() => {
+    const _end = new Date("2027-04-05T23:59:59.000+01:00").getTime();
+    if (Number.isNaN(_end)) return null;
+    const _d = Math.floor((_end - Date.now()) / 86_400_000);
+    return _d > 0 ? _d : null;
+  })();
+  const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
 
@@ -276,10 +280,12 @@ export default function SuccessAssess() {
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.
           </p>
+          {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 5 April 2027</span>
             <span className="font-mono text-sm font-bold text-white">5 Apr 2027</span>
           </div>
+          )}
         </div>
 
         {/* ── LOADING ── */}
@@ -459,7 +465,7 @@ export default function SuccessAssess() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 
-                {daysToDeadline} days to 5 April 2027.
+                {deadlineLive ? `${daysToDeadline} days to 5 April 2027.` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
