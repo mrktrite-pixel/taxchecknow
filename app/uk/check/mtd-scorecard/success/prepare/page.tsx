@@ -31,9 +31,13 @@ export default function SuccessPrepare() {
   const [copied, setCopied] = useState(false);
   const [calDone, setCalDone] = useState(false);
 
-  const days = Math.max(0, Math.floor(
-    (new Date("2026-08-07").getTime() - Date.now()) / 86_400_000
-  ));
+  const days: number | null = (() => {
+    const _end = new Date("2026-08-07").getTime();
+    if (Number.isNaN(_end)) return null;
+    const _d = Math.floor((_end - Date.now()) / 86_400_000);
+    return _d > 0 ? _d : null;
+  })();
+  const deadlineLive = days !== null;
 
   useEffect(() => {
     init();
@@ -201,10 +205,12 @@ Write a personal MTD compliance assessment. Respond ONLY with JSON, no markdown:
         </div>
 
         {/* DEADLINE BANNER */}
+        {deadlineLive && (
         <div className="rounded-xl bg-red-700 px-5 py-3 flex items-center justify-between">
           <span className="text-sm font-bold text-white">🔴 {days} days to your first MTD deadline</span>
           <span className="font-mono text-sm font-bold text-white">7 August 2026</span>
         </div>
+        )}
 
         {/* ── SECTION 2: YOUR MTD POSITION ────────────────────────────── */}
         {loading ? (
@@ -373,7 +379,7 @@ Write a personal MTD compliance assessment. Respond ONLY with JSON, no markdown:
                 </button>
               </div>
               <p className="mt-3 text-sm text-neutral-400">
-                {days} days to 7 August 2026. That is enough time — if you start today.
+                {deadlineLive ? `${days} days to 7 August 2026. ` : ""}That is enough time — if you start today.
               </p>
             </div>
 

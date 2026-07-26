@@ -28,11 +28,12 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "6 April 2027";
 const DEADLINE_ISO   = "2027-04-06T00:00:00.000+01:00";
 
-function daysToDeadline(): number {
-  if (!DEADLINE_ISO) return 0;
+function daysToDeadline(): number | null {
+  if (!DEADLINE_ISO) return null;
   const now = new Date();
   const end = new Date(DEADLINE_ISO);
-  return Math.max(0, Math.ceil((end.getTime() - now.getTime()) / 86_400_000));
+  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
+  return _d > 0 ? _d : null;
 }
 
 function progressPct(): number {
@@ -336,6 +337,7 @@ const countdownStats = [
 
 export default function PensionIhtTrapPage() {
   const countdown = daysToDeadline();
+  const deadlineLive = countdown !== null;
   const progress  = progressPct();
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
@@ -466,9 +468,11 @@ export default function PensionIhtTrapPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Link href="/" className="text-lg font-bold text-neutral-900">TaxCheckNow</Link>
           <div className="flex items-center gap-4 text-sm">
+            {deadlineLive && (
             <span className="hidden items-center gap-1 text-neutral-600 md:flex">
               <span className="font-bold text-red-600">{countdown}</span> days to {DEADLINE_LABEL}
             </span>
+            )}
             <Link href="/uk" className="text-neutral-600 hover:text-neutral-900">
               ← United Kingdom tools
             </Link>
@@ -477,9 +481,11 @@ export default function PensionIhtTrapPage() {
       </nav>
 
       {/* Mobile red bar */}
+      {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
         🔴 {countdown} days · {DEADLINE_LABEL} · PROPOSED EFFECTIVE DATE — IF ENACTED
       </div>
+      )}
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 2 — HERO + CALCULATOR GRID                                    */}
@@ -569,6 +575,7 @@ export default function PensionIhtTrapPage() {
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* COUNTDOWN BOX — just below calculator, above answer content            */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
+      {deadlineLive && (
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
@@ -622,6 +629,7 @@ export default function PensionIhtTrapPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── ANSWER + MISTAKES — below calculator for mobile conversion ── */}
       <section className="mx-auto mb-12 max-w-6xl px-4">
