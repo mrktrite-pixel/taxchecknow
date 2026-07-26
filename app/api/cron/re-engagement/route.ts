@@ -271,6 +271,8 @@ export async function GET(request: Request) {
         product_key:             row.product_key ?? null,
         resend_id:                  result.resendId ?? null,
         error_message:                 errorMessage,
+        // Phase 1.3 — stamp sent_at so this send counts toward the cron's per-recipient 24h cap.
+        sent_at:                        result.success ? new Date().toISOString() : null,
       });
     } catch (err) {
       console.error("[re-engagement cron] Failed to write email_log", err);
