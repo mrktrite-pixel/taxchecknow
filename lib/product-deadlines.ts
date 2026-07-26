@@ -45,7 +45,11 @@ export const PRODUCT_DEADLINES: Record<SiteId, Record<ProductId, DeadlineEntry>>
     "bring-forward-window":             { date: "2026-06-30T23:59:59.000+10:00" },
 
     // ── AU (ATO) — 5 critical Pre-Step-2D additions (operator-confirmed labels) ──
-    "frcgw-clearance-certificate":      { date: "2026-06-30T23:59:59.000+10:00", label: "30 June 2026 valuation date" },
+    // frcgw-clearance-certificate — DELIBERATELY UNDECLARED (TEMPORAL v1 Step 2). FRCGW is
+    // PER_USER supplied: the real deadline is the customer's SETTLEMENT date, never a static
+    // calendar date (past or future). With no entry, lookupDeadline() returns null →
+    // queueReminders inserts ZERO reminders (webhook:262) and the delivery email omits the
+    // deadline banner (email-context:133-135). Do NOT re-add a static date here.
     "div296-wealth-eraser":             { date: "2026-06-30T23:59:59.000+10:00", label: "30 June 2026 valuation date" },
     "super-death-tax-trap":             { date: "2026-06-30T23:59:59.000+10:00", label: "30 June 2026 super deadline" },
     "super-to-trust-exit":              { date: "2026-06-30T23:59:59.000+10:00", label: "30 June 2026 super deadline" },
