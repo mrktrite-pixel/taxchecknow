@@ -193,7 +193,24 @@ export async function GET(request: Request) {
   let sent     = 0;
   let failed    = 0;
   let skipped    = 0;
-  const failures: string[] = [];
+  let deferred = 0;   // Phase 1 addendum A — over the per-recipient 24h cap
+  const failures: string[]  = [];
+  const deferrals: string[] = [];
+
+  // Phase 1 addendum A — the 24h per-recipient cap now gates re-engagement (marketing). Build the
+  // set of recipients who received ANY email in the last 24h (email_log 'sent' with sent_at set —
+  // includes the transactional delivery + t2_lead_capture emails, which count toward the cap but are
+  // themselves exempt). A capped customer is DEFERRED: re_engagement_sent stays false so a future run
+  // retries once 24h has elapsed. Never marked sent, never dropped.
+  const dayAgoIso = new Date(Date.now() - 86_400_000).toISOString();
+  const recent24h = new Set<string>();
+  try {
+    const { data: recent } = await sb.from("email_log")
+      .select("recipient_email").eq("status", "sent").gte("sent_at", dayAgoIso);
+    (recent ?? []).forEach((r: { recipient_email?: string | null }) => {
+      if (r.recipient_email) recent24h.add(r.recipient_email.toLowerCase());
+    });
+  } catch { /* non-fatal: fall through; the send still respects re_engagement_sent gating */ }
 
   // 3. Process each deduped customer
   for (const row of sessionRows) {
@@ -206,6 +223,14 @@ export async function GET(request: Request) {
     // SELECT and now (race with manual re-trigger or parallel cron run).
     if (row.re_engagement_sent === true) {
       skipped++;
+      continue;
+    }
+
+    // Phase 1 addendum A — 24h per-recipient cap. Defer (leave re_engagement_sent false) if this
+    // recipient already got an email in the last 24h. Retried on a future run once the window clears.
+    if (recent24h.has(row.email.toLowerCase())) {
+      deferred++;
+      deferrals.push(`${row.email} | re_engagement | sent_within_24h`);
       continue;
     }
 
@@ -289,10 +314,11 @@ export async function GET(request: Request) {
   // 4. Operator alert if any failures
   if (failed > 0) {
     await alertOperator(
-      `Re-engagement cron run at ${new Date().toISOString()}\nSent: ${sent}\nFailed: ${failed}\nSkipped: ${skipped}\n\nFailures:\n${failures.join("\n")}`,
+      `Re-engagement cron run at ${new Date().toISOString()}\nSent: ${sent}\nFailed: ${failed}\nSkipped: ${skipped}\nDeferred(24h cap): ${deferred}\n\n` +
+      `Failures:\n${failures.join("\n")}` + (deferrals.length ? `\n\nDeferred:\n${deferrals.join("\n")}` : ""),
       resendKey,
     );
   }
 
-  return NextResponse.json({ sent, failed, skipped, processed: sessionRows.length });
+  return NextResponse.json({ sent, failed, skipped, deferred, processed: sessionRows.length });
 }
