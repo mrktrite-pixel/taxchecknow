@@ -24,6 +24,9 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getEmailTemplate, type TemplateData } from "@/lib/email-templates/index";
 import { LEAD_PRODUCT_META } from "@/lib/lead-product-meta";
+import {
+  newRunId, logRunOutcome, logEmailEvent, recordCronRun, zeroCounts,
+} from "@/lib/email-observability";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -31,6 +34,10 @@ export const runtime = "nodejs";
 const FROM_ADDRESS = "TaxCheckNow <hello@taxchecknow.com>";
 const RESEND_URL    = "https://api.resend.com/emails";
 const BATCH_LIMIT   = 50;
+const ROUTE         = "/api/cron/re-engagement";
+
+// Detail arrays are echoed in the response body (Step 4.3) — keep them bounded.
+const DETAIL_LIMIT  = 50;
 
 // Window: re-engage between days 7 and 30 after save.
 //   - < 7 days: still in nurture_d3 + nurture_d7 window (don't double-email)
@@ -122,6 +129,11 @@ async function alertOperator(failureSummary: string, resendKey: string): Promise
 // ── MAIN HANDLER ─────────────────────────────────────────────────────────
 
 export async function GET(request: Request) {
+  // TEMPORAL v1 Step 4.4 — this route was as blind as send-emails: no console line, no durable
+  // run record, and its deferrals (Phase 1 addendum A) left no trace at all.
+  const startedAtMs = Date.now();
+  const runId       = newRunId();
+
   // 1. Auth — Vercel sends Authorization: Bearer ${CRON_SECRET}
   const expectedAuth = `Bearer ${process.env.CRON_SECRET ?? ""}`;
   if (!process.env.CRON_SECRET || request.headers.get("authorization") !== expectedAuth) {
@@ -173,7 +185,14 @@ export async function GET(request: Request) {
     .limit(candidateLimit);
 
   if (fetchErr) {
-    return NextResponse.json({ error: "decision_sessions fetch failed", detail: fetchErr.message }, { status: 500 });
+    // Step 4.4 — even a failed run is on the record.
+    logRunOutcome(ROUTE, runId, startedAtMs, zeroCounts(), { fetch_error: fetchErr.message });
+    await recordCronRun(sb, {
+      runId, route: ROUTE, startedAtMs,
+      counts: { ...zeroCounts(), failed: 1 },
+      detail: { fetch_error: fetchErr.message },
+    });
+    return NextResponse.json({ error: "decision_sessions fetch failed", detail: fetchErr.message, runId }, { status: 500 });
   }
 
   const candidateRows: DecisionSessionRow[] = rows ?? [];
@@ -230,7 +249,18 @@ export async function GET(request: Request) {
     // recipient already got an email in the last 24h. Retried on a future run once the window clears.
     if (recent24h.has(row.email.toLowerCase())) {
       deferred++;
-      deferrals.push(`${row.email} | re_engagement | sent_within_24h`);
+      if (deferrals.length < DETAIL_LIMIT) {
+        deferrals.push(`${row.id} | ${row.email} | re_engagement | sent_within_24h`);
+      }
+      // Step 4.2 — the deferral is now durable. Unlike the send-emails queue there is no
+      // trigger_stale floor here (decision_sessions has no send-window), so no counter is needed
+      // to protect the row; what was missing was purely the audit trail. The session id goes in
+      // error_message because a re-engagement deferral has no email_queue row to point at.
+      await logEmailEvent(sb, {
+        runId, recipientEmail: row.email, emailType: "re_engagement", status: "deferred",
+        productKey: row.product_key ?? null,
+        errorMessage: `deferred:sent_within_24h:decision_session=${row.id}`,
+      });
       continue;
     }
 
@@ -287,38 +317,49 @@ export async function GET(request: Request) {
     const errorMessage = result.success
       ? (personalisationDegraded ? "personalisation_degraded:no_verdict_in_decision_session_output" : null)
       : (result.error ?? "send error");
-    try {
-      await sb.from("email_log").insert({
-        recipient_email: row.email,
-        email_type:        "re_engagement",
-        subject:             tpl.subject,
-        status:                result.success ? "sent" : "failed",
-        product_key:             row.product_key ?? null,
-        resend_id:                  result.resendId ?? null,
-        error_message:                 errorMessage,
-        // Phase 1.3 — stamp sent_at so this send counts toward the cron's per-recipient 24h cap.
-        sent_at:                        result.success ? new Date().toISOString() : null,
-      });
-    } catch (err) {
-      console.error("[re-engagement cron] Failed to write email_log", err);
-    }
+    await logEmailEvent(sb, {
+      runId,
+      recipientEmail: row.email,
+      emailType:      "re_engagement",
+      subject:        tpl.subject,
+      status:         result.success ? "sent" : "failed",
+      productKey:     row.product_key ?? null,
+      resendId:       result.resendId ?? null,
+      errorMessage,
+      // Phase 1.3 — stamp sent_at so this send counts toward the cron's per-recipient 24h cap.
+      sentAt:         result.success ? new Date().toISOString() : null,
+    });
 
     if (result.success) {
       sent++;
     } else {
       failed++;
-      failures.push(`${row.id} | ${row.email} | ${result.error}`);
+      if (failures.length < DETAIL_LIMIT) {
+        failures.push(`${row.id} | ${row.email} | ${result.error}`);
+      }
     }
   }
 
-  // 4. Operator alert if any failures
-  if (failed > 0) {
+  const counts = {
+    processed: sessionRows.length, sent, failed, skipped, windowSkipped: 0, deferred,
+  };
+
+  // 4. Operator alert. Step 4.3 — `deferred > 0` is now in the gate here too: a run whose only
+  //    outcome was deferrals previously built the deferrals[] detail and then dispatched nothing.
+  if (failed > 0 || deferred > 0) {
     await alertOperator(
-      `Re-engagement cron run at ${new Date().toISOString()}\nSent: ${sent}\nFailed: ${failed}\nSkipped: ${skipped}\nDeferred(24h cap): ${deferred}\n\n` +
-      `Failures:\n${failures.join("\n")}` + (deferrals.length ? `\n\nDeferred:\n${deferrals.join("\n")}` : ""),
+      `Re-engagement cron run ${runId} at ${new Date().toISOString()}\n` +
+      `Processed: ${sessionRows.length}\nSent: ${sent}\nFailed: ${failed}\nSkipped: ${skipped}\nDeferred(24h cap): ${deferred}\n\n` +
+      (failures.length  ? `Failures:\n${failures.join("\n")}\n\n`  : "") +
+      (deferrals.length ? `Deferred:\n${deferrals.join("\n")}`     : ""),
       resendKey,
     );
   }
 
-  return NextResponse.json({ sent, failed, skipped, deferred, processed: sessionRows.length });
+  // 5. Step 4.4 — structured line + durable run row, zero-activity runs included.
+  logRunOutcome(ROUTE, runId, startedAtMs, counts);
+  await recordCronRun(sb, { runId, route: ROUTE, startedAtMs, counts, detail: { failures, deferrals } });
+
+  // Step 4.3 — deferral detail is returned, not only mailed.
+  return NextResponse.json({ runId, ...counts, failures, deferrals });
 }

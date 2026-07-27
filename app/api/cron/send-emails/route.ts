@@ -1,18 +1,27 @@
 // ── EMAIL CRON SENDER ────────────────────────────────────────────────────
-// Triggered hourly by Vercel cron (see vercel.json).
+// Triggered daily 09:00 UTC by Vercel cron (see vercel.json).
 //
 // Workflow:
 //   1. Verify Authorization: Bearer ${CRON_SECRET}
 //   2. Fetch up to 50 rows from email_queue where status='queued' AND
 //      trigger_date <= today
 //   3. For each row: build template -> Resend send -> update queue + log
-//   4. On send failure: alert OPERATOR_EMAIL (if configured)
-//   5. Return { sent, failed, skipped }
+//   4. On failure / window-skip / deferral: alert OPERATOR_EMAIL (if configured)
+//   5. Return { sent, failed, skipped, windowSkipped, deferred, processed }
+//
+// TEMPORAL v1 Step 4 — this route no longer runs blind. Every run writes a
+// structured console line and a public.email_cron_runs row (even a run that does
+// nothing), and every non-send outcome — deferral included — writes an
+// email_log event. Requires the Step 4 DDL; see the Step 4 HOLD report.
 
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getEmailTemplate, type EmailType, type TemplateData } from "@/lib/email-templates/index";
 import { LEAD_PRODUCT_META } from "@/lib/lead-product-meta";
+import {
+  newRunId, logRunOutcome, logEmailEvent, recordCronRun, zeroCounts,
+} from "@/lib/email-observability";
+import { collectEmailHealth, formatHealthForOperator } from "@/lib/email-alerts";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -20,6 +29,11 @@ export const runtime = "nodejs";
 const FROM_ADDRESS = "TaxCheckNow <hello@taxchecknow.com>";
 const RESEND_URL    = "https://api.resend.com/emails";
 const BATCH_LIMIT   = 50;
+const ROUTE         = "/api/cron/send-emails";
+
+// Detail arrays are echoed in the response body (Step 4.3). Bound them so a
+// pathological queue cannot produce an unbounded payload.
+const DETAIL_LIMIT = 50;
 
 const VALID_EMAIL_TYPES: ReadonlySet<EmailType> = new Set([
   "nurture_d3", "nurture_d7", "nurture_d14",
@@ -39,6 +53,8 @@ interface QueueRow {
   status:                                       string;
   // Step 4 — link to decision_sessions row for per-customer personalisation
   decision_session_id?:                            string | null;
+  // Step 4.1 — how many times the 24h cap has deferred this row
+  deferral_count?:                                    number | null;
 }
 
 // Decision session shape we read at send time. Only the fields the cron
@@ -62,22 +78,52 @@ function todayIso(): string {
 //     d-30/d-7/d-1 all fired AFTER the deadline.
 //   · trigger_stale  — more than STALE_GRACE_DAYS past its intended send date (the cron was down,
 //     or the row was deferred repeatedly). Sending a stale "N days" reminder days late misleads.
+//
+// TEMPORAL v1 Step 4.1 — F-OBS-2 FIX. "or the row was deferred repeatedly" was a DEFECT: a row the
+// 24h cap kept deferring accumulated staleness and was then killed by the trigger_stale floor, so
+// the cap could silently convert a queued email into a dropped one — and the surviving artefact
+// ("trigger_stale") is the SAME signal used for "the cron was down", making the two causes
+// indistinguishable after the fact.
+//
+// The fix keeps the two causes structurally separate:
+//   · trigger_stale now applies ONLY to rows the cap has never touched (deferral_count = 0), so it
+//     means exactly what it says: this row was not processed in time.
+//   · A cap-deferred row (deferral_count > 0) can NEVER be skipped as trigger_stale.
+//   · It is not immortal either: at MAX_DEFERRALS it terminates as `cap_starved:<n>` — its own
+//     distinct reason, which alerts. Anti-limbo: no row sits queued forever, and nothing is
+//     unlabeled (the Step 7 terminal-state principle applied to the queue).
+//   · deadline_passed stays UNCONDITIONAL. Deferral history is irrelevant to it: a reminder whose
+//     deadline has passed must never be sent, full stop. That is correctness, not scheduling.
 const STALE_GRACE_DAYS = 2;
+
+// Five consecutive deferrals is not queue contention — it is an anomaly. The cron is DAILY and the
+// cap is 24h, so an ordinary same-day collision (two rows for one recipient come due together)
+// resolves in exactly ONE deferral: row A sends today, row B sends tomorrow. Reaching 5 means the
+// recipient received some other email on five separate days, which is a different problem and
+// deserves a terminal + an alert rather than an indefinitely queued row.
+const MAX_DEFERRALS = 5;
+
 function addDaysIso(iso: string, n: number): string {
   const d = new Date(iso + "T00:00:00Z");
   d.setUTCDate(d.getUTCDate() + n);
   return d.toISOString().split("T")[0];
 }
-function windowSkipReason(row: QueueRow, todayStr: string): string | null {
-  const trig = row.trigger_date;
-  if (!trig) return null;
-  if (row.days_before_deadline != null) {
-    const deadlineStr = addDaysIso(trig, row.days_before_deadline);
-    if (todayStr > deadlineStr) return `deadline_passed:${deadlineStr}`;
-  }
+
+// Unconditional — see above. Deferral history does not exempt a passed deadline.
+function deadlineSkipReason(row: QueueRow, todayStr: string): string | null {
+  if (!row.trigger_date) return null;
+  if (row.days_before_deadline == null) return null;
+  const deadlineStr = addDaysIso(row.trigger_date, row.days_before_deadline);
+  return todayStr > deadlineStr ? `deadline_passed:${deadlineStr}` : null;
+}
+
+// Caller MUST gate this on deferral_count === 0 (Step 4.1). Evaluating it before the cap check is
+// deliberate: a row that is genuinely stale from an outage is still caught on the run where it is
+// first seen, instead of being deferred once and thereby made permanently exempt.
+function staleSkipReason(row: QueueRow, todayStr: string): string | null {
+  if (!row.trigger_date) return null;
   const floorStr = addDaysIso(todayStr, -STALE_GRACE_DAYS);
-  if (trig < floorStr) return `trigger_stale:${trig}<${floorStr}`;
-  return null;
+  return row.trigger_date < floorStr ? `trigger_stale:${row.trigger_date}<${floorStr}` : null;
 }
 
 // Resolve the email_type for a row.
@@ -160,7 +206,10 @@ async function sendViaResend(to: string, subject: string, html: string, resendKe
 // ── OPERATOR ALERT (fire-and-forget) ─────────────────────────────────────
 async function alertOperator(failureSummary: string, resendKey: string): Promise<void> {
   const operator = process.env.OPERATOR_EMAIL;
-  if (!operator) return;
+  if (!operator) {
+    console.error("[cron] OPERATOR ALERT (no OPERATOR_EMAIL configured):", failureSummary);
+    return;
+  }
   try {
     await fetch(RESEND_URL, {
       method: "POST",
@@ -168,7 +217,7 @@ async function alertOperator(failureSummary: string, resendKey: string): Promise
       body: JSON.stringify({
         from:    FROM_ADDRESS,
         to:      [operator],
-        subject: `[TaxCheckNow cron] Email send failure`,
+        subject: `[TaxCheckNow cron] Email run needs attention`,
         html:    `<pre style="font-family:monospace;font-size:12px;white-space:pre-wrap;">${failureSummary.replace(/</g, "&lt;")}</pre>`,
       }),
     });
@@ -178,6 +227,9 @@ async function alertOperator(failureSummary: string, resendKey: string): Promise
 // ── MAIN HANDLER ─────────────────────────────────────────────────────────
 
 export async function GET(request: Request) {
+  const startedAtMs = Date.now();
+  const runId       = newRunId();
+
   // 1. Auth — Vercel sends Authorization: Bearer ${CRON_SECRET}
   const expectedAuth = `Bearer ${process.env.CRON_SECRET ?? ""}`;
   if (!process.env.CRON_SECRET || request.headers.get("authorization") !== expectedAuth) {
@@ -198,19 +250,29 @@ export async function GET(request: Request) {
   // 2. Fetch due rows. Embed decision_sessions data via the FK we added in
   //    Step 4 so personalisation context (output.status) is available at
   //    send time without an extra query per row.
+  //
+  //    Step 4 — the column list is now `*`. The explicit list meant that adding a
+  //    column to the SELECT before the DDL had run would 400 the whole PostgREST
+  //    query and take the entire cron down. With `*` the route is insensitive to
+  //    migration ORDER: pre-DDL, deferral_count simply comes back undefined and
+  //    the code falls back to 0.
   const { data: rows, error: fetchErr } = await sb
     .from("email_queue")
-    .select(
-      "id, customer_email, customer_name, product_key, product_id, email_type, days_before_deadline, trigger_date, subject, status, decision_session_id, " +
-      "decision_sessions:decision_session_id(id, output)",
-    )
+    .select("*, decision_sessions:decision_session_id(id, output)")
     .eq("status", "queued")
     .lte("trigger_date", todayIso())
     .order("trigger_date", { ascending: true })
     .limit(BATCH_LIMIT);
 
   if (fetchErr) {
-    return NextResponse.json({ error: "Queue fetch failed", detail: fetchErr.message }, { status: 500 });
+    // Even a failed run is no longer invisible.
+    logRunOutcome(ROUTE, runId, startedAtMs, zeroCounts(), { fetch_error: fetchErr.message });
+    await recordCronRun(sb, {
+      runId, route: ROUTE, startedAtMs,
+      counts: { ...zeroCounts(), failed: 1 },
+      detail: { fetch_error: fetchErr.message },
+    });
+    return NextResponse.json({ error: "Queue fetch failed", detail: fetchErr.message, runId }, { status: 500 });
   }
 
   const queueRows: QueueRow[] = rows ?? [];
@@ -228,6 +290,9 @@ export async function GET(request: Request) {
   // Recipients already emailed in the last 24h (any email_log 'sent' row — includes the webhook
   // delivery email, since 1.4a now stamps email_log.sent_at) are deferred, not dropped. Combined
   // with the run-local set below, a recipient can receive at most one email per run.
+  //
+  // Step 4 note: the Step 4 event ledger writes deferred/skipped rows to email_log with
+  // status != 'sent' and sent_at = null, so they can never enter this set.
   const dayAgoIso = new Date(Date.now() - 86_400_000).toISOString();
   const recent24h = new Set<string>();
   try {
@@ -239,6 +304,25 @@ export async function GET(request: Request) {
   } catch { /* non-fatal: the run-local cap below still bounds this run to 1/recipient */ }
   const emailedThisRun = new Set<string>();
 
+  // Mark a row terminally skipped: queue row + a durable email_log event (Step 4.2), so a
+  // past-date skip has a timestamp and is sweepable by the 4.6 health check.
+  const markWindowSkipped = async (row: QueueRow, emailType: string, reason: string) => {
+    windowSkipped++;
+    if (windowSkips.length < DETAIL_LIMIT) {
+      windowSkips.push(`${row.id} | ${emailType} | ${row.customer_email} | ${reason}`);
+    }
+    try {
+      const { error } = await sb.from("email_queue")
+        .update({ status: "skipped", error_message: `window:${reason}` }).eq("id", row.id);
+      if (error) console.error("[cron] window-skip queue update failed", row.id, error.message);
+    } catch (err) { console.error("[cron] window-skip queue update threw", row.id, err); }
+    await logEmailEvent(sb, {
+      runId, recipientEmail: row.customer_email, emailType, status: "skipped",
+      subject: row.subject ?? null, productKey: row.product_key ?? null,
+      queueRowId: row.id, errorMessage: `window:${reason}`,
+    });
+  };
+
   // 3. Process each row
   for (const row of queueRows) {
     const emailType = resolveEmailType(row);
@@ -248,26 +332,73 @@ export async function GET(request: Request) {
       try {
         await sb.from("email_queue").update({ status: "skipped", error_message: "Could not resolve email_type" }).eq("id", row.id);
       } catch { /* ignore */ }
+      await logEmailEvent(sb, {
+        runId, recipientEmail: row.customer_email, emailType: row.email_type ?? "unresolved",
+        status: "skipped", productKey: row.product_key ?? null, queueRowId: row.id,
+        errorMessage: "unresolvable_email_type",
+      });
       continue;
     }
 
-    // Phase 1.2 — sender floor + expiry. Past-window rows are marked 'skipped' (visible), never sent.
-    const skipReason = windowSkipReason(row, today);
-    if (skipReason) {
-      windowSkipped++;
-      windowSkips.push(`${row.id} | ${emailType} | ${row.customer_email} | ${skipReason}`);
-      try {
-        await sb.from("email_queue").update({ status: "skipped", error_message: `window:${skipReason}` }).eq("id", row.id);
-      } catch { /* ignore */ }
+    const deferralCount = row.deferral_count ?? 0;
+
+    // Phase 1.2 — (a) deadline expiry. UNCONDITIONAL: a passed deadline is never sendable,
+    // regardless of how the row got here.
+    const deadlineReason = deadlineSkipReason(row, today);
+    if (deadlineReason) {
+      await markWindowSkipped(row, emailType, deadlineReason);
       continue;
+    }
+
+    // Phase 1.2 — (b) sender floor. Step 4.1: ONLY for rows the cap has never deferred, so
+    // `trigger_stale` continues to mean "not processed in time" and nothing else.
+    if (deferralCount === 0) {
+      const staleReason = staleSkipReason(row, today);
+      if (staleReason) {
+        await markWindowSkipped(row, emailType, staleReason);
+        continue;
+      }
     }
 
     // Phase 1.3 — per-recipient 24h cap. Defer (leave 'queued'), never drop; next run retries once
     // the 24h window has elapsed. Bounds each recipient to at most one email per run.
     const rcpt = row.customer_email.toLowerCase();
-    if (recent24h.has(rcpt) || emailedThisRun.has(rcpt)) {
+    const capHit = recent24h.has(rcpt) || emailedThisRun.has(rcpt);
+    if (capHit) {
+      // Step 4.1 anti-limbo terminal — a row the cap has starved for MAX_DEFERRALS runs stops
+      // being deferred and terminates under its OWN reason, never `trigger_stale`.
+      if (deferralCount >= MAX_DEFERRALS) {
+        await markWindowSkipped(row, emailType, `cap_starved:${deferralCount}`);
+        continue;
+      }
+
+      const reason = emailedThisRun.has(rcpt) ? "already_sent_this_run" : "sent_within_24h";
       deferred++;
-      deferrals.push(`${row.id} | ${emailType} | ${row.customer_email} | ${emailedThisRun.has(rcpt) ? "already_sent_this_run" : "sent_within_24h"}`);
+      if (deferrals.length < DETAIL_LIMIT) {
+        deferrals.push(`${row.id} | ${emailType} | ${row.customer_email} | ${reason} | deferral ${deferralCount + 1}/${MAX_DEFERRALS}`);
+      }
+
+      // Step 4.1/4.2 — the deferral is now DURABLE, on both surfaces:
+      //   · email_queue counters — drives the trigger_stale exemption and the cap_starved
+      //     terminal, and makes "is this row being starved?" a single SELECT.
+      //   · email_log event      — the full audit line (recipient, row id, reason, run, timestamp).
+      // trigger_date is deliberately NOT bumped: it is rendered into the customer-visible date
+      // (see formatDeadlineDate below) and it is the record of when the email was MEANT to go.
+      try {
+        const { error } = await sb.from("email_queue").update({
+          deferral_count:       deferralCount + 1,
+          last_deferred_at:     new Date().toISOString(),
+          last_deferred_reason: reason,
+        }).eq("id", row.id);
+        if (error) console.error("[cron] deferral counter update failed", row.id, error.message);
+      } catch (err) { console.error("[cron] deferral counter update threw", row.id, err); }
+
+      await logEmailEvent(sb, {
+        runId, recipientEmail: row.customer_email, emailType, status: "deferred",
+        subject: row.subject ?? null, productKey: row.product_key ?? null,
+        queueRowId: row.id,
+        errorMessage: `deferred:${reason}:${deferralCount + 1}/${MAX_DEFERRALS}`,
+      });
       continue; // status stays 'queued'
     }
 
@@ -346,44 +477,67 @@ export async function GET(request: Request) {
     const errorMessage = result.success
       ? (personalisationDegraded ? "personalisation_degraded:no_verdict_from_decision_session" : null)
       : (result.error ?? "send error");
-    try {
-      await sb.from("email_log").insert({
-        recipient_email: row.customer_email,
-        email_type:        emailType,
-        subject:             tpl.subject,
-        status:                result.success ? "sent" : "failed",
-        product_key:             row.product_key ?? null,
-        resend_id:                  result.resendId ?? null,
-        error_message:                 errorMessage,
-        // Phase 1.3 — stamp sent_at so the per-recipient 24h cap can see this send next run.
-        sent_at:                        result.success ? new Date().toISOString() : null,
-      });
-    } catch (err) {
-      console.error("[cron] Failed to write email_log", err);
-    }
+    await logEmailEvent(sb, {
+      runId,
+      recipientEmail: row.customer_email,
+      emailType,
+      status:         result.success ? "sent" : "failed",
+      subject:        tpl.subject,
+      productKey:     row.product_key ?? null,
+      queueRowId:     row.id,
+      resendId:       result.resendId ?? null,
+      errorMessage,
+      // Phase 1.3 — stamp sent_at so the per-recipient 24h cap can see this send next run.
+      sentAt:         result.success ? new Date().toISOString() : null,
+    });
 
     if (result.success) {
       sent++;
       emailedThisRun.add(rcpt); // Phase 1.3 — enforce one-per-recipient for the rest of this run
     } else {
       failed++;
-      failures.push(`${row.id} | ${emailType} | ${row.customer_email} | ${result.error}`);
+      if (failures.length < DETAIL_LIMIT) {
+        failures.push(`${row.id} | ${emailType} | ${row.customer_email} | ${result.error}`);
+      }
     }
   }
 
-  // 4. Operator alert on failures OR window-skips. A window-skip is an upstream defect signal
-  //    (a reminder should never have reached its send date past-window) — surface it, don't bury it.
-  if (failed > 0 || windowSkipped > 0) {
+  const counts = { processed: queueRows.length, sent, failed, skipped, windowSkipped, deferred };
+
+  // 4. Step 4.6 — standing health conditions, computed from the DB rather than this run's
+  //    counters, so a condition caused by a previous run or by the webhook path still surfaces.
+  const health = await collectEmailHealth(sb);
+
+  // 5. Operator alert. Step 4.3 — `deferred > 0` is now IN THE GATE. Previously a run whose only
+  //    outcome was deferrals sent no alert at all: the deferrals[] detail was built and rendered
+  //    into the alert body, but the body was never dispatched unless some OTHER condition fired.
+  if (failed > 0 || windowSkipped > 0 || deferred > 0 || health.alerts.length > 0) {
     await alertOperator(
-      `Cron run at ${new Date().toISOString()}\n` +
-      `Sent: ${sent}  Failed: ${failed}  Skipped(unresolvable): ${skipped}  ` +
+      `Cron run ${runId} at ${new Date().toISOString()} (${ROUTE})\n` +
+      `Processed: ${queueRows.length}  Sent: ${sent}  Failed: ${failed}  Skipped(unresolvable): ${skipped}  ` +
       `WindowSkipped: ${windowSkipped}  Deferred(24h cap): ${deferred}\n\n` +
       (failures.length     ? `Failures:\n${failures.join("\n")}\n\n`         : "") +
       (windowSkips.length  ? `Window-skips:\n${windowSkips.join("\n")}\n\n`  : "") +
-      (deferrals.length    ? `Deferred:\n${deferrals.join("\n")}`            : ""),
+      (deferrals.length    ? `Deferred:\n${deferrals.join("\n")}\n\n`        : "") +
+      formatHealthForOperator(health),
       resendKey,
     );
   }
 
-  return NextResponse.json({ sent, failed, skipped, windowSkipped, deferred, processed: queueRows.length });
+  // 6. Step 4.4 — the run is on the record whatever it did, zero-activity included.
+  logRunOutcome(ROUTE, runId, startedAtMs, counts, { health_alerts: health.alerts.length });
+  await recordCronRun(sb, {
+    runId, route: ROUTE, startedAtMs, counts,
+    detail: { failures, windowSkips, deferrals, healthAlerts: health.alerts },
+  });
+
+  // Step 4.3 — the deferrals[] detail is returned, not only mailed.
+  return NextResponse.json({
+    runId,
+    ...counts,
+    failures,
+    windowSkips,
+    deferrals,
+    healthAlerts: health.alerts,
+  });
 }
