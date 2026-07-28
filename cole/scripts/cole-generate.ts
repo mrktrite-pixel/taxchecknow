@@ -92,7 +92,7 @@ function toPascal(str: string): string {
 }
 
 // ── MAIN ──────────────────────────────────────────────────────────────────────
-async function cole(productId: string, successOnly = false) {
+async function cole(productId: string, successOnly = false, evidenceOnly = false) {
   const startTime      = Date.now();
   const filesGenerated: string[] = [];
   const errors:         string[] = [];
@@ -151,6 +151,27 @@ async function cole(productId: string, successOnly = false) {
   // generator the new build uses, so a migrated product's deliverable is never left legacy.
   // Runs ONLY success pages (not gate/calculator/files) so it cannot clobber the engine-native
   // calculator or gate. Gated by the R-A2/R-A3 tripwire inside buildSuccessPage().
+  // TEMPORAL v1 Step 6 — EVIDENCE-ONLY. Re-derives the temporal registry and writes the gate
+  // evidence WITHOUT regenerating a single page.
+  //
+  // Why this mode exists: declaring a product should not require re-emitting it. The
+  // --success-only path is tripwired (buildSuccessPage throws unless
+  // COLE_SUCCESS_TEMPLATE_RA2_RA3=1) and, for a product whose success pages predate the Phase 0
+  // countdown block, regeneration would ALSO introduce a countdown keyed to config.deadline.
+  // Neither belongs in "record this product's declaration". Evidence-only touches no page,
+  // trips no wire, and changes no rendered output.
+  if (evidenceOnly) {
+    console.log(`   → --evidence-only: temporal registry + gate evidence for ${config.id} (NO page regenerated)\n`);
+    emitTemporalRegistry(filesGenerated, errors);
+    await writeTemporalEvidence(config, errors);
+    const ok = errors.length === 0;
+    console.log(`\n${"─".repeat(60)}`);
+    console.log(ok ? `\n✅ Temporal evidence recorded: ${productId}` : `\n⚠️  Completed with ${errors.length} error(s):`);
+    errors.forEach(e => console.log(`   • ${e}`));
+    if (!ok) process.exitCode = 1;
+    return;
+  }
+
   if (successOnly) {
     console.log(`   → --success-only: regenerating success pages for ${config.id} (calculator/gate untouched)\n`);
     emitSuccessPages(config, filesGenerated, errors);
@@ -460,10 +481,13 @@ function relativePath(absolutePath: string): string {
 // ── ENTRY POINT ───────────────────────────────────────────────────────────────
 const args        = process.argv.slice(2);
 const successOnly  = args.includes("--success-only");
+const evidenceOnly = args.includes("--evidence-only");   // TEMPORAL v1 Step 6
 const productId    = args.find(a => !a.startsWith("--"));
 if (!productId) {
   console.error("\n❌ Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id] [--success-only]");
   console.error("   Full build:    cole-generate.ts uk-03");
+  console.error("   Evidence only: cole-generate.ts au-19-frcgw-clearance-certificate --evidence-only");
+  console.error("                  (temporal registry + gate evidence ONLY — regenerates NO page)");
   console.error("   Update emit:   cole-generate.ts au-19-frcgw-clearance-certificate --success-only");
   console.error("                  (regenerates ONLY the success pages — for a migrated/engine-native product)\n");
   console.error("   Available configs:");
@@ -474,7 +498,7 @@ if (!productId) {
   } catch { /* ignore */ }
   process.exit(1);
 }
-cole(productId, successOnly).catch(err => {
+cole(productId, successOnly, evidenceOnly).catch(err => {
   console.error(`\n❌ COLE fatal error: ${err}\n`);
   process.exit(1);
 });

@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 1
+// Declared products: 2
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -25,6 +25,14 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, TemporalDeclaratio
           "jurisdiction": "AU",
           "domain": "property_cgt",
           "label": "Settlement date"
+    },
+    "superannuation-tax-leaving-australia-confusion-2026": {
+          "kind": "unresolvable",
+          "reason": "departure_date_not_captured",
+          "detail": "The DASP six-month unclaimed-transfer point is measured from the customer's departure and visa cessation, which this product never collects. Its engine captures only which side of that threshold the customer is on (q4-time-since-departure: past_threshold | before_threshold | unsure_time), so no date can be computed for any customer.",
+          "jurisdiction": "AU",
+          "domain": "superannuation",
+          "label": "DASP unclaimed-transfer threshold"
     },
   },
 };

@@ -5,6 +5,53 @@ import type { ProductConfig } from "../types/product-config";
 // the page mounts EngineCalculator (engine JSON alongside), not a hand-written calculator.
 
 export const PRODUCT_CONFIG: ProductConfig = {
+  // ── TEMPORAL DECLARATION (TEMPORAL v1 · Step 6 addendum) ────────────────
+  // SUPERLEAVE, the other live product. Declared 2026-07-28 from ITS OWN input
+  // evidence — not from the topic, not from the shape survey (ruling 3.5).
+  //
+  // THE AUDIT, in full:
+  //   · engine.json (this is a MACHINE product — the page mounts EngineCalculator,
+  //     so engine.json IS the input surface) declares SIX questions, every one of
+  //     them option-valued: q1-scope, q2-topic, q3-visa-type,
+  //     q4-time-since-departure, q5-balance, q6-whm-mixed. No date input exists.
+  //   · 127 live decision_sessions carry 21 distinct answer keys plus 3
+  //     questionnaire keys. ZERO date-valued answers, on any key, ever.
+  //   · The nearest temporal signals are all BUCKETS: q4-time-since-departure is
+  //     {past_threshold | before_threshold | unsure_time}, and the sessions record
+  //     prose like "How urgent is this?" → "Within 6 months".
+  //
+  // So a REAL date exists — unclaimed super transfers to the ATO six months after
+  // departure + visa cessation, which is what q4 is asking which side of you are
+  // on — but it is anchored to a DEPARTURE date the product never collects. The
+  // product knows which side of the threshold the customer is on and nothing more.
+  // Deriving a date from that bucket would invent precision the customer never
+  // gave, exactly as it would for FRCGW. Recorded, not forced (6.1).
+  //
+  // EFFECT: resolve() → UNRESOLVABLE → 0 reminders. Unchanged behaviour; the
+  // silence is now declared, and the gate item can tick, so a SHIPPED product no
+  // longer sits permanently in AWAITING OPERATOR.
+  //
+  // NOT DECLARED AS A FIXED DEADLINE, deliberately: config.deadline below holds
+  // 31 Oct 2026 (the AU individual tax return due date). That is a plausible
+  // annual recurrence, but it is NOT what this product gates on — its own engine
+  // asks about the 6-month departure threshold — and adopting it here would be
+  // inferring a declaration from a hand-authored artefact, which 3.5 forbids. If
+  // 31 October IS the intended act-by date, the operator declares it at the gate
+  // as { kind: "deadline", rule: { source: "fixed", recurrence: "annual",
+  // month: 10, day: 31, timezone: "Australia/Sydney", shift: "next_business_day" } }
+  // — a recurrence rule, never the stored date.
+  temporal: {
+    kind:         "unresolvable",
+    reason:       "departure_date_not_captured",
+    detail:       "The DASP six-month unclaimed-transfer point is measured from the customer's " +
+                  "departure and visa cessation, which this product never collects. Its engine " +
+                  "captures only which side of that threshold the customer is on " +
+                  "(q4-time-since-departure: past_threshold | before_threshold | unsure_time), " +
+                  "so no date can be computed for any customer.",
+    jurisdiction: "AU",
+    domain:       "superannuation",
+    label:        "DASP unclaimed-transfer threshold",
+  },
   "id": "superannuation-tax-leaving-australia-confusion-2026",
   "name": "Superannuation Tax When Leaving Australia (DASP)",
   "site": "taxchecknow",
