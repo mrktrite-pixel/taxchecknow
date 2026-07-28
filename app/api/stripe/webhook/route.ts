@@ -6,7 +6,15 @@ import { getMarketContext } from "@/lib/email-context";
 import { getAssessmentFields } from "@/lib/assessment-fields";
 import { buildComposerInputs } from "@/lib/composer-inputs";
 import { generateAssessment } from "@/lib/assess-core";
-import { lookupDeadline } from "@/lib/product-deadlines";
+// TEMPORAL v1 Step 6.2 — the SCHEDULER's date now comes from the resolver over
+// the generated declaration registry. lookupDeadline() against the
+// hand-authored lib/product-deadlines.ts is RETIRED here and must not come
+// back: that file is a central list maintained apart from the products it
+// describes, which is how it came to hold dates that had already passed.
+// (lib/email-context.ts still reads it for the delivery-email BANNER — a
+// presentation concern outside Step 6's scope, flagged in the report.)
+import { resolve as resolveTemporal, schedulableDate } from "@/lib/temporal-resolver";
+import { lookupTemporal } from "@/lib/temporal-registry";
 
 // ── PRODUCT DELIVERY MAP — all 25 TaxCheckNow + 5 SuperTaxCheck ─────────────
 const DELIVERY_MAP: Record<string, {
@@ -259,8 +267,29 @@ async function queueReminders(
   decisionSessionId: string,
 ): Promise<void> {
   try {
-    const deadlineEntry = lookupDeadline("taxchecknow", delivery.productId);
-    if (!deadlineEntry) return;
+    // TEMPORAL v1 Step 6.2/6.3 — resolve the product's OWN declaration. There is
+    // no fallback: UNDECLARED, NONE, UNRESOLVABLE and EXPIRED all queue nothing.
+    // schedulableDate() returns non-null ONLY for a RESOLVED future date, so
+    // "silent unless positively resolved" is enforced by the resolver rather
+    // than by every caller remembering to check four statuses.
+    //
+    // `answers` is null here: the reminder batch is queued at purchase time from
+    // a product-level declaration. A user_supplied rule therefore resolves
+    // UNRESOLVABLE on this path — correct, because a per-customer date must be
+    // scheduled from that customer's session, not from the product. Wiring the
+    // session answers through is the follow-on to the calculator date-field work.
+    const declaration = lookupTemporal("taxchecknow", delivery.productId);
+    const resolution  = resolveTemporal(declaration, null, new Date());
+    const schedulable = schedulableDate(resolution);
+
+    if (!schedulable) {
+      console.log("[webhook] TEMPORAL: no schedulable date — 0 reminders queued", {
+        product: delivery.productId,
+        status:  resolution.status,
+        reason:  "reason" in resolution ? resolution.reason : undefined,
+      });
+      return;
+    }
 
     // Step 4 personalisation hook: link reminder rows to the decision_sessions
     // row when present so cron's send-emails can read the customer's verdict
@@ -271,15 +300,22 @@ async function queueReminders(
         ? decisionSessionId
         : null;
 
-    const deadline = new Date(deadlineEntry.date);
+    // Step 6.2 — the resolved CALENDAR date (YYYY-MM-DD in the declared zone).
+    // Parsed as UTC midnight so the offset arithmetic below is pure calendar
+    // maths: `new Date("2027-01-31")` is UTC-midnight by spec, whereas the old
+    // `new Date("…T23:59:59+10:00")` was an instant that could shift the derived
+    // trigger_date across a day boundary depending on the runtime's zone.
+    const deadline = new Date(`${schedulable.date}T00:00:00Z`);
     // TEMPORAL v1 Phase 1.1 — queue-time future guard. Never insert a reminder whose trigger
     // is already past at insert time. Checked PER OFFSET (d-30/d-7/d-1), not just the deadline,
     // so a d-30 whose window has closed is dropped even when d-1 is still future. This is what
     // sent d-30/d-7/d-1 "deadline" reminders for an already-passed FRCGW deadline.
+    // Still load-bearing under Step 6: the resolver guarantees the DEADLINE is future,
+    // but an individual d-30 offset can still land in the past.
     const todayStr = new Date().toISOString().split("T")[0];
     const allRows = REMINDER_DAYS.map(days => {
       const trigger = new Date(deadline);
-      trigger.setDate(trigger.getDate() - days);
+      trigger.setUTCDate(trigger.getUTCDate() - days);
       return {
         stripe_session_id:    stripeSessionId,
         product_key:          productKey,
@@ -299,7 +335,7 @@ async function queueReminders(
       if (r.trigger_date < todayStr) {
         console.warn("[webhook] TEMPORAL queue-guard: suppressed reminder (trigger already past)", {
           product:           delivery.productId,
-          resolved_deadline: deadlineEntry.date,
+          resolved_deadline: schedulable.date,
           offset_days:       r.days_before_deadline,
           trigger_date:      r.trigger_date,
           reason:            "trigger_date < today at insert",
@@ -310,8 +346,8 @@ async function queueReminders(
     });
 
     if (rows.length === 0) {
-      console.warn("[webhook] TEMPORAL queue-guard: ALL reminders suppressed (deadline already past) for",
-        customerEmail, delivery.productId, "deadline", deadlineEntry.date);
+      console.warn("[webhook] TEMPORAL queue-guard: ALL reminders suppressed (every offset already past) for",
+        customerEmail, delivery.productId, "deadline", schedulable.date);
       return;
     }
 

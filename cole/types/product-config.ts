@@ -1,5 +1,11 @@
 // ─── CALCULATOR INPUT TYPES (exported for generator use) ──────────────────────
 
+// TEMPORAL v1 Step 6.1 — the declaration vocabulary. Canonical in
+// cole-marketing/lib/temporal-types.ts, snapshotted to lib/ by
+// scripts/sync-cole-lib.mjs. Type-only import: cole/ is excluded from the app
+// tsconfig, so this never pulls generator code into the app bundle.
+import type { TemporalDeclaration } from "../../lib/temporal-types";
+
 export interface ButtonGroupInput {
   type: "buttonGroup";
   stateKey: string;
@@ -97,7 +103,14 @@ export interface ProductConfig {
     fileCount: number;
   };
 
-  // ─── DEADLINE ──────────────────────────────────────────────────────────
+  // ─── DEADLINE (PRESENTATION ONLY) ──────────────────────────────────────
+  // WARNING: `isoDate` here is a STORED DATE and is therefore wrong the day
+  // after it passes. It drives the gate-page countdown only, and the generated
+  // page already suppresses the countdown when it has elapsed
+  // (generate-gate-page.ts:81 `if (!DEADLINE_ISO) return null`, plus the
+  // expired-suppression log at :128). It is NOT, and must never again become,
+  // the input to anything that SCHEDULES an email — that is `temporal` below.
+  // Set isoDate to "" for any product whose date is not a fixed calendar date.
   deadline: {
     isoDate: string;
     display: string;
@@ -106,6 +119,19 @@ export interface ProductConfig {
     urgencyLabel: string;
     countdownLabel: string;
   };
+
+  // ─── TEMPORAL DECLARATION (TEMPORAL v1 · Step 6.1) ─────────────────────
+  // The product's own statement of its temporal behaviour, and the ONLY thing
+  // the email scheduler reads (via lib/temporal-resolver.ts).
+  //
+  // OPTIONAL BY TYPE, MANDATORY BY GATE. Making it required here would break
+  // every existing config at once and force a rushed, inferred declaration for
+  // 21 products — exactly what ruling 3.5 forbids. Instead the soverella gate
+  // item `temporal_declared` (Step 6.4) blocks any product from SHIPPING while
+  // it is absent, so each product declares as a by-product of work already
+  // happening. Absent here means UNDECLARED, which means SILENT (6.3) — never
+  // a fallback to config.deadline or to any other date.
+  temporal?: TemporalDeclaration;
 
   // ─── PAGE CONTENT ──────────────────────────────────────────────────────
   h1: string;

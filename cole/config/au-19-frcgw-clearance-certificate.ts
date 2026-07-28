@@ -1,11 +1,56 @@
 import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
+  // ── TEMPORAL DECLARATION (TEMPORAL v1 · Step 6.1/6.5) ───────────────────
+  // FRCGW is the first product to declare. Operator ruling, 2026-07-28.
+  //
+  // WHY `unresolvable` AND NOT `user_supplied`:
+  // The real deadline is the customer's SETTLEMENT date — a real date that
+  // genuinely exists. But this product never collects it. Its only settlement
+  // input is a four-way BUCKET (daysToSettlement: less_14 | 14_to_28 |
+  // 28_to_60 | over_60), and live sessions record prose ("How close is
+  // settlement?" → "Within a month"). A scan of the 400 most recent
+  // decision_sessions across ALL products found ZERO date-valued answers.
+  //
+  // Deriving a date from a bucket ("less_14" → now+14) would email a customer a
+  // deadline they never gave — manufactured precision, the same class of error
+  // as the stored date this step exists to kill. 6.1 forbids it: a real date
+  // that cannot be computed is RECORDED, never forced into a computable kind.
+  //
+  // EFFECT: resolve() → UNRESOLVABLE → 0 reminders queued, no deadline
+  // scheduling. Identical behaviour to today — but now BY DECLARATION rather
+  // than by absence from a hand-authored list. Silent on purpose, and provably so.
+  //
+  // TO MAKE THIS RESOLVABLE: add a real date input to the calculator, then
+  // re-declare as { kind: "deadline", rule: { source: "user_supplied",
+  // field: "settlementDate", offset: { days: -1 }, timezone:
+  // "Australia/Sydney", shift: "prev_business_day" } }. Dispatched separately.
+  temporal: {
+    kind:         "unresolvable",
+    reason:       "settlement_date_contingent_not_captured",
+    detail:       "Settlement is fixed by the buyer's contract and differs per customer. " +
+                  "The calculator captures only a bucketed proximity answer (daysToSettlement), " +
+                  "never a date, so no settlement date can be computed for any customer.",
+    jurisdiction: "AU",
+    domain:       "property_cgt",
+    label:        "Settlement date",
+  },
   id: "frcgw-clearance-certificate", name: "Foreign Resident CGT Withholding Clearance Certificate", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/frcgw-clearance-certificate", url: "https://taxchecknow.com/au/check/frcgw-clearance-certificate", apiRoute: "/api/rules/frcgw-clearance-certificate",
   authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments", legislation: "Taxation Administration Act 1953 Schedule 1 Subdivision 14-D (Foreign Resident Capital Gains Withholding) · Treasury Laws Amendment (Foreign Resident Capital Gains Withholding) Act 2024 (effective 1 January 2025) · Threshold reduced from $750,000 to $0 · Withholding rate increased from 12.5% to 15% · Applies to all property sales from 1 January 2025 onwards", lastVerified: "April 2026",
   tier1: { price: 67, name: "Your FRCGW Clearance Pack", tagline: "Know if your sale needs a clearance certificate — before settlement locks in 15% withholding", value: "Your exact withholding exposure on your sale price, certificate eligibility check, days-to-settlement countdown, and 4 accountant questions built for your situation.", cta: "Show My Withholding Exposure — $67 →", productKey: "au_67_frcgw_clearance_certificate", envVar: "STRIPE_AU_FRCGW_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your FRCGW Execution Pack", tagline: "Get the clearance certificate lodged correctly — before the buyer's solicitor withholds 15%", value: "Full pre-settlement execution plan, certificate application walkthrough, residency evidence checklist, settlement-day buyer instruction template, and dispute recovery path if the certificate misses the deadline.", cta: "Get My Execution Plan — $147 →", productKey: "au_147_frcgw_clearance_certificate", envVar: "STRIPE_AU_FRCGW_147", successPath: "plan", fileCount: 8 },
-  deadline: { isoDate: "2025-12-31T23:59:59.000+10:00", display: "Settlement Date (Critical)", short: "Settlement", description: "The ATO clearance certificate must be issued and provided to the buyer's solicitor BEFORE settlement. After settlement, withholding is locked in. Processing takes 1-4 weeks.", urgencyLabel: "CERTIFICATE MUST ARRIVE BEFORE SETTLEMENT", countdownLabel: "Countdown to your settlement — certificate delivery deadline" },
+  // TEMPORAL v1 Step 6 — isoDate NEUTRALISED (operator ruling, 2026-07-28).
+  // It held "2025-12-31T23:59:59.000+10:00": a hardcoded date labelled
+  // "Settlement Date" that had been SEVEN MONTHS stale, on a live product.
+  // FRCGW's settlement date is set per-customer by the buyer's contract — there
+  // is no fixed calendar date this field could ever correctly hold.
+  // Empty is the generator-supported "no countdown" value: generate-gate-page.ts
+  // guards `if (!DEADLINE_ISO) return null`, so the countdown block is omitted.
+  // No rendered change — daysToDeadline() already returned null for the elapsed
+  // date, so the countdown was suppressed on the live page either way. What
+  // changes is that the config no longer ASSERTS a false date.
+  // The scheduling truth now lives in `temporal` below; see lib/temporal-registry.ts.
+  deadline: { isoDate: "", display: "Settlement Date (Critical)", short: "Settlement", description: "The ATO clearance certificate must be issued and provided to the buyer's solicitor BEFORE settlement. After settlement, withholding is locked in. Processing takes 1-4 weeks.", urgencyLabel: "CERTIFICATE MUST ARRIVE BEFORE SETTLEMENT", countdownLabel: "Countdown to your settlement — certificate delivery deadline" },
   h1: "Selling Australian Property? Since 1 Jan 2025 the ATO Withholds 15% at Settlement — Even If You Owe Nothing.",
   metaTitle: "FRCGW Clearance Certificate — 15% Withholding on Property Sales (1 Jan 2025) | TaxCheckNow",
   metaDescription: "From 1 January 2025, the ATO withholds 15% on every Australian property sale unless the seller produces a clearance certificate. Threshold changed from $750k to $0. Rate changed from 12.5% to 15%. On a $900k sale, that's $135,000 withheld. Run your check in 2 minutes.",

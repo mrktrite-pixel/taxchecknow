@@ -9,9 +9,15 @@
     "strict": false,
     "resolveJsonModule": true,
     "outDir": "./dist",
-    "rootDir": ".",
+    // TEMPORAL v1 Step 6: rootDir widened from "." to ".." so cole/ can TYPE-IMPORT the
+    // canonical lib/temporal-types.ts (product-config.ts declares the `temporal` field).
+    // Inert in practice — cole runs via ts-node (see CLAUDE.md build sequence), nothing emits
+    // from this config, and cole/dist neither exists nor is tracked. The alternative was
+    // duplicating the declaration types inside cole/ — a second source of truth, which is the
+    // exact failure mode this step exists to remove.
+    "rootDir": "..",
     "baseUrl": "."
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "../lib/temporal-types.ts"],
   "exclude": ["node_modules", "dist"]
 }

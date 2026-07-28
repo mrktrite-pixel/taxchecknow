@@ -25,6 +25,7 @@ import { generateSuccessAssess, getSuccessAssessPath,
          generateSuccessPlan,   getSuccessPlanPath   } from "../generators/generate-success-pages";
 import { generateAllProductFiles                      } from "../generators/generate-product-files";
 import { generateRulesRoute,    getRulesRoutePath     } from "../generators/generate-rules-route";
+import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
 import type { ProductConfig } from "../types/product-config";
 import { createClient } from "@supabase/supabase-js";
 import type { GeoBake } from "../generators/generate-gate-page";
@@ -153,6 +154,11 @@ async function cole(productId: string, successOnly = false) {
   if (successOnly) {
     console.log(`   → --success-only: regenerating success pages for ${config.id} (calculator/gate untouched)\n`);
     emitSuccessPages(config, filesGenerated, errors);
+    // TEMPORAL v1 Step 6 — the registry is re-emitted on --success-only too. A
+    // migration/update emit is exactly when a product's declaration is added or
+    // changed, so skipping it here would let the registry go stale precisely on
+    // the path the gate is meant to catch.
+    emitTemporalRegistry(filesGenerated, errors);
     const ok = errors.length === 0;
     console.log(`\n${"─".repeat(60)}`);
     console.log(ok
@@ -229,6 +235,12 @@ async function cole(productId: string, successOnly = false) {
     errors.push(`Rules route: ${err}`);
     console.error(`   ❌ Rules route: ${err}`);
   }
+  // ── STEP 6b: Temporal registry (TEMPORAL v1 Step 6) ───────────────────────
+  // Re-derived from every config on each build, so a product that gains or
+  // changes a declaration lands in the runtime registry as a by-product of the
+  // build already happening — never as a separate hand-edit.
+  emitTemporalRegistry(filesGenerated, errors);
+
   // ── STEP 7: Log to Supabase ───────────────────────────────────────────────
   const duration = Date.now() - startTime;
   const success  = errors.length === 0;
@@ -309,6 +321,28 @@ async function cole(productId: string, successOnly = false) {
 // update/migration emit (--success-only) regenerates success pages IDENTICALLY, never a partial
 // transplant. buildSuccessPage() carries the R-A2/R-A3 hard-rule tripwire, so a premature regen
 // throws here (recorded as an error) until the template is upgraded + COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
+// TEMPORAL v1 Step 6 — re-emit lib/temporal-registry.ts from ALL configs.
+// Whole-registry rather than per-product because the file is a single map: a
+// per-product patch would need to parse and splice the existing output, and a
+// full re-derive from the configs cannot drift from them.
+// Non-fatal: a registry failure is recorded but must not fail a product build,
+// or a temporal problem could block an unrelated emit. The gate is what stops
+// an undeclared product shipping — this generator only reflects declarations.
+function emitTemporalRegistry(filesGenerated: string[], errors: string[]): void {
+  try {
+    const entries = generateTemporalRegistry(CONFIG_DIR, path.dirname(APP_ROOT));
+    const p = getTemporalRegistryPath(path.dirname(APP_ROOT));
+    filesGenerated.push(p);
+    console.log(`   ✅ Temporal registry (${entries.length} declared product${entries.length === 1 ? "" : "s"})\n      → ${relativePath(p)}`);
+    for (const e of entries) {
+      console.log(`      · ${e.site}/${e.productId} → ${e.temporal.kind}`);
+    }
+  } catch (err) {
+    errors.push(`Temporal registry: ${err}`);
+    console.error(`   ❌ Temporal registry: ${err}`);
+  }
+}
+
 function emitSuccessPages(config: ProductConfig, filesGenerated: string[], errors: string[]): void {
   try {
     const p = getSuccessAssessPath(config, APP_ROOT);

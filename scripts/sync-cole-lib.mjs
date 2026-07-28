@@ -42,9 +42,15 @@ const MANIFEST_PATH      = resolve(TAXCHECKNOW_LIB, ".cole-lib-manifest.json");
 const FILES = [
   "email-types.ts",
   "email-product-copy.ts",
+  // TEMPORAL v1 Step 6.2 — RETIRED as the scheduler's source. Still synced because
+  // lib/email-context.ts reads it for the delivery-email deadline BANNER, which is
+  // outside Step 6's scope. Nothing that SCHEDULES an email reads it any more.
   "product-deadlines.ts",
   "email-context.ts",
   "cole-email.ts",
+  // TEMPORAL v1 Step 6 — the declaration vocabulary + the one resolver.
+  "temporal-types.ts",
+  "temporal-resolver.ts",
 ];
 
 const SYNC_HEADER_PREFIX = "// AUTO-SYNCED FROM cole-marketing/lib/";
