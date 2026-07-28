@@ -1,4 +1,4 @@
-// ── LEAD CAPTURE ENDPOINT ────────────────────────────────────────────────
+﻿// â”€â”€ LEAD CAPTURE ENDPOINT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Free calculator email capture:
 //   1. Send T2 email immediately (Resend) with result summary + 3 questions
 //   2. Queue S2 nurture sequence (d3, d7, d14) into email_queue table
@@ -9,6 +9,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLeadMeta } from "@/lib/lead-product-meta";
+import { nurtureTracksFor } from "@/lib/temporal-registry";
+import { nurtureEmailType } from "@/lib/nurture-types";
 
 const FROM_ADDRESS = "TaxCheckNow <hello@taxchecknow.com>";
 const SITE_ORIGIN = "https://www.taxchecknow.com";
@@ -19,10 +21,10 @@ interface LeadBody {
   country_code?:  string;
   site?:           string;
   session_id?:      string;
-  verdict_status?:   string;   // optional — passed by newer calculators for richer T2 body
+  verdict_status?:   string;   // optional â€” passed by newer calculators for richer T2 body
 }
 
-// ── HTML EMAIL TEMPLATE ──────────────────────────────────────────────────
+// â”€â”€ HTML EMAIL TEMPLATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function buildT2Html(
   productName: string,
   productUrl:  string,
@@ -32,14 +34,14 @@ function buildT2Html(
   fearNumber:  string,
   sessionId:   string | undefined,
 ): string {
-  // CTA URL — append session_id when present so calculator hydration fires
-  // (Step 2 of save-box β). Customer clicks email CTA → lands on calculator
+  // CTA URL â€” append session_id when present so calculator hydration fires
+  // (Step 2 of save-box Î²). Customer clicks email CTA â†’ lands on calculator
   // with their inputs preserved + verdict already shown.
   const cta = sessionId
     ? `${SITE_ORIGIN}${productUrl}?session_id=${encodeURIComponent(sessionId)}`
     : `${SITE_ORIGIN}${productUrl}`;
 
-  // Personalised verdict block — combines verdict status (from calculator)
+  // Personalised verdict block â€” combines verdict status (from calculator)
   // with fearNumber (per-product from LeadProductMeta). Replaces the empty
   // verdict block that existed pre-Step-3 (when calculator wasn't sending
   // verdict_status at all).
@@ -56,7 +58,7 @@ function buildT2Html(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>${productName} — your result saved</title>
+  <title>${productName} â€” your result saved</title>
 </head>
 <body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;padding:40px 20px;">
@@ -64,7 +66,7 @@ function buildT2Html(
   <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;max-width:600px;">
 
     <tr><td style="background:#0a0a0a;padding:28px 36px;">
-      <p style="margin:0;font-family:monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6b7280;">TaxCheckNow · ${authority}</p>
+      <p style="margin:0;font-family:monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6b7280;">TaxCheckNow Â· ${authority}</p>
       <h2 style="margin:10px 0 0;font-size:22px;font-weight:700;color:#fff;line-height:1.3;">Your result is saved</h2>
       <p style="margin:8px 0 0;font-size:13px;color:#9ca3af;">${productName}</p>
     </td></tr>
@@ -85,19 +87,19 @@ function buildT2Html(
       <!-- CTA BUTTON -->
       <table cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
         <tr><td style="background:#0a0a0a;border-radius:12px;">
-          <a href="${cta}" style="display:block;padding:14px 28px;color:#fff;font-size:14px;font-weight:700;text-decoration:none;">Get the full plan →</a>
+          <a href="${cta}" style="display:block;padding:14px 28px;color:#fff;font-size:14px;font-weight:700;text-decoration:none;">Get the full plan â†’</a>
         </td></tr>
       </table>
 
-      <p style="margin:0;font-size:12px;color:#6b7280;line-height:1.6;">Forward this to your accountant — the 3 questions above are the right ones to raise with them about this issue.</p>
+      <p style="margin:0;font-size:12px;color:#6b7280;line-height:1.6;">Forward this to your accountant â€” the 3 questions above are the right ones to raise with them about this issue.</p>
 
     </td></tr>
 
     <tr><td style="background:#f9fafb;padding:20px 36px;border-top:1px solid #e5e7eb;text-align:center;">
       <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.6;">
-        TaxCheckNow · taxchecknow.com<br/>
-        General information only — not financial, tax, or legal advice. Always consult a qualified adviser.<br/>
-        <a href="${SITE_ORIGIN}/privacy" style="color:#9ca3af;">Privacy</a> ·
+        TaxCheckNow Â· taxchecknow.com<br/>
+        General information only â€” not financial, tax, or legal advice. Always consult a qualified adviser.<br/>
+        <a href="${SITE_ORIGIN}/privacy" style="color:#9ca3af;">Privacy</a> Â·
         <a href="${SITE_ORIGIN}/terms" style="color:#9ca3af;">Terms</a>
       </p>
     </td></tr>
@@ -109,7 +111,7 @@ function buildT2Html(
 </html>`;
 }
 
-// ── SEND T2 EMAIL VIA RESEND ─────────────────────────────────────────────
+// â”€â”€ SEND T2 EMAIL VIA RESEND â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function sendT2Email(
   to:          string,
   productName: string,
@@ -133,7 +135,7 @@ async function sendT2Email(
       body: JSON.stringify({
         from:    FROM_ADDRESS,
         to:      [to],
-        subject: `Your ${productName} result — saved`,
+        subject: `Your ${productName} result â€” saved`,
         html:    buildT2Html(productName, productUrl, authority, verdict, questions, fearNumber, sessionId),
       }),
     });
@@ -150,18 +152,43 @@ async function sendT2Email(
   }
 }
 
-// ── QUEUE S2 NURTURE SEQUENCE ────────────────────────────────────────────
+// â”€â”€ QUEUE S2 NURTURE SEQUENCE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function addDays(days: number): string {
   const d = new Date();
   d.setDate(d.getDate() + days);
   return d.toISOString().split("T")[0];
 }
 
+// TEMPORAL v1 Step 7.3/7.4 â€” the cadence and the anchor now come from the
+// PRODUCT'S OWN declaration, not from a hardcoded list in this file.
+//
+// SUBJECT LINES stay here, keyed by milestone, because they are COPY and copy is
+// deliberately separate work. A milestone with no subject cannot be declared â€”
+// the emit-time validator rejects it against NURTURE_MILESTONES_WITH_COPY â€” so
+// this map and that list must stay in step.
+// The registry is keyed by config.id, which is KEBAB ("frcgw-clearance-certificate").
+// `source` arrives from the calculator as a snake_case product key, sometimes with a
+// Stripe-style "<country>_<tier>_" prefix. Normalise the same way resolveProduct does
+// elsewhere, so a declared product is actually found rather than silently missed â€”
+// a lookup miss here means no nurture at all, which must not happen by accident.
+function resolveProductId(source: string | undefined): string | null {
+  if (!source) return null;
+  const stripped = source.replace(/^(au|uk|us|nz|can|nomad|supertax)_(67|147)_/, "");
+  return stripped.replace(/_/g, "-");
+}
+
+const NURTURE_SUBJECTS: Record<number, string> = {
+  3:  "What people in your position usually do",
+  7:  "One week on â€” did you act on this?",
+  14: "Did you sort this out?",
+};
+
 async function queueNurture(
   supabase:          any,
   customerEmail:     string,
   productKey:        string,
   decisionSessionId: string | undefined,
+  productId:         string | null,
 ): Promise<void> {
   // Step 4 personalisation hook: if the calculator passed a real session_id
   // (not a fallback_ stub, not undefined), link the nurture rows back to the
@@ -173,20 +200,31 @@ async function queueNurture(
       ? decisionSessionId
       : null;
 
-  const rows = [
-    { days: 3,  subject: "What people in your position usually do", email_type: "nurture_d3"  },
-    { days: 7,  subject: "One week on — did you act on this?",       email_type: "nurture_d7"  },
-    { days: 14, subject: "Did you sort this out?",                    email_type: "nurture_d14" },
-  ].map(r => ({
-    customer_email:      customerEmail,
-    product_key:         productKey,
-    decision_session_id: linkedSessionId,
-    trigger_date:        addDays(r.days),
-    subject:             r.subject,
-    email_type:          r.email_type,
-    status:              "queued",
-    created_at:          new Date().toISOString(),
-  }));
+  // Step 7.1 / amendment â€” NO GLOBAL DEFAULT, and selection is PER TRACK.
+  // This path owns the "lead" anchor and asks for exactly those tracks, so a
+  // purchase-anchored track declared on the same product is never queued here.
+  // The filter is the guarantee: there is no branch that can reach the other
+  // anchor's tracks.
+  const tracks = productId ? nurtureTracksFor("taxchecknow", productId, "lead") : [];
+  if (tracks.length === 0) {
+    console.log("[leads] no lead-anchored nurture track â€” 0 nurture rows queued", {
+      product_key: productKey, product_id: productId ?? "(unresolved)",
+    });
+    return;
+  }
+
+  const rows = tracks.flatMap(track =>
+    track.milestones.map(days => ({
+      customer_email:      customerEmail,
+      product_key:         productKey,
+      decision_session_id: linkedSessionId,
+      trigger_date:        addDays(days),
+      subject:             NURTURE_SUBJECTS[days] ?? `Your ${days}-day check-in`,
+      email_type:          nurtureEmailType(days),
+      status:              "queued",
+      created_at:          new Date().toISOString(),
+    })),
+  );
 
   try {
     const { error } = await supabase.from("email_queue").insert(rows);
@@ -196,7 +234,7 @@ async function queueNurture(
   }
 }
 
-// ── MAIN HANDLER ─────────────────────────────────────────────────────────
+// â”€â”€ MAIN HANDLER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export async function POST(req: Request) {
   try {
     const body: LeadBody = await req.json();
@@ -221,7 +259,7 @@ export async function POST(req: Request) {
       session_id,
     );
 
-    // Supabase operations — non-fatal if credentials missing
+    // Supabase operations â€” non-fatal if credentials missing
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -240,24 +278,25 @@ export async function POST(req: Request) {
         await supabase.from("email_log").insert({
           recipient_email: email,
           email_type:      "t2_lead_capture",
-          subject:         `Your ${meta.name} result — saved`,
+          subject:         `Your ${meta.name} result â€” saved`,
           status:          emailResult.success ? "sent" : "failed",
           product_key:     source ?? null,
           resend_id:       emailResult.resendId ?? null,
           error_message:   emailResult.error   ?? null,
-          // Phase 1.3 — stamp sent_at so this send counts toward the cron's per-recipient 24h cap.
+          // Phase 1.3 â€” stamp sent_at so this send counts toward the cron's per-recipient 24h cap.
           sent_at:         emailResult.success ? new Date().toISOString() : null,
         });
       } catch { /* non-fatal */ }
 
-      // Queue the S2 nurture sequence (d3, d7, d14)
-      await queueNurture(supabase, email, source ?? "unknown", session_id);
+      // Queue the declared nurture track (Step 7.3 â€” cadence from the product).
+      await queueNurture(supabase, email, source ?? "unknown", session_id, resolveProductId(source));
     }
 
-    // Always return 200 — never block the user experience
+    // Always return 200 â€” never block the user experience
     return NextResponse.json({ success: true, emailed: emailResult.success });
   } catch (err) {
     console.error("[leads] error:", err);
     return NextResponse.json({ success: true });
   }
 }
+

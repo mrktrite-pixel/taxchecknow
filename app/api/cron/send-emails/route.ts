@@ -16,7 +16,10 @@
 
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getEmailTemplate, type EmailType, type TemplateData } from "@/lib/email-templates/index";
+import {
+  getNurtureTemplate, getReminderTemplate, isNurtureType, isReminderType,
+  type EmailType, type BaseTemplateData,
+} from "@/lib/email-templates/index";
 import { LEAD_PRODUCT_META } from "@/lib/lead-product-meta";
 import {
   newRunId, logRunOutcome, logEmailEvent, recordCronRun, zeroCounts,
@@ -441,11 +444,17 @@ export async function GET(request: Request) {
     const fearNumber = leadMeta?.fearNumber || undefined;
     const authority  = leadMeta?.authority  || undefined;
 
-    const data: TemplateData = {
+    // TEMPORAL v1 Step 7.2 — the shared fields ONLY. Note what is absent:
+    // deadlineDate is NOT built here any more. It used to be
+    // `formatDeadlineDate(row.trigger_date)` for EVERY type, and for a nurture
+    // row trigger_date is the SEND date (anchor + 3/7/14), not a deadline — so
+    // the old code was one template edit away from printing the send date as a
+    // statutory deadline. The reminder branch below derives its date explicitly;
+    // the nurture branch never has one to render.
+    const base: BaseTemplateData = {
       customerName:  row.customer_name ?? undefined,
       productName:   product.name,
       productUrl:    product.url,
-      deadlineDate:  formatDeadlineDate(row.trigger_date),
       verdict,
       fearNumber,
       authority,
@@ -457,7 +466,33 @@ export async function GET(request: Request) {
     // string, not an actual send failure).
     const personalisationDegraded = row.decision_session_id && !verdict;
 
-    const tpl = getEmailTemplate(emailType, data);
+    // Step 7.2 — the branch IS the separation. Two doors, and only the reminder
+    // door is handed a date. A reminder row's date comes from its own
+    // trigger_date + days_before_deadline (the deadline it was queued against),
+    // which is a real deadline; a nurture row simply has none.
+    let tpl;
+    if (isNurtureType(emailType)) {
+      tpl = getNurtureTemplate(emailType, base);
+    } else if (isReminderType(emailType)) {
+      const deadlineIso = row.days_before_deadline != null
+        ? addDaysIso(row.trigger_date, row.days_before_deadline)
+        : row.trigger_date;
+      tpl = getReminderTemplate(emailType, {
+        ...base,
+        deadlineDate: formatDeadlineDate(deadlineIso) ?? deadlineIso,
+      });
+    } else {
+      // Unreachable: resolveEmailType only returns VALID_EMAIL_TYPES. Skip rather
+      // than send something unclassified — an email we cannot categorise into a
+      // lane is exactly what should never go out.
+      skipped++;
+      await logEmailEvent(sb, {
+        runId, recipientEmail: row.customer_email, emailType: String(emailType),
+        status: "skipped", productKey: row.product_key ?? null, queueRowId: row.id,
+        errorMessage: "unclassified_email_type",
+      });
+      continue;
+    }
     const result = await sendViaResend(row.customer_email, tpl.subject, tpl.html, resendKey);
 
     // 3c. Update queue row

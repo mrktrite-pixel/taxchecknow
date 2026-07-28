@@ -25,6 +25,7 @@ import { generateSuccessAssess, getSuccessAssessPath,
          generateSuccessPlan,   getSuccessPlanPath   } from "../generators/generate-success-pages";
 import { generateAllProductFiles                      } from "../generators/generate-product-files";
 import { generateRulesRoute,    getRulesRoutePath     } from "../generators/generate-rules-route";
+import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
 import type { ProductConfig } from "../types/product-config";
 import { createClient } from "@supabase/supabase-js";
 import type { GeoBake } from "../generators/generate-gate-page";
@@ -91,7 +92,7 @@ function toPascal(str: string): string {
 }
 
 // ── MAIN ──────────────────────────────────────────────────────────────────────
-async function cole(productId: string, successOnly = false) {
+async function cole(productId: string, successOnly = false, evidenceOnly = false) {
   const startTime      = Date.now();
   const filesGenerated: string[] = [];
   const errors:         string[] = [];
@@ -150,9 +151,38 @@ async function cole(productId: string, successOnly = false) {
   // generator the new build uses, so a migrated product's deliverable is never left legacy.
   // Runs ONLY success pages (not gate/calculator/files) so it cannot clobber the engine-native
   // calculator or gate. Gated by the R-A2/R-A3 tripwire inside buildSuccessPage().
+  // TEMPORAL v1 Step 6 — EVIDENCE-ONLY. Re-derives the temporal registry and writes the gate
+  // evidence WITHOUT regenerating a single page.
+  //
+  // Why this mode exists: declaring a product should not require re-emitting it. The
+  // --success-only path is tripwired (buildSuccessPage throws unless
+  // COLE_SUCCESS_TEMPLATE_RA2_RA3=1) and, for a product whose success pages predate the Phase 0
+  // countdown block, regeneration would ALSO introduce a countdown keyed to config.deadline.
+  // Neither belongs in "record this product's declaration". Evidence-only touches no page,
+  // trips no wire, and changes no rendered output.
+  if (evidenceOnly) {
+    console.log(`   → --evidence-only: temporal registry + gate evidence for ${config.id} (NO page regenerated)\n`);
+    emitTemporalRegistry(filesGenerated, errors);
+    await writeTemporalEvidence(config, errors);
+    const ok = errors.length === 0;
+    console.log(`\n${"─".repeat(60)}`);
+    console.log(ok ? `\n✅ Temporal evidence recorded: ${productId}` : `\n⚠️  Completed with ${errors.length} error(s):`);
+    errors.forEach(e => console.log(`   • ${e}`));
+    if (!ok) process.exitCode = 1;
+    return;
+  }
+
   if (successOnly) {
     console.log(`   → --success-only: regenerating success pages for ${config.id} (calculator/gate untouched)\n`);
     emitSuccessPages(config, filesGenerated, errors);
+    // TEMPORAL v1 Step 6 — the registry is re-emitted on --success-only too. A
+    // migration/update emit is exactly when a product's declaration is added or
+    // changed, so skipping it here would let the registry go stale precisely on
+    // the path the gate is meant to catch. Same for the gate evidence: the
+    // UPDATE gate is the arm that clears the undeclared backlog, and --success-only
+    // is the emit path a PANELBEAT update actually uses.
+    emitTemporalRegistry(filesGenerated, errors);
+    await writeTemporalEvidence(config, errors);
     const ok = errors.length === 0;
     console.log(`\n${"─".repeat(60)}`);
     console.log(ok
@@ -229,6 +259,13 @@ async function cole(productId: string, successOnly = false) {
     errors.push(`Rules route: ${err}`);
     console.error(`   ❌ Rules route: ${err}`);
   }
+  // ── STEP 6b: Temporal registry (TEMPORAL v1 Step 6) ───────────────────────
+  // Re-derived from every config on each build, so a product that gains or
+  // changes a declaration lands in the runtime registry as a by-product of the
+  // build already happening — never as a separate hand-edit.
+  emitTemporalRegistry(filesGenerated, errors);
+  await writeTemporalEvidence(config, errors);
+
   // ── STEP 7: Log to Supabase ───────────────────────────────────────────────
   const duration = Date.now() - startTime;
   const success  = errors.length === 0;
@@ -309,6 +346,111 @@ async function cole(productId: string, successOnly = false) {
 // update/migration emit (--success-only) regenerates success pages IDENTICALLY, never a partial
 // transplant. buildSuccessPage() carries the R-A2/R-A3 hard-rule tripwire, so a premature regen
 // throws here (recorded as an error) until the template is upgraded + COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
+// TEMPORAL v1 Step 6 — re-emit lib/temporal-registry.ts from ALL configs.
+// Whole-registry rather than per-product because the file is a single map: a
+// per-product patch would need to parse and splice the existing output, and a
+// full re-derive from the configs cannot drift from them.
+// Non-fatal: a registry failure is recorded but must not fail a product build,
+// or a temporal problem could block an unrelated emit. The gate is what stops
+// an undeclared product shipping — this generator only reflects declarations.
+function emitTemporalRegistry(filesGenerated: string[], errors: string[]): void {
+  try {
+    const entries = generateTemporalRegistry(CONFIG_DIR, path.dirname(APP_ROOT));
+    const p = getTemporalRegistryPath(path.dirname(APP_ROOT));
+    filesGenerated.push(p);
+    console.log(`   ✅ Temporal registry (${entries.length} declared product${entries.length === 1 ? "" : "s"})\n      → ${relativePath(p)}`);
+    for (const e of entries) {
+      console.log(`      · ${e.site}/${e.productId} → ${e.temporal.kind}`);
+    }
+  } catch (err) {
+    errors.push(`Temporal registry: ${err}`);
+    console.error(`   ❌ Temporal registry: ${err}`);
+  }
+}
+
+// TEMPORAL v1 Step 6.4 / R3 — PERSIST THE DECLARATION AS GATE EVIDENCE.
+// This is the cross-repo bridge from 6.6: the declaration is authored in the
+// product's config here, and the soverella gate auto-ticks `temporal_declared`
+// from what this writes. soverella cannot read this repo's files; the shared
+// Supabase project is the only thing both sides can see.
+//
+// Writes TWO places, per the R3 ruling:
+//   · build_jobs.temporal_declaration (jsonb) — the full declaration, alongside
+//     research_output, exactly how law_correctness evidence already flows. The
+//     gate is keyed by build_job_id, so this is what it reads.
+//   · products.temporal_kind (text) — the resolved KIND only, mirrored for the
+//     catalogue. NOT products.deadline: that column holds stored dates for 5 UK
+//     rows and is the anti-pattern 6.1 forbids — it is reported as a separate
+//     defect and deliberately left untouched.
+//
+// JOIN KEY is products.slug === config.slug (verified: "au/check/frcgw-clearance-
+// certificate" matches exactly). Deliberately NOT products.config_path, which is
+// NULL on every row, and NOT products.product_id, which holds the config FILENAME
+// stem ("au-19-frcgw-clearance-certificate") rather than config.id.
+//
+// Non-fatal throughout: evidence is an observability/gating concern and must
+// never fail a product build. A miss is logged loudly and leaves the gate item
+// unticked — which correctly blocks the ship rather than silently passing it.
+async function writeTemporalEvidence(config: ProductConfig, errors: string[]): Promise<void> {
+  if (!config.temporal) {
+    console.log(`   ⚠️  Temporal evidence SKIPPED — ${config.id} has no \`temporal\` declaration.`);
+    console.log(`      The soverella gate item \`temporal_declared\` will stay UNTICKED and block the ship (Step 6.4).`);
+    return;
+  }
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    console.log(`   ⚠️  Temporal evidence SKIPPED — no Supabase env; the gate item will stay unticked.`);
+    return;
+  }
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY) as any;
+
+    const { data: products, error: pErr } = await sb
+      .from("products").select("id, slug, site")
+      .eq("site", config.site).eq("slug", config.slug).limit(1);
+    if (pErr) throw new Error(`products lookup: ${pErr.message}`);
+    const product = (products ?? [])[0];
+    if (!product) {
+      console.log(`   ⚠️  Temporal evidence — no products row for ${config.site}/${config.slug}; nothing to attach to.`);
+      return;
+    }
+
+    // Mirror the KIND for the catalogue.
+    const { error: mErr } = await sb.from("products")
+      .update({ temporal_kind: config.temporal.kind }).eq("id", product.id);
+    if (mErr) throw new Error(`products.temporal_kind: ${mErr.message}`);
+
+    // Attach the full declaration to the build job the operator is gating.
+    // RULE: the most recently updated build_job for this product. Today every
+    // product has exactly one, so this is unambiguous; ordering explicitly keeps
+    // it deterministic if that ever stops being true. A product with NO build
+    // job (hand-built, never through the queen) simply gets no evidence — its
+    // gate item stays unticked, which is the correct, safe outcome.
+    const { data: jobs, error: jErr } = await sb
+      .from("build_jobs").select("id, build_state")
+      .eq("product_id", product.id).order("updated_at", { ascending: false }).limit(1);
+    if (jErr) throw new Error(`build_jobs lookup: ${jErr.message}`);
+    const job = (jobs ?? [])[0];
+    if (!job) {
+      console.log(`   ⚠️  Temporal evidence — products.temporal_kind set, but no build_job for ${config.slug} to attach the declaration to.`);
+      return;
+    }
+
+    const { error: bErr } = await sb.from("build_jobs")
+      .update({ temporal_declaration: config.temporal }).eq("id", job.id);
+    if (bErr) throw new Error(`build_jobs.temporal_declaration: ${bErr.message}`);
+
+    console.log(`   ✅ Temporal evidence written — kind "${config.temporal.kind}"`);
+    console.log(`      products.temporal_kind → ${product.id}`);
+    console.log(`      build_jobs.temporal_declaration → ${job.id} (${job.build_state})`);
+  } catch (err) {
+    // Recorded, not thrown: see the non-fatal note above.
+    errors.push(`Temporal evidence: ${err}`);
+    console.error(`   ❌ Temporal evidence: ${err}`);
+    console.error(`      Has the Step 6 DDL been run? (build_jobs.temporal_declaration, products.temporal_kind)`);
+  }
+}
+
 function emitSuccessPages(config: ProductConfig, filesGenerated: string[], errors: string[]): void {
   try {
     const p = getSuccessAssessPath(config, APP_ROOT);
@@ -339,10 +481,13 @@ function relativePath(absolutePath: string): string {
 // ── ENTRY POINT ───────────────────────────────────────────────────────────────
 const args        = process.argv.slice(2);
 const successOnly  = args.includes("--success-only");
+const evidenceOnly = args.includes("--evidence-only");   // TEMPORAL v1 Step 6
 const productId    = args.find(a => !a.startsWith("--"));
 if (!productId) {
   console.error("\n❌ Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id] [--success-only]");
   console.error("   Full build:    cole-generate.ts uk-03");
+  console.error("   Evidence only: cole-generate.ts au-19-frcgw-clearance-certificate --evidence-only");
+  console.error("                  (temporal registry + gate evidence ONLY — regenerates NO page)");
   console.error("   Update emit:   cole-generate.ts au-19-frcgw-clearance-certificate --success-only");
   console.error("                  (regenerates ONLY the success pages — for a migrated/engine-native product)\n");
   console.error("   Available configs:");
@@ -353,7 +498,7 @@ if (!productId) {
   } catch { /* ignore */ }
   process.exit(1);
 }
-cole(productId, successOnly).catch(err => {
+cole(productId, successOnly, evidenceOnly).catch(err => {
   console.error(`\n❌ COLE fatal error: ${err}\n`);
   process.exit(1);
 });
