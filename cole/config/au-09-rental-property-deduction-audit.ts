@@ -1,5 +1,17 @@
 import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
+  // ── NURTURE DECLARATION (TEMPORAL v1 · Step 7) ──────────────────────────
+  // This product's EXISTING behaviour, written down. Its calculator already
+  // POSTs to /api/leads with a source that resolves to this config id, and
+  // /api/leads queued [3,7,14] for any lead save before Step 7 gated it on a
+  // declaration. Declaring it restores exactly that — nothing new, nothing
+  // inferred from the topic.
+  //
+  // NURTURE ONLY. `temporal` is deliberately NOT declared here: that is a gate
+  // decision made per product at its own rebuild, from its own build evidence
+  // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
+  // which is the correct state until someone rules on it.
+  nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
   id: "rental-property-deduction-audit", name: "Rental Property Deduction Audit", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/rental-property-deduction-audit", url: "https://taxchecknow.com/au/check/rental-property-deduction-audit", apiRoute: "/api/rules/rental-property-deduction-audit",
   authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Rental property deductions", legislation: "Income Tax Assessment Act 1997 — rental property income and deductions", lastVerified: "April 2026",

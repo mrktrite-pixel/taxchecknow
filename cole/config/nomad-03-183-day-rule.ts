@@ -1,5 +1,17 @@
 import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
+  // ── NURTURE DECLARATION (TEMPORAL v1 · Step 7) ──────────────────────────
+  // This product's EXISTING behaviour, written down. Its calculator already
+  // POSTs to /api/leads with a source that resolves to this config id, and
+  // /api/leads queued [3,7,14] for any lead save before Step 7 gated it on a
+  // declaration. Declaring it restores exactly that — nothing new, nothing
+  // inferred from the topic.
+  //
+  // NURTURE ONLY. `temporal` is deliberately NOT declared here: that is a gate
+  // decision made per product at its own rebuild, from its own build evidence
+  // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
+  // which is the correct state until someone rules on it.
+  nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
   id: "day-183-rule", name: "183-Day Rule Reality Check", site: "taxchecknow", country: "global", market: "Global (cross-border residency tests)", language: "en", currency: "USD",
   slug: "nomad/check/183-day-rule", url: "https://taxchecknow.com/nomad/check/183-day-rule", apiRoute: "/api/rules/day-183-rule",
   authority: "National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention", authorityUrl: "https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm", legalAnchor: "UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)", legislation: "Residency tests are country-specific: UK applies Statutory Residence Test (Finance Act 2013 Schedule 45) with automatic tests and sufficient ties; Australia applies resides test plus domicile and 183-day statutory tests (ITAA 1936 s6(1)); New Zealand applies 183-day presence test plus permanent place of abode (Income Tax Act 2007 s YD 1); Canada applies factual residence based on ties plus 183-day deemed resident rule (ITA s250); United States applies Substantial Presence Test plus citizenship-based taxation (IRC §7701(b), §§1, 61).",
