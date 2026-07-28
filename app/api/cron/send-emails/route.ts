@@ -22,6 +22,7 @@ import {
   newRunId, logRunOutcome, logEmailEvent, recordCronRun, zeroCounts,
 } from "@/lib/email-observability";
 import { collectEmailHealth, formatHealthForOperator } from "@/lib/email-alerts";
+import { collectCronStaleness, cronStalenessAlerts, peerRoutes } from "@/lib/cron-staleness";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -508,10 +509,19 @@ export async function GET(request: Request) {
   //    counters, so a condition caused by a previous run or by the webhook path still surfaces.
   const health = await collectEmailHealth(sb);
 
+  // 4b. Step 4.8c — MUTUAL WATCH. This run checks the OTHER scheduled cron, never itself:
+  //     a cron cannot observe its own death (it only executes when it is alive, so its own age
+  //     is always ~0 at check time). re-engagement (08:00) and send-emails (09:00) each watch
+  //     the other, so either one dying is reported by the survivor within a day — no new
+  //     scheduled job required. See §4.8d for what this deliberately does NOT cover.
+  const cronStaleness = await collectCronStaleness(sb, peerRoutes(ROUTE));
+  const cronAlerts    = cronStalenessAlerts(cronStaleness);
+
   // 5. Operator alert. Step 4.3 — `deferred > 0` is now IN THE GATE. Previously a run whose only
   //    outcome was deferrals sent no alert at all: the deferrals[] detail was built and rendered
   //    into the alert body, but the body was never dispatched unless some OTHER condition fired.
-  if (failed > 0 || windowSkipped > 0 || deferred > 0 || health.alerts.length > 0) {
+  //    Step 4.8c adds the peer-staleness alerts to the same gate.
+  if (failed > 0 || windowSkipped > 0 || deferred > 0 || health.alerts.length > 0 || cronAlerts.length > 0) {
     await alertOperator(
       `Cron run ${runId} at ${new Date().toISOString()} (${ROUTE})\n` +
       `Processed: ${queueRows.length}  Sent: ${sent}  Failed: ${failed}  Skipped(unresolvable): ${skipped}  ` +
@@ -519,16 +529,20 @@ export async function GET(request: Request) {
       (failures.length     ? `Failures:\n${failures.join("\n")}\n\n`         : "") +
       (windowSkips.length  ? `Window-skips:\n${windowSkips.join("\n")}\n\n`  : "") +
       (deferrals.length    ? `Deferred:\n${deferrals.join("\n")}\n\n`        : "") +
+      (cronAlerts.length   ? `PEER CRON:\n${cronAlerts.join("\n")}\n\n`      : "") +
       formatHealthForOperator(health),
       resendKey,
     );
   }
 
   // 6. Step 4.4 — the run is on the record whatever it did, zero-activity included.
-  logRunOutcome(ROUTE, runId, startedAtMs, counts, { health_alerts: health.alerts.length });
+  logRunOutcome(ROUTE, runId, startedAtMs, counts, {
+    health_alerts: health.alerts.length,
+    cron_alerts:   cronAlerts.length,
+  });
   await recordCronRun(sb, {
     runId, route: ROUTE, startedAtMs, counts,
-    detail: { failures, windowSkips, deferrals, healthAlerts: health.alerts },
+    detail: { failures, windowSkips, deferrals, healthAlerts: health.alerts, cronAlerts },
   });
 
   // Step 4.3 — the deferrals[] detail is returned, not only mailed.
@@ -539,5 +553,6 @@ export async function GET(request: Request) {
     windowSkips,
     deferrals,
     healthAlerts: health.alerts,
+    cronAlerts,
   });
 }
