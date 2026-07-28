@@ -9,6 +9,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getLeadMeta } from "@/lib/lead-product-meta";
+import { lookupNurture } from "@/lib/temporal-registry";
+import { nurtureEmailType } from "@/lib/nurture-types";
 
 const FROM_ADDRESS = "TaxCheckNow <hello@taxchecknow.com>";
 const SITE_ORIGIN = "https://www.taxchecknow.com";
@@ -157,11 +159,36 @@ function addDays(days: number): string {
   return d.toISOString().split("T")[0];
 }
 
+// TEMPORAL v1 Step 7.3/7.4 — the cadence and the anchor now come from the
+// PRODUCT'S OWN declaration, not from a hardcoded list in this file.
+//
+// SUBJECT LINES stay here, keyed by milestone, because they are COPY and copy is
+// deliberately separate work. A milestone with no subject cannot be declared —
+// the emit-time validator rejects it against NURTURE_MILESTONES_WITH_COPY — so
+// this map and that list must stay in step.
+// The registry is keyed by config.id, which is KEBAB ("frcgw-clearance-certificate").
+// `source` arrives from the calculator as a snake_case product key, sometimes with a
+// Stripe-style "<country>_<tier>_" prefix. Normalise the same way resolveProduct does
+// elsewhere, so a declared product is actually found rather than silently missed —
+// a lookup miss here means no nurture at all, which must not happen by accident.
+function resolveProductId(source: string | undefined): string | null {
+  if (!source) return null;
+  const stripped = source.replace(/^(au|uk|us|nz|can|nomad|supertax)_(67|147)_/, "");
+  return stripped.replace(/_/g, "-");
+}
+
+const NURTURE_SUBJECTS: Record<number, string> = {
+  3:  "What people in your position usually do",
+  7:  "One week on — did you act on this?",
+  14: "Did you sort this out?",
+};
+
 async function queueNurture(
   supabase:          any,
   customerEmail:     string,
   productKey:        string,
   decisionSessionId: string | undefined,
+  productId:         string | null,
 ): Promise<void> {
   // Step 4 personalisation hook: if the calculator passed a real session_id
   // (not a fallback_ stub, not undefined), link the nurture rows back to the
@@ -173,17 +200,31 @@ async function queueNurture(
       ? decisionSessionId
       : null;
 
-  const rows = [
-    { days: 3,  subject: "What people in your position usually do", email_type: "nurture_d3"  },
-    { days: 7,  subject: "One week on — did you act on this?",       email_type: "nurture_d7"  },
-    { days: 14, subject: "Did you sort this out?",                    email_type: "nurture_d14" },
-  ].map(r => ({
+  // Step 7.1 — NO GLOBAL DEFAULT. A product with no declared nurture track gets
+  // no nurture rows. Silence is the default on this lane too.
+  const declaration = productId ? lookupNurture("taxchecknow", productId) : null;
+  if (!declaration) {
+    console.log("[leads] no nurture declaration — 0 nurture rows queued", {
+      product_key: productKey, product_id: productId ?? "(unresolved)",
+    });
+    return;
+  }
+  // Step 7.4 — this is the LEAD anchor. A purchase-anchored track is queued by
+  // the Stripe webhook instead, so a lead capture must not fire it here.
+  if (declaration.anchor !== "lead") {
+    console.log("[leads] nurture track is not lead-anchored — skipping", {
+      product_id: productId, anchor: declaration.anchor,
+    });
+    return;
+  }
+
+  const rows = declaration.milestones.map(days => ({
     customer_email:      customerEmail,
     product_key:         productKey,
     decision_session_id: linkedSessionId,
-    trigger_date:        addDays(r.days),
-    subject:             r.subject,
-    email_type:          r.email_type,
+    trigger_date:        addDays(days),
+    subject:             NURTURE_SUBJECTS[days] ?? `Your ${days}-day check-in`,
+    email_type:          nurtureEmailType(days),
     status:              "queued",
     created_at:          new Date().toISOString(),
   }));
@@ -250,8 +291,8 @@ export async function POST(req: Request) {
         });
       } catch { /* non-fatal */ }
 
-      // Queue the S2 nurture sequence (d3, d7, d14)
-      await queueNurture(supabase, email, source ?? "unknown", session_id);
+      // Queue the declared nurture track (Step 7.3 — cadence from the product).
+      await queueNurture(supabase, email, source ?? "unknown", session_id, resolveProductId(source));
     }
 
     // Always return 200 — never block the user experience

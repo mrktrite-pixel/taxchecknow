@@ -52,6 +52,12 @@ export const PRODUCT_CONFIG: ProductConfig = {
     domain:       "superannuation",
     label:        "DASP unclaimed-transfer threshold",
   },
+  // ── NURTURE DECLARATION (TEMPORAL v1 · Step 7.6) ────────────────────────
+  // Same reasoning as FRCGW: `unresolvable` bars a computed deadline, not
+  // contact. Anchored to the customer's own save, so the DASP six-month
+  // threshold — which we cannot date for any individual — is never implied.
+  // [3,7,14] records the cadence /api/leads already queues for this product.
+  nurture: { track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" },
   "id": "superannuation-tax-leaving-australia-confusion-2026",
   "name": "Superannuation Tax When Leaving Australia (DASP)",
   "site": "taxchecknow",

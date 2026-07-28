@@ -14,7 +14,8 @@ import { generateAssessment } from "@/lib/assess-core";
 // (lib/email-context.ts still reads it for the delivery-email BANNER — a
 // presentation concern outside Step 6's scope, flagged in the report.)
 import { resolve as resolveTemporal, schedulableDate } from "@/lib/temporal-resolver";
-import { lookupTemporal } from "@/lib/temporal-registry";
+import { lookupTemporal, lookupNurture } from "@/lib/temporal-registry";
+import { nurtureEmailType } from "@/lib/nurture-types";
 
 // ── PRODUCT DELIVERY MAP — all 25 TaxCheckNow + 5 SuperTaxCheck ─────────────
 const DELIVERY_MAP: Record<string, {
@@ -257,6 +258,64 @@ async function alertOperator(summary: string): Promise<void> {
   }
 }
 
+// ── QUEUE A PURCHASE-ANCHORED NURTURE TRACK (TEMPORAL v1 · Step 7.4) ────────
+// BEFORE STEP 7 A PURCHASE QUEUED NO NURTURE AT ALL — only deadline reminders.
+// The nurture lane fired exclusively from /api/leads (calculator save). So a
+// customer who bought without ever saving a free result got the delivery email
+// and then, for an unresolvable product, nothing else ever.
+//
+// Now the anchor is declarable. A product declaring anchor:"purchase" gets its
+// track queued here; anchor:"lead" is queued by /api/leads and deliberately NOT
+// duplicated here — one anchor per declaration, so a track cannot double-fire.
+//
+// Deadline-free by construction: offsets are days from the PURCHASE, so nothing
+// in this path reads the resolver or any date (Step 7.2).
+async function queueNurtureOnPurchase(
+  supabase: any,
+  productId: string,
+  productKey: string,
+  customerEmail: string,
+  customerName: string,
+  decisionSessionId: string,
+): Promise<void> {
+  try {
+    const declaration = lookupNurture("taxchecknow", productId);
+    if (!declaration) return;                        // no track declared → nothing (7.1)
+    if (declaration.anchor !== "purchase") return;   // lead-anchored → /api/leads owns it
+
+    const linkedSessionId =
+      decisionSessionId && !decisionSessionId.startsWith("fallback_") ? decisionSessionId : null;
+
+    const today = new Date();
+    const rows = declaration.milestones.map(days => {
+      const trigger = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+      trigger.setUTCDate(trigger.getUTCDate() + days);
+      return {
+        stripe_session_id:   null,
+        product_key:         productKey,
+        product_id:          productId,
+        customer_email:      customerEmail,
+        customer_name:       customerName,
+        decision_session_id: linkedSessionId,
+        trigger_date:        trigger.toISOString().split("T")[0],
+        // days_before_deadline stays NULL — this is NOT a deadline row. The send
+        // cron reads that column to decide the reminder lane, so leaving it null
+        // is what keeps this row on the nurture side of the Step 7.2 split.
+        email_type:          nurtureEmailType(days),
+        subject:             `Your ${days}-day check-in`,
+        status:              "queued",
+        created_at:          new Date().toISOString(),
+      };
+    });
+
+    const { error } = await (supabase as any).from("email_queue").insert(rows);
+    if (error) console.error("[webhook] nurture queue error:", error.message);
+    else console.log(`[webhook] queued ${rows.length} purchase-anchored nurture rows (track ${declaration.track}) for`, customerEmail);
+  } catch (err) {
+    console.error("[webhook] nurture queue failed (non-blocking):", err);
+  }
+}
+
 async function queueReminders(
   supabase: any,
   stripeSessionId: string,
@@ -463,6 +522,9 @@ export async function POST(req: Request) {
   // 3. Queue reminder emails — same deferral (same latent race).
   if (delivery && customerEmail) {
     after(() => queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery, decisionSid));
+    // Step 7.4 — the purchase anchor. Same after() deferral and the same
+    // non-fatal contract: a nurture-queue failure must never affect delivery.
+    after(() => queueNurtureOnPurchase(supabase, delivery.productId, productKey, customerEmail, customerName, decisionSid));
   }
 
   // 4. Send delivery email

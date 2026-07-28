@@ -1,4 +1,4 @@
-// ── RE-ENGAGEMENT CRON (Step 5 of save-box β) ────────────────────────────
+﻿// â”€â”€ RE-ENGAGEMENT CRON (Step 5 of save-box Î²) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Triggered daily 8am UTC by Vercel cron (see vercel.json).
 //
 // Workflow:
@@ -22,7 +22,10 @@
 
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getEmailTemplate, type TemplateData } from "@/lib/email-templates/index";
+// TEMPORAL v1 Step 7.2 â€” re-engagement is a NURTURE-lane email (anchored to the
+// customer's own save, not to any statutory date), so it goes through the
+// nurture door. The data type makes a deadline unpassable.
+import { getNurtureTemplate, type NurtureTemplateData } from "@/lib/email-templates/index";
 import { LEAD_PRODUCT_META } from "@/lib/lead-product-meta";
 import {
   newRunId, logRunOutcome, logEmailEvent, recordCronRun, zeroCounts,
@@ -37,7 +40,7 @@ const RESEND_URL    = "https://api.resend.com/emails";
 const BATCH_LIMIT   = 50;
 const ROUTE         = "/api/cron/re-engagement";
 
-// Detail arrays are echoed in the response body (Step 4.3) — keep them bounded.
+// Detail arrays are echoed in the response body (Step 4.3) â€” keep them bounded.
 const DETAIL_LIMIT  = 50;
 
 // Window: re-engage between days 7 and 30 after save.
@@ -57,7 +60,7 @@ interface DecisionSessionRow {
   created_at:              string;
 }
 
-// ── HELPERS ──────────────────────────────────────────────────────────────
+// â”€â”€ HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function isoDaysAgo(days: number): string {
   const d = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
@@ -93,7 +96,7 @@ function resolveProduct(row: DecisionSessionRow): { name: string; url: string } 
   return { name: fallbackName, url: "/" };
 }
 
-// ── SEND VIA RESEND ──────────────────────────────────────────────────────
+// â”€â”€ SEND VIA RESEND â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function sendViaResend(to: string, subject: string, html: string, resendKey: string): Promise<{ success: boolean; resendId?: string; error?: string }> {
   try {
     const res = await fetch(RESEND_URL, {
@@ -109,7 +112,7 @@ async function sendViaResend(to: string, subject: string, html: string, resendKe
   }
 }
 
-// ── OPERATOR ALERT (fire-and-forget) ─────────────────────────────────────
+// â”€â”€ OPERATOR ALERT (fire-and-forget) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function alertOperator(failureSummary: string, resendKey: string): Promise<void> {
   const operator = process.env.OPERATOR_EMAIL;
   if (!operator) return;
@@ -127,15 +130,15 @@ async function alertOperator(failureSummary: string, resendKey: string): Promise
   } catch { /* non-fatal */ }
 }
 
-// ── MAIN HANDLER ─────────────────────────────────────────────────────────
+// â”€â”€ MAIN HANDLER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function GET(request: Request) {
-  // TEMPORAL v1 Step 4.4 — this route was as blind as send-emails: no console line, no durable
+  // TEMPORAL v1 Step 4.4 â€” this route was as blind as send-emails: no console line, no durable
   // run record, and its deferrals (Phase 1 addendum A) left no trace at all.
   const startedAtMs = Date.now();
   const runId       = newRunId();
 
-  // 1. Auth — Vercel sends Authorization: Bearer ${CRON_SECRET}
+  // 1. Auth â€” Vercel sends Authorization: Bearer ${CRON_SECRET}
   const expectedAuth = `Bearer ${process.env.CRON_SECRET ?? ""}`;
   if (!process.env.CRON_SECRET || request.headers.get("authorization") !== expectedAuth) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -158,13 +161,13 @@ export async function GET(request: Request) {
   //
   //    Step 6 dedupe (Discovery #30): a customer can have multiple eligible
   //    sessions in the same window (saved 5 calculators -> 5 rows). The
-  //    pre-Step-6 sweep would fire 5 emails on day 8 — spammy.
+  //    pre-Step-6 sweep would fire 5 emails on day 8 â€” spammy.
   //
   //    PostgREST does not support CTEs / DISTINCT ON in client queries, so
   //    dedupe runs in JS:
   //      a) Fetch BATCH_LIMIT * 4 candidates ORDER BY created_at DESC
   //      b) Walk the array, keep first occurrence per email (= most recent
-  //         save — what they saw last is freshest in their mind)
+  //         save â€” what they saw last is freshest in their mind)
   //      c) Cap at BATCH_LIMIT customers per run
   //      d) After successful send: UPDATE re_engagement_sent=true on ALL
   //         eligible rows for that email + window (not just the picked id),
@@ -172,7 +175,7 @@ export async function GET(request: Request) {
   //         tomorrow.
   const minCreatedAt = isoDaysAgo(MAX_AGE_DAYS);   // older bound (e.g. 30 days ago)
   const maxCreatedAt = isoDaysAgo(MIN_AGE_DAYS);   // newer bound (e.g. 7 days ago)
-  const candidateLimit = BATCH_LIMIT * 4;          // 200 — dedupe headroom
+  const candidateLimit = BATCH_LIMIT * 4;          // 200 â€” dedupe headroom
 
   const { data: rows, error: fetchErr } = await sb
     .from("decision_sessions")
@@ -186,7 +189,7 @@ export async function GET(request: Request) {
     .limit(candidateLimit);
 
   if (fetchErr) {
-    // Step 4.4 — even a failed run is on the record.
+    // Step 4.4 â€” even a failed run is on the record.
     logRunOutcome(ROUTE, runId, startedAtMs, zeroCounts(), { fetch_error: fetchErr.message });
     await recordCronRun(sb, {
       runId, route: ROUTE, startedAtMs,
@@ -198,7 +201,7 @@ export async function GET(request: Request) {
 
   const candidateRows: DecisionSessionRow[] = rows ?? [];
 
-  // Dedupe by email — keep first occurrence (= most recent save given DESC).
+  // Dedupe by email â€” keep first occurrence (= most recent save given DESC).
   // Cap at BATCH_LIMIT customers per run.
   const seenEmails = new Set<string>();
   const sessionRows: DecisionSessionRow[] = [];
@@ -213,12 +216,12 @@ export async function GET(request: Request) {
   let sent     = 0;
   let failed    = 0;
   let skipped    = 0;
-  let deferred = 0;   // Phase 1 addendum A — over the per-recipient 24h cap
+  let deferred = 0;   // Phase 1 addendum A â€” over the per-recipient 24h cap
   const failures: string[]  = [];
   const deferrals: string[] = [];
 
-  // Phase 1 addendum A — the 24h per-recipient cap now gates re-engagement (marketing). Build the
-  // set of recipients who received ANY email in the last 24h (email_log 'sent' with sent_at set —
+  // Phase 1 addendum A â€” the 24h per-recipient cap now gates re-engagement (marketing). Build the
+  // set of recipients who received ANY email in the last 24h (email_log 'sent' with sent_at set â€”
   // includes the transactional delivery + t2_lead_capture emails, which count toward the cap but are
   // themselves exempt). A capped customer is DEFERRED: re_engagement_sent stays false so a future run
   // retries once 24h has elapsed. Never marked sent, never dropped.
@@ -246,14 +249,14 @@ export async function GET(request: Request) {
       continue;
     }
 
-    // Phase 1 addendum A — 24h per-recipient cap. Defer (leave re_engagement_sent false) if this
+    // Phase 1 addendum A â€” 24h per-recipient cap. Defer (leave re_engagement_sent false) if this
     // recipient already got an email in the last 24h. Retried on a future run once the window clears.
     if (recent24h.has(row.email.toLowerCase())) {
       deferred++;
       if (deferrals.length < DETAIL_LIMIT) {
         deferrals.push(`${row.id} | ${row.email} | re_engagement | sent_within_24h`);
       }
-      // Step 4.2 — the deferral is now durable. Unlike the send-emails queue there is no
+      // Step 4.2 â€” the deferral is now durable. Unlike the send-emails queue there is no
       // trigger_stale floor here (decision_sessions has no send-window), so no counter is needed
       // to protect the row; what was missing was purely the audit trail. The session id goes in
       // error_message because a re-engagement deferral has no email_queue row to point at.
@@ -267,7 +270,7 @@ export async function GET(request: Request) {
 
     const product = resolveProduct(row);
 
-    // Personalisation resolution — graceful degrade per bee canonical rule
+    // Personalisation resolution â€” graceful degrade per bee canonical rule
     // 8b. Verdict from output.status; fearNumber + authority from
     // LEAD_PRODUCT_META. When verdict is missing, template falls back to
     // product-only copy.
@@ -281,7 +284,7 @@ export async function GET(request: Request) {
     const fearNumber = leadMeta?.fearNumber || undefined;
     const authority  = leadMeta?.authority  || undefined;
 
-    const data: TemplateData = {
+    const data: NurtureTemplateData = {
       productName:   product.name,
       productUrl:    product.url,
       verdict,
@@ -289,12 +292,12 @@ export async function GET(request: Request) {
       authority,
     };
 
-    const tpl = getEmailTemplate("re_engagement", data);
+    const tpl = getNurtureTemplate("re_engagement", data);
     const result = await sendViaResend(row.email, tpl.subject, tpl.html, resendKey);
 
     // 3b. UPDATE: flip re_engagement_sent on ALL eligible rows for this
     //     customer (Step 6 dedupe). The filter mirrors the SELECT filter
-    //     exactly — only flips rows that were eligible for THIS run, never
+    //     exactly â€” only flips rows that were eligible for THIS run, never
     //     a future-eligible row. On failure: leave rows untouched so a
     //     future run can retry the entire customer cleanly.
     if (result.success) {
@@ -327,7 +330,7 @@ export async function GET(request: Request) {
       productKey:     row.product_key ?? null,
       resendId:       result.resendId ?? null,
       errorMessage,
-      // Phase 1.3 — stamp sent_at so this send counts toward the cron's per-recipient 24h cap.
+      // Phase 1.3 â€” stamp sent_at so this send counts toward the cron's per-recipient 24h cap.
       sentAt:         result.success ? new Date().toISOString() : null,
     });
 
@@ -345,14 +348,14 @@ export async function GET(request: Request) {
     processed: sessionRows.length, sent, failed, skipped, windowSkipped: 0, deferred,
   };
 
-  // 3b. Step 4.8c — MUTUAL WATCH. This run checks the OTHER scheduled cron, never itself (a cron
+  // 3b. Step 4.8c â€” MUTUAL WATCH. This run checks the OTHER scheduled cron, never itself (a cron
   //     cannot observe its own death). This is the arm that matters most: send-emails is where the
-  //     4.6 health alerts are dispatched from, so if send-emails dies it silences its own alarm —
+  //     4.6 health alerts are dispatched from, so if send-emails dies it silences its own alarm â€”
   //     re-engagement is the only thing left that can report it.
   const cronStaleness = await collectCronStaleness(sb, peerRoutes(ROUTE));
   const cronAlerts    = cronStalenessAlerts(cronStaleness);
 
-  // 4. Operator alert. Step 4.3 — `deferred > 0` is now in the gate here too: a run whose only
+  // 4. Operator alert. Step 4.3 â€” `deferred > 0` is now in the gate here too: a run whose only
   //    outcome was deferrals previously built the deferrals[] detail and then dispatched nothing.
   //    Step 4.8c adds peer-cron staleness to the same gate.
   if (failed > 0 || deferred > 0 || cronAlerts.length > 0) {
@@ -366,10 +369,11 @@ export async function GET(request: Request) {
     );
   }
 
-  // 5. Step 4.4 — structured line + durable run row, zero-activity runs included.
+  // 5. Step 4.4 â€” structured line + durable run row, zero-activity runs included.
   logRunOutcome(ROUTE, runId, startedAtMs, counts, { cron_alerts: cronAlerts.length });
   await recordCronRun(sb, { runId, route: ROUTE, startedAtMs, counts, detail: { failures, deferrals, cronAlerts } });
 
-  // Step 4.3 — deferral detail is returned, not only mailed.
+  // Step 4.3 â€” deferral detail is returned, not only mailed.
   return NextResponse.json({ runId, ...counts, failures, deferrals, cronAlerts });
 }
+

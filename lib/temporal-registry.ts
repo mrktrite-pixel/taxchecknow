@@ -15,31 +15,65 @@
 // list when it next ships through the `temporal_declared` gate item.)
 
 import type { TemporalDeclaration } from "./temporal-types";
+import type { NurtureDeclaration } from "./nurture-types";
 
-export const TEMPORAL_REGISTRY: Record<string, Record<string, TemporalDeclaration>> = {
+/** Both lanes for a product. Either may be absent; absent = silent on that lane. */
+export interface ProductDeclarations {
+  temporal?: TemporalDeclaration;
+  nurture?:  NurtureDeclaration;
+}
+
+export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclarations>> = {
   "taxchecknow": {
     "frcgw-clearance-certificate": {
-          "kind": "unresolvable",
-          "reason": "settlement_date_contingent_not_captured",
-          "detail": "Settlement is fixed by the buyer's contract and differs per customer. The calculator captures only a bucketed proximity answer (daysToSettlement), never a date, so no settlement date can be computed for any customer.",
-          "jurisdiction": "AU",
-          "domain": "property_cgt",
-          "label": "Settlement date"
+          "temporal": {
+                "kind": "unresolvable",
+                "reason": "settlement_date_contingent_not_captured",
+                "detail": "Settlement is fixed by the buyer's contract and differs per customer. The calculator captures only a bucketed proximity answer (daysToSettlement), never a date, so no settlement date can be computed for any customer.",
+                "jurisdiction": "AU",
+                "domain": "property_cgt",
+                "label": "Settlement date"
+          },
+          "nurture": {
+                "track": "standard_v1",
+                "milestones": [
+                      3,
+                      7,
+                      14
+                ],
+                "anchor": "lead"
+          }
     },
     "superannuation-tax-leaving-australia-confusion-2026": {
-          "kind": "unresolvable",
-          "reason": "departure_date_not_captured",
-          "detail": "The DASP six-month unclaimed-transfer point is measured from the customer's departure and visa cessation, which this product never collects. Its engine captures only which side of that threshold the customer is on (q4-time-since-departure: past_threshold | before_threshold | unsure_time), so no date can be computed for any customer.",
-          "jurisdiction": "AU",
-          "domain": "superannuation",
-          "label": "DASP unclaimed-transfer threshold"
+          "temporal": {
+                "kind": "unresolvable",
+                "reason": "departure_date_not_captured",
+                "detail": "The DASP six-month unclaimed-transfer point is measured from the customer's departure and visa cessation, which this product never collects. Its engine captures only which side of that threshold the customer is on (q4-time-since-departure: past_threshold | before_threshold | unsure_time), so no date can be computed for any customer.",
+                "jurisdiction": "AU",
+                "domain": "superannuation",
+                "label": "DASP unclaimed-transfer threshold"
+          },
+          "nurture": {
+                "track": "standard_v1",
+                "milestones": [
+                      3,
+                      7,
+                      14
+                ],
+                "anchor": "lead"
+          }
     },
   },
 };
 
-/** The declaration for a product, or null when undeclared (→ silent). */
+/** The temporal declaration for a product, or null when undeclared (→ silent). */
 export function lookupTemporal(site: string, productId: string): TemporalDeclaration | null {
-  return TEMPORAL_REGISTRY[site]?.[productId] ?? null;
+  return TEMPORAL_REGISTRY[site]?.[productId]?.temporal ?? null;
+}
+
+/** The nurture declaration for a product, or null when it has no track (→ no nurture). */
+export function lookupNurture(site: string, productId: string): NurtureDeclaration | null {
+  return TEMPORAL_REGISTRY[site]?.[productId]?.nurture ?? null;
 }
 
 /** Every declared (site, productId) pair — used by the gate evidence writer. */

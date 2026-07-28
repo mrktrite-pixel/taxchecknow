@@ -1,11 +1,12 @@
 {
-  "synced_at": "2026-07-28T07:46:14.645Z",
+  "synced_at": "2026-07-28T09:13:27.257Z",
   "source": "C:\\Users\\MATTV\\CitationGap\\cole-marketing\\lib",
   "files": [
     "cole-email.ts",
     "email-context.ts",
     "email-product-copy.ts",
     "email-types.ts",
+    "nurture-types.ts",
     "product-deadlines.ts",
     "temporal-resolver.ts",
     "temporal-types.ts"
@@ -17,6 +18,7 @@
     "email-context.ts": "ef4410c09d1dab74",
     "cole-email.ts": "40758693f2b77a3d",
     "temporal-types.ts": "82fa21c6b9f77ff8",
-    "temporal-resolver.ts": "17f9b7e1377a49f8"
+    "temporal-resolver.ts": "17f9b7e1377a49f8",
+    "nurture-types.ts": "e8792b385b35f982"
   }
 }

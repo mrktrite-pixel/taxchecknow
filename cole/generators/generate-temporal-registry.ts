@@ -22,11 +22,17 @@ import * as fs   from "fs";
 import * as path from "path";
 import type { ProductConfig } from "../types/product-config";
 import type { TemporalDeclaration } from "../../lib/temporal-types";
+import type { NurtureDeclaration } from "../../lib/nurture-types";
+import { validateNurture } from "../../lib/nurture-types";
+import { NURTURE_MILESTONES_WITH_COPY } from "../../lib/email-templates/index";
 
 export interface RegistryEntry {
   site:      string;
   productId: string;
-  temporal:  TemporalDeclaration;
+  /** Step 6 — absent when the product declares only a nurture lane. */
+  temporal?: TemporalDeclaration;
+  /** Step 7 — absent when the product declares no nurture track. */
+  nurture?:  NurtureDeclaration;
 }
 
 /** Load every config and keep only those that actually declare. */
@@ -54,8 +60,40 @@ export function collectDeclarations(configDir: string): RegistryEntry[] {
     }
     const cfg = mod.PRODUCT_CONFIG;
     if (!cfg) continue;
-    if (!cfg.temporal) continue;   // UNDECLARED → no entry → silent (6.3)
-    out.push({ site: cfg.site, productId: cfg.id, temporal: cfg.temporal });
+    // A product earns an entry by declaring EITHER lane. Declaring neither means
+    // UNDECLARED on both, which means silent on both (6.3 / 7.1) — there is no
+    // default track and no default deadline.
+    if (!cfg.temporal && !cfg.nurture) continue;
+
+    // Step 7.3 — validate the cadence at EMIT, where a human is watching, rather
+    // than at send time where a bad milestone becomes a queued row that can never
+    // render. Shape first (canonical), then copy availability (site-side, because
+    // the templates live here).
+    if (cfg.nurture) {
+      const problems = validateNurture(cfg.nurture);
+      const missingCopy = (cfg.nurture.milestones ?? []).filter(
+        m => !NURTURE_MILESTONES_WITH_COPY.includes(m),
+      );
+      if (missingCopy.length > 0) {
+        problems.push(
+          `no copy for milestone(s) ${missingCopy.join(", ")} — templates exist for ` +
+          `${NURTURE_MILESTONES_WITH_COPY.join(", ")}. Write the copy first (separate work); ` +
+          `queueing a milestone with no template would create a row that can never render.`,
+        );
+      }
+      if (problems.length > 0) {
+        throw new Error(
+          `[temporal-registry] INVALID nurture declaration in ${file} (${cfg.id}):\n` +
+          problems.map(p => `    · ${p}`).join("\n"),
+        );
+      }
+    }
+
+    out.push({
+      site: cfg.site, productId: cfg.id,
+      ...(cfg.temporal ? { temporal: cfg.temporal } : {}),
+      ...(cfg.nurture  ? { nurture:  cfg.nurture  } : {}),
+    });
   }
 
   // FAIL LOUD ON A TOTAL WIPEOUT. Skipping one config is tolerable; failing to
@@ -85,7 +123,13 @@ export function renderRegistry(entries: RegistryEntry[]): string {
     .map(([site, list]) => {
       const inner = list
         .sort((a, b) => a.productId.localeCompare(b.productId))
-        .map(e => `    ${JSON.stringify(e.productId)}: ${JSON.stringify(e.temporal, null, 6).replace(/\n/g, "\n    ")},`)
+        .map(e => {
+          const body = {
+            ...(e.temporal ? { temporal: e.temporal } : {}),
+            ...(e.nurture  ? { nurture:  e.nurture  } : {}),
+          };
+          return `    ${JSON.stringify(e.productId)}: ${JSON.stringify(body, null, 6).replace(/\n/g, "\n    ")},`;
+        })
         .join("\n");
       return `  ${JSON.stringify(site)}: {\n${inner}\n  },`;
     })
@@ -110,14 +154,26 @@ export function renderRegistry(entries: RegistryEntry[]): string {
 // list when it next ships through the \`temporal_declared\` gate item.)
 
 import type { TemporalDeclaration } from "./temporal-types";
+import type { NurtureDeclaration } from "./nurture-types";
 
-export const TEMPORAL_REGISTRY: Record<string, Record<string, TemporalDeclaration>> = {
+/** Both lanes for a product. Either may be absent; absent = silent on that lane. */
+export interface ProductDeclarations {
+  temporal?: TemporalDeclaration;
+  nurture?:  NurtureDeclaration;
+}
+
+export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclarations>> = {
 ${body}
 };
 
-/** The declaration for a product, or null when undeclared (→ silent). */
+/** The temporal declaration for a product, or null when undeclared (→ silent). */
 export function lookupTemporal(site: string, productId: string): TemporalDeclaration | null {
-  return TEMPORAL_REGISTRY[site]?.[productId] ?? null;
+  return TEMPORAL_REGISTRY[site]?.[productId]?.temporal ?? null;
+}
+
+/** The nurture declaration for a product, or null when it has no track (→ no nurture). */
+export function lookupNurture(site: string, productId: string): NurtureDeclaration | null {
+  return TEMPORAL_REGISTRY[site]?.[productId]?.nurture ?? null;
 }
 
 /** Every declared (site, productId) pair — used by the gate evidence writer. */

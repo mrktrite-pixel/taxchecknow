@@ -34,6 +34,17 @@ export const PRODUCT_CONFIG: ProductConfig = {
     domain:       "property_cgt",
     label:        "Settlement date",
   },
+  // ── NURTURE DECLARATION (TEMPORAL v1 · Step 7.6) ────────────────────────
+  // FRCGW is `unresolvable`, which means we cannot compute a LEGAL deadline —
+  // it has never meant "no email". This lane carries the product: anchored to
+  // the day the customer saved their result, so it needs no settlement date and
+  // can never imply one (Step 7.2 makes that structural, not editorial).
+  //
+  // Cadence [3,7,14] is the product's CURRENT behaviour written down, not a new
+  // decision: /api/leads has queued exactly these three offsets for this product
+  // since launch. Declaring it changes nothing that goes out; it makes the track
+  // explicit and configurable instead of hardcoded.
+  nurture: { track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" },
   id: "frcgw-clearance-certificate", name: "Foreign Resident CGT Withholding Clearance Certificate", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/frcgw-clearance-certificate", url: "https://taxchecknow.com/au/check/frcgw-clearance-certificate", apiRoute: "/api/rules/frcgw-clearance-certificate",
   authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments", legislation: "Taxation Administration Act 1953 Schedule 1 Subdivision 14-D (Foreign Resident Capital Gains Withholding) · Treasury Laws Amendment (Foreign Resident Capital Gains Withholding) Act 2024 (effective 1 January 2025) · Threshold reduced from $750,000 to $0 · Withholding rate increased from 12.5% to 15% · Applies to all property sales from 1 January 2025 onwards", lastVerified: "April 2026",
