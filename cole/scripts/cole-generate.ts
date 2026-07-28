@@ -359,8 +359,18 @@ function emitTemporalRegistry(filesGenerated: string[], errors: string[]): void 
     const p = getTemporalRegistryPath(path.dirname(APP_ROOT));
     filesGenerated.push(p);
     console.log(`   ✅ Temporal registry (${entries.length} declared product${entries.length === 1 ? "" : "s"})\n      → ${relativePath(p)}`);
+    // Step 7 — an entry may declare EITHER lane, so neither may be dereferenced
+    // unconditionally. This line previously read `e.temporal.kind` and threw the
+    // moment a nurture-only product appeared; cole/tsconfig.json sets
+    // "strict": false, so the optional access was not a compile error and only
+    // surfaced at run time. The registry file itself was written correctly —
+    // the throw was in the logging that follows it.
     for (const e of entries) {
-      console.log(`      · ${e.site}/${e.productId} → ${e.temporal.kind}`);
+      const lanes = [
+        e.temporal ? `temporal:${e.temporal.kind}` : null,
+        e.nurture?.length ? `nurture:${e.nurture.map(t => `${t.track}@${t.anchor}[${t.milestones.join(",")}]`).join(" + ")}` : null,
+      ].filter(Boolean).join("  ");
+      console.log(`      · ${e.site}/${e.productId} → ${lanes}`);
     }
   } catch (err) {
     errors.push(`Temporal registry: ${err}`);

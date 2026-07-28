@@ -1,5 +1,17 @@
 import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
+  // ── NURTURE DECLARATION (TEMPORAL v1 · Step 7) ──────────────────────────
+  // This product's EXISTING behaviour, written down. Its calculator already
+  // POSTs to /api/leads with a source that resolves to this config id, and
+  // /api/leads queued [3,7,14] for any lead save before Step 7 gated it on a
+  // declaration. Declaring it restores exactly that — nothing new, nothing
+  // inferred from the topic.
+  //
+  // NURTURE ONLY. `temporal` is deliberately NOT declared here: that is a gate
+  // decision made per product at its own rebuild, from its own build evidence
+  // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
+  // which is the correct state until someone rules on it.
+  nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
   id: "mtd-scorecard", name: "MTD Mandation Engine", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
   slug: "uk/check/mtd-scorecard", url: "https://taxchecknow.com/uk/check/mtd-scorecard", apiRoute: "/api/rules/mtd-scorecard",
   authority: "HMRC", authorityUrl: "https://www.gov.uk/government/organisations/hm-revenue-customs", legalAnchor: "Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)", legislation: "Finance Act 2021 — MTD ITSA phased implementation from 6 April 2026 · Income Tax (Digital Requirements) Regulations implementing quarterly update obligations · Schedule 24 Finance Act 2021 penalty regime (£200 initial + £10/day up to 90 days per missed quarterly update) · HMRC points-based late-submission penalty system",

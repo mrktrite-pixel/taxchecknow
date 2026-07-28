@@ -1,5 +1,17 @@
 import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
+  // ── NURTURE DECLARATION (TEMPORAL v1 · Step 7) ──────────────────────────
+  // This product's EXISTING behaviour, written down. Its calculator already
+  // POSTs to /api/leads with a source that resolves to this config id, and
+  // /api/leads queued [3,7,14] for any lead save before Step 7 gated it on a
+  // declaration. Declaring it restores exactly that — nothing new, nothing
+  // inferred from the topic.
+  //
+  // NURTURE ONLY. `temporal` is deliberately NOT declared here: that is a gate
+  // decision made per product at its own rebuild, from its own build evidence
+  // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
+  // which is the correct state until someone rules on it.
+  nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
   id: "side-hustle-checker", name: "HMRC Side Income Declaration Engine", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
   slug: "uk/check/side-hustle-checker", url: "https://taxchecknow.com/uk/check/side-hustle-checker", apiRoute: "/api/rules/side-hustle-checker",
   authority: "HMRC", authorityUrl: "https://www.gov.uk/government/organisations/hm-revenue-customs", legalAnchor: "Income Tax (Trading and Other Income) Act 2005 — Trading allowance s783A and Self Assessment obligation", legislation: "Income Tax (Trading and Other Income) Act 2005 (ITTOIA 2005) section 783A — £1,000 trading allowance · Taxes Management Act 1970 section 7 — notification of liability (registration for Self Assessment by 5 October following tax year) · Platform Operators (Due Diligence and Reporting Requirements) Regulations 2023 (SI 2023/817) — DAC7 implementation from 1 January 2024 · Finance Act 2007 Schedule 24 — penalties for inaccuracies · Finance Act 2008 Schedule 41 — penalty for failure to notify",

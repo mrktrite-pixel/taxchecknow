@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 2
+// Declared products: 8
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -27,6 +27,19 @@ export interface ProductDeclarations {
 
 export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclarations>> = {
   "taxchecknow": {
+    "day-183-rule": {
+          "nurture": [
+                {
+                      "track": "standard_v1",
+                      "milestones": [
+                            3,
+                            7,
+                            14
+                      ],
+                      "anchor": "lead"
+                }
+          ]
+    },
     "frcgw-clearance-certificate": {
           "temporal": {
                 "kind": "unresolvable",
@@ -36,6 +49,71 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "property_cgt",
                 "label": "Settlement date"
           },
+          "nurture": [
+                {
+                      "track": "standard_v1",
+                      "milestones": [
+                            3,
+                            7,
+                            14
+                      ],
+                      "anchor": "lead"
+                }
+          ]
+    },
+    "medicare-levy-surcharge-trap": {
+          "nurture": [
+                {
+                      "track": "standard_v1",
+                      "milestones": [
+                            3,
+                            7,
+                            14
+                      ],
+                      "anchor": "lead"
+                }
+          ]
+    },
+    "mtd-scorecard": {
+          "nurture": [
+                {
+                      "track": "standard_v1",
+                      "milestones": [
+                            3,
+                            7,
+                            14
+                      ],
+                      "anchor": "lead"
+                }
+          ]
+    },
+    "rental-property-deduction-audit": {
+          "nurture": [
+                {
+                      "track": "standard_v1",
+                      "milestones": [
+                            3,
+                            7,
+                            14
+                      ],
+                      "anchor": "lead"
+                }
+          ]
+    },
+    "side-hustle-checker": {
+          "nurture": [
+                {
+                      "track": "standard_v1",
+                      "milestones": [
+                            3,
+                            7,
+                            14
+                      ],
+                      "anchor": "lead"
+                }
+          ]
+    },
+    "spain-beckham": {
           "nurture": [
                 {
                       "track": "standard_v1",

@@ -1,5 +1,17 @@
 import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
+  // ── NURTURE DECLARATION (TEMPORAL v1 · Step 7) ──────────────────────────
+  // This product's EXISTING behaviour, written down. Its calculator already
+  // POSTs to /api/leads with a source that resolves to this config id, and
+  // /api/leads queued [3,7,14] for any lead save before Step 7 gated it on a
+  // declaration. Declaring it restores exactly that — nothing new, nothing
+  // inferred from the topic.
+  //
+  // NURTURE ONLY. `temporal` is deliberately NOT declared here: that is a gate
+  // decision made per product at its own rebuild, from its own build evidence
+  // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
+  // which is the correct state until someone rules on it.
+  nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
   id: "spain-beckham", name: "Spain Beckham Eligibility Wall", site: "taxchecknow", country: "global", market: "Spain", language: "en", currency: "EUR",
   slug: "nomad/check/spain-beckham-eligibility", url: "https://taxchecknow.com/nomad/check/spain-beckham-eligibility", apiRoute: "/api/rules/spain-beckham",
   authority: "Agencia Estatal de Administración Tributaria (AEAT)", authorityUrl: "https://sede.agenciatributaria.gob.es/Sede/procedimientoini/GI24.shtml", legalAnchor: "Ley 35/2006 Art. 93 (IRPF Act) + Ley 28/2022 (Startup Law, effective 1 Jan 2023) — Special Expat Regime (Beckham Law)", legislation: "Article 93 of Ley 35/2006 (Spanish IRPF Act) establishes the Special Expat Regime: qualifying individuals who relocate to Spain for work can elect taxation at a flat rate of 24% on Spanish-source income up to €600,000 (47% above), rather than under Spain's progressive IRPF rates (up to 47%). The regime applies for the tax year of arrival plus five subsequent tax years (maximum six years total). Ley 28/2022 (Startup Law), effective 1 January 2023, expanded qualifying categories to include highly qualified professionals, entrepreneurs in startup/innovation activities, and remote workers holding the Spanish Digital Nomad Visa. Eligibility conditions: (a) relocation to Spain caused by a qualifying work arrangement; (b) not Spanish tax resident in the 5 tax years before arrival; (c) valid social security coverage (Spanish SS, EU/EEA A1 certificate, or bilateral agreement). Application via Modelo 149 within 6 months of Spanish Social Security registration — deadline is absolute.",
