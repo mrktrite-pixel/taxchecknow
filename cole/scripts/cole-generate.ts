@@ -157,8 +157,11 @@ async function cole(productId: string, successOnly = false) {
     // TEMPORAL v1 Step 6 — the registry is re-emitted on --success-only too. A
     // migration/update emit is exactly when a product's declaration is added or
     // changed, so skipping it here would let the registry go stale precisely on
-    // the path the gate is meant to catch.
+    // the path the gate is meant to catch. Same for the gate evidence: the
+    // UPDATE gate is the arm that clears the undeclared backlog, and --success-only
+    // is the emit path a PANELBEAT update actually uses.
     emitTemporalRegistry(filesGenerated, errors);
+    await writeTemporalEvidence(config, errors);
     const ok = errors.length === 0;
     console.log(`\n${"─".repeat(60)}`);
     console.log(ok
@@ -240,6 +243,7 @@ async function cole(productId: string, successOnly = false) {
   // changes a declaration lands in the runtime registry as a by-product of the
   // build already happening — never as a separate hand-edit.
   emitTemporalRegistry(filesGenerated, errors);
+  await writeTemporalEvidence(config, errors);
 
   // ── STEP 7: Log to Supabase ───────────────────────────────────────────────
   const duration = Date.now() - startTime;
@@ -340,6 +344,89 @@ function emitTemporalRegistry(filesGenerated: string[], errors: string[]): void 
   } catch (err) {
     errors.push(`Temporal registry: ${err}`);
     console.error(`   ❌ Temporal registry: ${err}`);
+  }
+}
+
+// TEMPORAL v1 Step 6.4 / R3 — PERSIST THE DECLARATION AS GATE EVIDENCE.
+// This is the cross-repo bridge from 6.6: the declaration is authored in the
+// product's config here, and the soverella gate auto-ticks `temporal_declared`
+// from what this writes. soverella cannot read this repo's files; the shared
+// Supabase project is the only thing both sides can see.
+//
+// Writes TWO places, per the R3 ruling:
+//   · build_jobs.temporal_declaration (jsonb) — the full declaration, alongside
+//     research_output, exactly how law_correctness evidence already flows. The
+//     gate is keyed by build_job_id, so this is what it reads.
+//   · products.temporal_kind (text) — the resolved KIND only, mirrored for the
+//     catalogue. NOT products.deadline: that column holds stored dates for 5 UK
+//     rows and is the anti-pattern 6.1 forbids — it is reported as a separate
+//     defect and deliberately left untouched.
+//
+// JOIN KEY is products.slug === config.slug (verified: "au/check/frcgw-clearance-
+// certificate" matches exactly). Deliberately NOT products.config_path, which is
+// NULL on every row, and NOT products.product_id, which holds the config FILENAME
+// stem ("au-19-frcgw-clearance-certificate") rather than config.id.
+//
+// Non-fatal throughout: evidence is an observability/gating concern and must
+// never fail a product build. A miss is logged loudly and leaves the gate item
+// unticked — which correctly blocks the ship rather than silently passing it.
+async function writeTemporalEvidence(config: ProductConfig, errors: string[]): Promise<void> {
+  if (!config.temporal) {
+    console.log(`   ⚠️  Temporal evidence SKIPPED — ${config.id} has no \`temporal\` declaration.`);
+    console.log(`      The soverella gate item \`temporal_declared\` will stay UNTICKED and block the ship (Step 6.4).`);
+    return;
+  }
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    console.log(`   ⚠️  Temporal evidence SKIPPED — no Supabase env; the gate item will stay unticked.`);
+    return;
+  }
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY) as any;
+
+    const { data: products, error: pErr } = await sb
+      .from("products").select("id, slug, site")
+      .eq("site", config.site).eq("slug", config.slug).limit(1);
+    if (pErr) throw new Error(`products lookup: ${pErr.message}`);
+    const product = (products ?? [])[0];
+    if (!product) {
+      console.log(`   ⚠️  Temporal evidence — no products row for ${config.site}/${config.slug}; nothing to attach to.`);
+      return;
+    }
+
+    // Mirror the KIND for the catalogue.
+    const { error: mErr } = await sb.from("products")
+      .update({ temporal_kind: config.temporal.kind }).eq("id", product.id);
+    if (mErr) throw new Error(`products.temporal_kind: ${mErr.message}`);
+
+    // Attach the full declaration to the build job the operator is gating.
+    // RULE: the most recently updated build_job for this product. Today every
+    // product has exactly one, so this is unambiguous; ordering explicitly keeps
+    // it deterministic if that ever stops being true. A product with NO build
+    // job (hand-built, never through the queen) simply gets no evidence — its
+    // gate item stays unticked, which is the correct, safe outcome.
+    const { data: jobs, error: jErr } = await sb
+      .from("build_jobs").select("id, build_state")
+      .eq("product_id", product.id).order("updated_at", { ascending: false }).limit(1);
+    if (jErr) throw new Error(`build_jobs lookup: ${jErr.message}`);
+    const job = (jobs ?? [])[0];
+    if (!job) {
+      console.log(`   ⚠️  Temporal evidence — products.temporal_kind set, but no build_job for ${config.slug} to attach the declaration to.`);
+      return;
+    }
+
+    const { error: bErr } = await sb.from("build_jobs")
+      .update({ temporal_declaration: config.temporal }).eq("id", job.id);
+    if (bErr) throw new Error(`build_jobs.temporal_declaration: ${bErr.message}`);
+
+    console.log(`   ✅ Temporal evidence written — kind "${config.temporal.kind}"`);
+    console.log(`      products.temporal_kind → ${product.id}`);
+    console.log(`      build_jobs.temporal_declaration → ${job.id} (${job.build_state})`);
+  } catch (err) {
+    // Recorded, not thrown: see the non-fatal note above.
+    errors.push(`Temporal evidence: ${err}`);
+    console.error(`   ❌ Temporal evidence: ${err}`);
+    console.error(`      Has the Step 6 DDL been run? (build_jobs.temporal_declaration, products.temporal_kind)`);
   }
 }
 
