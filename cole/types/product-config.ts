@@ -5,7 +5,7 @@
 // scripts/sync-cole-lib.mjs. Type-only import: cole/ is excluded from the app
 // tsconfig, so this never pulls generator code into the app bundle.
 import type { TemporalDeclaration } from "../../lib/temporal-types";
-import type { NurtureDeclaration } from "../../lib/nurture-types";
+import type { NurtureLane } from "../../lib/nurture-types";
 
 export interface ButtonGroupInput {
   type: "buttonGroup";
@@ -145,7 +145,7 @@ export interface ProductConfig {
   // The cadence is validated AT EMIT (shape + copy availability), so a milestone
   // with no template is a loud declaration error rather than a queued row that
   // can never render.
-  nurture?: NurtureDeclaration;
+  nurture?: NurtureLane;
 
   // â”€â”€â”€ PAGE CONTENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   h1: string;
@@ -279,4 +279,5 @@ export interface ProductConfig {
   tier1AssessmentFields: string[];
   tier2AssessmentFields: string[];
 }
+
 

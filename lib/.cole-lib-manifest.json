@@ -1,5 +1,5 @@
 {
-  "synced_at": "2026-07-28T09:13:27.257Z",
+  "synced_at": "2026-07-28T09:32:08.671Z",
   "source": "C:\\Users\\MATTV\\CitationGap\\cole-marketing\\lib",
   "files": [
     "cole-email.ts",
@@ -19,6 +19,6 @@
     "cole-email.ts": "40758693f2b77a3d",
     "temporal-types.ts": "82fa21c6b9f77ff8",
     "temporal-resolver.ts": "17f9b7e1377a49f8",
-    "nurture-types.ts": "e8792b385b35f982"
+    "nurture-types.ts": "0cd2f931895d8985"
   }
 }

@@ -22,8 +22,8 @@ import * as fs   from "fs";
 import * as path from "path";
 import type { ProductConfig } from "../types/product-config";
 import type { TemporalDeclaration } from "../../lib/temporal-types";
-import type { NurtureDeclaration } from "../../lib/nurture-types";
-import { validateNurture } from "../../lib/nurture-types";
+import type { NurtureLane } from "../../lib/nurture-types";
+import { validateNurtureLane } from "../../lib/nurture-types";
 import { NURTURE_MILESTONES_WITH_COPY } from "../../lib/email-templates/index";
 
 export interface RegistryEntry {
@@ -31,8 +31,8 @@ export interface RegistryEntry {
   productId: string;
   /** Step 6 — absent when the product declares only a nurture lane. */
   temporal?: TemporalDeclaration;
-  /** Step 7 — absent when the product declares no nurture track. */
-  nurture?:  NurtureDeclaration;
+  /** Step 7 — absent when the product declares no nurture track. A LIST: one track per anchor. */
+  nurture?:  NurtureLane;
 }
 
 /** Load every config and keep only those that actually declare. */
@@ -70,17 +70,21 @@ export function collectDeclarations(configDir: string): RegistryEntry[] {
     // render. Shape first (canonical), then copy availability (site-side, because
     // the templates live here).
     if (cfg.nurture) {
-      const problems = validateNurture(cfg.nurture);
-      const missingCopy = (cfg.nurture.milestones ?? []).filter(
-        m => !NURTURE_MILESTONES_WITH_COPY.includes(m),
-      );
-      if (missingCopy.length > 0) {
-        problems.push(
-          `no copy for milestone(s) ${missingCopy.join(", ")} — templates exist for ` +
-          `${NURTURE_MILESTONES_WITH_COPY.join(", ")}. Write the copy first (separate work); ` +
-          `queueing a milestone with no template would create a row that can never render.`,
-        );
-      }
+      // List-level rules first (one track per anchor, unique names), then each
+      // track's own shape — validateNurtureLane does both.
+      const problems = validateNurtureLane(cfg.nurture);
+      // Copy availability is PER TRACK, so a product can have one valid track and
+      // one invalid one and be told exactly which.
+      cfg.nurture.forEach((t, i) => {
+        const missingCopy = (t.milestones ?? []).filter(m => !NURTURE_MILESTONES_WITH_COPY.includes(m));
+        if (missingCopy.length > 0) {
+          problems.push(
+            `track[${i}] (${t.track}): no copy for milestone(s) ${missingCopy.join(", ")} — templates exist for ` +
+            `${NURTURE_MILESTONES_WITH_COPY.join(", ")}. Write the copy first (separate work); ` +
+            `queueing a milestone with no template would create a row that can never render.`,
+          );
+        }
+      });
       if (problems.length > 0) {
         throw new Error(
           `[temporal-registry] INVALID nurture declaration in ${file} (${cfg.id}):\n` +
@@ -154,12 +158,14 @@ export function renderRegistry(entries: RegistryEntry[]): string {
 // list when it next ships through the \`temporal_declared\` gate item.)
 
 import type { TemporalDeclaration } from "./temporal-types";
-import type { NurtureDeclaration } from "./nurture-types";
+import type { NurtureLane, NurtureAnchor } from "./nurture-types";
+import { tracksForAnchor } from "./nurture-types";
 
 /** Both lanes for a product. Either may be absent; absent = silent on that lane. */
 export interface ProductDeclarations {
   temporal?: TemporalDeclaration;
-  nurture?:  NurtureDeclaration;
+  /** A LIST of tracks — at most one per anchor (enforced at emit). */
+  nurture?:  NurtureLane;
 }
 
 export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclarations>> = {
@@ -171,9 +177,18 @@ export function lookupTemporal(site: string, productId: string): TemporalDeclara
   return TEMPORAL_REGISTRY[site]?.[productId]?.temporal ?? null;
 }
 
-/** The nurture declaration for a product, or null when it has no track (→ no nurture). */
-export function lookupNurture(site: string, productId: string): NurtureDeclaration | null {
-  return TEMPORAL_REGISTRY[site]?.[productId]?.nurture ?? null;
+/** Every nurture track for a product ([] when it declares none → no nurture). */
+export function lookupNurture(site: string, productId: string): NurtureLane {
+  return TEMPORAL_REGISTRY[site]?.[productId]?.nurture ?? [];
+}
+
+/**
+ * The tracks a given path owns. THIS is what makes double-firing impossible:
+ * /api/leads asks for "lead" and the webhook asks for "purchase", so neither can
+ * queue the other's track no matter what a product declares.
+ */
+export function nurtureTracksFor(site: string, productId: string, anchor: NurtureAnchor): NurtureLane {
+  return tracksForAnchor(lookupNurture(site, productId), anchor);
 }
 
 /** Every declared (site, productId) pair — used by the gate evidence writer. */

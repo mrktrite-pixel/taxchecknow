@@ -15,12 +15,14 @@
 // list when it next ships through the `temporal_declared` gate item.)
 
 import type { TemporalDeclaration } from "./temporal-types";
-import type { NurtureDeclaration } from "./nurture-types";
+import type { NurtureLane, NurtureAnchor } from "./nurture-types";
+import { tracksForAnchor } from "./nurture-types";
 
 /** Both lanes for a product. Either may be absent; absent = silent on that lane. */
 export interface ProductDeclarations {
   temporal?: TemporalDeclaration;
-  nurture?:  NurtureDeclaration;
+  /** A LIST of tracks — at most one per anchor (enforced at emit). */
+  nurture?:  NurtureLane;
 }
 
 export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclarations>> = {
@@ -34,15 +36,17 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "property_cgt",
                 "label": "Settlement date"
           },
-          "nurture": {
-                "track": "standard_v1",
-                "milestones": [
-                      3,
-                      7,
-                      14
-                ],
-                "anchor": "lead"
-          }
+          "nurture": [
+                {
+                      "track": "standard_v1",
+                      "milestones": [
+                            3,
+                            7,
+                            14
+                      ],
+                      "anchor": "lead"
+                }
+          ]
     },
     "superannuation-tax-leaving-australia-confusion-2026": {
           "temporal": {
@@ -53,15 +57,17 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "superannuation",
                 "label": "DASP unclaimed-transfer threshold"
           },
-          "nurture": {
-                "track": "standard_v1",
-                "milestones": [
-                      3,
-                      7,
-                      14
-                ],
-                "anchor": "lead"
-          }
+          "nurture": [
+                {
+                      "track": "standard_v1",
+                      "milestones": [
+                            3,
+                            7,
+                            14
+                      ],
+                      "anchor": "lead"
+                }
+          ]
     },
   },
 };
@@ -71,9 +77,18 @@ export function lookupTemporal(site: string, productId: string): TemporalDeclara
   return TEMPORAL_REGISTRY[site]?.[productId]?.temporal ?? null;
 }
 
-/** The nurture declaration for a product, or null when it has no track (→ no nurture). */
-export function lookupNurture(site: string, productId: string): NurtureDeclaration | null {
-  return TEMPORAL_REGISTRY[site]?.[productId]?.nurture ?? null;
+/** Every nurture track for a product ([] when it declares none → no nurture). */
+export function lookupNurture(site: string, productId: string): NurtureLane {
+  return TEMPORAL_REGISTRY[site]?.[productId]?.nurture ?? [];
+}
+
+/**
+ * The tracks a given path owns. THIS is what makes double-firing impossible:
+ * /api/leads asks for "lead" and the webhook asks for "purchase", so neither can
+ * queue the other's track no matter what a product declares.
+ */
+export function nurtureTracksFor(site: string, productId: string, anchor: NurtureAnchor): NurtureLane {
+  return tracksForAnchor(lookupNurture(site, productId), anchor);
 }
 
 /** Every declared (site, productId) pair — used by the gate evidence writer. */
