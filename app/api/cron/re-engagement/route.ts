@@ -27,6 +27,7 @@ import { LEAD_PRODUCT_META } from "@/lib/lead-product-meta";
 import {
   newRunId, logRunOutcome, logEmailEvent, recordCronRun, zeroCounts,
 } from "@/lib/email-observability";
+import { collectCronStaleness, cronStalenessAlerts, peerRoutes } from "@/lib/cron-staleness";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -344,22 +345,31 @@ export async function GET(request: Request) {
     processed: sessionRows.length, sent, failed, skipped, windowSkipped: 0, deferred,
   };
 
+  // 3b. Step 4.8c — MUTUAL WATCH. This run checks the OTHER scheduled cron, never itself (a cron
+  //     cannot observe its own death). This is the arm that matters most: send-emails is where the
+  //     4.6 health alerts are dispatched from, so if send-emails dies it silences its own alarm —
+  //     re-engagement is the only thing left that can report it.
+  const cronStaleness = await collectCronStaleness(sb, peerRoutes(ROUTE));
+  const cronAlerts    = cronStalenessAlerts(cronStaleness);
+
   // 4. Operator alert. Step 4.3 — `deferred > 0` is now in the gate here too: a run whose only
   //    outcome was deferrals previously built the deferrals[] detail and then dispatched nothing.
-  if (failed > 0 || deferred > 0) {
+  //    Step 4.8c adds peer-cron staleness to the same gate.
+  if (failed > 0 || deferred > 0 || cronAlerts.length > 0) {
     await alertOperator(
       `Re-engagement cron run ${runId} at ${new Date().toISOString()}\n` +
       `Processed: ${sessionRows.length}\nSent: ${sent}\nFailed: ${failed}\nSkipped: ${skipped}\nDeferred(24h cap): ${deferred}\n\n` +
       (failures.length  ? `Failures:\n${failures.join("\n")}\n\n`  : "") +
-      (deferrals.length ? `Deferred:\n${deferrals.join("\n")}`     : ""),
+      (deferrals.length ? `Deferred:\n${deferrals.join("\n")}\n\n` : "") +
+      (cronAlerts.length ? `PEER CRON:\n${cronAlerts.join("\n")}`  : ""),
       resendKey,
     );
   }
 
   // 5. Step 4.4 — structured line + durable run row, zero-activity runs included.
-  logRunOutcome(ROUTE, runId, startedAtMs, counts);
-  await recordCronRun(sb, { runId, route: ROUTE, startedAtMs, counts, detail: { failures, deferrals } });
+  logRunOutcome(ROUTE, runId, startedAtMs, counts, { cron_alerts: cronAlerts.length });
+  await recordCronRun(sb, { runId, route: ROUTE, startedAtMs, counts, detail: { failures, deferrals, cronAlerts } });
 
   // Step 4.3 — deferral detail is returned, not only mailed.
-  return NextResponse.json({ runId, ...counts, failures, deferrals });
+  return NextResponse.json({ runId, ...counts, failures, deferrals, cronAlerts });
 }

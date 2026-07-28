@@ -16,11 +16,15 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { collectEmailHealth } from "@/lib/email-alerts";
+import { collectCronStaleness, cronStalenessAlerts, scheduledRoutes } from "@/lib/cron-staleness";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const CRON_ROUTES = ["/api/cron/send-emails", "/api/cron/re-engagement"];
+// Step 4.8a — the route list now comes from vercel.json (the same file Vercel
+// schedules from) rather than a local literal, so adding or removing a cron
+// cannot leave this endpoint reporting on a stale set of routes.
+const CRON_ROUTES = scheduledRoutes();
 
 export async function GET(request: Request) {
   const expectedAuth = `Bearer ${process.env.CRON_SECRET ?? ""}`;
@@ -122,12 +126,22 @@ export async function GET(request: Request) {
   // ── STANDING CONDITIONS (4.6) ───────────────────────────────────────────
   const health = await collectEmailHealth(sb);
 
-  const ok = health.alerts.length === 0 && errors.length === 0;
+  // ── CRON STALENESS (4.8a/4.8b) ──────────────────────────────────────────
+  // Evaluates EVERY scheduled route (the endpoint is outside all of them, so
+  // unlike a cron it can legitimately watch them all). This is what makes a
+  // dead or never-run cron flip ok — before 4.8, ageMinutes was computed and
+  // returned but never compared to anything.
+  const cronStaleness = await collectCronStaleness(sb, CRON_ROUTES, now);
+  const cronAlerts    = cronStalenessAlerts(cronStaleness);
+
+  const ok = health.alerts.length === 0 && cronAlerts.length === 0 && errors.length === 0;
 
   return NextResponse.json({
     ok,
     checkedAt: new Date(now).toISOString(),
     lastRuns,
+    cronStaleness,
+    cronAlerts,
     queue: {
       byStatus:            queueByStatus,
       oldestQueued,
