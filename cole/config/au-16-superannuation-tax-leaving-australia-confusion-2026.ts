@@ -47,6 +47,20 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // app/au/check/superannuation-tax-leaving-australia-confusion-2026.
   engineNative: true,
 
+  // ── CORPUS AUTHORSHIP ──────────────────────────────────────────────────
+  // app/api/rules/superannuation-tax-leaving-australia-confusion-2026/route.ts
+  // is HAND-AUTHORED (2026-07-23) to close the fail-closed grounding gap: this
+  // product had no /api/rules route at all, so grounded generation was
+  // impossible. Every fact in it is drawn from this product's OWN verified
+  // figures.json + this config — the full Migration Act 1958 / ATO DASP
+  // citation and legal anchor, which the generator reduces to config-derived
+  // stubs ("Migration Act 1958", "DASP").
+  //
+  // On 2026-07-29 a full cole-generate overwrote it. Nothing stopped that,
+  // because nothing knew the file was authored. Declaring it here, verified
+  // against the file's own missing AUTO-GENERATED marker, is what stops it.
+  corpusAuthored: "hand",
+
   temporal: {
     kind:         "unresolvable",
     reason:       "departure_date_not_captured",

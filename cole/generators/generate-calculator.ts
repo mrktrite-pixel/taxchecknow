@@ -10,6 +10,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { ProductConfig, ButtonGroupInput, TwoButtonInput } from "../types/product-config";
+import { GuardRefusal } from "./guard-refusal";
 
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 
@@ -23,8 +24,9 @@ export function generateCalculator(config: ProductConfig): string {
   // and only then throw at the success-page verifier — leaving the product with a
   // clobbered calculator and no regenerated pages. Fail before writing anything.
   if (config.engineNative) {
-    throw new Error(
-      `[R-A2 guard] Refusing to generate a bespoke calculator for "${config.id}": it declares ` +
+    throw new GuardRefusal(
+      "R-A2 calculator",
+      `Refusing to generate a bespoke calculator for "${config.id}": it declares ` +
       `engineNative: true, so its calculator is the EngineCalculator wrapper and is NOT generated ` +
       `from this template. Overwriting it would destroy the engine binding. Regenerate this ` +
       `product's pages individually (gate / success / files), not via a full calculator rebuild.`
