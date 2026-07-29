@@ -26,6 +26,7 @@
 // │ See reports/2026-07-23-frcgw-success-content-migration-scope.txt           │
 // └────────────────────────────────────────────────────────────────────────────┘
 import type { ProductConfig } from "../types/product-config";
+import { verifyEngineNative } from "./verify-engine-native";
 
 // Machine-enforced hard rule. buildSuccessPage() THROWS unless the template has been
 // upgraded (R-A2/R-A3) and the operator opts in with COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
@@ -86,23 +87,80 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   const assessFields = isTier2 ? config.tier2AssessmentFields : config.tier1AssessmentFields;
   const currency     = sym(config);
 
-  // sessionStorage reads
-  const ssReads = promptFields.map(f =>
-    `      const ${f.key} = sessionStorage.getItem("${config.id}_${f.key}") || "${f.defaultVal}";`
-  ).join("\n");
+  // ── R-A2: WHICH ASSESSMENT-INPUT SHAPE DOES THIS PRODUCT GET? ─────────────
+  // Declared in the config, VERIFIED against the app dir here. Throws on any
+  // disagreement rather than guessing — both wrong answers are silent at runtime.
+  const engineNative = verifyEngineNative(config);
+
+  // STEP 2 fallback inputs. STEP 1 (the stored-first fetch) is untouched by this
+  // branch: it is correct, and it is the path every real purchase takes.
+  //
+  //   engine-native → the SAME composer the webhook uses (F5 contract), reading
+  //                   the labelled answers EngineCalculator actually wrote.
+  //   legacy        → the existing per-field phantom reads, byte-for-byte
+  //                   unchanged, because a bespoke calculator does write them.
+  const ssReads = engineNative
+    ? `      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
+      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // (F5 contract). The legacy per-field keys are never written by an engine-native
+      // calculator, so reading them would always fall back to defaults → a generic,
+      // corpus-contradicting assessment.
+      const inputs = buildComposerInputsFromSession("${config.id}");`
+    : promptFields.map(f =>
+        `      const ${f.key} = sessionStorage.getItem("${config.id}_${f.key}") || "${f.defaultVal}";`
+      ).join("\n");
 
   // inputs object for /api/assess
   const inputsObj = promptFields.map(f =>
     `        "${f.label}": ${f.key},`
   ).join("\n");
 
-  // calendar storage reads
-  const calReads = promptFields.map(f =>
-    `    const ${f.key} = sessionStorage.getItem("${config.id}_${f.key}") || "${f.defaultVal}";`
-  ).join("\n");
+  // calendar storage reads — legacy only. On an engine-native product these read
+  // keys nobody writes; on the hand-patched pages they are dead code.
+  const calReads = engineNative
+    ? ""
+    : promptFields.map(f =>
+        `    const ${f.key} = sessionStorage.getItem("${config.id}_${f.key}") || "${f.defaultVal}";`
+      ).join("\n");
+
+  // ── R-A3 / GAP 3: WHICH CALENDAR EVENTS MAY CARRY A DATE? ─────────────────
+  // Same fail-closed rule as the countdown, applied to the surface Phase 0 left
+  // alone. An absolute date in a calendar event is a CLAIM about a real date:
+  //   · the product must actually claim a date at all (temporal kind deadline /
+  //     window / effective_from — never unresolvable or none), and
+  //   · the date must still be in the future at generate time.
+  // If either fails, the event is dropped entirely rather than shipped stale.
+  // Relative events ("relative:+Ndays") are computed from the customer's own
+  // "today" at render and assert no legal date, so they are always safe.
+  const todayCompact = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const claimsADate  = productClaimsADate(config);
+
+  // ── GAP 2: is the absence of a date DECLARED, or is it a failure? ─────────
+  // Declared-absent (unresolvable / none) is a reviewed answer and must be silent.
+  // Anything else that fails to produce a countdown IS a defect and must still alert.
+  const deadlineDeclaredAbsent =
+    config.temporal?.kind === "unresolvable" || config.temporal?.kind === "none";
+  // The declared stand-in for the countdown. Only honoured when the product has
+  // actually declared it has no date — never as a way to dodge a real deadline.
+  const qualitative = deadlineDeclaredAbsent ? config.deadline?.qualitative : undefined;
+  const temporalReason =
+    config.temporal && "reason" in config.temporal ? String(config.temporal.reason ?? "") : "";
+  const droppedEvents: string[] = [];
+  const emittableEvents = calEvents.filter(evt => {
+    if (evt.date.startsWith("relative:")) return true;
+    if (!claimsADate)            { droppedEvents.push(`${evt.uid} (${evt.date}: product declares no resolvable date)`); return false; }
+    if (evt.date < todayCompact) { droppedEvents.push(`${evt.uid} (${evt.date}: in the past)`); return false; }
+    return true;
+  });
+  if (droppedEvents.length) {
+    console.warn(
+      `[COLE R-A3 calendar] "${config.id}" ${tier}: dropped ${droppedEvents.length} dated event(s) — ` +
+      droppedEvents.join("; ") + `. A stale or unfounded calendar date is worse than no event.`
+    );
+  }
 
   // .ics events
-  const icsEvents = calEvents.map(evt => {
+  const icsEvents = emittableEvents.map(evt => {
     const dateCode = evt.date.startsWith("relative:")
       ? buildRelativeDate(evt.date)
       : `"${evt.date}"`;
@@ -112,8 +170,8 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
       \`DTSTART;VALUE=DATE:\${${dateCode}}\`,
       \`DTEND;VALUE=DATE:\${${dateCode}}\`,
       \`DTSTAMP:\${now}\`,
-      "SUMMARY:${evt.summary}",
-      "DESCRIPTION:${evt.description}",
+      "SUMMARY:${icsText(evt.summary)}",
+      "DESCRIPTION:${icsText(evt.description)}",
       "STATUS:CONFIRMED",
       "END:VEVENT",`;
   }).join("");
@@ -122,7 +180,7 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
 // AUTO-GENERATED BY COLE — do not edit manually
 // Product: ${config.id} · ${isTier2 ? "Tier 2" : "Tier 1"} Success Page
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import Link from "next/link";${engineNative ? `\nimport { buildComposerInputsFromSession } from "@/lib/composer-inputs";` : ""}
 
 const FILES = ${JSON.stringify(visibleFiles.map(f => ({
     num: f.num, slug: f.slug, name: f.name, desc: f.desc, tier: f.tier,
@@ -140,10 +198,19 @@ export default function Success${isTier2 ? "Plan" : "Assess"}() {
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState("");
   const [copied,     setCopied]     = useState(false);
-  const [calDone,    setCalDone]    = useState(false);
+${emittableEvents.length === 0 ? "" : `  const [calDone,    setCalDone]    = useState(false);`}
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
+${deadlineDeclaredAbsent ? `  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "${config.temporal?.kind}"${temporalReason ? `, reason: "${temporalReason}"` : ""}).
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
+
+  useEffect(() => { init(); }, []);` : `  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
   // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
   // (never "0 days", never a negative, never a stale label).
   const daysToDeadline: number | null = (() => {
@@ -156,11 +223,12 @@ export default function Success${isTier2 ? "Plan" : "Assess"}() {
 
   useEffect(() => { init(); }, []);
 
-  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline is suppressed
-  // above; surface it so it is never silent. Phase 5 replaces this with real alerting.
+  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
+  // expired or will not parse, is a real defect — surface it so it is never silent.
+  // Phase 5 replaces this with real alerting.
   useEffect(() => {
     if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "${config.id}", deadlineIso: "${config.deadline.isoDate}" });
-  }, []);
+  }, []);`}
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -200,12 +268,12 @@ export default function Success${isTier2 ? "Plan" : "Assess"}() {
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
 ${ssReads}
-
+${engineNative ? "" : `
       // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
       const hasInputs = Object.values({
 ${promptFields.map(f => `        "${f.key}": ${f.key},`).join("\n")}
       }).some(v => v && v !== "${promptFields[0]?.defaultVal || ""}");
-
+`}
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -215,9 +283,9 @@ ${promptFields.map(f => `        "${f.key}": ${f.key},`).join("\n")}
           authority:  "${config.authority}",
           tier:       ${isTier2 ? 2 : 1},
           name: name === "there" ? "" : name,
-          inputs: {
+${engineNative ? "          inputs," : `          inputs: {
 ${inputsObj}
-          },
+          },`}
           fields: ${JSON.stringify(assessFields)},
         }),
       });
@@ -241,9 +309,9 @@ ${inputsObj}
     }
   }
 
-  function handleCalendar() {
-    const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-${calReads}
+${emittableEvents.length === 0 ? `  // handleCalendar() omitted: no event survived the R-A3 date gate, so there is no
+  // .ics to build and no button to trigger it.` : `  function handleCalendar() {
+    const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";${calReads ? `\n${calReads}` : ""}
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -261,7 +329,7 @@ ${calReads}
     document.body.appendChild(a); a.click();
     document.body.removeChild(a); URL.revokeObjectURL(url);
     setCalDone(true);
-  }
+  }`}
 
   async function handleCopy() {
     if (!assessment?.accountantQuestions?.length) return;
@@ -307,12 +375,18 @@ ${calReads}
               ? "This is your full implementation plan — built around your specific inputs, not the average taxpayer."
               : "This is your personalised assessment — built around your exact answers, not a generic guide."}
           </p>
-          {deadlineLive && (
+${qualitative ? `          {/* No date resolves for this product (temporal kind "${config.temporal?.kind}"), so the
+              countdown is replaced by its DECLARED qualitative urgency — corpus-true for every
+              customer, and not a fabricated day-count. */}
+          <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
+            <span className="text-sm font-bold text-white">🔴 ${qualitative.headline}</span>
+            <span className="font-mono text-sm font-bold text-white">${qualitative.badge}</span>
+          </div>` : `          {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to ${config.deadline.display}</span>
             <span className="font-mono text-sm font-bold text-white">${config.deadline.short}</span>
           </div>
-          )}
+          )}`}
         </div>
 
         {/* ── LOADING ── */}
@@ -443,7 +517,10 @@ ${isTier2 ? `
               </div>
             )}
 
-            {/* CALENDAR */}
+${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at generate time: every dated event was dropped
+                (see the R-A3 calendar warning in the build log). An empty "key dates"
+                panel with a download button that yields an eventless .ics is worse than
+                no panel at all. */}` : `            {/* CALENDAR */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                 Key dates for your calendar
@@ -452,14 +529,14 @@ ${isTier2 ? `
                 Add these now — don't rely on memory
               </h2>
               <div className="mb-4 space-y-2">
-                ${calEvents.map(evt => `
+                ${emittableEvents.map(evt => `
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold text-neutral-900">${evt.summary}</p>
                     <p className="text-xs text-neutral-500">${evt.description}</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    ${evt.date.startsWith("relative:") ? "This week" : formatDateDisplay(evt.date)}
+                    ${evt.date.startsWith("relative:") ? relativeDateLabel(evt.date) : formatDateDisplay(evt.date)}
                   </span>
                 </div>`).join("")}
               </div>
@@ -467,7 +544,7 @@ ${isTier2 ? `
                 className="no-print w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
                 {calDone ? "✓ Downloaded — open the .ics file to add to your calendar" : "📅 Add all dates to Apple / Google / Outlook calendar →"}
               </button>
-            </div>
+            </div>`}
 
             {/* YOUR FILES */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
@@ -515,17 +592,17 @@ ${isTier2 ? `
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 ${isTier2 ? "Work through the checklist above." : ""}
-                {deadlineLive ? \`\${daysToDeadline} days to ${config.deadline.display}.\` : ""}
+                ${qualitative ? qualitative.cta : `{deadlineLive ? \`\${daysToDeadline} days to ${config.deadline.display}.\` : ""}`}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   ⬇ Save as PDF
                 </button>
-                <button onClick={handleCalendar}
+${emittableEvents.length === 0 ? "" : `                <button onClick={handleCalendar}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   📅 Add to calendar
-                </button>
+                </button>`}
                 <button onClick={handleCopy}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   📋 Copy accountant questions
@@ -577,6 +654,69 @@ ${!isTier2 ? `
   );
 }
 `;
+}
+
+/**
+ * Escape a TEXT value for an .ics file (RFC 5545 §3.3.11): backslash, semicolon
+ * and comma are escaped, newlines become \n.
+ *
+ * Every description in these configs contains commas, and an unescaped comma in
+ * a TEXT value is a VALUE SEPARATOR — strict parsers truncate the description at
+ * the first one or reject the event. The hand-patched FRCGW page escapes them by
+ * hand ("...withheld automatically\, 15%..."), which is the correct behaviour;
+ * the generator did not, so it could not reproduce that page.
+ *
+ * NOTE the double layer: the output of this function is written INTO a TypeScript
+ * string literal in the generated file, so an emitted `\\,` is what yields the
+ * runtime `\,` the .ics actually needs.
+ */
+function icsText(s: string): string {
+  return s
+    .replace(/\\/g, "\\\\\\\\")
+    .replace(/;/g, "\\\\;")
+    .replace(/,/g, "\\\\,")
+    .replace(/\r?\n/g, "\\\\n");
+}
+
+/**
+ * Does this product claim a real, resolvable calendar date at all?
+ *
+ * `temporal` is authoritative when present — that is the entire point of the
+ * declaration. `unresolvable` and `none` mean the product has SAID it cannot
+ * produce a date for any customer, so any absolute date sitting in its calendar
+ * config is an authoring leftover, not a fact.
+ *
+ * When `temporal` is absent the product is UNDECLARED, and we fall back to the
+ * same signal the countdown uses (`deadline.isoDate`) so this change does not
+ * silently strip dates from the 40-odd products that have not declared yet.
+ * Undeclared + a future isoDate keeps today's behaviour; undeclared + a past or
+ * empty isoDate was already broken and now fails closed.
+ */
+function productClaimsADate(config: ProductConfig): boolean {
+  if (config.temporal) {
+    return config.temporal.kind === "deadline"
+        || config.temporal.kind === "window"
+        || config.temporal.kind === "effective_from";
+  }
+  const iso = Date.parse(config.deadline?.isoDate ?? "");
+  return !Number.isNaN(iso) && iso >= Date.now();
+}
+
+/**
+ * Human label for a relative calendar event in the visible list.
+ *
+ * Previously every relative event was labelled "This week", which is simply
+ * false for the +21 and +28 day events FRCGW declares — the customer reads
+ * "This week" against an event a month out.
+ */
+function relativeDateLabel(relativeStr: string): string {
+  const m = relativeStr.match(/\+(\d+)days/);
+  if (!m) return "Soon";
+  const d = Number(m[1]);
+  if (d === 0) return "Now";
+  if (d <= 7)  return "This week";
+  if (d <= 14) return "In 2 weeks";
+  return `In ${d} days`;
 }
 
 function buildRelativeDate(relativeStr: string): string {

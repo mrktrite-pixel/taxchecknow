@@ -40,6 +40,13 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // as { kind: "deadline", rule: { source: "fixed", recurrence: "annual",
   // month: 10, day: 31, timezone: "Australia/Sydney", shift: "next_business_day" } }
   // — a recurrence rule, never the stored date.
+  // ── ENGINE-NATIVE DECLARATION (R-A2) ───────────────────────────────────
+  // Mounts the generic EngineCalculator against the Bee D engine, so it writes
+  // <id>_answers / <id>_qualification and NOT the per-field
+  // successPromptFields keys. Verified at generate time against
+  // app/au/check/superannuation-tax-leaving-australia-confusion-2026.
+  engineNative: true,
+
   temporal: {
     kind:         "unresolvable",
     reason:       "departure_date_not_captured",

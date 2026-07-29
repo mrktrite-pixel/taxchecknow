@@ -119,6 +119,25 @@ export interface ProductConfig {
     description: string;
     urgencyLabel: string;
     countdownLabel: string;
+
+    // Shown on the success pages INSTEAD of the countdown when the product's
+    // temporal declaration yields no date (kind "unresolvable" / "none").
+    //
+    // Without this, a declared-dateless product simply loses its urgency banner:
+    // the banner is gated on a day-count that will never exist, so the customer
+    // sees nothing where the most time-critical sentence on the page used to be.
+    // The answer is not to fabricate a date — it is to say the true thing
+    // qualitatively. FRCGW cannot know your settlement date, but "the certificate
+    // must reach the buyer's solicitor BEFORE settlement" is corpus-true for every
+    // customer, every day.
+    //
+    // Declared, never inferred: this is customer-facing legal urgency copy.
+    // Absent means the banner is simply omitted — never auto-written from the topic.
+    qualitative?: {
+      headline: string;   // replaces "🔴 N days to <display>"
+      badge:    string;   // replaces the "<short>" pill
+      cta:      string;   // replaces the "N days to <display>." line in the CTA block
+    };
   };
 
   // ─── TEMPORAL DECLARATION (TEMPORAL v1 · Step 6.1) ─────────────────────
@@ -133,6 +152,34 @@ export interface ProductConfig {
   // happening. Absent here means UNDECLARED, which means SILENT (6.3) — never
   // a fallback to config.deadline or to any other date.
   temporal?: TemporalDeclaration;
+
+  // ─── ENGINE-NATIVE DECLARATION (R-A2) ──────────────────────────────────
+  // Does this product's calculator mount the generic EngineCalculator?
+  //
+  // WHY THIS IS DECLARED AND NOT SNIFFED: it selects which assessment-input
+  // shape the success-page template emits, and the two shapes are mutually
+  // destructive. An engine-native calculator writes `<id>_answers` /
+  // `<id>_qualification`; a legacy bespoke calculator writes the per-field
+  // `<id>_<key>` keys that `successPromptFields` names. Emit the wrong shape
+  // and the /api/assess fallback silently reads keys nobody wrote, takes its
+  // hardcoded defaults, and produces a confident, personalised-looking
+  // assessment built from numbers the customer never supplied. That failure is
+  // invisible at runtime, so the choice has to be reviewable in the diff.
+  //
+  // WHY IT IS ALSO VERIFIED: a declaration alone rots the moment a calculator
+  // is migrated and the config is not. generate-success-pages.ts therefore
+  // checks this claim against the product's app dir at generate time (does the
+  // calculator import @/app/_components/EngineCalculator, does engine.json
+  // exist) and THROWS on disagreement rather than emitting either shape.
+  //
+  // Absent means legacy — the pre-existing behaviour, unchanged.
+  //
+  // NOTE the asymmetry: engine.json can legitimately exist BEFORE the wrapper
+  // lands (it is emitted by the engine pipeline, not by the calculator), so
+  // engine.json alone never makes a product engine-native. The calculator
+  // mount is the load-bearing signal. rental-property-deduction-audit is
+  // exactly this case today.
+  engineNative?: boolean;
 
   // ─── NURTURE DECLARATION (TEMPORAL v1 · Step 7.1) ──────────────────────
   // The product's own nurture lane. INDEPENDENT of `temporal`: an unresolvable
