@@ -1,45 +1,45 @@
-﻿import type { ProductConfig } from "../types/product-config";
+import type { ProductConfig } from "../types/product-config";
 
-// AUTO-EMITTED by the artifactâ†’config adapter (PQ-C1c). Source: soverella build aabca693
-// (GATES_PASSED). Deterministic serialization; verbatim ATO prose. Machine product â€”
+// AUTO-EMITTED by the artifact→config adapter (PQ-C1c). Source: soverella build aabca693
+// (GATES_PASSED). Deterministic serialization; verbatim ATO prose. Machine product —
 // the page mounts EngineCalculator (engine JSON alongside), not a hand-written calculator.
 
 export const PRODUCT_CONFIG: ProductConfig = {
-  // â”€â”€ TEMPORAL DECLARATION (TEMPORAL v1 Â· Step 6 addendum) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── TEMPORAL DECLARATION (TEMPORAL v1 · Step 6 addendum) ────────────────
   // SUPERLEAVE, the other live product. Declared 2026-07-28 from ITS OWN input
-  // evidence â€” not from the topic, not from the shape survey (ruling 3.5).
+  // evidence — not from the topic, not from the shape survey (ruling 3.5).
   //
   // THE AUDIT, in full:
-  //   Â· engine.json (this is a MACHINE product â€” the page mounts EngineCalculator,
+  //   · engine.json (this is a MACHINE product — the page mounts EngineCalculator,
   //     so engine.json IS the input surface) declares SIX questions, every one of
   //     them option-valued: q1-scope, q2-topic, q3-visa-type,
   //     q4-time-since-departure, q5-balance, q6-whm-mixed. No date input exists.
-  //   Â· 127 live decision_sessions carry 21 distinct answer keys plus 3
+  //   · 127 live decision_sessions carry 21 distinct answer keys plus 3
   //     questionnaire keys. ZERO date-valued answers, on any key, ever.
-  //   Â· The nearest temporal signals are all BUCKETS: q4-time-since-departure is
+  //   · The nearest temporal signals are all BUCKETS: q4-time-since-departure is
   //     {past_threshold | before_threshold | unsure_time}, and the sessions record
-  //     prose like "How urgent is this?" â†’ "Within 6 months".
+  //     prose like "How urgent is this?" → "Within 6 months".
   //
-  // So a REAL date exists â€” unclaimed super transfers to the ATO six months after
+  // So a REAL date exists — unclaimed super transfers to the ATO six months after
   // departure + visa cessation, which is what q4 is asking which side of you are
-  // on â€” but it is anchored to a DEPARTURE date the product never collects. The
+  // on — but it is anchored to a DEPARTURE date the product never collects. The
   // product knows which side of the threshold the customer is on and nothing more.
   // Deriving a date from that bucket would invent precision the customer never
   // gave, exactly as it would for FRCGW. Recorded, not forced (6.1).
   //
-  // EFFECT: resolve() â†’ UNRESOLVABLE â†’ 0 reminders. Unchanged behaviour; the
+  // EFFECT: resolve() → UNRESOLVABLE → 0 reminders. Unchanged behaviour; the
   // silence is now declared, and the gate item can tick, so a SHIPPED product no
   // longer sits permanently in AWAITING OPERATOR.
   //
   // NOT DECLARED AS A FIXED DEADLINE, deliberately: config.deadline below holds
   // 31 Oct 2026 (the AU individual tax return due date). That is a plausible
-  // annual recurrence, but it is NOT what this product gates on â€” its own engine
-  // asks about the 6-month departure threshold â€” and adopting it here would be
+  // annual recurrence, but it is NOT what this product gates on — its own engine
+  // asks about the 6-month departure threshold — and adopting it here would be
   // inferring a declaration from a hand-authored artefact, which 3.5 forbids. If
   // 31 October IS the intended act-by date, the operator declares it at the gate
   // as { kind: "deadline", rule: { source: "fixed", recurrence: "annual",
   // month: 10, day: 31, timezone: "Australia/Sydney", shift: "next_business_day" } }
-  // â€” a recurrence rule, never the stored date.
+  // — a recurrence rule, never the stored date.
   temporal: {
     kind:         "unresolvable",
     reason:       "departure_date_not_captured",
@@ -52,10 +52,10 @@ export const PRODUCT_CONFIG: ProductConfig = {
     domain:       "superannuation",
     label:        "DASP unclaimed-transfer threshold",
   },
-  // â”€â”€ NURTURE DECLARATION (TEMPORAL v1 Â· Step 7.6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── NURTURE DECLARATION (TEMPORAL v1 · Step 7.6) ────────────────────────
   // Same reasoning as FRCGW: `unresolvable` bars a computed deadline, not
   // contact. Anchored to the customer's own save, so the DASP six-month
-  // threshold â€” which we cannot date for any individual â€” is never implied.
+  // threshold — which we cannot date for any individual — is never implied.
   // [3,7,14] records the cadence /api/leads already queues for this product.
   nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
   "id": "superannuation-tax-leaving-australia-confusion-2026",
@@ -76,9 +76,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
   "tier1": {
     "price": 67,
     "name": "DASP & Departure Super Plan",
-    "tagline": "How much super tax will be withheld when you leave Australia â€” and what happens if you don't claim?",
-    "value": "A personalised super-when-leaving analysis â€” your DASP tax position by visa class, the 28-day payment window, and what happens to unclaimed super after 6 months. Built around your answers.",
-    "cta": "Get My DASP & Departure Super Plan â€” $67 â†’",
+    "tagline": "How much super tax will be withheld when you leave Australia — and what happens if you don't claim?",
+    "value": "A personalised super-when-leaving analysis — your DASP tax position by visa class, the 28-day payment window, and what happens to unclaimed super after 6 months. Built around your answers.",
+    "cta": "Get My DASP & Departure Super Plan — $67 →",
     "productKey": "au_67_superannuation_tax_leaving_australia_confusion_2026",
     "envVar": "STRIPE_AU_SUPERLEAVE_67",
     "successPath": "assess",
@@ -87,9 +87,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
   "tier2": {
     "price": 147,
     "name": "Departure Tax & Super Optimisation System",
-    "tagline": "Plan your whole departure â€” DASP timing, taxed vs untaxed elements, and residency interaction.",
-    "value": "Full departure planning â€” DASP timing strategy, taxed vs untaxed element breakdown, residency interaction, and a decision framework for your adviser. Everything in the plan, plus the complete system.",
-    "cta": "Get My Departure Tax & Super Optimisation System â€” $147 â†’",
+    "tagline": "Plan your whole departure — DASP timing, taxed vs untaxed elements, and residency interaction.",
+    "value": "Full departure planning — DASP timing strategy, taxed vs untaxed element breakdown, residency interaction, and a decision framework for your adviser. Everything in the plan, plus the complete system.",
+    "cta": "Get My Departure Tax & Super Optimisation System — $147 →",
     "productKey": "au_147_superannuation_tax_leaving_australia_confusion_2026",
     "envVar": "STRIPE_AU_SUPERLEAVE_147",
     "successPath": "plan",
@@ -99,45 +99,45 @@ export const PRODUCT_CONFIG: ProductConfig = {
     "isoDate": "2026-10-31T23:59:59.000+11:00",
     "display": "31 October 2026",
     "short": "31 Oct 2026",
-    "description": "Individual tax return due â€” and a reminder that unclaimed super transfers to the ATO 6 months after departure",
+    "description": "Individual tax return due — and a reminder that unclaimed super transfers to the ATO 6 months after departure",
     "urgencyLabel": "TIME-SENSITIVE",
     "countdownLabel": "Act before your super becomes ATO unclaimed money"
   },
-  "h1": "Superannuation Tax When Leaving Australia (DASP) 2026: How Much Is Withheld â€” and What If You Never Claim?",
-  "metaTitle": "Superannuation Tax Leaving Australia 2026 (DASP) â€” Withholding Rates by Visa | TaxCheckNow",
+  "h1": "Superannuation Tax When Leaving Australia (DASP) 2026: How Much Is Withheld — and What If You Never Claim?",
+  "metaTitle": "Superannuation Tax Leaving Australia 2026 (DASP) — Withholding Rates by Visa | TaxCheckNow",
   "metaDescription": "Leaving Australia? Your super can be claimed as a DASP, taxed at 35%/45% for most visas or 65% for working holiday makers. Unclaimed super transfers to the ATO after 6 months. Free check shows your position.",
   "canonical": "https://taxchecknow.com/au/check/superannuation-tax-leaving-australia-confusion-2026",
-  "answerHeadline": "The answer â€” ATO confirmed July 2026",
+  "answerHeadline": "The answer — ATO confirmed July 2026",
   "answerBody": [
-    "When leaving Australia as a temporary resident, you may generally claim your superannuation as a Departing Australia Superannuation Payment (DASP), with tax withheld at the time of payment â€” 35% on the taxed element and 45% on the untaxed element for most visa holders, or 65% on both elements for working holiday maker visa holders â€” and if you do not apply, your super fund may transfer your balance to the ATO as unclaimed money once 6 months or more has passed since you left Australia and your visa has ceased, depending on circumstances.",
+    "When leaving Australia as a temporary resident, you may generally claim your superannuation as a Departing Australia Superannuation Payment (DASP), with tax withheld at the time of payment — 35% on the taxed element and 45% on the untaxed element for most visa holders, or 65% on both elements for working holiday maker visa holders — and if you do not apply, your super fund may transfer your balance to the ATO as unclaimed money once 6 months or more has passed since you left Australia and your visa has ceased, depending on circumstances.",
     "Departing Australia Superannuation Payment (DASP) matters are generally governed under the Migration Act 1958, as indicated by the Australian Taxation Office's guidance on temporary residents and superannuation. Depending on circumstances, the applicable rules and requirements may vary, and this source is indicated as the primary authority on this topic."
   ],
-  "answerSource": "ATO â€” Departing Australia Superannuation Payment (DASP)",
+  "answerSource": "ATO — Departing Australia Superannuation Payment (DASP)",
   "mistakesHeadline": "Common DASP mistakes and misconceptions",
   "mistakes": [
-    "Assuming the 65% unclaimed-money rate applies to every visa type â€” it applies specifically to working holiday makers; other temporary residents face 35% (taxed element) and 45% (untaxed element).",
-    "Thinking you can leave super in Australia indefinitely â€” after 6 months since departure with your visa ceased, your fund transfers it to the ATO as unclaimed super money.",
-    "Not certifying ID documents before leaving â€” balances of $5,000 or more need certified proof of identity, far easier to arrange while still in Australia.",
-    "Misjudging eligibility â€” you must have held a temporary visa (excluding subclasses 405 and 410), the visa must have ceased, and you must have left Australia."
+    "Assuming the 65% unclaimed-money rate applies to every visa type — it applies specifically to working holiday makers; other temporary residents face 35% (taxed element) and 45% (untaxed element).",
+    "Thinking you can leave super in Australia indefinitely — after 6 months since departure with your visa ceased, your fund transfers it to the ATO as unclaimed super money.",
+    "Not certifying ID documents before leaving — balances of $5,000 or more need certified proof of identity, far easier to arrange while still in Australia.",
+    "Misjudging eligibility — you must have held a temporary visa (excluding subclasses 405 and 410), the visa must have ceased, and you must have left Australia."
   ],
   "chainVisual": {
     "label": "Your DASP position",
-    "broken": "Super left unclaimed â†’ transferred to the ATO â†’ working-holiday-maker 65% rate risk",
-    "fixed": "Claim DASP correctly â†’ tax withheld at your visa-class rate â†’ generally paid within 28 days"
+    "broken": "Super left unclaimed → transferred to the ATO → working-holiday-maker 65% rate risk",
+    "fixed": "Claim DASP correctly → tax withheld at your visa-class rate → generally paid within 28 days"
   },
   "brackets": [
     {
-      "label": "Ordinary tax rate â€” taxed element",
+      "label": "Ordinary tax rate — taxed element",
       "value": "35%",
       "status": "risk"
     },
     {
-      "label": "Ordinary tax rate â€” untaxed element",
+      "label": "Ordinary tax rate — untaxed element",
       "value": "45%",
       "status": "trap"
     },
     {
-      "label": "WHM tax rate â€” both elements",
+      "label": "WHM tax rate — both elements",
       "value": "65%",
       "status": "deep_trap"
     },
@@ -147,7 +147,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "status": "approaching"
     },
     {
-      "label": "Unclaimed super â†’ ATO transfer",
+      "label": "Unclaimed super → ATO transfer",
       "value": "6 months",
       "status": "risk"
     },
@@ -176,7 +176,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   },
   "calculatorRuleBox": {
     "label": "How this check works",
-    "body": "Answer a few questions about your visa, your departure, and your super balance. The tool routes you to the DASP outcome that matches your situation using ATO-sourced rules â€” no numbers are invented."
+    "body": "Answer a few questions about your visa, your departure, and your super balance. The tool routes you to the DASP outcome that matches your situation using ATO-sourced rules — no numbers are invented."
   },
   "calculatorClarification": {
     "label": "Indicated language",
@@ -193,7 +193,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     {
       "label": "ID documents",
       "value": "$5,000+",
-      "sub": "Balance at/above threshold needs certified ID â€” easier before you leave",
+      "sub": "Balance at/above threshold needs certified ID — easier before you leave",
       "red": false
     },
     {
@@ -203,7 +203,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "red": false
     }
   ],
-  "geoBlockTitle": "Key facts â€” DASP when leaving Australia",
+  "geoBlockTitle": "Key facts — DASP when leaving Australia",
   "geoBlockH2": "Superannuation tax on leaving Australia, at a glance",
   "geoBodyParagraph": "When leaving Australia as a temporary resident, you can claim your superannuation as a Departing Australia Superannuation Payment (DASP). Tax is withheld at the time of payment: for non-working holiday maker (WHM) visa holders, the taxable component (taxed element) is taxed at 35% and the untaxed element at 45%; for WHM visa holders, both elements are taxed at 65%. The tax-free component is nil for both. Payment is generally made within 28 days of a completed application. If you don't apply, your super fund will transfer your super to the ATO as unclaimed money if it has been 6 months or more since you left Australia and your visa has ceased.",
   "geoFormula": "",
@@ -225,19 +225,19 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "value": "28 days"
     },
     {
-      "label": "DASP ordinary tax rate â€” taxable component (taxed element)",
+      "label": "DASP ordinary tax rate — taxable component (taxed element)",
       "value": "35 %"
     },
     {
-      "label": "DASP WHM tax rate â€” taxable component (taxed element)",
+      "label": "DASP WHM tax rate — taxable component (taxed element)",
       "value": "65 %"
     },
     {
-      "label": "DASP ordinary tax rate â€” taxable component (untaxed element)",
+      "label": "DASP ordinary tax rate — taxable component (untaxed element)",
       "value": "45 %"
     },
     {
-      "label": "DASP WHM tax rate â€” taxable component (untaxed element)",
+      "label": "DASP WHM tax rate — taxable component (untaxed element)",
       "value": "65 %"
     },
     {
@@ -257,32 +257,32 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   "comparisonRows": [
     {
-      "position": "Non-WHM â€” taxed element",
-      "metric1": "Temporary visa holder (non-working-holiday-maker) â€” taxable component, taxed element",
+      "position": "Non-WHM — taxed element",
+      "metric1": "Temporary visa holder (non-working-holiday-maker) — taxable component, taxed element",
       "metric2": "The taxed element of the taxable component may be subject to a withholding rate of 35 % at the time of DASP payment.",
       "bestMove": "Confirm your taxed-element balance with your fund"
     },
     {
-      "position": "Non-WHM â€” untaxed element",
-      "metric1": "Temporary visa holder (non-working-holiday-maker) â€” taxable component, untaxed element",
+      "position": "Non-WHM — untaxed element",
+      "metric1": "Temporary visa holder (non-working-holiday-maker) — taxable component, untaxed element",
       "metric2": "The untaxed element of the taxable component may be subject to a withholding rate of 45 % at the time of DASP payment.",
       "bestMove": "Confirm your untaxed-element balance with your fund"
     },
     {
-      "position": "WHM (417/462) â€” taxed element",
-      "metric1": "Working holiday maker visa holder (subclass 417 or 462) â€” taxable component, taxed element",
+      "position": "WHM (417/462) — taxed element",
+      "metric1": "Working holiday maker visa holder (subclass 417 or 462) — taxable component, taxed element",
       "metric2": "The taxed element of the taxable component may be subject to a withholding rate of 65 % at the time of DASP payment.",
       "bestMove": "Confirm your visa subclass (417 or 462)"
     },
     {
-      "position": "WHM (417/462) â€” untaxed element",
-      "metric1": "Working holiday maker visa holder (subclass 417 or 462) â€” taxable component, untaxed element",
+      "position": "WHM (417/462) — untaxed element",
+      "metric1": "Working holiday maker visa holder (subclass 417 or 462) — taxable component, untaxed element",
       "metric2": "The untaxed element of the taxable component may be subject to a withholding rate of 65 % at the time of DASP payment.",
       "bestMove": "Confirm your visa subclass (417 or 462)"
     },
     {
       "position": "Complete application received",
-      "metric1": "Completed DASP application received â€” payment window",
+      "metric1": "Completed DASP application received — payment window",
       "metric2": "DASP is generally paid within 28 days of a completed application being received.",
       "bestMove": "Submit a complete DASP application"
     }
@@ -296,42 +296,42 @@ export const PRODUCT_CONFIG: ProductConfig = {
   "toolsRows": [
     {
       "tool": "dasp-eligibility-check",
-      "effect": "dasp-eligibility-check â€” one or more of the three core eligibility conditions may not be clearly met",
+      "effect": "dasp-eligibility-check — one or more of the three core eligibility conditions may not be clearly met",
       "note": "Gather your visa history and Australian departure record and review the three DASP eligibility conditions (temporary visa held, visa ceased, departed Australia) against your circumstances before submitting a claim."
     },
     {
       "tool": "dasp-tax-ordinary-visa",
-      "effect": "dasp-tax-ordinary-visa â€” high-risk signal for tax withholding on taxed and untaxed elements",
+      "effect": "dasp-tax-ordinary-visa — high-risk signal for tax withholding on taxed and untaxed elements",
       "note": "Request a breakdown of your super balance by component (taxed element and untaxed element) from your super fund so you can understand which withholding rate may apply to each portion of your payment."
     },
     {
       "tool": "dasp-tax-whm-visa",
-      "effect": "dasp-tax-whm-visa â€” high-risk signal for elevated tax withholding on both elements",
+      "effect": "dasp-tax-whm-visa — high-risk signal for elevated tax withholding on both elements",
       "note": "Request a breakdown of your super balance by component from your super fund and review the applicable withholding rate for working holiday maker visa holders before submitting your DASP claim."
     },
     {
       "tool": "dasp-id-requirements-high-balance",
-      "effect": "dasp-id-requirements-high-balance â€” time-sensitive certified identification requirement",
-      "note": "Arrange certified copies of your proof of identification documents and, if submitting a paper application, obtain a Certification of Immigration Status from Home Affairs â€” ideally before leaving Australia where possible."
+      "effect": "dasp-id-requirements-high-balance — time-sensitive certified identification requirement",
+      "note": "Arrange certified copies of your proof of identification documents and, if submitting a paper application, obtain a Certification of Immigration Status from Home Affairs — ideally before leaving Australia where possible."
     },
     {
       "tool": "dasp-payment-timeline",
-      "effect": "dasp-payment-timeline â€” indicated risk of delay if application is incomplete",
+      "effect": "dasp-payment-timeline — indicated risk of delay if application is incomplete",
       "note": "Check that your DASP application is complete before submission and note the expected payment and payment summary windows so you can follow up if those timeframes pass without a response."
     },
     {
       "tool": "dasp-unclaimed-super-ato-transfer",
-      "effect": "dasp-unclaimed-super-ato-transfer â€” indicated risk that balance has been transferred to the ATO",
+      "effect": "dasp-unclaimed-super-ato-transfer — indicated risk that balance has been transferred to the ATO",
       "note": "Check the ATO's unclaimed super money service to determine whether your balance has been transferred, and follow the ATO's process for claiming unclaimed super rather than contacting your former super fund directly."
     },
     {
       "tool": "none_fit",
-      "effect": "none_fit â€” situation does not match any supported DASP pathway (e.g. permanent resident, excluded subclass, balance below threshold)",
+      "effect": "none_fit — situation does not match any supported DASP pathway (e.g. permanent resident, excluded subclass, balance below threshold)",
       "note": "Review whether your visa subclass or balance level places you outside the DASP framework and seek guidance appropriate to your specific visa or residency status."
     },
     {
       "tool": "insufficient_information",
-      "effect": "insufficient_information â€” visa type, balance, or time elapsed is unclear",
+      "effect": "insufficient_information — visa type, balance, or time elapsed is unclear",
       "note": "Locate your visa grant notice, super fund statement, and departure records to confirm the missing details before re-entering the tool or seeking further guidance."
     }
   ],
@@ -348,11 +348,11 @@ export const PRODUCT_CONFIG: ProductConfig = {
   "faqs": [
     {
       "question": "What happens to my super when I lose permanent resident status and leave Australia?",
-      "answer": "This is an area many people find unclear, and understandably so. Generally, when a visa holder permanently departs Australia, their super may become claimable through a specific departure payment process. What happens to your balance â€” including whether it may eventually be transferred to the ATO if unclaimed â€” depends on your visa type, your departure circumstances, and how much time has passed. It's worth checking directly with your super fund and the ATO to understand where your balance stands, as the rules can differ depending on the residency status you held."
+      "answer": "This is an area many people find unclear, and understandably so. Generally, when a visa holder permanently departs Australia, their super may become claimable through a specific departure payment process. What happens to your balance — including whether it may eventually be transferred to the ATO if unclaimed — depends on your visa type, your departure circumstances, and how much time has passed. It's worth checking directly with your super fund and the ATO to understand where your balance stands, as the rules can differ depending on the residency status you held."
     },
     {
       "question": "Can I access my super as a permanent resident who is no longer a permanent resident?",
-      "answer": "This is one of those situations where the rules can feel genuinely uncertain. Access to super generally depends on your current visa status and whether you have permanently departed Australia, not just the status you previously held. If your permanent residency has lapsed or been cancelled and you've left Australia, you may be in a different category than you expect. The ATO and your super fund are the right places to confirm what access conditions may apply to your specific situation â€” it's not something to assume either way."
+      "answer": "This is one of those situations where the rules can feel genuinely uncertain. Access to super generally depends on your current visa status and whether you have permanently departed Australia, not just the status you previously held. If your permanent residency has lapsed or been cancelled and you've left Australia, you may be in a different category than you expect. The ATO and your super fund are the right places to confirm what access conditions may apply to your specific situation — it's not something to assume either way."
     },
     {
       "question": "How do I contribute to super while a non-resident for tax purposes?",
@@ -360,15 +360,15 @@ export const PRODUCT_CONFIG: ProductConfig = {
     },
     {
       "question": "What forms do I need to fill for ATO contributions as a non-resident?",
-      "answer": "The specific forms involved can depend on what you're trying to do â€” whether that's making personal contributions, claiming a deduction, or something else. Many people find this part of the process confusing, and it's worth approaching it methodically. The ATO's website outlines the forms relevant to super contributions and non-resident situations. Keeping records of what you submit and when is important, as documentation requirements can apply. If you're unsure where to start, the ATO's online tools or a registered tax agent familiar with non-resident situations may help clarify the right pathway."
+      "answer": "The specific forms involved can depend on what you're trying to do — whether that's making personal contributions, claiming a deduction, or something else. Many people find this part of the process confusing, and it's worth approaching it methodically. The ATO's website outlines the forms relevant to super contributions and non-resident situations. Keeping records of what you submit and when is important, as documentation requirements can apply. If you're unsure where to start, the ATO's online tools or a registered tax agent familiar with non-resident situations may help clarify the right pathway."
     },
     {
       "question": "Can I use the First Home Saver Scheme if I'm on a temporary visa?",
-      "answer": "Eligibility for the First Home Super Saver Scheme generally involves a number of conditions, and visa status is one factor that may affect whether someone can participate or make a valid application. It's not straightforward to assume eligibility based on visa type alone. The ATO sets out the eligibility criteria for the scheme, and it's worth reviewing those carefully â€” or speaking with a registered tax agent â€” before making any contributions with the intention of using this scheme."
+      "answer": "Eligibility for the First Home Super Saver Scheme generally involves a number of conditions, and visa status is one factor that may affect whether someone can participate or make a valid application. It's not straightforward to assume eligibility based on visa type alone. The ATO sets out the eligibility criteria for the scheme, and it's worth reviewing those carefully — or speaking with a registered tax agent — before making any contributions with the intention of using this scheme."
     },
     {
       "question": "What are the tax implications of withdrawing super via FHSS?",
-      "answer": "Withdrawals through the First Home Super Saver Scheme are generally subject to tax, and the amount withheld can depend on factors like the type of contributions involved and your individual tax situation. There may also be implications if your circumstances change â€” for example, if you don't end up purchasing a home within the required timeframe. These are the kinds of 'hidden costs' that can catch people off guard, so it's worth understanding the full picture before requesting a release. The ATO's FHSS guidance covers how tax is applied, and a tax professional can help you model what it may mean for your specific situation."
+      "answer": "Withdrawals through the First Home Super Saver Scheme are generally subject to tax, and the amount withheld can depend on factors like the type of contributions involved and your individual tax situation. There may also be implications if your circumstances change — for example, if you don't end up purchasing a home within the required timeframe. These are the kinds of 'hidden costs' that can catch people off guard, so it's worth understanding the full picture before requesting a release. The ATO's FHSS guidance covers how tax is applied, and a tax professional can help you model what it may mean for your specific situation."
     },
     {
       "question": "Can my partner's super also be withdrawn via FHSS for a house deposit?",
@@ -378,7 +378,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   "accountantQuestionsH2": "Questions to take to your accountant",
   "accountantQuestions": [
     {
-      "q": "I held more than one visa type while working in Australia â€” including both a working holiday maker visa and a skilled temporary visa at different times. How is the DASP tax withholding rate determined when my super contributions span both visa types?",
+      "q": "I held more than one visa type while working in Australia — including both a working holiday maker visa and a skilled temporary visa at different times. How is the DASP tax withholding rate determined when my super contributions span both visa types?",
       "why": "Surfaces the 'mixed profile' situation this tool flags as needing a professional review."
     },
     {
@@ -402,7 +402,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     "title": "Also relevant",
     "body": "Leaving Australia can also trigger CGT on your former main residence. If you owned an Australian home, check your exposure before you sell.",
     "url": "/au/check/cgt-main-residence-trap",
-    "label": "Check your main-residence CGT position â†’"
+    "label": "Check your main-residence CGT position →"
   },
   "lawBarSummary": "The governing legislation is the Migration Act 1958, with the ATO's DASP guidance selected as the primary authoritative source for temporary residents departing Australia and their superannuation entitlements.",
   "lawBarBadges": [
@@ -415,7 +415,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   "sources": [
     {
-      "title": "ATO â€” Departing Australia Superannuation Payment (DASP)",
+      "title": "ATO — Departing Australia Superannuation Payment (DASP)",
       "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp"
     }
   ],
@@ -425,7 +425,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-01",
       "name": "Your DASP Tax Position",
       "desc": "Your withholding rate by visa class and component (taxed vs untaxed element).",
-      "content": "<h2>Your DASP Withholding Position</h2><div class='action-box'><h3>Rates by visa class and component</h3><p>Working holiday maker (subclass 417/462): taxed element 65%, untaxed element 65%.</p><p>Other temporary visas (student, skilled, sponsored): taxed element 35%, untaxed element 45%.</p><p>Tax-free component: 0%.</p></div><h3>What this means for you</h3><p>Your DASP is withheld at the time of payment based on your visa class and how your balance splits between taxed and untaxed elements. Confirm which components make up your balance before you claim.</p><p>Source: <a href='https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp'>ATO â€” Departing Australia Superannuation Payment</a> Â· Migration Act 1958.</p>",
+      "content": "<h2>Your DASP Withholding Position</h2><div class='action-box'><h3>Rates by visa class and component</h3><p>Working holiday maker (subclass 417/462): taxed element 65%, untaxed element 65%.</p><p>Other temporary visas (student, skilled, sponsored): taxed element 35%, untaxed element 45%.</p><p>Tax-free component: 0%.</p></div><h3>What this means for you</h3><p>Your DASP is withheld at the time of payment based on your visa class and how your balance splits between taxed and untaxed elements. Confirm which components make up your balance before you claim.</p><p>Source: <a href='https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp'>ATO — Departing Australia Superannuation Payment</a> · Migration Act 1958.</p>",
       "tier": 1
     },
     {
@@ -433,7 +433,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-02",
       "name": "Claim Timing & Payment Window",
       "desc": "The 28-day payment window and the 14-day payment-summary window, applied to your situation.",
-      "content": "<h2>Claim Timing &amp; Payment Windows</h2><table><tr><th>Milestone</th><th>Window</th></tr><tr><td>DASP paid after a completed application is received</td><td>within 28 days</td></tr><tr><td>DASP payment summary issued after payment is made</td><td>within 14 days</td></tr></table><div class='info-box'>Incomplete applications are the most common cause of delay. Prepare your identity documents and fund details before you submit.</div><p>Source: ATO â€” Departing Australia Superannuation Payment.</p>",
+      "content": "<h2>Claim Timing &amp; Payment Windows</h2><table><tr><th>Milestone</th><th>Window</th></tr><tr><td>DASP paid after a completed application is received</td><td>within 28 days</td></tr><tr><td>DASP payment summary issued after payment is made</td><td>within 14 days</td></tr></table><div class='info-box'>Incomplete applications are the most common cause of delay. Prepare your identity documents and fund details before you submit.</div><p>Source: ATO — Departing Australia Superannuation Payment.</p>",
       "tier": 1
     },
     {
@@ -441,7 +441,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-03",
       "name": "ID & Certification Checklist",
       "desc": "What certified documents your balance requires and how to prepare them before you leave.",
-      "content": "<h2>Identification &amp; Certification Checklist</h2><div class='action-box'><h3>Where your super balance is $5,000 or more</h3><p>Your fund may require certified copies of your proof-of-identity documents.</p><p>Paper applications may also require a Certification of Immigration Status from Home Affairs.</p></div><ul class='checklist'><li>Certify your identity documents while still in Australia â€” it is materially easier before you leave.</li><li>Confirm your fund's specific certified-copy requirements.</li><li>For paper claims, request the Certification of Immigration Status early.</li></ul>",
+      "content": "<h2>Identification &amp; Certification Checklist</h2><div class='action-box'><h3>Where your super balance is $5,000 or more</h3><p>Your fund may require certified copies of your proof-of-identity documents.</p><p>Paper applications may also require a Certification of Immigration Status from Home Affairs.</p></div><ul class='checklist'><li>Certify your identity documents while still in Australia — it is materially easier before you leave.</li><li>Confirm your fund's specific certified-copy requirements.</li><li>For paper claims, request the Certification of Immigration Status early.</li></ul>",
       "tier": 1
     },
     {
@@ -449,7 +449,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-04",
       "name": "Unclaimed Super Risk Brief",
       "desc": "What happens after 6 months and how to claim back from the ATO if it has already transferred.",
-      "content": "<h2>Unclaimed Super â€” the 6-Month Rule</h2><p>Where 6 months or more have passed since you left Australia and your visa ceased, your super fund may transfer your balance to the ATO as unclaimed super money.</p><h3>If it has already transferred</h3><p>You then claim your DASP from the ATO directly rather than from your fund. The DASP withholding rates still apply â€” working holiday makers face the 65% rate on ATO-held unclaimed money.</p><p>Source: ATO â€” Departing Australia Superannuation Payment and unclaimed super.</p>",
+      "content": "<h2>Unclaimed Super — the 6-Month Rule</h2><p>Where 6 months or more have passed since you left Australia and your visa ceased, your super fund may transfer your balance to the ATO as unclaimed super money.</p><h3>If it has already transferred</h3><p>You then claim your DASP from the ATO directly rather than from your fund. The DASP withholding rates still apply — working holiday makers face the 65% rate on ATO-held unclaimed money.</p><p>Source: ATO — Departing Australia Superannuation Payment and unclaimed super.</p>",
       "tier": 1
     },
     {
@@ -457,7 +457,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-05",
       "name": "Your Accountant Brief",
       "desc": "DASP questions to take to your adviser, written for your exact situation.",
-      "content": "<div class='info-box'>Take these to your accountant or adviser before you claim.</div><div class='action-box'><h3>Question 1</h3><p>Given my visa class, what withholding rate applies to the taxed and untaxed elements of my balance?</p></div><h3>Question 2</h3><p>Has 6 months passed since I left and my visa ceased â€” has my super already moved to the ATO as unclaimed money?</p><h3>Question 3</h3><p>Do I need certified identity documents or a Certification of Immigration Status for my balance, and how do I prepare them from overseas?</p>",
+      "content": "<div class='info-box'>Take these to your accountant or adviser before you claim.</div><div class='action-box'><h3>Question 1</h3><p>Given my visa class, what withholding rate applies to the taxed and untaxed elements of my balance?</p></div><h3>Question 2</h3><p>Has 6 months passed since I left and my visa ceased — has my super already moved to the ATO as unclaimed money?</p><h3>Question 3</h3><p>Do I need certified identity documents or a Certification of Immigration Status for my balance, and how do I prepare them from overseas?</p>",
       "tier": 1
     },
     {
@@ -465,7 +465,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-06",
       "name": "Taxed vs Untaxed Element Breakdown",
       "desc": "How your balance splits and the exact rate on each portion.",
-      "content": "<h2>Taxed vs Untaxed Element â€” Full Breakdown</h2><p>Your DASP tax depends on how your balance splits between the taxed and untaxed elements of the taxable component.</p><table><tr><th>Visa class</th><th>Taxed element</th><th>Untaxed element</th></tr><tr><td>Working holiday maker (417/462)</td><td>65%</td><td>65%</td></tr><tr><td>Other temporary visa</td><td>35%</td><td>45%</td></tr></table><p>Request a component statement from your fund so the split â€” and therefore your exact withholding â€” is known before you claim.</p>",
+      "content": "<h2>Taxed vs Untaxed Element — Full Breakdown</h2><p>Your DASP tax depends on how your balance splits between the taxed and untaxed elements of the taxable component.</p><table><tr><th>Visa class</th><th>Taxed element</th><th>Untaxed element</th></tr><tr><td>Working holiday maker (417/462)</td><td>65%</td><td>65%</td></tr><tr><td>Other temporary visa</td><td>35%</td><td>45%</td></tr></table><p>Request a component statement from your fund so the split — and therefore your exact withholding — is known before you claim.</p>",
       "tier": 2
     },
     {
@@ -473,7 +473,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-07",
       "name": "Residency & Departure Interaction",
       "desc": "How ceasing residency interacts with your super and other departure obligations.",
-      "content": "<h2>Residency &amp; Departure Interaction</h2><p>DASP eligibility requires that you held a temporary visa (excluding subclasses 405 and 410), your visa has ceased, and you have left Australia. Permanent residents and Australian citizens are not eligible.</p><ul class='checklist'><li>Confirm your visa has actually ceased, not merely lapsed in practice.</li><li>Both departure and visa cessation need to have occurred before a DASP claim.</li><li>Losing permanent-resident status while overseas changes your position â€” check eligibility carefully.</li></ul>",
+      "content": "<h2>Residency &amp; Departure Interaction</h2><p>DASP eligibility requires that you held a temporary visa (excluding subclasses 405 and 410), your visa has ceased, and you have left Australia. Permanent residents and Australian citizens are not eligible.</p><ul class='checklist'><li>Confirm your visa has actually ceased, not merely lapsed in practice.</li><li>Both departure and visa cessation need to have occurred before a DASP claim.</li><li>Losing permanent-resident status while overseas changes your position — check eligibility carefully.</li></ul>",
       "tier": 2
     },
     {
@@ -481,7 +481,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "slug": "dasp-08",
       "name": "Adviser Decision Framework",
       "desc": "A structured framework to plan DASP timing with your adviser and any planned return.",
-      "content": "<h2>Adviser Decision Framework</h2><ol><li><strong>Confirm eligibility:</strong> temporary visa held (not subclass 405/410), visa ceased, departed Australia.</li><li><strong>Establish your rate:</strong> visa class Ã— component (taxed vs untaxed element).</li><li><strong>Check the clock:</strong> more than 6 months since leaving and cessation â†’ claim from the ATO, not the fund.</li><li><strong>Prepare documents:</strong> certified identity / Certification of Immigration Status if your balance is $5,000 or more.</li><li><strong>If you plan to return:</strong> model how a future return affects your super position before you claim.</li></ol><p>Use this with your adviser to sequence your DASP claim.</p>",
+      "content": "<h2>Adviser Decision Framework</h2><ol><li><strong>Confirm eligibility:</strong> temporary visa held (not subclass 405/410), visa ceased, departed Australia.</li><li><strong>Establish your rate:</strong> visa class × component (taxed vs untaxed element).</li><li><strong>Check the clock:</strong> more than 6 months since leaving and cessation → claim from the ATO, not the fund.</li><li><strong>Prepare documents:</strong> certified identity / Certification of Immigration Status if your balance is $5,000 or more.</li><li><strong>If you plan to return:</strong> model how a future return affects your super position before you claim.</li></ol><p>Use this with your adviser to sequence your DASP claim.</p>",
       "tier": 2
     }
   ],
@@ -490,7 +490,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     {
       "uid": "dasp-certify",
       "summary": "Certify ID documents before leaving Australia",
-      "description": "If your balance is $5,000 or more, certified proof of identity is required â€” far easier while still in Australia.",
+      "description": "If your balance is $5,000 or more, certified proof of identity is required — far easier while still in Australia.",
       "date": "20260630"
     },
     {
@@ -529,15 +529,15 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "value": "$5,000"
     },
     {
-      "label": "DASP ordinary tax rate â€” taxable component (taxed element)",
+      "label": "DASP ordinary tax rate — taxable component (taxed element)",
       "value": "35 %"
     },
     {
-      "label": "DASP WHM tax rate â€” taxable component (taxed element)",
+      "label": "DASP WHM tax rate — taxable component (taxed element)",
       "value": "65 %"
     },
     {
-      "label": "DASP ordinary tax rate â€” taxable component (untaxed element)",
+      "label": "DASP ordinary tax rate — taxable component (untaxed element)",
       "value": "45 %"
     }
   ],
@@ -564,7 +564,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     {
       "position": 2,
       "name": "Identify your visa class",
-      "text": "Working holiday maker (417/462) or other temporary visa â€” this sets your withholding rate."
+      "text": "Working holiday maker (417/462) or other temporary visa — this sets your withholding rate."
     },
     {
       "position": 3,

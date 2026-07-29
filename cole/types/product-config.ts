@@ -1,6 +1,6 @@
-﻿// â”€â”€â”€ CALCULATOR INPUT TYPES (exported for generator use) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── CALCULATOR INPUT TYPES (exported for generator use) ──────────────────────
 
-// TEMPORAL v1 Step 6.1 â€” the declaration vocabulary. Canonical in
+// TEMPORAL v1 Step 6.1 — the declaration vocabulary. Canonical in
 // cole-marketing/lib/temporal-types.ts, snapshotted to lib/ by
 // scripts/sync-cole-lib.mjs. Type-only import: cole/ is excluded from the app
 // tsconfig, so this never pulls generator code into the app bundle.
@@ -26,7 +26,7 @@ export interface TwoButtonInput {
   default: string | number | boolean;
 }
 
-// â”€â”€â”€ PRODUCT CONFIG v3.0 â€” with PersonaConfig + StorySection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── PRODUCT CONFIG v3.0 — with PersonaConfig + StorySection ───────────────
 
 
 export interface ProductFile {
@@ -44,14 +44,14 @@ export interface PersonaConfig {
   occupation: string;     // "Company director, Hartley Precision Engineering"
   location: string;       // "West Midlands"
   family: string;         // "Wife Helen, two kids at university"
-  financialSnapshot: string; // "Â£180k salary, Â£45k dividends, Birmingham rental"
+  financialSnapshot: string; // "£180k salary, £45k dividends, Birmingham rental"
   painPoint: string;      // "Accountant visits once a year. Everything else is guesswork."
   discovery: string;      // "James googled the question after his accountant didn't call"
   voice: string;          // Tone: "Plain. No-nonsense. Slightly frustrated. Midlands straight-talker."
 }
 
 export interface StorySection {
-  hook: string;           // Opening sentence â€” sets scene immediately
+  hook: string;           // Opening sentence — sets scene immediately
   setup: string[];        // 2-3 paragraphs building the situation
   revelation: string;     // The moment James/Tyler/Aroha realises the problem
   resolution: string;     // What they did / what the calculator showed
@@ -59,7 +59,7 @@ export interface StorySection {
 }
 
 export interface ProductConfig {
-  // â”€â”€â”€ IDENTITY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── IDENTITY ──────────────────────────────────────────────────────────
   id: string;
   name: string;
   site: string;
@@ -68,19 +68,19 @@ export interface ProductConfig {
   language: string;
   currency: string;
 
-  // â”€â”€â”€ ROUTING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── ROUTING ───────────────────────────────────────────────────────────
   slug: string;
   url: string;
   apiRoute: string;
 
-  // â”€â”€â”€ LEGAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── LEGAL ─────────────────────────────────────────────────────────────
   authority: string;
   authorityUrl: string;
   legalAnchor: string;
   legislation: string;
   lastVerified: string;
 
-  // â”€â”€â”€ PRODUCTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── PRODUCTS ──────────────────────────────────────────────────────────
   tier1: {
     price: number;
     name: string;
@@ -104,13 +104,13 @@ export interface ProductConfig {
     fileCount: number;
   };
 
-  // â”€â”€â”€ DEADLINE (PRESENTATION ONLY) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── DEADLINE (PRESENTATION ONLY) ──────────────────────────────────────
   // WARNING: `isoDate` here is a STORED DATE and is therefore wrong the day
   // after it passes. It drives the gate-page countdown only, and the generated
   // page already suppresses the countdown when it has elapsed
   // (generate-gate-page.ts:81 `if (!DEADLINE_ISO) return null`, plus the
   // expired-suppression log at :128). It is NOT, and must never again become,
-  // the input to anything that SCHEDULES an email â€” that is `temporal` below.
+  // the input to anything that SCHEDULES an email — that is `temporal` below.
   // Set isoDate to "" for any product whose date is not a fixed calendar date.
   deadline: {
     isoDate: string;
@@ -121,16 +121,16 @@ export interface ProductConfig {
     countdownLabel: string;
   };
 
-  // â”€â”€â”€ TEMPORAL DECLARATION (TEMPORAL v1 Â· Step 6.1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── TEMPORAL DECLARATION (TEMPORAL v1 · Step 6.1) ─────────────────────
   // The product's own statement of its temporal behaviour, and the ONLY thing
   // the email scheduler reads (via lib/temporal-resolver.ts).
   //
   // OPTIONAL BY TYPE, MANDATORY BY GATE. Making it required here would break
   // every existing config at once and force a rushed, inferred declaration for
-  // 21 products â€” exactly what ruling 3.5 forbids. Instead the soverella gate
+  // 21 products — exactly what ruling 3.5 forbids. Instead the soverella gate
   // item `temporal_declared` (Step 6.4) blocks any product from SHIPPING while
   // it is absent, so each product declares as a by-product of work already
-  // happening. Absent here means UNDECLARED, which means SILENT (6.3) â€” never
+  // happening. Absent here means UNDECLARED, which means SILENT (6.3) — never
   // a fallback to config.deadline or to any other date.
   temporal?: TemporalDeclaration;
 
@@ -147,7 +147,7 @@ export interface ProductConfig {
   // can never render.
   nurture?: NurtureLane;
 
-  // â”€â”€â”€ PAGE CONTENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── PAGE CONTENT ──────────────────────────────────────────────────────
   h1: string;
   metaTitle: string;
   metaDescription: string;
@@ -172,7 +172,7 @@ export interface ProductConfig {
     status: "clear" | "approaching" | "trap" | "deep_trap" | "risk" | "fail" | "in_scope" | "out_of_scope";
   }>;
 
-  // â”€â”€â”€ CALCULATOR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── CALCULATOR ────────────────────────────────────────────────────────
   calculatorInputs: Array<ButtonGroupInput | TwoButtonInput>;
 
   tierAlgorithm: {
@@ -192,18 +192,18 @@ export interface ProductConfig {
     red?: boolean;
   }>;
 
-  // â”€â”€â”€ PERSONA + STORY (v3.0) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── PERSONA + STORY (v3.0) ────────────────────────────────────────────
   persona?: PersonaConfig;
   story?: StorySection;
 
-  // â”€â”€â”€ GEO BLOCK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── GEO BLOCK ─────────────────────────────────────────────────────────
   geoBlockTitle: string;
   geoBlockH2: string;
   geoBodyParagraph: string;
   geoFormula: string;
   geoFacts: Array<{ label: string; value: string }>;
 
-  // â”€â”€â”€ WORKED EXAMPLES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── WORKED EXAMPLES ───────────────────────────────────────────────────
   workedExamplesH2: string;
   workedExamplesColumns: string[];
   workedExamples: Array<{
@@ -213,7 +213,7 @@ export interface ProductConfig {
     status: string;
   }>;
 
-  // â”€â”€â”€ COMPARISON TABLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── COMPARISON TABLE ──────────────────────────────────────────────────
   comparisonH2: string;
   comparisonColumns: string[];
   comparisonRows: Array<{
@@ -223,7 +223,7 @@ export interface ProductConfig {
     bestMove: string;
   }>;
 
-  // â”€â”€â”€ TOOLS TABLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── TOOLS TABLE ───────────────────────────────────────────────────────
   toolsH2: string;
   toolsColumns: string[];
   toolsRows: Array<{
@@ -232,49 +232,49 @@ export interface ProductConfig {
     note: string;
   }>;
 
-  // â”€â”€â”€ AI CORRECTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── AI CORRECTIONS ────────────────────────────────────────────────────
   aiCorrections: Array<{ wrong: string; correct: string }>;
 
-  // â”€â”€â”€ FAQs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── FAQs ──────────────────────────────────────────────────────────────
   faqs: Array<{ question: string; answer: string }>;
 
-  // â”€â”€â”€ ACCOUNTANT QUESTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── ACCOUNTANT QUESTIONS ──────────────────────────────────────────────
   accountantQuestionsH2: string;
   accountantQuestions: Array<{ q: string; why: string }>;
 
-  // â”€â”€â”€ CROSSLINK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── CROSSLINK ─────────────────────────────────────────────────────────
   crosslink: { title: string; body: string; url: string; label: string };
 
-  // â”€â”€â”€ LAW BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── LAW BAR ───────────────────────────────────────────────────────────
   lawBarSummary: string;
   lawBarBadges: string[];
   sources: Array<{ title: string; url: string }>;
 
-  // â”€â”€â”€ FILES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── FILES ─────────────────────────────────────────────────────────────
   files: Array<ProductFile>;
 
-  // â”€â”€â”€ CALENDAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── CALENDAR ──────────────────────────────────────────────────────────
   calendarTitle: string;
   tier1Calendar: Array<{ uid: string; summary: string; description: string; date: string }>;
   tier2Calendar: Array<{ uid: string; summary: string; description: string; date: string }>;
 
-  // â”€â”€â”€ DELIVERY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── DELIVERY ──────────────────────────────────────────────────────────
   delivery?: { tier1DriveEnvVar: string; tier2DriveEnvVar: string };
 
-  // â”€â”€â”€ MONITORING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── MONITORING ────────────────────────────────────────────────────────
   monitorUrls: string[];
 
-  // â”€â”€â”€ SIDEBAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── SIDEBAR ───────────────────────────────────────────────────────────
   sidebarNumbers: Array<{ label: string; value: string }>;
   sidebarMathsTitle: string;
   sidebarMathsIncludes: string[];
   sidebarMathsExcludes: string[];
   sidebarMathsNote: string;
 
-  // â”€â”€â”€ HOW TO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── HOW TO ────────────────────────────────────────────────────────────
   howToSteps: Array<{ position: number; name: string; text: string }>;
 
-  // â”€â”€â”€ SUCCESS PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ─── SUCCESS PAGE ──────────────────────────────────────────────────────
   successPromptFields: Array<{ key: string; label: string; defaultVal: string }>;
   tier1AssessmentFields: string[];
   tier2AssessmentFields: string[];
