@@ -115,11 +115,43 @@ export const PRODUCT_CONFIG: ProductConfig = {
     // countdown those commits deleted. Empty makes the config agree with the
     // declaration, so the fix survives regeneration.
     "isoDate": "",
-    "display": "31 October 2026",
-    "short": "31 Oct 2026",
-    "description": "Individual tax return due — and a reminder that unclaimed super transfers to the ATO 6 months after departure",
+    // CLEARED (operator ruling, 2026-07-29). Was "31 October 2026" / "31 Oct 2026".
+    // Same reason as isoDate: it is the individual tax-return date, not a DASP date.
+    // It was NOT inert — two success-page slots and the product-file deadline bar
+    // render `display` OUTSIDE any countdown gate, so it was the route by which the
+    // removed date would have come back. The "…before X" clause now falls to
+    // `temporal.label` ("DASP unclaimed-transfer threshold"), and the product-file
+    // deadline bar is suppressed when display is empty.
+    "display": "",
+    "short": "",
+    "description": "Unclaimed super transfers to the ATO 6 months after departure with the visa ceased; DASP is generally paid within 28 days of a complete application",
     "urgencyLabel": "TIME-SENSITIVE",
-    "countdownLabel": "Act before your super becomes ATO unclaimed money"
+    "countdownLabel": "Act before your super becomes ATO unclaimed money",
+
+    // ── QUALITATIVE URGENCY (operator ruling, 2026-07-29 — PROPOSAL A) ──────
+    // Shown in place of the countdown, which is permanently suppressed here
+    // (temporal kind "unresolvable"). Every phrase traces to the build:
+    //   · "6 months … visa ceased"  → engine.json q4-time-since-departure, and
+    //     corpus `unclaimed_super_transfer_to_ato`
+    //   · "within 28 days of a complete application" → corpus `dasp_payment_window`
+    //
+    // THE BINDING CONSTRAINT: this banner is emitted at GENERATE time and is
+    // static — it cannot branch on the customer's answer. So it must be true for
+    // ALL THREE q4 answers at once (past_threshold, before_threshold, unsure_time).
+    // It therefore states the RULE, never the customer's position.
+    //
+    // PROPOSAL B WAS REJECTED — recorded so it is not re-litigated. Its headline
+    // ("Apply for your DASP before your super becomes ATO unclaimed money") is
+    // FALSE for the past_threshold cohort: those customers are already 6+ months
+    // past departure with a ceased visa, so their balance may ALREADY have
+    // transferred to the ATO. Telling them to act "before" an event that has
+    // happened is wrong for the very cohort most at risk. A states the rule and
+    // stays true on both sides of the threshold.
+    "qualitative": {
+      "headline": "Unclaimed super transfers to the ATO 6 months after you leave with your visa ceased",
+      "badge": "DASP paid within 28 days",
+      "cta": "Apply for your DASP now — payment is generally made within 28 days of a complete application."
+    }
   },
   "h1": "Superannuation Tax When Leaving Australia (DASP) 2026: How Much Is Withheld — and What If You Never Claim?",
   "metaTitle": "Superannuation Tax Leaving Australia 2026 (DASP) — Withholding Rates by Visa | TaxCheckNow",

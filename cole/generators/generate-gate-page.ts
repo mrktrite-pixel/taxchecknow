@@ -343,7 +343,7 @@ ${videoSchemaConst}
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until ${config.deadline.display}</span>
+            <span className="text-lg text-neutral-300">days${config.deadline?.display?.trim() ? ` until ${config.deadline.display}` : ""}</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: \`\${progress}%\` }} />

@@ -14,6 +14,23 @@ import type { ProductConfig, ButtonGroupInput, TwoButtonInput } from "../types/p
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 
 export function generateCalculator(config: ProductConfig): string {
+  // ── R-A2 GUARD: NEVER OVERWRITE AN ENGINE-NATIVE CALCULATOR ────────────────
+  // An engine-native product's calculator is a hand-built wrapper that mounts
+  // @/app/_components/EngineCalculator against its engine.json. This generator
+  // emits a bespoke calculator, and cole-generate writes it (script :225) BEFORE
+  // it generates the success pages (:467). So without this guard, running
+  // cole-generate on FRCGW or SUPERLEAVE would destroy the engine binding first
+  // and only then throw at the success-page verifier — leaving the product with a
+  // clobbered calculator and no regenerated pages. Fail before writing anything.
+  if (config.engineNative) {
+    throw new Error(
+      `[R-A2 guard] Refusing to generate a bespoke calculator for "${config.id}": it declares ` +
+      `engineNative: true, so its calculator is the EngineCalculator wrapper and is NOT generated ` +
+      `from this template. Overwriting it would destroy the engine binding. Regenerate this ` +
+      `product's pages individually (gate / success / files), not via a full calculator rebuild.`
+    );
+  }
+
   const name         = toPascal(config.id) + "Calculator";
   const stateKeys    = config.calculatorInputs.map(i => i.stateKey);
   const hasInputs    = config.calculatorInputs.length > 0;
@@ -460,9 +477,10 @@ ${config.calculatorInputs.map(input => buildInputJSX(input)).join("\n")}
                     Based on your position
                   </p>
                   <p className="mt-1 font-serif text-xl font-bold text-white">{selectedProduct.name}</p>
-                  <p className="mt-1 text-sm text-neutral-300">
+${config.deadline?.display?.trim() ? `                  <p className="mt-1 text-sm text-neutral-300">
                     {DAYS_TO_END} days to ${config.deadline.display}
-                  </p>
+                  </p>` : `                  {/* Day-count line omitted: this product declares no deadline display,
+                      so "{DAYS_TO_END} days to " would render a dangling phrase. */}`}
                 </div>
                 <button onClick={() => setShowPopup(false)}
                   className="text-sm text-neutral-400 transition hover:text-white">✕</button>

@@ -11,6 +11,43 @@ function countryFlag(country: string): string {
   return ({ au: "🇦🇺", uk: "🇬🇧", us: "🇺🇸", nz: "🇳🇿", ca: "🇨🇦" } as Record<string, string>)[country?.toLowerCase()] ?? "🏳️";
 }
 
+/**
+ * The red deadline bar at the top of every delivered document.
+ *
+ * FAIL-CLOSED ON AN EMPTY DISPLAY. `deadline.display` is free text, and a product
+ * that declares no resolvable date clears it — emitting the bar anyway produced
+ * "🔴 TIME-SENSITIVE:" with nothing after the colon, inside the PAID deliverable.
+ *
+ * This is the one place `display` reaches a customer without passing through a
+ * countdown gate first, which is exactly why it needs its own guard: the success
+ * pages and the gate page both suppress on `deadlineLive`, and this does not.
+ *
+ * When the product has declared qualitative urgency, that is used instead — a
+ * dateless product still has something true and time-critical to say.
+ */
+function deadlineBar(config: ProductConfig): string {
+  const q = config.deadline?.qualitative;
+  const text = config.deadline?.display?.trim()
+    ? `${config.deadline.urgencyLabel}: ${config.deadline.display}`
+    : q?.headline?.trim()
+      ? `${config.deadline.urgencyLabel}: ${q.headline}`
+      : "";
+  if (!text) {
+    return `          {/* Deadline bar suppressed: this product declares no date and no
+              qualitative urgency, so there is nothing truthful to put here. */}`;
+  }
+  return `          {/* Deadline bar */}
+          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
+            <span className="text-sm font-bold text-white">
+              🔴 ${text}
+            </span>
+            <a href="/${config.slug}"
+              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
+              Check your position →
+            </a>
+          </div>`;
+}
+
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 
 export function generateProductFile(
@@ -147,16 +184,7 @@ export default function ${toPascal(config.id)}File${file.num}() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 ${config.deadline.urgencyLabel}: ${config.deadline.display}
-            </span>
-            <a href="/${config.slug}"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+${deadlineBar(config)}
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             ${config.name} · File ${file.num} of ${config.files.length}
