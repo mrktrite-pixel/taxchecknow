@@ -42,6 +42,18 @@ export const PRODUCT_CONFIG: ProductConfig = {
   //      calendar exists in this system. 31 Oct 2026 is a SATURDAY, so this
   //      resolves to Monday 2 November 2026, which is correct. A 31 October
   //      falling on a public holiday would resolve a day early.
+  // ── ENGINE-NATIVE DECLARATION (R-A2) ───────────────────────────────────
+  // FALSE, DELIBERATELY AND EXPLICITLY. This product has an engine.json in its
+  // app dir (emitted by the engine pipeline), but its calculator is still the
+  // bespoke RentalPropertyDeductionAuditCalculator — it does NOT mount
+  // EngineCalculator, and it still writes the per-field successPromptFields
+  // keys the legacy template reads. Declared here rather than omitted precisely
+  // because the engine.json makes this product LOOK engine-native to anything
+  // that sniffs the filesystem. It keeps the legacy input shape until the
+  // wrapper lands; flipping this before then would serve an assessment built
+  // from an empty inputs object.
+  engineNative: false,
+
   temporal: {
     kind: "deadline",
     rule: {
