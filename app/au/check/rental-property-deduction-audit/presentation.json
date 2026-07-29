@@ -1,0 +1,69 @@
+{
+  "_doc": "OPERATOR presentation overlay (rental-property-deduction-audit migration — ruled 2026-07-29). The emitter merges the machine engine (content+routing) with this overlay → engine.json (terminals schema). Bee-D never sets tier/severity. Dishes take heading from the menu label + result_copy from the grounded result_state unless overridden. Escapes REQUIRE heading+result_copy here; tier=67 FORCED on escapes.",
+  "_ruling": "Split 67×3 (immediate-deductible-expenses, non-deductible-expenses, acquisition-costs-cgt-cost-base) / 147×4 (deductions-over-several-years, contractor-no-abn-withholding, vacant-land-deduction-restriction, already-claimed-incorrect-deduction). SEEDED from the live bespoke RentalPropertyDeductionAuditCalculator.tsx, whose tier rule is: :153 ≥2 risk flags → 147/red 'HIGH OVERCLAIM RISK — ATO AUDIT EXPOSURE'; :180 one flag or missed deduction → 147/amber 'CLASSIFICATION ISSUES DETECTED'; :205 clean → 67/green 'DEDUCTIONS APPEAR CORRECTLY CLASSIFIED'. ROW 2 OVERRIDE: deductions-over-several-years was DRAFTED 67 (an explainer of the Div 43 / Div 40 regimes, asserting no outcome) and was OVERRIDDEN to 147/amber/critical — the customer reaching it has asserted capital_or_asset, so misclassification is an overclaim and missed depreciation is lost money; that is execution, not guidance. ROWS 4 AND 6 ARE NEW SURFACE: contractor-no-abn-withholding and vacant-land-deduction-restriction have NO counterpart in the live calculator (its seven risk flags cover only repairs/capital/availability/records), so their tiers are NOT seeded — they are reasoned from the FRCGW money-at-stake principle (ruled 2026-07-22: 'live deadline, 15% conditionally at stake' → 147; 'guidance dish, asserts no outcome' → 67). Row 4: 47% withholding (fig_0) AND the deduction is forfeited entirely. Row 6: holding costs for vacant land are non-deductible since 1 July 2019, so money is at stake by the same test — the dish is KEPT, and its tier does not depend on the earlier :82 'not genuinely available for rent' flag mapping, which was only an inference. Row 5 stays 67/green: it is an outcome, but a benign one — acquisition and disposal costs are not lost, they move to the CGT cost base (fig_5..fig_9). Escapes: tier forced 67; high_complexity has no FRCGW precedent and was ruled amber/critical by analogy with insufficient_information (both decline to assert an outcome). Escape copy approved as drafted for now.",
+  "states": {
+    "immediate-deductible-expenses": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "deductions-over-several-years": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "non-deductible-expenses": {
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "contractor-no-abn-withholding": {
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "acquisition-costs-cgt-cost-base": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "vacant-land-deduction-restriction": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "already-claimed-incorrect-deduction": {
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "none_fit": {
+      "severity": "blue",
+      "criticality": "standard",
+      "title_key": "review_guide",
+      "heading": "Rental deduction rules may not apply to your situation",
+      "result_copy": "Your answers suggest this check may not fit — for example the property is not rented or genuinely available for rent, or the expense you have in mind is private rather than rental. If you do hold a rental property and incurred expenses on it, a short personalised review confirms which of them are deductible now, which are claimed over several years, and which are not deductible at all."
+    },
+    "insufficient_information": {
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "review_guide",
+      "heading": "Your situation needs a closer look",
+      "result_copy": "Your answers do not yet confirm your deduction position — a key detail (whether the property was genuinely available for rent, how much private use it had, or what records you hold) is unconfirmed. A short personalised review confirms which expenses you can claim, which must be apportioned, and what evidence the ATO expects if it asks."
+    },
+    "high_complexity": {
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "review_guide",
+      "heading": "Your situation has more than one moving part",
+      "result_copy": "Your answers point to several interacting issues at once — for example mixed private and rental use, capital works alongside depreciating assets, or expenses spanning a period the property was not available. Each is individually manageable; together they change how the others are apportioned. A personalised review works through them in order and shows the position for your specific combination."
+    }
+  }
+}

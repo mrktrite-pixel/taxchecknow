@@ -1,0 +1,348 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Rental property expense deductions under the Income Tax Assessment Act 1997: what you can and cannot claim, withholding obligations when contractors do not provide an ABN (47% withholding rate applies), acquisition costs and their treatment in the CGT cost base, and vacant land deduction restrictions. Competitor research highlights a gap in guidance on what happens when incorrect deductions have already been claimed.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_expense_category",
+      "text": "What best describes the rental property expense or situation you need help with?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Day-to-day running costs (e.g. repairs, rates, insurance, interest) I want to claim this year",
+          "value": "immediate",
+          "flags": [
+            "q1_expense_category:immediate"
+          ]
+        },
+        {
+          "label": "A building, structural improvement, or depreciating asset (e.g. new roof, appliances, carpets)",
+          "value": "capital_or_asset",
+          "flags": [
+            "q1_expense_category:capital_or_asset"
+          ]
+        },
+        {
+          "label": "Costs of buying or selling the property (e.g. stamp duty, surveyor's fees, legal fees on purchase/sale)",
+          "value": "acquisition_disposal",
+          "flags": [
+            "q1_expense_category:acquisition_disposal"
+          ]
+        },
+        {
+          "label": "A payment to a contractor who did not give me an ABN",
+          "value": "no_abn",
+          "flags": [
+            "q1_expense_category:no_abn"
+          ]
+        },
+        {
+          "label": "Expenses on vacant land I own",
+          "value": "vacant_land",
+          "flags": [
+            "q1_expense_category:vacant_land"
+          ]
+        },
+        {
+          "label": "I already claimed a deduction and I'm now unsure whether it was allowable",
+          "value": "already_claimed",
+          "flags": [
+            "q1_expense_category:already_claimed"
+          ]
+        },
+        {
+          "label": "None of these describe my situation",
+          "value": "none",
+          "flags": [
+            "q1_expense_category:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_availability",
+      "text": "During the period you incurred the expense, what was the status of your rental property?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_expense_category:immediate"
+        ]
+      },
+      "options": [
+        {
+          "label": "The property was rented out or genuinely available for rent for the entire relevant period",
+          "value": "fully_available",
+          "flags": [
+            "q2_availability:fully_available"
+          ]
+        },
+        {
+          "label": "The property was only partly available for rent — I also used it privately or it was vacant for some periods",
+          "value": "partly_available",
+          "flags": [
+            "q2_availability:partly_available"
+          ]
+        },
+        {
+          "label": "The property was not available for rent at all during that period (e.g. purely private use or held as collateral only)",
+          "value": "not_available",
+          "flags": [
+            "q2_availability:not_available"
+          ]
+        },
+        {
+          "label": "I'm not sure whether the property was genuinely available for rent",
+          "value": "unsure_availability",
+          "flags": [
+            "q2_availability:unsure_availability"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_abn_timing",
+      "text": "When you paid the contractor who did not provide an ABN, did you withhold 47% of the payment and remit it to the ATO?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q1_expense_category:no_abn"
+        ]
+      },
+      "options": [
+        {
+          "label": "No — I paid the full amount without withholding anything",
+          "value": "did_not_withhold",
+          "flags": [
+            "q3_abn_timing:did_not_withhold"
+          ]
+        },
+        {
+          "label": "Yes — I withheld 47% and remitted it to the ATO",
+          "value": "did_withhold",
+          "flags": [
+            "q3_abn_timing:did_withhold"
+          ]
+        },
+        {
+          "label": "I'm not sure what I did or whether withholding was required",
+          "value": "unsure_withholding",
+          "flags": [
+            "q3_abn_timing:unsure_withholding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4_apportionment",
+      "text": "You indicated the property was only partly available for rent. Which of the following best describes your situation?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2_availability:partly_available"
+        ]
+      },
+      "options": [
+        {
+          "label": "It is a holiday home or similar property I also use personally for some periods",
+          "value": "holiday_home_private",
+          "flags": [
+            "q4_apportionment:holiday_home_private"
+          ]
+        },
+        {
+          "label": "It was genuinely available for rent for part of the year but vacant (not privately used) for the rest",
+          "value": "partly_rented_not_private",
+          "flags": [
+            "q4_apportionment:partly_rented_not_private"
+          ]
+        },
+        {
+          "label": "I'm not sure how to categorise the mixed use",
+          "value": "unsure_mixed",
+          "flags": [
+            "q4_apportionment:unsure_mixed"
+          ]
+        },
+        {
+          "label": "The situation involves both private use AND periods genuinely available for rent in a complex mix",
+          "value": "complex_mix",
+          "flags": [
+            "q4_apportionment:complex_mix"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "immediate-deductible-expenses",
+      "when": {
+        "any": [
+          "q2_availability:fully_available",
+          "q4_apportionment:partly_rented_not_private"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Expenses you can claim as an immediate deduction in the year you incur them",
+      "result_copy": "Indicated pathway: the expense may qualify as an immediate deduction in the income year it is incurred, provided it relates to a period the property is rented or genuinely available for rent. Review recommended to confirm the expense is not capital or private in nature and that any apportionment for partial availability has been applied.",
+      "figure_ids": []
+    },
+    {
+      "id": "deductions-over-several-years",
+      "when": {
+        "any": [
+          "q1_expense_category:capital_or_asset"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Expenses claimed over several years: capital works and depreciating assets",
+      "result_copy": "Indicated pathway: the cost may need to be claimed over several years — either as decline in value of a depreciating asset or as a capital works deduction. Review recommended to determine which category applies and whether any capital costs that are not deductible may instead be included in the CGT cost base.",
+      "figure_ids": []
+    },
+    {
+      "id": "non-deductible-expenses",
+      "when": {
+        "any": [
+          "q2_availability:not_available",
+          "q4_apportionment:holiday_home_private"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Expenses you cannot deduct at all from your rental property",
+      "result_copy": "Indicated pathway: the expense shows high-risk signals of being non-deductible — for example, it may relate to a period the property was not genuinely available for rent, to private use of a holiday home, or to holding a non-income-producing property. Review recommended to confirm no deduction is available and whether any alternative treatment (e.g. CGT cost base inclusion) applies.",
+      "figure_ids": []
+    },
+    {
+      "id": "contractor-no-abn-withholding",
+      "when": {
+        "any": [
+          "q3_abn_timing:did_not_withhold",
+          "q3_abn_timing:did_withhold"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Your contractor did not provide an ABN — what you must withhold and what happens to your deduction",
+      "result_copy": "Indicated pathway: where a contractor does not provide an ABN, there is an indicated obligation to withhold 47% of the payment and remit it to the ATO. Failure to withhold indicates high risk of losing the deduction for that expense entirely. Review recommended to assess your specific payment and withholding position.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "acquisition-costs-cgt-cost-base",
+      "when": {
+        "any": [
+          "q1_expense_category:acquisition_disposal"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Acquisition and disposal costs cannot be deducted but can be added to your CGT cost base",
+      "result_copy": "Indicated pathway: acquisition and disposal costs (such as surveyor's fees and stamp duty on transfer) show high-risk signals of being non-deductible as rental expenses. However, they may be includable in the cost base and reduced cost base of the property for CGT purposes. Review recommended to confirm which costs qualify and how to calculate the cost base.",
+      "figure_ids": []
+    },
+    {
+      "id": "vacant-land-deduction-restriction",
+      "when": {
+        "any": [
+          "q1_expense_category:vacant_land"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Deductions for expenses relating to vacant land — what is and is not allowed",
+      "result_copy": "Indicated pathway: expenses relating to holding vacant land are generally indicated as non-deductible as rental expenses. An exception may apply where the land is used by your spouse or a child under 18 years old. Review recommended to assess whether the restriction or the exception applies to your situation.",
+      "figure_ids": [
+        "fig_10"
+      ]
+    },
+    {
+      "id": "already-claimed-incorrect-deduction",
+      "when": {
+        "any": [
+          "q1_expense_category:already_claimed"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "You may have already claimed a deduction you were not entitled to — how to determine your position and what to do",
+      "result_copy": "Indicated pathway: if a deduction already claimed may not have been allowable, there is an indicated risk of non-compliance. Review recommended to identify whether the claim was incorrect and to understand the ATO's position and any corrective steps available.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1_expense_category:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Rental deduction rules may not apply to your situation",
+      "result_copy": "Your answers suggest this check may not fit — for example the property is not rented or genuinely available for rent, or the expense you have in mind is private rather than rental. If you do hold a rental property and incurred expenses on it, a short personalised review confirms which of them are deductible now, which are claimed over several years, and which are not deductible at all.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2_availability:unsure_availability",
+          "q3_abn_timing:unsure_withholding",
+          "q4_apportionment:unsure_mixed"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your situation needs a closer look",
+      "result_copy": "Your answers do not yet confirm your deduction position — a key detail (whether the property was genuinely available for rent, how much private use it had, or what records you hold) is unconfirmed. A short personalised review confirms which expenses you can claim, which must be apportioned, and what evidence the ATO expects if it asks.",
+      "figure_ids": []
+    },
+    {
+      "id": "high_complexity",
+      "when": {
+        "any": [
+          "q4_apportionment:complex_mix"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your situation has more than one moving part",
+      "result_copy": "Your answers point to several interacting issues at once — for example mixed private and rental use, capital works alongside depreciating assets, or expenses spanning a period the property was not available. Each is individually manageable; together they change how the others are apportioned. A personalised review works through them in order and shows the position for your specific combination.",
+      "figure_ids": []
+    }
+  ]
+}
