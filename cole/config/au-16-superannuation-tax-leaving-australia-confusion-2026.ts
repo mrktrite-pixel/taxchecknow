@@ -103,7 +103,18 @@ export const PRODUCT_CONFIG: ProductConfig = {
     "fileCount": 8
   },
   "deadline": {
-    "isoDate": "2026-10-31T23:59:59.000+11:00",
+    // REMOVED (operator ruling, 2026-07-29). Was "2026-10-31T23:59:59.000+11:00".
+    // It contradicted this product's own temporal declaration (kind
+    // "unresolvable": the DASP six-month point is measured from a departure date
+    // this product never captures), and 31 October is the INDIVIDUAL TAX RETURN
+    // date — inapplicable to DASP timing, which runs on the 6-month unclaimed
+    // transfer and the 28-day payment window. Commits 34dfb30 / edd9233 removed
+    // it from the visible success copy and a152989 removed the countdown from the
+    // gate page BY HAND; because 31 Oct 2026 is still in the FUTURE, leaving the
+    // date here meant the next regeneration would have silently restored the very
+    // countdown those commits deleted. Empty makes the config agree with the
+    // declaration, so the fix survives regeneration.
+    "isoDate": "",
     "display": "31 October 2026",
     "short": "31 Oct 2026",
     "description": "Individual tax return due — and a reminder that unclaimed super transfers to the ATO 6 months after departure",

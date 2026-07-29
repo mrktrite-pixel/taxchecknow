@@ -143,6 +143,26 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // The declared stand-in for the countdown. Only honoured when the product has
   // actually declared it has no date — never as a way to dodge a real deadline.
   const qualitative = deadlineDeclaredAbsent ? config.deadline?.qualitative : undefined;
+
+  // What fills the "…before X" slot in prose (the action-checklist heading and the
+  // fallback accountant question).
+  //
+  // `deadline.display` is the wrong source for a declared-dateless product: it is
+  // free text that may hold a concrete DATE. SUPERLEAVE's was "31 October 2026" —
+  // the individual tax-return date, inapplicable to DASP timing, and already
+  // removed from visible copy by 34dfb30 / edd9233 / a152989. Both of these slots
+  // render OUTSIDE the deadlineLive gate, so using `display` there would have put
+  // that date back in front of customers on the next regeneration.
+  //
+  // The declaration already carries the right string: `temporal.label`, documented
+  // as "Human label used in customer-facing copy" — a name for the anchor, never a
+  // date. Absent label on a dateless product ⇒ drop the clause rather than invent one.
+  const beforeAnchor = deadlineDeclaredAbsent
+    ? (config.temporal?.label ? ` — before ${config.temporal.label}` : "")
+    : ` — before ${config.deadline.display}`;
+  const beforeAnchorQ = deadlineDeclaredAbsent
+    ? (config.temporal?.label ? ` before ${config.temporal.label}` : " now")
+    : ` before ${config.deadline.display}`;
   const temporalReason =
     config.temporal && "reason" in config.temporal ? String(config.temporal.reason ?? "") : "";
   const droppedEvents: string[] = [];
@@ -299,7 +319,7 @@ ${inputsObj}
         ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: "Your personalised ${f.replace(/_/g," ")} is being prepared — please refresh in a moment.",`).join("\n        ")}
         accountantQuestions: [
           "What is my exact ${config.authority} position based on my answers?",
-          "What is the single most important action I should take before ${config.deadline.display}?",
+          "What is the single most important action I should take${beforeAnchorQ}?",
           "Are there any planning opportunities specific to my situation?",
         ],
         ${isTier2 ? 'actions: [],' : ''}
@@ -443,7 +463,7 @@ ${isTier2 ? `
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before ${config.deadline.display}
+                  What to do — in order${beforeAnchor}
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
