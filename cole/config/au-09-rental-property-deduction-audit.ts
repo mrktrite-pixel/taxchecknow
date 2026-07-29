@@ -7,11 +7,55 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // declaration. Declaring it restores exactly that — nothing new, nothing
   // inferred from the topic.
   //
-  // NURTURE ONLY. `temporal` is deliberately NOT declared here: that is a gate
-  // decision made per product at its own rebuild, from its own build evidence
-  // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
-  // which is the correct state until someone rules on it.
+  // Independent of `temporal` below — a product may run both lanes.
   nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
+
+  // ── TEMPORAL DECLARATION (TEMPORAL v1 · Step 6.1) ───────────────────────
+  // OPERATOR RULING, 2026-07-29, at the gate for build a0346ad4 (GATES_PASSED).
+  //
+  // A RULING, NOT A DERIVATION — recorded as such. This build's own evidence
+  // supports NO act-by date: authority.temporal returned urgency_triggers []
+  // and deadline_window_days null; the ATO source (rental-properties-2025 /
+  // Rental expenses) carries no lodgement language; the four engine questions
+  // ask only about expense category, availability, ABN withholding and
+  // apportionment; and no result/escape state mentions timing. Session A
+  // proposed kind "none" on that basis. The operator ruled "deadline" because
+  // the PRODUCT is lodgement-anchored — an audit you run BEFORE you lodge —
+  // which is a judgement about what the product is for, not a fact the
+  // authority page states. That is exactly the call 3.5 reserves to the
+  // operator at the gate.
+  //
+  // A RECURRENCE RULE, NEVER A STORED DATE. 31 October is expressed as
+  // { annual, month 10, day 31 } so it can never go stale: it resolves to the
+  // next occurrence relative to `now`, automatically, forever.
+  //
+  // TWO CAVEATS RECORDED WITH THE RULING — knowingly accepted, NOT to be
+  // silently "fixed" by a later edit:
+  //   1. 31 October is the SELF-LODGER date. A customer using a registered tax
+  //      agent generally has until ~15 May, and THIS PRODUCT NEVER ASKS WHICH.
+  //      So an agent-using customer is emailed a deadline ~6 months early.
+  //      Early is safer than late and the trade was chosen deliberately. The
+  //      honest fix is an "are you using a tax agent?" question at a future
+  //      rebuild, which would make this per_user_derived — not a change to make
+  //      here, because the input does not exist to derive from.
+  //   2. The resolver's business-day shift handles WEEKENDS ONLY — no holiday
+  //      calendar exists in this system. 31 Oct 2026 is a SATURDAY, so this
+  //      resolves to Monday 2 November 2026, which is correct. A 31 October
+  //      falling on a public holiday would resolve a day early.
+  temporal: {
+    kind: "deadline",
+    rule: {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      10,
+      day:        31,
+      timezone:   "Australia/Sydney",
+      shift:      "next_business_day",
+    },
+    jurisdiction: "AU",
+    domain:       "property_rental",
+    label:        "Individual tax return due",
+  },
   id: "rental-property-deduction-audit", name: "Rental Property Deduction Audit", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/rental-property-deduction-audit", url: "https://taxchecknow.com/au/check/rental-property-deduction-audit", apiRoute: "/api/rules/rental-property-deduction-audit",
   authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Rental property deductions", legislation: "Income Tax Assessment Act 1997 — rental property income and deductions", lastVerified: "April 2026",
