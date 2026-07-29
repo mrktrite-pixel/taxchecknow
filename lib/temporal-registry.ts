@@ -88,6 +88,20 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
           ]
     },
     "rental-property-deduction-audit": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 10,
+                      "day": 31,
+                      "timezone": "Australia/Sydney",
+                      "shift": "next_business_day"
+                },
+                "jurisdiction": "AU",
+                "domain": "property_rental",
+                "label": "Individual tax return due"
+          },
           "nurture": [
                 {
                       "track": "standard_v1",
