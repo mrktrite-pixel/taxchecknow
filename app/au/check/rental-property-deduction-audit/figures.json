@@ -1,0 +1,79 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Withholding rate where contractor does not provide ABN",
+    "value": "47",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_1",
+    "label": "Quote price with tax invoice (Example 5)",
+    "value": "2500",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_2",
+    "label": "Cash payment amount (Example 5)",
+    "value": "1800",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_3",
+    "label": "Amount to withhold from $1,800 at 47% (Example 5)",
+    "value": "846",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_4",
+    "label": "Remaining amount payable to contractor after withholding (Example 5)",
+    "value": "954",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_5",
+    "label": "Purchase price of rental property (Example 6)",
+    "value": "170000",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_6",
+    "label": "Surveyor's fees (Example 6)",
+    "value": "350",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_7",
+    "label": "Stamp duty on transfer (Example 6)",
+    "value": "750",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_8",
+    "label": "Total incidental costs included in cost base (Example 6)",
+    "value": "1100",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_9",
+    "label": "Cost base/reduced cost base for CGT purposes (Example 6)",
+    "value": "171100",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_10",
+    "label": "Age threshold for child under which land use by child qualifies for vacant land deduction",
+    "value": "18",
+    "unit": "years",
+    "fact_role": "threshold"
+  }
+]
