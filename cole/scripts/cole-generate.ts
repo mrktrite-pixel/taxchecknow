@@ -25,7 +25,8 @@ import { generateSuccessAssess, getSuccessAssessPath,
          generateSuccessPlan,   getSuccessPlanPath   } from "../generators/generate-success-pages";
 import { generateAllProductFiles                      } from "../generators/generate-product-files";
 import { isGuardRefusal, rethrowIfGuardRefusal } from "../generators/guard-refusal";
-import { generateRulesRoute,    getRulesRoutePath     } from "../generators/generate-rules-route";
+import { generateRulesRoute,    getRulesRoutePath,
+         corpusWriteDecision                          } from "../generators/generate-rules-route";
 import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
 import type { ProductConfig } from "../types/product-config";
 import { createClient } from "@supabase/supabase-js";
@@ -259,10 +260,18 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
   emitProductFiles(config, filesGenerated, errors);
   // ── STEP 6: Generate rules route ──────────────────────────────────────────
   try {
-    const filePath = getRulesRoutePath(config, APP_ROOT);
-    writeFile(filePath, generateRulesRoute(config));
-    filesGenerated.push(filePath);
-    console.log(`   ✅ Rules API route\n      → ${relativePath(filePath)}`);
+    // The corpus grounds the paid assessment. Ask permission before writing it —
+    // a "hand" corpus is skipped, and a contradiction between the declaration and
+    // the file aborts the whole run rather than being collected.
+    const decision = corpusWriteDecision(config);
+    if (decision.action === "skip") {
+      console.log(`   ⏭  Rules API route SKIPPED — ${decision.reason}\n      → ${relativePath(decision.target)}`);
+    } else {
+      const filePath = getRulesRoutePath(config, APP_ROOT);
+      writeFile(filePath, generateRulesRoute(config));
+      filesGenerated.push(filePath);
+      console.log(`   ✅ Rules API route (${decision.reason})\n      → ${relativePath(filePath)}`);
+    }
   } catch (err) {
     rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     errors.push(`Rules route: ${err}`);
