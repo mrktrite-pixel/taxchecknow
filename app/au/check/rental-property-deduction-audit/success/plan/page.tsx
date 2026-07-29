@@ -78,15 +78,25 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
+  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
+  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
+  // (never "0 days", never a negative, never a stale label).
   const daysToDeadline: number | null = (() => {
-    const _end = new Date("2026-10-31T23:59:59.000+11:00").getTime();
-    if (Number.isNaN(_end)) return null;
-    const _d = Math.floor((_end - Date.now()) / 86_400_000);
-    return _d > 0 ? _d : null;
+    const end = new Date("2026-10-31T23:59:59.000+11:00").getTime();
+    if (Number.isNaN(end)) return null;
+    const d = Math.floor((end - Date.now()) / 86_400_000);
+    return d > 0 ? d : null;
   })();
   const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
+
+  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
+  // expired or will not parse, is a real defect — surface it so it is never silent.
+  // Phase 5 replaces this with real alerting.
+  useEffect(() => {
+    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "rental-property-deduction-audit", deadlineIso: "2026-10-31T23:59:59.000+11:00" });
+  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -148,7 +158,7 @@ export default function SuccessPlan() {
           market:     "Australia",
           authority:  "ATO",
           tier:       2,
-          name,
+          name: name === "there" ? "" : name,
           inputs: {
         "Expense types incurred": expense_types,
         "Number of classification risks": risk_flags,
@@ -246,7 +256,7 @@ export default function SuccessPlan() {
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "Your";
+  const greeting = firstName !== "there" ? `${firstName}` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -417,7 +427,7 @@ export default function SuccessPlan() {
                     <p className="text-xs text-neutral-500">Review all rental expenses and classify capital vs repairs before lodging return.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    This week
+                    In 2 weeks
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">

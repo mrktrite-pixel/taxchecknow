@@ -87,7 +87,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File01() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 TIME-SENSITIVE: 31 October 2026
+              🔴 TIME-SENSITIVE: Unclaimed super transfers to the ATO 6 months after you leave with your visa ceased
             </span>
             <a href="/au/check/superannuation-tax-leaving-australia-confusion-2026"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
