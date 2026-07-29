@@ -3,6 +3,7 @@
 // Product: superannuation-tax-leaving-australia-confusion-2026 · Tier 2 Success Page
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -75,9 +76,17 @@ export default function SuccessPlan() {
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState("");
   const [copied,     setCopied]     = useState(false);
-  const [calDone,    setCalDone]    = useState(false);
+
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "unresolvable", reason: "departure_date_not_captured").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
 
@@ -118,13 +127,12 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      // Personalised fallback: read the LABELED answers the calculator wrote
-      // (<slug>_answers = "<question>" → "<chosen option>"). Not raw ids, not defaults.
-      let inputs: Record<string, string> = {};
-      try {
-        const raw = sessionStorage.getItem("superannuation-tax-leaving-australia-confusion-2026_answers");
-        if (raw) inputs = JSON.parse(raw) as Record<string, string>;
-      } catch { inputs = {}; }
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
+      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // (F5 contract). The legacy per-field keys are never written by an engine-native
+      // calculator, so reading them would always fall back to defaults → a generic,
+      // corpus-contradicting assessment.
+      const inputs = buildComposerInputsFromSession("superannuation-tax-leaving-australia-confusion-2026");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -162,7 +170,7 @@ export default function SuccessPlan() {
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
-          "What is the single most important action I should take before my super is transferred to the ATO as unclaimed super money?",
+          "What is the single most important action I should take before DASP unclaimed-transfer threshold?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -172,38 +180,8 @@ export default function SuccessPlan() {
     }
   }
 
-  function handleCalendar() {
-    const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const visa_class = sessionStorage.getItem("superannuation-tax-leaving-australia-confusion-2026_visa_class") || "temporary";
-    const time_since_leaving = sessionStorage.getItem("superannuation-tax-leaving-australia-confusion-2026_time_since_leaving") || "unknown";
-    const super_balance_band = sessionStorage.getItem("superannuation-tax-leaving-australia-confusion-2026_super_balance_band") || "unknown";
-    function relativeDate(d: number): string {
-      return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
-    }
-    const ics = [
-      "BEGIN:VCALENDAR","VERSION:2.0",
-      "PRODID:-//TaxCheckNow//COLE//EN",
-      "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Superannuation Tax When Leaving Australia (DASP) — Deadlines`,
-      "BEGIN:VEVENT",
-      `UID:dasp-review-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260930"}`,
-      `DTEND;VALUE=DATE:${"20260930"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Review DASP timing with your adviser",
-      "DESCRIPTION:Confirm component split, visa-class rate, and any planned-return interaction before you claim.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
-    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "superannuation-tax-leaving-australia-confusion-2026.ics";
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
-    setCalDone(true);
-  }
+  // handleCalendar() omitted: no event survived the R-A3 date gate, so there is no
+  // .ics to build and no button to trigger it.
 
   async function handleCopy() {
     if (!assessment?.accountantQuestions?.length) return;
@@ -247,6 +225,13 @@ export default function SuccessPlan() {
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
+          {/* No date resolves for this product (temporal kind "unresolvable"), so the
+              countdown is replaced by its DECLARED qualitative urgency — corpus-true for every
+              customer, and not a fabricated day-count. */}
+          <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
+            <span className="text-sm font-bold text-white">🔴 Unclaimed super transfers to the ATO 6 months after you leave with your visa ceased</span>
+            <span className="font-mono text-sm font-bold text-white">DASP paid within 28 days</span>
+          </div>
         </div>
 
         {/* ── LOADING ── */}
@@ -303,7 +288,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order
+                  What to do — in order — before DASP unclaimed-transfer threshold
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
@@ -366,31 +351,10 @@ export default function SuccessPlan() {
               </div>
             )}
 
-            {/* CALENDAR */}
-            <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
-              <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Key dates for your calendar
-              </p>
-              <h2 className="mb-4 font-serif text-lg font-bold text-neutral-950">
-                Add these now — don't rely on memory
-              </h2>
-              <div className="mb-4 space-y-2">
-                
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">Review DASP timing with your adviser</p>
-                    <p className="text-xs text-neutral-500">Confirm component split, visa-class rate, and any planned-return interaction before you claim.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    30 Sep 2026
-                  </span>
-                </div>
-              </div>
-              <button onClick={handleCalendar}
-                className="no-print w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
-                {calDone ? "✓ Downloaded — open the .ics file to add to your calendar" : "📅 Add all dates to Apple / Google / Outlook calendar →"}
-              </button>
-            </div>
+            {/* CALENDAR — suppressed at generate time: every dated event was dropped
+                (see the R-A3 calendar warning in the build log). An empty "key dates"
+                panel with a download button that yields an eventless .ics is worse than
+                no panel at all. */}
 
             {/* YOUR FILES */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
@@ -438,16 +402,14 @@ export default function SuccessPlan() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
+                Apply for your DASP now — payment is generally made within 28 days of a complete application.
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   ⬇ Save as PDF
                 </button>
-                <button onClick={handleCalendar}
-                  className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
-                  📅 Add to calendar
-                </button>
+
                 <button onClick={handleCopy}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   📋 Copy accountant questions

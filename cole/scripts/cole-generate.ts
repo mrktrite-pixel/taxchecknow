@@ -193,18 +193,37 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     return;
   }
 
-  // ── STEP 2: Generate gate page ────────────────────────────────────────────
-  try {
-    const filePath = getGatePagePath(config, APP_ROOT);
-    const geo = await fetchGeoBake(config); // transcript + published-video facts (best-effort; null if absent/no DB)
-    writeFile(filePath, generateGatePage(config, geo));
-    filesGenerated.push(filePath);
-    console.log(`   ✅ Gate page\n      → ${relativePath(filePath)}`);
-  } catch (err) {
-    const msg = `Gate page: ${err}`;
-    errors.push(msg);
-    console.error(`   ❌ ${msg}`);
+  // ── PER-SURFACE EMIT (--gate-only / --files-only) ─────────────────────────
+  // An ENGINE-NATIVE product cannot take a full cole-generate: generate-calculator
+  // refuses (R-A2 guard), and rightly so — a full run would otherwise overwrite the
+  // EngineCalculator wrapper. But such a product still needs its gate page and its
+  // eight delivered documents regenerated when its CONFIG changes. These two modes
+  // are the supported way to do that: each touches exactly one surface and never
+  // goes near the calculator.
+  if (gateOnly) {
+    console.log(`   → --gate-only: regenerating the gate page for ${config.id} (calculator/success/files untouched)\n`);
+    await emitGatePage(config, filesGenerated, errors);
+    const ok = errors.length === 0;
+    console.log(`\n${"─".repeat(60)}`);
+    console.log(ok ? `\n✅ Gate page regenerated: ${productId}` : `\n⚠️  Gate-only completed with ${errors.length} error(s):`);
+    errors.forEach(e => console.log(`   • ${e}`));
+    if (!ok) process.exitCode = 1;
+    return;
   }
+
+  if (filesOnly) {
+    console.log(`   → --files-only: regenerating the ${config.files.length} product files for ${config.id} (calculator/gate/success untouched)\n`);
+    emitProductFiles(config, filesGenerated, errors);
+    const ok = errors.length === 0;
+    console.log(`\n${"─".repeat(60)}`);
+    console.log(ok ? `\n✅ Product files regenerated: ${productId}` : `\n⚠️  Files-only completed with ${errors.length} error(s):`);
+    errors.forEach(e => console.log(`   • ${e}`));
+    if (!ok) process.exitCode = 1;
+    return;
+  }
+
+  // ── STEP 2: Generate gate page ────────────────────────────────────────────
+  await emitGatePage(config, filesGenerated, errors);
   // ── STEP 3: Calculator ────────────────────────────────────────────────────
   // RULE: If a hand-built calculator exists in cole/calculators/, copy it.
   //       Never overwrite hand-built calculators with generated ones.
@@ -234,21 +253,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
   // ── STEP 4: Generate success pages ────────────────────────────────────────
   emitSuccessPages(config, filesGenerated, errors);
   // ── STEP 5: Generate product files ────────────────────────────────────────
-  try {
-    const productFiles = generateAllProductFiles(config);
-    for (const { path: filePath, content } of productFiles) {
-      const fullPath = path.join(path.dirname(APP_ROOT), filePath);
-      writeFile(fullPath, content);
-      filesGenerated.push(fullPath);
-    }
-    console.log(`   ✅ Product files (${config.files.length} files)`);
-    config.files.forEach(f => {
-      console.log(`      → app/files/${config.country}/${config.id}/${f.slug}/page.tsx`);
-    });
-  } catch (err) {
-    errors.push(`Product files: ${err}`);
-    console.error(`   ❌ Product files: ${err}`);
-  }
+  emitProductFiles(config, filesGenerated, errors);
   // ── STEP 6: Generate rules route ──────────────────────────────────────────
   try {
     const filePath = getRulesRoutePath(config, APP_ROOT);
@@ -461,6 +466,38 @@ async function writeTemporalEvidence(config: ProductConfig, errors: string[]): P
   }
 }
 
+async function emitGatePage(config: ProductConfig, filesGenerated: string[], errors: string[]): Promise<void> {
+  try {
+    const filePath = getGatePagePath(config, APP_ROOT);
+    const geo = await fetchGeoBake(config); // transcript + published-video facts (best-effort; null if absent/no DB)
+    writeFile(filePath, generateGatePage(config, geo));
+    filesGenerated.push(filePath);
+    console.log(`   ✅ Gate page\n      → ${relativePath(filePath)}`);
+  } catch (err) {
+    const msg = `Gate page: ${err}`;
+    errors.push(msg);
+    console.error(`   ❌ ${msg}`);
+  }
+}
+
+function emitProductFiles(config: ProductConfig, filesGenerated: string[], errors: string[]): void {
+  try {
+    const productFiles = generateAllProductFiles(config);
+    for (const { path: filePath, content } of productFiles) {
+      const fullPath = path.join(path.dirname(APP_ROOT), filePath);
+      writeFile(fullPath, content);
+      filesGenerated.push(fullPath);
+    }
+    console.log(`   ✅ Product files (${config.files.length} files)`);
+    config.files.forEach(f => {
+      console.log(`      → app/files/${config.country}/${config.id}/${f.slug}/page.tsx`);
+    });
+  } catch (err) {
+    errors.push(`Product files: ${err}`);
+    console.error(`   ❌ Product files: ${err}`);
+  }
+}
+
 function emitSuccessPages(config: ProductConfig, filesGenerated: string[], errors: string[]): void {
   try {
     const p = getSuccessAssessPath(config, APP_ROOT);
@@ -492,14 +529,22 @@ function relativePath(absolutePath: string): string {
 const args        = process.argv.slice(2);
 const successOnly  = args.includes("--success-only");
 const evidenceOnly = args.includes("--evidence-only");   // TEMPORAL v1 Step 6
+const gateOnly     = args.includes("--gate-only");       // R-A2 — per-surface emit
+const filesOnly    = args.includes("--files-only");      // R-A2 — per-surface emit
 const productId    = args.find(a => !a.startsWith("--"));
 if (!productId) {
-  console.error("\n❌ Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id] [--success-only]");
+  console.error("\n❌ Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id] [mode]");
   console.error("   Full build:    cole-generate.ts uk-03");
+  console.error("                  (REFUSED for an engineNative product — it would overwrite the");
+  console.error("                   EngineCalculator wrapper. Use the per-surface modes below.)");
   console.error("   Evidence only: cole-generate.ts au-19-frcgw-clearance-certificate --evidence-only");
   console.error("                  (temporal registry + gate evidence ONLY — regenerates NO page)");
   console.error("   Update emit:   cole-generate.ts au-19-frcgw-clearance-certificate --success-only");
-  console.error("                  (regenerates ONLY the success pages — for a migrated/engine-native product)\n");
+  console.error("                  (regenerates ONLY the success pages — for a migrated/engine-native product)");
+  console.error("   Gate only:     cole-generate.ts au-16-superannuation-... --gate-only");
+  console.error("                  (regenerates ONLY the gate page)");
+  console.error("   Files only:    cole-generate.ts au-16-superannuation-... --files-only");
+  console.error("                  (regenerates ONLY the 8 delivered product documents)\n");
   console.error("   Available configs:");
   try {
     fs.readdirSync(CONFIG_DIR)
