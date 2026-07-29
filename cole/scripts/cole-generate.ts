@@ -24,6 +24,7 @@ import { generateCalculator,    getCalculatorPath     } from "../generators/gene
 import { generateSuccessAssess, getSuccessAssessPath,
          generateSuccessPlan,   getSuccessPlanPath   } from "../generators/generate-success-pages";
 import { generateAllProductFiles                      } from "../generators/generate-product-files";
+import { isGuardRefusal, rethrowIfGuardRefusal } from "../generators/guard-refusal";
 import { generateRulesRoute,    getRulesRoutePath     } from "../generators/generate-rules-route";
 import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
 import type { ProductConfig } from "../types/product-config";
@@ -140,6 +141,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
       console.warn(`   Replace < with "less than" and > with "over" / "exceeds"`);
     }
   } catch (err) {
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     console.error(`   ❌ Config error: ${err}`);
     process.exit(1);
   }
@@ -246,6 +248,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
       console.log(`   ✅ Calculator (generated 🤖)\n      → ${relativePath(outputPath)}`);
     }
   } catch (err) {
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     const msg = `Calculator: ${err}`;
     errors.push(msg);
     console.error(`   ❌ ${msg}`);
@@ -261,6 +264,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     filesGenerated.push(filePath);
     console.log(`   ✅ Rules API route\n      → ${relativePath(filePath)}`);
   } catch (err) {
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     errors.push(`Rules route: ${err}`);
     console.error(`   ❌ Rules route: ${err}`);
   }
@@ -300,6 +304,8 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
         console.log(`   ⚠️  Supabase log failed: ${res.status}`);
       }
     } catch (err) {
+      rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
       console.log(`   ⚠️  Supabase log error: ${err}`);
     }
   } else {
@@ -378,6 +384,7 @@ function emitTemporalRegistry(filesGenerated: string[], errors: string[]): void 
       console.log(`      · ${e.site}/${e.productId} → ${lanes}`);
     }
   } catch (err) {
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     errors.push(`Temporal registry: ${err}`);
     console.error(`   ❌ Temporal registry: ${err}`);
   }
@@ -459,6 +466,7 @@ async function writeTemporalEvidence(config: ProductConfig, errors: string[]): P
     console.log(`      products.temporal_kind → ${product.id}`);
     console.log(`      build_jobs.temporal_declaration → ${job.id} (${job.build_state})`);
   } catch (err) {
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     // Recorded, not thrown: see the non-fatal note above.
     errors.push(`Temporal evidence: ${err}`);
     console.error(`   ❌ Temporal evidence: ${err}`);
@@ -474,6 +482,7 @@ async function emitGatePage(config: ProductConfig, filesGenerated: string[], err
     filesGenerated.push(filePath);
     console.log(`   ✅ Gate page\n      → ${relativePath(filePath)}`);
   } catch (err) {
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     const msg = `Gate page: ${err}`;
     errors.push(msg);
     console.error(`   ❌ ${msg}`);
@@ -493,6 +502,7 @@ function emitProductFiles(config: ProductConfig, filesGenerated: string[], error
       console.log(`      → app/files/${config.country}/${config.id}/${f.slug}/page.tsx`);
     });
   } catch (err) {
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     errors.push(`Product files: ${err}`);
     console.error(`   ❌ Product files: ${err}`);
   }
@@ -505,6 +515,7 @@ function emitSuccessPages(config: ProductConfig, filesGenerated: string[], error
     filesGenerated.push(p);
     console.log(`   ✅ Success page (tier 1 — ${config.tier1.successPath})\n      → ${relativePath(p)}`);
   } catch (err) {
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     errors.push(`Success assess: ${err}`);
     console.error(`   ❌ Success assess: ${err}`);
   }
@@ -514,6 +525,7 @@ function emitSuccessPages(config: ProductConfig, filesGenerated: string[], error
     filesGenerated.push(p);
     console.log(`   ✅ Success page (tier 2 — ${config.tier2.successPath})\n      → ${relativePath(p)}`);
   } catch (err) {
+    rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     errors.push(`Success plan: ${err}`);
     console.error(`   ❌ Success plan: ${err}`);
   }
@@ -554,6 +566,21 @@ if (!productId) {
   process.exit(1);
 }
 cole(productId, successOnly, evidenceOnly).catch(err => {
+  if (isGuardRefusal(err)) {
+    // ABORTED, not "completed with errors". Nothing further was written.
+    console.error("");
+    console.error("=".repeat(70));
+    console.error(`🛑 ABORTED BY GUARD — ${err.guard}`);
+    console.error("=".repeat(70));
+    console.error("");
+    console.error(err.message);
+    console.error("");
+    console.error("No further files were written. The run stopped AT the refusal rather than");
+    console.error("collecting it and continuing — the steps AFTER a guard are the destructive");
+    console.error("ones (calculator, product files, /api/rules corpus).");
+    console.error("");
+    process.exit(2);
+  }
   console.error(`\n❌ COLE fatal error: ${err}\n`);
   process.exit(1);
 });

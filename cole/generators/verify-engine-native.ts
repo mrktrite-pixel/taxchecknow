@@ -21,6 +21,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import type { ProductConfig } from "../types/product-config";
+import { GuardRefusal } from "./guard-refusal";
 
 /** Repo root, resolved from this file (cole/generators/ → two up). */
 const REPO_ROOT = path.resolve(__dirname, "..", "..");
@@ -92,8 +93,9 @@ export function verifyEngineNative(config: ProductConfig): boolean {
   const where = `product "${config.id}" (${v.appDir})`;
 
   if (!v.appDirExists) {
-    throw new Error(
-      `[R-A2 verify] Cannot verify engineNative for ${where}: the app directory does not exist. ` +
+    throw new GuardRefusal(
+      "R-A2 verify",
+      `Cannot verify engineNative for ${where}: the app directory does not exist. ` +
       `Refusing to emit either input shape on an unverifiable claim. ` +
       `(A missing directory must never read as "not engine-native" — that is a zero from a wrong ` +
       `target, which looks identical to a real answer.)`
@@ -101,8 +103,9 @@ export function verifyEngineNative(config: ProductConfig): boolean {
   }
 
   if (v.declared && !v.mountsEngineCalculator) {
-    throw new Error(
-      `[R-A2 verify] ${where} DECLARES engineNative: true, but no file directly in its app directory ` +
+    throw new GuardRefusal(
+      "R-A2 verify",
+      `${where} DECLARES engineNative: true, but no file directly in its app directory ` +
       `imports "${ENGINE_IMPORT}". Inspected: ${v.inspected.join(", ") || "(no .tsx files)"}. ` +
       `Emitting buildComposerInputsFromSession() here would read <id>_answers, which this ` +
       `calculator never writes → an EMPTY inputs object on the /api/assess fallback. ` +
@@ -111,8 +114,9 @@ export function verifyEngineNative(config: ProductConfig): boolean {
   }
 
   if (!v.declared && v.mountsEngineCalculator) {
-    throw new Error(
-      `[R-A2 verify] ${where} mounts EngineCalculator (in ${v.mountedBy}) but does NOT declare ` +
+    throw new GuardRefusal(
+      "R-A2 verify",
+      `${where} mounts EngineCalculator (in ${v.mountedBy}) but does NOT declare ` +
       `engineNative: true. This is the drift R-A2 exists to catch: the template would emit the ` +
       `legacy phantom sessionStorage reads for a calculator that writes <id>_answers, so every ` +
       `read would miss and the customer's assessment would be built from the template's hardcoded ` +
@@ -121,8 +125,9 @@ export function verifyEngineNative(config: ProductConfig): boolean {
   }
 
   if (v.declared && !v.hasEngineJson) {
-    throw new Error(
-      `[R-A2 verify] ${where} declares engineNative: true and mounts EngineCalculator, but ` +
+    throw new GuardRefusal(
+      "R-A2 verify",
+      `${where} declares engineNative: true and mounts EngineCalculator, but ` +
       `engine.json is missing from its app directory. The engine payload is what the mounted ` +
       `component runs; without it the declaration cannot be considered verified. Generating nothing.`
     );
