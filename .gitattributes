@@ -1,0 +1,10 @@
+# Snapshot files are compared BYTE-FOR-BYTE against generator output, and the
+# generators always emit \n. This repo is developed on Windows with
+# core.autocrlf=true, which stores LF but checks out CRLF — so without this rule
+# a fresh clone (or any `git reset --hard`) rewrites every .snap with CRLF and
+# ALL 480 snapshot tests fail, on a tree that is byte-identical in git.
+#
+# Found the hard way: the suite passed only on the machine that generated the
+# files. Pinning eol=lf makes the checkout match what the generator produces, so
+# the suite is green anywhere — including CI, which has no such machine.
+*.snap text eol=lf

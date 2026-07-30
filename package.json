@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "sync:cole-lib": "node scripts/sync-cole-lib.mjs --write",
+    "audit:authority": "ts-node --project cole/tsconfig.json cole/audit/run-config-authority-diff.ts",
     "test:snap": "node cole/scripts/snap-tests.mjs",
     "test:snap:update": "node cole/scripts/snap-tests.mjs --update"
   },
