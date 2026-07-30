@@ -10,16 +10,56 @@
 // Under the ROOT tsconfig, ts-node emits ESM and every extensionless internal
 // import fails with ERR_MODULE_NOT_FOUND. Verified both ways.
 //
-//   node cole/scripts/snap-tests.mjs            run
-//   node cole/scripts/snap-tests.mjs --update   write/refresh snapshots
+//   npm run test:snap                                   run everything
+//   npm run test:snap:update                            write/refresh snapshots
+//   npm run test:snap -- --test-name-pattern frcgw       scoped run
+//   npm run test:snap:update -- --test-name-pattern frcgw   scoped update
+//   npm run test:snap -- cole/__tests__/success-pages.snapshot.test.ts   one file
+//
+// FLAG PASS-THROUGH: anything after `--` reaches node:test verbatim, so scoped
+// runs work through npm and the raw command does not become tribal knowledge.
+// --update is consumed here (it maps to --test-update-snapshots and also sets
+// COLE_SNAP_UPDATE); everything else is forwarded.
 import { spawnSync } from "node:child_process";
 
-const update = process.argv.includes("--update");
+// node:test flags that take a SEPARATE value token. Without this list, the value
+// in `--test-name-pattern frcgw` would look like a positional and be mistaken for
+// a test-file target — the run would silently test the wrong thing, which is
+// worse than erroring.
+const VALUE_FLAGS = new Set([
+  "--test-name-pattern",
+  "--test-skip-pattern",
+  "--test-concurrency",
+  "--test-timeout",
+  "--test-reporter",
+  "--test-reporter-destination",
+  "--test-shard",
+]);
+
+const argv = process.argv.slice(2).filter(a => a !== "--update");
+const update = process.argv.slice(2).includes("--update");
+
+const passthrough = [];
+const targets = [];
+for (let i = 0; i < argv.length; i++) {
+  const a = argv[i];
+  if (a.startsWith("-")) {
+    passthrough.push(a);
+    // `--flag value` (but not `--flag=value`, which is already one token)
+    if (VALUE_FLAGS.has(a) && i + 1 < argv.length && !argv[i + 1].startsWith("-")) {
+      passthrough.push(argv[++i]);
+    }
+  } else {
+    targets.push(a);
+  }
+}
+
 const args = [
   "--import", "ts-node/esm",
   "--test",
   ...(update ? ["--test-update-snapshots"] : []),
-  "cole/__tests__/*.test.ts",
+  ...passthrough,
+  ...(targets.length ? targets : ["cole/__tests__/*.test.ts"]),
 ];
 
 // COLE_SNAP_UPDATE tells the hygiene test to stand down. node:test runs test FILES
