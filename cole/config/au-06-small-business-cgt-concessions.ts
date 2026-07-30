@@ -118,7 +118,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier1Calendar: [{ uid: "sbcgt-return", summary: "Tax Return Due — 31 October 2026", description: "Small business CGT concession elections must be made in the return for the year of the CGT event.", date: "20261031" }],
   tier2Calendar: [{ uid: "sbcgt-plan", summary: "CGT — Pre-sale structuring review", description: "Review Division 152 eligibility and concession strategy before signing sale contract.", date: "relative:+7days" }, { uid: "sbcgt-return", summary: "Tax Return Due", description: "Lodge return with Division 152 elections.", date: "20261031" }],
   delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_AU_SBCGT_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_AU_SBCGT_147" },
-  monitorUrls: ["https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions"],
+  monitorUrls: ["https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/incentives-and-concessions/small-business-cgt-concessions"],
   sidebarNumbers: [{ label: "Turnover threshold", value: "Under $2M" }, { label: "Net assets threshold", value: "Under $6M" }, { label: "Retirement exemption", value: "$500k lifetime" }, { label: "15-year exemption", value: "100% elimination" }],
   sidebarMathsTitle: "The 4 concessions — applied in order",
   sidebarMathsIncludes: [

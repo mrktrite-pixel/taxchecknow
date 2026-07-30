@@ -146,7 +146,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "nexus-year",  summary: "Nexus — Year-End Compliance Review",      description: "Full gross sales by state review. File all outstanding VDAs before year-end.", date: "20261231" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide", "https://www.streamlinedsalestax.org"],
+  monitorUrls: ["https://www.streamlinedsalestax.org"],
   sidebarNumbers: [{ label: "Economic nexus states", value: "45 + DC" }, { label: "Most common threshold", value: "$100k / 200 txns" }, { label: "Liability starts", value: "Date threshold crossed" }, { label: "VDA lookback cap", value: "3–4 years" }],
   sidebarMathsTitle: "Retroactive exposure components",
   sidebarMathsIncludes: ["Uncollected sales tax (from threshold date)", "Interest (typically 6-12%/year)", "Penalties (typically 10-25%)", "Marketplace sales count toward threshold", "Direct sales = your collection obligation"],

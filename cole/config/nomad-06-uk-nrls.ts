@@ -158,7 +158,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "nrls-apr",       summary: "New UK tax year — 6 April",                                 description: "Review NRLY statement from agent for prior year.",               date: "20260406" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.gov.uk/government/publications/non-resident-landlord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes"],
+  monitorUrls: ["https://www.gov.uk/guidance/paying-tax-on-rent-to-landlords-abroad"],
   sidebarNumbers: [{ label: "Agent withholding rate", value: "20% basic rate" }, { label: "Tenant threshold", value: "£100/week" }, { label: "NRL1 effect", value: "Gross payment approval" }, { label: "SA deadline (online)", value: "31 January" }],
   sidebarMathsTitle: "NRLS withholding logic",
   sidebarMathsIncludes: ["Letting agent: ALWAYS withholds 20% unless NRL1 approved", "Tenant (no agent): withholds 20% if rent over £100/week", "NRL1 approval removes withholding; annual SA required", "Self Assessment required regardless of withholding status", "Allowable expenses reduce taxable profit — some expenses subject to finance cost restriction"],

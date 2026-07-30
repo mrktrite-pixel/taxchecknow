@@ -158,7 +158,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "smsf-quarterly",    summary: "SMSF investment committee — quarterly review",                description: "AU director chair decision cadence (per Global Control Strategy).",   date: "relative:+90days" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements"],
+  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund"],
   sidebarNumbers: [{ label: "Non-complying tax rate", value: "45% top marginal" }, { label: "Complying tax rate", value: "15% on earnings" }, { label: "Temporary absence", value: "~2 years accepted" }, { label: "Active member test", value: "50%+ AU resident" }],
   sidebarMathsTitle: "SMSF residency decision logic",
   sidebarMathsIncludes: ["Three tests: establishment + CM&C + active member — ALL must pass", "CM&C = where strategic decisions made — NOT where members live", "Temporary absence up to ~2 years with genuine return intent: CM&C preserved", "Corporate trustee with AU-resident director who genuinely exercises control: standard shield", "Active member test: 50%+ of active member balances held by AU residents"],
