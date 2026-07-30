@@ -29,7 +29,7 @@ export async function GET() {
         "urgency_label": "ONGOING TAX — NOT A DEADLINE, A COMPOUNDING COST"
     },
     "key_facts": {
-        "general_tbc_2025_26": "AUD 1,900,000",
+        "general_tbc_2026_27": "AUD 2,100,000",
         "general_cap_pre_2021": "AUD 1,600,000",
         "general_cap_2021_2023": "AUD 1,700,000",
         "indexation_steps": "AUD 100,000 CPI",
@@ -90,12 +90,12 @@ export async function GET() {
         {
             "id": 1,
             "question": "What is the Transfer Balance Cap?",
-            "answer": "The Transfer Balance Cap (TBC) is a lifetime limit on how much superannuation can be held in the tax-free retirement phase — the part of super where earnings are taxed at 0% under ITAA 1997 s295-385. It was introduced from 1 July 2017. The general TBC is indexed to CPI in $100,000 increments. For 2025-26 the general cap is $1,900,000. Each member has a personal TBC which is set when they first start an account-based pension."
+            "answer": "The Transfer Balance Cap (TBC) is a lifetime limit on how much superannuation can be held in the tax-free retirement phase — the part of super where earnings are taxed at 0% under ITAA 1997 s295-385. It was introduced from 1 July 2017. The general TBC is indexed to CPI in $100,000 increments. For 2026-27 the general cap is $2,100,000. Each member has a personal TBC which is set when they first start an account-based pension."
         },
         {
             "id": 2,
             "question": "Why might my personal TBC be lower than $1.9M?",
-            "answer": "Your personal TBC is fixed at the general cap on the day you first commenced an account-based pension (ITAA 1997 s294-35). If you started your pension between 1 July 2017 and 30 June 2021, your personal cap is $1,600,000. Between 1 July 2021 and 30 June 2023, $1,700,000. From 1 July 2023 onwards, $1,900,000. The personal cap only increases proportionally based on how much of the cap was UNUSED when the general cap indexed up — if you were at 100% utilisation, no indexation applies and your cap is permanently frozen."
+            "answer": "Your personal TBC is fixed at the general cap on the day you first commenced an account-based pension (ITAA 1997 s294-35). If you started your pension between 1 July 2017 and 30 June 2021, your personal cap is $1,600,000. Between 1 July 2021 and 30 June 2023, $1,700,000. From 1 July 2023 to 30 June 2025, $1,900,000. For 2025-26, $2,000,000. From 1 July 2026, $2,100,000. The personal cap only increases proportionally based on how much of the cap was UNUSED when the general cap indexed up — if you were at 100% utilisation, no indexation applies and your cap is permanently frozen."
         },
         {
             "id": 3,
@@ -148,11 +148,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap"
+        "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/transfer-balance-cap"
     ],
     "canonical": "https://taxchecknow.com/au/check/transfer-balance-cap",
     "api_endpoint": "/api/rules/transfer-balance-cap",
-    "generated_at": "2026-04-22T14:02:06.223Z"
+    "generated_at": "2026-07-30T07:24:14.002Z"
 };
 
   return NextResponse.json(rules, {

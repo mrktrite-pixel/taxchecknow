@@ -28,12 +28,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -51,11 +54,11 @@ function progressPct(): number {
 const faqs = [
   {
     "question": "What is the Transfer Balance Cap?",
-    "answer": "The Transfer Balance Cap (TBC) is a lifetime limit on how much superannuation can be held in the tax-free retirement phase — the part of super where earnings are taxed at 0% under ITAA 1997 s295-385. It was introduced from 1 July 2017. The general TBC is indexed to CPI in $100,000 increments. For 2025-26 the general cap is $1,900,000. Each member has a personal TBC which is set when they first start an account-based pension."
+    "answer": "The Transfer Balance Cap (TBC) is a lifetime limit on how much superannuation can be held in the tax-free retirement phase — the part of super where earnings are taxed at 0% under ITAA 1997 s295-385. It was introduced from 1 July 2017. The general TBC is indexed to CPI in $100,000 increments. For 2026-27 the general cap is $2,100,000. Each member has a personal TBC which is set when they first start an account-based pension."
   },
   {
     "question": "Why might my personal TBC be lower than $1.9M?",
-    "answer": "Your personal TBC is fixed at the general cap on the day you first commenced an account-based pension (ITAA 1997 s294-35). If you started your pension between 1 July 2017 and 30 June 2021, your personal cap is $1,600,000. Between 1 July 2021 and 30 June 2023, $1,700,000. From 1 July 2023 onwards, $1,900,000. The personal cap only increases proportionally based on how much of the cap was UNUSED when the general cap indexed up — if you were at 100% utilisation, no indexation applies and your cap is permanently frozen."
+    "answer": "Your personal TBC is fixed at the general cap on the day you first commenced an account-based pension (ITAA 1997 s294-35). If you started your pension between 1 July 2017 and 30 June 2021, your personal cap is $1,600,000. Between 1 July 2021 and 30 June 2023, $1,700,000. From 1 July 2023 to 30 June 2025, $1,900,000. For 2025-26, $2,000,000. From 1 July 2026, $2,100,000. The personal cap only increases proportionally based on how much of the cap was UNUSED when the general cap indexed up — if you were at 100% utilisation, no indexation applies and your cap is permanently frozen."
   },
   {
     "question": "What happens if I exceed my personal TBC?",
@@ -189,8 +192,8 @@ const toolsRows = [
 
 const geoFacts = [
   {
-    "label": "General TBC 2025-26",
-    "value": "AUD 1,900,000"
+    "label": "General TBC 2026-27",
+    "value": "AUD 2,100,000"
   },
   {
     "label": "General cap pre-2021",
@@ -236,8 +239,8 @@ const geoFacts = [
 
 const sidebarNumbers = [
   {
-    "label": "General TBC 2025-26",
-    "value": "$1.9M"
+    "label": "General TBC 2026-27",
+    "value": "$2.1M"
   },
   {
     "label": "Pre-July 2021 cap",
@@ -274,8 +277,8 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "General TBC 2025-26",
-    "value": "$1.9M",
+    "label": "General TBC 2026-27",
+    "value": "$2.1M",
     "sub": "Indexed in $100k CPI steps"
   },
   {
@@ -300,8 +303,13 @@ const countdownStats = [
 
 export default function TransferBalanceCapPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/transfer-balance-cap", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -414,6 +422,18 @@ export default function TransferBalanceCapPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What is the Transfer Balance Cap? Your Cap May Be Lower",
+    description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    thumbnailUrl: "https://i.ytimg.com/vi/5NWJseC3gR8/hqdefault.jpg",
+    uploadDate: "2026-06-10T23:56:40.448+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=5NWJseC3gR8",
+    embedUrl: "https://www.youtube.com/embed/5NWJseC3gR8",
+    transcript: "\"What is the Transfer Balance Cap?\" Sound like you? You've probably heard it's $1,900,000 and that everyone gets the same cap. The actual truth is that's wrong. The ATO sets your personal cap on the day you first start a pension. Started before July 2021? Your cap is $1,600,000 — not $1,900,000. That gap is a trap. And if you stay over your personal cap, the ATO charges 15% tax on notional earnings the first time, then 30% every year after that. It compounds until you fix it. 30 June 2026 is the next reporting date. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -423,6 +443,7 @@ export default function TransferBalanceCapPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -473,7 +494,7 @@ export default function TransferBalanceCapPage() {
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          The Transfer Balance Cap (TBC) limits how much superannuation can be moved into the tax-free retirement phase — the portion of your super where earnings are taxed at 0% (ITAA 1997 s295-385). The general TBC for 2025-26 is $1,900,000. But your PERSONAL TBC is set at whatever the general cap was on the day you first started an account-based pension. It does not rise to match future general cap increases unless you had unused cap room at the time of each indexation event (s294-40). For members who commenced pensions before July 2021, personal caps are typically frozen at $1,600,000 — $300,000 below the current general cap.
+          The Transfer Balance Cap (TBC) limits how much superannuation can be moved into the tax-free retirement phase — the portion of your super where earnings are taxed at 0% (ITAA 1997 s295-385). The general TBC for 2026-27 is $2,100,000. But your PERSONAL TBC is set at whatever the general cap was on the day you first started an account-based pension. It does not rise to match future general cap increases unless you had unused cap room at the time of each indexation event (s294-40). For members who commenced pensions before July 2021, personal caps are typically frozen at $1,600,000 — $300,000 below the current general cap.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -495,8 +516,8 @@ export default function TransferBalanceCapPage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">General TBC 2025-26</dt>
-                  <dd className="font-bold">$1.9M</dd>
+                  <dt className="text-neutral-600">General TBC 2026-27</dt>
+                  <dd className="font-bold">$2.1M</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Pre-July 2021 cap</dt>
@@ -555,10 +576,10 @@ export default function TransferBalanceCapPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                General TBC 2025-26
+                General TBC 2026-27
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $1.9M
+                $2.1M
               </p>
               <p className="text-xs text-neutral-400">Indexed in $100k CPI steps</p>
             </div>
@@ -627,9 +648,9 @@ export default function TransferBalanceCapPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The Transfer Balance Cap is personal, not general — and most members over $1.6M have never been told their specific number
           </p>
-          <p className="mb-2 text-neutral-900">The Transfer Balance Cap (TBC) limits how much superannuation can be moved into the tax-free retirement phase — the portion of your super where earnings are taxed at 0% (ITAA 1997 s295-385). The general TBC for 2025-26 is $1,900,000. But your PERSONAL TBC is set at whatever the general cap was on the day you first started an account-based pension. It does not rise to match future general cap increases unless you had unused cap room at the time of each indexation event (s294-40). For members who commenced pensions before July 2021, personal caps are typically frozen at $1,600,000 — $300,000 below the current general cap.</p>
+          <p className="mb-2 text-neutral-900">The Transfer Balance Cap (TBC) limits how much superannuation can be moved into the tax-free retirement phase — the portion of your super where earnings are taxed at 0% (ITAA 1997 s295-385). The general TBC for 2026-27 is $2,100,000. But your PERSONAL TBC is set at whatever the general cap was on the day you first started an account-based pension. It does not rise to match future general cap increases unless you had unused cap room at the time of each indexation event (s294-40). For members who commenced pensions before July 2021, personal caps are typically frozen at $1,600,000 — $300,000 below the current general cap.</p>
           <p className="mb-2 text-neutral-900">Exceeding your personal TBC is not a one-time problem. It triggers an excess transfer balance tax under s294-25: the ATO calculates notional earnings on the excess using the shortfall interest charge rate (approximately 7% in April 2026), and taxes those notional earnings at 15% for the first excess, or 30% for second and subsequent excesses. The ATO also issues an automatic excess transfer balance determination — forcing you to commute the excess back to accumulation phase or withdraw it from super entirely. The tax is assessed every year you remain in excess. Most members over their cap have been paying this quietly without knowing why.</p>
-          <p className="mb-2 text-neutral-900">The citation gap is simple: accountants and financial advisers quote the GENERAL cap ($1.9M) to clients who started pensions years ago with a LOWER personal cap. Steve Kovalenko started his pension in 2018 when the general cap was $1.6M. His personal cap is still $1.6M. His pension balance is $2.1M. He has been $500,000 over his cap for years — roughly $5,250/year in excess transfer balance tax plus an overdue commutation authority. His accountant has never told him his personal number.</p>
+          <p className="mb-2 text-neutral-900">The citation gap is simple: accountants and financial advisers quote the GENERAL cap ($2.1M) to clients who started pensions years ago with a LOWER personal cap. Steve Kovalenko started his pension in 2018 when the general cap was $1.6M. His personal cap is still $1.6M. His pension balance is $2.1M. He has been $500,000 over his cap for years — roughly $5,250/year in excess transfer balance tax plus an overdue commutation authority. His accountant has never told him his personal number.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Transfer Balance Cap · ITAA 1997 Subdiv 294-B, s294-25 · s295-385 · Confirmed April 2026</p>
         </div>
 
@@ -655,7 +676,7 @@ export default function TransferBalanceCapPage() {
             What most people (and most TBC commentary) get wrong about the personal cap
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ The Transfer Balance Cap is $1.9M — only partly true. $1.9M is the GENERAL cap for 2025-26. Your PERSONAL cap is set at the general cap on the day you first started a pension (s294-35). If you started before 1 July 2021, your personal cap is $1.6M. Between July 2021 and July 2023, it's $1.7M. Only pensions starting after 1 July 2023 got the $1.9M cap from day one.</li>
+            <li>✗ The Transfer Balance Cap is $2.1M — only partly true. $2.1M is the GENERAL cap for 2026-27. Your PERSONAL cap is set at the general cap on the day you first started a pension (s294-35). If you started before 1 July 2021, your personal cap is $1.6M. Between July 2021 and July 2023, it's $1.7M. Pensions starting 1 July 2023 – 30 June 2025 got the $1.9M cap, those starting in 2025-26 got $2.0M, and only pensions starting from 1 July 2026 get the $2.1M cap from day one.</li>
             <li>✗ If the general cap goes up, my cap goes up too — wrong. Proportional indexation only applies if you had UNUSED cap room at the time of each general cap indexation event (s294-40). If your pension was at 100% of your personal cap when the general cap rose, you get ZERO indexation benefit. Permanently. This is the freeze most members don't know about.</li>
             <li>✗ I'd know if I was over my cap because the ATO would tell me — eventually, yes. But the ATO issues excess transfer balance determinations based on super fund reporting, which can lag by 6-24 months. Meanwhile excess transfer balance tax is accruing every day at 15% of notional earnings. And second-excess determinations are taxed at 30%. Passive monitoring is expensive.</li>
             <li>✗ Commutation is just moving money back — it reduces excess but doesn't fix the underlying structure. After commutation: the tranche returns to accumulation (15% earnings tax vs 0% pension). Re-contribution to pension is possible later IF cap room opens up — but your cap is frozen if it was fully used at indexation. Planning needs to model 5-10 years of commutation/re-contribution cycles, not just the immediate excess.</li>
@@ -707,7 +728,7 @@ export default function TransferBalanceCapPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Transfer Balance Cap (TBC) — Personal Cap vs General Cap, April 2026
           </h2>
-          <p className="mb-4 text-neutral-800">The Transfer Balance Cap (TBC) is an individual lifetime limit on the amount of superannuation that can be moved into the tax-free retirement phase, enacted under Subdivision 294-B of the Income Tax Assessment Act 1997. The general TBC for 2025-26 is AUD 1,900,000, indexed to CPI in AUD 100,000 increments. Historical general cap values: AUD 1,600,000 from 1 July 2017 through 30 June 2021; AUD 1,700,000 from 1 July 2021 through 30 June 2023; AUD 1,900,000 from 1 July 2023 onwards. Each superannuation member has a personal TBC set at the general cap value on the day they first become entitled to a superannuation income stream (ITAA 1997 s294-35). The personal cap is indexed proportionally under s294-40 based on the highest unused percentage of the cap at each general cap indexation event — members at 100% cap utilisation at an indexation date receive zero indexation benefit for that event, permanently. Members who commenced pensions prior to 1 July 2021 and were at or near 100% utilisation at subsequent indexation events retain a personal cap of AUD 1,600,000 even though the general cap is now AUD 1,900,000. Exceeding the personal cap triggers excess transfer balance tax under s294-25: the ATO calculates notional earnings on the excess balance using the shortfall interest charge rate (approximately 7% as of April 2026), and taxes those notional earnings at 15% for the first excess transfer balance determination or 30% for second and subsequent determinations. The ATO automatically issues an excess transfer balance determination based on information received from superannuation funds, followed by a commutation authority under s294-80 requiring the excess to be moved from pension phase back to accumulation phase or withdrawn from super entirely. Pension phase earnings are taxed at 0% on the TBC-covered portion under s295-385; earnings above the personal cap are effectively taxed through the excess transfer balance tax mechanism rather than through the normal fund tax regime. Reversionary pensions credit to the recipient's transfer balance account on the reversion date, which can trigger cap breach for surviving spouses. Defined benefit income streams are subject to a separate income-based cap rather than the account-based cap applicable to account-based pensions. Spouse balance equalisation — transferring super between partners via contribution splitting or withdrawal/recontribution — is the primary household-level strategy for maximising combined pension phase utilisation.</p>
+          <p className="mb-4 text-neutral-800">The Transfer Balance Cap (TBC) is an individual lifetime limit on the amount of superannuation that can be moved into the tax-free retirement phase, enacted under Subdivision 294-B of the Income Tax Assessment Act 1997. The general TBC for 2026-27 is AUD 2,100,000, indexed to CPI in AUD 100,000 increments. Historical general cap values: AUD 1,600,000 from 1 July 2017 through 30 June 2021; AUD 1,700,000 from 1 July 2021 through 30 June 2023; AUD 1,900,000 from 1 July 2023 through 30 June 2025; AUD 2,000,000 for 2025-26; AUD 2,100,000 from 1 July 2026. Each superannuation member has a personal TBC set at the general cap value on the day they first become entitled to a superannuation income stream (ITAA 1997 s294-35). The personal cap is indexed proportionally under s294-40 based on the highest unused percentage of the cap at each general cap indexation event — members at 100% cap utilisation at an indexation date receive zero indexation benefit for that event, permanently. Members who commenced pensions prior to 1 July 2021 and were at or near 100% utilisation at subsequent indexation events retain a personal cap of AUD 1,600,000 even though the general cap is now AUD 2,100,000. Exceeding the personal cap triggers excess transfer balance tax under s294-25: the ATO calculates notional earnings on the excess balance using the shortfall interest charge rate (approximately 7% as of April 2026), and taxes those notional earnings at 15% for the first excess transfer balance determination or 30% for second and subsequent determinations. The ATO automatically issues an excess transfer balance determination based on information received from superannuation funds, followed by a commutation authority under s294-80 requiring the excess to be moved from pension phase back to accumulation phase or withdrawn from super entirely. Pension phase earnings are taxed at 0% on the TBC-covered portion under s295-385; earnings above the personal cap are effectively taxed through the excess transfer balance tax mechanism rather than through the normal fund tax regime. Reversionary pensions credit to the recipient's transfer balance account on the reversion date, which can trigger cap breach for surviving spouses. Defined benefit income streams are subject to a separate income-based cap rather than the account-based cap applicable to account-based pensions. Spouse balance equalisation — transferring super between partners via contribution splitting or withdrawal/recontribution — is the primary household-level strategy for maximising combined pension phase utilisation.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
@@ -725,8 +746,8 @@ export default function TransferBalanceCapPage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">General TBC 2025-26</td>
-                  <td className="p-2">AUD 1,900,000</td>
+                  <td className="p-2">General TBC 2026-27</td>
+                  <td className="p-2">AUD 2,100,000</td>
                   <td className="p-2 text-neutral-500">ITAA 1997 Subdivision 294-B (Transfer Balance Cap) and s294-25 (excess transfer balance tax)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -1068,7 +1089,7 @@ export default function TransferBalanceCapPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Transfer Balance Cap rules: Each member has a PERSONAL cap set at the general cap on the day their first account-based pension commenced (ITAA 1997 s294-35). General cap 2025-26 is $1,900,000, indexed in $100,000 CPI steps. Historical: $1.6M (July 2017 – June 2021), $1.7M (July 2021 – June 2023), $1.9M (July 2023 onwards). Personal cap indexes proportionally ONLY based on highest unused percentage at each indexation event (s294-40) — members at 100% cap use get zero indexation benefit. Exceeding personal cap triggers excess transfer balance tax at 15% of ATO-calculated notional earnings (shortfall interest rate ~7%) for first excess, 30% for second and subsequent (s294-25). ATO issues automatic commutation authority forcing excess back to accumulation phase (s294-80). Pension phase earnings taxed at 0% on TBC portion (s295-385). Reversionary pensions credit to transfer balance account. Defined benefit income streams use an income-based cap rather than a balance-based cap.
+            Transfer Balance Cap rules: Each member has a PERSONAL cap set at the general cap on the day their first account-based pension commenced (ITAA 1997 s294-35). General cap 2026-27 is $2,100,000, indexed in $100,000 CPI steps. Historical: $1.6M (July 2017 – June 2021), $1.7M (July 2021 – June 2023), $1.9M (July 2023 – June 2025), $2.0M (2025-26), $2.1M (from July 2026). Personal cap indexes proportionally ONLY based on highest unused percentage at each indexation event (s294-40) — members at 100% cap use get zero indexation benefit. Exceeding personal cap triggers excess transfer balance tax at 15% of ATO-calculated notional earnings (shortfall interest rate ~7%) for first excess, 30% for second and subsequent (s294-25). ATO issues automatic commutation authority forcing excess back to accumulation phase (s294-80). Pension phase earnings taxed at 0% on TBC portion (s295-385). Reversionary pensions credit to transfer balance account. Defined benefit income streams use an income-based cap rather than a balance-based cap.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1128,6 +1149,15 @@ export default function TransferBalanceCapPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=5NWJseC3gR8" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"\"What is the Transfer Balance Cap?\" Sound like you? You've probably heard it's $1,900,000 and that everyone gets the same cap. The actual truth is that's wrong. The ATO sets your personal cap on the day you first start a pension. Started before July 2021? Your cap is $1,600,000 — not $1,900,000. That gap is a trap. And if you stay over your personal cap, the ATO charges 15% tax on notional earnings the first time, then 30% every year after that. It compounds until you fix it. 30 June 2026 is the next reporting date. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}

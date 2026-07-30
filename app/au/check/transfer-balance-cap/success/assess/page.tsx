@@ -54,18 +54,28 @@ export default function SuccessAssess() {
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState("");
   const [copied,     setCopied]     = useState(false);
-  const [calDone,    setCalDone]    = useState(false);
+
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
+  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
+  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
+  // (never "0 days", never a negative, never a stale label).
   const daysToDeadline: number | null = (() => {
-    const _end = new Date("2026-06-30T23:59:59.000+10:00").getTime();
-    if (Number.isNaN(_end)) return null;
-    const _d = Math.floor((_end - Date.now()) / 86_400_000);
-    return _d > 0 ? _d : null;
+    const end = new Date("2026-06-30T23:59:59.000+10:00").getTime();
+    if (Number.isNaN(end)) return null;
+    const d = Math.floor((end - Date.now()) / 86_400_000);
+    return d > 0 ? d : null;
   })();
   const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
+
+  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
+  // expired or will not parse, is a real defect — surface it so it is never silent.
+  // Phase 5 replaces this with real alerting.
+  useEffect(() => {
+    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "transfer-balance-cap", deadlineIso: "2026-06-30T23:59:59.000+10:00" });
+  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -137,7 +147,7 @@ export default function SuccessAssess() {
           market:     "Australia",
           authority:  "ATO",
           tier:       1,
-          name,
+          name: name === "there" ? "" : name,
           inputs: {
         "Pension phase status": pension_status,
         "Year pension commenced": pension_started_year,
@@ -181,45 +191,8 @@ export default function SuccessAssess() {
     }
   }
 
-  function handleCalendar() {
-    const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const pension_status = sessionStorage.getItem("transfer-balance-cap_pension_status") || "in_pension";
-    const pension_started_year = sessionStorage.getItem("transfer-balance-cap_pension_started_year") || "pre_2021";
-    const pension_balance_band = sessionStorage.getItem("transfer-balance-cap_pension_balance_band") || "1_9m_to_2_2m";
-    const cap_fully_used = sessionStorage.getItem("transfer-balance-cap_cap_fully_used") || "true";
-    const has_reversionary = sessionStorage.getItem("transfer-balance-cap_has_reversionary") || "false";
-    const personal_tbc = sessionStorage.getItem("transfer-balance-cap_personal_tbc") || "1600000";
-    const excess_amount = sessionStorage.getItem("transfer-balance-cap_excess_amount") || "500000";
-    const annual_excess_tax = sessionStorage.getItem("transfer-balance-cap_annual_excess_tax") || "5250";
-    const status = sessionStorage.getItem("transfer-balance-cap_status") || "EXCEEDED";
-    const tier = sessionStorage.getItem("transfer-balance-cap_tier") || "147";
-    function relativeDate(d: number): string {
-      return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
-    }
-    const ics = [
-      "BEGIN:VCALENDAR","VERSION:2.0",
-      "PRODID:-//TaxCheckNow//COLE//EN",
-      "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:Transfer Balance Cap Optimiser — Deadlines`,
-      "BEGIN:VEVENT",
-      `UID:tbc-june30-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260630"}`,
-      `DTEND;VALUE=DATE:${"20260630"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:30 June TBC reporting date",
-      "DESCRIPTION:Year-end super fund reporting to the ATO. Commutation actions must be complete before this date.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
-    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "transfer-balance-cap.ics";
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
-    setCalDone(true);
-  }
+  // handleCalendar() omitted: no event survived the R-A3 date gate, so there is no
+  // .ics to build and no button to trigger it.
 
   async function handleCopy() {
     if (!assessment?.accountantQuestions?.length) return;
@@ -233,7 +206,7 @@ export default function SuccessAssess() {
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "Your";
+  const greeting = firstName !== "there" ? `${firstName}` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -358,31 +331,10 @@ export default function SuccessAssess() {
               </div>
             )}
 
-            {/* CALENDAR */}
-            <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
-              <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Key dates for your calendar
-              </p>
-              <h2 className="mb-4 font-serif text-lg font-bold text-neutral-950">
-                Add these now — don't rely on memory
-              </h2>
-              <div className="mb-4 space-y-2">
-                
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">30 June TBC reporting date</p>
-                    <p className="text-xs text-neutral-500">Year-end super fund reporting to the ATO. Commutation actions must be complete before this date.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    30 Jun 2026
-                  </span>
-                </div>
-              </div>
-              <button onClick={handleCalendar}
-                className="no-print w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
-                {calDone ? "✓ Downloaded — open the .ics file to add to your calendar" : "📅 Add all dates to Apple / Google / Outlook calendar →"}
-              </button>
-            </div>
+            {/* CALENDAR — suppressed at generate time: every dated event was dropped
+                (see the R-A3 calendar warning in the build log). An empty "key dates"
+                panel with a download button that yields an eventless .ics is worse than
+                no panel at all. */}
 
             {/* YOUR FILES */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
@@ -437,10 +389,7 @@ export default function SuccessAssess() {
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   ⬇ Save as PDF
                 </button>
-                <button onClick={handleCalendar}
-                  className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
-                  📅 Add to calendar
-                </button>
+
                 <button onClick={handleCopy}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   📋 Copy accountant questions
