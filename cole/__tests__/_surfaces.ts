@@ -62,12 +62,21 @@ export function loadConfigs(): LoadedConfig[] {
 export interface Surface {
   /** Snapshot filename segment: <product-id>.<key>.snap */
   key: string;
-  /** Is this surface snapshotted YET? Sequencing ruling: success pages only for now. */
+  /** Is this surface snapshotted YET? Surfaces land in sequence, not all at once. */
   enabled: boolean;
   /** True when this product legitimately has NO generated output for this surface. */
   excluded: (config: any) => boolean;
   /** Why, for the failure message when an excluded snapshot turns up anyway. */
   exclusionReason: string;
+  /**
+   * Snapshot key(s) this surface contributes FOR THIS PRODUCT. Default: [key].
+   *
+   * Exists because product-files is one surface with EIGHT artefacts per product,
+   * so a single key per product cannot describe it. Derived from the config's own
+   * files[] rather than assuming 8, so a product that ever ships a different
+   * number is described correctly instead of silently under-covered.
+   */
+  keys?: (config: any) => string[];
 }
 
 export const SURFACES: Surface[] = [
@@ -97,9 +106,14 @@ export const SURFACES: Surface[] = [
   },
   {
     key: "product-files",
-    enabled: false,
+    enabled: true,
     excluded: () => false,
     exclusionReason: "",
+    // 8 artefacts per product, keyed by the file's own `num` (verified unique
+    // within every config, 8/8 across all 48). This is the PAID DELIVERABLE and
+    // the surface that carried "TIME-SENSITIVE: 31 October 2026" for months, so
+    // it is the one most worth locking.
+    keys: c => (c.files ?? []).map((f: any) => `product-files-${f.num}`),
   },
   {
     key: "rules-route",
@@ -138,11 +152,17 @@ export function expectations(configs = loadConfigs()): Expectation[] {
   for (const s of SURFACES) {
     if (!s.enabled) continue;
     for (const c of configs) {
-      const file = `${c.id}.${s.key}.snap`;
-      if (s.excluded(c.config)) {
-        out.push({ productId: c.id, surface: s.key, file, state: "forbidden", reason: s.exclusionReason });
-      } else {
-        out.push({ productId: c.id, surface: s.key, file, state: "expected", reason: "" });
+      const keys = s.keys ? s.keys(c.config) : [s.key];
+      if (keys.length === 0) {
+        throw new Error(`[snapshot suite] surface "${s.key}" produced NO keys for ${c.id} — that would silently drop it from coverage`);
+      }
+      for (const key of keys) {
+        const file = `${c.id}.${key}.snap`;
+        if (s.excluded(c.config)) {
+          out.push({ productId: c.id, surface: key, file, state: "forbidden", reason: s.exclusionReason });
+        } else {
+          out.push({ productId: c.id, surface: key, file, state: "expected", reason: "" });
+        }
       }
     }
   }
