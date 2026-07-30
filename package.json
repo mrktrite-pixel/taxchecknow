@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync:cole-lib": "node scripts/sync-cole-lib.mjs --write"
+    "sync:cole-lib": "node scripts/sync-cole-lib.mjs --write",
+    "test:snap": "node cole/scripts/snap-tests.mjs",
+    "test:snap:update": "node cole/scripts/snap-tests.mjs --update"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.1",
