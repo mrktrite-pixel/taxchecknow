@@ -13,6 +13,11 @@
 //   NO_AUTHORITY       no usable authority input exists for this product
 //   AUTHORITY_EXPIRED  an authority snapshot exists but is past its validity
 //                      window, so it cannot support a comparison
+//   UNVERIFIED         the number IS in the config, but its position cannot be
+//                      attributed to this figure's ROLE. Not agreement. See the
+//                      role-attribution block below for why this state had to
+//                      exist: au-15 matched a cap figure against a worked-example
+//                      pension balance and reported AGREES.
 //   AUTHORITY_UNPARSEABLE
 //                      we HOLD a current page but cannot read figures out of it.
 //                      ATO Table 26 is a clean two-column register; most authority
@@ -44,6 +49,7 @@
 
 export type FigureState =
   | "AGREES"
+  | "UNVERIFIED"
   | "DISAGREES"
   | "NO_AUTHORITY"
   | "AUTHORITY_EXPIRED"
@@ -84,6 +90,8 @@ export interface FigureVerdict {
    */
   corroborated?: boolean;
   corroboratingContext?: string;
+  /** How the match was (or was not) tied to this figure's role. */
+  attributionWhy?: string;
   note?: string;
 }
 
@@ -161,9 +169,15 @@ export function parseNumericTokens(text: string): Map<number, string[]> {
     else if (suffix === "bn") n *= 1_000_000_000;
     const at = m.index ?? 0;
     const context = text.slice(Math.max(0, at - 60), at + 60).replace(/\s+/g, " ").trim();
+    // Nearest preceding object key — so a match can be reported as "which FIELD",
+    // not just "somewhere in the file". Looked up in a bounded window because a
+    // whole-file scan per token would be quadratic on a 50 KB config.
+    const back = text.slice(Math.max(0, at - 600), at);
+    const keys = [...back.matchAll(/["']?([A-Za-z_][A-Za-z0-9_]*)["']?\s*:/g)];
+    const field = keys.length ? keys[keys.length - 1][1] : "(unknown)";
     if (!out.has(n)) out.set(n, []);
     const arr = out.get(n)!;
-    if (arr.length < 3) arr.push(context);
+    if (arr.length < 4) arr.push(`[${field}] ${context}`);
   }
   return out;
 }
@@ -225,6 +239,86 @@ export function extractSourceLastUpdated(researchOutput: any): string | null {
   return m ? m[1] : null;
 }
 
+// ── ROLE ATTRIBUTION ─────────────────────────────────────────────────────────
+// A number being PRESENT in a config proves nothing. au-15 proved it: the ATO's
+// 2026-27 transfer balance cap is $2,100,000, that number was in the config as a
+// WORKED-EXAMPLE PENSION BALANCE ("His pension balance is $2.1M"), and the check
+// reported AGREES while the config's stated cap was still $1,900,000.
+//
+// Corroborating on shared label words alone does not fix it — the label is
+// "General transfer balance cap" and the coincidence says "pension balance", so
+// they overlap on "balance".
+//
+// THE PART THAT ACTUALLY DISCRIMINATES IS THE PERIOD. The authority figure carries
+// its own period ("General transfer balance cap — 2026–27"), and these configs are
+// full of legitimate HISTORICAL values: au-15 states 1.9M and 2.0M as prior-year
+// caps, in the same fields, in the same words. So a role term alone cannot separate
+// "the current cap" from "a former cap" either. A match is attributed only when the
+// surrounding text carries BOTH:
+//     a role term from the label   AND   the figure's own period
+// and when the label has no period, two distinct role terms are required instead.
+const PERIOD_STOP = new Set(["general", "cap", "income", "balance", "transfer", "threshold", "amount", "rate", "defined", "benefit"]);
+
+/** Period tokens from a label like "General transfer balance cap — 2026–27". */
+export function periodForms(label: string): string[] {
+  const m = label.match(/((?:19|20)\d{2})\s*[–—\-\/]\s*(\d{2,4})/);
+  if (!m) {
+    const single = label.match(/(?:19|20)\d{2}/);
+    return single ? [single[0]] : [];
+  }
+  const y1 = m[1];
+  const tail = m[2].length === 2 ? m[2] : m[2].slice(-2);
+  const y2full = String(Number(y1) + 1);
+  // NOTE the bare year is deliberately NOT included for a RANGED period. It was,
+  // and it made attribution far too easy to satisfy: any sentence mentioning some
+  // 2026 date plus the word "general" attributed. A financial-year figure must be
+  // matched by a financial-year reference, not by the calendar year appearing
+  // anywhere nearby.
+  return [`${y1}-${tail}`, `${y1}–${tail}`, `${y1}/${tail}`, `${y1}-${y2full}`, `${y1} ${y2full}`,
+          `1 july ${y1}`, `from july ${y1}`, `from 1 july ${y1}`];
+}
+
+/** Distinctive role terms — generic nouns that caused the au-15 false match rank last. */
+export function roleTerms(label: string): { distinctive: string[]; generic: string[] } {
+  const words = (label.toLowerCase().match(/[a-z]{4,}/g) ?? []).filter(w => w !== "cap");
+  return {
+    distinctive: words.filter(w => !PERIOD_STOP.has(w)),
+    generic: words.filter(w => PERIOD_STOP.has(w)),
+  };
+}
+
+export interface Attribution {
+  attributed: boolean;
+  why: string;
+  context: string;
+}
+
+/** Can this match be attributed to the figure's role, in this context? */
+export function attribute(label: string, contexts: string[]): Attribution {
+  const periods = periodForms(label);
+  const { distinctive, generic } = roleTerms(label);
+  const all = [...distinctive, ...generic];
+  for (const raw of contexts) {
+    const c = raw.toLowerCase();
+    const hitPeriod = periods.find(p => c.includes(p.toLowerCase()));
+    const hitTerms = all.filter(w => c.includes(w));
+    if (periods.length > 0 && hitPeriod && hitTerms.length >= 1) {
+      return { attributed: true, why: `period "${hitPeriod}" + role term "${hitTerms[0]}"`, context: raw };
+    }
+    if (periods.length === 0 && hitTerms.length >= 2) {
+      return { attributed: true, why: `role terms "${hitTerms.slice(0, 2).join('", "')}" (label carries no period)`, context: raw };
+    }
+  }
+  const best = contexts[0] ?? "";
+  return {
+    attributed: false,
+    why: periods.length
+      ? `no context carries both the period (${periods[0]}) and a role term — the number is present but not as this figure`
+      : "no context carries two role terms — the number is present but not as this figure",
+    context: best,
+  };
+}
+
 // ── THE COMPARISON ───────────────────────────────────────────────────────────
 export interface CompareInput {
   productId: string;
@@ -246,7 +340,7 @@ export interface CompareInput {
 }
 
 export function compareProduct(input: CompareInput): ProductDiff {
-  const counts: Record<FigureState, number> = { AGREES: 0, DISAGREES: 0, NO_AUTHORITY: 0, AUTHORITY_EXPIRED: 0, AUTHORITY_UNPARSEABLE: 0 };
+  const counts: Record<FigureState, number> = { AGREES: 0, UNVERIFIED: 0, DISAGREES: 0, NO_AUTHORITY: 0, AUTHORITY_EXPIRED: 0, AUTHORITY_UNPARSEABLE: 0 };
   const base = {
     productId: input.productId,
     configFile: input.configFile,
@@ -279,21 +373,16 @@ export function compareProduct(input: CompareInput): ProductDiff {
   for (const f of input.figures) {
     const candidates = authorityValueCandidates(f.value, f.unit);
     const hit = candidates.find(c => configNumbers.has(c));
-    const state: FigureState = hit !== undefined ? "AGREES" : "DISAGREES";
+    // Present is not the same as agreeing. A present number must be ATTRIBUTABLE to
+    // this figure's role, or it reports UNVERIFIED.
+    const attribution = hit !== undefined ? attribute(f.id, configNumbers.get(hit) ?? []) : null;
+    const state: FigureState =
+      hit === undefined ? "DISAGREES" : attribution!.attributed ? "AGREES" : "UNVERIFIED";
     counts[state]++;
 
-    // Corroboration for an AGREES: does any context carrying that number mention
-    // a significant word from the label? See the field doc — au-15 agrees on
-    // 2,100,000 purely by coincidence.
-    let corroborated: boolean | undefined;
-    let corroboratingContext: string | undefined;
-    if (state === "AGREES") {
-      const words = f.id.toLowerCase().match(/[a-z]{5,}/g) ?? [];
-      const ctxs = configNumbers.get(hit!) ?? [];
-      const found = ctxs.find(c => words.some(w => c.toLowerCase().includes(w)));
-      corroborated = !!found;
-      corroboratingContext = found ?? ctxs[0];
-    }
+    const corroborated = attribution ? attribution.attributed : undefined;
+    const corroboratingContext = attribution?.context;
+    const attributionWhy = attribution?.why;
 
     // For a disagreement, offer what the config plausibly says instead: numbers
     // of similar magnitude whose surrounding text shares a significant word with
@@ -328,6 +417,7 @@ export function compareProduct(input: CompareInput): ProductDiff {
       sourceLastUpdated: input.sourceLastUpdated ?? null,
       corroborated,
       corroboratingContext,
+      attributionWhy,
       note: state === "DISAGREES" && configCandidates.length === 0
         ? "no same-magnitude number with related wording found in the config — the figure may simply be absent"
         : undefined,

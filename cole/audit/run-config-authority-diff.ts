@@ -190,7 +190,7 @@ export async function sweepAllProducts(): Promise<ProductDiff[]> {
 // ── CLI ──────────────────────────────────────────────────────────────────────
 function tally(diffs: ProductDiff[]) {
   const overall: Record<string, number> = {};
-  const fig: Record<FigureState, number> = { AGREES: 0, DISAGREES: 0, NO_AUTHORITY: 0, AUTHORITY_EXPIRED: 0, AUTHORITY_UNPARSEABLE: 0 };
+  const fig: Record<FigureState, number> = { AGREES: 0, UNVERIFIED: 0, DISAGREES: 0, NO_AUTHORITY: 0, AUTHORITY_EXPIRED: 0, AUTHORITY_UNPARSEABLE: 0 };
   for (const d of diffs) {
     overall[d.overall] = (overall[d.overall] ?? 0) + 1;
     for (const k of Object.keys(fig) as FigureState[]) fig[k] += d.counts[k];
@@ -205,13 +205,16 @@ function printOne(d: ProductDiff) {
   if (d.snapshotParse) console.log(`  snapshot parse: ${d.snapshotParse.reason} (rows skipped as superseded: ${d.snapshotParse.rowsSkipped})`);
   console.log(`  ${d.reason}`);
   for (const f of d.figures) {
-    const mark = f.state === "AGREES" ? (f.corroborated ? "OK  " : "OK? ") : "DIFF";
+    const mark = f.state === "AGREES" ? "OK  " : f.state === "UNVERIFIED" ? "UNVF" : "DIFF";
     console.log(`   ${mark} ${f.id}`);
     console.log(`        authority: ${f.authorityValue} ${f.unit}${f.factRole ? ` (${f.factRole})` : ""}`);
-    if (f.state === "AGREES" && f.corroborated === false) {
-      console.log(`        ⚠ UNCORROBORATED: the number is present but not near any word from the label —`);
-      console.log(`          it may be a coincidence rather than this figure. context:`);
-      console.log(`          « ${String(f.corroboratingContext ?? "").slice(0, 96)} »`);
+    if (f.state === "AGREES") {
+      console.log(`        ATTRIBUTED via ${f.attributionWhy}`);
+      console.log(`          matched in: « ${String(f.corroboratingContext ?? "").slice(0, 96)} »`);
+    }
+    if (f.state === "UNVERIFIED") {
+      console.log(`        ⚠ PRESENT BUT NOT ATTRIBUTED — ${f.attributionWhy}`);
+      console.log(`          nearest context: « ${String(f.corroboratingContext ?? "").slice(0, 96)} »`);
     }
     if (f.state === "DISAGREES") {
       if (f.configCandidates.length) {
