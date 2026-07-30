@@ -119,7 +119,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier1Calendar: [{ uid: "tbc-june30", summary: "30 June TBC reporting date", description: "Year-end super fund reporting to the ATO. Commutation actions must be complete before this date.", date: "20260630" }],
   tier2Calendar: [{ uid: "tbc-may15", summary: "Commutation authority check", description: "Check MyGov for any outstanding excess transfer balance determinations — 60-day response window.", date: "20260515" }, { uid: "tbc-june01", summary: "Pre-EOFY commutation decisions", description: "Decide which tranche to commute back to accumulation phase before 30 June reporting.", date: "20260601" }, { uid: "tbc-june30b", summary: "30 June reporting cutoff", description: "Super funds report balances to ATO — any excess at this date triggers/renews excess transfer balance tax.", date: "20260630" }],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap"],
+  monitorUrls: ["https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/transfer-balance-cap"],
   sidebarNumbers: [{ label: "General TBC 2025-26", value: "$1.9M" }, { label: "Pre-July 2021 cap", value: "$1.6M (frozen)" }, { label: "First excess tax rate", value: "15% on notional" }, { label: "Subsequent excess rate", value: "30% on notional" }],
   sidebarMathsTitle: "Personal TBC — rules vs reality",
   sidebarMathsIncludes: [

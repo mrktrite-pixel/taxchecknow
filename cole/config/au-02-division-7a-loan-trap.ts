@@ -120,7 +120,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier1Calendar: [{ uid: "d7a-repayment", summary: "Division 7A — Minimum repayment due", description: "Minimum Div 7A loan repayment must be made before 30 June each year to avoid deemed dividend.", date: "20260630" }],
   tier2Calendar: [{ uid: "d7a-review", summary: "Division 7A — Review loan agreement and repayment", description: "Confirm agreement is current and minimum repayment calculated correctly.", date: "relative:+14days" }, { uid: "d7a-repayment", summary: "Division 7A — Minimum repayment due by 30 June", description: "Make minimum repayment before EOFY.", date: "20260630" }],
   delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_AU_DIV7A_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_AU_DIV7A_147" },
-  monitorUrls: ["https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends"],
+  monitorUrls: ["https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends"],
   sidebarNumbers: [{ label: "Benchmark rate 2025/26", value: "8.27%" }, { label: "Max term unsecured", value: "7 years" }, { label: "Max term secured", value: "25 years" }, { label: "Repayment deadline", value: "30 June" }],
   sidebarMathsTitle: "Division 7A — the rules that decide everything",
   sidebarMathsIncludes: [

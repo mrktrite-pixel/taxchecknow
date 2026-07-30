@@ -58,7 +58,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier1Calendar: [{ uid: "strexit-june30", summary: "Div 296 commences — last pre-act planning date", description: "30 June 2026 is the final window to plan before Division 296 starts 1 July 2026.", date: "20260630" }],
   tier2Calendar: [{ uid: "strexit-may", summary: "Alternatives modelling — spouse equalisation + cost-base reset", description: "Model spouse balance equalisation and cost-base reset election BEFORE considering exit.", date: "20260501" }, { uid: "strexit-june15", summary: "Exit tax lock-in date check", description: "If exit is proceeding: age, retirement, and component split all lock in at withdrawal date.", date: "20260615" }, { uid: "strexit-june30b", summary: "Div 296 commences", description: "30 June 2026 — last planning window before Division 296 starts.", date: "20260630" }],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/accessing-your-super"],
+  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/withdrawing-and-using-your-super"],
   sidebarNumbers: [{ label: "Exit tax under 60", value: "15% on taxable" }, { label: "Super pension rate", value: "0% on TBC" }, { label: "Trust top rate", value: "47% undistributed" }, { label: "NCC re-entry cap", value: "$120k/yr, $360k bring-fwd" }],
   sidebarMathsTitle: "Super-to-trust exit — rules vs reality",
   sidebarMathsIncludes: [

@@ -157,7 +157,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "aucgt-clearance",          summary: "ATO clearance certificate — apply at least 4 weeks before settlement", description: "Avoid automatic 12.5% withholding.",                                  date: "relative:+60days" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/your-home-and-other-real-estate/main-residence-exemption-for-foreign-residents"],
+  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents"],
   sidebarNumbers: [{ label: "Exemption denied from", value: "9 May 2017" }, { label: "CGT event date", value: "Contract signing" }, { label: "No CGT discount from", value: "8 May 2012" }, { label: "FRCGW rate", value: "12.5% if over $750k" }],
   sidebarMathsTitle: "Expat CGT decision logic",
   sidebarMathsIncludes: ["Foreign resident at contract date: exemption denied (s118-115)", "Australian resident at contract date: main residence exemption may apply", "50% CGT discount not available to foreign residents (from 8 May 2012)", "12.5% withholding on sale over $750,000 unless clearance certificate", "Narrow life events exception — death / terminal / Family Law Act order"],

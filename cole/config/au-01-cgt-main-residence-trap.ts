@@ -127,7 +127,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier1Calendar: [{ uid: "cgt-return", summary: "CGT — Lodge tax return including property sale", description: "CGT from 2025/26 property sale must be declared in return due October 2026.", date: "20261031" }],
   tier2Calendar: [{ uid: "cgt-review", summary: "CGT — Review cost base and exemption with accountant", description: "Gather all records before meeting accountant to maximise cost base.", date: "relative:+14days" }, { uid: "cgt-return", summary: "CGT — Lodge tax return", description: "CGT declared in return due October 2026.", date: "20261031" }],
   delivery: { tier1DriveEnvVar: "NEXT_PUBLIC_DRIVE_AU_CGT_MR_67", tier2DriveEnvVar: "NEXT_PUBLIC_DRIVE_AU_CGT_MR_147" },
-  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption"],
+  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home"],
   sidebarNumbers: [{ label: "Full exemption", value: "All conditions met" }, { label: "6-year rule", value: "Per absence — not total" }, { label: "CGT discount", value: "50% if 12mo+" }, { label: "Records", value: "5 years after disposal" }],
   sidebarMathsTitle: "Main residence exemption — what breaks it",
   sidebarMathsIncludes: [

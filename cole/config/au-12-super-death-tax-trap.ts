@@ -114,7 +114,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier1Calendar: [{ uid: "sdtt-june30", summary: "Super — recontribution window closes", description: "Last day to withdraw + recontribute under 2025-26 rules before Division 296 commences.", date: "20260630" }],
   tier2Calendar: [{ uid: "sdtt-prepare", summary: "Super — confirm taxable component % with fund", description: "Request statement showing tax-free vs taxable split — required for recontribution planning.", date: "20260515" }, { uid: "sdtt-recontrib", summary: "Super — execute recontribution before 30 June", description: "Withdraw amount, recontribute as NCC, reset taxable component to tax-free.", date: "20260615" }, { uid: "sdtt-div296", summary: "Super — Division 296 commences", description: "First financial year subject to Division 296. Monitor TSB against $3M threshold.", date: "20260701" }],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/in-detail/withdrawing-and-using-your-super/superannuation-benefits-paid-from-a-deceased-estate"],
+  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/withdrawing-and-using-your-super/superannuation-death-benefits"],
   sidebarNumbers: [{ label: "Death tax on taxable component", value: "17%" }, { label: "Typical taxable %", value: "70-90%" }, { label: "Division 296 threshold", value: "$3M TSB" }, { label: "Law in force since", value: "2007" }],
   sidebarMathsTitle: "Super death tax trap — rule vs reality",
   sidebarMathsIncludes: [
