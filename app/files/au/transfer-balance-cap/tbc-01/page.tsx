@@ -74,7 +74,7 @@ export default function TransferBalanceCapFile01() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 ATO · ITAA 1997 Subdivision 294-B (Transfer Balance Cap) and s294-25 (excess transfer balance tax)
+              🇦🇺 ATO · ITAA 1997 Subdivision 294-B (Transfer Balance Cap) and s294-25 (excess transfer balance tax)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -116,7 +116,7 @@ export default function TransferBalanceCapFile01() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Your Personal Transfer Balance Cap</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: The general TBC on the day you commenced your first pension (sets your personal cap)</p><p>Number 2: Your proportional indexation entitlement at each general cap rise (s294-40)</p><p>Number 3: Your current pension phase balance vs personal cap = excess or headroom</p></div><h3>Historical General Caps</h3><table><tr><th>Period</th><th>General Cap</th><th>Personal Cap If Commenced In Period</th></tr><tr><td>1 July 2017 – 30 June 2021</td><td>$1,600,000</td><td>$1,600,000 (frozen if fully used)</td></tr><tr><td>1 July 2021 – 30 June 2023</td><td>$1,700,000</td><td>$1,700,000 (frozen if fully used)</td></tr><tr><td>1 July 2023 onwards</td><td>$1,900,000</td><td>$1,900,000</td></tr></table><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap">ATO — Transfer Balance Cap</a> · ITAA 1997 s294-35</p>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Your Personal Transfer Balance Cap</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: The general TBC on the day you commenced your first pension (sets your personal cap)</p><p>Number 2: Your proportional indexation entitlement at each general cap rise (s294-40)</p><p>Number 3: Your current pension phase balance vs personal cap = excess or headroom</p></div><h3>Historical General Caps</h3><table><tr><th>Period</th><th>General Cap</th><th>Personal Cap If Commenced In Period</th></tr><tr><td>1 July 2017 – 30 June 2021</td><td>$1,600,000</td><td>$1,600,000 (frozen if fully used)</td></tr><tr><td>1 July 2021 – 30 June 2023</td><td>$1,700,000</td><td>$1,700,000 (frozen if fully used)</td></tr><tr><td>1 July 2023 – 30 June 2025</td><td>$1,900,000</td><td>$1,900,000</td></tr><tr><td>1 July 2025 – 30 June 2026</td><td>$2,000,000</td><td>$2,000,000</td></tr><tr><td>1 July 2026 onwards</td><td>$2,100,000</td><td>$2,100,000</td></tr></table><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap">ATO — Transfer Balance Cap</a> · ITAA 1997 s294-35</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -204,7 +204,7 @@ export default function TransferBalanceCapFile01() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
+            Always consult a qualified Australia tax adviser for your personal situation.
             Based on ATO guidance April 2026.
           </p>
         </div>
