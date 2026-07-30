@@ -13,6 +13,13 @@
 //   NO_AUTHORITY       no usable authority input exists for this product
 //   AUTHORITY_EXPIRED  an authority snapshot exists but is past its validity
 //                      window, so it cannot support a comparison
+//   AUTHORITY_UNPARSEABLE
+//                      we HOLD a current page but cannot read figures out of it.
+//                      ATO Table 26 is a clean two-column register; most authority
+//                      pages are not. A page we hold and cannot read is a DIFFERENT
+//                      fact from a page we do not hold — it means the fetch works
+//                      and the parser is the gap — and neither may read as
+//                      agreement.
 //
 // ── WHERE THE INPUT ACTUALLY LIVES (corrected against the DB) ────────────────
 // The dispatch specified research_output.verified_facts.figures. THAT PATH DOES
@@ -35,7 +42,12 @@
 //     label|value|unit or every count would be inflated ~4x.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type FigureState = "AGREES" | "DISAGREES" | "NO_AUTHORITY" | "AUTHORITY_EXPIRED";
+export type FigureState =
+  | "AGREES"
+  | "DISAGREES"
+  | "NO_AUTHORITY"
+  | "AUTHORITY_EXPIRED"
+  | "AUTHORITY_UNPARSEABLE";
 
 export interface AuthorityFigure {
   /** The label — used as the identifier, because the payload carries no id. */
@@ -59,6 +71,19 @@ export interface FigureVerdict {
   sourceQuote: string;
   sourceUrl: string | null;
   sourceLastUpdated: string | null;
+  /**
+   * AGREES only: did the matched number appear in text that shares a significant
+   * word with the figure's label?
+   *
+   * This exists because of au-15. The ATO says the 2026-27 transfer balance cap is
+   * $2,100,000. That number IS present in au-15's config — as a WORKED-EXAMPLE
+   * PENSION BALANCE ("Current pension balance: $2,100,000"), while the config's
+   * stated cap is still $1,900,000. A bare presence test reports AGREES and the
+   * product stays wrong. Uncorroborated agreement is therefore reported as such,
+   * so a coincidence cannot pass for a check.
+   */
+  corroborated?: boolean;
+  corroboratingContext?: string;
   note?: string;
 }
 
@@ -66,10 +91,12 @@ export interface ProductDiff {
   productId: string;
   configFile: string | null;
   /** The single state when there is nothing to compare against. */
-  overall: "COMPARED" | "NO_AUTHORITY" | "AUTHORITY_EXPIRED" | "NO_CONFIG";
+  overall: "COMPARED" | "NO_AUTHORITY" | "AUTHORITY_EXPIRED" | "AUTHORITY_UNPARSEABLE" | "NO_CONFIG";
   reason: string;
   authoritySource: "build_figures" | "snapshot" | "none";
   buildId: string | null;
+  /** Set when the authority input was a snapshot: could the parser read it? */
+  snapshotParse?: { tablesFound: number; tablesParsed: number; rowsSkipped: number; reason: string };
   figures: FigureVerdict[];
   counts: Record<FigureState, number>;
 }
@@ -212,15 +239,20 @@ export interface CompareInput {
   /** Set when a snapshot exists but is out of window. */
   expired?: boolean;
   expiredDetail?: string;
+  /** Set when a CURRENT snapshot exists but no figures could be read from it. */
+  unparseable?: boolean;
+  unparseableDetail?: string;
+  snapshotParse?: { tablesFound: number; tablesParsed: number; rowsSkipped: number; reason: string };
 }
 
 export function compareProduct(input: CompareInput): ProductDiff {
-  const counts: Record<FigureState, number> = { AGREES: 0, DISAGREES: 0, NO_AUTHORITY: 0, AUTHORITY_EXPIRED: 0 };
+  const counts: Record<FigureState, number> = { AGREES: 0, DISAGREES: 0, NO_AUTHORITY: 0, AUTHORITY_EXPIRED: 0, AUTHORITY_UNPARSEABLE: 0 };
   const base = {
     productId: input.productId,
     configFile: input.configFile,
     authoritySource: input.authoritySource,
     buildId: input.buildId ?? null,
+    snapshotParse: input.snapshotParse,
     figures: [] as FigureVerdict[],
     counts,
   };
@@ -231,6 +263,10 @@ export function compareProduct(input: CompareInput): ProductDiff {
   if (input.expired && input.figures.length === 0) {
     counts.AUTHORITY_EXPIRED = 1;
     return { ...base, overall: "AUTHORITY_EXPIRED", reason: input.expiredDetail ?? "authority snapshot is past its validity window" };
+  }
+  if (input.unparseable && input.figures.length === 0) {
+    counts.AUTHORITY_UNPARSEABLE = 1;
+    return { ...base, overall: "AUTHORITY_UNPARSEABLE", reason: input.unparseableDetail ?? "a current snapshot is held but no figures could be read from it" };
   }
   if (input.figures.length === 0) {
     counts.NO_AUTHORITY = 1;
@@ -245,6 +281,19 @@ export function compareProduct(input: CompareInput): ProductDiff {
     const hit = candidates.find(c => configNumbers.has(c));
     const state: FigureState = hit !== undefined ? "AGREES" : "DISAGREES";
     counts[state]++;
+
+    // Corroboration for an AGREES: does any context carrying that number mention
+    // a significant word from the label? See the field doc — au-15 agrees on
+    // 2,100,000 purely by coincidence.
+    let corroborated: boolean | undefined;
+    let corroboratingContext: string | undefined;
+    if (state === "AGREES") {
+      const words = f.id.toLowerCase().match(/[a-z]{5,}/g) ?? [];
+      const ctxs = configNumbers.get(hit!) ?? [];
+      const found = ctxs.find(c => words.some(w => c.toLowerCase().includes(w)));
+      corroborated = !!found;
+      corroboratingContext = found ?? ctxs[0];
+    }
 
     // For a disagreement, offer what the config plausibly says instead: numbers
     // of similar magnitude whose surrounding text shares a significant word with
@@ -277,6 +326,8 @@ export function compareProduct(input: CompareInput): ProductDiff {
       sourceQuote: f.sourceQuote,
       sourceUrl: input.sourceUrl ?? null,
       sourceLastUpdated: input.sourceLastUpdated ?? null,
+      corroborated,
+      corroboratingContext,
       note: state === "DISAGREES" && configCandidates.length === 0
         ? "no same-magnitude number with related wording found in the config — the figure may simply be absent"
         : undefined,

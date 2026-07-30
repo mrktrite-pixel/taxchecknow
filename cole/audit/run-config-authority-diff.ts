@@ -16,6 +16,7 @@ import {
   compareProduct, extractAuthorityFigures, extractSourceLastUpdated,
   type ProductDiff, type FigureState,
 } from "./config-authority-diff";
+import { parseSnapshotFigures } from "./snapshot-figure-extractor";
 
 const REPO_ROOT = path.resolve(__dirname, "..", "..");
 const CONFIG_DIR = path.join(REPO_ROOT, "cole", "config");
@@ -92,10 +93,12 @@ export interface SnapshotState {
   detail: string;
   sourceUrl: string | null;
   fetchedAt: string | null;
+  /** Markdown of the newest usable snapshot, for the second extractor. */
+  content: string | null;
 }
 
 export function classifySnapshots(rows: any[], now = Date.now()): SnapshotState {
-  if (rows.length === 0) return { usable: false, expired: false, detail: "no snapshot rows for this product", sourceUrl: null, fetchedAt: null };
+  if (rows.length === 0) return { usable: false, expired: false, detail: "no snapshot rows for this product", sourceUrl: null, fetchedAt: null, content: null };
   let newestUsable: any = null, newestExpired: any = null, errored = 0;
   for (const s of rows) {
     if (s.fetch_error || !s.content_hash) { errored++; continue; }
@@ -104,16 +107,16 @@ export function classifySnapshots(rows: any[], now = Date.now()): SnapshotState 
     if (isExpired) { if (!newestExpired || s.fetched_at > newestExpired.fetched_at) newestExpired = s; }
     else if (!newestUsable || s.fetched_at > newestUsable.fetched_at) newestUsable = s;
   }
-  if (newestUsable) return { usable: true, expired: false, detail: `snapshot in window (fetched ${String(newestUsable.fetched_at).slice(0, 10)})`, sourceUrl: newestUsable.source_url, fetchedAt: newestUsable.fetched_at };
-  if (newestExpired) return { usable: false, expired: true, detail: `newest usable snapshot expired ${String(newestExpired.validity_until).slice(0, 10)} (fetched ${String(newestExpired.fetched_at).slice(0, 10)})`, sourceUrl: newestExpired.source_url, fetchedAt: newestExpired.fetched_at };
-  return { usable: false, expired: false, detail: `${errored} snapshot row(s) exist but all carry a fetch error or no content hash`, sourceUrl: rows[0]?.source_url ?? null, fetchedAt: null };
+  if (newestUsable) return { usable: true, expired: false, detail: `snapshot in window (fetched ${String(newestUsable.fetched_at).slice(0, 10)})`, sourceUrl: newestUsable.source_url, fetchedAt: newestUsable.fetched_at, content: newestUsable.source_content ?? null };
+  if (newestExpired) return { usable: false, expired: true, detail: `newest usable snapshot expired ${String(newestExpired.validity_until).slice(0, 10)} (fetched ${String(newestExpired.fetched_at).slice(0, 10)})`, sourceUrl: newestExpired.source_url, fetchedAt: newestExpired.fetched_at, content: null };
+  return { usable: false, expired: false, detail: `${errored} snapshot row(s) exist but all carry a fetch error or no content hash`, sourceUrl: rows[0]?.source_url ?? null, fetchedAt: null, content: null };
 }
 
 // ── the two modes ────────────────────────────────────────────────────────────
 export async function diffOneProduct(productKeyOrBuildId: string): Promise<ProductDiff> {
   const products = await select("products?select=id,product_id,slug&limit=500");
   const builds = await select("build_jobs?select=id,product_id,build_state,started_at,research_output&order=started_at.desc&limit=500");
-  const snaps = await select("authority_source_snapshots?select=id,topic,source_url,fetch_error,content_hash,fetched_at,validity_until&limit=1000");
+  const snaps = await select("authority_source_snapshots?select=id,topic,source_url,fetch_error,content_hash,fetched_at,validity_until,source_content&limit=1000");
 
   let product = products.find(p => p.product_id === productKeyOrBuildId || String(p.slug ?? "").endsWith(`/${productKeyOrBuildId}`));
   let build = builds.find(b => String(b.id).startsWith(productKeyOrBuildId));
@@ -129,8 +132,14 @@ function buildDiff(product: any, build: any, allSnaps: any[]): ProductDiff {
   const configFile = product ? resolveConfigFile(product.product_id, product.slug) : null;
   const configText = readConfigText(configFile);
 
-  const figures = build?.research_output ? extractAuthorityFigures(build.research_output) : [];
+  let figures = build?.research_output ? extractAuthorityFigures(build.research_output) : [];
   const lastUpdated = build?.research_output ? extractSourceLastUpdated(build.research_output) : null;
+  let snapshotParse: { tablesFound: number; tablesParsed: number; rowsSkipped: number; reason: string } | undefined;
+  let unparseable = false;
+  // Track provenance EXPLICITLY. Deriving it from figures.length after the
+  // snapshot fallback has overwritten `figures` mislabels snapshot-sourced
+  // figures as build_figures — the report would lie about where a number came from.
+  let source: "build_figures" | "snapshot" | "none" = figures.length ? "build_figures" : "none";
 
   // Only snapshots whose topic resolves to THIS product (namespace trap).
   const leaf = String(product?.slug ?? "").split("/").pop() ?? "";
@@ -140,24 +149,38 @@ function buildDiff(product: any, build: any, allSnaps: any[]): ProductDiff {
   });
   const snap = classifySnapshots(mine);
 
+  // SECOND EXTRACTOR (Step 5): when there is no build, read the snapshot markdown.
+  // This is what takes the sweep from 4 comparable products to as many as hold a
+  // parseable page. If the page is held and current but cannot be read, that is
+  // AUTHORITY_UNPARSEABLE — a different fact from holding nothing.
+  if (figures.length === 0 && snap.usable && snap.content) {
+    const parsed = parseSnapshotFigures(snap.content);
+    snapshotParse = { tablesFound: parsed.tablesFound, tablesParsed: parsed.tablesParsed, rowsSkipped: parsed.rowsSkipped, reason: parsed.reason };
+    if (parsed.parseable) { figures = parsed.figures; source = "snapshot"; }
+    else unparseable = true;
+  }
+
   return compareProduct({
     productId,
     configFile,
     configText,
     figures,
-    authoritySource: figures.length ? "build_figures" : snap.usable ? "snapshot" : "none",
+    authoritySource: source,
     buildId: build?.id ?? null,
     sourceUrl: snap.sourceUrl,
     sourceLastUpdated: lastUpdated,
     expired: snap.expired,
     expiredDetail: snap.detail,
+    unparseable,
+    unparseableDetail: snapshotParse ? `snapshot held and current, but unreadable: ${snapshotParse.reason}` : undefined,
+    snapshotParse,
   });
 }
 
 export async function sweepAllProducts(): Promise<ProductDiff[]> {
   const products = await select("products?select=id,product_id,slug,retired&limit=500");
   const builds = await select("build_jobs?select=id,product_id,build_state,started_at,research_output&order=started_at.desc&limit=500");
-  const snaps = await select("authority_source_snapshots?select=id,topic,source_url,fetch_error,content_hash,fetched_at,validity_until&limit=1000");
+  const snaps = await select("authority_source_snapshots?select=id,topic,source_url,fetch_error,content_hash,fetched_at,validity_until,source_content&limit=1000");
   const live = products.filter(p => !p.retired);
   const newestBuildFor = new Map<string, any>();
   for (const b of builds) if (!newestBuildFor.has(b.product_id)) newestBuildFor.set(b.product_id, b);
@@ -167,7 +190,7 @@ export async function sweepAllProducts(): Promise<ProductDiff[]> {
 // ── CLI ──────────────────────────────────────────────────────────────────────
 function tally(diffs: ProductDiff[]) {
   const overall: Record<string, number> = {};
-  const fig: Record<FigureState, number> = { AGREES: 0, DISAGREES: 0, NO_AUTHORITY: 0, AUTHORITY_EXPIRED: 0 };
+  const fig: Record<FigureState, number> = { AGREES: 0, DISAGREES: 0, NO_AUTHORITY: 0, AUTHORITY_EXPIRED: 0, AUTHORITY_UNPARSEABLE: 0 };
   for (const d of diffs) {
     overall[d.overall] = (overall[d.overall] ?? 0) + 1;
     for (const k of Object.keys(fig) as FigureState[]) fig[k] += d.counts[k];
@@ -179,11 +202,17 @@ function printOne(d: ProductDiff) {
   console.log(`\n${"─".repeat(78)}`);
   console.log(`${d.productId}   [${d.overall}]`);
   console.log(`  config: ${d.configFile ?? "(none)"}   authority: ${d.authoritySource}${d.buildId ? `   build ${String(d.buildId).slice(0, 8)}` : ""}`);
+  if (d.snapshotParse) console.log(`  snapshot parse: ${d.snapshotParse.reason} (rows skipped as superseded: ${d.snapshotParse.rowsSkipped})`);
   console.log(`  ${d.reason}`);
   for (const f of d.figures) {
-    const mark = f.state === "AGREES" ? "OK  " : "DIFF";
+    const mark = f.state === "AGREES" ? (f.corroborated ? "OK  " : "OK? ") : "DIFF";
     console.log(`   ${mark} ${f.id}`);
     console.log(`        authority: ${f.authorityValue} ${f.unit}${f.factRole ? ` (${f.factRole})` : ""}`);
+    if (f.state === "AGREES" && f.corroborated === false) {
+      console.log(`        ⚠ UNCORROBORATED: the number is present but not near any word from the label —`);
+      console.log(`          it may be a coincidence rather than this figure. context:`);
+      console.log(`          « ${String(f.corroboratingContext ?? "").slice(0, 96)} »`);
+    }
     if (f.state === "DISAGREES") {
       if (f.configCandidates.length) {
         // CANDIDATES, not an answer. The heuristic (same magnitude + a shared
