@@ -143,7 +143,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "ir-yearend", summary: "NZ Tax Year End — 31 March 2027",           description: "Plan final interest claims for 2026/27 year.", date: "20270331" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/deductions-for-residential-rental-property/interest"],
+  monitorUrls: ["https://www.ird.govt.nz/property-interest-rules"],
   sidebarNumbers: [{ label: "Current deductibility (from 1 Apr 2025)", value: "100%" }, { label: "Previous step (1 Apr 2024 – 31 Mar 2025)", value: "80%" }, { label: "On $20k interest at 33%", value: "$6,600/yr back" }, { label: "New builds + commercial", value: "Always 100%" }],
   sidebarMathsTitle: "The recovery math",
   sidebarMathsIncludes: ["Annual interest × 100% × marginal rate = tax saving", "Claim under Income Tax Act 2007 DB 2", "Structure determines effective rate (28% / 33% / personal)", "New builds (post-July 2020) never restricted", "Commercial property never restricted"],

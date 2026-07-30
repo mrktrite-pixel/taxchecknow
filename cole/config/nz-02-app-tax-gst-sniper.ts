@@ -150,7 +150,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "gst-annual", summary: "GST — Annual adjustment due", description: "Annual GST adjustment for mixed-use assets and apportionment.", date: "20270331" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ird.govt.nz/gst/gst-for-marketplace-sellers"],
+  monitorUrls: ["https://www.ird.govt.nz/sharing-economy/sellers-of-listed-services/gst-for-listed-services"],
   sidebarNumbers: [{ label: "Operative date (seller-facing)", value: "1 April 2024" }, { label: "Platform GST rate", value: "15%" }, { label: "Unregistered credit", value: "8.5%" }, { label: "Threshold", value: "$60,000/yr" }],
   sidebarMathsTitle: "The five decision paths",
   sidebarMathsIncludes: ["Stay flat-rate — default when expenses low", "Voluntary register — break-even + horizon over 3 yr", "Threshold register — mandatory at $60k turnover", "Register before big purchase — one-off recovery", "Avoid register — short horizon + retained assets"],
