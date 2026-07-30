@@ -43,16 +43,22 @@ export const PRODUCT_CONFIG: ProductConfig = {
   //      resolves to Monday 2 November 2026, which is correct. A 31 October
   //      falling on a public holiday would resolve a day early.
   // ── ENGINE-NATIVE DECLARATION (R-A2) ───────────────────────────────────
-  // FALSE, DELIBERATELY AND EXPLICITLY. This product has an engine.json in its
-  // app dir (emitted by the engine pipeline), but its calculator is still the
-  // bespoke RentalPropertyDeductionAuditCalculator — it does NOT mount
-  // EngineCalculator, and it still writes the per-field successPromptFields
-  // keys the legacy template reads. Declared here rather than omitted precisely
-  // because the engine.json makes this product LOOK engine-native to anything
-  // that sniffs the filesystem. It keeps the legacy input shape until the
-  // wrapper lands; flipping this before then would serve an assessment built
-  // from an empty inputs object.
-  engineNative: false,
+  // TRUE as of Step F (2026-07-30). The wrapper has landed: the app-dir
+  // calculator RentalPropertyDeductionAuditCalculator.tsx now mounts
+  // EngineCalculator against engine.json + figures.json, and the bespoke
+  // 871-line implementation is gone. verifyEngineNative() re-checks this claim
+  // against the app directory on every generate and refuses to emit if the two
+  // ever disagree, so this line and the mount move together or not at all.
+  //
+  // SCOPE, RULED: option (a) — the 4-question engine CLASSIFIES an expense; it
+  // does not find missed depreciation. The bespoke calculator's missed-deduction
+  // and record-quality outputs are NOT carried over; see the Step F report.
+  //
+  // NOTE FOR STEP G: the success pages have NOT been regenerated. They still
+  // read the five legacy per-field keys, of which EngineCalculator writes only
+  // _status and _tier — so until Step G regenerates them, _expense_types,
+  // _risk_flags and _confidence fall back to their hardcoded defaults.
+  engineNative: true,
 
   temporal: {
     kind: "deadline",
