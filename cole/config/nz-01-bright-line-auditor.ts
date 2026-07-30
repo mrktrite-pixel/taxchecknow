@@ -142,7 +142,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "bl-yearend", summary: "NZ Tax Year End — 31 March 2027",                  description: "Declare bright-line income in 2026/27 return.", date: "20270331" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test"],
+  monitorUrls: ["https://www.ird.govt.nz/property/buying-and-selling/when-you-need-to-pay/the-brightline-test"],
   sidebarNumbers: [{ label: "Current rule (from 1 Jul 2024)", value: "2 years" }, { label: "End date rule", value: "Agreement date" }, { label: "Tax rate", value: "20.5% – 39% marginal" }, { label: "Tax year end", value: "31 March" }],
   sidebarMathsTitle: "What the bright-line test measures",
   sidebarMathsIncludes: ["Start: SETTLEMENT date (title transfer)", "End: AGREEMENT date of sale (not sale settlement)", "Applicable period by original purchase date (2/5/10 years)", "Profit taxed as income at marginal rate", "Main home exemption proportional to period of main home use"],

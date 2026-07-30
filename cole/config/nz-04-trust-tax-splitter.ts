@@ -153,7 +153,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "tt-yearend",       summary: "NZ Tax Year End — 31 March 2027", description: "Last day for trust distributions to be effective for 2026/27.", date: "20270331" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income"],
+  monitorUrls: ["https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trusts-and-estates/income"],
   sidebarNumbers: [{ label: "Trustee rate (from 1 Apr 2024)", value: "39%" }, { label: "Beneficiary marginal (low end)", value: "10.5%" }, { label: "$100k saving at 17.5%", value: "$21,500/yr" }, { label: "Company beneficiary rate", value: "28%" }],
   sidebarMathsTitle: "The 7 decision paths",
   sidebarMathsIncludes: ["Adult beneficiary at lower marginal = arbitrage works", "Passive income (investment / rental / dividends) can be split", "Genuine benefit + in-time resolution required", "Company beneficiary path: 28% instead of 39%", "Every 11% of rate differential on $100k = $11,000/year"],

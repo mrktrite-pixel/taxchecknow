@@ -148,7 +148,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "ib-review",  summary: "Investment Boost — 2026 new assets review",   description: "Review all new assets acquired in 2026 for Investment Boost eligibility.", date: "20270301" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost"],
+  monitorUrls: ["https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/types-of-business-expenses/new-assets---investment-boost"],
   sidebarNumbers: [{ label: "Upfront deduction (year 1)", value: "20%" }, { label: "Trigger (available for use)", value: "On or after 22 May 2025" }, { label: "$100k at 28%", value: "$3,920/yr1" }, { label: "Total lifetime tax", value: "UNCHANGED" }],
   sidebarMathsTitle: "Cashflow acceleration (not tax saving)",
   sidebarMathsIncludes: ["20% upfront deduction in year 1", "80% depreciated normally over remaining life", "Eligible: new assets + new-to-NZ imports", "Qualifying: machinery · equipment · vehicles · computers · fit-out · plant · tools · hardware", "Trigger: available-for-use date (not purchase)"],
