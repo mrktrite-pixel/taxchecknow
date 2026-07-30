@@ -214,6 +214,87 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     return;
   }
 
+  // ── ALL PAGES, NEVER THE CALCULATOR (--pages-only) ────────────────────────
+  // One command for the three surfaces that were run separately in a fixed order,
+  // plus the rules route and the temporal registry/evidence the full build does.
+  //
+  // IT NEVER CALLS generateCalculator. Not call-and-catch: a guard you routinely
+  // swallow stops being a guard, which is the whole lesson of d863db6 — the R-A2
+  // calculator refusal was collected into errors[] and the run carried on to
+  // destroy a hand-authored corpus. There is nothing here to refuse because the
+  // calculator is never reached, so an engineNative product's wrapper is safe by
+  // construction rather than by exception handling.
+  //
+  // The corpus guard needs no special handling: corpusWriteDecision already SKIPs a
+  // "hand" corpus and ABORTS on a declaration/file contradiction, so this mode
+  // inherits correct behaviour from the shared step.
+  //
+  // NO ROLLBACK. Surfaces are written as they succeed; a later failure does not
+  // undo an earlier write. The summary therefore reports what LANDED, not just
+  // what failed.
+  if (pagesOnly) {
+    console.log(`   → --pages-only: gate + success + product files + rules + temporal for ${config.id}`);
+    console.log(`      calculator: NOT TOUCHED (never called in this mode)
+`);
+    const landed: string[] = [];
+
+    await emitGatePage(config, filesGenerated, errors);
+    if (!errors.length) landed.push("gate page");
+
+    const beforeSuccess = errors.length;
+    emitSuccessPages(config, filesGenerated, errors);
+    if (errors.length === beforeSuccess) landed.push("success pages (tier 1 + tier 2)");
+
+    const beforeFiles = errors.length;
+    emitProductFiles(config, filesGenerated, errors);
+    if (errors.length === beforeFiles) landed.push(`product files (${config.files.length})`);
+
+    const beforeRules = errors.length;
+    try {
+      const decision = corpusWriteDecision(config);
+      if (decision.action === "skip") {
+        console.log(`   ⏭  Rules API route SKIPPED — ${decision.reason}`);
+        landed.push("rules route (skipped — hand-authored corpus)");
+      } else {
+        const filePath = getRulesRoutePath(config, APP_ROOT);
+        writeFile(filePath, generateRulesRoute(config));
+        filesGenerated.push(filePath);
+        console.log(`   ✅ Rules API route (${decision.reason})
+      → ${relativePath(filePath)}`);
+        landed.push("rules route");
+      }
+    } catch (err) {
+      rethrowIfGuardRefusal(err);   // a corpus contradiction aborts, as it must
+      errors.push(`Rules route: ${err}`);
+      console.error(`   ❌ Rules route: ${err}`);
+    }
+    if (errors.length === beforeRules) { /* already recorded above */ }
+
+    emitTemporalRegistry(filesGenerated, errors);
+    await writeTemporalEvidence(config, errors);
+
+    const ok = errors.length === 0;
+    console.log(`
+${"─".repeat(60)}`);
+    console.log(ok
+      ? `
+✅ All page surfaces regenerated: ${productId} (${filesGenerated.length} files)`
+      : `
+⚠️  --pages-only completed with ${errors.length} error(s):`);
+    errors.forEach(e => console.log(`   • ${e}`));
+    if (!ok) {
+      // NO ROLLBACK — say plainly what is already on disk.
+      console.log(`
+   SURFACES ALREADY WRITTEN before the failure (NOT rolled back):`);
+      if (landed.length) landed.forEach(l => console.log(`     · ${l}`));
+      else console.log(`     · none`);
+      console.log(`   The product is part-regenerated. Re-run after fixing, or revert with git.`);
+    }
+    reportInvalidatedSnapshots(config);
+    if (!ok) process.exitCode = 1;
+    return;
+  }
+
   if (filesOnly) {
     console.log(`   → --files-only: regenerating the ${config.files.length} product files for ${config.id} (calculator/gate/success untouched)\n`);
     emitProductFiles(config, filesGenerated, errors);
@@ -517,6 +598,72 @@ function emitProductFiles(config: ProductConfig, filesGenerated: string[], error
   }
 }
 
+// ── SNAPSHOT INVALIDATION REPORT (production-line item 1) ────────────────────
+// RULED: the emit NEVER refreshes snapshots. A snapshot's only value is that a
+// human agreed to the output once; auto-refresh turns it into a diff log and the
+// suite stops being able to catch the class of bug it exists for. main sat at
+// 533/1 because a config correction left a delivery-document snapshot stale —
+// one line of 236, inside the paid document. That failure is the system working.
+//
+// So this reports rather than fixes: after an emit it names the snapshots the new
+// output invalidates and prints the exact scoped accept command. The operator
+// still types the accept, deliberately.
+//
+// It compares the COMMITTED .snap against the file just written to app/, so it
+// needs no regeneration. Line endings are normalised because *.snap is pinned to
+// LF by .gitattributes while the app/ files are not — without that every snapshot
+// would look invalidated on a Windows checkout.
+function reportInvalidatedSnapshots(config: ProductConfig): void {
+  const SNAP_DIR = path.join(__dirname, "..", "__tests__", "__snapshots__");
+  if (!fs.existsSync(SNAP_DIR)) return;   // suite not present — nothing to report
+
+  const norm = (t: string) => t.split("\r\n").join("\n").trimEnd();
+  const pairs: { snap: string; page: string; surface: string }[] = [];
+
+  // Snapshotted surfaces only. Gate pages, the calculator and the rules route are
+  // declared in the suite manifest but NOT yet enabled, so they have no snapshots
+  // to invalidate and must not be reported as if they did.
+  pairs.push({ surface: "success-assess", snap: `${config.id}.success-assess.snap`, page: getSuccessAssessPath(config, APP_ROOT) });
+  pairs.push({ surface: "success-plan",   snap: `${config.id}.success-plan.snap`,   page: getSuccessPlanPath(config, APP_ROOT) });
+  for (const f of config.files ?? []) {
+    pairs.push({
+      surface: `product-files-${f.num}`,
+      snap: `${config.id}.product-files-${f.num}.snap`,
+      page: path.join(path.dirname(APP_ROOT), "app", "files", config.country, config.id, f.slug, "page.tsx"),
+    });
+  }
+
+  const stale: string[] = [];
+  let compared = 0;
+  for (const { snap, page } of pairs) {
+    const snapPath = path.join(SNAP_DIR, snap);
+    if (!fs.existsSync(snapPath) || !fs.existsSync(page)) continue;
+    compared++;
+    if (norm(fs.readFileSync(snapPath, "utf8")) !== norm(fs.readFileSync(page, "utf8"))) stale.push(snap);
+  }
+
+  console.log(`
+${"─".repeat(60)}`);
+  if (compared === 0) {
+    console.log(`   SNAPSHOTS: none committed for ${config.id} yet — nothing invalidated.`);
+    return;
+  }
+  if (stale.length === 0) {
+    console.log(`   SNAPSHOTS: all ${compared} still match this output. Nothing to accept.`);
+    return;
+  }
+  console.log(`   ⚠ SNAPSHOTS INVALIDATED BY THIS EMIT — ${stale.length} of ${compared}:`);
+  for (const f of stale) console.log(`       ${f}`);
+  console.log(`
+   These are NOT refreshed automatically, by ruling. \`npm run test:snap\` will`);
+  console.log(`   FAIL until you accept them. Review the diff, then accept ONLY this product:`);
+  console.log(`
+       npm run test:snap:update -- --test-name-pattern "${config.id}"`);
+  console.log(`
+   Then commit the .snap files. Accepting a snapshot asserts the new output is`);
+  console.log(`   correct — for the product files that is the PAID deliverable, so read it.`);
+}
+
 function emitSuccessPages(config: ProductConfig, filesGenerated: string[], errors: string[]): void {
   try {
     const p = getSuccessAssessPath(config, APP_ROOT);
@@ -552,6 +699,7 @@ const successOnly  = args.includes("--success-only");
 const evidenceOnly = args.includes("--evidence-only");   // TEMPORAL v1 Step 6
 const gateOnly     = args.includes("--gate-only");       // R-A2 — per-surface emit
 const filesOnly    = args.includes("--files-only");      // R-A2 — per-surface emit
+const pagesOnly    = args.includes("--pages-only");      // every page surface EXCEPT the calculator
 const productId    = args.find(a => !a.startsWith("--"));
 if (!productId) {
   console.error("\n❌ Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id] [mode]");
@@ -565,6 +713,17 @@ if (!productId) {
   console.error("   Gate only:     cole-generate.ts au-16-superannuation-... --gate-only");
   console.error("                  (regenerates ONLY the gate page)");
   console.error("   Files only:    cole-generate.ts au-16-superannuation-... --files-only");
+  console.error("                  (regenerates ONLY the 8 delivered product documents)");
+  console.error("   ALL PAGES:     cole-generate.ts <product> --pages-only");
+  console.error("                  gate + success + product files + rules route + temporal");
+  console.error("                  registry/evidence. NEVER touches the calculator, so it is");
+  console.error("                  safe for an engineNative product whose calculator is a");
+  console.error("                  hand-built EngineCalculator wrapper.");
+  console.error("                  ⚠ WRITES TO THE LIVE DATABASE: the temporal registry step");
+  console.error("                    upserts products.temporal_kind and");
+  console.error("                    build_jobs.temporal_declaration. Not a dry run.");
+  console.error("                  ⚠ NO ROLLBACK: on a mid-run error, surfaces already written");
+  console.error("                    stay written. The summary lists what landed.");
   console.error("                  (regenerates ONLY the 8 delivered product documents)\n");
   console.error("   Available configs:");
   try {
