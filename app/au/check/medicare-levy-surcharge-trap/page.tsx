@@ -336,8 +336,8 @@ export default function MedicareLevySurchargeTrapPage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter total income",
-            "text": "Select your income including fringe benefits and reportable employer super."
+            "name": "Answer a few questions about your position",
+            "text": "Confirm your household, whether your income for MLS purposes is above the threshold — it includes reportable fringe benefits, net rental property losses and reportable super contributions — and the cover you hold."
       },
       {
             "@type": "HowToStep",
@@ -346,13 +346,13 @@ export default function MedicareLevySurchargeTrapPage() {
       },
       {
             "@type": "HowToStep",
-            "name": "Get MLS calculation",
-            "text": "See your exact MLS liability and comparison with hospital cover cost."
+            "name": "Get your surcharge position",
+            "text": "See whether the surcharge applies to you for 2025-26, and what that means before you lodge."
       },
       {
             "@type": "HowToStep",
             "name": "Get your avoidance plan",
-            "text": "Receive cover options, timing strategy, and income structuring analysis."
+            "text": "Receive your surcharge position, cover timing strategy, and income structuring analysis."
       }
 ],
   };
@@ -512,7 +512,7 @@ export default function MedicareLevySurchargeTrapPage() {
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
               <h3 className="mb-1 text-lg font-bold">Medicare Levy Surcharge Trap Engine</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised MLS analysis — surcharge calculation, cover timing strategy, and cost vs tax comparison.</p>
+              <p className="mb-3 text-sm text-neutral-300">A personalised MLS review — your surcharge position for 2025-26, what counts in your income for MLS purposes, and cover timing strategy.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
@@ -1040,7 +1040,7 @@ export default function MedicareLevySurchargeTrapPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Medicare Levy Surcharge 2025/26: singles over $101,001 — 1% to 1.5% additional tax if no appropriate hospital cover. Families over $202,000 combined. Income for MLS purposes includes taxable income + reportable fringe benefits + total net investment losses (including net rental property losses) + reportable super contributions. Avoided by appropriate private hospital cover for full year. Pro-rated for uncovered days. Under ITAA 1936 Part VIIB.
+            Medicare Levy Surcharge 2025/26: singles over $101,000 — 1% to 1.5% additional tax if no appropriate hospital cover. Families over $202,000 combined. Income for MLS purposes includes taxable income + reportable fringe benefits + total net investment losses (including net rental property losses) + reportable super contributions. Avoided by appropriate private hospital cover for full year. Pro-rated for uncovered days. Under ITAA 1936 Part VIIB.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             

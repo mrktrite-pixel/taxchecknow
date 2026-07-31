@@ -136,7 +136,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap",
     "api_endpoint": "/api/rules/medicare-levy-surcharge-trap",
-    "generated_at": "2026-07-31T11:44:09.560Z"
+    "generated_at": "2026-07-31T12:31:06.311Z"
 };
 
   return NextResponse.json(rules, {

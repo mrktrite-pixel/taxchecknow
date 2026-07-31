@@ -9,8 +9,8 @@ const FILES = [
   {
     "num": "01",
     "slug": "mls-01",
-    "name": "Your MLS Liability Calculation",
-    "desc": "Exact MLS payable and comparison with hospital cover cost.",
+    "name": "Your MLS Position — 2025/26",
+    "desc": "Whether the surcharge applies to you, at which threshold, and what counts in your income for MLS purposes.",
     "tier": 1
   },
   {
@@ -144,7 +144,7 @@ export default function SuccessPlan() {
           tier:       2,
           name: name === "there" ? "" : name,
           inputs,
-          fields: ["mlsStatus","incomeForMLSPurposes","surchargeRateTier","estimatedMLSPayable","coverCostEstimate","netSavingFromCover","coverTimingStrategy","partnerCoverAnalysis","familyThresholdPosition","superContributionOpportunity","policyExcessCheck","integratedPlan","nextYearCalendar","strongestRiskTrigger","confidenceLevel"],
+          fields: ["mlsStatus","incomeForMLSPurposes","coverTimingStrategy","householdCoverAnalysis","familyThresholdPosition","superContributionOpportunity","integratedPlan","nextYearCalendar","strongestRiskTrigger"],
         }),
       });
       const data = await res.json();
@@ -156,19 +156,13 @@ export default function SuccessPlan() {
       setAssessment({
         mlsStatus: "Your personalised mlsStatus is being prepared — please refresh in a moment.",
         incomeForMLSPurposes: "Your personalised incomeForMLSPurposes is being prepared — please refresh in a moment.",
-        surchargeRateTier: "Your personalised surchargeRateTier is being prepared — please refresh in a moment.",
-        estimatedMLSPayable: "Your personalised estimatedMLSPayable is being prepared — please refresh in a moment.",
-        coverCostEstimate: "Your personalised coverCostEstimate is being prepared — please refresh in a moment.",
-        netSavingFromCover: "Your personalised netSavingFromCover is being prepared — please refresh in a moment.",
         coverTimingStrategy: "Your personalised coverTimingStrategy is being prepared — please refresh in a moment.",
-        partnerCoverAnalysis: "Your personalised partnerCoverAnalysis is being prepared — please refresh in a moment.",
+        householdCoverAnalysis: "Your personalised householdCoverAnalysis is being prepared — please refresh in a moment.",
         familyThresholdPosition: "Your personalised familyThresholdPosition is being prepared — please refresh in a moment.",
         superContributionOpportunity: "Your personalised superContributionOpportunity is being prepared — please refresh in a moment.",
-        policyExcessCheck: "Your personalised policyExcessCheck is being prepared — please refresh in a moment.",
         integratedPlan: "Your personalised integratedPlan is being prepared — please refresh in a moment.",
         nextYearCalendar: "Your personalised nextYearCalendar is being prepared — please refresh in a moment.",
         strongestRiskTrigger: "Your personalised strongestRiskTrigger is being prepared — please refresh in a moment.",
-        confidenceLevel: "Your personalised confidenceLevel is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
           "What is the single most important action I should take before No act-by date?",
@@ -310,7 +304,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["mlsStatus","incomeForMLSPurposes","surchargeRateTier","estimatedMLSPayable","coverCostEstimate","netSavingFromCover"] as string[]).map(key => {
+                {(["mlsStatus","incomeForMLSPurposes","coverTimingStrategy","householdCoverAnalysis","familyThresholdPosition","superContributionOpportunity"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (

@@ -99,9 +99,9 @@ export default function MedicareLevySurchargeTrapFile01() {
             Medicare Levy Surcharge Trap Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your MLS Liability Calculation
+            Your MLS Position — 2025/26
           </h1>
-          <p className="text-neutral-500 text-sm">Exact MLS payable and comparison with hospital cover cost.</p>
+          <p className="text-neutral-500 text-sm">Whether the surcharge applies to you, at which threshold, and what counts in your income for MLS purposes.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -129,7 +129,7 @@ export default function MedicareLevySurchargeTrapFile01() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">01</span>
-                <span className="text-sm font-semibold text-white">Your MLS Liability Calculation</span>
+                <span className="text-sm font-semibold text-white">Your MLS Position — 2025/26</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>

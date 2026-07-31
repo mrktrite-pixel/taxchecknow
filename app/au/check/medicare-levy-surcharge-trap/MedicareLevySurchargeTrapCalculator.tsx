@@ -90,7 +90,7 @@ const ENGINE_CONFIG: EngineConfig = {
     bridgeCopy:
       "Most surcharge surprises come down to one of two things: income for MLS purposes being higher than the taxable income people have in mind, or cover that does not qualify — extras-only, or a policy that lapsed part-way through the year. This shows which side of the threshold you are on and what the surcharge would mean before you lodge.",
     planChecklist: [
-      "Whether the surcharge applies to you for 2025–26, and at which rate",
+      "Whether the surcharge applies to you for 2025–26, and how the rate tiers work",
       "What counts in your income for MLS purposes — including net rental property losses, which raise it",
       "Whether the cover you hold actually exempts you, and what happens for any uncovered days",
       "Questions to take to your accountant or tax agent before you lodge",

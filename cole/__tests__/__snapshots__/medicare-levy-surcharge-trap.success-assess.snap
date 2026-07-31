@@ -9,8 +9,8 @@ const FILES = [
   {
     "num": "01",
     "slug": "mls-01",
-    "name": "Your MLS Liability Calculation",
-    "desc": "Exact MLS payable and comparison with hospital cover cost.",
+    "name": "Your MLS Position — 2025/26",
+    "desc": "Whether the surcharge applies to you, at which threshold, and what counts in your income for MLS purposes.",
     "tier": 1
   },
   {
@@ -123,7 +123,7 @@ export default function SuccessAssess() {
           tier:       1,
           name: name === "there" ? "" : name,
           inputs,
-          fields: ["mlsStatus","incomeForMLSPurposes","surchargeRateTier","estimatedMLSPayable","coverCostEstimate","netSavingFromCover","coverTimingStrategy","thresholdPosition","strongestRiskTrigger","confidenceLevel","firstAction"],
+          fields: ["mlsStatus","incomeForMLSPurposes","whatCountsInYourMLSIncome","coverQualificationCheck","coverTimingStrategy","thresholdPosition","whatHappensAtLodgement","strongestRiskTrigger","firstAction"],
         }),
       });
       const data = await res.json();
@@ -135,14 +135,12 @@ export default function SuccessAssess() {
       setAssessment({
         mlsStatus: "Your personalised mlsStatus is being prepared — please refresh in a moment.",
         incomeForMLSPurposes: "Your personalised incomeForMLSPurposes is being prepared — please refresh in a moment.",
-        surchargeRateTier: "Your personalised surchargeRateTier is being prepared — please refresh in a moment.",
-        estimatedMLSPayable: "Your personalised estimatedMLSPayable is being prepared — please refresh in a moment.",
-        coverCostEstimate: "Your personalised coverCostEstimate is being prepared — please refresh in a moment.",
-        netSavingFromCover: "Your personalised netSavingFromCover is being prepared — please refresh in a moment.",
+        whatCountsInYourMLSIncome: "Your personalised whatCountsInYourMLSIncome is being prepared — please refresh in a moment.",
+        coverQualificationCheck: "Your personalised coverQualificationCheck is being prepared — please refresh in a moment.",
         coverTimingStrategy: "Your personalised coverTimingStrategy is being prepared — please refresh in a moment.",
         thresholdPosition: "Your personalised thresholdPosition is being prepared — please refresh in a moment.",
+        whatHappensAtLodgement: "Your personalised whatHappensAtLodgement is being prepared — please refresh in a moment.",
         strongestRiskTrigger: "Your personalised strongestRiskTrigger is being prepared — please refresh in a moment.",
-        confidenceLevel: "Your personalised confidenceLevel is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
@@ -276,7 +274,7 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["mlsStatus","incomeForMLSPurposes","surchargeRateTier","estimatedMLSPayable","coverCostEstimate","netSavingFromCover"] as string[]).map(key => {
+                {(["mlsStatus","incomeForMLSPurposes","whatCountsInYourMLSIncome","coverQualificationCheck","coverTimingStrategy","thresholdPosition"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
