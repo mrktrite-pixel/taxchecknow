@@ -12,6 +12,22 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
   // which is the correct state until someone rules on it.
   nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
+
+  // ── ENGINE-NATIVE DECLARATION (R-A2) ───────────────────────────────────
+  // TRUE as of Step F (2026-07-31), IN THE SAME COMMIT as the mount. The app-dir
+  // calculator MedicareLevySurchargeTrapCalculator.tsx now mounts EngineCalculator
+  // against engine.json + figures.json (emitted at 6bfd95a under the ruled overlay),
+  // and the bespoke 915-line implementation is gone. verifyEngineNative() re-checks
+  // this claim against the app directory on every generate and THROWS IN EITHER
+  // DIRECTION on disagreement — so this line and the mount must move together, which
+  // is why they are one commit and not two.
+  //
+  // WHAT THE MOUNT RETIRES: the bespoke still ran 2023-24 constants that the
+  // 2026-07-31 config correction never reached (INCOME_MIDPOINTS, calcMLSRate banding
+  // on 93001/108000/144000, the $186,000 family branch, and unsourced coverCost
+  // constants with a computed net saving). Until this commit the free calculator
+  // contradicted the corrected copy directly above it on the same page.
+  engineNative: true,
   id: "medicare-levy-surcharge-trap", name: "Medicare Levy Surcharge Trap Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/medicare-levy-surcharge-trap", url: "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap", apiRoute: "/api/rules/medicare-levy-surcharge-trap",
   authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "Medicare Levy Surcharge — ITAA 1936 Part VIIB", legislation: "Medicare Levy Surcharge — Income Tax Assessment Act 1936 Part VIIB", lastVerified: "July 2026",

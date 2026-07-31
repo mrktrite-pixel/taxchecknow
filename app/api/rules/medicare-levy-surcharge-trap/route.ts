@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "July 2026",
     "legislation": "Medicare Levy Surcharge — Income Tax Assessment Act 1936 Part VIIB",
     "legal_anchor": "Medicare Levy Surcharge — ITAA 1936 Part VIIB",
     "deadline": {
@@ -136,7 +136,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap",
     "api_endpoint": "/api/rules/medicare-levy-surcharge-trap",
-    "generated_at": "2026-07-31T05:04:46.907Z"
+    "generated_at": "2026-07-31T11:44:09.560Z"
 };
 
   return NextResponse.json(rules, {
@@ -146,7 +146,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "medicare-levy-surcharge-trap",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "July 2026",
     },
   });
 }

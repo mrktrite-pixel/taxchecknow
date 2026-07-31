@@ -3,6 +3,7 @@
 // Product: medicare-levy-surcharge-trap · Tier 2 Success Page
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -126,22 +127,12 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const annual_income = sessionStorage.getItem("medicare-levy-surcharge-trap_annual_income") || "band_93_108";
-      const has_hospital_cover = sessionStorage.getItem("medicare-levy-surcharge-trap_has_hospital_cover") || "false";
-      const is_family = sessionStorage.getItem("medicare-levy-surcharge-trap_is_family") || "false";
-      const status = sessionStorage.getItem("medicare-levy-surcharge-trap_status") || "SURCHARGE APPLIES";
-      const mls_annual = sessionStorage.getItem("medicare-levy-surcharge-trap_mls_annual") || "1000";
-      const tier = sessionStorage.getItem("medicare-levy-surcharge-trap_tier") || "67";
-
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-        "annual_income": annual_income,
-        "has_hospital_cover": has_hospital_cover,
-        "is_family": is_family,
-        "status": status,
-        "mls_annual": mls_annual,
-        "tier": tier,
-      }).some(v => v && v !== "band_93_108");
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
+      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // (F5 contract). The legacy per-field keys are never written by an engine-native
+      // calculator, so reading them would always fall back to defaults → a generic,
+      // corpus-contradicting assessment.
+      const inputs = buildComposerInputsFromSession("medicare-levy-surcharge-trap");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -152,14 +143,7 @@ export default function SuccessPlan() {
           authority:  "ATO",
           tier:       2,
           name: name === "there" ? "" : name,
-          inputs: {
-        "Income band for MLS purposes": annual_income,
-        "Has appropriate hospital cover": has_hospital_cover,
-        "Family or single assessment": is_family,
-        "MLS verdict status": status,
-        "Estimated annual MLS exposure (AUD)": mls_annual,
-        "Product tier purchased": tier,
-          },
+          inputs,
           fields: ["mlsStatus","incomeForMLSPurposes","surchargeRateTier","estimatedMLSPayable","coverCostEstimate","netSavingFromCover","coverTimingStrategy","partnerCoverAnalysis","familyThresholdPosition","superContributionOpportunity","policyExcessCheck","integratedPlan","nextYearCalendar","strongestRiskTrigger","confidenceLevel"],
         }),
       });
@@ -199,12 +183,6 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const annual_income = sessionStorage.getItem("medicare-levy-surcharge-trap_annual_income") || "band_93_108";
-    const has_hospital_cover = sessionStorage.getItem("medicare-levy-surcharge-trap_has_hospital_cover") || "false";
-    const is_family = sessionStorage.getItem("medicare-levy-surcharge-trap_is_family") || "false";
-    const status = sessionStorage.getItem("medicare-levy-surcharge-trap_status") || "SURCHARGE APPLIES";
-    const mls_annual = sessionStorage.getItem("medicare-levy-surcharge-trap_mls_annual") || "1000";
-    const tier = sessionStorage.getItem("medicare-levy-surcharge-trap_tier") || "67";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
