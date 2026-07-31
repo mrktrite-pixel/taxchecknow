@@ -87,7 +87,7 @@ export default function MedicareLevySurchargeTrapFile02() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 RETURN DUE: 31 October 2026
+              🔴 ACCRUES DAILY: Assessed at your tax return
             </span>
             <a href="/au/check/medicare-levy-surcharge-trap"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -156,7 +156,7 @@ export default function MedicareLevySurchargeTrapFile02() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Cost vs Tax Comparison</span>
+                <span className="text-sm font-semibold text-neutral-950">Your MLS by Income — 2025/26</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -225,6 +225,7 @@ export default function MedicareLevySurchargeTrapFile02() {
               ← Back to Medicare Levy Surcharge Trap Engine
             </a>
             <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Medicare Levy Surcharge ↗</a>
+            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Medicare levy surcharge income, thresholds and rates (QC49961) ↗</a>
           </div>
         </div>
       </footer>

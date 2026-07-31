@@ -62,6 +62,13 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
           ]
     },
     "medicare-levy-surcharge-trap": {
+          "temporal": {
+                "kind": "none",
+                "reason": "no_act_by_date_in_authority",
+                "jurisdiction": "AU",
+                "domain": "medicare_levy_surcharge",
+                "label": "No act-by date"
+          },
           "nurture": [
                 {
                       "track": "standard_v1",

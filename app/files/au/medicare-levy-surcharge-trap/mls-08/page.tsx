@@ -74,7 +74,7 @@ export default function MedicareLevySurchargeTrapFile08() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 ATO · Medicare Levy Surcharge — ITAA 1936 Part VIIB
+              🇦🇺 ATO · Medicare Levy Surcharge — ITAA 1936 Part VIIB
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -87,7 +87,7 @@ export default function MedicareLevySurchargeTrapFile08() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 RETURN DUE: 31 October 2026
+              🔴 ACCRUES DAILY: Assessed at your tax return
             </span>
             <a href="/au/check/medicare-levy-surcharge-trap"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -116,7 +116,7 @@ export default function MedicareLevySurchargeTrapFile08() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Integrated Insurance and Tax Strategy</h2><div class="action-box"><h3>Annual Review Checklist</h3><p>April: Review income forecast for current year — will MLS apply?</p><p>May: Compare cheapest qualifying hospital cover vs MLS</p><p>June: If cover not held — get it before 30 June to limit uncovered period</p><p>July-September: Lodge BAS / review income structuring for next year</p><p>October: Tax return — confirm MLS treatment is correct</p></div><p>For high-income earners: hospital cover is almost always cheaper than the surcharge and provides additional health access. The break-even point for most people is income between $93,000 and $108,000.</p>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Integrated Insurance and Tax Strategy</h2><div class="action-box"><h3>Annual Review Checklist</h3><p>April: Review income forecast for current year — will MLS apply?</p><p>May: Compare cheapest qualifying hospital cover vs MLS</p><p>June: If cover not held — get it before 30 June to limit uncovered period</p><p>July-September: Lodge BAS / review income structuring for next year</p><p>October: Tax return — confirm MLS treatment is correct</p></div><p>For higher-income earners the surcharge is often larger than a basic hospital-only premium, and cover provides additional health access. Break-even depends on your income and the premium you are quoted — compare your own MLS figure against current quotes. The surcharge begins at $101,001 for singles.</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -157,7 +157,7 @@ export default function MedicareLevySurchargeTrapFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Cost vs Tax Comparison</span>
+                <span className="text-sm font-semibold text-neutral-950">Your MLS by Income — 2025/26</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -204,7 +204,7 @@ export default function MedicareLevySurchargeTrapFile08() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
+            Always consult a qualified Australia tax adviser for your personal situation.
             Based on ATO guidance April 2026.
           </p>
         </div>
@@ -225,6 +225,7 @@ export default function MedicareLevySurchargeTrapFile08() {
               ← Back to Medicare Levy Surcharge Trap Engine
             </a>
             <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Medicare Levy Surcharge ↗</a>
+            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Medicare levy surcharge income, thresholds and rates (QC49961) ↗</a>
           </div>
         </div>
       </footer>
