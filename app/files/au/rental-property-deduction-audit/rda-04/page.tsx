@@ -77,7 +77,7 @@ export default function RentalPropertyDeductionAuditFile04() {
               🇦🇺 ATO · ITAA 1997 — Rental property deductions
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: July 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 04 of 8
@@ -205,7 +205,7 @@ export default function RentalPropertyDeductionAuditFile04() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australia tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance July 2026.
           </p>
         </div>
 
