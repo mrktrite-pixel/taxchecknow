@@ -62,7 +62,7 @@ export default function RentalPropertyDeductionAuditFile08() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/au/rental-property-deduction-audit/rda-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Multi-Year Deduction Plan</a></div>
+          <div><a href="/files/au/rental-property-deduction-audit/rda-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Multi-Year Write-Off Plan</a></div>
           <span className="font-mono">File 08 of 8</span>
           <div><a href="/au/check/rental-property-deduction-audit" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to Rental Property Deduction Audit →</a></div>
         </div>
@@ -130,7 +130,7 @@ export default function RentalPropertyDeductionAuditFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Rental Deduction Audit Report</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Rental Deduction Assessment</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -175,7 +175,7 @@ export default function RentalPropertyDeductionAuditFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Full Property Tax Optimisation<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Full Deduction Treatment Review<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -184,7 +184,7 @@ export default function RentalPropertyDeductionAuditFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Year Deduction Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Multi-Year Write-Off Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>

@@ -90,15 +90,25 @@ export async function GET() {
         {
             "id": 2,
             "question": "What is a quantity surveyor report and do I need one?",
-            "answer": "A quantity surveyor report identifies the depreciable value of all building components and plant and equipment items in your rental property. It enables you to claim building depreciation (2.5% per year on construction costs for post-1987 builds) and plant and equipment depreciation (appliances, carpets, blinds). A report typically costs $500-$800 and can identify $5,000-$15,000 in annual deductions. For most properties it pays for itself in the first year."
+            "answer": "A quantity surveyor report identifies the depreciable value of all building components and plant and equipment items in your rental property. It enables you to claim building depreciation (2.5% per year on construction costs for post-1987 builds) and plant and equipment depreciation (appliances, carpets, blinds). A report typically costs $500-$800 and can identify $5,000-$15,000 in annual deductions. For most properties it pays for itself in the first year. This checker does not value depreciation or tell you whether you have a report — it classifies the expense you ask about."
         },
         {
             "id": 3,
+            "question": "Can I deduct the costs of holding vacant land?",
+            "answer": "Generally no. Since 1 July 2019 the holding costs of vacant land — rates, interest, maintenance — are not deductible for individuals unless an exception applies. The exceptions include land used in a business, and land used by you or a related party in specific circumstances, one of which is use by your child under 18 years of age. If the land carries no substantial and permanent structure in use, assume the deduction is denied until you have confirmed an exception applies to you."
+        },
+        {
+            "id": 4,
+            "question": "I paid a contractor who did not give me an ABN — what was I supposed to do?",
+            "answer": "Withhold 47% of the payment and remit it to the ATO. Where a supplier does not quote an ABN for a payment made in the course of your enterprise, the no-ABN withholding rule applies and the top rate must be withheld. If you paid the full amount without withholding, the payment itself may not be deductible and you have an unmet withholding obligation — this is worth raising with your accountant before you lodge, not after."
+        },
+        {
+            "id": 5,
             "question": "Can I claim travel to inspect my rental property?",
             "answer": "Not if it is a residential property. Travel expenses (flights, accommodation, car costs) for inspecting, maintaining, or collecting rent from a residential investment property have not been deductible since 1 July 2017. This applies to individuals and trusts. If the property is commercial, the deduction may still be available."
         },
         {
-            "id": 4,
+            "id": 6,
             "question": "What if I renovated the property before renting it out?",
             "answer": "Renovation work done before the property was first rented out is generally capital expenditure — either depreciable at 2.5% per year (if it is building work) or at the asset's effective life rate (if it is plant and equipment). It is not immediately deductible regardless of when it was done relative to the rental commencement."
         }
@@ -111,17 +121,17 @@ export async function GET() {
     ],
     "products": {
         "tier1": {
-            "name": "Your Rental Deduction Audit Pack",
+            "name": "Your Rental Deduction Assessment Pack",
             "price": 67,
             "currency": "AUD",
-            "description": "Are you overclaiming or missing deductions?",
+            "description": "Is this expense a repair, a capital work, or neither?",
             "url": "https://taxchecknow.com/au/check/rental-property-deduction-audit/success/assess"
         },
         "tier2": {
-            "name": "Your Property Tax Optimisation System",
+            "name": "Your Rental Deduction Treatment System",
             "price": 147,
             "currency": "AUD",
-            "description": "Maximise every legitimate deduction — audit-proof documentation",
+            "description": "Classify every expense correctly — audit-ready documentation",
             "url": "https://taxchecknow.com/au/check/rental-property-deduction-audit/success/plan"
         }
     },
@@ -130,7 +140,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/rental-property-deduction-audit",
     "api_endpoint": "/api/rules/rental-property-deduction-audit",
-    "generated_at": "2026-07-31T00:18:46.541Z"
+    "generated_at": "2026-07-31T04:05:43.779Z"
 };
 
   return NextResponse.json(rules, {

@@ -10,12 +10,12 @@ import RentalPropertyDeductionAuditCalculator from "./RentalPropertyDeductionAud
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Rental Property Deduction Audit Australia 2026 — Are Your Claims Correct? | TaxCheckNow",
-  description: "The ATO audits thousands of rental property schedules each year. Common errors include claiming capital improvements as repairs, missing depreciation, and claiming expenses for vacant periods. Free calculator identifies your risk.",
+  title: "Rental Property Deduction Checker Australia 2026 — Which Class Is Your Expense? | TaxCheckNow",
+  description: "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
   alternates: { canonical: "https://taxchecknow.com/au/check/rental-property-deduction-audit" },
   openGraph: {
-    title: "Rental Property Deduction Audit Australia 2026 — Are Your Claims Correct? | TaxCheckNow",
-    description: "The ATO audits thousands of rental property schedules each year. Common errors include claiming capital improvements as repairs, missing depreciation, and claiming expenses for vacant periods. Free calculator identifies your risk.",
+    title: "Rental Property Deduction Checker Australia 2026 — Which Class Is Your Expense? | TaxCheckNow",
+    description: "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
     url: "https://taxchecknow.com/au/check/rental-property-deduction-audit",
     siteName: "TaxCheckNow",
     type: "website",
@@ -58,7 +58,15 @@ const faqs = [
   },
   {
     "question": "What is a quantity surveyor report and do I need one?",
-    "answer": "A quantity surveyor report identifies the depreciable value of all building components and plant and equipment items in your rental property. It enables you to claim building depreciation (2.5% per year on construction costs for post-1987 builds) and plant and equipment depreciation (appliances, carpets, blinds). A report typically costs $500-$800 and can identify $5,000-$15,000 in annual deductions. For most properties it pays for itself in the first year."
+    "answer": "A quantity surveyor report identifies the depreciable value of all building components and plant and equipment items in your rental property. It enables you to claim building depreciation (2.5% per year on construction costs for post-1987 builds) and plant and equipment depreciation (appliances, carpets, blinds). A report typically costs $500-$800 and can identify $5,000-$15,000 in annual deductions. For most properties it pays for itself in the first year. This checker does not value depreciation or tell you whether you have a report — it classifies the expense you ask about."
+  },
+  {
+    "question": "Can I deduct the costs of holding vacant land?",
+    "answer": "Generally no. Since 1 July 2019 the holding costs of vacant land — rates, interest, maintenance — are not deductible for individuals unless an exception applies. The exceptions include land used in a business, and land used by you or a related party in specific circumstances, one of which is use by your child under 18 years of age. If the land carries no substantial and permanent structure in use, assume the deduction is denied until you have confirmed an exception applies to you."
+  },
+  {
+    "question": "I paid a contractor who did not give me an ABN — what was I supposed to do?",
+    "answer": "Withhold 47% of the payment and remit it to the ATO. Where a supplier does not quote an ABN for a payment made in the course of your enterprise, the no-ABN withholding rule applies and the top rate must be withheld. If you paid the full amount without withholding, the payment itself may not be deductible and you have an unmet withholding obligation — this is worth raising with your accountant before you lodge, not after."
   },
   {
     "question": "Can I claim travel to inspect my rental property?",
@@ -87,7 +95,7 @@ const aiCorrections = [
 
 const accountantQuestions = [
   {
-    "q": "Do I have a quantity surveyor depreciation report — and if not, how much depreciation am I missing each year?",
+    "q": "Should this property have a quantity surveyor report, and which of my expenses would it move from non-deductible to written-off over time?",
     "why": "Depreciation is the most commonly missed legitimate deduction on rental properties. A QS report typically pays for itself in the first year."
   },
   {
@@ -242,20 +250,21 @@ const countdownStats = [
     "red": true
   },
   {
-    "label": "Most missed deduction",
-    "value": "Depreciation",
-    "sub": "worth $5k-$15k/yr on post-1987 builds"
+    "label": "Most common error",
+    "value": "Capital as repair",
+    "sub": "improvements claimed in the year they are paid"
+  },
+  {
+    "label": "No ABN supplied",
+    "value": "47%",
+    "sub": "you must withhold this from the payment and remit it",
+    "red": true
   },
   {
     "label": "Travel deduction",
     "value": "Abolished",
     "sub": "residential inspection travel not deductible since 2017",
     "red": true
-  },
-  {
-    "label": "QS report cost",
-    "value": "$500-$800",
-    "sub": "vs $5k-$15k annual deduction — ROI is clear"
   }
 ];
 
@@ -286,7 +295,7 @@ export default function RentalPropertyDeductionAuditPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Rental Property Deduction Audit — Rules April 2026",
-    description: "The ATO audits thousands of rental property schedules each year. Common errors include claiming capital improvements as repairs, missing depreciation, and claiming expenses for vacant periods. Free calculator identifies your risk.",
+    description: "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -302,14 +311,14 @@ export default function RentalPropertyDeductionAuditPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Rental Property Deduction Audit",
-    description: "The ATO audits thousands of rental property schedules each year. Common errors include claiming capital improvements as repairs, missing depreciation, and claiming expenses for vacant periods. Free calculator identifies your risk.",
+    description: "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
     url: "https://taxchecknow.com/au/check/rental-property-deduction-audit",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your Rental Deduction Audit Pack", price: "67.00", priceCurrency: "AUD" },
-      { "@type": "Offer", name: "Your Property Tax Optimisation System", price: "147.00", priceCurrency: "AUD" },
+      { "@type": "Offer", name: "Your Rental Deduction Assessment Pack", price: "67.00", priceCurrency: "AUD" },
+      { "@type": "Offer", name: "Your Rental Deduction Treatment System", price: "147.00", priceCurrency: "AUD" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -322,23 +331,23 @@ export default function RentalPropertyDeductionAuditPage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Select property type",
-            "text": "Choose the type of rental property — residential, holiday, or commercial."
+            "name": "Describe the expense",
+            "text": "Choose which rental property expense or situation you need help with — running costs, a building or depreciating asset, purchase or sale costs, a payment to a contractor with no ABN, vacant land, or a deduction you have already claimed."
       },
       {
             "@type": "HowToStep",
-            "name": "Check depreciation status",
-            "text": "Indicate whether you have a quantity surveyor report."
+            "name": "Confirm rental availability",
+            "text": "State whether the property was rented or genuinely available for rent for the whole period, only partly available, or not available at all."
       },
       {
             "@type": "HowToStep",
-            "name": "Flag renovation work",
-            "text": "Indicate whether you have done renovation or improvement work recently."
+            "name": "Answer the follow-up",
+            "text": "Where it applies, confirm whether you withheld 47% from a contractor who gave no ABN, or how private and rental use were split."
       },
       {
             "@type": "HowToStep",
-            "name": "Get your audit report",
-            "text": "Receive risk classification and missed deduction analysis."
+            "name": "See the deduction class",
+            "text": "Get the deduction class the expense falls into and the ATO rule that governs it."
       }
 ],
   };
@@ -351,7 +360,7 @@ export default function RentalPropertyDeductionAuditPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/rental-property-deduction-audit#calculator",
-    "description": "The ATO audits thousands of rental property schedules each year. Common errors include claiming capital improvements as repairs, missing depreciation, and claiming expenses for vacant periods. Free calculator identifies your risk.",
+    "description": "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -436,7 +445,7 @@ export default function RentalPropertyDeductionAuditPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Rental Property Deductions 2026: Are You Overclaiming or Missing Deductions?
+          Rental Property Deductions 2026: Is This Expense Actually Deductible?
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -485,15 +494,15 @@ export default function RentalPropertyDeductionAuditPage() {
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
               <h3 className="mb-1 text-lg font-bold">Rental Property Deduction Audit</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised rental property deduction audit — risk classification, missed deduction analysis, and deduction optimisation guide.</p>
+              <p className="mb-3 text-sm text-neutral-300">A personalised rental deduction assessment — the class your expense falls into, the ATO rule that governs it, and what to check before you lodge.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  $67 · Rental Deduction Audit Pack
+                  $67 · Rental Deduction Assessment Pack
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  $147 · Property Tax Optimisation System
+                  $147 · Rental Deduction Treatment System
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
@@ -532,12 +541,21 @@ export default function RentalPropertyDeductionAuditPage() {
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Most missed deduction
+                Most common error
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Depreciation
+                Capital as repair
               </p>
-              <p className="text-xs text-neutral-400">worth $5k-$15k/yr on post-1987 builds</p>
+              <p className="text-xs text-neutral-400">improvements claimed in the year they are paid</p>
+            </div>
+            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
+                No ABN supplied
+              </p>
+              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
+                47%
+              </p>
+              <p className="text-xs text-neutral-400">you must withhold this from the payment and remit it</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
@@ -547,15 +565,6 @@ export default function RentalPropertyDeductionAuditPage() {
                 Abolished
               </p>
               <p className="text-xs text-neutral-400">residential inspection travel not deductible since 2017</p>
-            </div>
-            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                QS report cost
-              </p>
-              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $500-$800
-              </p>
-              <p className="text-xs text-neutral-400">vs $5k-$15k annual deduction — ROI is clear</p>
             </div>
           </div>
         </div>
@@ -596,7 +605,8 @@ export default function RentalPropertyDeductionAuditPage() {
             The answer — ATO confirmed April 2026
           </p>
           <p className="mb-2 text-neutral-900">Rental property deductions are one of the ATO's highest audit priorities. Each year the ATO reviews hundreds of thousands of rental schedules and identifies billions in over-claimed deductions. The two most common errors: claiming capital improvements as repairs (which is incorrect — capital items must be depreciated), and failing to apportion deductions for periods when the property was not available for rent.</p>
-          <p className="mb-2 text-neutral-900">The most commonly missed legitimate deduction is depreciation. Many landlords do not have a quantity surveyor's depreciation schedule and therefore claim nothing for the building or plant and equipment. On a property built after 1987, building depreciation alone can be worth $5,000-$15,000 per year in additional deductions.</p>
+          <p className="mb-2 text-neutral-900">Capital works and depreciating assets are not deductible in the year you pay for them — they are written off over time. Whether a given item is an immediate repair or a capital work is the distinction this checker draws; quantifying the write-off is a job for your accountant or a quantity surveyor.</p>
+          <p className="mb-2 text-neutral-900">Two rules catch people out because they sit outside the repair-versus-capital question entirely. If you paid a contractor who did not give you an ABN, you were required to withhold 47% of the payment and remit it to the ATO. And expenses on vacant land are generally not deductible at all — though use of the land by your child under 18 is one of the circumstances that can preserve the deduction.</p>
           <p className="mb-2 text-neutral-900">The ATO specifically targets: repairs to newly acquired properties (these are initial repairs and are capital, not deductible immediately), travel to inspect rental properties (no longer deductible for residential properties), and holiday homes claimed as investment properties but used personally.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Rental properties · ITAA 1997</p>
         </div>
@@ -657,7 +667,7 @@ export default function RentalPropertyDeductionAuditPage() {
             <p>Gary had also been claiming flights to Mandurah as inspection expenses. Two trips per year at around $400 each. The travel deduction for residential rental inspections had been abolished in 2017. His accountant had not caught this either.</p>
             <p className="font-semibold text-neutral-900">When Gary ran the deduction audit calculator, it flagged both issues immediately. The kitchen and bathroom renovation at $26,000 should have been depreciated — not immediately deducted. The overclaim on the deduction was $26,000 in 2023/24. The ATO, if it pursued it, would disallow the deduction and add interest and penalties on the underpaid tax — approximately $9,620 in tax, interest, and penalties. The flights totalling $800 over three years added another $296 in exposure.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Gary's accountant prepared an amended return for 2023/24, correctly treating the renovation as a capital improvement and removing the travel claims. They also lodged the amendment proactively before the ATO issued a formal assessment — this reduced the penalty rate. The accountant also obtained a quantity surveyor report for the first time. It identified $7,800 in annual depreciation that had not been claimed in any of the prior years. Gary was able to amend two of those years to reclaim the missed depreciation — offsetting a portion of the overclaim adjustment.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary's accountant prepared an amended return for 2023/24, correctly treating the renovation as a capital improvement and removing the travel claims. They also lodged the amendment proactively before the ATO issued a formal assessment — this reduced the penalty rate. The accountant also confirmed that the kitchen replacement Gary had claimed as a repair was a capital work, which is the classification error the ATO letter was about. Gary was able to amend the affected years so the work was written off over time instead of claimed in full — correcting the treatment rather than losing the deduction outright.</p>
             </div>
           </div>
           
@@ -865,7 +875,7 @@ export default function RentalPropertyDeductionAuditPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          How to maximise legitimate deductions and reduce audit risk
+          How to classify rental expenses correctly and reduce audit risk
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
