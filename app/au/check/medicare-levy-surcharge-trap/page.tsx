@@ -396,18 +396,6 @@ export default function MedicareLevySurchargeTrapPage() {
     ],
   };
 
-  const videoSchema = {
-    "@context": "https://schema.org",
-    "@type": "VideoObject",
-    name: "What is the Medicare Levy Surcharge? The Full-Income Trap",
-    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
-    thumbnailUrl: "https://i.ytimg.com/vi/SWd6CHUUk78/hqdefault.jpg",
-    uploadDate: "2026-06-21T11:00:27.166+00:00",
-    contentUrl: "https://www.youtube.com/watch?v=SWd6CHUUk78",
-    embedUrl: "https://www.youtube.com/embed/SWd6CHUUk78",
-    transcript: "What is the Medicare Levy Surcharge? It's a tax penalty for earning over $93,001 without hospital cover. Sound like you? Here's what most people get wrong. The actual truth is the MLS hits your entire income — not just the dollars above the threshold. Earn $108,000 with no hospital cover? The ATO charges 1.25% on the full amount — not just the top slice. That's a real cliff. Get it wrong and you owe hundreds more than you expected, assessed in your annual return. Go to taxchecknow.com and check for yourself.",
-  };
-
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -417,7 +405,6 @@ export default function MedicareLevySurchargeTrapPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
-      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -1084,15 +1071,6 @@ export default function MedicareLevySurchargeTrapPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
-        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
-        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=SWd6CHUUk78" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
-        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"What is the Medicare Levy Surcharge? It's a tax penalty for earning over $93,001 without hospital cover. Sound like you? Here's what most people get wrong. The actual truth is the MLS hits your entire income — not just the dollars above the threshold. Earn $108,000 with no hospital cover? The ATO charges 1.25% on the full amount — not just the top slice. That's a real cliff. Get it wrong and you owe hundreds more than you expected, assessed in your annual return. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}

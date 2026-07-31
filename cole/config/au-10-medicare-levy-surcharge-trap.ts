@@ -7,10 +7,13 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // declaration. Declaring it restores exactly that — nothing new, nothing
   // inferred from the topic.
   //
-  // NURTURE ONLY. `temporal` is deliberately NOT declared here: that is a gate
-  // decision made per product at its own rebuild, from its own build evidence
-  // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
-  // which is the correct state until someone rules on it.
+  // The two lanes are INDEPENDENT — a product may run both. This comment used to
+  // read "NURTURE ONLY. `temporal` is deliberately NOT declared here", which was
+  // true when it was written and became FALSE at Step C (2026-07-31): `temporal`
+  // IS now declared below as kind "none", from this build's own evidence, which is
+  // exactly the per-product gate decision ruling 3.5 reserves. Corrected rather
+  // than left, because a comment asserting the opposite of the code two screens
+  // down is how the next reader gets misled.
   nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
 
   // ── ENGINE-NATIVE DECLARATION (R-A2) ───────────────────────────────────
