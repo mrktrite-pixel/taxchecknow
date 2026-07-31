@@ -3,6 +3,7 @@
 // Product: rental-property-deduction-audit · Tier 2 Success Page
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -135,20 +136,12 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const expense_types = sessionStorage.getItem("rental-property-deduction-audit_expense_types") || "repairs";
-      const risk_flags = sessionStorage.getItem("rental-property-deduction-audit_risk_flags") || "0";
-      const status = sessionStorage.getItem("rental-property-deduction-audit_status") || "CLASSIFICATION ISSUES DETECTED";
-      const confidence = sessionStorage.getItem("rental-property-deduction-audit_confidence") || "MEDIUM";
-      const tier = sessionStorage.getItem("rental-property-deduction-audit_tier") || "147";
-
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-        "expense_types": expense_types,
-        "risk_flags": risk_flags,
-        "status": status,
-        "confidence": confidence,
-        "tier": tier,
-      }).some(v => v && v !== "repairs");
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
+      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // (F5 contract). The legacy per-field keys are never written by an engine-native
+      // calculator, so reading them would always fall back to defaults → a generic,
+      // corpus-contradicting assessment.
+      const inputs = buildComposerInputsFromSession("rental-property-deduction-audit");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -159,13 +152,7 @@ export default function SuccessPlan() {
           authority:  "ATO",
           tier:       2,
           name: name === "there" ? "" : name,
-          inputs: {
-        "Expense types incurred": expense_types,
-        "Number of classification risks": risk_flags,
-        "Deduction audit verdict": status,
-        "Record quality confidence": confidence,
-        "Product tier purchased": tier,
-          },
+          inputs,
           fields: ["deductionStatus","expenseClassification","initialRepairRisk","overclaims","missedDeductions","capitalWorksAnalysis","depreciationOpportunity","recordQualityAssessment","evidenceRegister","multiYearDeductionPlan","auditRiskRating","strongestRiskTrigger"],
         }),
       });
@@ -202,11 +189,6 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const expense_types = sessionStorage.getItem("rental-property-deduction-audit_expense_types") || "repairs";
-    const risk_flags = sessionStorage.getItem("rental-property-deduction-audit_risk_flags") || "0";
-    const status = sessionStorage.getItem("rental-property-deduction-audit_status") || "CLASSIFICATION ISSUES DETECTED";
-    const confidence = sessionStorage.getItem("rental-property-deduction-audit_confidence") || "MEDIUM";
-    const tier = sessionStorage.getItem("rental-property-deduction-audit_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
