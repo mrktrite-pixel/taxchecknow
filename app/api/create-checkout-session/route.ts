@@ -44,6 +44,17 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // test-key 500. The legacy frcgw includes()-block below is now dead for these keys (registry hits first).
   au_67_frcgw_clearance_certificate:  "STRIPE_AU_FRCGW_67",
   au_147_frcgw_clearance_certificate: "STRIPE_AU_FRCGW_147",
+  // AU-09 rental-property-deduction-audit (engine-native, PANELBEAT migration) — registered per
+  // OPERATOR-MANUAL §N4.3 so a preview buy falls back to STRIPE_AU_TEST_<tier> instead of resolving
+  // the LIVE price under the test key. PRODUCTION IS UNCHANGED: these are the SAME env vars the
+  // includes()-chain rental block below already returns (STRIPE_AU_RENTAL_67/147) — the registry only
+  // short-circuits to the identical answer, and adds the preview fallback the chain lacks.
+  au_67_rental_property_deduction_audit:  "STRIPE_AU_RENTAL_67",
+  au_147_rental_property_deduction_audit: "STRIPE_AU_RENTAL_147",
+  // AU-10 medicare-levy-surcharge-trap — same rationale, ruled 2026-07-31. Production resolves the
+  // SAME vars its chain block below already returns (STRIPE_AU_MLS_67/147); preview gains the fallback.
+  au_67_medicare_levy_surcharge_trap:  "STRIPE_AU_MLS_67",
+  au_147_medicare_levy_surcharge_trap: "STRIPE_AU_MLS_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {
