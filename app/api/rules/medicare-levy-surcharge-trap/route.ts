@@ -23,38 +23,39 @@ export async function GET() {
     "legislation": "Medicare Levy Surcharge — Income Tax Assessment Act 1936 Part VIIB",
     "legal_anchor": "Medicare Levy Surcharge — ITAA 1936 Part VIIB",
     "deadline": {
-        "iso_date": "2026-10-31T23:59:59.000+11:00",
-        "display": "31 October 2026",
-        "description": "Individual tax return due — MLS assessed in annual return",
-        "urgency_label": "RETURN DUE"
+        "iso_date": "",
+        "display": "Assessed at your tax return",
+        "description": "There is no act-by date for the MLS. Liability accrues for each day you do not hold appropriate private patient hospital cover, and the ATO works out what you owe when it processes your return.",
+        "urgency_label": "ACCRUES DAILY"
     },
     "key_facts": {
-        "singles_threshold_2025_26": "$93,001",
-        "family_threshold_2025_26": "$186,000 combined",
-        "mls_rate_tier_1": "1% — $93,001 to $108,000",
-        "mls_rate_tier_2": "1.25% — $108,001 to $144,000",
-        "mls_rate_tier_3": "1.5% — over $144,000",
+        "singles_threshold_2025_26": "$101,001",
+        "family_threshold_2025_26": "$202,000 combined",
+        "spouse_own_income_exemption_2025_26": "$27,222 or less — ATO QC71227",
+        "mls_rate_tier_1": "1% — $101,001 to $118,000",
+        "mls_rate_tier_2": "1.25% — $118,001 to $158,000",
+        "mls_rate_tier_3": "1.5% — over $158,000",
         "legislative_anchor": "ITAA 1936 Part VIIB"
     },
-    "formula": "MLS Payable = MLS Income × Surcharge Rate (1%, 1.25%, or 1.5%). Net saving from hospital cover = MLS Payable - Annual Cost of Basic Hospital Cover. If Net Saving is positive → hospital cover saves money overall.",
+    "formula": "MLS Payable = Income for MLS purposes × Surcharge Rate (1%, 1.25%, or 1.5%), applied to the entire income. Holding appropriate private patient hospital cover for the full year reduces MLS Payable to nil. Whether cover is cheaper than the surcharge depends on the premium you are quoted.",
     "thresholds": [
         {
-            "label": "Income under $93,000 — MLS does not apply",
+            "label": "Income under $101,000 — MLS does not apply",
             "value": 1,
             "status": "clear"
         },
         {
-            "label": "Income $93k-$108k — 1% MLS if no hospital cover",
+            "label": "Income $101k-$118k — 1% MLS if no hospital cover",
             "value": 2,
             "status": "approaching"
         },
         {
-            "label": "Income $108k-$144k — 1.25% MLS if no hospital cover",
+            "label": "Income $118k-$158k — 1.25% MLS if no hospital cover",
             "value": 3,
             "status": "trap"
         },
         {
-            "label": "Income over $144k — 1.5% MLS if no hospital cover",
+            "label": "Income over $158k — 1.5% MLS if no hospital cover",
             "value": 4,
             "status": "deep_trap"
         },
@@ -73,7 +74,7 @@ export async function GET() {
         {
             "error_id": 2,
             "ai_says": "ChatGPT says: The Medicare Levy Surcharge applies only to the income above the threshold",
-            "correct": "Reality: The MLS applies to your entire MLS income — not just the amount above the threshold. If your income is $100,000 and you cross the $93,001 threshold, you pay 1% on the full $100,000 — not just $7,000. This makes crossing the threshold a significant cliff."
+            "correct": "Reality: The MLS applies to your entire MLS income — not just the amount above the threshold. If your income is $110,000 and you cross the $101,001 threshold, you pay 1% on the full $110,000 — $1,100, not 1% of the $9,000 excess. This makes crossing the threshold a significant cliff."
         },
         {
             "error_id": 3,
@@ -85,7 +86,7 @@ export async function GET() {
         {
             "id": 1,
             "question": "What is the Medicare Levy Surcharge?",
-            "answer": "The MLS is an additional tax of 1% to 1.5% imposed on individuals with income over $93,000 who do not hold appropriate private hospital cover for the full financial year. It is charged in addition to the standard 2% Medicare Levy and is designed to encourage higher-income earners to take out private hospital cover and reduce pressure on the public health system."
+            "answer": "The MLS is an additional tax of 1% to 1.5% imposed on individuals with income over $101,000 who do not hold appropriate private hospital cover for the full financial year. It is charged in addition to the standard 2% Medicare Levy and is designed to encourage higher-income earners to take out private hospital cover and reduce pressure on the public health system."
         },
         {
             "id": 2,
@@ -95,18 +96,22 @@ export async function GET() {
         {
             "id": 3,
             "question": "Does the Medicare Levy Surcharge apply to families?",
-            "answer": "Families have a higher combined income threshold of $186,000 for 2025/26. If your combined household income is under $186,000, MLS generally does not apply — even if one partner earns over $93,000. The threshold increases by $1,500 for each dependent child after the first. All family members must have appropriate hospital cover for the family threshold to apply."
+            "answer": "Families have a higher combined income threshold of $202,000 for 2025/26. If your combined household income is under $202,000, MLS generally does not apply — even if one partner earns over $101,000. The threshold increases by $1,500 for each dependent child after the first. All family members must have appropriate hospital cover for the family threshold to apply. If you had a spouse for the full year and your own income for MLS purposes was $27,222 or less, you are exempt even where combined income is above the threshold (ATO QC71227)."
         },
         {
             "id": 4,
             "question": "Can I reduce my MLS income by making super contributions?",
-            "answer": "Yes — concessional (before-tax) super contributions reduce your taxable income, which feeds into your MLS income calculation. If your income is close to the $93,000 threshold, a super contribution that brings taxable income below $93,001 can eliminate the MLS entirely. Model this carefully — the contribution cap is $30,000 per year for 2025/26."
+            "answer": "Yes — concessional (before-tax) super contributions reduce your taxable income, which feeds into your income for MLS purposes. If your income is close to the $101,000 threshold, a super contribution that brings income for MLS purposes below $101,001 can eliminate the MLS entirely. Model this carefully — concessional contributions are capped each year, and exceeding the cap has its own tax consequences. Check the current cap before contributing."
         }
     ],
     "sources": [
         {
             "title": "ATO — Medicare Levy Surcharge",
             "url": "https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge"
+        },
+        {
+            "title": "ATO — Medicare levy surcharge income, thresholds and rates (QC49961)",
+            "url": "https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates"
         }
     ],
     "products": {
@@ -126,11 +131,12 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge"
+        "https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge",
+        "https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates"
     ],
     "canonical": "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap",
     "api_endpoint": "/api/rules/medicare-levy-surcharge-trap",
-    "generated_at": "2026-04-21T09:23:00.269Z"
+    "generated_at": "2026-07-31T05:04:46.907Z"
 };
 
   return NextResponse.json(rules, {

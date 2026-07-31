@@ -11,11 +11,11 @@ import MedicareLevySurchargeTrapCalculator from "./MedicareLevySurchargeTrapCalc
 
 export const metadata: Metadata = {
   title: "Medicare Levy Surcharge Australia 2026 — Are You Paying the Surcharge Unnecessarily? | TaxCheckNow",
-  description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $93,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+  description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
   alternates: { canonical: "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap" },
   openGraph: {
     title: "Medicare Levy Surcharge Australia 2026 — Are You Paying the Surcharge Unnecessarily? | TaxCheckNow",
-    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $93,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
     url: "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap",
     siteName: "TaxCheckNow",
     type: "website",
@@ -24,16 +24,19 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "31 October 2026";
-const DEADLINE_ISO   = "2026-10-31T23:59:59.000+11:00";
+const LAST_VERIFIED  = "July 2026";
+const DEADLINE_LABEL = "Assessed at your tax return";
+const DEADLINE_ISO   = "";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -51,7 +54,7 @@ function progressPct(): number {
 const faqs = [
   {
     "question": "What is the Medicare Levy Surcharge?",
-    "answer": "The MLS is an additional tax of 1% to 1.5% imposed on individuals with income over $93,000 who do not hold appropriate private hospital cover for the full financial year. It is charged in addition to the standard 2% Medicare Levy and is designed to encourage higher-income earners to take out private hospital cover and reduce pressure on the public health system."
+    "answer": "The MLS is an additional tax of 1% to 1.5% imposed on individuals with income over $101,000 who do not hold appropriate private hospital cover for the full financial year. It is charged in addition to the standard 2% Medicare Levy and is designed to encourage higher-income earners to take out private hospital cover and reduce pressure on the public health system."
   },
   {
     "question": "What counts as appropriate hospital cover?",
@@ -59,11 +62,11 @@ const faqs = [
   },
   {
     "question": "Does the Medicare Levy Surcharge apply to families?",
-    "answer": "Families have a higher combined income threshold of $186,000 for 2025/26. If your combined household income is under $186,000, MLS generally does not apply — even if one partner earns over $93,000. The threshold increases by $1,500 for each dependent child after the first. All family members must have appropriate hospital cover for the family threshold to apply."
+    "answer": "Families have a higher combined income threshold of $202,000 for 2025/26. If your combined household income is under $202,000, MLS generally does not apply — even if one partner earns over $101,000. The threshold increases by $1,500 for each dependent child after the first. All family members must have appropriate hospital cover for the family threshold to apply. If you had a spouse for the full year and your own income for MLS purposes was $27,222 or less, you are exempt even where combined income is above the threshold (ATO QC71227)."
   },
   {
     "question": "Can I reduce my MLS income by making super contributions?",
-    "answer": "Yes — concessional (before-tax) super contributions reduce your taxable income, which feeds into your MLS income calculation. If your income is close to the $93,000 threshold, a super contribution that brings taxable income below $93,001 can eliminate the MLS entirely. Model this carefully — the contribution cap is $30,000 per year for 2025/26."
+    "answer": "Yes — concessional (before-tax) super contributions reduce your taxable income, which feeds into your income for MLS purposes. If your income is close to the $101,000 threshold, a super contribution that brings income for MLS purposes below $101,001 can eliminate the MLS entirely. Model this carefully — concessional contributions are capped each year, and exceeding the cap has its own tax consequences. Check the current cap before contributing."
   }
 ];
 
@@ -74,7 +77,7 @@ const aiCorrections = [
   },
   {
     "wrong": "ChatGPT says: The Medicare Levy Surcharge applies only to the income above the threshold",
-    "correct": "Reality: The MLS applies to your entire MLS income — not just the amount above the threshold. If your income is $100,000 and you cross the $93,001 threshold, you pay 1% on the full $100,000 — not just $7,000. This makes crossing the threshold a significant cliff."
+    "correct": "Reality: The MLS applies to your entire MLS income — not just the amount above the threshold. If your income is $110,000 and you cross the $101,001 threshold, you pay 1% on the full $110,000 — $1,100, not 1% of the $9,000 excess. This makes crossing the threshold a significant cliff."
   },
   {
     "wrong": "ChatGPT says: You can get hospital cover in June to avoid the full year MLS",
@@ -84,20 +87,20 @@ const aiCorrections = [
 
 const accountantQuestions = [
   {
-    "q": "What is my income for MLS purposes — including reportable fringe benefits and reportable employer super contributions?",
-    "why": "Many people forget that reportable fringe benefits and reportable employer super (salary sacrifice above the minimum) are added back into MLS income. Your MLS income may be higher than your taxable income."
+    "q": "What is my income for MLS purposes — including reportable fringe benefits, net rental property losses, and reportable super contributions?",
+    "why": "Many people forget that reportable fringe benefits, net investment losses including net rental property losses, and reportable super contributions are all added back into MLS income. If you negatively gear a property, your income for MLS purposes is HIGHER than your taxable income — not lower."
   },
   {
     "q": "Is the cost of a basic hospital-only cover less than my MLS liability — and which insurer provides the cheapest qualifying policy?",
-    "why": "For most people earning over $108,000, even the cheapest qualifying hospital cover costs less than the MLS. Your accountant can run the comparison."
+    "why": "Above the threshold the surcharge can exceed the cost of a basic hospital-only policy. Your accountant can run the comparison against current premiums for your situation."
   },
   {
-    "q": "As a couple — does the family threshold mean the MLS does not apply to us even though I am over $93,000?",
-    "why": "If combined family income is under $186,000, MLS may not apply at all. Many couples do not realise the family threshold is significantly higher."
+    "q": "As a couple — does the family threshold mean the MLS does not apply to us even though I am over $101,000?",
+    "why": "If combined family income is under $202,000, MLS may not apply at all. Many couples do not realise the family threshold is significantly higher."
   },
   {
     "q": "Would a concessional super contribution bring my income below the MLS threshold and eliminate the surcharge?",
-    "why": "If your income is close to $93,000, a relatively small super contribution can eliminate the MLS and save more than the contribution tax paid."
+    "why": "If your income is close to $101,000, a relatively small super contribution can eliminate the MLS and save more than the contribution tax paid."
   }
 ];
 
@@ -106,19 +109,19 @@ const workedExamples = [
     "name": "Under threshold",
     "setup": "$85,000 income — no cover",
     "income": "$85k",
-    "status": "NO MLS — under $93k threshold"
+    "status": "NO MLS — under $101k threshold"
   },
   {
     "name": "MLS tier 1",
-    "setup": "$100,000 income — no cover",
-    "income": "$100k",
-    "status": "$1,000 MLS — cover saves $200+"
+    "setup": "$110,000 income — no cover",
+    "income": "$110k",
+    "status": "$1,100 MLS — 1% on the full amount"
   },
   {
     "name": "MLS tier 3",
     "setup": "$160,000 income — no cover",
     "income": "$160k",
-    "status": "$2,400 MLS — cover saves $1,000+"
+    "status": "$2,400 MLS — 1.5% on the full amount"
   },
   {
     "name": "Has hospital cover",
@@ -130,28 +133,34 @@ const workedExamples = [
 
 const comparisonRows = [
   {
-    "position": "$93,000 (threshold)",
-    "metric1": "$930",
-    "metric2": "$1,200",
-    "bestMove": "MARGINAL — cover slightly more expensive"
+    "position": "$101,000",
+    "metric1": "$0",
+    "metric2": "0%",
+    "bestMove": "At or below the threshold — MLS does not apply"
   },
   {
-    "position": "$100,000",
-    "metric1": "$1,000",
-    "metric2": "$1,200",
-    "bestMove": "MARGINAL — depends on insurer"
+    "position": "$110,000",
+    "metric1": "$1,100",
+    "metric2": "1%",
+    "bestMove": "Above the threshold — MLS on the full amount"
   },
   {
     "position": "$120,000",
     "metric1": "$1,500",
-    "metric2": "$1,400",
-    "bestMove": "COVER WINS — $100 net saving"
+    "metric2": "1.25%",
+    "bestMove": "Compare against a basic hospital-only premium"
   },
   {
-    "position": "$150,000+",
-    "metric1": "$2,250+",
-    "metric2": "$1,600",
-    "bestMove": "COVER WINS — $650+ net saving"
+    "position": "$150,000",
+    "metric1": "$1,875",
+    "metric2": "1.25%",
+    "bestMove": "Compare against a basic hospital-only premium"
+  },
+  {
+    "position": "$170,000",
+    "metric1": "$2,550",
+    "metric2": "1.5%",
+    "bestMove": "Top tier — surcharge is typically well above premium cost"
   }
 ];
 
@@ -159,11 +168,11 @@ const toolsRows = [
   {
     "tool": "Take out basic hospital cover",
     "effect": "Eliminates MLS entirely — hospital-only policy qualifies",
-    "note": "Compare: MLS cost vs premium cost — usually cheaper above $108k"
+    "note": "Compare your MLS figure against current premium quotes — the comparison turns on your own income and the policy you choose"
   },
   {
     "tool": "Check family threshold",
-    "effect": "If combined family income under $186k — MLS may not apply",
+    "effect": "If combined family income under $202k — MLS may not apply",
     "note": "MLS assessed individually but family threshold is higher"
   },
   {
@@ -181,23 +190,27 @@ const toolsRows = [
 const geoFacts = [
   {
     "label": "Singles threshold 2025/26",
-    "value": "$93,001"
+    "value": "$101,001"
   },
   {
     "label": "Family threshold 2025/26",
-    "value": "$186,000 combined"
+    "value": "$202,000 combined"
+  },
+  {
+    "label": "Spouse own-income exemption 2025/26",
+    "value": "$27,222 or less — ATO QC71227"
   },
   {
     "label": "MLS rate tier 1",
-    "value": "1% — $93,001 to $108,000"
+    "value": "1% — $101,001 to $118,000"
   },
   {
     "label": "MLS rate tier 2",
-    "value": "1.25% — $108,001 to $144,000"
+    "value": "1.25% — $118,001 to $158,000"
   },
   {
     "label": "MLS rate tier 3",
-    "value": "1.5% — over $144,000"
+    "value": "1.5% — over $158,000"
   },
   {
     "label": "Legislative anchor",
@@ -208,11 +221,11 @@ const geoFacts = [
 const sidebarNumbers = [
   {
     "label": "Singles threshold",
-    "value": "$93,001"
+    "value": "$101,001"
   },
   {
     "label": "Family threshold",
-    "value": "$186,000"
+    "value": "$202,000"
   },
   {
     "label": "Top MLS rate",
@@ -220,7 +233,7 @@ const sidebarNumbers = [
   },
   {
     "label": "On $150k",
-    "value": "$2,250 MLS"
+    "value": "$1,875 MLS"
   }
 ];
 
@@ -228,29 +241,33 @@ const sources = [
   {
     "title": "ATO — Medicare Levy Surcharge",
     "url": "https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge"
+  },
+  {
+    "title": "ATO — Medicare levy surcharge income, thresholds and rates (QC49961)",
+    "url": "https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates"
   }
 ];
 
 const countdownStats = [
   {
-    "label": "MLS — income $100k, no cover",
-    "value": "$1,000",
+    "label": "MLS — income $110k, no cover",
+    "value": "$1,100",
     "sub": "extra tax at 1% rate"
   },
   {
-    "label": "MLS — income $150k, no cover",
-    "value": "$2,250",
+    "label": "MLS — income $170k, no cover",
+    "value": "$2,550",
     "sub": "extra tax at 1.5% rate",
     "red": true
   },
   {
-    "label": "Basic hospital cover cost",
-    "value": "$1,200-$1,800",
-    "sub": "per year — hospital only"
+    "label": "Medicare levy",
+    "value": "2%",
+    "sub": "of taxable income — separate from the MLS"
   },
   {
     "label": "Threshold 2025/26",
-    "value": "$93,001",
+    "value": "$101,001",
     "sub": "singles — 1% surcharge applies above this",
     "red": true
   }
@@ -260,8 +277,13 @@ const countdownStats = [
 
 export default function MedicareLevySurchargeTrapPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/medicare-levy-surcharge-trap", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -277,8 +299,8 @@ export default function MedicareLevySurchargeTrapPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Medicare Levy Surcharge Trap Engine — Rules April 2026",
-    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $93,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+    name: "Medicare Levy Surcharge Trap Engine — Rules July 2026",
+    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -294,7 +316,7 @@ export default function MedicareLevySurchargeTrapPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Medicare Levy Surcharge Trap Engine",
-    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $93,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
     url: "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -343,13 +365,13 @@ export default function MedicareLevySurchargeTrapPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap#calculator",
-    "description": "The Medicare Levy Surcharge adds 1-1.5% tax on income over $93,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+    "description": "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance July 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -374,6 +396,18 @@ export default function MedicareLevySurchargeTrapPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What is the Medicare Levy Surcharge? The Full-Income Trap",
+    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+    thumbnailUrl: "https://i.ytimg.com/vi/SWd6CHUUk78/hqdefault.jpg",
+    uploadDate: "2026-06-21T11:00:27.166+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=SWd6CHUUk78",
+    embedUrl: "https://www.youtube.com/embed/SWd6CHUUk78",
+    transcript: "What is the Medicare Levy Surcharge? It's a tax penalty for earning over $93,001 without hospital cover. Sound like you? Here's what most people get wrong. The actual truth is the MLS hits your entire income — not just the dollars above the threshold. Earn $108,000 with no hospital cover? The ATO charges 1.25% on the full amount — not just the top slice. That's a real cliff. Get it wrong and you owe hundreds more than you expected, assessed in your annual return. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -383,6 +417,7 @@ export default function MedicareLevySurchargeTrapPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -406,7 +441,7 @@ export default function MedicareLevySurchargeTrapPage() {
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · RETURN DUE
+        🔴 {countdown} days · {DEADLINE_LABEL} · ACCRUES DAILY
       </div>
       )}
 
@@ -433,7 +468,7 @@ export default function MedicareLevySurchargeTrapPage() {
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $93,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.
+          The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $101,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -456,11 +491,11 @@ export default function MedicareLevySurchargeTrapPage() {
                 
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Singles threshold</dt>
-                  <dd className="font-bold">$93,001</dd>
+                  <dd className="font-bold">$101,001</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Family threshold</dt>
-                  <dd className="font-bold">$186,000</dd>
+                  <dd className="font-bold">$202,000</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Top MLS rate</dt>
@@ -468,7 +503,7 @@ export default function MedicareLevySurchargeTrapPage() {
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">On $150k</dt>
-                  <dd className="font-bold">$2,250 MLS</dd>
+                  <dd className="font-bold">$1,875 MLS</dd>
                 </div>
               </dl>
             </div>
@@ -502,11 +537,11 @@ export default function MedicareLevySurchargeTrapPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 31 October 2026 — tax return due
+            
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 31 October 2026</span>
+            <span className="text-lg text-neutral-300">days until Assessed at your tax return</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -515,37 +550,37 @@ export default function MedicareLevySurchargeTrapPage() {
             
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                MLS — income $100k, no cover
+                MLS — income $110k, no cover
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $1,000
+                $1,100
               </p>
               <p className="text-xs text-neutral-400">extra tax at 1% rate</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                MLS — income $150k, no cover
+                MLS — income $170k, no cover
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                $2,250
+                $2,550
               </p>
               <p className="text-xs text-neutral-400">extra tax at 1.5% rate</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Basic hospital cover cost
+                Medicare levy
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $1,200-$1,800
+                2%
               </p>
-              <p className="text-xs text-neutral-400">per year — hospital only</p>
+              <p className="text-xs text-neutral-400">of taxable income — separate from the MLS</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
                 Threshold 2025/26
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                $93,001
+                $101,001
               </p>
               <p className="text-xs text-neutral-400">singles — 1% surcharge applies above this</p>
             </div>
@@ -564,8 +599,8 @@ export default function MedicareLevySurchargeTrapPage() {
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Taxable income + reportable fringe benefits + reportable employer super</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Applies to entire MLS income — not just amount over threshold</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Taxable income + reportable fringe benefits + net investment losses (incl. net rental property losses) + reportable super contributions</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Applies to entire income for MLS purposes — not just amount over threshold</p>
               <p className="mb-1 text-xs text-neutral-800">✓ Avoided by appropriate hospital cover for full year</p>
             </div>
             
@@ -573,7 +608,7 @@ export default function MedicareLevySurchargeTrapPage() {
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT avoided by extras-only cover</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT pro-rated to threshold excess only</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT a family threshold if combined income over $186k</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a family threshold if combined income over $202k</p>
             </div>
           </div>
           <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Medicare Levy Surcharge · ITAA 1936 Part VIIB</p>
@@ -582,11 +617,11 @@ export default function MedicareLevySurchargeTrapPage() {
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — ATO confirmed April 2026
+            The answer — ATO confirmed June 2026
           </p>
-          <p className="mb-2 text-neutral-900">The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $93,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.</p>
-          <p className="mb-2 text-neutral-900">For the 2025/26 year, the surcharge thresholds are: $93,001 to $108,000 — 1% surcharge; $108,001 to $144,000 — 1.25% surcharge; over $144,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable.</p>
-          <p className="mb-2 text-neutral-900">The key calculation: compare the annual cost of a basic hospital-only private health insurance policy against the MLS payable. For many people earning over $93,000, a basic hospital policy costing $1,200-$2,000 per year is cheaper than the surcharge. Once you have cover, the surcharge does not apply.</p>
+          <p className="mb-2 text-neutral-900">The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $101,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.</p>
+          <p className="mb-2 text-neutral-900">For the 2025/26 year, the surcharge thresholds are: $101,001 to $118,000 — 1% surcharge; $118,001 to $158,000 — 1.25% surcharge; over $158,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable.</p>
+          <p className="mb-2 text-neutral-900">The key calculation: compare the annual cost of a basic hospital-only private health insurance policy against the MLS payable. For many people earning over $101,000, a basic hospital-only policy costs less than the surcharge — compare current quotes against your own MLS figure before deciding. Once you have appropriate cover, the surcharge does not apply.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Medicare Levy Surcharge · ITAA 1936 Part VIIB</p>
         </div>
 
@@ -594,14 +629,14 @@ export default function MedicareLevySurchargeTrapPage() {
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            MLS vs basic private hospital cover — the cost comparison
+            MLS vs basic private hospital cover — the comparison
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
               ❌ No private cover, income $120k → $1,500 MLS extra tax per year  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Basic hospital cover ~$1,200/yr → MLS eliminated → net saving $300+  ✔
+              ✔ Appropriate hospital cover held all year → MLS eliminated → compare a current quote against your $1,500  ✔
             </div>
           </div>
         </div>
@@ -613,7 +648,7 @@ export default function MedicareLevySurchargeTrapPage() {
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
             <li>✗ General extras cover avoids the surcharge — wrong. The MLS is only avoided by holding appropriate private hospital cover — not general treatment (extras) cover. A policy covering dental, optical, and physiotherapy does not satisfy the MLS requirement. You need hospital cover specifically.</li>
-            <li>✗ The surcharge only applies to the income over the threshold — wrong. The MLS applies to your entire taxable income, total reportable fringe benefits, and reportable employer super contributions — not just the amount over the threshold. An income of $100,000 incurs MLS on the full $100,000, not just the $7,000 above $93,000.</li>
+            <li>✗ The surcharge only applies to the income over the threshold — wrong. The MLS applies to your entire income for MLS purposes — not just the amount over the threshold. An income of $110,000 incurs MLS on the full $110,000 at 1% ($1,100), not just on the $9,000 above $101,000.</li>
             <li>✗ I only need cover for part of the year — wrong. To avoid the full-year MLS, you need appropriate hospital cover for every day of the financial year. If you cancel cover in February and the financial year ends in June, you will pay MLS for those months. The surcharge is calculated on the number of days without appropriate cover.</li>
           </ul>
         </div>
@@ -643,9 +678,9 @@ export default function MedicareLevySurchargeTrapPage() {
             <p>They had both been on the FIFO employer health cover for years. When Gary retired, the cover stopped. He had not replaced it — they were generally healthy, they had Medicare, and the premiums seemed expensive. Life had moved on.</p>
             <p>At their last accountant meeting in April, the accountant had asked about private health insurance. Gary had said no. The accountant had nodded and moved on. Gary had not connected this to anything.</p>
             <p>Sandra brought it up again in May. She had been to the doctor twice that year and felt the wait at the bulk-billing clinic was getting longer. Gary called his accountant and asked directly: does not having private health insurance cost us anything at tax time?</p>
-            <p className="font-semibold text-neutral-900">The accountant's answer was immediate: yes. Gary's income — SMSF pension, company distributions — was around $155,000 for MLS purposes. The 1.5% MLS rate applied. His annual MLS was $2,325. Sandra's income was under the threshold so she was not affected individually. But Gary had been paying $2,325 in extra tax for two years. Total: $4,650 in avoidable tax.</p>
+            <p className="font-semibold text-neutral-900">The accountant's answer was immediate: yes. Gary's income — SMSF pension, company distributions — was around $155,000 for MLS purposes. The 1.25% MLS rate applied. His annual MLS was $1,938. Sandra's income was under the threshold so she was not affected individually. But Gary had been paying $1,938 in extra tax for two years. Total: $3,876 in avoidable tax.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Gary and Sandra looked at hospital cover options that afternoon. The cheapest qualifying basic hospital policy for Gary was $1,680 per year. The net saving from taking out cover: $645 per year. Gary called the insurer and signed up before the end of the week — ensuring coverage for the last two months of the current financial year and the full year going forward. He also asked his accountant whether prior years could be amended — they could not, but the surcharge stopped from the date cover commenced. Sandra asked why the accountant had not mentioned this when she saw they had no private health insurance listed. It was a fair question.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary and Sandra looked at hospital cover options that afternoon. Gary compared quotes for a basic hospital-only policy and found one that cost less than his surcharge. He took the cover. Gary called the insurer and signed up before the end of the week — ensuring coverage for the last two months of the current financial year and the full year going forward. He also asked his accountant whether prior years could be amended — they could not, but the surcharge stopped from the date cover commenced. Sandra asked why the accountant had not mentioned this when she saw they had no private health insurance listed. It was a fair question.</p>
             </div>
           </div>
           
@@ -663,18 +698,18 @@ export default function MedicareLevySurchargeTrapPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Medicare Levy Surcharge — confirmed 2025/26
           </h2>
-          <p className="mb-4 text-neutral-800">The Medicare Levy Surcharge is imposed under Part VIIB of the Income Tax Assessment Act 1936. It applies to Australian taxpayers with income for MLS purposes exceeding $93,000 (singles) or $186,000 (families) who do not hold appropriate private patient hospital cover for the full financial year. MLS income includes taxable income, total reportable fringe benefits, and reportable employer superannuation contributions. The surcharge rates for 2025/26 are: 1% for income $93,001-$108,000; 1.25% for $108,001-$144,000; and 1.5% for income over $144,000. The MLS applies to the entire income — not just the amount above the threshold. MLS is applied in addition to the 2% Medicare Levy. The surcharge is prorated for periods without appropriate hospital cover.</p>
+          <p className="mb-4 text-neutral-800">The Medicare Levy Surcharge is imposed under Part VIIB of the Income Tax Assessment Act 1936. It applies to Australian taxpayers with income for MLS purposes exceeding $101,000 (singles) or $202,000 (families) who do not hold appropriate private patient hospital cover for the full financial year. Income for MLS purposes is the sum of taxable income (including the net amount on which family trust distribution tax has been paid), reportable fringe benefits, total net investment losses — both net financial investment losses and net rental property losses — reportable super contributions (reportable employer super contributions plus deductible personal super contributions), a spouse's share of certain trust income taxed to the trustee, and exempt foreign employment income. The surcharge rates for 2025/26 are: 1% for income $101,001-$118,000; 1.25% for $118,001-$158,000; and 1.5% for income over $158,000. The MLS applies to the entire income — not just the amount above the threshold. MLS is applied in addition to the 2% Medicare Levy. The surcharge is prorated for periods without appropriate hospital cover.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            MLS Payable = MLS Income × Surcharge Rate (1%, 1.25%, or 1.5%). Net saving from hospital cover = MLS Payable - Annual Cost of Basic Hospital Cover. If Net Saving is positive → hospital cover saves money overall.
+            MLS Payable = Income for MLS purposes × Surcharge Rate (1%, 1.25%, or 1.5%), applied to the entire income. Holding appropriate private patient hospital cover for the full year reduces MLS Payable to nil. Whether cover is cheaper than the surcharge depends on the premium you are quoted.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (July 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -682,27 +717,32 @@ export default function MedicareLevySurchargeTrapPage() {
                 
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Singles threshold 2025/26</td>
-                  <td className="p-2">$93,001</td>
+                  <td className="p-2">$101,001</td>
                   <td className="p-2 text-neutral-500">Medicare Levy Surcharge — ITAA 1936 Part VIIB</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Family threshold 2025/26</td>
-                  <td className="p-2">$186,000 combined</td>
+                  <td className="p-2">$202,000 combined</td>
+                  <td className="p-2 text-neutral-500">Medicare Levy Surcharge — ITAA 1936 Part VIIB</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Spouse own-income exemption 2025/26</td>
+                  <td className="p-2">$27,222 or less — ATO QC71227</td>
                   <td className="p-2 text-neutral-500">Medicare Levy Surcharge — ITAA 1936 Part VIIB</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">MLS rate tier 1</td>
-                  <td className="p-2">1% — $93,001 to $108,000</td>
+                  <td className="p-2">1% — $101,001 to $118,000</td>
                   <td className="p-2 text-neutral-500">Medicare Levy Surcharge — ITAA 1936 Part VIIB</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">MLS rate tier 2</td>
-                  <td className="p-2">1.25% — $108,001 to $144,000</td>
+                  <td className="p-2">1.25% — $118,001 to $158,000</td>
                   <td className="p-2 text-neutral-500">Medicare Levy Surcharge — ITAA 1936 Part VIIB</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">MLS rate tier 3</td>
-                  <td className="p-2">1.5% — over $144,000</td>
+                  <td className="p-2">1.5% — over $158,000</td>
                   <td className="p-2 text-neutral-500">Medicare Levy Surcharge — ITAA 1936 Part VIIB</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -744,8 +784,7 @@ export default function MedicareLevySurchargeTrapPage() {
                 <th className="border-b border-neutral-300 p-3 text-left">Income</th>
                 <th className="border-b border-neutral-300 p-3 text-left">Hospital Cover?</th>
                 <th className="border-b border-neutral-300 p-3 text-left">MLS Payable</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Cover Cost Estimate</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Net Position</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Position</th>
               </tr>
             </thead>
             <tbody>
@@ -756,17 +795,17 @@ export default function MedicareLevySurchargeTrapPage() {
                 <td className="p-3 font-mono">$85k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NO MLS — under $93k threshold
+                    NO MLS — under $101k threshold
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">MLS tier 1</td>
-                <td className="p-3 text-neutral-700">$100,000 income — no cover</td>
-                <td className="p-3 font-mono">$100k</td>
+                <td className="p-3 text-neutral-700">$110,000 income — no cover</td>
+                <td className="p-3 font-mono">$110k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $1,000 MLS — cover saves $200+
+                    $1,100 MLS — 1% on the full amount
                   </span>
                 </td>
               </tr>
@@ -776,7 +815,7 @@ export default function MedicareLevySurchargeTrapPage() {
                 <td className="p-3 font-mono">$160k</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    $2,400 MLS — cover saves $1,000+
+                    $2,400 MLS — 1.5% on the full amount
                   </span>
                 </td>
               </tr>
@@ -803,7 +842,7 @@ export default function MedicareLevySurchargeTrapPage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          MLS vs basic hospital cover — who wins?
+          MLS by income — 2025/26
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
@@ -811,35 +850,41 @@ export default function MedicareLevySurchargeTrapPage() {
               <tr>
                 <th className="border-b border-neutral-300 p-3 text-left">Income</th>
                 <th className="border-b border-neutral-300 p-3 text-left">MLS Without Cover</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Basic Cover Cost (est.)</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Net Saving from Cover</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Rate</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Position</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">$93,000 (threshold)</td>
-                <td className="p-3 font-mono text-xs">$930</td>
-                <td className="p-3 text-xs">$1,200</td>
-                <td className="p-3 text-xs text-neutral-700">MARGINAL — cover slightly more expensive</td>
+                <td className="p-3 font-bold">$101,000</td>
+                <td className="p-3 font-mono text-xs">$0</td>
+                <td className="p-3 text-xs">0%</td>
+                <td className="p-3 text-xs text-neutral-700">At or below the threshold — MLS does not apply</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">$100,000</td>
-                <td className="p-3 font-mono text-xs">$1,000</td>
-                <td className="p-3 text-xs">$1,200</td>
-                <td className="p-3 text-xs text-neutral-700">MARGINAL — depends on insurer</td>
+                <td className="p-3 font-bold">$110,000</td>
+                <td className="p-3 font-mono text-xs">$1,100</td>
+                <td className="p-3 text-xs">1%</td>
+                <td className="p-3 text-xs text-neutral-700">Above the threshold — MLS on the full amount</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">$120,000</td>
                 <td className="p-3 font-mono text-xs">$1,500</td>
-                <td className="p-3 text-xs">$1,400</td>
-                <td className="p-3 text-xs text-neutral-700">COVER WINS — $100 net saving</td>
+                <td className="p-3 text-xs">1.25%</td>
+                <td className="p-3 text-xs text-neutral-700">Compare against a basic hospital-only premium</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">$150,000+</td>
-                <td className="p-3 font-mono text-xs">$2,250+</td>
-                <td className="p-3 text-xs">$1,600</td>
-                <td className="p-3 text-xs text-neutral-700">COVER WINS — $650+ net saving</td>
+                <td className="p-3 font-bold">$150,000</td>
+                <td className="p-3 font-mono text-xs">$1,875</td>
+                <td className="p-3 text-xs">1.25%</td>
+                <td className="p-3 text-xs text-neutral-700">Compare against a basic hospital-only premium</td>
+              </tr>
+              <tr className="border-b border-neutral-200">
+                <td className="p-3 font-bold">$170,000</td>
+                <td className="p-3 font-mono text-xs">$2,550</td>
+                <td className="p-3 text-xs">1.5%</td>
+                <td className="p-3 text-xs text-neutral-700">Top tier — surcharge is typically well above premium cost</td>
               </tr>
             </tbody>
           </table>
@@ -870,11 +915,11 @@ export default function MedicareLevySurchargeTrapPage() {
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Take out basic hospital cover</td>
                 <td className="p-3 text-xs">Eliminates MLS entirely — hospital-only policy qualifies</td>
-                <td className="p-3 text-xs text-neutral-700">Compare: MLS cost vs premium cost — usually cheaper above $108k</td>
+                <td className="p-3 text-xs text-neutral-700">Compare your MLS figure against current premium quotes — the comparison turns on your own income and the policy you choose</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Check family threshold</td>
-                <td className="p-3 text-xs">If combined family income under $186k — MLS may not apply</td>
+                <td className="p-3 text-xs">If combined family income under $202k — MLS may not apply</td>
                 <td className="p-3 text-xs text-neutral-700">MLS assessed individually but family threshold is higher</td>
               </tr>
               <tr className="border-b border-neutral-200">
@@ -995,7 +1040,7 @@ export default function MedicareLevySurchargeTrapPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Medicare Levy Surcharge 2025/26: singles over $93,001 — 1% to 1.5% additional tax if no appropriate hospital cover. Families over $186,000 combined. MLS income includes taxable income + reportable fringe benefits + reportable employer super. Avoided by appropriate private hospital cover for full year. Pro-rated for uncovered days. Under ITAA 1936 Part VIIB.
+            Medicare Levy Surcharge 2025/26: singles over $101,001 — 1% to 1.5% additional tax if no appropriate hospital cover. Families over $202,000 combined. Income for MLS purposes includes taxable income + reportable fringe benefits + total net investment losses (including net rental property losses) + reportable super contributions. Avoided by appropriate private hospital cover for full year. Pro-rated for uncovered days. Under ITAA 1936 Part VIIB.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1009,15 +1054,20 @@ export default function MedicareLevySurchargeTrapPage() {
               MLS
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              $93k Threshold 2025/26
+              $101k Threshold 2025/26
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Medicare Levy Surcharge ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge</p>
+            </a>
+            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Medicare levy surcharge income, thresholds and rates (QC49961) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates</p>
             </a>
           </div>
         </div>
@@ -1029,11 +1079,20 @@ export default function MedicareLevySurchargeTrapPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for July 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=SWd6CHUUk78" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"What is the Medicare Levy Surcharge? It's a tax penalty for earning over $93,001 without hospital cover. Sound like you? Here's what most people get wrong. The actual truth is the MLS hits your entire income — not just the dollars above the threshold. Earn $108,000 with no hospital cover? The ATO charges 1.25% on the full amount — not just the top slice. That's a real cliff. Get it wrong and you owe hundreds more than you expected, assessed in your annual return. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -1043,7 +1102,7 @@ export default function MedicareLevySurchargeTrapPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. July 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

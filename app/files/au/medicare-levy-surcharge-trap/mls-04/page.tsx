@@ -74,10 +74,10 @@ export default function MedicareLevySurchargeTrapFile04() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 ATO · Medicare Levy Surcharge — ITAA 1936 Part VIIB
+              🇦🇺 ATO · Medicare Levy Surcharge — ITAA 1936 Part VIIB
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: July 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 04 of 8
@@ -87,7 +87,7 @@ export default function MedicareLevySurchargeTrapFile04() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 RETURN DUE: 31 October 2026
+              🔴 ACCRUES DAILY: Assessed at your tax return
             </span>
             <a href="/au/check/medicare-levy-surcharge-trap"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -99,9 +99,9 @@ export default function MedicareLevySurchargeTrapFile04() {
             Medicare Levy Surcharge Trap Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Cost vs Tax Comparison
+            Your MLS by Income — 2025/26
           </h1>
-          <p className="text-neutral-500 text-sm">The exact dollar comparison between hospital cover and MLS for your income.</p>
+          <p className="text-neutral-500 text-sm">What the surcharge costs at each income level, and how to compare it against cover.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function MedicareLevySurchargeTrapFile04() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Hospital Cover vs MLS — What's Cheaper?</h2><table><tr><th>Income</th><th>Annual MLS</th><th>Basic Cover Est.</th><th>Net Saving from Cover</th></tr><tr><td>$93,001</td><td>$930</td><td>$1,200-$1,500</td><td>Breakeven or slight cost</td></tr><tr><td>$108,000</td><td>$1,350</td><td>$1,200-$1,500</td><td>$0-$150 saving</td></tr><tr><td>$120,000</td><td>$1,500</td><td>$1,200-$1,500</td><td>$0-$300 saving</td></tr><tr><td>$150,000</td><td>$2,250</td><td>$1,400-$1,800</td><td>$450-$850 saving</td></tr><tr><td>$200,000</td><td>$3,000</td><td>$1,600-$2,000</td><td>$1,000-$1,400 saving</td></tr></table>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>MLS by Income — 2025/26</h2><table><tr><th>Income for MLS purposes</th><th>MLS rate</th><th>Annual MLS</th></tr><tr><td>$101,000 or less</td><td>0%</td><td>$0 — below the threshold</td></tr><tr><td>$110,000</td><td>1%</td><td>$1,100</td></tr><tr><td>$120,000</td><td>1.25%</td><td>$1,500</td></tr><tr><td>$150,000</td><td>1.25%</td><td>$1,875</td></tr><tr><td>$200,000</td><td>1.5%</td><td>$3,000</td></tr></table><p>The MLS applies to your entire income for MLS purposes, not just the amount above the threshold. Compare your figure against current quotes for a basic hospital-only policy — premiums vary by insurer, state and excess, so use live quotes rather than an estimate.</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -156,7 +156,7 @@ export default function MedicareLevySurchargeTrapFile04() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">04</span>
-                <span className="text-sm font-semibold text-white">Cost vs Tax Comparison</span>
+                <span className="text-sm font-semibold text-white">Your MLS by Income — 2025/26</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -204,8 +204,8 @@ export default function MedicareLevySurchargeTrapFile04() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Always consult a qualified Australia tax adviser for your personal situation.
+            Based on ATO guidance July 2026.
           </p>
         </div>
 
@@ -225,6 +225,7 @@ export default function MedicareLevySurchargeTrapFile04() {
               ← Back to Medicare Levy Surcharge Trap Engine
             </a>
             <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Medicare Levy Surcharge ↗</a>
+            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Medicare levy surcharge income, thresholds and rates (QC49961) ↗</a>
           </div>
         </div>
       </footer>

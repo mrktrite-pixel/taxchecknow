@@ -29,8 +29,8 @@ const FILES = [
   {
     "num": "04",
     "slug": "mls-04",
-    "name": "Cost vs Tax Comparison",
-    "desc": "The exact dollar comparison between hospital cover and MLS for your income.",
+    "name": "Your MLS by Income — 2025/26",
+    "desc": "What the surcharge costs at each income level, and how to compare it against cover.",
     "tier": 1
   },
   {
@@ -57,25 +57,16 @@ export default function SuccessAssess() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("2026-10-31T23:59:59.000+11:00").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "none", reason: "no_act_by_date_in_authority").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
-
-  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
-  // expired or will not parse, is a real defect — surface it so it is never silent.
-  // Phase 5 replaces this with real alerting.
-  useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "medicare-levy-surcharge-trap", deadlineIso: "2026-10-31T23:59:59.000+11:00" });
-  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -171,7 +162,7 @@ export default function SuccessAssess() {
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
-          "What is the single most important action I should take before 31 October 2026?",
+          "What is the single most important action I should take before No act-by date?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
@@ -198,12 +189,21 @@ export default function SuccessAssess() {
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
       `X-WR-CALNAME:Medicare Levy Surcharge Trap Engine — Deadlines`,
       "BEGIN:VEVENT",
-      `UID:mls-return-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20261031"}`,
-      `DTEND;VALUE=DATE:${"20261031"}`,
+      `UID:mls-cover-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(14)}`,
+      `DTEND;VALUE=DATE:${relativeDate(14)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Tax Return Due — 31 October 2026",
-      "DESCRIPTION:MLS assessed in annual individual tax return.",
+      "SUMMARY:Private health — check your hospital cover for the current income year",
+      "DESCRIPTION:MLS accrues for each day without appropriate hospital cover. Confirm your cover is in place and qualifying.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:mls-return-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${relativeDate(90)}`,
+      `DTEND;VALUE=DATE:${relativeDate(90)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:Tax return — confirm MLS treatment",
+      "DESCRIPTION:MLS is assessed when the ATO processes your return. Check the surcharge has been applied correctly.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -261,8 +261,8 @@ export default function SuccessAssess() {
           </p>
           {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 31 October 2026</span>
-            <span className="font-mono text-sm font-bold text-white">31 Oct 2026</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to Assessed at your tax return</span>
+            <span className="font-mono text-sm font-bold text-white">At lodgement</span>
           </div>
           )}
         </div>
@@ -366,11 +366,20 @@ export default function SuccessAssess() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Tax Return Due — 31 October 2026</p>
-                    <p className="text-xs text-neutral-500">MLS assessed in annual individual tax return.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Private health — check your hospital cover for the current income year</p>
+                    <p className="text-xs text-neutral-500">MLS accrues for each day without appropriate hospital cover. Confirm your cover is in place and qualifying.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Oct 2026
+                    In 2 weeks
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Tax return — confirm MLS treatment</p>
+                    <p className="text-xs text-neutral-500">MLS is assessed when the ATO processes your return. Check the surcharge has been applied correctly.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    In 90 days
                   </span>
                 </div>
               </div>
@@ -426,7 +435,7 @@ export default function SuccessAssess() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 
-                {deadlineLive ? `${daysToDeadline} days to 31 October 2026.` : ""}
+                {deadlineLive ? `${daysToDeadline} days to Assessed at your tax return.` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -476,8 +485,8 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australia tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
-            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" target="_blank" rel="noopener noreferrer" className="underline">ATO — Medicare Levy Surcharge</a>
+            Based on ATO guidance July 2026.{" "}
+            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" target="_blank" rel="noopener noreferrer" className="underline">ATO — Medicare Levy Surcharge</a> · <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates" target="_blank" rel="noopener noreferrer" className="underline">ATO — Medicare levy surcharge income, thresholds and rates (QC49961)</a>
           </p>
         </div>
 

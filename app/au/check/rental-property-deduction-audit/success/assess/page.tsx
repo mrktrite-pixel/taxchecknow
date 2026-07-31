@@ -451,7 +451,7 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australia tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
+            Based on ATO guidance July 2026.{" "}
             <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties" target="_blank" rel="noopener noreferrer" className="underline">ATO — Rental properties</a>
           </p>
         </div>
