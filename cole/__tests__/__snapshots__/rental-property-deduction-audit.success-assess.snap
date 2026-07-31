@@ -9,8 +9,8 @@ const FILES = [
   {
     "num": "01",
     "slug": "rda-01",
-    "name": "Your Rental Deduction Audit Report",
-    "desc": "Risk classification and estimated missed or overclaimed deductions.",
+    "name": "Your Rental Deduction Assessment",
+    "desc": "The deduction class your expense falls into, and the ATO rule behind it.",
     "tier": 1
   },
   {
@@ -38,7 +38,7 @@ const FILES = [
     "num": "05",
     "slug": "rda-05",
     "name": "Your Accountant Brief",
-    "desc": "Questions to maximise deductions and reduce audit risk.",
+    "desc": "Questions that put the classification in front of your accountant.",
     "tier": 1
   }
 ];
@@ -197,7 +197,7 @@ export default function SuccessAssess() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your Rental Deduction Audit Pack — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your Rental Deduction Assessment Pack — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -226,10 +226,10 @@ export default function SuccessAssess() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your Rental Deduction Audit Pack · $67
+            Payment confirmed · Your Rental Deduction Assessment Pack · $67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Rental Deduction Audit Pack
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Rental Deduction Assessment Pack
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.
@@ -423,8 +423,8 @@ export default function SuccessAssess() {
             {/* UPGRADE */}
             <div className="no-print rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Want the full implementation plan?</p>
-              <p className="mb-1 font-serif text-lg font-bold text-neutral-950">Your Property Tax Optimisation System</p>
-              <p className="mb-3 text-sm text-neutral-600">Full property tax optimisation, multi-year deduction plan, and audit-proof documentation system across your rental portfolio.</p>
+              <p className="mb-1 font-serif text-lg font-bold text-neutral-950">Your Rental Deduction Treatment System</p>
+              <p className="mb-3 text-sm text-neutral-600">Full deduction-treatment review, a year-by-year plan for capital items already in service, and an audit-ready documentation system for the property you assessed.</p>
               <Link href="/au/check/rental-property-deduction-audit"
                 className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950 transition">
                 Upgrade — $147 →
@@ -451,7 +451,7 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australia tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
+            Based on ATO guidance July 2026.{" "}
             <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties" target="_blank" rel="noopener noreferrer" className="underline">ATO — Rental properties</a>
           </p>
         </div>

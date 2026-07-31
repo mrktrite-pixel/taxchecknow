@@ -9,8 +9,8 @@ const FILES = [
   {
     "num": "01",
     "slug": "rda-01",
-    "name": "Your Rental Deduction Audit Report",
-    "desc": "Risk classification and estimated missed or overclaimed deductions.",
+    "name": "Your Rental Deduction Assessment",
+    "desc": "The deduction class your expense falls into, and the ATO rule behind it.",
     "tier": 1
   },
   {
@@ -38,21 +38,21 @@ const FILES = [
     "num": "05",
     "slug": "rda-05",
     "name": "Your Accountant Brief",
-    "desc": "Questions to maximise deductions and reduce audit risk.",
+    "desc": "Questions that put the classification in front of your accountant.",
     "tier": 1
   },
   {
     "num": "06",
     "slug": "rda-06",
-    "name": "Full Property Tax Optimisation",
-    "desc": "All strategies to maximise legitimate deductions across your portfolio.",
+    "name": "Full Deduction Treatment Review",
+    "desc": "How each class of rental expense is treated, and where the lines fall.",
     "tier": 2
   },
   {
     "num": "07",
     "slug": "rda-07",
-    "name": "Multi-Year Deduction Plan",
-    "desc": "A 3-year strategy to maximise rental property deductions.",
+    "name": "Multi-Year Write-Off Plan",
+    "desc": "How capital items already in service are written off over the years ahead.",
     "tier": 2
   },
   {
@@ -231,7 +231,7 @@ export default function SuccessPlan() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your Property Tax Optimisation System — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your Rental Deduction Treatment System — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -260,10 +260,10 @@ export default function SuccessPlan() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your Property Tax Optimisation System · $147
+            Payment confirmed · Your Rental Deduction Treatment System · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Property Tax Optimisation System
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Rental Deduction Treatment System
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.

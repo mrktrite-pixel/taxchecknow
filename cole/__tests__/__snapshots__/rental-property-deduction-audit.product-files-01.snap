@@ -77,7 +77,7 @@ export default function RentalPropertyDeductionAuditFile01() {
               🇦🇺 ATO · ITAA 1997 — Rental property deductions
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: July 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 01 of 8
@@ -99,9 +99,9 @@ export default function RentalPropertyDeductionAuditFile01() {
             Rental Property Deduction Audit · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Rental Deduction Audit Report
+            Your Rental Deduction Assessment
           </h1>
-          <p className="text-neutral-500 text-sm">Risk classification and estimated missed or overclaimed deductions.</p>
+          <p className="text-neutral-500 text-sm">The deduction class your expense falls into, and the ATO rule behind it.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -129,7 +129,7 @@ export default function RentalPropertyDeductionAuditFile01() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">01</span>
-                <span className="text-sm font-semibold text-white">Your Rental Deduction Audit Report</span>
+                <span className="text-sm font-semibold text-white">Your Rental Deduction Assessment</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -174,7 +174,7 @@ export default function RentalPropertyDeductionAuditFile01() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Full Property Tax Optimisation<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Full Deduction Treatment Review<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +183,7 @@ export default function RentalPropertyDeductionAuditFile01() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Year Deduction Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Multi-Year Write-Off Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -205,7 +205,7 @@ export default function RentalPropertyDeductionAuditFile01() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australia tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance July 2026.
           </p>
         </div>
 

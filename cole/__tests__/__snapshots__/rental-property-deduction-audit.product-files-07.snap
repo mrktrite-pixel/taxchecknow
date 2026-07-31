@@ -62,7 +62,7 @@ export default function RentalPropertyDeductionAuditFile07() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/au/rental-property-deduction-audit/rda-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 06: Full Property Tax Optimisation</a></div>
+          <div><a href="/files/au/rental-property-deduction-audit/rda-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 06: Full Deduction Treatment Review</a></div>
           <span className="font-mono">File 07 of 8</span>
           <div><a href="/files/au/rental-property-deduction-audit/rda-08" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 08: Audit-Proof Documentation System →</a></div>
         </div>
@@ -77,7 +77,7 @@ export default function RentalPropertyDeductionAuditFile07() {
               🇦🇺 ATO · ITAA 1997 — Rental property deductions
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: July 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 07 of 8
@@ -99,9 +99,9 @@ export default function RentalPropertyDeductionAuditFile07() {
             Rental Property Deduction Audit · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Year Deduction Plan
+            Multi-Year Write-Off Plan
           </h1>
-          <p className="text-neutral-500 text-sm">A 3-year strategy to maximise rental property deductions.</p>
+          <p className="text-neutral-500 text-sm">How capital items already in service are written off over the years ahead.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -130,7 +130,7 @@ export default function RentalPropertyDeductionAuditFile07() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Rental Deduction Audit Report</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Rental Deduction Assessment</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -175,7 +175,7 @@ export default function RentalPropertyDeductionAuditFile07() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Full Property Tax Optimisation<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Full Deduction Treatment Review<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +183,7 @@ export default function RentalPropertyDeductionAuditFile07() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">07</span>
-                <span className="text-sm font-semibold text-white">Multi-Year Deduction Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-white">Multi-Year Write-Off Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -205,7 +205,7 @@ export default function RentalPropertyDeductionAuditFile07() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australia tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance July 2026.
           </p>
         </div>
 

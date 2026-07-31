@@ -79,6 +79,18 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   const tierConfig   = isTier2 ? config.tier2 : config.tier1;
   const price        = tierConfig.price;
   const packName     = tierConfig.name;
+  // DOUBLE-"YOUR" FIX. The hero h1 composes a possessive prefix — "<name>, here is your "
+  // when we know the buyer's first name, "Your " when we do not — in front of the pack
+  // name. Pack names are authored possessive ("Your Rental Deduction Audit Pack"), so the
+  // composition doubled it: "Lee, here is your Your Rental Deduction Audit Pack".
+  // Observed live on preview j9swc6lie, BOTH tiers. It never appeared in a grep of the
+  // built pages because the join happens at render — the literal "Your " sits in a ternary
+  // and the pack name is a separate JSX child.
+  // Fixed the same way lib/cole-email.ts:41 fixed it on the email path: strip the leading
+  // "Your " and let the prefix supply it. Renaming packs does NOT fix this (the names stay
+  // possessive by design) — the COMPOSITION is what had to change.
+  // Non-possessive pack names are unaffected: the strip is a no-op for them.
+  const packNounPhrase = packName.replace(/^Your\s+/i, "");
   const fileCount    = tierConfig.fileCount;
   const tier1Files   = config.files.filter(f => f.tier === 1);
   const visibleFiles = isTier2 ? config.files : tier1Files;
@@ -388,7 +400,7 @@ ${emittableEvents.length === 0 ? `  // handleCalendar() omitted: no event surviv
             Payment confirmed · ${packName} · ${currency}${price}
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? \`\${hi}, here is your \` : "Your "}${isTier2 ? config.tier2.name : config.tier1.name}
+            {hi !== "there" ? \`\${hi}, here is your \` : "Your "}${packNounPhrase}
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             ${isTier2
