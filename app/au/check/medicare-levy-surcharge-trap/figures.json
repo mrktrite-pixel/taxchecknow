@@ -1,0 +1,51 @@
+[
+  {
+    "id": "fig_0",
+    "label": "MLS rate - tier 1",
+    "value": "1",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_1",
+    "label": "MLS rate - tier 2",
+    "value": "1.25",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_2",
+    "label": "MLS rate - tier 3",
+    "value": "1.5",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_3",
+    "label": "Singles base income threshold (2025–26)",
+    "value": "101000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_4",
+    "label": "Family base income threshold (2025–26)",
+    "value": "202000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_5",
+    "label": "Additional family threshold per dependent child after first",
+    "value": "1500",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_6",
+    "label": "Spouse individual income exemption threshold",
+    "value": "27222",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  }
+]

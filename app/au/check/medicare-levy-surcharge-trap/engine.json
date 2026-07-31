@@ -1,0 +1,419 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "The Medicare Levy Surcharge (MLS) applies to Australian taxpayers who earn above the singles threshold of $101,000 or the family threshold of $202,000 (plus $1,500 per dependent child after the first) and do not hold appropriate private patient hospital cover. The MLS is levied at 1%, 1.25%, or 1.5% on top of the Medicare levy, is not withheld by employers, and is calculated at tax return time. Spouse status, dependants, and mid-year changes in circumstances all affect liability.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-household-status",
+      "text": "Which best describes your household situation for 2025–26?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I am single with no spouse or dependants",
+          "value": "single",
+          "flags": [
+            "q1-household-status:single"
+          ]
+        },
+        {
+          "label": "I have a spouse, or I have dependent children",
+          "value": "family",
+          "flags": [
+            "q1-household-status:family"
+          ]
+        },
+        {
+          "label": "My situation changed during the year (e.g. married, separated, or cover cancelled mid-year)",
+          "value": "changed",
+          "flags": [
+            "q1-household-status:changed"
+          ]
+        },
+        {
+          "label": "I'm not sure which applies to me",
+          "value": "unsure",
+          "flags": [
+            "q1-household-status:unsure"
+          ]
+        },
+        {
+          "label": "None of these describe me",
+          "value": "none",
+          "flags": [
+            "q1-household-status:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-single-cover",
+      "text": "Do you hold appropriate private patient hospital cover for yourself?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-household-status:single"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes, I have private patient hospital cover",
+          "value": "has_cover",
+          "flags": [
+            "q2-single-cover:has_cover"
+          ]
+        },
+        {
+          "label": "No, I do not have private patient hospital cover",
+          "value": "no_cover",
+          "flags": [
+            "q2-single-cover:no_cover"
+          ]
+        },
+        {
+          "label": "I'm not sure whether my policy qualifies",
+          "value": "unsure_cover",
+          "flags": [
+            "q2-single-cover:unsure_cover"
+          ]
+        },
+        {
+          "label": "I'm not sure what counts as 'appropriate' cover",
+          "value": "unsure_definition",
+          "flags": [
+            "q2-single-cover:unsure_definition"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-family-cover",
+      "text": "Do you (and your spouse and all dependants, if applicable) hold appropriate private patient hospital cover?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-household-status:family"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes, we all have appropriate private patient hospital cover",
+          "value": "has_cover",
+          "flags": [
+            "q3-family-cover:has_cover"
+          ]
+        },
+        {
+          "label": "No, at least one of us does not have appropriate cover",
+          "value": "no_cover",
+          "flags": [
+            "q3-family-cover:no_cover"
+          ]
+        },
+        {
+          "label": "I'm not sure whether our policy or policies qualify",
+          "value": "unsure_cover",
+          "flags": [
+            "q3-family-cover:unsure_cover"
+          ]
+        },
+        {
+          "label": "I want to understand what counts as 'income for MLS purposes' before answering",
+          "value": "income_definition",
+          "flags": [
+            "q3-family-cover:income_definition"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-single-income",
+      "text": "Is your 'income for MLS purposes' (taxable income plus total reportable fringe benefits plus any family trust distribution tax amounts) above $101,000 for 2025–26?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q2-single-cover:no_cover"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes, it is above $101,000",
+          "value": "above_threshold",
+          "flags": [
+            "q4-single-income:above_threshold"
+          ]
+        },
+        {
+          "label": "No, it is $101,000 or below",
+          "value": "below_threshold",
+          "flags": [
+            "q4-single-income:below_threshold"
+          ]
+        },
+        {
+          "label": "I'm not sure what counts as 'income for MLS purposes'",
+          "value": "unsure_definition",
+          "flags": [
+            "q4-single-income:unsure_definition"
+          ]
+        },
+        {
+          "label": "I'm not sure of my income amount",
+          "value": "unsure_amount",
+          "flags": [
+            "q4-single-income:unsure_amount"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5-family-income",
+      "text": "Does your family's combined 'income for MLS purposes' exceed $202,000 (plus $1,500 for each dependent child after the first) for 2025–26?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q3-family-cover:no_cover"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes, our combined family income exceeds the family threshold",
+          "value": "above_threshold",
+          "flags": [
+            "q5-family-income:above_threshold"
+          ]
+        },
+        {
+          "label": "No, our combined family income is at or below the family threshold",
+          "value": "below_threshold",
+          "flags": [
+            "q5-family-income:below_threshold"
+          ]
+        },
+        {
+          "label": "I had a spouse for the full year and my own income for MLS purposes was $27,222 or less",
+          "value": "spouse_exemption",
+          "flags": [
+            "q5-family-income:spouse_exemption"
+          ]
+        },
+        {
+          "label": "I'm not sure what counts as 'income for MLS purposes'",
+          "value": "unsure_definition",
+          "flags": [
+            "q5-family-income:unsure_definition"
+          ]
+        },
+        {
+          "label": "I'm not sure of our combined income amount",
+          "value": "unsure_amount",
+          "flags": [
+            "q5-family-income:unsure_amount"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q6-mls-or-cover",
+      "text": "What would you like to do next?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q4-single-income:above_threshold",
+          "q5-family-income:above_threshold"
+        ]
+      },
+      "options": [
+        {
+          "label": "Understand how the MLS will be calculated and why it wasn't withheld from my pay",
+          "value": "not_withheld",
+          "flags": [
+            "q6-mls-or-cover:not_withheld"
+          ]
+        },
+        {
+          "label": "Compare whether it's cheaper to pay the MLS or take out private hospital cover",
+          "value": "compare_cost",
+          "flags": [
+            "q6-mls-or-cover:compare_cost"
+          ]
+        },
+        {
+          "label": "Understand exactly what income is counted for MLS purposes",
+          "value": "income_definition",
+          "flags": [
+            "q6-mls-or-cover:income_definition"
+          ]
+        },
+        {
+          "label": "Check whether private hospital cover would exempt me",
+          "value": "check_cover",
+          "flags": [
+            "q6-mls-or-cover:check_cover"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "mls-do-i-pay-single",
+      "when": {
+        "any": [
+          "q4-single-income:below_threshold"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm single — do I have to pay the MLS?",
+      "result_copy": "Your indicated income for MLS purposes is at or below the $101,000 singles base income threshold for 2025–26. Review recommended: the mls-do-i-pay-single dish explains how 'income for MLS purposes' is calculated and how to confirm your position using the ATO Income tax estimator — no definite outcome is asserted here.",
+      "figure_ids": []
+    },
+    {
+      "id": "mls-do-i-pay-family",
+      "when": {
+        "any": [
+          "q5-family-income:below_threshold",
+          "q5-family-income:spouse_exemption"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I have a spouse or dependants — how does the family threshold work?",
+      "result_copy": "Your indicated family income for MLS purposes is at or below the $202,000 family base income threshold (plus $1,500 for each dependent child after the first) for 2025–26, or your own income for MLS purposes was $27,222 or less while you had a spouse for the full year. Review recommended: the mls-do-i-pay-family dish explains how the family threshold works and how to confirm your position — no definite outcome is asserted here.",
+      "figure_ids": []
+    },
+    {
+      "id": "mls-exempt-private-cover",
+      "when": {
+        "any": [
+          "q2-single-cover:has_cover",
+          "q2-single-cover:unsure_cover",
+          "q2-single-cover:unsure_definition",
+          "q3-family-cover:has_cover",
+          "q3-family-cover:unsure_cover",
+          "q6-mls-or-cover:check_cover"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I have private hospital cover — am I exempt from the MLS?",
+      "result_copy": "You have indicated you hold (or may hold) private patient hospital cover. Review recommended: not all policies qualify as 'appropriate' cover for MLS exemption purposes. The mls-exempt-private-cover dish explains what the policy must cover and flags considerations such as waiting periods and exclusions — no definite exemption outcome is asserted here.",
+      "figure_ids": []
+    },
+    {
+      "id": "mls-income-definition-explainer",
+      "when": {
+        "any": [
+          "q3-family-cover:income_definition",
+          "q4-single-income:unsure_definition",
+          "q5-family-income:unsure_definition",
+          "q6-mls-or-cover:income_definition"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What counts as 'income for MLS purposes'?",
+      "result_copy": "Income for Medicare levy surcharge purposes is not the same as your taxable income. It is the sum of your taxable income (including any net amount on which family trust distribution tax has been paid), reportable fringe benefits, total net investment losses — both net financial investment losses and net rental property losses — reportable super contributions (employer contributions plus deductible personal contributions), a spouse's share of certain trust income taxed to the trustee, and exempt foreign employment income. If you negatively gear a property, this figure is HIGHER than your taxable income, not lower — which is how people who believe they are under the threshold turn out to be over it. If you have a spouse, the ATO uses your combined income for MLS purposes. Source: ATO QC49961. No definite income figure or MLS outcome is asserted here.",
+      "figure_ids": []
+    },
+    {
+      "id": "mls-mid-year-change-circumstances",
+      "when": {
+        "any": [
+          "q1-household-status:changed"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My circumstances changed mid-year (new spouse, separation, or cover cancelled) — what happens?",
+      "result_copy": "Your circumstances changed during 2025–26. Review recommended: the mls-mid-year-change-circumstances dish explains how mid-year changes affect MLS liability on a pro-rata (number of days) basis and how to report these changes in your tax return — no definite outcome is asserted here.",
+      "figure_ids": []
+    },
+    {
+      "id": "mls-not-withheld-outcome",
+      "when": {
+        "any": [
+          "q6-mls-or-cover:not_withheld"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Why wasn't the MLS taken out of my pay — and what do I owe at tax time?",
+      "result_copy": "Your income for MLS purposes appears to exceed the applicable threshold and you do not have appropriate cover. Review recommended: the mls-not-withheld-outcome dish explains why the MLS is not withheld by your employer and how it appears on your notice of assessment — no definite liability amount is asserted here.",
+      "figure_ids": []
+    },
+    {
+      "id": "mls-surcharge-vs-insurance-cost",
+      "when": {
+        "any": [
+          "q6-mls-or-cover:compare_cost"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Is it cheaper to pay the MLS or take out private hospital cover?",
+      "result_copy": "Your income for MLS purposes appears to exceed the applicable threshold and you do not have appropriate cover. Review recommended: the mls-surcharge-vs-insurance-cost dish explains how to compare the MLS rate tiers (1%, 1.25%, or 1.5%) against private hospital cover premiums — no definite cost comparison outcome is asserted here.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_2"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-household-status:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "The Medicare levy surcharge may not apply to your situation",
+      "result_copy": "Your answers suggest this check may not fit — for example you are not an Australian resident for tax purposes, or your circumstances are not described by any of the household situations above. If you do earn above the singles threshold of $101,000 or the family threshold of $202,000 for 2025–26 and do not hold appropriate private patient hospital cover, the surcharge is likely to apply — a short personalised review confirms whether it does and what it would cost you.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1-household-status:unsure",
+          "q4-single-income:unsure_amount",
+          "q5-family-income:unsure_amount"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your situation needs a closer look",
+      "result_copy": "Your answers do not yet confirm your surcharge position — a key detail (your household status, or your income for Medicare levy surcharge purposes) is unconfirmed. That figure is not the same as your taxable income: it also counts reportable fringe benefits, total net investment losses including net rental property losses, and reportable super contributions. If you negatively gear a property, your income for MLS purposes is HIGHER than your taxable income, not lower. A short personalised review confirms which threshold applies to you — $101,000 for singles or $202,000 for families in 2025–26 — whether your cover exempts you, and what the surcharge would cost if it does not.",
+      "figure_ids": []
+    }
+  ]
+}
