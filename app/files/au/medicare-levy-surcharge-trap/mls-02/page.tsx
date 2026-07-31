@@ -62,7 +62,7 @@ export default function MedicareLevySurchargeTrapFile02() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/au/medicare-levy-surcharge-trap/mls-01" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 01: Your MLS Liability Calculation</a></div>
+          <div><a href="/files/au/medicare-levy-surcharge-trap/mls-01" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 01: Your MLS Position — 2025/26</a></div>
           <span className="font-mono">File 02 of 8</span>
           <div><a href="/files/au/medicare-levy-surcharge-trap/mls-03" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 03: Threshold Optimisation Guide →</a></div>
         </div>
@@ -130,7 +130,7 @@ export default function MedicareLevySurchargeTrapFile02() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your MLS Liability Calculation</span>
+                <span className="text-sm font-semibold text-neutral-950">Your MLS Position — 2025/26</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>

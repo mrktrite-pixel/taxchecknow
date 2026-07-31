@@ -1,0 +1,27 @@
+{
+  "_doc": "OPERATOR presentation overlay (medicare-levy-surcharge-trap migration — ruled 2026-07-31). The emitter merges the machine engine (content+routing) with this overlay → engine.json (terminals schema). Bee-D never sets tier/severity. Dishes take heading from the menu label + result_copy from the grounded result_state unless overridden. Escapes REQUIRE heading+result_copy here; tier=67 FORCED on escapes.",
+  "_ruling": "Tier seeded from the product's own exposure rule — MLS exposure greater than $0 → 147, exposure exactly $0 → 67 — which is identical in the corrected config (au-10:77 tierAlgorithm, annualIncome > 101000 AND no hospital cover → tier2) and in the bespoke calculator's six verdict paths. Rows 1 and 2 are the zero-exposure paths (q4/q5 below_threshold, and the $27,222 spouse exemption at q5, ATO QC71227) → 67/green. Row 3 is exposure $0 on its has_cover routes but carries four unsure/post-qualification routes → 67/amber, ruled Strategy under operator delegation 2026-07-31 on the mixed-population objection (ambiguity A). Row 4 asserts no outcome about the customer → 67/amber by the FRCGW guidance rule ('unsure-tax-residency-status → 67/amber/standard, guidance dish, asserts no outcome'), ruled Strategy under operator delegation 2026-07-31 on ambiguity B. Row 5 → 147/amber/critical: pro-rata money conditionally at stake, the FRCGW certificate-pending analogue; ruled Strategy under operator delegation 2026-07-31 on ambiguity C (reached from q1 before income or cover is asked). Rows 6 and 7 are reached only after above_threshold + no_cover, so money is established before the terminal — 147, red/critical for the `outcome` dish that resolves the liability, amber/standard for the `explainer` that supports a decision. Thresholds throughout are 2025-26 per ATO QC49961 (snapshot 46f9a3b1): $101,000 singles, $202,000 families. Escapes forced to 67 with authored heading + result_copy, rewritten to carry the six-component income definition the build's own copy omits (see _doc).",
+  "states": {
+    "mls-do-i-pay-single":                { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product" },
+    "mls-do-i-pay-family":                { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product" },
+    "mls-exempt-private-cover":           { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
+    "mls-income-definition-explainer": {
+      "tier": 67, "severity": "amber", "criticality": "standard", "title_key": "product",
+      "result_copy": "Income for Medicare levy surcharge purposes is not the same as your taxable income. It is the sum of your taxable income (including any net amount on which family trust distribution tax has been paid), reportable fringe benefits, total net investment losses — both net financial investment losses and net rental property losses — reportable super contributions (employer contributions plus deductible personal contributions), a spouse's share of certain trust income taxed to the trustee, and exempt foreign employment income. If you negatively gear a property, this figure is HIGHER than your taxable income, not lower — which is how people who believe they are under the threshold turn out to be over it. If you have a spouse, the ATO uses your combined income for MLS purposes. Source: ATO QC49961. No definite income figure or MLS outcome is asserted here."
+    },
+    "mls-mid-year-change-circumstances":  { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "mls-not-withheld-outcome":           { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product" },
+    "mls-surcharge-vs-insurance-cost":    { "tier": 147, "severity": "amber", "criticality": "standard", "title_key": "product" },
+
+    "none_fit": {
+      "severity": "blue", "criticality": "standard", "title_key": "review_guide",
+      "heading": "The Medicare levy surcharge may not apply to your situation",
+      "result_copy": "Your answers suggest this check may not fit — for example you are not an Australian resident for tax purposes, or your circumstances are not described by any of the household situations above. If you do earn above the singles threshold of $101,000 or the family threshold of $202,000 for 2025–26 and do not hold appropriate private patient hospital cover, the surcharge is likely to apply — a short personalised review confirms whether it does and what it would cost you."
+    },
+    "insufficient_information": {
+      "severity": "amber", "criticality": "critical", "title_key": "review_guide",
+      "heading": "Your situation needs a closer look",
+      "result_copy": "Your answers do not yet confirm your surcharge position — a key detail (your household status, or your income for Medicare levy surcharge purposes) is unconfirmed. That figure is not the same as your taxable income: it also counts reportable fringe benefits, total net investment losses including net rental property losses, and reportable super contributions. If you negatively gear a property, your income for MLS purposes is HIGHER than your taxable income, not lower. A short personalised review confirms which threshold applies to you — $101,000 for singles or $202,000 for families in 2025–26 — whether your cover exempts you, and what the surcharge would cost if it does not."
+    }
+  }
+}

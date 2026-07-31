@@ -130,7 +130,7 @@ export default function MedicareLevySurchargeTrapFile06() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your MLS Liability Calculation</span>
+                <span className="text-sm font-semibold text-neutral-950">Your MLS Position — 2025/26</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>

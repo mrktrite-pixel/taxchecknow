@@ -3,13 +3,14 @@
 // Product: medicare-levy-surcharge-trap · Tier 2 Success Page
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
     "num": "01",
     "slug": "mls-01",
-    "name": "Your MLS Liability Calculation",
-    "desc": "Exact MLS payable and comparison with hospital cover cost.",
+    "name": "Your MLS Position — 2025/26",
+    "desc": "Whether the surcharge applies to you, at which threshold, and what counts in your income for MLS purposes.",
     "tier": 1
   },
   {
@@ -29,8 +30,8 @@ const FILES = [
   {
     "num": "04",
     "slug": "mls-04",
-    "name": "Cost vs Tax Comparison",
-    "desc": "The exact dollar comparison between hospital cover and MLS for your income.",
+    "name": "Your MLS by Income — 2025/26",
+    "desc": "What the surcharge costs at each income level, and how to compare it against cover.",
     "tier": 1
   },
   {
@@ -78,13 +79,14 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  const daysToDeadline: number | null = (() => {
-    const _end = new Date("2026-10-31T23:59:59.000+11:00").getTime();
-    if (Number.isNaN(_end)) return null;
-    const _d = Math.floor((_end - Date.now()) / 86_400_000);
-    return _d > 0 ? _d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "none", reason: "no_act_by_date_in_authority").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
 
@@ -125,22 +127,12 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const annual_income = sessionStorage.getItem("medicare-levy-surcharge-trap_annual_income") || "band_93_108";
-      const has_hospital_cover = sessionStorage.getItem("medicare-levy-surcharge-trap_has_hospital_cover") || "false";
-      const is_family = sessionStorage.getItem("medicare-levy-surcharge-trap_is_family") || "false";
-      const status = sessionStorage.getItem("medicare-levy-surcharge-trap_status") || "SURCHARGE APPLIES";
-      const mls_annual = sessionStorage.getItem("medicare-levy-surcharge-trap_mls_annual") || "1000";
-      const tier = sessionStorage.getItem("medicare-levy-surcharge-trap_tier") || "67";
-
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-        "annual_income": annual_income,
-        "has_hospital_cover": has_hospital_cover,
-        "is_family": is_family,
-        "status": status,
-        "mls_annual": mls_annual,
-        "tier": tier,
-      }).some(v => v && v !== "band_93_108");
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
+      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // (F5 contract). The legacy per-field keys are never written by an engine-native
+      // calculator, so reading them would always fall back to defaults → a generic,
+      // corpus-contradicting assessment.
+      const inputs = buildComposerInputsFromSession("medicare-levy-surcharge-trap");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -150,16 +142,9 @@ export default function SuccessPlan() {
           market:     "Australia",
           authority:  "ATO",
           tier:       2,
-          name,
-          inputs: {
-        "Income band for MLS purposes": annual_income,
-        "Has appropriate hospital cover": has_hospital_cover,
-        "Family or single assessment": is_family,
-        "MLS verdict status": status,
-        "Estimated annual MLS exposure (AUD)": mls_annual,
-        "Product tier purchased": tier,
-          },
-          fields: ["mlsStatus","incomeForMLSPurposes","surchargeRateTier","estimatedMLSPayable","coverCostEstimate","netSavingFromCover","coverTimingStrategy","partnerCoverAnalysis","familyThresholdPosition","superContributionOpportunity","policyExcessCheck","integratedPlan","nextYearCalendar","strongestRiskTrigger","confidenceLevel"],
+          name: name === "there" ? "" : name,
+          inputs,
+          fields: ["mlsStatus","incomeForMLSPurposes","coverTimingStrategy","householdCoverAnalysis","familyThresholdPosition","superContributionOpportunity","integratedPlan","nextYearCalendar","strongestRiskTrigger"],
         }),
       });
       const data = await res.json();
@@ -171,22 +156,16 @@ export default function SuccessPlan() {
       setAssessment({
         mlsStatus: "Your personalised mlsStatus is being prepared — please refresh in a moment.",
         incomeForMLSPurposes: "Your personalised incomeForMLSPurposes is being prepared — please refresh in a moment.",
-        surchargeRateTier: "Your personalised surchargeRateTier is being prepared — please refresh in a moment.",
-        estimatedMLSPayable: "Your personalised estimatedMLSPayable is being prepared — please refresh in a moment.",
-        coverCostEstimate: "Your personalised coverCostEstimate is being prepared — please refresh in a moment.",
-        netSavingFromCover: "Your personalised netSavingFromCover is being prepared — please refresh in a moment.",
         coverTimingStrategy: "Your personalised coverTimingStrategy is being prepared — please refresh in a moment.",
-        partnerCoverAnalysis: "Your personalised partnerCoverAnalysis is being prepared — please refresh in a moment.",
+        householdCoverAnalysis: "Your personalised householdCoverAnalysis is being prepared — please refresh in a moment.",
         familyThresholdPosition: "Your personalised familyThresholdPosition is being prepared — please refresh in a moment.",
         superContributionOpportunity: "Your personalised superContributionOpportunity is being prepared — please refresh in a moment.",
-        policyExcessCheck: "Your personalised policyExcessCheck is being prepared — please refresh in a moment.",
         integratedPlan: "Your personalised integratedPlan is being prepared — please refresh in a moment.",
         nextYearCalendar: "Your personalised nextYearCalendar is being prepared — please refresh in a moment.",
         strongestRiskTrigger: "Your personalised strongestRiskTrigger is being prepared — please refresh in a moment.",
-        confidenceLevel: "Your personalised confidenceLevel is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
-          "What is the single most important action I should take before 31 October 2026?",
+          "What is the single most important action I should take before No act-by date?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -198,12 +177,6 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const annual_income = sessionStorage.getItem("medicare-levy-surcharge-trap_annual_income") || "band_93_108";
-    const has_hospital_cover = sessionStorage.getItem("medicare-levy-surcharge-trap_has_hospital_cover") || "false";
-    const is_family = sessionStorage.getItem("medicare-levy-surcharge-trap_is_family") || "false";
-    const status = sessionStorage.getItem("medicare-levy-surcharge-trap_status") || "SURCHARGE APPLIES";
-    const mls_annual = sessionStorage.getItem("medicare-levy-surcharge-trap_mls_annual") || "1000";
-    const tier = sessionStorage.getItem("medicare-levy-surcharge-trap_tier") || "67";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -214,29 +187,29 @@ export default function SuccessPlan() {
       `X-WR-CALNAME:Medicare Levy Surcharge Trap Engine — Deadlines`,
       "BEGIN:VEVENT",
       `UID:mls-review-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260501"}`,
-      `DTEND;VALUE=DATE:${"20260501"}`,
+      `DTSTART;VALUE=DATE:${relativeDate(14)}`,
+      `DTEND;VALUE=DATE:${relativeDate(14)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:MLS — Annual income and cover review",
-      "DESCRIPTION:Review forecast income and confirm hospital cover vs MLS comparison.",
+      "SUMMARY:MLS — income and cover review",
+      "DESCRIPTION:Review forecast income for MLS purposes and compare your surcharge against current cover quotes.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
       `UID:mls-cover-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260615"}`,
-      `DTEND;VALUE=DATE:${"20260615"}`,
+      `DTSTART;VALUE=DATE:${relativeDate(30)}`,
+      `DTEND;VALUE=DATE:${relativeDate(30)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Get hospital cover if needed — before 30 June",
-      "DESCRIPTION:Take out qualifying hospital cover to limit MLS exposure.",
+      "SUMMARY:Private health — check your hospital cover for the current income year",
+      "DESCRIPTION:MLS accrues for each day without appropriate hospital cover. Confirm your cover is in place and qualifying.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
       `UID:mls-return-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20261031"}`,
-      `DTEND;VALUE=DATE:${"20261031"}`,
+      `DTSTART;VALUE=DATE:${relativeDate(90)}`,
+      `DTEND;VALUE=DATE:${relativeDate(90)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Tax Return Due",
-      "DESCRIPTION:Lodge return — MLS assessed based on cover for full year.",
+      "SUMMARY:Tax return — confirm MLS treatment",
+      "DESCRIPTION:MLS is assessed when the ATO processes your return. Check the surcharge has been applied correctly.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -262,7 +235,7 @@ export default function SuccessPlan() {
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "Your";
+  const greeting = firstName !== "there" ? `${firstName}` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -287,15 +260,15 @@ export default function SuccessPlan() {
             Payment confirmed · Your Income and Insurance Optimisation System · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Income and Insurance Optimisation System
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Income and Insurance Optimisation System
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
           {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 31 October 2026</span>
-            <span className="font-mono text-sm font-bold text-white">31 Oct 2026</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to Assessed at your tax return</span>
+            <span className="font-mono text-sm font-bold text-white">At lodgement</span>
           </div>
           )}
         </div>
@@ -331,7 +304,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["mlsStatus","incomeForMLSPurposes","surchargeRateTier","estimatedMLSPayable","coverCostEstimate","netSavingFromCover"] as string[]).map(key => {
+                {(["mlsStatus","incomeForMLSPurposes","coverTimingStrategy","householdCoverAnalysis","familyThresholdPosition","superContributionOpportunity"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -354,7 +327,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 31 October 2026
+                  What to do — in order — before No act-by date
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
@@ -429,29 +402,29 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">MLS — Annual income and cover review</p>
-                    <p className="text-xs text-neutral-500">Review forecast income and confirm hospital cover vs MLS comparison.</p>
+                    <p className="text-sm font-semibold text-neutral-900">MLS — income and cover review</p>
+                    <p className="text-xs text-neutral-500">Review forecast income for MLS purposes and compare your surcharge against current cover quotes.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    1 May 2026
+                    In 2 weeks
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Get hospital cover if needed — before 30 June</p>
-                    <p className="text-xs text-neutral-500">Take out qualifying hospital cover to limit MLS exposure.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Private health — check your hospital cover for the current income year</p>
+                    <p className="text-xs text-neutral-500">MLS accrues for each day without appropriate hospital cover. Confirm your cover is in place and qualifying.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    15 Jun 2026
+                    In 30 days
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Tax Return Due</p>
-                    <p className="text-xs text-neutral-500">Lodge return — MLS assessed based on cover for full year.</p>
+                    <p className="text-sm font-semibold text-neutral-900">Tax return — confirm MLS treatment</p>
+                    <p className="text-xs text-neutral-500">MLS is assessed when the ATO processes your return. Check the surcharge has been applied correctly.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Oct 2026
+                    In 90 days
                   </span>
                 </div>
               </div>
@@ -507,7 +480,7 @@ export default function SuccessPlan() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                {deadlineLive ? `${daysToDeadline} days to 31 October 2026.` : ""}
+                {deadlineLive ? `${daysToDeadline} days to Assessed at your tax return.` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -547,8 +520,8 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australia tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
-            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" target="_blank" rel="noopener noreferrer" className="underline">ATO — Medicare Levy Surcharge</a>
+            Based on ATO guidance July 2026.{" "}
+            <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge" target="_blank" rel="noopener noreferrer" className="underline">ATO — Medicare Levy Surcharge</a> · <a href="https://www.ato.gov.au/individuals-and-families/medicare-and-private-health-insurance/medicare-levy-surcharge/medicare-levy-surcharge-income-thresholds-and-rates" target="_blank" rel="noopener noreferrer" className="underline">ATO — Medicare levy surcharge income, thresholds and rates (QC49961)</a>
           </p>
         </div>
 
