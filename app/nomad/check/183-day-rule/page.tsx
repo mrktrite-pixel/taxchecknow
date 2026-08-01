@@ -10,12 +10,12 @@ import Day183RuleCalculator from "./Day183RuleCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "183-Day Rule Reality Check — Residency Tests by Country | TaxCheckNow",
-  description: "The 183-day rule is not universal. UK SRT can make you UK-resident on 16 days if you have 4 UK ties. AU can keep you resident via domicile test. NZ applies permanent-place-of-abode regardless of days. Canada uses factual residence. Ties, not days, decide most cases.",
+  title: "183-Day Rule and the U.S. Substantial Presence Test — Does Under 183 Days Make You a Non-Resident? | TaxCheckNow",
+  description: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
   alternates: { canonical: "https://taxchecknow.com/nomad/check/183-day-rule" },
   openGraph: {
-    title: "183-Day Rule Reality Check — Residency Tests by Country | TaxCheckNow",
-    description: "The 183-day rule is not universal. UK SRT can make you UK-resident on 16 days if you have 4 UK ties. AU can keep you resident via domicile test. NZ applies permanent-place-of-abode regardless of days. Canada uses factual residence. Ties, not days, decide most cases.",
+    title: "183-Day Rule and the U.S. Substantial Presence Test — Does Under 183 Days Make You a Non-Resident? | TaxCheckNow",
+    description: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
     url: "https://taxchecknow.com/nomad/check/183-day-rule",
     siteName: "TaxCheckNow",
     type: "website",
@@ -24,16 +24,19 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "31 December 2026";
-const DEADLINE_ISO   = "2026-12-31T23:59:59.000+00:00";
+const LAST_VERIFIED  = "August 2026";
+const DEADLINE_LABEL = "Your income tax return due date";
+const DEADLINE_ISO   = "";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -372,8 +375,13 @@ const countdownStats = [
 
 export default function Day183RulePage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "nomad/check/183-day-rule", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -389,8 +397,8 @@ export default function Day183RulePage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "183-Day Rule Reality Check — Rules April 2026",
-    description: "The 183-day rule is not universal. UK SRT can make you UK-resident on 16 days if you have 4 UK ties. AU can keep you resident via domicile test. NZ applies permanent-place-of-abode regardless of days. Canada uses factual residence. Ties, not days, decide most cases.",
+    name: "183-Day Rule Reality Check — Rules August 2026",
+    description: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -406,14 +414,14 @@ export default function Day183RulePage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "183-Day Rule Reality Check",
-    description: "The 183-day rule is not universal. UK SRT can make you UK-resident on 16 days if you have 4 UK ties. AU can keep you resident via domicile test. NZ applies permanent-place-of-abode regardless of days. Canada uses factual residence. Ties, not days, decide most cases.",
+    description: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
     url: "https://taxchecknow.com/nomad/check/183-day-rule",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your 183-Day Residency Check", price: "67.00", priceCurrency: "USD" },
-      { "@type": "Offer", name: "Your Global Residency Strategy", price: "147.00", priceCurrency: "USD" },
+      { "@type": "Offer", name: "Your U.S. Substantial Presence Check", price: "67.00", priceCurrency: "USD" },
+      { "@type": "Offer", name: "Your U.S. Presence Documentation System", price: "147.00", priceCurrency: "USD" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -465,13 +473,13 @@ export default function Day183RulePage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nomad/check/183-day-rule#calculator",
-    "description": "The 183-day rule is not universal. UK SRT can make you UK-resident on 16 days if you have 4 UK ties. AU can keep you resident via domicile test. NZ applies permanent-place-of-abode regardless of days. Canada uses factual residence. Ties, not days, decide most cases.",
+    "description": "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention guidance April 2026"
+      "Based on IRS guidance August 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -528,7 +536,7 @@ export default function Day183RulePage() {
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · YEAR-END BOUNDARY
+        🔴 {countdown} days · {DEADLINE_LABEL} · PER-FILER
       </div>
       )}
 
@@ -541,7 +549,7 @@ export default function Day183RulePage() {
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇬🇧 National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention Verified · UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test) ↗
+            🇬🇧 IRS Verified · US IRC §7701(b) — Substantial Presence Test ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en
@@ -550,12 +558,12 @@ export default function Day183RulePage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Does Staying Under 183 Days Make You Non-Resident? In Most Countries, No. Here Is What Actually Determines Your Tax Residency.
+          Does Staying Under 183 Days Make You a U.S. Non-Resident? The IRS Counts Three Years of Days, Not One.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          The 183-day rule is widely cited as the test for tax non-residency. It is not. Most countries that use a 183-day threshold also have override provisions that can establish residency without reaching it — or remove residency even if it is exceeded. The United Kingdom's Statutory Residence Test can make a person UK resident with as few as 16 days if sufficient UK ties exist. Australia's domicile test can maintain Australian residency regardless of how many days are spent there. New Zealand's permanent place of abode test applies regardless of days. Canada's factual residence test is based primarily on ties, not a day threshold.
+          The 183-day rule is widely cited as the test for tax non-residency. For the United States that is not how the count works. Under the Substantial Presence Test you are treated as a U.S. resident for tax purposes if you were physically present in the United States on at least 31 days of the current year AND at least 183 days across three years — counting every day of the current year, one third of the days in the year before, and one sixth of the days in the year before that. A person who spends 120 days in the U.S. in each of three consecutive years reaches 180 on that weighting and is not a resident under this test; a small increase tips it over.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -599,15 +607,15 @@ export default function Day183RulePage() {
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
               <h3 className="mb-1 text-lg font-bold">183-Day Rule Reality Check</h3>
-              <p className="mb-3 text-sm text-neutral-300">A personalised residency-exit reality check against the specific statutory test of your departure country, ties assessment, and departure compliance checklist.</p>
+              <p className="mb-3 text-sm text-neutral-300">A personalised walk-through of the U.S. Substantial Presence Test — how your days are weighted across three years, which of your days may not count, and what the result means for your U.S. filing position.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  $67 · 183-Day Residency Check
+                  $67 · U.S. Substantial Presence Check
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  $147 · Global Residency Strategy
+                  $147 · U.S. Presence Documentation System
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
@@ -624,11 +632,11 @@ export default function Day183RulePage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 31 December 2026 — residency test boundary for most jurisdictions
+            
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 31 December 2026</span>
+            <span className="text-lg text-neutral-300">days until Your income tax return due date</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -708,12 +716,12 @@ export default function Day183RulePage() {
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — HMRC / ATO / IRD / CRA / IRS, confirmed April 2026
+            The answer — IRS, Substantial Presence Test
           </p>
-          <p className="mb-2 text-neutral-900">The 183-day rule is widely cited as the test for tax non-residency. It is not. Most countries that use a 183-day threshold also have override provisions that can establish residency without reaching it — or remove residency even if it is exceeded. The United Kingdom's Statutory Residence Test can make a person UK resident with as few as 16 days if sufficient UK ties exist. Australia's domicile test can maintain Australian residency regardless of how many days are spent there. New Zealand's permanent place of abode test applies regardless of days. Canada's factual residence test is based primarily on ties, not a day threshold.</p>
-          <p className="mb-2 text-neutral-900">Leaving a country without formally severing ties is the most common mistake. A person who moves abroad but keeps their family home available, leaves their spouse in the home country, and maintains bank accounts and memberships there is likely still tax resident — even with zero days in that country. Tax residency is not ended by physical departure. It is ended by the legal severance of the factors that created it.</p>
-          <p className="mb-2 text-neutral-900">The consequences of incorrectly assuming non-residency compound over time. Each year of non-filing in a country that considers you resident creates an additional year of liability — tax owed, interest accruing from the due date, and late filing penalties. Discovering the issue three years later means three years of worldwide income may be assessable in the country you thought you had left. Voluntary disclosure is available in most countries but reduces in value the longer it is delayed.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada ITA s250 · US IRC §7701(b) · OECD Model Tax Convention · Confirmed April 2026</p>
+          <p className="mb-2 text-neutral-900">The 183-day rule is widely cited as the test for tax non-residency. For the United States that is not how the count works. Under the Substantial Presence Test you are treated as a U.S. resident for tax purposes if you were physically present in the United States on at least 31 days of the current year AND at least 183 days across three years — counting every day of the current year, one third of the days in the year before, and one sixth of the days in the year before that. A person who spends 120 days in the U.S. in each of three consecutive years reaches 180 on that weighting and is not a resident under this test; a small increase tips it over.</p>
+          <p className="mb-2 text-neutral-900">Not every day of physical presence counts. Days in transit through the United States of under 24 hours between two places outside it, days as a crew member of a foreign vessel, days you regularly commute to work from a residence in Canada or Mexico, days you could not leave because of a medical condition that arose while you were in the U.S., and days as an exempt individual are all excluded. Excluding days as an exempt individual or for a medical condition is not automatic — it requires Form 8843, filed by the due date for your income tax return. File it late and the IRS position is that you cannot exclude those days at all.</p>
+          <p className="mb-2 text-neutral-900">If the test treats you as a U.S. resident, you are generally taxed on worldwide income and file as a resident, which is a materially different position from filing as a nonresident. A closer connection exception exists for some people who meet the day count but have a tax home and closer connection to another country, and separate rules apply to students. This check covers the U.S. Substantial Presence Test only — every other country applies its own residency test, and they differ from this one and from each other.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: IRS — Substantial presence test · US IRC §7701(b)</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -801,7 +809,7 @@ export default function Day183RulePage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (August 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -810,77 +818,77 @@ export default function Day183RulePage() {
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">UK — lowest-day-count trigger</td>
                   <td className="p-2">16 days with 4 UK ties (sufficient ties test)</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">UK legal anchor</td>
                   <td className="p-2">Finance Act 2013, Schedule 45</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">AU — primary test</td>
                   <td className="p-2">Resides test (behaviour + intention), not days</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">AU — domicile override</td>
                   <td className="p-2">Domicile in AU unless permanent place of abode elsewhere</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">AU legal anchor</td>
                   <td className="p-2">ITAA 1936 s6(1)</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">NZ — day test</td>
                   <td className="p-2">183+ days in any 12-month period</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">NZ — permanent place of abode</td>
                   <td className="p-2">Resident even at 0 days if home kept in NZ</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">NZ legal anchor</td>
                   <td className="p-2">Income Tax Act 2007 s YD 1</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Canada — primary test</td>
                   <td className="p-2">Factual residence based on ties (no day threshold for primary)</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Canada — deemed resident</td>
                   <td className="p-2">183+ days (different from factual residence)</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Canada legal anchor</td>
                   <td className="p-2">Income Tax Act (Canada) s250</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">US — substantial presence</td>
                   <td className="p-2">Weighted: all current year + 1/3 prior year + 1/6 two years prior ≥ 183</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">US — citizenship layer</td>
                   <td className="p-2">US citizens + green card holders: worldwide taxation regardless of days</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">US legal anchor</td>
                   <td className="p-2">IRC §7701(b) + §§1, 61</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Dual residency resolution</td>
                   <td className="p-2">OECD Model Convention Article 4 tie-breaker (via bilateral treaties)</td>
-                  <td className="p-2 text-neutral-500">UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
               </tbody>
             </table>
@@ -1177,24 +1185,24 @@ export default function Day183RulePage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Country-specific residency tests — the 183-day rule is NOT universal. UK Statutory Residence Test (Finance Act 2013 Sch 45) can make you resident at 16 days with 4 UK ties. Australia (ITAA 1936 s6(1)) applies resides test + domicile + 183-day with override provisions. New Zealand (Income Tax Act 2007 s YD 1) applies 183-day + permanent place of abode. Canada (ITA s250) applies factual residence + 183-day deemed. United States (IRC §7701(b) + §§1, 61) applies substantial presence + citizenship-based worldwide taxation. Dual residency resolved by OECD Model Convention Article 4 tie-breaker.
+            US Substantial Presence Test (IRC §7701(b)): you are treated as a U.S. resident for tax purposes if you were physically present at least 31 days in the current year AND at least 183 days across three years, counting all current-year days, one third of last year's, and one sixth of the year before. Some days do not count — under-24-hour transit between two places outside the U.S., crew of a foreign vessel, regular commuting from Canada or Mexico, days you could not leave because of a medical condition that arose in the U.S., and days as an exempt individual. Excluding days as an exempt individual or for a medical condition requires Form 8843, filed by the due date for your return. This check covers the U.S. test only; other countries apply their own residency tests, which differ.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              OECD Model Convention
+              IRS
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              UK Finance Act 2013 Sch 45
+              IRC §7701(b)
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              AU ITAA 1936 s6(1)
+              Substantial Presence Test
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              NZ ITA 2007 s YD 1
+              31-Day + 183-Day Weighted
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              183 Days Not Universal
+              Form 8843
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
@@ -1244,7 +1252,7 @@ export default function Day183RulePage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention and GOV.UK guidance for April 2026.
+          built from IRS and GOV.UK guidance for August 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1258,7 +1266,7 @@ export default function Day183RulePage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Global (cross-border residency tests) tax position checks. April 2026.</p>
+            <p className="mt-1">Global (cross-border residency tests) tax position checks. August 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/global/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

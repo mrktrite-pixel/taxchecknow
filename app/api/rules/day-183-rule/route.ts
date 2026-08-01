@@ -14,19 +14,19 @@ export async function GET() {
     "product_id": "day-183-rule",
     "title": "183-Day Rule Reality Check",
     "site": "https://taxchecknow.com/nomad/check/183-day-rule",
-    "authority": "National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention",
-    "authority_url": "https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm",
+    "authority": "IRS",
+    "authority_url": "https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test",
     "jurisdiction": "Global (cross-border residency tests)",
     "language": "en",
     "currency": "USD",
-    "last_verified": "April 2026",
-    "legislation": "Residency tests are country-specific: UK applies Statutory Residence Test (Finance Act 2013 Schedule 45) with automatic tests and sufficient ties; Australia applies resides test plus domicile and 183-day statutory tests (ITAA 1936 s6(1)); New Zealand applies 183-day presence test plus permanent place of abode (Income Tax Act 2007 s YD 1); Canada applies factual residence based on ties plus 183-day deemed resident rule (ITA s250); United States applies Substantial Presence Test plus citizenship-based taxation (IRC §7701(b), §§1, 61).",
-    "legal_anchor": "UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)",
+    "last_verified": "August 2026",
+    "legislation": "United States Internal Revenue Code §7701(b) — the Substantial Presence Test. A non-citizen is treated as a U.S. resident for tax purposes when physically present at least 31 days in the current year and at least 183 days across a weighted three-year count (all current-year days, one third of the prior year, one sixth of the year before that). Specified days are excluded, and excluding days as an exempt individual or for a medical condition requires Form 8843.",
+    "legal_anchor": "US IRC §7701(b) — Substantial Presence Test",
     "deadline": {
-        "iso_date": "2026-12-31T23:59:59.000+00:00",
-        "display": "31 December 2026",
-        "description": "Year-end boundary — most residency tests assessed annually against this cut-off",
-        "urgency_label": "YEAR-END BOUNDARY"
+        "iso_date": "",
+        "display": "Your income tax return due date",
+        "description": "The U.S. day-count year runs on the calendar year, but the one act-by moment in this test — filing Form 8843 to exclude days — falls on your own income tax return due date, which differs by filer.",
+        "urgency_label": "PER-FILER"
     },
     "key_facts": {
         "uk_lowest_day_count_trigger": "16 days with 4 UK ties (sufficient ties test)",
@@ -189,17 +189,17 @@ export async function GET() {
     ],
     "products": {
         "tier1": {
-            "name": "Your 183-Day Residency Check",
+            "name": "Your U.S. Substantial Presence Check",
             "price": 67,
             "currency": "USD",
-            "description": "Stayed under 183 days — does that make you non-resident? In most countries, no.",
+            "description": "Stayed under 183 days in the U.S. — does that make you a non-resident? The count is over three years.",
             "url": "https://taxchecknow.com/nomad/check/183-day-rule/success/assess"
         },
         "tier2": {
-            "name": "Your Global Residency Strategy",
+            "name": "Your U.S. Presence Documentation System",
             "price": 147,
             "currency": "USD",
-            "description": "Full ties severance plan + multi-country overlap + audit defence documentation",
+            "description": "Day-count evidence, excluded-day support, and audit-ready documentation",
             "url": "https://taxchecknow.com/nomad/check/183-day-rule/success/plan"
         }
     },
@@ -208,7 +208,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/183-day-rule",
     "api_endpoint": "/api/rules/day-183-rule",
-    "generated_at": "2026-04-23T09:22:14.493Z"
+    "generated_at": "2026-08-01T01:11:45.290Z"
 };
 
   return NextResponse.json(rules, {
@@ -218,7 +218,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "day-183-rule",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "August 2026",
     },
   });
 }

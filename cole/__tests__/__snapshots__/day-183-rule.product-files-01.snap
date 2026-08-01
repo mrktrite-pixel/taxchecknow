@@ -74,10 +74,10 @@ export default function Day183RuleFile01() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🏳️ National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention · UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)
+              🏳️ IRS · US IRC §7701(b) — Substantial Presence Test
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: August 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 01 of 8
@@ -87,7 +87,7 @@ export default function Day183RuleFile01() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 YEAR-END BOUNDARY: 31 December 2026
+              🔴 PER-FILER: Your income tax return due date
             </span>
             <a href="/nomad/check/183-day-rule"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -205,7 +205,7 @@ export default function Day183RuleFile01() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Global (cross-border residency tests) tax adviser for your personal situation.
-            Based on National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention guidance April 2026.
+            Based on IRS guidance August 2026.
           </p>
         </div>
 

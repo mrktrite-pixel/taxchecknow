@@ -1,0 +1,22 @@
+{
+  "_doc": "OPERATOR presentation overlay (183-day-rule migration — ruled 2026-08-01). The emitter merges the machine engine (content+routing) with this overlay → engine.json (terminals schema). Bee-D never sets tier/severity. Dishes take heading from the menu label + result_copy from the grounded result_state unless overridden. Escapes REQUIRE heading+result_copy here; tier=67 FORCED on escapes.",
+  "_ruling": "Tier seeded from the live bespoke Day183RuleCalculator.tsx, whose rule is RESOLUTION-based rather than money-based: a position resolved as non-resident is 67 (:295/:314), while an adverse OR UNRESOLVED position is 147 (:327, :357, :387, :417, :447, :477, :507). Terminal 1 is the resolved-favourable path → 67/green. Terminal 2 is resolved-adverse (treated as a U.S. resident alien, worldwide reporting) → 147/red/critical. Terminals 3, 4 and 5 are all unresolved-position dishes → 147, amber/critical, matching the bespoke's :507 'day count alone does not resolve your position'. Terminal 4 additionally sits downstream of meets_31 + meets_183, so its population is indicated-resident without evidence. Ruled Strategy under operator delegation 2026-08-01 on ambiguity A (terminal 5 is reached from q3, before the weighted total is established). Escapes forced to 67 with authored heading + result_copy; note that q1:citizen_or_pr routes the product's highest-exposure population to a forced-67 escape the overlay cannot reach — an engine-scope issue recorded here, not fixed here. Figures and day-count rules throughout are IRS substantial presence test, snapshot 6134b9ef, hash-verified.",
+  "states": {
+    "does-not-meet-substantial-presence-nonresident": { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product" },
+    "meets-substantial-presence-resident":            { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product" },
+    "borderline-day-count-uncertain":                 { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "documenting-days-for-audit-defense":             { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "gray-area-days-transit-ambiguous":               { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+
+    "none_fit": {
+      "severity": "blue", "criticality": "standard", "title_key": "review_guide",
+      "heading": "This test does not apply to U.S. citizens or green card holders",
+      "result_copy": "The Substantial Presence Test decides whether a non-citizen is treated as a U.S. resident for tax purposes. If you are a U.S. citizen or a lawful permanent resident (green card holder), it does not apply to you — but not because you are outside the U.S. tax net. Citizens and green card holders are taxed on worldwide income regardless of how many days they spend in the United States, and regardless of where they live. A day count will not change that. If you are trying to reduce or exit that obligation, the question is expatriation or treaty relief, not day counting, and it is worth a conversation with a qualified U.S. tax professional."
+    },
+    "insufficient_information": {
+      "severity": "amber", "criticality": "critical", "title_key": "review_guide",
+      "heading": "Your position needs a closer look",
+      "result_copy": "Your answers do not yet establish your U.S. tax residency position — either whether this test applies to you at all, or how many days you were physically present in the current year. Both matter: the Substantial Presence Test requires at least 31 days of presence in the current year AND a weighted three-year total of at least 183 days, counting all days in the current year, one third of the days in the year before, and one sixth of the days in the year before that. Some days may not count at all — days in transit through the U.S. under 24 hours, days as a crew member of a foreign vessel, regular commuting days from Canada or Mexico, days you could not leave because of a medical condition, and days as an exempt individual. Establishing your day count is the first step, and a short personalised review sets it out."
+    }
+  }
+}

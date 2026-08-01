@@ -12,24 +12,62 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
   // which is the correct state until someone rules on it.
   nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
+
+  // ── ENGINE-NATIVE DECLARATION (R-A2) ───────────────────────────────────
+  // TRUE as of Step F (2026-08-01), IN THE SAME COMMIT as the mount and the
+  // cole/calculators sync. verifyEngineNative() throws in EITHER direction on
+  // disagreement, so the declaration, the app-dir mount and the cole/ copy move
+  // together or not at all.
+  engineNative: true,
+
+  // ── TEMPORAL DECLARATION (TEMPORAL v1 · Step C) ─────────────────────────
+  // "unresolvable", NOT "none" — the first product in this programme where the
+  // answer is not "none", per Session B's 1.1 (2026-08-01).
+  // The build's own extraction says there is nothing (urgency_triggers EMPTY,
+  // deadline_window_days null), but the corpus contains an ACT-BY CONSEQUENCE the
+  // extractor missed, verbatim from the IRS page: send Form 8843 "by the due date
+  // for filing an income tax return", and "if you do not timely file Form 8843,
+  // you cannot exclude the days" — miss it and your day count rises, which can
+  // flip you from nonresident to resident. So a REAL date exists.
+  // It CANNOT BE COMPUTED HERE, which is the definition of unresolvable:
+  //   · the corpus names the date only by REFERENCE and states no date (zero
+  //     month-day tokens in the whole corpus; "April 15" absent);
+  //   · that reference resolves PER-TAXPAYER — US-resident filers, filers abroad
+  //     and anyone on extension all differ (a 1040-NR with no withheld wages is
+  //     June 15);
+  //   · the engine never establishes WHO NEEDS FORM 8843 — it has no question
+  //     about exempt-individual status or medical condition.
+  // Proposing a fixed April 15 recurrence would import a figure the authority
+  // never gave us, which is the fabrication this programme exists to stop.
+  temporal: {
+    kind:         "unresolvable",
+    reason:       "act_by_date_is_per_taxpayer_and_uncaptured",
+    jurisdiction: "US",
+    domain:       "us_tax_residency",
+    label:        "Form 8843 due with the income tax return",
+  },
   id: "day-183-rule", name: "183-Day Rule Reality Check", site: "taxchecknow", country: "global", market: "Global (cross-border residency tests)", language: "en", currency: "USD",
   slug: "nomad/check/183-day-rule", url: "https://taxchecknow.com/nomad/check/183-day-rule", apiRoute: "/api/rules/day-183-rule",
-  authority: "National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention", authorityUrl: "https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm", legalAnchor: "UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)", legislation: "Residency tests are country-specific: UK applies Statutory Residence Test (Finance Act 2013 Schedule 45) with automatic tests and sufficient ties; Australia applies resides test plus domicile and 183-day statutory tests (ITAA 1936 s6(1)); New Zealand applies 183-day presence test plus permanent place of abode (Income Tax Act 2007 s YD 1); Canada applies factual residence based on ties plus 183-day deemed resident rule (ITA s250); United States applies Substantial Presence Test plus citizenship-based taxation (IRC §7701(b), §§1, 61).",
-  lastVerified: "April 2026",
-  tier1: { price: 67, name: "Your 183-Day Residency Check", tagline: "Stayed under 183 days — does that make you non-resident? In most countries, no.", value: "A personalised residency-exit reality check against the specific statutory test of your departure country, ties assessment, and departure compliance checklist.", cta: "Get My Residency Check — $67 →", productKey: "nomad_67_183_day_rule", envVar: "STRIPE_NOMAD_183_67", successPath: "assess", fileCount: 5 },
-  tier2: { price: 147, name: "Your Global Residency Strategy", tagline: "Full ties severance plan + multi-country overlap + audit defence documentation", value: "Full residency exit strategy including ties severance sequence, multi-country overlap analysis, voluntary disclosure assessment, and audit-ready documentation pack.", cta: "Get My Residency Strategy — $147 →", productKey: "nomad_147_183_day_rule", envVar: "STRIPE_NOMAD_183_147", successPath: "plan", fileCount: 8 },
-  deadline: { isoDate: "2026-12-31T23:59:59.000+00:00", display: "31 December 2026", short: "31 Dec 2026", description: "Year-end boundary — most residency tests assessed annually against this cut-off", urgencyLabel: "YEAR-END BOUNDARY", countdownLabel: "Countdown to 31 December 2026 — residency test boundary for most jurisdictions" },
-  h1: "Does Staying Under 183 Days Make You Non-Resident? In Most Countries, No. Here Is What Actually Determines Your Tax Residency.",
-  metaTitle: "183-Day Rule Reality Check — Residency Tests by Country | TaxCheckNow",
-  metaDescription: "The 183-day rule is not universal. UK SRT can make you UK-resident on 16 days if you have 4 UK ties. AU can keep you resident via domicile test. NZ applies permanent-place-of-abode regardless of days. Canada uses factual residence. Ties, not days, decide most cases.",
+  authority: "IRS", authorityUrl: "https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test", legalAnchor: "US IRC §7701(b) — Substantial Presence Test", legislation: "United States Internal Revenue Code §7701(b) — the Substantial Presence Test. A non-citizen is treated as a U.S. resident for tax purposes when physically present at least 31 days in the current year and at least 183 days across a weighted three-year count (all current-year days, one third of the prior year, one sixth of the year before that). Specified days are excluded, and excluding days as an exempt individual or for a medical condition requires Form 8843.",
+  lastVerified: "August 2026",
+  tier1: { price: 67, name: "Your U.S. Substantial Presence Check", tagline: "Stayed under 183 days in the U.S. — does that make you a non-resident? The count is over three years.", value: "A personalised walk-through of the U.S. Substantial Presence Test — how your days are weighted across three years, which of your days may not count, and what the result means for your U.S. filing position.", cta: "Get My Residency Check — $67 →", productKey: "nomad_67_183_day_rule", envVar: "STRIPE_NOMAD_183_67", successPath: "assess", fileCount: 5 },
+  tier2: { price: 147, name: "Your U.S. Presence Documentation System", tagline: "Day-count evidence, excluded-day support, and audit-ready documentation", value: "Full U.S. presence position: your weighted three-year count, the exclusions you may be entitled to and what each requires, Form 8843 where it applies, and an audit-ready documentation pack.", cta: "Get My Residency Strategy — $147 →", productKey: "nomad_147_183_day_rule", envVar: "STRIPE_NOMAD_183_147", successPath: "plan", fileCount: 8 },
+  // TEMPORAL v1 — isoDate NEUTRALISED alongside the kind "unresolvable" declaration above.
+  // The old block asserted a 31 December boundary for "most jurisdictions": the corpus states
+  // no date at all, and the one real act-by moment (Form 8843, due with the return) resolves
+  // per-taxpayer. The prose names the moment without asserting a date.
+  deadline: { isoDate: "", display: "Your income tax return due date", short: "With your return", description: "The U.S. day-count year runs on the calendar year, but the one act-by moment in this test — filing Form 8843 to exclude days — falls on your own income tax return due date, which differs by filer.", urgencyLabel: "PER-FILER", countdownLabel: "" },
+  h1: "Does Staying Under 183 Days Make You a U.S. Non-Resident? The IRS Counts Three Years of Days, Not One.",
+  metaTitle: "183-Day Rule and the U.S. Substantial Presence Test — Does Under 183 Days Make You a Non-Resident? | TaxCheckNow",
+  metaDescription: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
   canonical: "https://taxchecknow.com/nomad/check/183-day-rule",
-  answerHeadline: "The answer — HMRC / ATO / IRD / CRA / IRS, confirmed April 2026",
+  answerHeadline: "The answer — IRS, Substantial Presence Test",
   answerBody: [
-    "The 183-day rule is widely cited as the test for tax non-residency. It is not. Most countries that use a 183-day threshold also have override provisions that can establish residency without reaching it — or remove residency even if it is exceeded. The United Kingdom's Statutory Residence Test can make a person UK resident with as few as 16 days if sufficient UK ties exist. Australia's domicile test can maintain Australian residency regardless of how many days are spent there. New Zealand's permanent place of abode test applies regardless of days. Canada's factual residence test is based primarily on ties, not a day threshold.",
-    "Leaving a country without formally severing ties is the most common mistake. A person who moves abroad but keeps their family home available, leaves their spouse in the home country, and maintains bank accounts and memberships there is likely still tax resident — even with zero days in that country. Tax residency is not ended by physical departure. It is ended by the legal severance of the factors that created it.",
-    "The consequences of incorrectly assuming non-residency compound over time. Each year of non-filing in a country that considers you resident creates an additional year of liability — tax owed, interest accruing from the due date, and late filing penalties. Discovering the issue three years later means three years of worldwide income may be assessable in the country you thought you had left. Voluntary disclosure is available in most countries but reduces in value the longer it is delayed.",
+    "The 183-day rule is widely cited as the test for tax non-residency. For the United States that is not how the count works. Under the Substantial Presence Test you are treated as a U.S. resident for tax purposes if you were physically present in the United States on at least 31 days of the current year AND at least 183 days across three years — counting every day of the current year, one third of the days in the year before, and one sixth of the days in the year before that. A person who spends 120 days in the U.S. in each of three consecutive years reaches 180 on that weighting and is not a resident under this test; a small increase tips it over.",
+    "Not every day of physical presence counts. Days in transit through the United States of under 24 hours between two places outside it, days as a crew member of a foreign vessel, days you regularly commute to work from a residence in Canada or Mexico, days you could not leave because of a medical condition that arose while you were in the U.S., and days as an exempt individual are all excluded. Excluding days as an exempt individual or for a medical condition is not automatic — it requires Form 8843, filed by the due date for your income tax return. File it late and the IRS position is that you cannot exclude those days at all.",
+    "If the test treats you as a U.S. resident, you are generally taxed on worldwide income and file as a resident, which is a materially different position from filing as a nonresident. A closer connection exception exists for some people who meet the day count but have a tax home and closer connection to another country, and separate rules apply to students. This check covers the U.S. Substantial Presence Test only — every other country applies its own residency test, and they differ from this one and from each other.",
   ],
-  answerSource: "Source: UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada ITA s250 · US IRC §7701(b) · OECD Model Tax Convention · Confirmed April 2026",
+  answerSource: "Source: IRS — Substantial presence test · US IRC §7701(b)",
   mistakesHeadline: "Common AI errors on this topic",
   mistakes: [
     "I stayed under 183 days so I am not tax resident — wrong as a universal rule. The 183-day threshold is used in some countries as one test among many — not as a complete definition of non-residency. The UK Statutory Residence Test can establish UK residency with 16 days if 4 UK ties exist. Australia can maintain residency under the domicile test regardless of days spent there. New Zealand's permanent place of abode test applies independently of any day count.",
@@ -139,8 +177,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { q: "If I have been incorrectly filing (or not filing) for prior years, what voluntary disclosure options are available and what are the terms?", why: "Voluntary disclosure is available in most countries with significantly reduced penalties — but only if initiated BEFORE authority contact. Timing matters." },
   ],
   crosslink: { title: "Step 1: classify your residency risk state", body: "Before running the 183-day rule reality check, start with the Nomad Residency Risk Index — classifies GREEN / YELLOW / RED and routes to the right engine for your situation.", url: "/nomad", label: "Nomad Residency Risk Index →" },
-  lawBarSummary: "Country-specific residency tests — the 183-day rule is NOT universal. UK Statutory Residence Test (Finance Act 2013 Sch 45) can make you resident at 16 days with 4 UK ties. Australia (ITAA 1936 s6(1)) applies resides test + domicile + 183-day with override provisions. New Zealand (Income Tax Act 2007 s YD 1) applies 183-day + permanent place of abode. Canada (ITA s250) applies factual residence + 183-day deemed. United States (IRC §7701(b) + §§1, 61) applies substantial presence + citizenship-based worldwide taxation. Dual residency resolved by OECD Model Convention Article 4 tie-breaker.",
-  lawBarBadges: ["OECD Model Convention", "UK Finance Act 2013 Sch 45", "AU ITAA 1936 s6(1)", "NZ ITA 2007 s YD 1", "183 Days Not Universal"],
+  lawBarSummary: "US Substantial Presence Test (IRC §7701(b)): you are treated as a U.S. resident for tax purposes if you were physically present at least 31 days in the current year AND at least 183 days across three years, counting all current-year days, one third of last year's, and one sixth of the year before. Some days do not count — under-24-hour transit between two places outside the U.S., crew of a foreign vessel, regular commuting from Canada or Mexico, days you could not leave because of a medical condition that arose in the U.S., and days as an exempt individual. Excluding days as an exempt individual or for a medical condition requires Form 8843, filed by the due date for your return. This check covers the U.S. test only; other countries apply their own residency tests, which differ.",
+  lawBarBadges: ["IRS", "IRC §7701(b)", "Substantial Presence Test", "31-Day + 183-Day Weighted", "Form 8843"],
   sources: [
     { title: "HMRC — Statutory Residence Test (UK)",                                  url: "https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" },
     { title: "ATO — Your tax residency (Australia)",                                     url: "https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency" },
