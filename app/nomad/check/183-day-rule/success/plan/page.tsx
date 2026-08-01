@@ -3,62 +3,63 @@
 // Product: day-183-rule · Tier 2 Success Page
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
     "num": "01",
     "slug": "d183-01",
-    "name": "Your 183-Day Residency Reality Check",
-    "desc": "Specific residency outcome against the statutory test of your departure country.",
+    "name": "Your Substantial Presence Position",
+    "desc": "Where your weighted three-year day count lands against the two IRS thresholds.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "d183-02",
-    "name": "Country-Specific Residency Test Summary",
-    "desc": "Day thresholds, ties, and override provisions for UK / AU / NZ / CA / US.",
+    "name": "Your Three-Year Day Count Worksheet",
+    "desc": "The weighting applied year by year, with the arithmetic set out.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "d183-03",
-    "name": "Ties Severance Checklist",
-    "desc": "What to sever in each country to establish clean non-residency.",
+    "name": "Excluded Days Checklist",
+    "desc": "The five categories of day that do not count, and what each one requires.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "d183-04",
-    "name": "Departure Compliance Checklist",
-    "desc": "Formal notifications and filings required per country on departure.",
+    "name": "Form 8843 Filing Brief",
+    "desc": "What Form 8843 supports, when it is due, and what late filing costs you.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "d183-05",
-    "name": "Your Accountant Brief — Residency Exit",
-    "desc": "Questions for your departure-country tax advisor before leaving.",
+    "name": "Your Accountant Brief — U.S. Presence",
+    "desc": "Five questions for a U.S. tax advisor, with why each one matters.",
     "tier": 1
   },
   {
     "num": "06",
     "slug": "d183-06",
-    "name": "Full Residency Exit Strategy",
-    "desc": "Sequential plan for establishing clean non-residency with evidence.",
+    "name": "Full U.S. Presence Position",
+    "desc": "The complete count, the exclusions claimed, and the filing position that follows.",
     "tier": 2
   },
   {
     "num": "07",
     "slug": "d183-07",
-    "name": "Multi-Country Overlap Analysis",
-    "desc": "Where domestic law of multiple countries claims you, how treaties resolve it.",
+    "name": "Closer Connection Exception Brief",
+    "desc": "The remaining route where the day count is met, and what it turns on.",
     "tier": 2
   },
   {
     "num": "08",
     "slug": "d183-08",
     "name": "Audit Defence Documentation",
-    "desc": "Evidence file to maintain for residency position.",
+    "desc": "The evidence file behind a U.S. day count and every excluded day in it.",
     "tier": 2
   }
 ];
@@ -78,13 +79,14 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  const daysToDeadline: number | null = (() => {
-    const _end = new Date("2026-12-31T23:59:59.000+00:00").getTime();
-    if (Number.isNaN(_end)) return null;
-    const _d = Math.floor((_end - Date.now()) / 86_400_000);
-    return _d > 0 ? _d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "unresolvable", reason: "act_by_date_is_per_taxpayer_and_uncaptured").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
 
@@ -125,47 +127,24 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const departure_country = sessionStorage.getItem("day-183-rule_departure_country") || "UK";
-      const days_in_country = sessionStorage.getItem("day-183-rule_days_in_country") || "under_91";
-      const ties_count = sessionStorage.getItem("day-183-rule_ties_count") || "2";
-      const property_retained = sessionStorage.getItem("day-183-rule_property_retained") || "yes";
-      const family_location = sessionStorage.getItem("day-183-rule_family_location") || "home_country";
-      const formally_notified = sessionStorage.getItem("day-183-rule_formally_notified") || "no";
-      const status = sessionStorage.getItem("day-183-rule_status") || "LIKELY STILL RESIDENT";
-      const tier = sessionStorage.getItem("day-183-rule_tier") || "147";
-
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-        "departure_country": departure_country,
-        "days_in_country": days_in_country,
-        "ties_count": ties_count,
-        "property_retained": property_retained,
-        "family_location": family_location,
-        "formally_notified": formally_notified,
-        "status": status,
-        "tier": tier,
-      }).some(v => v && v !== "UK");
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
+      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // (F5 contract). The legacy per-field keys are never written by an engine-native
+      // calculator, so reading them would always fall back to defaults → a generic,
+      // corpus-contradicting assessment.
+      const inputs = buildComposerInputsFromSession("day-183-rule");
 
       const res = await fetch("/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           product_id: "day-183-rule",
-          market:     "Global (cross-border residency tests)",
-          authority:  "National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention",
+          market:     "United States (IRS Substantial Presence Test)",
+          authority:  "IRS",
           tier:       2,
-          name,
-          inputs: {
-        "Country leaving": departure_country,
-        "Days in country": days_in_country,
-        "Number of ties": ties_count,
-        "Property retained": property_retained,
-        "Family location": family_location,
-        "Formally notified": formally_notified,
-        "Verdict status": status,
-        "Tier purchased": tier,
-          },
-          fields: ["residencyStatus","dayCountAnalysis","tiesAssessment","propertyPosition","departureComplianceStatus","filingObligations","riskLevel","immediateActions","tiesSeveranceStrategy","departureReturnStrategy","voluntaryDisclosureAssessment","multiCountryOverlapAnalysis","auditDefenceDocumentation"],
+          name: name === "there" ? "" : name,
+          inputs,
+          fields: ["residencyStatus","dayCountAnalysis","currentYearMinimumCheck","excludedDaysAssessment","form8843Position","filingObligations","riskLevel","immediateActions","priorYearCountReview","exclusionEvidenceStrategy","closerConnectionAssessment","recordKeepingSystem","auditDefenceDocumentation"],
         }),
       });
       const data = await res.json();
@@ -177,20 +156,20 @@ export default function SuccessPlan() {
       setAssessment({
         residencyStatus: "Your personalised residencyStatus is being prepared — please refresh in a moment.",
         dayCountAnalysis: "Your personalised dayCountAnalysis is being prepared — please refresh in a moment.",
-        tiesAssessment: "Your personalised tiesAssessment is being prepared — please refresh in a moment.",
-        propertyPosition: "Your personalised propertyPosition is being prepared — please refresh in a moment.",
-        departureComplianceStatus: "Your personalised departureComplianceStatus is being prepared — please refresh in a moment.",
+        currentYearMinimumCheck: "Your personalised currentYearMinimumCheck is being prepared — please refresh in a moment.",
+        excludedDaysAssessment: "Your personalised excludedDaysAssessment is being prepared — please refresh in a moment.",
+        form8843Position: "Your personalised form8843Position is being prepared — please refresh in a moment.",
         filingObligations: "Your personalised filingObligations is being prepared — please refresh in a moment.",
         riskLevel: "Your personalised riskLevel is being prepared — please refresh in a moment.",
         immediateActions: "Your personalised immediateActions is being prepared — please refresh in a moment.",
-        tiesSeveranceStrategy: "Your personalised tiesSeveranceStrategy is being prepared — please refresh in a moment.",
-        departureReturnStrategy: "Your personalised departureReturnStrategy is being prepared — please refresh in a moment.",
-        voluntaryDisclosureAssessment: "Your personalised voluntaryDisclosureAssessment is being prepared — please refresh in a moment.",
-        multiCountryOverlapAnalysis: "Your personalised multiCountryOverlapAnalysis is being prepared — please refresh in a moment.",
+        priorYearCountReview: "Your personalised priorYearCountReview is being prepared — please refresh in a moment.",
+        exclusionEvidenceStrategy: "Your personalised exclusionEvidenceStrategy is being prepared — please refresh in a moment.",
+        closerConnectionAssessment: "Your personalised closerConnectionAssessment is being prepared — please refresh in a moment.",
+        recordKeepingSystem: "Your personalised recordKeepingSystem is being prepared — please refresh in a moment.",
         auditDefenceDocumentation: "Your personalised auditDefenceDocumentation is being prepared — please refresh in a moment.",
         accountantQuestions: [
-          "What is my exact National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention position based on my answers?",
-          "What is the single most important action I should take before 31 December 2026?",
+          "What is my exact IRS position based on my answers?",
+          "What is the single most important action I should take before Form 8843 due with the income tax return?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -202,14 +181,6 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const departure_country = sessionStorage.getItem("day-183-rule_departure_country") || "UK";
-    const days_in_country = sessionStorage.getItem("day-183-rule_days_in_country") || "under_91";
-    const ties_count = sessionStorage.getItem("day-183-rule_ties_count") || "2";
-    const property_retained = sessionStorage.getItem("day-183-rule_property_retained") || "yes";
-    const family_location = sessionStorage.getItem("day-183-rule_family_location") || "home_country";
-    const formally_notified = sessionStorage.getItem("day-183-rule_formally_notified") || "no";
-    const status = sessionStorage.getItem("day-183-rule_status") || "LIKELY STILL RESIDENT";
-    const tier = sessionStorage.getItem("day-183-rule_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -223,8 +194,8 @@ export default function SuccessPlan() {
       `DTSTART;VALUE=DATE:${relativeDate(90)}`,
       `DTEND;VALUE=DATE:${relativeDate(90)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Residency — quarterly evidence check",
-      "DESCRIPTION:Pull flight records, bank/utility statements, and day-count log quarterly.",
+      "SUMMARY:U.S. presence — quarterly evidence check",
+      "DESCRIPTION:Pull flight records and entry/exit stamps and update the three-year day-count log.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -232,44 +203,8 @@ export default function SuccessPlan() {
       `DTSTART;VALUE=DATE:${relativeDate(365)}`,
       `DTEND;VALUE=DATE:${relativeDate(365)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Residency — annual advisor review",
-      "DESCRIPTION:Review residency position annually with a tax advisor qualified in each country.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:d183-uk-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270131"}`,
-      `DTEND;VALUE=DATE:${"20270131"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:UK SRT — 31 January",
-      "DESCRIPTION:Self-assessment non-residence return due.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:d183-au-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20261031"}`,
-      `DTEND;VALUE=DATE:${"20261031"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:AU — 31 October",
-      "DESCRIPTION:AU individual return due.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:d183-nz-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260707"}`,
-      `DTEND;VALUE=DATE:${"20260707"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:NZ IR3 — 7 July",
-      "DESCRIPTION:NZ departure return due.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:d183-us-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270615"}`,
-      `DTEND;VALUE=DATE:${"20270615"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:US citizens — 15 June (expat extension)",
-      "DESCRIPTION:US 1040 for citizens/green card holders abroad.",
+      "SUMMARY:U.S. presence — annual advisor review",
+      "DESCRIPTION:Review the weighted three-year count and any excluded days with a U.S. tax advisor.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -288,14 +223,14 @@ export default function SuccessPlan() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your Global Residency Strategy — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your U.S. Presence Documentation System — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "Your";
+  const greeting = firstName !== "there" ? `${firstName}` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -317,18 +252,18 @@ export default function SuccessPlan() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your Global Residency Strategy · $147
+            Payment confirmed · Your U.S. Presence Documentation System · $147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Global Residency Strategy
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}U.S. Presence Documentation System
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
           {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 31 December 2026</span>
-            <span className="font-mono text-sm font-bold text-white">31 Dec 2026</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to Your income tax return due date</span>
+            <span className="font-mono text-sm font-bold text-white">With your return</span>
           </div>
           )}
         </div>
@@ -338,7 +273,7 @@ export default function SuccessPlan() {
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
             <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention rules</p>
+            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against IRS rules</p>
           </div>
         )}
 
@@ -358,13 +293,13 @@ export default function SuccessPlan() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your Global (cross-border residency tests) National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention position
+                Your United States (IRS Substantial Presence Test) IRS position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["residencyStatus","dayCountAnalysis","tiesAssessment","propertyPosition","departureComplianceStatus","filingObligations"] as string[]).map(key => {
+                {(["residencyStatus","dayCountAnalysis","currentYearMinimumCheck","excludedDaysAssessment","form8843Position","filingObligations"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -387,7 +322,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 31 December 2026
+                  What to do — in order — before Form 8843 due with the income tax return
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
@@ -462,56 +397,20 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Residency — quarterly evidence check</p>
-                    <p className="text-xs text-neutral-500">Pull flight records, bank/utility statements, and day-count log quarterly.</p>
+                    <p className="text-sm font-semibold text-neutral-900">U.S. presence — quarterly evidence check</p>
+                    <p className="text-xs text-neutral-500">Pull flight records and entry/exit stamps and update the three-year day-count log.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    This week
+                    In 90 days
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Residency — annual advisor review</p>
-                    <p className="text-xs text-neutral-500">Review residency position annually with a tax advisor qualified in each country.</p>
+                    <p className="text-sm font-semibold text-neutral-900">U.S. presence — annual advisor review</p>
+                    <p className="text-xs text-neutral-500">Review the weighted three-year count and any excluded days with a U.S. tax advisor.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    This week
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">UK SRT — 31 January</p>
-                    <p className="text-xs text-neutral-500">Self-assessment non-residence return due.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Jan 2027
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">AU — 31 October</p>
-                    <p className="text-xs text-neutral-500">AU individual return due.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Oct 2026
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">NZ IR3 — 7 July</p>
-                    <p className="text-xs text-neutral-500">NZ departure return due.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    7 Jul 2026
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">US citizens — 15 June (expat extension)</p>
-                    <p className="text-xs text-neutral-500">US 1040 for citizens/green card holders abroad.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    15 Jun 2027
+                    In 365 days
                   </span>
                 </div>
               </div>
@@ -530,7 +429,7 @@ export default function SuccessPlan() {
                 Everything you need — in one place
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
-                Each document is built around your specific National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention position.
+                Each document is built around your specific IRS position.
                 Start with File 02 — it has your exact numbers.
                 Files 06–08 are exclusive to this plan.
               </p>
@@ -567,7 +466,7 @@ export default function SuccessPlan() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                {deadlineLive ? `${daysToDeadline} days to 31 December 2026.` : ""}
+                {deadlineLive ? `${daysToDeadline} days to Your income tax return due date.` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -606,9 +505,9 @@ export default function SuccessPlan() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
-            Always consult a qualified Global (cross-border residency tests) tax adviser before making financial decisions.
-            Based on National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention guidance April 2026.{" "}
-            <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Statutory Residence Test (UK)</a> · <a href="https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency" target="_blank" rel="noopener noreferrer" className="underline">ATO — Your tax residency (Australia)</a>
+            Always consult a qualified United States (IRS Substantial Presence Test) tax adviser before making financial decisions.
+            Based on IRS guidance August 2026.{" "}
+            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="underline">IRS — Substantial Presence Test (US)</a> · <a href="/api/rules/day-183-rule" target="_blank" rel="noopener noreferrer" className="underline">Machine-readable JSON rules</a>
           </p>
         </div>
 

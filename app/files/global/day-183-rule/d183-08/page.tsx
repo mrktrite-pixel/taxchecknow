@@ -49,7 +49,7 @@ export default function Day183RuleFile08() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">Global (cross-border residency tests) · 183-Day Rule Reality Check</span>
+            <span className="hidden sm:block">United States (IRS Substantial Presence Test) · 183-Day Rule Reality Check</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,7 +62,7 @@ export default function Day183RuleFile08() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/global/day-183-rule/d183-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Multi-Country Overlap Analysis</a></div>
+          <div><a href="/files/global/day-183-rule/d183-07" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 07: Closer Connection Exception Brief</a></div>
           <span className="font-mono">File 08 of 8</span>
           <div><a href="/nomad/check/183-day-rule" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to 183-Day Rule Reality Check →</a></div>
         </div>
@@ -74,10 +74,10 @@ export default function Day183RuleFile08() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention · UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)
+              🏳️ IRS · US IRC §7701(b) — Substantial Presence Test
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: August 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 08 of 8
@@ -87,7 +87,7 @@ export default function Day183RuleFile08() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 YEAR-END BOUNDARY: 31 December 2026
+              🔴 PER-FILER: Your income tax return due date
             </span>
             <a href="/nomad/check/183-day-rule"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -101,7 +101,7 @@ export default function Day183RuleFile08() {
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
             Audit Defence Documentation
           </h1>
-          <p className="text-neutral-500 text-sm">Evidence file to maintain for residency position.</p>
+          <p className="text-neutral-500 text-sm">The evidence file behind a U.S. day count and every excluded day in it.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function Day183RuleFile08() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Audit-Ready Evidence Pack (annual)</h2><ul class="checklist"><li>Passport with entry/exit stamps for each country</li><li>Flight records (airline or credit card statements)</li><li>Day-count spreadsheet with supporting proof</li><li>Lease or title for home in new country</li><li>Utility bills showing new address</li><li>Bank statements with new country address</li><li>Employment contracts / business registration in new country</li><li>Family location evidence (spouse/children schooling, medical registration)</li><li>Departure return / formal notification to prior country authority</li><li>Tax returns filed in new country</li><li>Treaty position forms where applicable (US 8833, UK DT-Individual, etc.)</li></ul><div class="warning-box"><strong>Retention:</strong> 7 years minimum from the filing date. Residency challenges often emerge years after the relevant tax year.</div>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Audit-Ready Evidence Pack (annual)</h2><ul class="checklist"><li>Passport with U.S. entry and exit stamps</li><li>Flight records (airline confirmations or card statements) for every U.S. arrival and departure</li><li>Day-count spreadsheet for the current year and the two years before it, with the weighting shown</li><li>Transit evidence: itineraries and boarding records showing both endpoints outside the U.S. and elapsed time under 24 hours</li><li>Crew documentation and voyage records, where foreign-vessel days are excluded</li><li>Evidence of the foreign residence and the regular commuting pattern, where commuter days are excluded</li><li>Medical records establishing that the condition arose while you were in the United States</li><li>Visa and status documents for any exempt-individual days</li><li>Filed Form 8843 with proof of the filing date</li><li>Tax home and closer-connection evidence, where that exception is claimed</li></ul><div class="warning-box"><strong>Retention:</strong> the burden of showing a day does not count is yours, and a day count is challenged long after the year it covers. Keep the pack for at least seven years from the filing date.</div>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function Day183RuleFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your 183-Day Residency Reality Check</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Substantial Presence Position</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function Day183RuleFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">Country-Specific Residency Test Summary</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Three-Year Day Count Worksheet</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function Day183RuleFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Ties Severance Checklist</span>
+                <span className="text-sm font-semibold text-neutral-950">Excluded Days Checklist</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +157,7 @@ export default function Day183RuleFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Departure Compliance Checklist</span>
+                <span className="text-sm font-semibold text-neutral-950">Form 8843 Filing Brief</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -166,7 +166,7 @@ export default function Day183RuleFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">05</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Accountant Brief — Residency Exit</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Accountant Brief — U.S. Presence</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -175,7 +175,7 @@ export default function Day183RuleFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Full Residency Exit Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Full U.S. Presence Position<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -184,7 +184,7 @@ export default function Day183RuleFile08() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Country Overlap Analysis<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Closer Connection Exception Brief<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -204,8 +204,8 @@ export default function Day183RuleFile08() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
-            Based on National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention guidance April 2026.
+            Always consult a qualified United States (IRS Substantial Presence Test) tax adviser for your personal situation.
+            Based on IRS guidance August 2026.
           </p>
         </div>
 
@@ -224,8 +224,8 @@ export default function Day183RuleFile08() {
             <a href="/nomad/check/183-day-rule" className="hover:text-neutral-900 transition">
               ← Back to 183-Day Rule Reality Check
             </a>
-            <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Statutory Residence Test (UK) ↗</a>
-            <a href="https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Your tax residency (Australia) ↗</a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Substantial Presence Test (US) ↗</a>
+            <a href="/api/rules/day-183-rule" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Machine-readable JSON rules ↗</a>
           </div>
         </div>
       </footer>

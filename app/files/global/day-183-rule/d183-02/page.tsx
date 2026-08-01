@@ -49,7 +49,7 @@ export default function Day183RuleFile02() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">Global (cross-border residency tests) · 183-Day Rule Reality Check</span>
+            <span className="hidden sm:block">United States (IRS Substantial Presence Test) · 183-Day Rule Reality Check</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function Day183RuleFile02() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/global/day-183-rule/d183-01" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 01: Your 183-Day Residency Reality Check</a></div>
+          <div><a href="/files/global/day-183-rule/d183-01" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 01: Your Substantial Presence Position</a></div>
           <span className="font-mono">File 02 of 8</span>
-          <div><a href="/files/global/day-183-rule/d183-03" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 03: Ties Severance Checklist →</a></div>
+          <div><a href="/files/global/day-183-rule/d183-03" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 03: Excluded Days Checklist →</a></div>
         </div>
       </div>
 
@@ -74,10 +74,10 @@ export default function Day183RuleFile02() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention · UK Finance Act 2013 Schedule 45 (SRT) · AU ITAA 1936 s6(1) · NZ Income Tax Act 2007 s YD 1 · Canada Income Tax Act s250 · US IRC §7701(b) (Substantial Presence Test)
+              🏳️ IRS · US IRC §7701(b) — Substantial Presence Test
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: August 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 02 of 8
@@ -87,7 +87,7 @@ export default function Day183RuleFile02() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 YEAR-END BOUNDARY: 31 December 2026
+              🔴 PER-FILER: Your income tax return due date
             </span>
             <a href="/nomad/check/183-day-rule"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -99,9 +99,9 @@ export default function Day183RuleFile02() {
             183-Day Rule Reality Check · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Country-Specific Residency Test Summary
+            Your Three-Year Day Count Worksheet
           </h1>
-          <p className="text-neutral-500 text-sm">Day thresholds, ties, and override provisions for UK / AU / NZ / CA / US.</p>
+          <p className="text-neutral-500 text-sm">The weighting applied year by year, with the arithmetic set out.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function Day183RuleFile02() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Test Comparison</h2><table><tr><th>Country</th><th>Primary test</th><th>Lowest-day trigger</th></tr><tr><td>UK</td><td>Statutory Residence Test</td><td>16 days (with 4 UK ties)</td></tr><tr><td>Australia</td><td>Resides + domicile + 183-day</td><td>0 days (domicile test can still apply)</td></tr><tr><td>New Zealand</td><td>183-day + permanent place of abode</td><td>0 days (PPOA test)</td></tr><tr><td>Canada</td><td>Factual residence</td><td>No day threshold — ties-based</td></tr><tr><td>US</td><td>Substantial presence + citizenship</td><td>Weighted day count OR citizen (always)</td></tr></table>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Weighted Day Count</h2><table><tr><th>Year</th><th>Days physically present in the U.S.</th><th>Weight</th><th>Counts as</th></tr><tr><td>Current year</td><td>your count</td><td>All days</td><td>days × 1</td></tr><tr><td>Year before</td><td>your count</td><td>One third</td><td>days ÷ 3</td></tr><tr><td>Two years before</td><td>your count</td><td>One sixth</td><td>days ÷ 6</td></tr><tr><td colspan="3"><strong>Weighted three-year total</strong></td><td><strong>≥ 183?</strong></td></tr></table><div class="warning-box"><strong>Check the current-year minimum separately.</strong> The weighted total does nothing on its own — you must also have at least 31 days of U.S. presence in the current year. 25 days this year and 330 in each of the two prior years gives 190 weighted days and still does not meet the test.</div><p>Count only days you were physically present. Excluded days come out before the weighting is applied — see document 03.</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function Day183RuleFile02() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your 183-Day Residency Reality Check</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Substantial Presence Position</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -138,7 +138,7 @@ export default function Day183RuleFile02() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">02</span>
-                <span className="text-sm font-semibold text-white">Country-Specific Residency Test Summary</span>
+                <span className="text-sm font-semibold text-white">Your Three-Year Day Count Worksheet</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -147,7 +147,7 @@ export default function Day183RuleFile02() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Ties Severance Checklist</span>
+                <span className="text-sm font-semibold text-neutral-950">Excluded Days Checklist</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -156,7 +156,7 @@ export default function Day183RuleFile02() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Departure Compliance Checklist</span>
+                <span className="text-sm font-semibold text-neutral-950">Form 8843 Filing Brief</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -165,7 +165,7 @@ export default function Day183RuleFile02() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">05</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Accountant Brief — Residency Exit</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Accountant Brief — U.S. Presence</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -174,7 +174,7 @@ export default function Day183RuleFile02() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Full Residency Exit Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Full U.S. Presence Position<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +183,7 @@ export default function Day183RuleFile02() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Country Overlap Analysis<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Closer Connection Exception Brief<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -204,8 +204,8 @@ export default function Day183RuleFile02() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
-            Based on National tax authorities (HMRC / ATO / IRD NZ / CRA / IRS) + OECD Model Tax Convention guidance April 2026.
+            Always consult a qualified United States (IRS Substantial Presence Test) tax adviser for your personal situation.
+            Based on IRS guidance August 2026.
           </p>
         </div>
 
@@ -224,8 +224,8 @@ export default function Day183RuleFile02() {
             <a href="/nomad/check/183-day-rule" className="hover:text-neutral-900 transition">
               ← Back to 183-Day Rule Reality Check
             </a>
-            <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Statutory Residence Test (UK) ↗</a>
-            <a href="https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Your tax residency (Australia) ↗</a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Substantial Presence Test (US) ↗</a>
+            <a href="/api/rules/day-183-rule" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Machine-readable JSON rules ↗</a>
           </div>
         </div>
       </footer>

@@ -1,0 +1,298 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "The Substantial Presence Test determines whether a foreign national is treated as a U.S. resident for tax purposes based on physical presence in the U.S. over a 3-year lookback period. To meet the test, a person must be present at least 31 days in the current year and at least 183 days over the 3-year period using a weighted day-count formula (all current-year days, 1/3 of prior-year days, 1/6 of days from the year before that). The IRS example illustrates a case where 120 days in each of three years yields a weighted total of 180 days — just below the 183-day threshold — resulting in non-resident status for the current year.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_scope",
+      "text": "Are you a non-citizen trying to determine whether you are treated as a U.S. resident alien for federal income tax purposes under the Substantial Presence Test?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Yes — I am a non-citizen and want to know my U.S. tax residency status",
+          "value": "in_scope",
+          "flags": [
+            "q1_scope:in_scope"
+          ]
+        },
+        {
+          "label": "No — I am a U.S. citizen or permanent resident (green card holder)",
+          "value": "citizen_or_pr",
+          "flags": [
+            "q1_scope:citizen_or_pr"
+          ]
+        },
+        {
+          "label": "I'm not sure whether this test applies to my situation",
+          "value": "unsure_scope",
+          "flags": [
+            "q1_scope:unsure_scope"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_current_year_days",
+      "text": "Were you physically present in the United States on at least 31 days during the current calendar year?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_scope:in_scope"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — I was present at least 31 days in the current year",
+          "value": "meets_31",
+          "flags": [
+            "q2_current_year_days:meets_31"
+          ]
+        },
+        {
+          "label": "No — I was present fewer than 31 days in the current year",
+          "value": "below_31",
+          "flags": [
+            "q2_current_year_days:below_31"
+          ]
+        },
+        {
+          "label": "I'm not sure how many days I was present in the current year",
+          "value": "unsure_current",
+          "flags": [
+            "q2_current_year_days:unsure_current"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_day_type",
+      "text": "Do any of your U.S. days involve situations that may affect how they are counted — such as days spent in transit through the U.S., partial days of arrival or departure, or other ambiguous circumstances?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2_current_year_days:meets_31"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — some of my days involve transit, partial days, or other ambiguous situations",
+          "value": "gray_days",
+          "flags": [
+            "q3_day_type:gray_days"
+          ]
+        },
+        {
+          "label": "No — all my U.S. days are straightforward full days of physical presence",
+          "value": "clean_days",
+          "flags": [
+            "q3_day_type:clean_days"
+          ]
+        },
+        {
+          "label": "I'm not sure whether any of my days fall into a special category",
+          "value": "unsure_day_type",
+          "flags": [
+            "q3_day_type:unsure_day_type"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4_weighted_total",
+      "text": "Have you calculated your weighted 3-year day count — counting all days in the current year, 1/3 of days in the first prior year, and 1/6 of days in the second prior year — and do you know whether your total reaches 183 days?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q3_day_type:clean_days"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — my weighted 3-year total is 183 days or more",
+          "value": "meets_183",
+          "flags": [
+            "q4_weighted_total:meets_183"
+          ]
+        },
+        {
+          "label": "Yes — my weighted 3-year total is below 183 days",
+          "value": "below_183",
+          "flags": [
+            "q4_weighted_total:below_183"
+          ]
+        },
+        {
+          "label": "I have not calculated my weighted total yet, or I'm not sure of the result",
+          "value": "unsure_weighted",
+          "flags": [
+            "q4_weighted_total:unsure_weighted"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5_documentation",
+      "text": "Do you have documentary evidence (such as flight records, credit card statements, or calendars) to support your day count if questioned by the IRS?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q4_weighted_total:meets_183"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — I have records that can support my day count",
+          "value": "has_docs",
+          "flags": [
+            "q5_documentation:has_docs"
+          ]
+        },
+        {
+          "label": "No — I do not have documentation or I am unsure what records I need",
+          "value": "no_docs",
+          "flags": [
+            "q5_documentation:no_docs"
+          ]
+        },
+        {
+          "label": "I'm not sure whether my records are sufficient",
+          "value": "unsure_docs",
+          "flags": [
+            "q5_documentation:unsure_docs"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "meets-substantial-presence-resident",
+      "when": {
+        "any": [
+          "q5_documentation:has_docs"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I meet the Substantial Presence Test — I am treated as a U.S. resident for tax",
+      "result_copy": "Based on your answers, there is an indicated signal that you meet the Substantial Presence Test and may be treated as a U.S. resident alien for federal income tax purposes for the current year. Review recommended. The test requires physical presence on at least 31 days during the current year, and at least 183 days during the 3-year period that includes the current year and the 2 years immediately before that, counting: all the days you were present in the current year, 1/3 of the days you were present in the first year before the current year, and 1/6 of the days you were present in the second year before the current year. You indicated your weighted total meets or exceeds 183 days and that you have supporting documentation. Consult a qualified tax professional to confirm your filing status.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_3"
+      ]
+    },
+    {
+      "id": "does-not-meet-substantial-presence-nonresident",
+      "when": {
+        "any": [
+          "q2_current_year_days:below_31",
+          "q4_weighted_total:below_183"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I do NOT meet the Substantial Presence Test — I remain a nonresident alien for tax",
+      "result_copy": "Based on your answers, there is an indicated signal that you do NOT meet the Substantial Presence Test and may remain a nonresident alien for federal income tax purposes for the current year. Review recommended. Either your current-year presence fell below 31 days, or your weighted 3-year total fell below 183 days. For example, being present 120 days in each of three years produces a weighted total of 180 days (120 current year + 40 from first prior year at 1/3 of 120 + 20 from second prior year at 1/6 of 120), which falls below the 183-day threshold. Consult a qualified tax professional to confirm your nonresident filing status.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_4",
+        "fig_6",
+        "fig_7"
+      ]
+    },
+    {
+      "id": "borderline-day-count-uncertain",
+      "when": {
+        "any": [
+          "q4_weighted_total:unsure_weighted"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure whether my day count meets or misses the 183-day threshold",
+      "result_copy": "Based on your answers, your weighted 3-year day count relative to the 183-day threshold has not been established. You need to calculate your actual days of presence for the current year and the 2 prior years, apply the weighting formula (all current-year days + 1/3 of first prior year days + 1/6 of second prior year days), and compare the result to the 183-day threshold. You must also confirm you were present at least 31 days in the current year. Because auditors scrutinize borderline cases, gather documentary evidence before determining your filing status. Consult a qualified tax professional if your count is close to the threshold.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "documenting-days-for-audit-defense",
+      "when": {
+        "any": [
+          "q5_documentation:no_docs",
+          "q5_documentation:unsure_docs"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How to document and prove my U.S. days of presence (audit defense)",
+      "result_copy": "Based on your answers, you may meet the Substantial Presence Test but lack confirmed documentation to support your day count. Because the Substantial Presence Test turns entirely on physical presence, records supporting your count of days against the 31-day current-year minimum and the 183-day weighted 3-year threshold are important for audit defense. Review recommended. Consult a qualified tax professional about what records to gather and maintain.",
+      "figure_ids": []
+    },
+    {
+      "id": "gray-area-days-transit-ambiguous",
+      "when": {
+        "any": [
+          "q3_day_type:gray_days",
+          "q3_day_type:unsure_day_type"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I have days in transit, partial days, or ambiguous situations — how do I count them?",
+      "result_copy": "Based on your answers, some of your U.S. days may involve transit, partial days, or other ambiguous situations that affect how they are counted toward the 31-day current-year minimum and the 183-day weighted 3-year threshold. Review recommended. You need to determine which categories of days are included or excluded under the Substantial Presence Test rules before calculating your weighted total. Consult IRS guidance and a qualified tax professional for days that do not fit standard patterns.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1_scope:citizen_or_pr"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This test does not apply to U.S. citizens or green card holders",
+      "result_copy": "The Substantial Presence Test decides whether a non-citizen is treated as a U.S. resident for tax purposes. If you are a U.S. citizen or a lawful permanent resident (green card holder), it does not apply to you — but not because you are outside the U.S. tax net. Citizens and green card holders are taxed on worldwide income regardless of how many days they spend in the United States, and regardless of where they live. A day count will not change that. If you are trying to reduce or exit that obligation, the question is expatriation or treaty relief, not day counting, and it is worth a conversation with a qualified U.S. tax professional.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1_scope:unsure_scope",
+          "q2_current_year_days:unsure_current"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your position needs a closer look",
+      "result_copy": "Your answers do not yet establish your U.S. tax residency position — either whether this test applies to you at all, or how many days you were physically present in the current year. Both matter: the Substantial Presence Test requires at least 31 days of presence in the current year AND a weighted three-year total of at least 183 days, counting all days in the current year, one third of the days in the year before, and one sixth of the days in the year before that. Some days may not count at all — days in transit through the U.S. under 24 hours, days as a crew member of a foreign vessel, regular commuting days from Canada or Mexico, days you could not leave because of a medical condition, and days as an exempt individual. Establishing your day count is the first step, and a short personalised review sets it out.",
+      "figure_ids": []
+    }
+  ]
+}

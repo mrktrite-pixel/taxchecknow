@@ -216,15 +216,6 @@ export default function SuccessAssess() {
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:nrls-july-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260731"}`,
-      `DTEND;VALUE=DATE:${"20260731"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:UK payment on account — 31 July",
-      "DESCRIPTION:Second payment on account for current tax year.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
       `UID:nrls-oct-${Date.now()}@taxchecknow.com`,
       `DTSTART;VALUE=DATE:${"20261031"}`,
       `DTEND;VALUE=DATE:${"20261031"}`,
@@ -398,15 +389,6 @@ export default function SuccessAssess() {
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     31 Jan 2027
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">UK payment on account — 31 July</p>
-                    <p className="text-xs text-neutral-500">Second payment on account for current tax year.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Jul 2026
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">

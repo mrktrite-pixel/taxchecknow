@@ -33,6 +33,23 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["daspStatus", "taxByVisaClass", "paymentTimeline", "idDocRequirements", "unclaimedSuperRisk", "confidenceLevel", "firstAction"],
     tier2: ["daspStatus", "taxByVisaClass", "taxedVsUntaxedBreakdown", "paymentTimeline", "idDocRequirements", "unclaimedSuperRisk", "residencyInteraction", "superBalanceStrategy", "adviserDecisionFramework", "returnPlanningNote", "nextStepsCalendar", "strongestRiskTrigger", "confidenceLevel", "firstAction"],
   },
+  // ⚠ THE KEY IS "183-day-rule", NOT THE CONFIG'S id "day-183-rule". THIS IS DELIBERATE.
+  // This map is only ever read by the webhook, as getAssessmentFields(delivery.productId, tier)
+  // (app/api/stripe/webhook/route.ts:203), so the key that can be looked up is the DELIVERY_MAP
+  // productId — and this is one of the products whose DELIVERY_MAP productId ("183-day-rule",
+  // route.ts:70-71) differs from its config id ("day-183-rule"). For the two entries above the
+  // two names happen to coincide, which is why the distinction has not come up before.
+  // Keyed on the config id this entry would parse, typecheck and never once be read.
+  // Same mismatch class that assess-core.ts:33 RULES_SLUG already maps for seven products —
+  // it carries "183-day-rule" → "day-183-rule" so the corpus fetch resolves, which is why the
+  // webhook path grounds correctly today even though it was falling back to GENERIC_FIELDS.
+  // Lists READ OUT OF cole/config/nomad-03-183-day-rule.ts (tier1/tier2AssessmentFields) and
+  // asserted element-by-element against the `fields:` arrays the two emitted success pages
+  // actually POST — 8 and 13, identical on both sides.
+  "183-day-rule": {
+    tier1: ["residencyStatus", "dayCountAnalysis", "currentYearMinimumCheck", "excludedDaysAssessment", "form8843Position", "filingObligations", "riskLevel", "immediateActions"],
+    tier2: ["residencyStatus", "dayCountAnalysis", "currentYearMinimumCheck", "excludedDaysAssessment", "form8843Position", "filingObligations", "riskLevel", "immediateActions", "priorYearCountReview", "exclusionEvidenceStrategy", "closerConnectionAssessment", "recordKeepingSystem", "auditDefenceDocumentation"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */

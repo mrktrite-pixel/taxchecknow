@@ -28,6 +28,13 @@ export interface ProductDeclarations {
 export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclarations>> = {
   "taxchecknow": {
     "day-183-rule": {
+          "temporal": {
+                "kind": "unresolvable",
+                "reason": "act_by_date_is_per_taxpayer_and_uncaptured",
+                "jurisdiction": "US",
+                "domain": "us_tax_residency",
+                "label": "Form 8843 due with the income tax return"
+          },
           "nurture": [
                 {
                       "track": "standard_v1",
