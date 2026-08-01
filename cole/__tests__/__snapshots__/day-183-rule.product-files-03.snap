@@ -49,7 +49,7 @@ export default function Day183RuleFile03() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">Global (cross-border residency tests) · 183-Day Rule Reality Check</span>
+            <span className="hidden sm:block">United States (IRS Substantial Presence Test) · 183-Day Rule Reality Check</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function Day183RuleFile03() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/global/day-183-rule/d183-02" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 02: Country-Specific Residency Test Summary</a></div>
+          <div><a href="/files/global/day-183-rule/d183-02" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 02: Your Three-Year Day Count Worksheet</a></div>
           <span className="font-mono">File 03 of 8</span>
-          <div><a href="/files/global/day-183-rule/d183-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 04: Departure Compliance Checklist →</a></div>
+          <div><a href="/files/global/day-183-rule/d183-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 04: Form 8843 Filing Brief →</a></div>
         </div>
       </div>
 
@@ -99,9 +99,9 @@ export default function Day183RuleFile03() {
             183-Day Rule Reality Check · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Ties Severance Checklist
+            Excluded Days Checklist
           </h1>
-          <p className="text-neutral-500 text-sm">What to sever in each country to establish clean non-residency.</p>
+          <p className="text-neutral-500 text-sm">The five categories of day that do not count, and what each one requires.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function Day183RuleFile03() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Ties to Sever</h2><ul class="checklist"><li><strong>Property:</strong> sell, transfer, or end lease</li><li><strong>Family:</strong> spouse/partner and dependants relocate</li><li><strong>Employment:</strong> resign or move employer</li><li><strong>Bank accounts:</strong> close or move primary banking</li><li><strong>Memberships:</strong> clubs, political, social</li><li><strong>Utilities:</strong> end contracts (verifies no home)</li><li><strong>Vehicle:</strong> sell or transfer registration</li><li><strong>Drivers licence:</strong> surrender or exchange</li><li><strong>Health insurance:</strong> end coverage</li><li><strong>Professional registrations:</strong> maintain only where mobile/non-resident compatible</li></ul><div class="info-box"><strong>Retention:</strong> document each severance with dated evidence. Challenges to non-residency often emerge years later.</div>` }}
+          dangerouslySetInnerHTML={{ __html: `<h2>Days That Do Not Count</h2><ul class="checklist"><li><strong>Transit under 24 hours:</strong> days in transit through the United States of less than 24 hours while travelling between two places outside it</li><li><strong>Foreign vessel crew:</strong> days as a regular crew member of a foreign vessel travelling between the United States and a foreign country</li><li><strong>Regular commuters:</strong> days you regularly commute to work in the United States from a residence in Canada or Mexico</li><li><strong>Medical condition:</strong> days you could not leave the United States because of a medical condition that arose while you were there</li><li><strong>Exempt individuals:</strong> days present as a student, teacher or trainee</li></ul><div class="warning-box"><strong>Two of these depend on a filing.</strong> Excluding days as an exempt individual, or for a medical condition that arose while you were in the U.S., requires Form 8843 filed by the due date for your income tax return. Filed late, the IRS position is that you cannot exclude those days at all.</div><div class="info-box"><strong>Evidence:</strong> the burden of showing a day does not count is yours. Keep the itinerary, crew documentation, commuting evidence or medical records that establish each excluded day, dated.</div>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function Day183RuleFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your 183-Day Residency Reality Check</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Substantial Presence Position</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function Day183RuleFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">Country-Specific Residency Test Summary</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Three-Year Day Count Worksheet</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -147,7 +147,7 @@ export default function Day183RuleFile03() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">03</span>
-                <span className="text-sm font-semibold text-white">Ties Severance Checklist</span>
+                <span className="text-sm font-semibold text-white">Excluded Days Checklist</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -156,7 +156,7 @@ export default function Day183RuleFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Departure Compliance Checklist</span>
+                <span className="text-sm font-semibold text-neutral-950">Form 8843 Filing Brief</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -165,7 +165,7 @@ export default function Day183RuleFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">05</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Accountant Brief — Residency Exit</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Accountant Brief — U.S. Presence</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -174,7 +174,7 @@ export default function Day183RuleFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Full Residency Exit Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Full U.S. Presence Position<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +183,7 @@ export default function Day183RuleFile03() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Country Overlap Analysis<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Closer Connection Exception Brief<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -204,7 +204,7 @@ export default function Day183RuleFile03() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Global (cross-border residency tests) tax adviser for your personal situation.
+            Always consult a qualified United States (IRS Substantial Presence Test) tax adviser for your personal situation.
             Based on IRS guidance August 2026.
           </p>
         </div>
@@ -224,8 +224,8 @@ export default function Day183RuleFile03() {
             <a href="/nomad/check/183-day-rule" className="hover:text-neutral-900 transition">
               ← Back to 183-Day Rule Reality Check
             </a>
-            <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Statutory Residence Test (UK) ↗</a>
-            <a href="https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Your tax residency (Australia) ↗</a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Substantial Presence Test (US) ↗</a>
+            <a href="/api/rules/day-183-rule" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Machine-readable JSON rules ↗</a>
           </div>
         </div>
       </footer>

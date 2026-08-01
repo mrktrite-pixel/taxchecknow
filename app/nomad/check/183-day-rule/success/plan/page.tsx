@@ -9,57 +9,57 @@ const FILES = [
   {
     "num": "01",
     "slug": "d183-01",
-    "name": "Your 183-Day Residency Reality Check",
-    "desc": "Specific residency outcome against the statutory test of your departure country.",
+    "name": "Your Substantial Presence Position",
+    "desc": "Where your weighted three-year day count lands against the two IRS thresholds.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "d183-02",
-    "name": "Country-Specific Residency Test Summary",
-    "desc": "Day thresholds, ties, and override provisions for UK / AU / NZ / CA / US.",
+    "name": "Your Three-Year Day Count Worksheet",
+    "desc": "The weighting applied year by year, with the arithmetic set out.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "d183-03",
-    "name": "Ties Severance Checklist",
-    "desc": "What to sever in each country to establish clean non-residency.",
+    "name": "Excluded Days Checklist",
+    "desc": "The five categories of day that do not count, and what each one requires.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "d183-04",
-    "name": "Departure Compliance Checklist",
-    "desc": "Formal notifications and filings required per country on departure.",
+    "name": "Form 8843 Filing Brief",
+    "desc": "What Form 8843 supports, when it is due, and what late filing costs you.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "d183-05",
-    "name": "Your Accountant Brief — Residency Exit",
-    "desc": "Questions for your departure-country tax advisor before leaving.",
+    "name": "Your Accountant Brief — U.S. Presence",
+    "desc": "Five questions for a U.S. tax advisor, with why each one matters.",
     "tier": 1
   },
   {
     "num": "06",
     "slug": "d183-06",
-    "name": "Full Residency Exit Strategy",
-    "desc": "Sequential plan for establishing clean non-residency with evidence.",
+    "name": "Full U.S. Presence Position",
+    "desc": "The complete count, the exclusions claimed, and the filing position that follows.",
     "tier": 2
   },
   {
     "num": "07",
     "slug": "d183-07",
-    "name": "Multi-Country Overlap Analysis",
-    "desc": "Where domestic law of multiple countries claims you, how treaties resolve it.",
+    "name": "Closer Connection Exception Brief",
+    "desc": "The remaining route where the day count is met, and what it turns on.",
     "tier": 2
   },
   {
     "num": "08",
     "slug": "d183-08",
     "name": "Audit Defence Documentation",
-    "desc": "Evidence file to maintain for residency position.",
+    "desc": "The evidence file behind a U.S. day count and every excluded day in it.",
     "tier": 2
   }
 ];
@@ -139,12 +139,12 @@ export default function SuccessPlan() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           product_id: "day-183-rule",
-          market:     "Global (cross-border residency tests)",
+          market:     "United States (IRS Substantial Presence Test)",
           authority:  "IRS",
           tier:       2,
           name: name === "there" ? "" : name,
           inputs,
-          fields: ["residencyStatus","dayCountAnalysis","tiesAssessment","propertyPosition","departureComplianceStatus","filingObligations","riskLevel","immediateActions","tiesSeveranceStrategy","departureReturnStrategy","voluntaryDisclosureAssessment","multiCountryOverlapAnalysis","auditDefenceDocumentation"],
+          fields: ["residencyStatus","dayCountAnalysis","currentYearMinimumCheck","excludedDaysAssessment","form8843Position","filingObligations","riskLevel","immediateActions","priorYearCountReview","exclusionEvidenceStrategy","closerConnectionAssessment","recordKeepingSystem","auditDefenceDocumentation"],
         }),
       });
       const data = await res.json();
@@ -156,16 +156,16 @@ export default function SuccessPlan() {
       setAssessment({
         residencyStatus: "Your personalised residencyStatus is being prepared — please refresh in a moment.",
         dayCountAnalysis: "Your personalised dayCountAnalysis is being prepared — please refresh in a moment.",
-        tiesAssessment: "Your personalised tiesAssessment is being prepared — please refresh in a moment.",
-        propertyPosition: "Your personalised propertyPosition is being prepared — please refresh in a moment.",
-        departureComplianceStatus: "Your personalised departureComplianceStatus is being prepared — please refresh in a moment.",
+        currentYearMinimumCheck: "Your personalised currentYearMinimumCheck is being prepared — please refresh in a moment.",
+        excludedDaysAssessment: "Your personalised excludedDaysAssessment is being prepared — please refresh in a moment.",
+        form8843Position: "Your personalised form8843Position is being prepared — please refresh in a moment.",
         filingObligations: "Your personalised filingObligations is being prepared — please refresh in a moment.",
         riskLevel: "Your personalised riskLevel is being prepared — please refresh in a moment.",
         immediateActions: "Your personalised immediateActions is being prepared — please refresh in a moment.",
-        tiesSeveranceStrategy: "Your personalised tiesSeveranceStrategy is being prepared — please refresh in a moment.",
-        departureReturnStrategy: "Your personalised departureReturnStrategy is being prepared — please refresh in a moment.",
-        voluntaryDisclosureAssessment: "Your personalised voluntaryDisclosureAssessment is being prepared — please refresh in a moment.",
-        multiCountryOverlapAnalysis: "Your personalised multiCountryOverlapAnalysis is being prepared — please refresh in a moment.",
+        priorYearCountReview: "Your personalised priorYearCountReview is being prepared — please refresh in a moment.",
+        exclusionEvidenceStrategy: "Your personalised exclusionEvidenceStrategy is being prepared — please refresh in a moment.",
+        closerConnectionAssessment: "Your personalised closerConnectionAssessment is being prepared — please refresh in a moment.",
+        recordKeepingSystem: "Your personalised recordKeepingSystem is being prepared — please refresh in a moment.",
         auditDefenceDocumentation: "Your personalised auditDefenceDocumentation is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact IRS position based on my answers?",
@@ -194,8 +194,8 @@ export default function SuccessPlan() {
       `DTSTART;VALUE=DATE:${relativeDate(90)}`,
       `DTEND;VALUE=DATE:${relativeDate(90)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Residency — quarterly evidence check",
-      "DESCRIPTION:Pull flight records\\, bank/utility statements\\, and day-count log quarterly.",
+      "SUMMARY:U.S. presence — quarterly evidence check",
+      "DESCRIPTION:Pull flight records and entry/exit stamps and update the three-year day-count log.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -203,8 +203,8 @@ export default function SuccessPlan() {
       `DTSTART;VALUE=DATE:${relativeDate(365)}`,
       `DTEND;VALUE=DATE:${relativeDate(365)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:Residency — annual advisor review",
-      "DESCRIPTION:Review residency position annually with a tax advisor qualified in each country.",
+      "SUMMARY:U.S. presence — annual advisor review",
+      "DESCRIPTION:Review the weighted three-year count and any excluded days with a U.S. tax advisor.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -293,13 +293,13 @@ export default function SuccessPlan() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your Global (cross-border residency tests) IRS position
+                Your United States (IRS Substantial Presence Test) IRS position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["residencyStatus","dayCountAnalysis","tiesAssessment","propertyPosition","departureComplianceStatus","filingObligations"] as string[]).map(key => {
+                {(["residencyStatus","dayCountAnalysis","currentYearMinimumCheck","excludedDaysAssessment","form8843Position","filingObligations"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -397,8 +397,8 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Residency — quarterly evidence check</p>
-                    <p className="text-xs text-neutral-500">Pull flight records, bank/utility statements, and day-count log quarterly.</p>
+                    <p className="text-sm font-semibold text-neutral-900">U.S. presence — quarterly evidence check</p>
+                    <p className="text-xs text-neutral-500">Pull flight records and entry/exit stamps and update the three-year day-count log.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     In 90 days
@@ -406,8 +406,8 @@ export default function SuccessPlan() {
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">Residency — annual advisor review</p>
-                    <p className="text-xs text-neutral-500">Review residency position annually with a tax advisor qualified in each country.</p>
+                    <p className="text-sm font-semibold text-neutral-900">U.S. presence — annual advisor review</p>
+                    <p className="text-xs text-neutral-500">Review the weighted three-year count and any excluded days with a U.S. tax advisor.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     In 365 days
@@ -505,9 +505,9 @@ export default function SuccessPlan() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
-            Always consult a qualified Global (cross-border residency tests) tax adviser before making financial decisions.
+            Always consult a qualified United States (IRS Substantial Presence Test) tax adviser before making financial decisions.
             Based on IRS guidance August 2026.{" "}
-            <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Statutory Residence Test (UK)</a> · <a href="https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency" target="_blank" rel="noopener noreferrer" className="underline">ATO — Your tax residency (Australia)</a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="underline">IRS — Substantial Presence Test (US)</a> · <a href="/api/rules/day-183-rule" target="_blank" rel="noopener noreferrer" className="underline">Machine-readable JSON rules</a>
           </p>
         </div>
 

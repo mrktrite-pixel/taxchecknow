@@ -49,7 +49,7 @@ export default function Day183RuleFile05() {
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <a href="/" className="font-bold text-neutral-900">TaxCheckNow</a>
           <div className="flex items-center gap-4 text-sm text-neutral-500">
-            <span className="hidden sm:block">Global (cross-border residency tests) · 183-Day Rule Reality Check</span>
+            <span className="hidden sm:block">United States (IRS Substantial Presence Test) · 183-Day Rule Reality Check</span>
             <button
               onClick={() => window.print()}
               className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 transition">
@@ -62,9 +62,9 @@ export default function Day183RuleFile05() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/global/day-183-rule/d183-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 04: Departure Compliance Checklist</a></div>
+          <div><a href="/files/global/day-183-rule/d183-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 04: Form 8843 Filing Brief</a></div>
           <span className="font-mono">File 05 of 8</span>
-          <div><a href="/files/global/day-183-rule/d183-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 06: Full Residency Exit Strategy →</a></div>
+          <div><a href="/files/global/day-183-rule/d183-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 06: Full U.S. Presence Position →</a></div>
         </div>
       </div>
 
@@ -99,9 +99,9 @@ export default function Day183RuleFile05() {
             183-Day Rule Reality Check · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — Residency Exit
+            Your Accountant Brief — U.S. Presence
           </h1>
-          <p className="text-neutral-500 text-sm">Questions for your departure-country tax advisor before leaving.</p>
+          <p className="text-neutral-500 text-sm">Five questions for a U.S. tax advisor, with why each one matters.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -116,7 +116,7 @@ export default function Day183RuleFile05() {
         {/* CONTENT */}
         <div
           className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<div class="info-box"><strong>Use this brief</strong> with a tax advisor qualified in your departure country BEFORE you leave, not after.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Under the specific statutory test of [my departure country], am I tax resident or non-resident based on my actual facts?</p></div><h3>Question 2</h3><p>What ties remain that could keep me resident — and what severance is needed for confirmed non-residency?</p><h3>Question 3</h3><p>Have I formally notified the tax authority of my departure, and what departure return/form is required?</p><h3>Question 4</h3><p>If I am potentially resident in two countries, does a tax treaty apply, and what does Article 4 tie-breaker say?</p><h3>Question 5</h3><p>If I have been incorrectly filing (or not filing) for prior years, what voluntary disclosure options apply?</p>` }}
+          dangerouslySetInnerHTML={{ __html: `<div class="info-box"><strong>Use this brief</strong> with an advisor qualified in U.S. tax, and bring your travel history with you.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Run my actual travel history through the weighted three-year count — what is my total, and does it reach 183?</p></div><h3>Question 2</h3><p>Was I physically present in the United States on at least 31 days of the current year?</p><h3>Question 3</h3><p>Which of my U.S. days fall into an excluded category, and what evidence do I hold for each?</p><h3>Question 4</h3><p>Do I need to file Form 8843, and by what date for my own filing position?</p><h3>Question 5</h3><p>If the test does treat me as a U.S. resident, does the closer connection exception apply on my facts?</p>` }}
         />
 
         {/* FILE NAVIGATION */}
@@ -130,7 +130,7 @@ export default function Day183RuleFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your 183-Day Residency Reality Check</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Substantial Presence Position</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function Day183RuleFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">Country-Specific Residency Test Summary</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Three-Year Day Count Worksheet</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function Day183RuleFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Ties Severance Checklist</span>
+                <span className="text-sm font-semibold text-neutral-950">Excluded Days Checklist</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +157,7 @@ export default function Day183RuleFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Departure Compliance Checklist</span>
+                <span className="text-sm font-semibold text-neutral-950">Form 8843 Filing Brief</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -165,7 +165,7 @@ export default function Day183RuleFile05() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">05</span>
-                <span className="text-sm font-semibold text-white">Your Accountant Brief — Residency Exit</span>
+                <span className="text-sm font-semibold text-white">Your Accountant Brief — U.S. Presence</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -174,7 +174,7 @@ export default function Day183RuleFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Full Residency Exit Strategy<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Full U.S. Presence Position<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +183,7 @@ export default function Day183RuleFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Multi-Country Overlap Analysis<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Closer Connection Exception Brief<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -204,7 +204,7 @@ export default function Day183RuleFile05() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Global (cross-border residency tests) tax adviser for your personal situation.
+            Always consult a qualified United States (IRS Substantial Presence Test) tax adviser for your personal situation.
             Based on IRS guidance August 2026.
           </p>
         </div>
@@ -224,8 +224,8 @@ export default function Day183RuleFile05() {
             <a href="/nomad/check/183-day-rule" className="hover:text-neutral-900 transition">
               ← Back to 183-Day Rule Reality Check
             </a>
-            <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">HMRC — Statutory Residence Test (UK) ↗</a>
-            <a href="https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Your tax residency (Australia) ↗</a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Substantial Presence Test (US) ↗</a>
+            <a href="/api/rules/day-183-rule" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Machine-readable JSON rules ↗</a>
           </div>
         </div>
       </footer>

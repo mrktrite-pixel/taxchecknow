@@ -53,291 +53,279 @@ function progressPct(): number {
 
 const faqs = [
   {
-    "question": "Is the 183-day rule universal?",
-    "answer": "No. The 183-day threshold exists in several countries as one test among many — but it is not the universal test for tax non-residency. The UK SRT can establish residency at 16 days with 4 UK ties. Australia's domicile test operates regardless of days. New Zealand's permanent place of abode test applies even at 0 days if a home is maintained."
+    "question": "Does staying under 183 days in the U.S. make me a nonresident?",
+    "answer": "Not on its own, because the Substantial Presence Test does not count a single year. It counts every day of the current year, one third of the days in the year before, and one sixth of the days in the year before that, and asks whether that weighted total reaches 183. Someone with 150 U.S. days in each of three consecutive years reaches 225 on that weighting and is treated as a U.S. resident, without ever being close to 183 days in any one year."
   },
   {
-    "question": "Can I be tax resident at 0 days in a country?",
-    "answer": "Yes, in New Zealand and potentially Australia. NZ's permanent place of abode test makes you resident if you maintain a home available for use — regardless of whether you spend any days there. Australia's domicile test can keep you resident if your domicile remains Australian and no permanent place of abode has been established elsewhere."
+    "question": "How exactly is the weighted three-year count calculated?",
+    "answer": "All of your U.S. days in the current year, plus one third of your U.S. days in the year before, plus one sixth of your U.S. days in the year before that. The IRS's own worked example is 120 days in each of three years: 120 + 40 + 20 = 180, which is under 183 and does not meet the test."
   },
   {
-    "question": "What is the UK sufficient ties test?",
-    "answer": "Part of the UK Statutory Residence Test. If you fail the automatic overseas tests and fail the automatic UK tests, residency is determined by days × ties. More UK ties = fewer days needed to trigger residency. At 4 UK ties, as few as 16 days makes you UK resident (if previously UK resident). UK ties: family, accommodation, work (40+ days substantive UK work), 90-day tie (90+ days in either of 2 previous years), country tie."
+    "question": "Is 183 weighted days the only threshold?",
+    "answer": "No — there are two, and both must be met. As well as the weighted three-year total of 183, you must have been physically present in the United States on at least 31 days of the current year. If you were in the U.S. for 25 days this year, the test is not met no matter how many days you spent there in the two earlier years."
   },
   {
-    "question": "What are the UK automatic overseas tests?",
-    "answer": "Three tests, ANY of which (if met) make you NOT UK resident: (1) under 16 days in UK in the tax year (if previously UK resident in any of the 3 prior years); (2) under 46 days in UK in the tax year (if NOT previously UK resident in any of the 3 prior years); (3) full-time work overseas with under 91 UK days and under 31 UK work days."
+    "question": "Which days do not count toward the test?",
+    "answer": "Days in transit through the United States of under 24 hours while travelling between two places outside it; days as a regular crew member of a foreign vessel travelling between the U.S. and a foreign country; days you regularly commute to work in the U.S. from a residence in Canada or Mexico; days you could not leave because of a medical condition that arose while you were in the United States; and days as an exempt individual."
   },
   {
-    "question": "How does the Australian domicile test work?",
-    "answer": "Under ITAA 1936 s6(1), a person whose domicile is Australia is tax resident in Australia UNLESS the ATO is satisfied their permanent place of abode is elsewhere. 'Permanent place of abode' requires evidence: lease or title, settled life, intention. Simply living overseas without establishing a permanent home there is insufficient to end Australian domicile-based residency."
+    "question": "Who is an exempt individual?",
+    "answer": "The exempt-individual categories in this test are students, teachers and trainees. Days present in one of those capacities are excluded from the day count — but the exclusion is not automatic, and it depends on filing Form 8843."
   },
   {
-    "question": "What is the NZ permanent place of abode test?",
-    "answer": "Under Income Tax Act 2007 s YD 1, a person has an NZ permanent place of abode if they maintain a dwelling in NZ that is available for their use on a continuing basis. This makes them NZ tax resident regardless of day count. Leaving NZ does not end residency until the permanent place of abode is given up (sale, lease end, or permanent unavailability)."
+    "question": "What is Form 8843 and when is it due?",
+    "answer": "Form 8843 is what supports excluding days as an exempt individual, or for a medical condition that arose while you were in the United States. It is due by the due date for filing your income tax return. If you do not have to file an income tax return, it is sent on its own to the address in the form's instructions, by that same date."
   },
   {
-    "question": "What is Canada's factual residence test?",
-    "answer": "The primary Canadian residency test. It is fact-based: primary ties (dwelling in Canada, spouse/partner in Canada, dependants in Canada) and secondary ties (other property, social ties, economic ties, drivers licence, health insurance). No statutory day threshold applies to the factual test. Canada also has a deemed-resident rule for 183+ days, which is separate from the factual test."
+    "question": "What happens if I file Form 8843 late?",
+    "answer": "The IRS position is that if you do not timely file Form 8843 you cannot exclude the days you were present as an exempt individual, or because of a medical condition that arose while you were in the U.S. Those days go back into the count, which can move you from nonresident to resident on exactly the same travel history. There is a reasonable-cause let-out where you can show by clear and convincing evidence that you took reasonable actions to become aware of the requirement and to comply."
   },
   {
-    "question": "How does US substantial presence test work?",
-    "answer": "Under IRC §7701(b), a non-citizen is treated as US resident if the weighted sum of days over 3 years exceeds 183: all current year days + 1/3 of prior year days + 1/6 of two-years-prior days. Short example: 120 days each for 3 years = 120 + 40 + 20 = 180, just under. 150 days each = 150 + 50 + 25 = 225, over — US resident. US citizens and green card holders are taxed worldwide regardless."
+    "question": "Do the transit, crew and commuter exclusions also need Form 8843?",
+    "answer": "No. The form requirement attaches to the exempt-individual and medical-condition exclusions. The transit, foreign-vessel-crew and regular-commuter exclusions are part of how the count is defined — but you should still hold the records that establish them, because the burden of showing a day does not count is yours."
   },
   {
-    "question": "What happens if I am resident in two countries under their domestic laws?",
-    "answer": "The applicable bilateral tax treaty resolves the conflict using OECD Model Convention Article 4 tie-breaker: permanent home → centre of vital interests → habitual abode → nationality → mutual agreement. See /nomad/check/tax-treaty-navigator for the full tie-breaker analysis."
+    "question": "What does it mean if the test treats me as a U.S. resident?",
+    "answer": "You are generally taxed on worldwide income and file as a resident, rather than filing as a nonresident on U.S.-source income. That is a materially different filing position, and it is the reason the day count is worth getting right rather than estimating."
   },
   {
-    "question": "How do I formally notify a country of my departure?",
-    "answer": "Country-specific: UK — form P85 + self-assessment non-residence claim + split-year election where applicable; Australia — ATO 'Leaving Australia' statement + update tax profile; New Zealand — IRD cessation notification; Canada — departure return with deemed dispositions; US — Form 8854 for expatriation if renouncing citizenship, otherwise not applicable to citizens. Without formal notification, the domestic authority typically continues to treat you as resident."
+    "question": "What is the closer connection exception?",
+    "answer": "A person who meets the day count under the Substantial Presence Test may still be treated as a nonresident if they have a tax home in another country and a closer connection to that country than to the United States. There is a separate variant of the exception for students. It is an exception to a test you have otherwise met, not a way of avoiding the count."
   },
   {
-    "question": "What are the penalties for incorrectly assuming non-residency?",
-    "answer": "Penalties vary by country. UK: £100 minimum late-filing + daily penalties (up to £900) + 5% of unpaid tax + interest. Australia: $313 per 28 days (up to ~$1,565) + general interest charge + shortfall penalty. New Zealand: late-filing + use-of-money interest + penalty percentages. Canada: late-filing + arrears interest + gross-negligence penalty possible. US: citizens face FBAR penalties $10,000+ per undisclosed foreign account in addition to income tax penalties."
+    "question": "Does this test apply to U.S. citizens and green card holders?",
+    "answer": "No. The Substantial Presence Test decides whether a non-citizen is treated as a U.S. resident for tax purposes. U.S. citizens and lawful permanent residents are taxed on worldwide income regardless of how many days they spend in the United States and regardless of where they live, so a day count does not change their position."
   },
   {
-    "question": "Can voluntary disclosure help if I realise I was still resident?",
-    "answer": "Yes, in most countries. UK: Worldwide Disclosure Facility + Disclosure Services for specific issues. Australia: voluntary disclosure reduces penalties significantly (from up to 75% down to 20% or less). New Zealand: voluntary disclosure reduces shortfall penalty substantially. Canada: Voluntary Disclosures Program (VDP). US: IRS Streamlined Filing Compliance Procedures for non-wilful non-filing. Disclose BEFORE authority contact for best terms."
+    "question": "Does this tell me my residency position in other countries?",
+    "answer": "No. This check covers the U.S. Substantial Presence Test only. Every other country applies its own residency test, and those tests differ from this one and from each other — some do not turn on a day count at all. If more than one country may treat you as resident, that is a separate question and it needs advice covering each country involved."
   }
 ];
 
 const aiCorrections = [
   {
-    "wrong": "ChatGPT says: I stayed under 183 days so I am not tax resident",
-    "correct": "Reality: Wrong as a universal rule. The 183-day threshold is used in some countries as one test among many — not as a complete definition of non-residency. The UK SRT can establish UK residency with 16 days if 4 UK ties exist. Australia can maintain residency under the domicile test regardless of days spent there. New Zealand's permanent place of abode test applies independently of any day count."
+    "wrong": "ChatGPT says: I was in the U.S. under 183 days this year, so I am not a U.S. resident",
+    "correct": "Reality: the Substantial Presence Test does not count one year. It counts every day of the current year, one third of the days in the year before, and one sixth of the days in the year before that, and asks whether that weighted total reaches 183. 150 U.S. days in each of three consecutive years produces 225 on that weighting and meets the test, without ever approaching 183 in a single year."
   },
   {
-    "wrong": "ChatGPT says: I left the country so I stopped being tax resident",
-    "correct": "Reality: Wrong until ties are severed. Physical departure does not end tax residency. Residency ends when the legal tests for residency no longer apply — which requires severance of the ties that created it. A person who leaves but keeps their home available, maintains their family there, and retains significant economic ties is likely still resident in that country."
+    "wrong": "ChatGPT says: reaching 183 weighted days makes you a U.S. resident",
+    "correct": "Reality: there are two thresholds and both must be met. As well as 183 weighted days across three years, you must have been physically present in the United States on at least 31 days of the current year. 25 U.S. days this year does not meet the test however large the two earlier years were."
   },
   {
-    "wrong": "ChatGPT says: I can split my time to stay under the limit in every country",
-    "correct": "Reality: Wrong if ties exist in any of them. Splitting time between countries reduces day counts but does not eliminate ties. A person who spends 100 days in the UK and 100 days in Australia and 165 days elsewhere may be resident in BOTH UK and Australia based on ties — despite being under 183 days in each. Ties-based tests apply regardless of time-splitting strategies."
+    "wrong": "ChatGPT says: every day you are physically in the U.S. counts toward the test",
+    "correct": "Reality: several categories of day are excluded. Days in transit through the United States of under 24 hours between two places outside it, days as a regular crew member of a foreign vessel, days regularly commuting to work from a residence in Canada or Mexico, days you could not leave because of a medical condition that arose while you were in the U.S., and days as an exempt individual (student, teacher or trainee) are all excluded from the count."
   },
   {
-    "wrong": "ChatGPT says: My employer handles my tax residency when I work abroad",
-    "correct": "Reality: Wrong. Employers handle payroll and may advise on the employment tax position — but tax residency is the individual's own responsibility. An employer sending someone to work overseas may handle shadow payroll or tax equalisation — but the underlying residency position, personal income obligations, and filing requirements are personal, not employer, responsibilities."
+    "wrong": "ChatGPT says: excluded days are simply left out of your count",
+    "correct": "Reality: two of the categories are conditional on a filing. Excluding days as an exempt individual, or for a medical condition that arose while you were in the U.S., requires Form 8843 filed by the due date for your income tax return. The IRS position is that if it is not filed on time you cannot exclude those days at all — the same travel history can then produce a resident outcome instead of a nonresident one."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "Under the specific statutory test of [my departure country], am I tax resident or non-resident based on my actual facts (days + ties + home + family + intention)?",
-    "why": "The 183-day rule is one factor. The underlying test must be applied to the full facts. Misapplying the test is the single most common cause of unexpected tax liability after moving abroad."
+    "q": "Run my actual travel history through the weighted three-year count — what is my total, and does it reach 183?",
+    "why": "The count is all of the current year, one third of the year before, and one sixth of the year before that. Most people who assume they are safe have only counted the current year, and the two earlier years are where the total comes from."
   },
   {
-    "q": "What ties remain that could keep me resident — and what would I need to sever to confirm non-residency?",
-    "why": "Ties-based tests require specific severance. A checklist of ties and the actions needed to sever each gives a clear path to confirmed non-residency."
+    "q": "Was I physically present in the United States on at least 31 days of the current year?",
+    "why": "Both thresholds have to be met. If the current-year count is under 31 the test is not met at all, and the weighted total stops mattering. It is the fastest question to settle and it is often skipped."
   },
   {
-    "q": "Have I formally notified [my departure country's tax authority] of my departure, and do I need to file a departure return?",
-    "why": "Without formal notification, the authority typically continues to treat you as resident. The specific form/return required varies by country — UK P85, AU departing Australia statement, CA departure return, etc."
+    "q": "Which of my U.S. days fall into an excluded category, and what evidence do I hold for each?",
+    "why": "Transit under 24 hours, foreign-vessel crew days, regular commuting from a residence in Canada or Mexico, medical days, and exempt-individual days come out of the count. The burden of showing a day does not count sits with you, so the evidence matters as much as the category."
   },
   {
-    "q": "If I am potentially resident in two countries, does a tax treaty apply, and what does the Article 4 tie-breaker say?",
-    "why": "Dual residency requires treaty analysis. Without a treaty, double taxation has no automatic relief. With a treaty, the tie-breaker determines primary taxing rights."
+    "q": "Do I need to file Form 8843, and by what date for my own filing position?",
+    "why": "Excluding exempt-individual or medical days depends on Form 8843, due by the due date for your income tax return — which differs between filers. Filed late, the IRS position is that those days cannot be excluded at all."
   },
   {
-    "q": "If I have been incorrectly filing (or not filing) for prior years, what voluntary disclosure options are available and what are the terms?",
-    "why": "Voluntary disclosure is available in most countries with significantly reduced penalties — but only if initiated BEFORE authority contact. Timing matters."
+    "q": "If the test does treat me as a U.S. resident, does the closer connection exception apply to me?",
+    "why": "It is available to some people who meet the day count but have a tax home and a closer connection to another country, with a separate variant for students. It is the remaining route once the count itself is settled, and it needs to be assessed on your facts."
   }
 ];
 
 const workedExamples = [
   {
-    "name": "UK leaver keeps house and family",
-    "setup": "45 UK days; family + home available + 2 ties = 4 UK ties total; not formally notified HMRC",
-    "income": "45 days",
-    "status": "UK RESIDENT — sufficient ties test (16 days × 4 ties)"
+    "name": "Steady 120 days a year",
+    "setup": "120 U.S. days in the current year and in each of the two prior years; no excluded days",
+    "income": "180 days",
+    "status": "NOT A RESIDENT — the IRS's own worked example; 120 + 40 + 20 is under 183"
   },
   {
-    "name": "UK clean exit",
-    "setup": "12 UK days; no family/home; previously UK resident",
-    "income": "12 days",
-    "status": "NON-RESIDENT — automatic overseas test (under 16 days)"
+    "name": "Steady 150 days a year",
+    "setup": "150 U.S. days in the current year and in each of the two prior years; no excluded days",
+    "income": "225 days",
+    "status": "U.S. RESIDENT — 31+ current-year days and 150 + 50 + 25 is over 183"
   },
   {
-    "name": "AU leaver keeps domicile",
-    "setup": "30 AU days; home retained; intention unchanged; spouse stayed in Sydney",
-    "income": "30 days",
-    "status": "AU RESIDENT — domicile test (regardless of days)"
+    "name": "Heavy earlier years, light now",
+    "setup": "25 U.S. days this year; 330 in each of the two prior years",
+    "income": "190 days",
+    "status": "NOT A RESIDENT — the weighted total is met but the 31-day current-year minimum is not"
   },
   {
-    "name": "NZ leaver keeps holiday home",
-    "setup": "0 NZ days all year; Wellington apartment kept available for use",
-    "income": "0 days",
-    "status": "NZ RESIDENT — permanent place of abode test"
+    "name": "Exempt individual, Form 8843 filed late",
+    "setup": "200 U.S. days this year as a student; Form 8843 not filed by the income tax return due date",
+    "income": "200 days",
+    "status": "U.S. RESIDENT — the exempt-individual days cannot be excluded once the form is late"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "United Kingdom",
-    "metric1": "Statutory Residence Test (SRT)",
-    "metric2": "Yes — automatic tests + sufficient ties",
-    "bestMove": "Can be RESIDENT with 16 days if 4 UK ties"
+    "position": "120 / 120 / 120",
+    "metric1": "All of this year + 1/3 of last + 1/6 of the year before",
+    "metric2": "None claimed",
+    "bestMove": "180 weighted — does not meet the test"
   },
   {
-    "position": "Australia",
-    "metric1": "Resides test + domicile + 183-day",
-    "metric2": "Yes — domicile and 'usual place of abode'",
-    "bestMove": "Can be RESIDENT with any days if domicile retained"
+    "position": "150 / 150 / 150",
+    "metric1": "Same weighting, larger numbers",
+    "metric2": "None claimed",
+    "bestMove": "225 weighted — treated as a U.S. resident"
   },
   {
-    "position": "New Zealand",
-    "metric1": "183-day + permanent place of abode",
-    "metric2": "Yes — PPOA applies regardless of days",
-    "bestMove": "Can be RESIDENT at 0 days if home kept"
+    "position": "25 this year / 330 / 330",
+    "metric1": "Current-year minimum is checked first",
+    "metric2": "None claimed",
+    "bestMove": "190 weighted, but under 31 current-year days — does not meet the test"
   },
   {
-    "position": "Canada",
-    "metric1": "Factual residence (ties)",
-    "metric2": "Ties-based primary test; 183 is deemed-resident",
-    "bestMove": "Likely RESIDENT if ties retained; no automatic exit"
+    "position": "200 this year, student",
+    "metric1": "Exempt-individual days may come out of the count",
+    "metric2": "Yes — Form 8843 required",
+    "bestMove": "Excluded only if Form 8843 is filed by the return due date; otherwise counted"
   },
   {
-    "position": "United States",
-    "metric1": "Substantial presence + citizenship",
-    "metric2": "Citizenship overrides all residency tests",
-    "bestMove": "US citizens: worldwide taxation regardless"
+    "position": "Daily commuter from Canada or Mexico",
+    "metric1": "Regular commuting days are excluded outright",
+    "metric2": "Yes — no Form 8843 for this category",
+    "bestMove": "Only the non-commuting days count toward 31 and 183"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "UK",
-    "effect": "Meet automatic overseas test + file form P85 + self-assessment non-residence claim (split-year if mid-year)",
-    "note": "SRT evidence: day count, tie severance, destination country residency proof"
+    "tool": "Transit under 24 hours",
+    "effect": "Days in transit through the United States of less than 24 hours while travelling between two places outside it",
+    "note": "Itinerary, tickets and boarding records establishing both endpoints and the elapsed time"
   },
   {
-    "tool": "Australia",
-    "effect": "Establish permanent place of abode elsewhere + change domicile + intention + ATO departing Australia statement",
-    "note": "ATO evidence: new country residency, permanent home elsewhere, pattern of behaviour"
+    "tool": "Foreign vessel crew",
+    "effect": "Days present as a regular crew member of a foreign vessel travelling between the United States and a foreign country",
+    "note": "Crew documentation and voyage records"
   },
   {
-    "tool": "New Zealand",
-    "effect": "Remove permanent place of abode (sell/end lease; no continuous availability) + 325 days continuously absent",
-    "note": "IRD evidence: disposal of properties, lease terminations, new country PPOA"
+    "tool": "Regular commuter",
+    "effect": "Days regularly commuting to work in the United States from a residence in Canada or Mexico",
+    "note": "Evidence of the foreign residence and of the regular commuting pattern"
   },
   {
-    "tool": "Canada",
-    "effect": "Sever residential ties: primary ties (home, spouse, dependants) + secondary ties (property, social, economic) + departure return",
-    "note": "CRA evidence: departure date, asset dispositions (deemed), new country residency"
+    "tool": "Medical condition",
+    "effect": "Days you could not leave the United States because of a medical condition that arose while you were there",
+    "note": "Form 8843, filed by the due date for your income tax return, supported by medical evidence"
   },
   {
-    "tool": "United States",
-    "effect": "US citizens must RENOUNCE citizenship (exit tax under §877A) to exit worldwide taxation. Green card holders must formally abandon.",
-    "note": "Substantial presence test only applies to non-citizens; citizenship-based taxation continues otherwise"
+    "tool": "Exempt individual",
+    "effect": "Days present as a student, teacher or trainee within the exempt-individual categories",
+    "note": "Form 8843, filed by the due date for your income tax return. Filed late, the days cannot be excluded at all."
   }
 ];
 
 const geoFacts = [
   {
-    "label": "UK — lowest-day-count trigger",
-    "value": "16 days with 4 UK ties (sufficient ties test)"
+    "label": "Current-year minimum",
+    "value": "31 days of U.S. presence in the current year"
   },
   {
-    "label": "UK legal anchor",
-    "value": "Finance Act 2013, Schedule 45"
+    "label": "Weighted three-year threshold",
+    "value": "183 days"
   },
   {
-    "label": "AU — primary test",
-    "value": "Resides test (behaviour + intention), not days"
+    "label": "Current-year weighting",
+    "value": "All days count in full"
   },
   {
-    "label": "AU — domicile override",
-    "value": "Domicile in AU unless permanent place of abode elsewhere"
+    "label": "Prior-year weighting",
+    "value": "One third of the days"
   },
   {
-    "label": "AU legal anchor",
-    "value": "ITAA 1936 s6(1)"
+    "label": "Two-years-prior weighting",
+    "value": "One sixth of the days"
   },
   {
-    "label": "NZ — day test",
-    "value": "183+ days in any 12-month period"
+    "label": "Both thresholds required",
+    "value": "31 current-year days AND 183 weighted — either alone does not meet the test"
   },
   {
-    "label": "NZ — permanent place of abode",
-    "value": "Resident even at 0 days if home kept in NZ"
+    "label": "IRS worked example",
+    "value": "120 + 120 + 120 days → 180 weighted — does not meet the test"
   },
   {
-    "label": "NZ legal anchor",
-    "value": "Income Tax Act 2007 s YD 1"
+    "label": "Excluded — transit",
+    "value": "Under 24 hours in transit between two places outside the United States"
   },
   {
-    "label": "Canada — primary test",
-    "value": "Factual residence based on ties (no day threshold for primary)"
+    "label": "Excluded — foreign vessel crew",
+    "value": "Days as a regular crew member of a foreign vessel"
   },
   {
-    "label": "Canada — deemed resident",
-    "value": "183+ days (different from factual residence)"
+    "label": "Excluded — regular commuters",
+    "value": "Days commuting to U.S. work from a residence in Canada or Mexico"
   },
   {
-    "label": "Canada legal anchor",
-    "value": "Income Tax Act (Canada) s250"
+    "label": "Excluded — medical condition",
+    "value": "Days unable to leave due to a condition that arose while in the U.S."
   },
   {
-    "label": "US — substantial presence",
-    "value": "Weighted: all current year + 1/3 prior year + 1/6 two years prior ≥ 183"
+    "label": "Excluded — exempt individuals",
+    "value": "Student, teacher or trainee"
   },
   {
-    "label": "US — citizenship layer",
-    "value": "US citizens + green card holders: worldwide taxation regardless of days"
+    "label": "Form 8843 requirement",
+    "value": "Required to exclude exempt-individual or medical days; due with the income tax return"
+  },
+  {
+    "label": "Form 8843 filed late",
+    "value": "Those days cannot be excluded"
+  },
+  {
+    "label": "Closer connection exception",
+    "value": "Tax home and closer connection to another country; separate variant for students"
   },
   {
     "label": "US legal anchor",
-    "value": "IRC §7701(b) + §§1, 61"
+    "value": "IRC §7701(b)"
   },
   {
-    "label": "Dual residency resolution",
-    "value": "OECD Model Convention Article 4 tie-breaker (via bilateral treaties)"
+    "label": "Scope of this test",
+    "value": "Determines U.S. residency only — other countries apply their own tests, which differ"
   }
 ];
 
 const sidebarNumbers = [
   {
-    "label": "UK — minimum-day trigger",
-    "value": "16 days + 4 ties"
+    "label": "Current-year minimum",
+    "value": "31 days"
   },
   {
-    "label": "AU — domicile test",
-    "value": "Regardless of days"
+    "label": "Weighted three-year threshold",
+    "value": "183 days"
   },
   {
-    "label": "NZ — PPOA test",
-    "value": "0 days possible"
+    "label": "Prior-year weighting",
+    "value": "One third"
   },
   {
-    "label": "Canada — primary test",
-    "value": "Ties-based, no day threshold"
+    "label": "Two-years-prior weighting",
+    "value": "One sixth"
   }
 ];
 
 const sources = [
   {
-    "title": "HMRC — Statutory Residence Test (UK)",
-    "url": "https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis"
-  },
-  {
-    "title": "ATO — Your tax residency (Australia)",
-    "url": "https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency"
-  },
-  {
-    "title": "IRD NZ — Tax residency status",
-    "url": "https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals"
-  },
-  {
-    "title": "CRA — Determining residence status (Canada)",
-    "url": "https://www.canada.ca/en/revenue-agency/services/tax/technical-information/income-tax/income-tax-folios-index/series-5-international-residency/folio-1-residency/income-tax-folio-s5-f1-c1-determining-individual-s-residence-status.html"
-  },
-  {
     "title": "IRS — Substantial Presence Test (US)",
     "url": "https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test"
-  },
-  {
-    "title": "OECD Model Tax Convention",
-    "url": "https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -347,27 +335,27 @@ const sources = [
 
 const countdownStats = [
   {
-    "label": "UK SRT minimum-day threshold",
-    "value": "16 days",
-    "sub": "with 4 UK ties under sufficient ties test",
+    "label": "Current-year minimum",
+    "value": "31 days",
+    "sub": "days of U.S. presence in the current year before the test can apply at all",
     "red": true
   },
   {
-    "label": "AU domicile test",
-    "value": "Regardless of days",
-    "sub": "maintained unless permanent place of abode elsewhere",
+    "label": "Weighted three-year threshold",
+    "value": "183 days",
+    "sub": "all current-year days + one third of last year + one sixth of the year before",
     "red": true
   },
   {
-    "label": "NZ permanent place of abode",
-    "value": "0 days enough",
-    "sub": "resident if home kept available in NZ",
+    "label": "Prior-year weighting",
+    "value": "1/3 and 1/6",
+    "sub": "the two earlier years still count, at a reduced rate",
     "red": true
   },
   {
-    "label": "Canada factual residence",
-    "value": "Ties-based",
-    "sub": "no day threshold for primary test"
+    "label": "Form 8843",
+    "value": "Due with your return",
+    "sub": "exempt-individual and medical days cannot be excluded if it is filed late"
   }
 ];
 
@@ -407,7 +395,7 @@ export default function Day183RulePage() {
       encodingFormat: "application/json",
       contentUrl: "https://taxchecknow.com/nomad/check/183-day-rule/api/rules/day-183-rule",
     }],
-    spatialCoverage: { "@type": "Place", name: "Global (cross-border residency tests)" },
+    spatialCoverage: { "@type": "Place", name: "United States (IRS Substantial Presence Test)" },
   };
 
   const webAppSchema = {
@@ -434,33 +422,28 @@ export default function Day183RulePage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Identify departure country",
-            "text": "UK / AU / NZ / CA / US / other — determines which statutory test applies to your exit."
+            "name": "Confirm the test applies to you",
+            "text": "The Substantial Presence Test decides whether a non-citizen is treated as a U.S. resident. U.S. citizens and green card holders are taxed on worldwide income regardless of days."
       },
       {
             "@type": "HowToStep",
-            "name": "Enter days in that country",
-            "text": "Past 12 months. Part-days count under most tests."
+            "name": "Enter your current-year U.S. days",
+            "text": "Days physically present in the United States this year. Under 31 and the test is not met, whatever the earlier years hold."
       },
       {
             "@type": "HowToStep",
-            "name": "Count UK ties (if UK selected)",
-            "text": "Family / accommodation / work / 90-day / country tie. Each tie lowers the day threshold needed to make you resident."
+            "name": "Identify any days that do not count",
+            "text": "Transit under 24 hours, foreign vessel crew, regular commuting from Canada or Mexico, medical condition arising in the U.S., or exempt individual."
       },
       {
             "@type": "HowToStep",
-            "name": "Identify property retained",
-            "text": "A permanent home available to you is a strong tie in most countries."
+            "name": "Enter the weighted three-year total",
+            "text": "All of this year, one third of last year, one sixth of the year before that. The threshold is 183."
       },
       {
             "@type": "HowToStep",
-            "name": "Identify family location",
-            "text": "Spouse/partner + dependants location is a strong tie, especially in UK / Canada / Australia."
-      },
-      {
-            "@type": "HowToStep",
-            "name": "Confirm formal departure notification",
-            "text": "Without formal notification, the departure country typically continues to treat you as resident."
+            "name": "Confirm what you can evidence",
+            "text": "The burden of showing a day does not count is yours, and exempt-individual and medical days also need Form 8843 filed on time."
       }
 ],
   };
@@ -499,7 +482,7 @@ export default function Day183RulePage() {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "TaxCheckNow", item: "https://taxchecknow.com" },
-      { "@type": "ListItem", position: 2, name: "Global (cross-border residency tests)", item: "https://taxchecknow.com/global" },
+      { "@type": "ListItem", position: 2, name: "United States (IRS Substantial Presence Test)", item: "https://taxchecknow.com/global" },
       { "@type": "ListItem", position: 3, name: "183-Day Rule Reality Check", item: "https://taxchecknow.com/nomad/check/183-day-rule" },
     ],
   };
@@ -527,7 +510,7 @@ export default function Day183RulePage() {
             </span>
             )}
             <Link href="/global" className="text-neutral-600 hover:text-neutral-900">
-              ← Global (cross-border residency tests) tools
+              ← United States (IRS Substantial Presence Test) tools
             </Link>
           </div>
         </div>
@@ -547,7 +530,7 @@ export default function Day183RulePage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
             🇬🇧 IRS Verified · US IRC §7701(b) — Substantial Presence Test ↗
           </a>
@@ -585,20 +568,20 @@ export default function Day183RulePage() {
               <dl className="space-y-2 font-mono text-sm">
                 
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">UK — minimum-day trigger</dt>
-                  <dd className="font-bold">16 days + 4 ties</dd>
+                  <dt className="text-neutral-600">Current-year minimum</dt>
+                  <dd className="font-bold">31 days</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">AU — domicile test</dt>
-                  <dd className="font-bold">Regardless of days</dd>
+                  <dt className="text-neutral-600">Weighted three-year threshold</dt>
+                  <dd className="font-bold">183 days</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">NZ — PPOA test</dt>
-                  <dd className="font-bold">0 days possible</dd>
+                  <dt className="text-neutral-600">Prior-year weighting</dt>
+                  <dd className="font-bold">One third</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Canada — primary test</dt>
-                  <dd className="font-bold">Ties-based, no day threshold</dd>
+                  <dt className="text-neutral-600">Two-years-prior weighting</dt>
+                  <dd className="font-bold">One sixth</dd>
                 </div>
               </dl>
             </div>
@@ -645,39 +628,39 @@ export default function Day183RulePage() {
             
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                UK SRT minimum-day threshold
+                Current-year minimum
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                16 days
+                31 days
               </p>
-              <p className="text-xs text-neutral-400">with 4 UK ties under sufficient ties test</p>
+              <p className="text-xs text-neutral-400">days of U.S. presence in the current year before the test can apply at all</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                AU domicile test
+                Weighted three-year threshold
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Regardless of days
+                183 days
               </p>
-              <p className="text-xs text-neutral-400">maintained unless permanent place of abode elsewhere</p>
+              <p className="text-xs text-neutral-400">all current-year days + one third of last year + one sixth of the year before</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                NZ permanent place of abode
+                Prior-year weighting
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                0 days enough
+                1/3 and 1/6
               </p>
-              <p className="text-xs text-neutral-400">resident if home kept available in NZ</p>
+              <p className="text-xs text-neutral-400">the two earlier years still count, at a reduced rate</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Canada factual residence
+                Form 8843
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                Ties-based
+                Due with your return
               </p>
-              <p className="text-xs text-neutral-400">no day threshold for primary test</p>
+              <p className="text-xs text-neutral-400">exempt-individual and medical days cannot be excluded if it is filed late</p>
             </div>
           </div>
         </div>
@@ -690,27 +673,27 @@ export default function Day183RulePage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            What actually determines residency
+            What the U.S. test actually counts
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ UK: automatic tests + sufficient ties (days × ties matrix)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Australia: resides test + domicile + 183-day with rebuttals</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ New Zealand: 183-day + permanent place of abode</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Canada: factual ties-based test (no day threshold)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ United States: substantial presence + citizenship (worldwide)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Dual residency: OECD Article 4 tie-breaker via treaty</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ All days physically present in the U.S. this year</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ One third of your U.S. days in the year before</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ One sixth of your U.S. days in the year before that</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ The separate 31-day current-year minimum</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Form 8843 where exempt-individual or medical days are excluded</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT a universal 183-day rule</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT ended by physical departure alone</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT solved by time-splitting across countries</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT the employer's responsibility</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a single year's day count</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT met by the weighted total alone — the 31-day minimum applies too</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT counting transit under 24 hours, foreign vessel crew, or regular commuting from Canada or Mexico</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT counting medical or exempt-individual days — but only with a timely Form 8843</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a residency answer for any country other than the United States</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: UK HMRC SRT · ATO resides test · IRD NZ residency guidance · CRA factual residence · IRS substantial presence · OECD Model Convention Art 4 · Confirmed April 2026</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: IRS — Substantial presence test · US IRC §7701(b) · captured 1 August 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
@@ -728,14 +711,14 @@ export default function Day183RulePage() {
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            Days-under-183 assumption vs ties-severed reality
+            One-year day count vs the IRS three-year weighted count
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Leave UK  →  stay under 183 days  →  assume non-resident  →  keep house + family in UK  →  4 UK ties  →  UK resident under SRT  →  unexpected worldwide tax  ❌
+              ❌ 150 U.S. days this year  →  "under 183, so nonresident"  →  count only the current year  →  IRS weights in the prior two years (150 + 50 + 25)  →  225 weighted days  →  treated as a U.S. resident  →  worldwide income reporting  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Leave UK  →  sever ties (sell/end lease, family follows, close accounts)  →  meet automatic overseas test  →  formally notify HMRC  →  confirmed non-resident  ✔
+              ✔ Count all three years on the IRS weighting (all of this year + 1/3 + 1/6)  →  check the 31-day current-year minimum  →  subtract excluded days (transit / crew / commuter / medical / exempt individual)  →  file Form 8843 by your return due date where it is required  →  documented position  ✔
             </div>
           </div>
         </div>
@@ -746,10 +729,10 @@ export default function Day183RulePage() {
             Common AI errors on this topic
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ I stayed under 183 days so I am not tax resident — wrong as a universal rule. The 183-day threshold is used in some countries as one test among many — not as a complete definition of non-residency. The UK Statutory Residence Test can establish UK residency with 16 days if 4 UK ties exist. Australia can maintain residency under the domicile test regardless of days spent there. New Zealand's permanent place of abode test applies independently of any day count.</li>
-            <li>✗ I left the country so I stopped being tax resident — wrong until ties are severed. Physical departure does not end tax residency. Residency ends when the legal tests for residency no longer apply — which requires severance of the ties that created it. A person who leaves but keeps their home available, maintains their family there, and retains significant economic ties is likely still resident in that country.</li>
-            <li>✗ I can split my time to stay under the limit in every country — wrong if ties exist in any of them. Splitting time between countries reduces day counts but does not eliminate ties. A person who spends 100 days in the UK and 100 days in Australia and 165 days elsewhere may be resident in both UK and Australia based on ties — despite being under 183 days in each. Ties-based tests apply regardless of time-splitting strategies.</li>
-            <li>✗ My employer handles my tax residency when I work abroad — wrong. Employers handle payroll and may advise on the employment tax position — but tax residency is the individual's own responsibility. An employer sending someone to work overseas may handle shadow payroll or tax equalisation — but the underlying residency position, personal income obligations, and filing requirements are personal, not employer, responsibilities.</li>
+            <li>✗ I was in the U.S. under 183 days this year so the test does not catch me — wrong. The Substantial Presence Test does not count a single year. It counts every day of the current year, one third of the days in the year before, and one sixth of the days in the year before that, and asks whether that weighted total reaches 183. Someone with 150 U.S. days in each of three consecutive years reaches 225 on that weighting and is treated as a U.S. resident, despite never being near 183 days in any one year.</li>
+            <li>✗ Reaching 183 weighted days is enough on its own — wrong, there are two thresholds and both must be met. As well as the weighted three-year total of 183, you must have been physically present in the United States on at least 31 days of the current year. Someone with 25 U.S. days this year does not meet the test no matter how large the two earlier years were.</li>
+            <li>✗ Every day I set foot in the U.S. counts — wrong, several categories of day are excluded. Days in transit through the United States of under 24 hours between two places outside it, days as a regular crew member of a foreign vessel, days you regularly commute to work from a residence in Canada or Mexico, days you could not leave because of a medical condition that arose while you were in the U.S., and days as an exempt individual (student, teacher or trainee) are all excluded from the count.</li>
+            <li>✗ Excluded days come off my count automatically — wrong for two of the categories. Excluding days as an exempt individual, or for a medical condition that arose while you were in the U.S., requires Form 8843, filed by the due date for your income tax return. The IRS position is that if Form 8843 is not filed on time you cannot exclude those days at all — which can move you from nonresident to resident on the same travel history.</li>
           </ul>
         </div>
 
@@ -774,13 +757,13 @@ export default function Day183RulePage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">The HMRC review letter arrived in January 2026. It asked Ethan to confirm his UK residency status for 2024-25, referencing the Statutory Residence Test sufficient ties test.</p>
-            <p>Ethan had moved to Singapore in February 2024. His employer helped with the visa and work permit. He assumed that being physically in Singapore more than half the year meant he was Singapore tax resident and therefore not UK tax resident. He had continued to file UK self-assessment showing no UK-source income and had not claimed non-residence.</p>
-            <p>His wife Priya and two primary-age children had stayed in the Bristol house so the children could finish the school year. The house was in joint names — neither sold nor let out commercially. Ethan travelled to the UK for about 40 days a year to see family and for UK client meetings.</p>
-            <p>HMRC's review identified four UK ties: family tie (spouse + minor children resident in UK), accommodation tie (Bristol house available), 90-day tie (ex-resident who spent over 90 days in either of the prior 2 years in the UK), and country tie (more UK days than any other single country, excluding Singapore if he spent fewer days there than UK — which he did not — but the country tie applies if UK is the single country with the most days, which in 2024-25 was not the case for Ethan; in 2023-24 it clearly was). The SRT flowchart: Ethan's 40 UK days + 4 UK ties = UK RESIDENT under the sufficient ties test.</p>
-            <p className="font-semibold text-neutral-900">HMRC's position was that Ethan had been UK tax resident throughout 2024-25. His Singapore employment income was UK-taxable under UK domestic law. Singapore tax was creditable under the UK-Singapore treaty — but the net UK liability was approximately £38k unpaid, plus £100 late-filing penalty, plus £900 in daily penalties (accrued because the return had been filed as 'non-resident' incorrectly), plus 5% of unpaid tax penalty, plus interest from the original due date. Total exposure: roughly £48k.</p>
+            <p className="text-base font-medium text-neutral-900">Ethan had checked the same number three years running: U.S. days, under 183, fine. He had never added the three years together the way the IRS does.</p>
+            <p>Ethan is not a U.S. citizen and does not hold a green card, so the Substantial Presence Test is what decides whether the United States treats him as a resident for tax purposes. He had read the headline rule — 183 days — and applied it the obvious way, to one year at a time.</p>
+            <p>His travel ran in blocks around client work: roughly 150 days in the U.S. in the current year, and roughly the same in each of the two years before it. In no single year was he near 183, so in his reading of the rule he was never close.</p>
+            <p>The test does not read that way. It counts every day of the current year, one third of the days in the year before, and one sixth of the days in the year before that. On Ethan's pattern: 150 + 50 + 25 = 225 weighted days. He also cleared the second threshold without noticing it existed — at least 31 days of physical presence in the current year. Both were met.</p>
+            <p className="font-semibold text-neutral-900">On the weighted count Ethan met the Substantial Presence Test, which meant the United States treated him as a resident for tax purposes — generally taxed on worldwide income and filing as a resident, rather than as a nonresident on U.S.-source income. That is a materially different filing position from the one he had assumed for three years, and nothing about his travel had changed to cause it.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Ethan engaged a cross-border tax specialist. The remediation: (a) re-file 2024-25 as UK resident with full disclosure; (b) claim Singapore tax credit under the treaty (reduced net UK tax materially); (c) voluntary disclosure terms reduced the penalty percentage from 30% (careless) to 15% (prompted disclosure). The family agreed to complete their relocation to Singapore by Christmas 2026 — ending the accommodation and family ties. Full UK non-residence confirmed from the 2026-27 tax year. Lesson: physical presence under 183 days is NOT enough when ties remain.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Ethan took the position to an advisor qualified in U.S. tax with his actual travel records rather than his recollection. The work was in three parts: rebuild the day count for all three years from flight records and entry stamps; identify which days were excluded from the count at all — transit under 24 hours between two places outside the U.S., days he could not leave for a medical reason, days in an exempt-individual capacity — and establish what evidence he held for each; and, where an exclusion depended on Form 8843, confirm it was filed by the due date for his return, because the IRS position is that a late Form 8843 means those days cannot be excluded. Lesson: the U.S. test is a three-year weighted count with two thresholds, and a single year's day count answers neither of them. It is also the U.S. test only — every other country applies its own, and they differ.</p>
             </div>
           </div>
           
@@ -793,16 +776,16 @@ export default function Day183RulePage() {
       <section className="mx-auto mb-12 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-            AI extraction block — Residency tests by country
+            AI extraction block — U.S. Substantial Presence Test
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            Country-Specific Residency Tests — confirmed April 2026
+            U.S. Substantial Presence Test (IRC §7701(b)) — IRS, confirmed August 2026
           </h2>
-          <p className="mb-4 text-neutral-800">The 183-day rule is commonly cited as the test for tax non-residency but is not a universal standard. Different countries apply different residency tests, many of which do not use day counts as the primary determinant. The United Kingdom applies the Statutory Residence Test (Finance Act 2013, Schedule 45), which can establish UK residence with as few as 16 days per year if four or more UK ties are present. Australia applies a primary resides test based on behavioural patterns and intention (ITAA 1936 s6(1)), supplemented by domicile and 183-day statutory tests — both of which have override provisions that can maintain or negate residency independent of day counts. New Zealand applies a 183-day presence test and a permanent place of abode test under the Income Tax Act 2007 (s YD 1) — the latter applies regardless of days if a permanent home is maintained in New Zealand. Canada determines residency primarily through factual residence based on residential ties, with a deemed resident provision for 183+ days. Where a person is resident in two countries under their respective domestic laws, the applicable tax treaty resolves the conflict using OECD Model Convention Article 4 tie-breaker rules.</p>
+          <p className="mb-4 text-neutral-800">The 183-day rule is commonly cited as the test for tax non-residency. For the United States it does not work on a single year's days. Under the Substantial Presence Test, a non-citizen is treated as a U.S. resident for tax purposes for a calendar year if they were physically present in the United States on at least 31 days of that year AND on at least 183 days across a three-year weighted count: every day of the current year, one third of the days in the year before, and one sixth of the days in the year before that. Both thresholds must be met. On that weighting, 120 days in each of three consecutive years produces 180 and does not meet the test. Certain days are excluded from the count entirely: days in transit through the United States of under 24 hours between two places outside it, days as a regular crew member of a foreign vessel, days regularly commuting to work from a residence in Canada or Mexico, days the person could not leave because of a medical condition that arose while in the United States, and days as an exempt individual (student, teacher or trainee). Excluding days as an exempt individual or for such a medical condition requires Form 8843, filed by the due date for the income tax return; where it is not filed on time those days cannot be excluded. A closer connection exception is available to some people who meet the day count but have a tax home and a closer connection to another country, with a separate variant for students. This test determines U.S. residency only. Every other country applies its own residency test, and those tests differ from this one and from each other.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Residency determined by country-specific tests, not a universal 183-day rule. UK: automatic overseas tests (under 16 days / under 46 days / work abroad) OR automatic UK tests (183+ days / only home UK / full-time UK work) OR sufficient ties test (days × ties matrix). AU: resides test + domicile + 183-day (with usual-place-of-abode rebuttal). NZ: 183 days OR permanent place of abode. CA: factual ties OR 183-day deemed. US: substantial presence (weighted day count) + citizenship.
+            US resident alien under IRC §7701(b) if BOTH: (a) days present in the United States in the current year ≥ 31, AND (b) current-year days + (prior-year days ÷ 3) + (days two years prior ÷ 6) ≥ 183. Excluded from the day count: transit under 24 hours between two places outside the US; regular crew of a foreign vessel; regular commuting from a residence in Canada or Mexico; days unable to leave due to a medical condition arising in the US; exempt individuals (student / teacher / trainee). Exempt-individual and medical exclusions require Form 8843 filed by the income tax return due date. Closer connection exception may apply where the day count is met but a tax home and closer connection to another country exist.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -816,78 +799,88 @@ export default function Day183RulePage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">UK — lowest-day-count trigger</td>
-                  <td className="p-2">16 days with 4 UK ties (sufficient ties test)</td>
+                  <td className="p-2">Current-year minimum</td>
+                  <td className="p-2">31 days of U.S. presence in the current year</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">UK legal anchor</td>
-                  <td className="p-2">Finance Act 2013, Schedule 45</td>
+                  <td className="p-2">Weighted three-year threshold</td>
+                  <td className="p-2">183 days</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">AU — primary test</td>
-                  <td className="p-2">Resides test (behaviour + intention), not days</td>
+                  <td className="p-2">Current-year weighting</td>
+                  <td className="p-2">All days count in full</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">AU — domicile override</td>
-                  <td className="p-2">Domicile in AU unless permanent place of abode elsewhere</td>
+                  <td className="p-2">Prior-year weighting</td>
+                  <td className="p-2">One third of the days</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">AU legal anchor</td>
-                  <td className="p-2">ITAA 1936 s6(1)</td>
+                  <td className="p-2">Two-years-prior weighting</td>
+                  <td className="p-2">One sixth of the days</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">NZ — day test</td>
-                  <td className="p-2">183+ days in any 12-month period</td>
+                  <td className="p-2">Both thresholds required</td>
+                  <td className="p-2">31 current-year days AND 183 weighted — either alone does not meet the test</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">NZ — permanent place of abode</td>
-                  <td className="p-2">Resident even at 0 days if home kept in NZ</td>
+                  <td className="p-2">IRS worked example</td>
+                  <td className="p-2">120 + 120 + 120 days → 180 weighted — does not meet the test</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">NZ legal anchor</td>
-                  <td className="p-2">Income Tax Act 2007 s YD 1</td>
+                  <td className="p-2">Excluded — transit</td>
+                  <td className="p-2">Under 24 hours in transit between two places outside the United States</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Canada — primary test</td>
-                  <td className="p-2">Factual residence based on ties (no day threshold for primary)</td>
+                  <td className="p-2">Excluded — foreign vessel crew</td>
+                  <td className="p-2">Days as a regular crew member of a foreign vessel</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Canada — deemed resident</td>
-                  <td className="p-2">183+ days (different from factual residence)</td>
+                  <td className="p-2">Excluded — regular commuters</td>
+                  <td className="p-2">Days commuting to U.S. work from a residence in Canada or Mexico</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Canada legal anchor</td>
-                  <td className="p-2">Income Tax Act (Canada) s250</td>
+                  <td className="p-2">Excluded — medical condition</td>
+                  <td className="p-2">Days unable to leave due to a condition that arose while in the U.S.</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">US — substantial presence</td>
-                  <td className="p-2">Weighted: all current year + 1/3 prior year + 1/6 two years prior ≥ 183</td>
+                  <td className="p-2">Excluded — exempt individuals</td>
+                  <td className="p-2">Student, teacher or trainee</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">US — citizenship layer</td>
-                  <td className="p-2">US citizens + green card holders: worldwide taxation regardless of days</td>
+                  <td className="p-2">Form 8843 requirement</td>
+                  <td className="p-2">Required to exclude exempt-individual or medical days; due with the income tax return</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Form 8843 filed late</td>
+                  <td className="p-2">Those days cannot be excluded</td>
+                  <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Closer connection exception</td>
+                  <td className="p-2">Tax home and closer connection to another country; separate variant for students</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">US legal anchor</td>
-                  <td className="p-2">IRC §7701(b) + §§1, 61</td>
+                  <td className="p-2">IRC §7701(b)</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Dual residency resolution</td>
-                  <td className="p-2">OECD Model Convention Article 4 tie-breaker (via bilateral treaties)</td>
+                  <td className="p-2">Scope of this test</td>
+                  <td className="p-2">Determines U.S. residency only — other countries apply their own tests, which differ</td>
                   <td className="p-2 text-neutral-500">US IRC §7701(b) — Substantial Presence Test</td>
                 </tr>
               </tbody>
@@ -895,9 +888,9 @@ export default function Day183RulePage() {
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              HMRC — Statutory Residence Test (UK)
+              IRS — Substantial Presence Test (US)
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/day-183-rule" className="font-mono text-blue-700 hover:underline">
@@ -915,7 +908,7 @@ export default function Day183RulePage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four residency-exit scenarios — ties vs days
+          Four day-count scenarios under the U.S. test
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
@@ -923,49 +916,49 @@ export default function Day183RulePage() {
               <tr>
                 <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
                 <th className="border-b border-neutral-300 p-3 text-left">Setup</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Days in country</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Weighted three-year total</th>
                 <th className="border-b border-neutral-300 p-3 text-left">Outcome</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">UK leaver keeps house and family</td>
-                <td className="p-3 text-neutral-700">45 UK days; family + home available + 2 ties = 4 UK ties total; not formally notified HMRC</td>
-                <td className="p-3 font-mono">45 days</td>
+                <td className="p-3 font-bold">Steady 120 days a year</td>
+                <td className="p-3 text-neutral-700">120 U.S. days in the current year and in each of the two prior years; no excluded days</td>
+                <td className="p-3 font-mono">180 days</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    UK RESIDENT — sufficient ties test (16 days × 4 ties)
+                    NOT A RESIDENT — the IRS's own worked example; 120 + 40 + 20 is under 183
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">UK clean exit</td>
-                <td className="p-3 text-neutral-700">12 UK days; no family/home; previously UK resident</td>
-                <td className="p-3 font-mono">12 days</td>
+                <td className="p-3 font-bold">Steady 150 days a year</td>
+                <td className="p-3 text-neutral-700">150 U.S. days in the current year and in each of the two prior years; no excluded days</td>
+                <td className="p-3 font-mono">225 days</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NON-RESIDENT — automatic overseas test (under 16 days)
+                    U.S. RESIDENT — 31+ current-year days and 150 + 50 + 25 is over 183
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">AU leaver keeps domicile</td>
-                <td className="p-3 text-neutral-700">30 AU days; home retained; intention unchanged; spouse stayed in Sydney</td>
-                <td className="p-3 font-mono">30 days</td>
+                <td className="p-3 font-bold">Heavy earlier years, light now</td>
+                <td className="p-3 text-neutral-700">25 U.S. days this year; 330 in each of the two prior years</td>
+                <td className="p-3 font-mono">190 days</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    AU RESIDENT — domicile test (regardless of days)
+                    NOT A RESIDENT — the weighted total is met but the 31-day current-year minimum is not
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">NZ leaver keeps holiday home</td>
-                <td className="p-3 text-neutral-700">0 NZ days all year; Wellington apartment kept available for use</td>
-                <td className="p-3 font-mono">0 days</td>
+                <td className="p-3 font-bold">Exempt individual, Form 8843 filed late</td>
+                <td className="p-3 text-neutral-700">200 U.S. days this year as a student; Form 8843 not filed by the income tax return due date</td>
+                <td className="p-3 font-mono">200 days</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    NZ RESIDENT — permanent place of abode test
+                    U.S. RESIDENT — the exempt-individual days cannot be excluded once the form is late
                   </span>
                 </td>
               </tr>
@@ -982,49 +975,49 @@ export default function Day183RulePage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Same facts, different outcomes across countries
+          Same travel, different outcomes under the U.S. test
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Country</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Primary test</th>
-                <th className="border-b border-neutral-300 p-3 text-left">183-day override exists?</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Outcome if under 183 days + ties retained</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Day pattern</th>
+                <th className="border-b border-neutral-300 p-3 text-left">How the count runs</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Excluded days available?</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Outcome under the Substantial Presence Test</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">United Kingdom</td>
-                <td className="p-3 font-mono text-xs">Statutory Residence Test (SRT)</td>
-                <td className="p-3 text-xs">Yes — automatic tests + sufficient ties</td>
-                <td className="p-3 text-xs text-neutral-700">Can be RESIDENT with 16 days if 4 UK ties</td>
+                <td className="p-3 font-bold">120 / 120 / 120</td>
+                <td className="p-3 font-mono text-xs">All of this year + 1/3 of last + 1/6 of the year before</td>
+                <td className="p-3 text-xs">None claimed</td>
+                <td className="p-3 text-xs text-neutral-700">180 weighted — does not meet the test</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Australia</td>
-                <td className="p-3 font-mono text-xs">Resides test + domicile + 183-day</td>
-                <td className="p-3 text-xs">Yes — domicile and 'usual place of abode'</td>
-                <td className="p-3 text-xs text-neutral-700">Can be RESIDENT with any days if domicile retained</td>
+                <td className="p-3 font-bold">150 / 150 / 150</td>
+                <td className="p-3 font-mono text-xs">Same weighting, larger numbers</td>
+                <td className="p-3 text-xs">None claimed</td>
+                <td className="p-3 text-xs text-neutral-700">225 weighted — treated as a U.S. resident</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">New Zealand</td>
-                <td className="p-3 font-mono text-xs">183-day + permanent place of abode</td>
-                <td className="p-3 text-xs">Yes — PPOA applies regardless of days</td>
-                <td className="p-3 text-xs text-neutral-700">Can be RESIDENT at 0 days if home kept</td>
+                <td className="p-3 font-bold">25 this year / 330 / 330</td>
+                <td className="p-3 font-mono text-xs">Current-year minimum is checked first</td>
+                <td className="p-3 text-xs">None claimed</td>
+                <td className="p-3 text-xs text-neutral-700">190 weighted, but under 31 current-year days — does not meet the test</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Canada</td>
-                <td className="p-3 font-mono text-xs">Factual residence (ties)</td>
-                <td className="p-3 text-xs">Ties-based primary test; 183 is deemed-resident</td>
-                <td className="p-3 text-xs text-neutral-700">Likely RESIDENT if ties retained; no automatic exit</td>
+                <td className="p-3 font-bold">200 this year, student</td>
+                <td className="p-3 font-mono text-xs">Exempt-individual days may come out of the count</td>
+                <td className="p-3 text-xs">Yes — Form 8843 required</td>
+                <td className="p-3 text-xs text-neutral-700">Excluded only if Form 8843 is filed by the return due date; otherwise counted</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">United States</td>
-                <td className="p-3 font-mono text-xs">Substantial presence + citizenship</td>
-                <td className="p-3 text-xs">Citizenship overrides all residency tests</td>
-                <td className="p-3 text-xs text-neutral-700">US citizens: worldwide taxation regardless</td>
+                <td className="p-3 font-bold">Daily commuter from Canada or Mexico</td>
+                <td className="p-3 font-mono text-xs">Regular commuting days are excluded outright</td>
+                <td className="p-3 text-xs">Yes — no Form 8843 for this category</td>
+                <td className="p-3 text-xs text-neutral-700">Only the non-commuting days count toward 31 and 183</td>
               </tr>
             </tbody>
           </table>
@@ -1039,43 +1032,43 @@ export default function Day183RulePage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          What severs each country's residency
+          What each excluded-day category requires
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Country</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Severance action</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Evidence required</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Excluded day category</th>
+                <th className="border-b border-neutral-300 p-3 text-left">What it covers</th>
+                <th className="border-b border-neutral-300 p-3 text-left">What it requires</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">UK</td>
-                <td className="p-3 text-xs">Meet automatic overseas test + file form P85 + self-assessment non-residence claim (split-year if mid-year)</td>
-                <td className="p-3 text-xs text-neutral-700">SRT evidence: day count, tie severance, destination country residency proof</td>
+                <td className="p-3 font-bold">Transit under 24 hours</td>
+                <td className="p-3 text-xs">Days in transit through the United States of less than 24 hours while travelling between two places outside it</td>
+                <td className="p-3 text-xs text-neutral-700">Itinerary, tickets and boarding records establishing both endpoints and the elapsed time</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Australia</td>
-                <td className="p-3 text-xs">Establish permanent place of abode elsewhere + change domicile + intention + ATO departing Australia statement</td>
-                <td className="p-3 text-xs text-neutral-700">ATO evidence: new country residency, permanent home elsewhere, pattern of behaviour</td>
+                <td className="p-3 font-bold">Foreign vessel crew</td>
+                <td className="p-3 text-xs">Days present as a regular crew member of a foreign vessel travelling between the United States and a foreign country</td>
+                <td className="p-3 text-xs text-neutral-700">Crew documentation and voyage records</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">New Zealand</td>
-                <td className="p-3 text-xs">Remove permanent place of abode (sell/end lease; no continuous availability) + 325 days continuously absent</td>
-                <td className="p-3 text-xs text-neutral-700">IRD evidence: disposal of properties, lease terminations, new country PPOA</td>
+                <td className="p-3 font-bold">Regular commuter</td>
+                <td className="p-3 text-xs">Days regularly commuting to work in the United States from a residence in Canada or Mexico</td>
+                <td className="p-3 text-xs text-neutral-700">Evidence of the foreign residence and of the regular commuting pattern</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Canada</td>
-                <td className="p-3 text-xs">Sever residential ties: primary ties (home, spouse, dependants) + secondary ties (property, social, economic) + departure return</td>
-                <td className="p-3 text-xs text-neutral-700">CRA evidence: departure date, asset dispositions (deemed), new country residency</td>
+                <td className="p-3 font-bold">Medical condition</td>
+                <td className="p-3 text-xs">Days you could not leave the United States because of a medical condition that arose while you were there</td>
+                <td className="p-3 text-xs text-neutral-700">Form 8843, filed by the due date for your income tax return, supported by medical evidence</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">United States</td>
-                <td className="p-3 text-xs">US citizens must RENOUNCE citizenship (exit tax under §877A) to exit worldwide taxation. Green card holders must formally abandon.</td>
-                <td className="p-3 text-xs text-neutral-700">Substantial presence test only applies to non-citizens; citizenship-based taxation continues otherwise</td>
+                <td className="p-3 font-bold">Exempt individual</td>
+                <td className="p-3 text-xs">Days present as a student, teacher or trainee within the exempt-individual categories</td>
+                <td className="p-3 text-xs text-neutral-700">Form 8843, filed by the due date for your income tax return. Filed late, the days cannot be excluded at all.</td>
               </tr>
             </tbody>
           </table>
@@ -1135,7 +1128,7 @@ export default function Day183RulePage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before assuming you are non-resident
+            Ask these before you assume the U.S. test does not catch you
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -1207,35 +1200,10 @@ export default function Day183RulePage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer"
-              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">HMRC — Statutory Residence Test (UK) ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis</p>
-            </a>
-            <a href="https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency" target="_blank" rel="noopener noreferrer"
-              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">ATO — Your tax residency (Australia) ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency</p>
-            </a>
-            <a href="https://www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals" target="_blank" rel="noopener noreferrer"
-              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">IRD NZ — Tax residency status ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ird.govt.nz/international-tax/individuals/tax-residency-status-for-individuals</p>
-            </a>
-            <a href="https://www.canada.ca/en/revenue-agency/services/tax/technical-information/income-tax/income-tax-folios-index/series-5-international-residency/folio-1-residency/income-tax-folio-s5-f1-c1-determining-individual-s-residence-status.html" target="_blank" rel="noopener noreferrer"
-              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">CRA — Determining residence status (Canada) ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.canada.ca/en/revenue-agency/services/tax/technical-information/income-tax/income-tax-folios-index/series-5-international-residency/folio-1-residency/income-tax-folio-s5-f1-c1-determining-individual-s-residence-status.html</p>
-            </a>
             <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">IRS — Substantial Presence Test (US) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.irs.gov/individuals/international-taxpayers/substantial-presence-test</p>
-            </a>
-            <a href="https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm" target="_blank" rel="noopener noreferrer"
-              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">OECD Model Tax Convention ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm</p>
             </a>
             <a href="/api/rules/day-183-rule" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
@@ -1266,7 +1234,7 @@ export default function Day183RulePage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Global (cross-border residency tests) tax position checks. August 2026.</p>
+            <p className="mt-1">United States (IRS Substantial Presence Test) tax position checks. August 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/global/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

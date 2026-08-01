@@ -9,36 +9,36 @@ const FILES = [
   {
     "num": "01",
     "slug": "d183-01",
-    "name": "Your 183-Day Residency Reality Check",
-    "desc": "Specific residency outcome against the statutory test of your departure country.",
+    "name": "Your Substantial Presence Position",
+    "desc": "Where your weighted three-year day count lands against the two IRS thresholds.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "d183-02",
-    "name": "Country-Specific Residency Test Summary",
-    "desc": "Day thresholds, ties, and override provisions for UK / AU / NZ / CA / US.",
+    "name": "Your Three-Year Day Count Worksheet",
+    "desc": "The weighting applied year by year, with the arithmetic set out.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "d183-03",
-    "name": "Ties Severance Checklist",
-    "desc": "What to sever in each country to establish clean non-residency.",
+    "name": "Excluded Days Checklist",
+    "desc": "The five categories of day that do not count, and what each one requires.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "d183-04",
-    "name": "Departure Compliance Checklist",
-    "desc": "Formal notifications and filings required per country on departure.",
+    "name": "Form 8843 Filing Brief",
+    "desc": "What Form 8843 supports, when it is due, and what late filing costs you.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "d183-05",
-    "name": "Your Accountant Brief — Residency Exit",
-    "desc": "Questions for your departure-country tax advisor before leaving.",
+    "name": "Your Accountant Brief — U.S. Presence",
+    "desc": "Five questions for a U.S. tax advisor, with why each one matters.",
     "tier": 1
   }
 ];
@@ -118,12 +118,12 @@ export default function SuccessAssess() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           product_id: "day-183-rule",
-          market:     "Global (cross-border residency tests)",
+          market:     "United States (IRS Substantial Presence Test)",
           authority:  "IRS",
           tier:       1,
           name: name === "there" ? "" : name,
           inputs,
-          fields: ["residencyStatus","dayCountAnalysis","tiesAssessment","propertyPosition","departureComplianceStatus","filingObligations","riskLevel","immediateActions"],
+          fields: ["residencyStatus","dayCountAnalysis","currentYearMinimumCheck","excludedDaysAssessment","form8843Position","filingObligations","riskLevel","immediateActions"],
         }),
       });
       const data = await res.json();
@@ -135,9 +135,9 @@ export default function SuccessAssess() {
       setAssessment({
         residencyStatus: "Your personalised residencyStatus is being prepared — please refresh in a moment.",
         dayCountAnalysis: "Your personalised dayCountAnalysis is being prepared — please refresh in a moment.",
-        tiesAssessment: "Your personalised tiesAssessment is being prepared — please refresh in a moment.",
-        propertyPosition: "Your personalised propertyPosition is being prepared — please refresh in a moment.",
-        departureComplianceStatus: "Your personalised departureComplianceStatus is being prepared — please refresh in a moment.",
+        currentYearMinimumCheck: "Your personalised currentYearMinimumCheck is being prepared — please refresh in a moment.",
+        excludedDaysAssessment: "Your personalised excludedDaysAssessment is being prepared — please refresh in a moment.",
+        form8843Position: "Your personalised form8843Position is being prepared — please refresh in a moment.",
         filingObligations: "Your personalised filingObligations is being prepared — please refresh in a moment.",
         riskLevel: "Your personalised riskLevel is being prepared — please refresh in a moment.",
         immediateActions: "Your personalised immediateActions is being prepared — please refresh in a moment.",
@@ -231,13 +231,13 @@ export default function SuccessAssess() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your Global (cross-border residency tests) IRS position
+                Your United States (IRS Substantial Presence Test) IRS position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["residencyStatus","dayCountAnalysis","tiesAssessment","propertyPosition","departureComplianceStatus","filingObligations"] as string[]).map(key => {
+                {(["residencyStatus","dayCountAnalysis","currentYearMinimumCheck","excludedDaysAssessment","form8843Position","filingObligations"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -390,9 +390,9 @@ export default function SuccessAssess() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
-            Always consult a qualified Global (cross-border residency tests) tax adviser before making financial decisions.
+            Always consult a qualified United States (IRS Substantial Presence Test) tax adviser before making financial decisions.
             Based on IRS guidance August 2026.{" "}
-            <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Statutory Residence Test (UK)</a> · <a href="https://www.ato.gov.au/individuals/coming-to-australia-or-going-overseas/your-tax-residency" target="_blank" rel="noopener noreferrer" className="underline">ATO — Your tax residency (Australia)</a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="underline">IRS — Substantial Presence Test (US)</a> · <a href="/api/rules/day-183-rule" target="_blank" rel="noopener noreferrer" className="underline">Machine-readable JSON rules</a>
           </p>
         </div>
 
