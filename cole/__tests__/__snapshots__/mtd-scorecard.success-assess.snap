@@ -61,7 +61,7 @@ export default function SuccessAssess() {
   // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
   // (never "0 days", never a negative, never a stale label).
   const daysToDeadline: number | null = (() => {
-    const end = new Date("2026-04-06T00:00:00.000+01:00").getTime();
+    const end = new Date("").getTime();
     if (Number.isNaN(end)) return null;
     const d = Math.floor((end - Date.now()) / 86_400_000);
     return d > 0 ? d : null;
@@ -74,7 +74,7 @@ export default function SuccessAssess() {
   // expired or will not parse, is a real defect — surface it so it is never silent.
   // Phase 5 replaces this with real alerting.
   useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "mtd-scorecard", deadlineIso: "2026-04-06T00:00:00.000+01:00" });
+    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "mtd-scorecard", deadlineIso: "" });
   }, []);
 
   async function init() {
@@ -181,7 +181,7 @@ export default function SuccessAssess() {
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
-          "What is the single most important action I should take before 6 April 2026?",
+          "What is the single most important action I should take before Live since 6 April 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
@@ -238,8 +238,8 @@ export default function SuccessAssess() {
           </p>
           {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 6 April 2026</span>
-            <span className="font-mono text-sm font-bold text-white">6 Apr 2026</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to Live since 6 April 2026</span>
+            <span className="font-mono text-sm font-bold text-white">Phase 1 live</span>
           </div>
           )}
         </div>
@@ -382,7 +382,7 @@ export default function SuccessAssess() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 
-                {deadlineLive ? `${daysToDeadline} days to 6 April 2026.` : ""}
+                {deadlineLive ? `${daysToDeadline} days to Live since 6 April 2026.` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}

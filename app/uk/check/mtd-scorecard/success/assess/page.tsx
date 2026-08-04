@@ -54,18 +54,28 @@ export default function SuccessAssess() {
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState("");
   const [copied,     setCopied]     = useState(false);
-  const [calDone,    setCalDone]    = useState(false);
+
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
+  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
+  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
+  // (never "0 days", never a negative, never a stale label).
   const daysToDeadline: number | null = (() => {
-    const _end = new Date("2026-04-06T00:00:00.000+01:00").getTime();
-    if (Number.isNaN(_end)) return null;
-    const _d = Math.floor((_end - Date.now()) / 86_400_000);
-    return _d > 0 ? _d : null;
+    const end = new Date("").getTime();
+    if (Number.isNaN(end)) return null;
+    const d = Math.floor((end - Date.now()) / 86_400_000);
+    return d > 0 ? d : null;
   })();
   const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
+
+  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
+  // expired or will not parse, is a real defect — surface it so it is never silent.
+  // Phase 5 replaces this with real alerting.
+  useEffect(() => {
+    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "mtd-scorecard", deadlineIso: "" });
+  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -137,7 +147,7 @@ export default function SuccessAssess() {
           market:     "United Kingdom",
           authority:  "HMRC",
           tier:       1,
-          name,
+          name: name === "there" ? "" : name,
           inputs: {
         "Income band": income_band,
         "Income source": income_source,
@@ -171,7 +181,7 @@ export default function SuccessAssess() {
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
-          "What is the single most important action I should take before 6 April 2026?",
+          "What is the single most important action I should take before Live since 6 April 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
@@ -181,72 +191,8 @@ export default function SuccessAssess() {
     }
   }
 
-  function handleCalendar() {
-    const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const income_band = sessionStorage.getItem("mtd-scorecard_income_band") || "30k_to_50k";
-    const income_source = sessionStorage.getItem("mtd-scorecard_income_source") || "both";
-    const record_keeping = sessionStorage.getItem("mtd-scorecard_record_keeping") || "spreadsheets";
-    const quarterly_aware = sessionStorage.getItem("mtd-scorecard_quarterly_aware") || "false";
-    const mandated = sessionStorage.getItem("mtd-scorecard_mandated") || "true";
-    const mandate_date = sessionStorage.getItem("mtd-scorecard_mandate_date") || "6 April 2027";
-    const mandate_wave = sessionStorage.getItem("mtd-scorecard_mandate_wave") || "2";
-    const software_gap = sessionStorage.getItem("mtd-scorecard_software_gap") || "true";
-    const status = sessionStorage.getItem("mtd-scorecard_status") || "YOU ARE IN NEXT WAVE";
-    const tier = sessionStorage.getItem("mtd-scorecard_tier") || "147";
-    function relativeDate(d: number): string {
-      return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
-    }
-    const ics = [
-      "BEGIN:VCALENDAR","VERSION:2.0",
-      "PRODID:-//TaxCheckNow//COLE//EN",
-      "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:MTD Mandation Engine — Deadlines`,
-      "BEGIN:VEVENT",
-      `UID:mtd-q1-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260805"}`,
-      `DTEND;VALUE=DATE:${"20260805"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Q1 Quarterly Update Due (5 Aug)",
-      "DESCRIPTION:First MTD quarterly update covering 6 April to 5 July. Penalty clock starts if late.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:mtd-q2-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20261105"}`,
-      `DTEND;VALUE=DATE:${"20261105"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Q2 Quarterly Update Due (5 Nov)",
-      "DESCRIPTION:Second quarterly update covering 6 July to 5 October.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:mtd-q3-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270205"}`,
-      `DTEND;VALUE=DATE:${"20270205"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Q3 Quarterly Update Due (5 Feb)",
-      "DESCRIPTION:Third quarterly update covering 6 October to 5 January.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:mtd-final-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270131"}`,
-      `DTEND;VALUE=DATE:${"20270131"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Annual Final Declaration Due",
-      "DESCRIPTION:Annual final declaration — equivalent to current self-assessment return.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
-    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "mtd-scorecard.ics";
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
-    setCalDone(true);
-  }
+  // handleCalendar() omitted: no event survived the R-A3 date gate, so there is no
+  // .ics to build and no button to trigger it.
 
   async function handleCopy() {
     if (!assessment?.accountantQuestions?.length) return;
@@ -260,7 +206,7 @@ export default function SuccessAssess() {
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "Your";
+  const greeting = firstName !== "there" ? `${firstName}` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -285,15 +231,15 @@ export default function SuccessAssess() {
             Payment confirmed · Your MTD Readiness Pack · £67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your MTD Readiness Pack
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}MTD Readiness Pack
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.
           </p>
           {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 6 April 2026</span>
-            <span className="font-mono text-sm font-bold text-white">6 Apr 2026</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to Live since 6 April 2026</span>
+            <span className="font-mono text-sm font-bold text-white">Phase 1 live</span>
           </div>
           )}
         </div>
@@ -385,58 +331,10 @@ export default function SuccessAssess() {
               </div>
             )}
 
-            {/* CALENDAR */}
-            <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
-              <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Key dates for your calendar
-              </p>
-              <h2 className="mb-4 font-serif text-lg font-bold text-neutral-950">
-                Add these now — don't rely on memory
-              </h2>
-              <div className="mb-4 space-y-2">
-                
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Q1 Quarterly Update Due (5 Aug)</p>
-                    <p className="text-xs text-neutral-500">First MTD quarterly update covering 6 April to 5 July. Penalty clock starts if late.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    5 Aug 2026
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Q2 Quarterly Update Due (5 Nov)</p>
-                    <p className="text-xs text-neutral-500">Second quarterly update covering 6 July to 5 October.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    5 Nov 2026
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Q3 Quarterly Update Due (5 Feb)</p>
-                    <p className="text-xs text-neutral-500">Third quarterly update covering 6 October to 5 January.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    5 Feb 2027
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Annual Final Declaration Due</p>
-                    <p className="text-xs text-neutral-500">Annual final declaration — equivalent to current self-assessment return.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Jan 2027
-                  </span>
-                </div>
-              </div>
-              <button onClick={handleCalendar}
-                className="no-print w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
-                {calDone ? "✓ Downloaded — open the .ics file to add to your calendar" : "📅 Add all dates to Apple / Google / Outlook calendar →"}
-              </button>
-            </div>
+            {/* CALENDAR — suppressed at generate time: every dated event was dropped
+                (see the R-A3 calendar warning in the build log). An empty "key dates"
+                panel with a download button that yields an eventless .ics is worse than
+                no panel at all. */}
 
             {/* YOUR FILES */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
@@ -484,17 +382,14 @@ export default function SuccessAssess() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 
-                {deadlineLive ? `${daysToDeadline} days to 6 April 2026.` : ""}
+                {deadlineLive ? `${daysToDeadline} days to Live since 6 April 2026.` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   ⬇ Save as PDF
                 </button>
-                <button onClick={handleCalendar}
-                  className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
-                  📅 Add to calendar
-                </button>
+
                 <button onClick={handleCopy}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   📋 Copy accountant questions

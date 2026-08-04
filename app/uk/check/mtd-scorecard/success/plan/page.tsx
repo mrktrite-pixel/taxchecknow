@@ -78,15 +78,25 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
+  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
+  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
+  // (never "0 days", never a negative, never a stale label).
   const daysToDeadline: number | null = (() => {
-    const _end = new Date("2026-04-06T00:00:00.000+01:00").getTime();
-    if (Number.isNaN(_end)) return null;
-    const _d = Math.floor((_end - Date.now()) / 86_400_000);
-    return _d > 0 ? _d : null;
+    const end = new Date("").getTime();
+    if (Number.isNaN(end)) return null;
+    const d = Math.floor((end - Date.now()) / 86_400_000);
+    return d > 0 ? d : null;
   })();
   const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
+
+  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
+  // expired or will not parse, is a real defect — surface it so it is never silent.
+  // Phase 5 replaces this with real alerting.
+  useEffect(() => {
+    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "mtd-scorecard", deadlineIso: "" });
+  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -158,7 +168,7 @@ export default function SuccessPlan() {
           market:     "United Kingdom",
           authority:  "HMRC",
           tier:       2,
-          name,
+          name: name === "there" ? "" : name,
           inputs: {
         "Income band": income_band,
         "Income source": income_source,
@@ -196,7 +206,7 @@ export default function SuccessPlan() {
         ongoingComplianceChecklist: "Your personalised ongoingComplianceChecklist is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
-          "What is the single most important action I should take before 6 April 2026?",
+          "What is the single most important action I should take before Live since 6 April 2026?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -232,7 +242,7 @@ export default function SuccessPlan() {
       `DTEND;VALUE=DATE:${relativeDate(7)}`,
       `DTSTAMP:${now}`,
       "SUMMARY:MTD — Choose approved software",
-      "DESCRIPTION:Pick QuickBooks, Xero, FreeAgent, or Sage. Set up chart of accounts.",
+      "DESCRIPTION:Pick QuickBooks\\, Xero\\, FreeAgent\\, or Sage. Set up chart of accounts.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -251,24 +261,6 @@ export default function SuccessPlan() {
       `DTSTAMP:${now}`,
       "SUMMARY:MTD — Register with HMRC",
       "DESCRIPTION:Register for MTD ITSA via HMRC online services.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:mtd-q1-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20260805"}`,
-      `DTEND;VALUE=DATE:${"20260805"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Q1 Quarterly Update Due",
-      "DESCRIPTION:First quarterly update — 5 August.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:mtd-final-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270131"}`,
-      `DTEND;VALUE=DATE:${"20270131"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Annual Final Declaration",
-      "DESCRIPTION:31 January 2027.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -294,7 +286,7 @@ export default function SuccessPlan() {
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "Your";
+  const greeting = firstName !== "there" ? `${firstName}` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -319,15 +311,15 @@ export default function SuccessPlan() {
             Payment confirmed · Your MTD Implementation Plan · £147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your MTD Implementation Plan
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}MTD Implementation Plan
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
           {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 6 April 2026</span>
-            <span className="font-mono text-sm font-bold text-white">6 Apr 2026</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to Live since 6 April 2026</span>
+            <span className="font-mono text-sm font-bold text-white">Phase 1 live</span>
           </div>
           )}
         </div>
@@ -386,7 +378,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 6 April 2026
+                  What to do — in order — before Live since 6 April 2026
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
@@ -474,7 +466,7 @@ export default function SuccessPlan() {
                     <p className="text-xs text-neutral-500">One month of parallel running before cutover.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    This week
+                    In 30 days
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
@@ -483,25 +475,7 @@ export default function SuccessPlan() {
                     <p className="text-xs text-neutral-500">Register for MTD ITSA via HMRC online services.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    This week
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Q1 Quarterly Update Due</p>
-                    <p className="text-xs text-neutral-500">First quarterly update — 5 August.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    5 Aug 2026
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Annual Final Declaration</p>
-                    <p className="text-xs text-neutral-500">31 January 2027.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Jan 2027
+                    In 60 days
                   </span>
                 </div>
               </div>
@@ -557,7 +531,7 @@ export default function SuccessPlan() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                {deadlineLive ? `${daysToDeadline} days to 6 April 2026.` : ""}
+                {deadlineLive ? `${daysToDeadline} days to Live since 6 April 2026.` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}

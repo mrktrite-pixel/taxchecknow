@@ -18,7 +18,20 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lastVerified: "April 2026",
   tier1: { price: 67, name: "Your MTD Readiness Pack", tagline: "Confirm your mandate date, software gap, and penalty exposure — before HMRC does it for you", value: "Your exact mandate wave + date, software migration path ranked for your situation, quarterly submission calendar with all 4 deadlines, penalty risk assessment, and 5 accountant questions — built for your income band and record-keeping reality.", cta: "Get My MTD Readiness Pack — £67 →", productKey: "uk_67_mtd_scorecard", envVar: "STRIPE_UK_MTD_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your MTD Implementation Plan", tagline: "Execute the software migration + quarterly book-keeping before mandate day", value: "Full implementation plan: software selection + migration sequencing, quarterly book-keeping setup, penalty risk mitigation strategy, multi-property reporting plan if relevant, accountant coordination brief, and first-year quarterly dry-run schedule.", cta: "Get My MTD Implementation Plan — £147 →", productKey: "uk_147_mtd_scorecard", envVar: "STRIPE_UK_MTD_147", successPath: "plan", fileCount: 8 },
-  deadline: { isoDate: "2026-04-06T00:00:00.000+01:00", display: "6 April 2026", short: "6 Apr 2026", description: "6 April 2026 — MTD ITSA Phase 1 mandate date for gross income over £50,000", urgencyLabel: "MANDATED — NOT OPTIONAL", countdownLabel: "Countdown to MTD ITSA Phase 1 — 6 April 2026" },
+  // TEMPORAL v1 — isoDate NEUTRALISED (operator ruling, 2026-08-04), same mechanism as
+  // au-19-frcgw-clearance-certificate.ts:62,73 and au-10:66-69.
+  // WHY: 6 April 2026 was the Phase 1 mandate date. IT HAS PASSED. The prose fields below
+  // now state it as a PAST FACT, which is true and still useful, instead of as a countdown
+  // target. NO forward date is asserted here, deliberately: the GATES_PASSED build
+  // 04a73e0d captured the GOV.UK *contents* page, which carries no deadline, no threshold
+  // and no figure at all, so nothing in the estate grounds a next date — not 7 August, not
+  // any other. See reports/2026-08-04-session-b-mtd-CD-proposals.txt §0-§1.
+  // NOTE the live page was already FAIL-CLOSED on this: daysToDeadline() returns null once
+  // the date passes, so the countdown blocks were suppressed rather than counting negative.
+  // This change removes the stale date from the source rather than relying on that guard.
+  // NOTE the delivery-doc bar composes as `{urgencyLabel}: {display}`, so these two are
+  // written to read together — "PHASE 1: Live since 6 April 2026" — not to repeat.
+  deadline: { isoDate: "", display: "Live since 6 April 2026", short: "Phase 1 live", description: "MTD for Income Tax Phase 1 began on 6 April 2026 for gross income over £50,000. That date has passed — if you are in Phase 1 you are already mandated.", urgencyLabel: "PHASE 1", countdownLabel: "" },
   h1: "Making Tax Digital 2026: Are You Mandated — And What Happens If You Miss It?",
   metaTitle: "MTD ITSA 2026: Are You Mandated and What Does It Cost if You Miss It | TaxCheckNow",
   metaDescription: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
@@ -54,7 +67,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tierAlgorithm: { description: "Mandated (income over £30k) AND (software gap OR awareness gap) → tier2 (implementation plan). Otherwise tier1 (readiness pack).", tier2Conditions: ["incomeBand === 'over_50k'", "incomeBand === '30k_to_50k'"], tier2Flags: [] },
   calculatorRuleBox: { label: "The MTD rules — HMRC confirmed", body: "MTD ITSA live from 6 April 2026 for gross income over £50,000 (Phase 1). Phase 2 (£30k threshold) from April 2027. Phase 3 (£20k threshold) from April 2028. Reporting: 4 quarterly updates + 1 final declaration per year. Software: HMRC-approved required — spreadsheets need bridging software. Penalties: £200 initial + £10/day up to 90 days = up to £1,100 per missed quarter, up to £4,400/year." },
   calculatorClarification: { label: "Gross income, not profit — and sources combine", body: "The threshold is based on GROSS income — before expenses. A landlord with £52,000 rental income is mandated even if profit after mortgage and costs is £15,000. Sources combine: £22k self-employment + £12k rental = £34k total → mandated from April 2027. PAYE salary and dividends do NOT count toward the MTD threshold." },
-  countdownLabel: "Countdown to MTD ITSA Phase 1 — 6 April 2026",
+  // Event-prose stand-in, not a countdown — deadline.isoDate is "" (see above).
+  countdownLabel: "MTD for Income Tax Phase 1 has been live since 6 April 2026",
   countdownStats: [
     { label: "What people think",   value: "4 tax returns",      sub: "wrong — causes misallocated effort" },
     { label: "What it actually is", value: "4 quarterly + 1 final", sub: "1 annual return becomes 5 submissions",  red: true },
@@ -141,7 +155,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { question: "Do I need separate MTD records for multiple properties?",                              answer: "Residential rental properties are combined and reported as one MTD business. Furnished holiday lets are reported as a separate MTD business. Commercial property is not in MTD ITSA scope. If you have a mix of residential + FHL + self-employment, you have multiple MTD businesses each with their own quarterly updates." },
     { question: "What if my accountant handles my tax?",                                                 answer: "Your accountant can submit MTD updates on your behalf, but the underlying records must be kept in HMRC-approved software. Most accountants are charging extra for quarterly submissions on top of annual fees — typical range £50-£150 per quarter per business. Confirm the cost in advance and make sure your software choice is one your accountant uses." },
   ],
-  accountantQuestionsH2: "Ask these before 6 April 2026",
+  accountantQuestionsH2: "Ask these before you file",
   accountantQuestions: [
     { q: "Am I mandated under MTD ITSA — and from which April?",                                                                                        why: "Your accountant should confirm your gross income figure and which phase you fall into. The threshold is gross income, not profit. For £30-50k earners especially, the exact figure matters." },
     { q: "Is my current software MTD-compatible — or do I need to switch or add bridging software?",                                                     why: "Spreadsheets alone do not meet MTD. You either migrate to QuickBooks, Xero, FreeAgent, or Sage, OR add a recognised bridging tool. Getting this wrong triggers penalties." },
