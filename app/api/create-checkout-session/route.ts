@@ -61,6 +61,12 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // env vars the includes()-chain nomad block already returns (STRIPE_NOMAD_183_67/147).
   nomad_67_183_day_rule:  "STRIPE_NOMAD_183_67",
   nomad_147_183_day_rule: "STRIPE_NOMAD_183_147",
+  // UK-01 mtd-scorecard (engine-native, PANELBEAT migration) — registered per
+  // OPERATOR-MANUAL §N4.3 so a preview buy falls back to STRIPE_AU_TEST_<tier> instead of
+  // resolving the LIVE price under the test key. PRODUCTION IS UNCHANGED: these are the SAME
+  // env vars the includes()-chain uk block already returns (STRIPE_UK_MTD_67/147).
+  uk_67_mtd_scorecard:  "STRIPE_UK_MTD_67",
+  uk_147_mtd_scorecard: "STRIPE_UK_MTD_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {

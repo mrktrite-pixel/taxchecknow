@@ -10,12 +10,12 @@ import MtdScorecardCalculator from "./MtdScorecardCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "MTD ITSA 2026: Are You Mandated and What Does It Cost if You Miss It | TaxCheckNow",
-  description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
+  title: "Making Tax Digital for Income Tax — Who It Applies To and What You Must Do | TaxCheckNow",
+  description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/mtd-scorecard" },
   openGraph: {
-    title: "MTD ITSA 2026: Are You Mandated and What Does It Cost if You Miss It | TaxCheckNow",
-    description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
+    title: "Making Tax Digital for Income Tax — Who It Applies To and What You Must Do | TaxCheckNow",
+    description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
     url: "https://taxchecknow.com/uk/check/mtd-scorecard",
     siteName: "TaxCheckNow",
     type: "website",
@@ -356,7 +356,7 @@ export default function MtdScorecardPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "MTD Mandation Engine — Rules April 2026",
-    description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
+    description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -372,14 +372,14 @@ export default function MtdScorecardPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "MTD Mandation Engine",
-    description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
+    description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
     url: "https://taxchecknow.com/uk/check/mtd-scorecard",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: [
-      { "@type": "Offer", name: "Your MTD Readiness Pack", price: "67.00", priceCurrency: "GBP" },
-      { "@type": "Offer", name: "Your MTD Implementation Plan", price: "147.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your MTD Orientation Pack", price: "67.00", priceCurrency: "GBP" },
+      { "@type": "Offer", name: "Your MTD Setup Guide", price: "147.00", priceCurrency: "GBP" },
     ],
     provider: { "@type": "Organization", name: "TaxCheckNow" },
   };
@@ -421,7 +421,7 @@ export default function MtdScorecardPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/mtd-scorecard#calculator",
-    "description": "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
+    "description": "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -456,7 +456,7 @@ export default function MtdScorecardPage() {
     "@context": "https://schema.org",
     "@type": "VideoObject",
     name: "Am I mandated under MTD ITSA? The £4,400 trap",
-    description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
+    description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
     thumbnailUrl: "https://i.ytimg.com/vi/i4O6GBeyMO0/hqdefault.jpg",
     uploadDate: "2026-06-15T11:00:24.109+00:00",
     contentUrl: "https://www.youtube.com/watch?v=i4O6GBeyMO0",
@@ -519,7 +519,7 @@ export default function MtdScorecardPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Making Tax Digital 2026: Are You Mandated — And What Happens If You Miss It?
+          Making Tax Digital for Income Tax: Which Part Applies to You?
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -568,15 +568,15 @@ export default function MtdScorecardPage() {
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
               <h3 className="mb-1 text-lg font-bold">MTD Mandation Engine</h3>
-              <p className="mb-3 text-sm text-neutral-300">Your exact mandate wave + date, software migration path ranked for your situation, quarterly submission calendar with all 4 deadlines, penalty risk assessment, and 5 accountant questions — built for your income band and record-keeping reality.</p>
+              <p className="mb-3 text-sm text-neutral-300">A personalised walk-through of the part of MTD for Income Tax your answers point to — who it applies to and from when, the digital records required, how quarterly updates work, getting compatible software authorised, and what to check with HMRC or your agent before you act.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  £67 · MTD Readiness Pack
+                  £67 · MTD Orientation Pack
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  £147 · MTD Implementation Plan
+                  £147 · MTD Setup Guide
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
@@ -674,7 +674,7 @@ export default function MtdScorecardPage() {
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            MTD is a mandate, not a readiness exercise — and the penalty regime starts on day one
+            MTD for Income Tax replaces one annual return with quarterly updates
           </p>
           <p className="mb-2 text-neutral-900">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is mandatory from 6 April 2026 for self-employed individuals and landlords with combined gross income from self-employment and property exceeding £50,000. The threshold drops to £30,000 from April 2027, and £20,000 from April 2028. These thresholds are statutory under Finance Act 2021 — mandate, not choice.</p>
           <p className="mb-2 text-neutral-900">The reporting change is larger than most taxpayers realise. MTD does NOT simply mean filing your annual tax return online. It replaces one annual self-assessment with five submissions per year: four quarterly updates (due 5 August, 5 November, 5 February, 5 May) plus a final annual declaration (still due 31 January). Each quarterly update is a brief digital summary — not a mini tax return — but it IS a mandatory filing with a deadline. Missing any of them triggers HMRC's points-based penalty system.</p>

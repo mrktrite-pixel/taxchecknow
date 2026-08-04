@@ -1,0 +1,25 @@
+{
+  "_doc": "OPERATOR presentation overlay (mtd-scorecard migration — ruled 2026-08-04). The emitter merges the machine engine (content+routing) with this overlay → engine.json (terminals schema). Bee-D never sets tier/severity. Dishes take heading from the menu label + result_copy from the grounded result_state unless overridden. Escapes REQUIRE heading+result_copy here; tier=67 FORCED on escapes.",
+  "_ruling": "Tier mapped from the build's own menu `kind`, NOT seeded from the live bespoke, because the bespoke's rule (MtdScorecardCalculator.tsx:134, urgencyBoost = softwareGap || unaware, applied to an income-derived mandateWave at :158/:188/:218/:246) has no inputs in this engine — the four questions capture role and topic only, never income, software state or awareness. The three terminals the build classifies `outcome` (mtd-it-software-setup, mtd-it-first-year, mtd-it-access-service) are all post-signup and resolve an execution task, so they take 147; software-setup and first-year additionally correspond to the two halves of the bespoke's urgencyBoost and take criticality critical. The five `explainer`/`guidance` terminals assert no outcome about the user and take 67 under the FRCGW rule ('guidance dish, asserts no outcome' → 67). Ruled Strategy under operator delegation 2026-08-04 on ambiguities A and B, both of which are corpus-capture consequences rather than tier questions. Ambiguity C ruled the same day: the AGENTS branch (mtd-it-agent-roles) tiers 67 — a navigation branch establishes no liability, and billing 147 off a routing accident is the mis-billing principle. Escapes forced to 67 with authored heading + result_copy, written figure-free and date-free because the captured authority carries neither.",
+  "states": {
+    "mtd-it-what-it-is":        { "tier": 67,  "severity": "blue",  "criticality": "standard", "title_key": "product" },
+    "mtd-it-who-must-use":      { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
+    "mtd-it-digital-records":   { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
+    "mtd-it-quarterly-updates": { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
+    "mtd-it-software-setup":    { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "mtd-it-first-year":        { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "mtd-it-agent-roles":       { "tier": 67,  "severity": "blue",  "criticality": "standard", "title_key": "product" },
+    "mtd-it-access-service":    { "tier": 147, "severity": "amber", "criticality": "standard", "title_key": "product" },
+
+    "none_fit": {
+      "severity": "blue", "criticality": "standard", "title_key": "review_guide",
+      "heading": "Making Tax Digital for Income Tax may not apply to you",
+      "result_copy": "Making Tax Digital for Income Tax applies to sole traders and landlords who file a Self Assessment return. If your only income is employment taxed through PAYE, with no self-employment and no rental property, it does not apply to you and there is nothing you need to do. If that changes — you start a side business, or you begin letting a property — the position changes with it, because MTD follows self-employment and property income. If you are an agent whose question is not covered here, HMRC's guidance for agents is the right starting point."
+    },
+    "insufficient_information": {
+      "severity": "amber", "criticality": "standard", "title_key": "review_guide",
+      "heading": "Let's narrow down what you need",
+      "result_copy": "Your answers do not yet identify which part of Making Tax Digital for Income Tax you need. That is common — it covers several separate things: whether it applies to you and from when, the digital records you must keep, the quarterly updates you send during the year, getting compatible software authorised, and what happens at the end of the year. A short personalised review works out which of these actually affect you and in what order to deal with them."
+    }
+  }
+}

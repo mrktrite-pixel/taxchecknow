@@ -152,17 +152,17 @@ export async function GET() {
     ],
     "products": {
         "tier1": {
-            "name": "Your MTD Readiness Pack",
+            "name": "Your MTD Orientation Pack",
             "price": 67,
             "currency": "GBP",
-            "description": "Confirm your mandate date, software gap, and penalty exposure — before HMRC does it for you",
+            "description": "Work out which part of Making Tax Digital for Income Tax actually applies to you",
             "url": "https://taxchecknow.com/uk/check/mtd-scorecard/success/assess"
         },
         "tier2": {
-            "name": "Your MTD Implementation Plan",
+            "name": "Your MTD Setup Guide",
             "price": 147,
             "currency": "GBP",
-            "description": "Execute the software migration + quarterly book-keeping before mandate day",
+            "description": "Getting compatible software authorised and your records ready for quarterly updates",
             "url": "https://taxchecknow.com/uk/check/mtd-scorecard/success/plan"
         }
     },
@@ -171,7 +171,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/mtd-scorecard",
     "api_endpoint": "/api/rules/mtd-scorecard",
-    "generated_at": "2026-08-04T02:10:58.881Z"
+    "generated_at": "2026-08-04T02:48:35.138Z"
 };
 
   return NextResponse.json(rules, {
