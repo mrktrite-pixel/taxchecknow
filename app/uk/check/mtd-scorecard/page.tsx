@@ -392,23 +392,23 @@ export default function MtdScorecardPage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Enter your gross income band",
-            "text": "Combined self-employment + property gross income — before expenses. Determines your mandate wave."
+            "name": "Say who you are",
+            "text": "Whether you are a sole trader or landlord dealing with your own tax, or an agent acting for clients."
       },
       {
             "@type": "HowToStep",
-            "name": "Identify your income sources",
-            "text": "Self-employed, landlord, both, or director-with-rental. Affects multi-business reporting."
+            "name": "Choose what you need",
+            "text": "Which part of Making Tax Digital for Income Tax you are asking about — who it applies to, digital records, quarterly updates, software, or the end of the year."
       },
       {
             "@type": "HowToStep",
-            "name": "Check your record-keeping",
-            "text": "HMRC-approved software required. Spreadsheets alone do not qualify."
+            "name": "Answer the follow-up",
+            "text": "Where it applies, confirm whether your question is about the first year of MTD or about getting compatible software authorised."
       },
       {
             "@type": "HowToStep",
-            "name": "Confirm quarterly awareness",
-            "text": "Most taxpayers don't know 1 annual return becomes 5 submissions. This is the awareness gap that drives first-year breaches."
+            "name": "Read the guidance",
+            "text": "Get the part of MTD your answers point to, and where HMRC publishes the thresholds and dates that decide when it starts for you."
       }
 ],
   };
@@ -736,7 +736,7 @@ export default function MtdScorecardPage() {
             <p>He runs Hartley Precision Engineering out of a unit in Solihull. Twelve employees. Good order book. The business side he knows inside out. The tax side he leaves to his accountant Dave, who he sees every April for about forty minutes.</p>
             <p>The letter said something about Making Tax Digital and quarterly submissions. James assumed it applied to bigger companies. He makes around £280,000 in annual turnover — nowhere near what he thought the threshold would be.</p>
             <p>What James had not thought about was that MTD ITSA is INDIVIDUAL, not company-level. His £18k rental flat in Birmingham plus any consulting invoices outside the company would be his personal MTD threshold — and that number was already creeping toward £50k.</p>
-            <p className="font-semibold text-neutral-900">When he ran the calculator it came back immediately: combined personal gross income puts him in the £30,000–£50,000 band, mandated from 6 April 2027. His current spreadsheet records do not qualify. He had never heard of quarterly submissions. That combination — missed mandate + spreadsheet + no quarterly awareness — is the exact profile that pays £1,100 per missed quarter.</p>
+            <p className="font-semibold text-neutral-900">When he ran the check it pointed him straight at the part he needed: what MTD requires you to keep digitally, and how quarterly updates replace the single annual return. The thresholds that decide WHEN it starts for him are published by HMRC, and that was the next thing he looked up. His current spreadsheet records do not qualify. He had never heard of quarterly submissions. That combination — missed mandate + spreadsheet + no quarterly awareness — is the exact profile that pays £1,100 per missed quarter.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
               <p><strong className="text-neutral-950">The bottom line:</strong> James called Dave the next morning with a specific question for the first time: which MTD wave am I in, and what software do we need to migrate to? Dave appreciated the preparation. By the end of the week James had QuickBooks running for the rental income and a calendar reminder for every 5th of the penalty months.</p>
             </div>
@@ -977,7 +977,7 @@ export default function MtdScorecardPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          HMRC-approved MTD software — ranked for your situation
+          HMRC-recognised MTD software — how the options differ
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">

@@ -123,7 +123,7 @@ export default function SuccessAssess() {
           tier:       1,
           name: name === "there" ? "" : name,
           inputs,
-          fields: ["mandationStatus","exactMandateDate","mandateWaveAnalysis","incomeSourceImpact","softwareGapAssessment","awarenessGapAssessment","quarterlyCalendar","penaltyExposure","firstAction"],
+          fields: ["whichPartApplies","whoMtdAppliesTo","digitalRecordsRequired","quarterlyUpdateCycle","softwareAndAuthorisation","whereToCheckThresholds","firstAction"],
         }),
       });
       const data = await res.json();
@@ -133,14 +133,12 @@ export default function SuccessAssess() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        mandationStatus: "Your personalised mandationStatus is being prepared — please refresh in a moment.",
-        exactMandateDate: "Your personalised exactMandateDate is being prepared — please refresh in a moment.",
-        mandateWaveAnalysis: "Your personalised mandateWaveAnalysis is being prepared — please refresh in a moment.",
-        incomeSourceImpact: "Your personalised incomeSourceImpact is being prepared — please refresh in a moment.",
-        softwareGapAssessment: "Your personalised softwareGapAssessment is being prepared — please refresh in a moment.",
-        awarenessGapAssessment: "Your personalised awarenessGapAssessment is being prepared — please refresh in a moment.",
-        quarterlyCalendar: "Your personalised quarterlyCalendar is being prepared — please refresh in a moment.",
-        penaltyExposure: "Your personalised penaltyExposure is being prepared — please refresh in a moment.",
+        whichPartApplies: "Your personalised whichPartApplies is being prepared — please refresh in a moment.",
+        whoMtdAppliesTo: "Your personalised whoMtdAppliesTo is being prepared — please refresh in a moment.",
+        digitalRecordsRequired: "Your personalised digitalRecordsRequired is being prepared — please refresh in a moment.",
+        quarterlyUpdateCycle: "Your personalised quarterlyUpdateCycle is being prepared — please refresh in a moment.",
+        softwareAndAuthorisation: "Your personalised softwareAndAuthorisation is being prepared — please refresh in a moment.",
+        whereToCheckThresholds: "Your personalised whereToCheckThresholds is being prepared — please refresh in a moment.",
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
@@ -238,7 +236,7 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["mandationStatus","exactMandateDate","mandateWaveAnalysis","incomeSourceImpact","softwareGapAssessment","awarenessGapAssessment"] as string[]).map(key => {
+                {(["whichPartApplies","whoMtdAppliesTo","digitalRecordsRequired","quarterlyUpdateCycle","softwareAndAuthorisation","whereToCheckThresholds"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (

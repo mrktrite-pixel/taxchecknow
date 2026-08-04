@@ -171,7 +171,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/mtd-scorecard",
     "api_endpoint": "/api/rules/mtd-scorecard",
-    "generated_at": "2026-08-04T02:48:35.138Z"
+    "generated_at": "2026-08-04T03:00:53.429Z"
 };
 
   return NextResponse.json(rules, {
