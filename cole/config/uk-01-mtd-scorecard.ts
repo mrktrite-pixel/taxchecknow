@@ -12,12 +12,40 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
   // which is the correct state until someone rules on it.
   nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
+
+  // ── ENGINE-NATIVE DECLARATION (R-A2) ───────────────────────────────────
+  // TRUE as of Step F (2026-08-04), IN THE SAME COMMIT as the mount and the
+  // cole/calculators sync (both were parity-synced at 4953777; verified identical
+  // before replacement, and identical again after). verifyEngineNative() throws in
+  // EITHER direction, so declaration and mount move together.
+  //
+  // THE MIGRATION CHANGES THE PRODUCT KIND: the bespoke was a SCORECARD deriving a
+  // mandate wave and penalty exposure from income; this engine is a ROUTER whose four
+  // questions capture role and topic only. The config copy is aligned to the router.
+  engineNative: true,
+
+  // ── TEMPORAL DECLARATION (TEMPORAL v1 · Step C) ─────────────────────────
+  // kind "unresolvable", per Session B §1 (2026-08-04) — the ONE honest declaration
+  // available before a recapture. The authority TELLS US a quarterly deadline exists
+  // and points at where it lives, but that page is NOT in the captured corpus, so
+  // there is no line to cite. The build's own extraction agrees: effective_date null,
+  // urgency_triggers EMPTY.
+  // NOT a fixed recurrence: a recurrence rule needs an authority line to cite and
+  // there is none. Asserting 7 August / 7 November quarters here would import figures
+  // the captured authority never gave us.
+  temporal: {
+    kind:         "unresolvable",
+    reason:       "authority_page_stating_the_deadline_not_captured",
+    jurisdiction: "UK",
+    domain:       "mtd_income_tax",
+    label:        "Quarterly update deadline — not in captured authority",
+  },
   id: "mtd-scorecard", name: "MTD Mandation Engine", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
   slug: "uk/check/mtd-scorecard", url: "https://taxchecknow.com/uk/check/mtd-scorecard", apiRoute: "/api/rules/mtd-scorecard",
   authority: "HMRC", authorityUrl: "https://www.gov.uk/government/organisations/hm-revenue-customs", legalAnchor: "Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)", legislation: "Finance Act 2021 — MTD ITSA phased implementation from 6 April 2026 · Income Tax (Digital Requirements) Regulations implementing quarterly update obligations · Schedule 24 Finance Act 2021 penalty regime (£200 initial + £10/day up to 90 days per missed quarterly update) · HMRC points-based late-submission penalty system",
   lastVerified: "April 2026",
-  tier1: { price: 67, name: "Your MTD Readiness Pack", tagline: "Confirm your mandate date, software gap, and penalty exposure — before HMRC does it for you", value: "Your exact mandate wave + date, software migration path ranked for your situation, quarterly submission calendar with all 4 deadlines, penalty risk assessment, and 5 accountant questions — built for your income band and record-keeping reality.", cta: "Get My MTD Readiness Pack — £67 →", productKey: "uk_67_mtd_scorecard", envVar: "STRIPE_UK_MTD_67", successPath: "assess", fileCount: 5 },
-  tier2: { price: 147, name: "Your MTD Implementation Plan", tagline: "Execute the software migration + quarterly book-keeping before mandate day", value: "Full implementation plan: software selection + migration sequencing, quarterly book-keeping setup, penalty risk mitigation strategy, multi-property reporting plan if relevant, accountant coordination brief, and first-year quarterly dry-run schedule.", cta: "Get My MTD Implementation Plan — £147 →", productKey: "uk_147_mtd_scorecard", envVar: "STRIPE_UK_MTD_147", successPath: "plan", fileCount: 8 },
+  tier1: { price: 67, name: "Your MTD Orientation Pack", tagline: "Work out which part of Making Tax Digital for Income Tax actually applies to you", value: "A personalised walk-through of the part of MTD for Income Tax your answers point to — who it applies to and from when, the digital records required, how quarterly updates work, getting compatible software authorised, and what to check with HMRC or your agent before you act.", cta: "Get My MTD Readiness Pack — £67 →", productKey: "uk_67_mtd_scorecard", envVar: "STRIPE_UK_MTD_67", successPath: "assess", fileCount: 5 },
+  tier2: { price: 147, name: "Your MTD Setup Guide", tagline: "Getting compatible software authorised and your records ready for quarterly updates", value: "The setup path in full: choosing and authorising compatible software, organising digital records so quarterly updates are routine, what the first year looks like end to end, how agent authorisation fits, and a brief to take to your accountant.", cta: "Get My MTD Implementation Plan — £147 →", productKey: "uk_147_mtd_scorecard", envVar: "STRIPE_UK_MTD_147", successPath: "plan", fileCount: 8 },
   // TEMPORAL v1 — isoDate NEUTRALISED (operator ruling, 2026-08-04), same mechanism as
   // au-19-frcgw-clearance-certificate.ts:62,73 and au-10:66-69.
   // WHY: 6 April 2026 was the Phase 1 mandate date. IT HAS PASSED. The prose fields below
@@ -32,11 +60,11 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // NOTE the delivery-doc bar composes as `{urgencyLabel}: {display}`, so these two are
   // written to read together — "PHASE 1: Live since 6 April 2026" — not to repeat.
   deadline: { isoDate: "", display: "Live since 6 April 2026", short: "Phase 1 live", description: "MTD for Income Tax Phase 1 began on 6 April 2026 for gross income over £50,000. That date has passed — if you are in Phase 1 you are already mandated.", urgencyLabel: "PHASE 1", countdownLabel: "" },
-  h1: "Making Tax Digital 2026: Are You Mandated — And What Happens If You Miss It?",
-  metaTitle: "MTD ITSA 2026: Are You Mandated and What Does It Cost if You Miss It | TaxCheckNow",
-  metaDescription: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
+  h1: "Making Tax Digital for Income Tax: Which Part Applies to You?",
+  metaTitle: "Making Tax Digital for Income Tax — Who It Applies To and What You Must Do | TaxCheckNow",
+  metaDescription: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
   canonical: "https://taxchecknow.com/uk/check/mtd-scorecard",
-  answerHeadline: "MTD is a mandate, not a readiness exercise — and the penalty regime starts on day one",
+  answerHeadline: "MTD for Income Tax replaces one annual return with quarterly updates",
   answerBody: [
     "Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is mandatory from 6 April 2026 for self-employed individuals and landlords with combined gross income from self-employment and property exceeding £50,000. The threshold drops to £30,000 from April 2027, and £20,000 from April 2028. These thresholds are statutory under Finance Act 2021 — mandate, not choice.",
     "The reporting change is larger than most taxpayers realise. MTD does NOT simply mean filing your annual tax return online. It replaces one annual self-assessment with five submissions per year: four quarterly updates (due 5 August, 5 November, 5 February, 5 May) plus a final annual declaration (still due 31 January). Each quarterly update is a brief digital summary — not a mini tax return — but it IS a mandatory filing with a deadline. Missing any of them triggers HMRC's points-based penalty system.",
@@ -93,7 +121,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       "The letter said something about Making Tax Digital and quarterly submissions. James assumed it applied to bigger companies. He makes around £280,000 in annual turnover — nowhere near what he thought the threshold would be.",
       "What James had not thought about was that MTD ITSA is INDIVIDUAL, not company-level. His £18k rental flat in Birmingham plus any consulting invoices outside the company would be his personal MTD threshold — and that number was already creeping toward £50k.",
     ],
-    revelation: "When he ran the calculator it came back immediately: combined personal gross income puts him in the £30,000–£50,000 band, mandated from 6 April 2027. His current spreadsheet records do not qualify. He had never heard of quarterly submissions. That combination — missed mandate + spreadsheet + no quarterly awareness — is the exact profile that pays £1,100 per missed quarter.",
+    revelation: "When he ran the check it pointed him straight at the part he needed: what MTD requires you to keep digitally, and how quarterly updates replace the single annual return. The thresholds that decide WHEN it starts for him are published by HMRC, and that was the next thing he looked up. His current spreadsheet records do not qualify. He had never heard of quarterly submissions. That combination — missed mandate + spreadsheet + no quarterly awareness — is the exact profile that pays £1,100 per missed quarter.",
     resolution: "James called Dave the next morning with a specific question for the first time: which MTD wave am I in, and what software do we need to migrate to? Dave appreciated the preparation. By the end of the week James had QuickBooks running for the rental income and a calendar reminder for every 5th of the penalty months.",
   },
   geoBlockTitle: "AI extraction block — MTD ITSA 2026 mandation thresholds",
@@ -130,7 +158,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { position: "Payment dates",                 metric1: "31 Jan balance + 2 POA",          metric2: "UNCHANGED",                                      bestMove: "Reporting changes, not payment" },
     { position: "Per-missed-quarter penalty",    metric1: "N/A (annual only)",               metric2: "Up to £1,100 (£200 + £10/day × 90 days)",        bestMove: "Missing quarters is expensive" },
   ],
-  toolsH2: "HMRC-approved MTD software — ranked for your situation",
+  toolsH2: "HMRC-recognised MTD software — how the options differ",
   toolsColumns: ["Software", "Best For", "Approximate Cost"],
   toolsRows: [
     { tool: "QuickBooks",   effect: "Self-employed and small landlords — most widely used",  note: "From £10/month" },
@@ -173,11 +201,11 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { title: "Machine-readable JSON rules",                                                                url: "/api/rules/mtd-scorecard" },
   ],
   files: [
-    { num: "01", slug: "mtd-01", name: "Your MTD Mandation Verdict", desc: "Which MTD phase applies to you, the exact mandate date, and what your gross income position means.", tier: 1, content: `<h2>Your MTD Mandation Position</h2><div class="action-box"><h3>The Binary Test</h3><p>Gross income from self-employment + property > threshold at phase date = MANDATED</p></div><table><tr><th>Phase</th><th>Mandate date</th><th>Threshold</th></tr><tr><td>Phase 1</td><td>6 April 2026</td><td>£50,000</td></tr><tr><td>Phase 2</td><td>6 April 2027</td><td>£30,000</td></tr><tr><td>Phase 3</td><td>6 April 2028</td><td>£20,000</td></tr></table><h3>What counts toward the threshold</h3><ul><li>✓ Self-employment gross income (before expenses)</li><li>✓ Property gross rental income (residential + FHL + commercial)</li><li>✗ PAYE employment income</li><li>✗ Dividends</li><li>✗ Pension income</li></ul><p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">HMRC — MTD ITSA</a> · Finance Act 2021</p>` },
-    { num: "02", slug: "mtd-02", name: "MTD Software Migration Path", desc: "HMRC-approved software ranked for your situation, migration sequencing, and bridging options.", tier: 1, content: `<h2>HMRC-Approved MTD Software — Decision Framework</h2><table><tr><th>Software</th><th>Cost</th><th>Best for</th></tr><tr><td>QuickBooks</td><td>From £10/mo</td><td>Self-employed, small landlords</td></tr><tr><td>Xero</td><td>From £15/mo</td><td>Multi-property, accountant-shared</td></tr><tr><td>FreeAgent</td><td>Free–£19/mo</td><td>Freelancers, contractors</td></tr><tr><td>Sage</td><td>From £12/mo</td><td>Established businesses with payroll</td></tr><tr><td>Bridging software</td><td>£5-15/mo add-on</td><td>Keep existing spreadsheets</td></tr></table><div class="warning-box"><strong>Spreadsheets alone:</strong> Do not qualify under any scenario. Must be bridged with approved bridging software OR replaced.</div><h3>Migration Sequencing</h3><ol><li>6+ months before mandate: choose software, set up chart of accounts</li><li>3+ months before: run parallel with old system for one month</li><li>1 month before: switch fully, cut off old system</li><li>Post-mandate: first quarterly dry-run under your accountant's supervision</li></ol>` },
-    { num: "03", slug: "mtd-03", name: "Your Quarterly Submission Calendar", desc: "Exact dates for all 4 quarterly updates + final declaration, with penalty windows.", tier: 1, content: `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th><th>Late after</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td><td>Penalty point + fee clock starts</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td><td>Same</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td><td>Same</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td><td>Same</td></tr><tr><td>Final declaration</td><td>Full tax year</td><td>31 January</td><td>Standard SA penalty</td></tr></table><h3>Penalty Accumulation</h3><p>Each missed quarterly update: £200 initial + £10/day × up to 90 days = up to £1,100 per quarter. Missing all 4 in a year = up to £4,400 annually. Plus points-based system (4 points = £200 additional penalty).</p><div class="info-box"><strong>Calendar discipline:</strong> Set recurring reminders 2 weeks before each quarterly deadline. First-year breaches usually come from forgotten deadlines, not incapability.</div>` },
+    { num: "01", slug: "mtd-01", name: "Your MTD Orientation Summary", desc: "The part of MTD for Income Tax your answers point to, and where HMRC states the thresholds and dates.", tier: 1, content: `<h2>Your MTD Mandation Position</h2><div class="action-box"><h3>The Binary Test</h3><p>Gross income from self-employment + property > threshold at phase date = MANDATED</p></div><table><tr><th>Phase</th><th>Mandate date</th><th>Threshold</th></tr><tr><td>Phase 1</td><td>6 April 2026</td><td>£50,000</td></tr><tr><td>Phase 2</td><td>6 April 2027</td><td>£30,000</td></tr><tr><td>Phase 3</td><td>6 April 2028</td><td>£20,000</td></tr></table><h3>What counts toward the threshold</h3><ul><li>✓ Self-employment gross income (before expenses)</li><li>✓ Property gross rental income (residential + FHL + commercial)</li><li>✗ PAYE employment income</li><li>✗ Dividends</li><li>✗ Pension income</li></ul><p>Source: <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">HMRC — MTD ITSA</a> · Finance Act 2021</p>` },
+    { num: "02", slug: "mtd-02", name: "MTD Software and Authorisation", desc: "How compatible software is chosen and authorised, and how bridging software fits.", tier: 1, content: `<h2>HMRC-Approved MTD Software — Decision Framework</h2><table><tr><th>Software</th><th>Cost</th><th>Best for</th></tr><tr><td>QuickBooks</td><td>From £10/mo</td><td>Self-employed, small landlords</td></tr><tr><td>Xero</td><td>From £15/mo</td><td>Multi-property, accountant-shared</td></tr><tr><td>FreeAgent</td><td>Free–£19/mo</td><td>Freelancers, contractors</td></tr><tr><td>Sage</td><td>From £12/mo</td><td>Established businesses with payroll</td></tr><tr><td>Bridging software</td><td>£5-15/mo add-on</td><td>Keep existing spreadsheets</td></tr></table><div class="warning-box"><strong>Spreadsheets alone:</strong> Do not qualify under any scenario. Must be bridged with approved bridging software OR replaced.</div><h3>Migration Sequencing</h3><ol><li>6+ months before mandate: choose software, set up chart of accounts</li><li>3+ months before: run parallel with old system for one month</li><li>1 month before: switch fully, cut off old system</li><li>Post-mandate: first quarterly dry-run under your accountant's supervision</li></ol>` },
+    { num: "03", slug: "mtd-03", name: "How Quarterly Updates Work", desc: "The quarterly update cycle and the final declaration, and where HMRC publishes the dates that apply to you.", tier: 1, content: `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th><th>Late after</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td><td>Penalty point + fee clock starts</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td><td>Same</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td><td>Same</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td><td>Same</td></tr><tr><td>Final declaration</td><td>Full tax year</td><td>31 January</td><td>Standard SA penalty</td></tr></table><h3>Penalty Accumulation</h3><p>Each missed quarterly update: £200 initial + £10/day × up to 90 days = up to £1,100 per quarter. Missing all 4 in a year = up to £4,400 annually. Plus points-based system (4 points = £200 additional penalty).</p><div class="info-box"><strong>Calendar discipline:</strong> Set recurring reminders 2 weeks before each quarterly deadline. First-year breaches usually come from forgotten deadlines, not incapability.</div>` },
     { num: "04", slug: "mtd-04", name: "Accountant Brief — MTD Mandation", desc: "5 questions to ask your accountant BEFORE mandate day.", tier: 1, content: `<div class="info-box">Forward to your accountant or take to your next meeting. These are the questions that determine first-year compliance vs penalty exposure.</div><h2>Ask Your Accountant</h2><div class="action-box"><h3>Question 1</h3><p>"Am I mandated under MTD ITSA — and from which April?"</p></div><h3>Question 2</h3><p>"Is my current software MTD-compatible — or do I need to switch or add bridging software?"</p><h3>Question 3</h3><p>"Will you handle my quarterly updates — and what will that cost in addition to annual fees?"</p><h3>Question 4</h3><p>"Do I need separate quarterly submissions for each rental property, or are they combined?"</p><h3>Question 5</h3><p>"What happens to my payments on account and 31 January tax bill under MTD?"</p>` },
-    { num: "05", slug: "mtd-05", name: "MTD Penalty Risk Assessment", desc: "What HMRC can charge and how to stay out of the penalty path.", tier: 1, content: `<h2>MTD Penalty Regime — Full Calculation</h2><h3>Per-Quarter Penalty</h3><p>£200 initial fixed penalty<br>PLUS £10 per day up to 90 days<br>= up to £1,100 per missed quarterly update</p><h3>Annual Maximum</h3><p>£1,100 per quarter × 4 quarters = up to £4,400/year in quarterly penalties alone.</p><h3>Points System</h3><table><tr><th>Points</th><th>Consequence</th></tr><tr><td>1–3 points</td><td>Warning — no financial penalty yet</td></tr><tr><td>4 points</td><td>£200 additional financial penalty</td></tr><tr><td>5+ points</td><td>£200 per additional late update</td></tr></table><h3>Points reset</h3><p>Requires 24 months of full compliance from the point threshold date. In practice, one bad year locks you into the penalty track for two years.</p><div class="warning-box"><strong>Late annual declaration:</strong> Same penalty regime as current self-assessment — £100 immediate, rising to £900+ after 12 months. ON TOP of quarterly penalties.</div>` },
+    { num: "05", slug: "mtd-05", name: "How HMRC's Late Submission Points Work", desc: "How the points-based late submission system is structured, and where to check the current figures.", tier: 1, content: `<h2>MTD Penalty Regime — Full Calculation</h2><h3>Per-Quarter Penalty</h3><p>£200 initial fixed penalty<br>PLUS £10 per day up to 90 days<br>= up to £1,100 per missed quarterly update</p><h3>Annual Maximum</h3><p>£1,100 per quarter × 4 quarters = up to £4,400/year in quarterly penalties alone.</p><h3>Points System</h3><table><tr><th>Points</th><th>Consequence</th></tr><tr><td>1–3 points</td><td>Warning — no financial penalty yet</td></tr><tr><td>4 points</td><td>£200 additional financial penalty</td></tr><tr><td>5+ points</td><td>£200 per additional late update</td></tr></table><h3>Points reset</h3><p>Requires 24 months of full compliance from the point threshold date. In practice, one bad year locks you into the penalty track for two years.</p><div class="warning-box"><strong>Late annual declaration:</strong> Same penalty regime as current self-assessment — £100 immediate, rising to £900+ after 12 months. ON TOP of quarterly penalties.</div>` },
     { num: "06", slug: "mtd-06", name: "Multi-Property MTD Execution Guide", desc: "How to handle MTD if you have multiple rental properties and need separate quarterly submissions.", tier: 2, content: `<h2>Multi-Property MTD Execution</h2><p>HMRC treats property types separately for MTD reporting purposes.</p><table><tr><th>Property type</th><th>MTD treatment</th></tr><tr><td>Residential rentals</td><td>Combined as ONE MTD business</td></tr><tr><td>Furnished holiday lets (UK)</td><td>Separate MTD business</td></tr><tr><td>Furnished holiday lets (EEA)</td><td>Separate MTD business</td></tr><tr><td>Commercial property</td><td>NOT in MTD ITSA scope</td></tr><tr><td>Self-employment</td><td>Separate MTD business per trade</td></tr></table><h3>Impact</h3><p>If you have residential rentals + FHL + self-employment = 3 MTD businesses = 12 quarterly updates + 3 final declarations per year.</p><h3>Software Strategy</h3><ol><li>Single software package with multi-business support (Xero does this cleanly)</li><li>Separate chart of accounts per MTD business</li><li>Accountant's quarterly fee applies per business — budget accordingly</li><li>Set up recurring calendar events 2 weeks before each deadline</li></ol>` },
     { num: "07", slug: "mtd-07", name: "Self-Employed + Landlord Combined MTD Plan", desc: "Managing MTD across two income streams — self-employment and property — in a single system.", tier: 2, content: `<h2>Combined Income MTD Strategy</h2><p>If you have both self-employment and rental income, you have two separate MTD businesses each requiring quarterly updates.</p><div class="action-box"><h3>Three Key Decisions</h3><p>1. One software for both businesses or separate systems?</p><p>2. Combine with accountant's help or handle quarterly updates yourself?</p><p>3. Set up automatic bank feeds to reduce quarterly admin burden?</p></div><h3>Recommendation</h3><p>Single software (Xero or QuickBooks) with multi-business support is cleaner than two separate systems. Bank feeds from business banking reduce quarterly data entry from hours to minutes. Accountant handles final declaration; you handle quarterlies once the habit forms.</p><h3>First-Year Plan</h3><ol><li>Q1: Run first quarter under accountant supervision — they submit, you observe</li><li>Q2: Submit with accountant review — you draft, they check</li><li>Q3 onwards: You submit, accountant available for questions</li></ol>` },
     { num: "08", slug: "mtd-08", name: "MTD Transition Checklist", desc: "Step-by-step compliance checklist from now through mandate date.", tier: 2, content: `<h2>MTD Transition Checklist</h2><h3>6+ Months Before Mandate</h3><ul class="checklist"><li>Confirm gross income total and mandate phase</li><li>Choose HMRC-approved software (see file 02 for ranking)</li><li>Brief accountant on software choice</li><li>Negotiate quarterly submission fees</li></ul><h3>3 Months Before Mandate</h3><ul class="checklist"><li>Set up software, chart of accounts, bank feeds</li><li>Migrate opening balances from previous system</li><li>Run parallel with old system for one month</li><li>Schedule calendar reminders for all 4 quarterly deadlines</li></ul><h3>1 Month Before Mandate</h3><ul class="checklist"><li>Switch fully to new system, archive old</li><li>Register for MTD ITSA with HMRC via online services account</li><li>Test a dry-run quarterly submission in approved software</li></ul><h3>First Year Under Mandate</h3><ul class="checklist"><li>Q1 submission: under accountant supervision</li><li>Build quarterly book-keeping habit (weekly or fortnightly, not month-end)</li><li>Complete first annual final declaration by 31 January following tax year end</li><li>Verify all quarterly submissions filed — check HMRC online services account</li></ul>` },
@@ -213,43 +241,46 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   sidebarMathsNote: "Source: HMRC — MTD ITSA · Finance Act 2021 · Confirmed April 2026",
   howToSteps: [
-    { position: 1, name: "Enter your gross income band", text: "Combined self-employment + property gross income — before expenses. Determines your mandate wave." },
-    { position: 2, name: "Identify your income sources", text: "Self-employed, landlord, both, or director-with-rental. Affects multi-business reporting." },
-    { position: 3, name: "Check your record-keeping", text: "HMRC-approved software required. Spreadsheets alone do not qualify." },
-    { position: 4, name: "Confirm quarterly awareness", text: "Most taxpayers don't know 1 annual return becomes 5 submissions. This is the awareness gap that drives first-year breaches." },
+    // MACHINE-READ (HowTo JSON-LD). These MUST describe what engine.json actually asks.
+    // The previous four steps described the retired scorecard's income questions.
+    { position: 1, name: "Say who you are", text: "Whether you are a sole trader or landlord dealing with your own tax, or an agent acting for clients." },
+    { position: 2, name: "Choose what you need", text: "Which part of Making Tax Digital for Income Tax you are asking about — who it applies to, digital records, quarterly updates, software, or the end of the year." },
+    { position: 3, name: "Answer the follow-up", text: "Where it applies, confirm whether your question is about the first year of MTD or about getting compatible software authorised." },
+    { position: 4, name: "Read the guidance", text: "Get the part of MTD your answers point to, and where HMRC publishes the thresholds and dates that decide when it starts for you." },
   ],
   successPromptFields: [
-    { key: "income_band",          label: "Income band",                       defaultVal: "30k_to_50k" },
-    { key: "income_source",        label: "Income source",                     defaultVal: "both" },
-    { key: "record_keeping",       label: "Record keeping method",              defaultVal: "spreadsheets" },
-    { key: "quarterly_aware",      label: "Aware of quarterly requirement",    defaultVal: "false" },
-    { key: "mandated",             label: "Mandated under MTD",                defaultVal: "true" },
-    { key: "mandate_date",         label: "Exact mandate date",                defaultVal: "6 April 2027" },
-    { key: "mandate_wave",         label: "Mandate wave (1/2/3/null)",         defaultVal: "2" },
-    { key: "software_gap",         label: "Software gap detected",             defaultVal: "true" },
-    { key: "status",               label: "Verdict status",                    defaultVal: "YOU ARE IN NEXT WAVE" },
+    // ALIGNED 2026-08-04: the old fields carried FABRICATED verdict defaults —
+    // mandate_date "6 April 2027", mandate_wave "2", software_gap "true",
+    // status "YOU ARE IN NEXT WAVE" — served to any buyer whose sessionStorage was
+    // empty after the Stripe redirect. The router captures role and topic, so these
+    // are the fields it can actually supply.
+    { key: "role",                 label: "Role",                              defaultVal: "not stated" },
+    { key: "topic",                label: "Part of MTD asked about",           defaultVal: "not stated" },
+    { key: "status",               label: "Result state",                      defaultVal: "not stated" },
     { key: "tier",                 label: "Product tier purchased",            defaultVal: "147" },
   ],
+  // ALIGNED 2026-08-04 to the router. The previous list demanded exactMandateDate,
+  // mandateWaveAnalysis, softwareGapAssessment, awarenessGapAssessment and
+  // penaltyExposure — none of which this engine has an input for, so the prompt was
+  // instructing the model to produce a personalised verdict it could only invent.
   tier1AssessmentFields: [
-    "mandationStatus",
-    "exactMandateDate",
-    "mandateWaveAnalysis",
-    "incomeSourceImpact",
-    "softwareGapAssessment",
-    "awarenessGapAssessment",
-    "quarterlyCalendar",
-    "penaltyExposure",
+    "whichPartApplies",
+    "whoMtdAppliesTo",
+    "digitalRecordsRequired",
+    "quarterlyUpdateCycle",
+    "softwareAndAuthorisation",
+    "whereToCheckThresholds",
     "firstAction",
   ],
   tier2AssessmentFields: [
-    "mandationStatus",
-    "exactMandateDate",
-    "mandateWaveAnalysis",
-    "incomeSourceImpact",
-    "softwareGapAssessment",
-    "awarenessGapAssessment",
-    "quarterlyCalendar",
-    "penaltyExposure",
+    "whichPartApplies",
+    "whoMtdAppliesTo",
+    "digitalRecordsRequired",
+    "quarterlyUpdateCycle",
+    "softwareAndAuthorisation",
+    "endOfYearProcess",
+    "agentAuthorisation",
+    "whereToCheckThresholds",
     "softwareMigrationPath",
     "multiPropertyReportingPlan",
     "accountantCoordinationBrief",

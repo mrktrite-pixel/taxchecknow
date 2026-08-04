@@ -1,0 +1,352 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Making Tax Digital for Income Tax (MTD IT) affects sole traders and landlords who must use HMRC's new digital Self Assessment system. This menu covers what MTD IT is, how to get started with compliant software, and what to do in the first year after signing up. No verified numeric figures are available for this topic.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-role",
+      "text": "Which of the following best describes your situation in relation to Making Tax Digital for Income Tax (MTD IT)?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I am a sole trader and/or landlord using Self Assessment and want to understand MTD IT",
+          "value": "in_scope_individual",
+          "flags": [
+            "q1-role:in_scope_individual"
+          ]
+        },
+        {
+          "label": "I am an accountant or agent acting on behalf of a client",
+          "value": "agent",
+          "flags": [
+            "q1-role:agent"
+          ]
+        },
+        {
+          "label": "I am neither of these — for example, I am employed only (PAYE) with no self-employment or rental income",
+          "value": "out_of_scope",
+          "flags": [
+            "q1-role:out_of_scope"
+          ]
+        },
+        {
+          "label": "I am not sure whether MTD IT applies to me at all",
+          "value": "unsure_scope",
+          "flags": [
+            "q1-role:unsure_scope"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-topic",
+      "text": "What would you most like to know about MTD IT for your own sole trader or landlord situation?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-role:in_scope_individual"
+        ]
+      },
+      "options": [
+        {
+          "label": "I want to understand what MTD IT is and how it works overall",
+          "value": "what_is_it",
+          "flags": [
+            "q2-topic:what_is_it"
+          ]
+        },
+        {
+          "label": "I want to know whether MTD IT applies to me and when",
+          "value": "who_must_use",
+          "flags": [
+            "q2-topic:who_must_use"
+          ]
+        },
+        {
+          "label": "I want to know what digital records I need to keep",
+          "value": "digital_records",
+          "flags": [
+            "q2-topic:digital_records"
+          ]
+        },
+        {
+          "label": "I want to understand how quarterly updates work",
+          "value": "quarterly_updates",
+          "flags": [
+            "q2-topic:quarterly_updates"
+          ]
+        },
+        {
+          "label": "I have already signed up and want to know what to do in my first year",
+          "value": "first_year",
+          "flags": [
+            "q2-topic:first_year"
+          ]
+        },
+        {
+          "label": "I am not sure what I need to find out",
+          "value": "unsure_topic",
+          "flags": [
+            "q2-topic:unsure_topic"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-agent-topic",
+      "text": "As an agent or accountant, what aspect of MTD IT do you need guidance on?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-role:agent"
+        ]
+      },
+      "options": [
+        {
+          "label": "What tasks I can perform on behalf of my client under MTD IT and how agent authorisation works",
+          "value": "agent_roles",
+          "flags": [
+            "q2-agent-topic:agent_roles"
+          ]
+        },
+        {
+          "label": "How my client accesses the MTD IT service after signing up",
+          "value": "access_service",
+          "flags": [
+            "q2-agent-topic:access_service"
+          ]
+        },
+        {
+          "label": "What my client needs to do in their first year on MTD IT",
+          "value": "first_year_agent",
+          "flags": [
+            "q2-agent-topic:first_year_agent"
+          ]
+        },
+        {
+          "label": "Something else about MTD IT not listed here",
+          "value": "agent_other",
+          "flags": [
+            "q2-agent-topic:agent_other"
+          ]
+        },
+        {
+          "label": "I am not sure what I need",
+          "value": "agent_unsure",
+          "flags": [
+            "q2-agent-topic:agent_unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-first-year-or-software",
+      "text": "You have signed up for MTD IT — which aspect of your first year do you need help with?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-topic:first_year"
+        ]
+      },
+      "options": [
+        {
+          "label": "Getting my software authorised and ready to make my first submission",
+          "value": "software_setup",
+          "flags": [
+            "q3-first-year-or-software:software_setup"
+          ]
+        },
+        {
+          "label": "Understanding all my obligations in the first year (digital records, quarterly updates, end-of-period statement)",
+          "value": "first_year_overview",
+          "flags": [
+            "q3-first-year-or-software:first_year_overview"
+          ]
+        },
+        {
+          "label": "How to access and navigate the MTD IT service now that I am signed up",
+          "value": "access_service",
+          "flags": [
+            "q3-first-year-or-software:access_service"
+          ]
+        },
+        {
+          "label": "I am not sure which of these I need",
+          "value": "first_year_unsure",
+          "flags": [
+            "q3-first-year-or-software:first_year_unsure"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "mtd-it-what-it-is",
+      "when": {
+        "any": [
+          "q2-topic:what_is_it"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is Making Tax Digital for Income Tax?",
+      "result_copy": "Indicated result: your answers suggest you are looking for an overview of what Making Tax Digital for Income Tax is and how it works. This dish is indicated to explain the MTD IT framework for sole traders and landlords as described in HMRC's official guidance.",
+      "figure_ids": []
+    },
+    {
+      "id": "mtd-it-who-must-use",
+      "when": {
+        "any": [
+          "q1-role:unsure_scope",
+          "q2-topic:who_must_use"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Does MTD IT apply to me — sole trader or landlord?",
+      "result_copy": "Indicated result: your answers suggest uncertainty about whether MTD IT applies to you or when your mandate date is. This dish is indicated to help you determine your status as a sole trader or landlord under Self Assessment and what the conditional obligations are.",
+      "figure_ids": []
+    },
+    {
+      "id": "mtd-it-digital-records",
+      "when": {
+        "any": [
+          "q2-topic:digital_records"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What digital records do I need to keep for MTD IT?",
+      "result_copy": "Indicated result: your answers suggest you need to understand what digital record-keeping is required under MTD IT. This dish is indicated to explain what records must be maintained digitally and how this differs from traditional methods.",
+      "figure_ids": []
+    },
+    {
+      "id": "mtd-it-quarterly-updates",
+      "when": {
+        "any": [
+          "q2-topic:quarterly_updates"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How do quarterly updates work under MTD IT?",
+      "result_copy": "Indicated result: your answers suggest you need to understand how quarterly updates work. This dish is indicated to explain what a quarterly update is, what it contains, and how it fits into the MTD IT year.",
+      "figure_ids": []
+    },
+    {
+      "id": "mtd-it-software-setup",
+      "when": {
+        "any": [
+          "q3-first-year-or-software:software_setup"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How do I get my software ready for MTD IT?",
+      "result_copy": "Indicated result: your answers suggest you need to get your MTD-compatible software authorised and ready for your first submission. This dish is indicated to resolve the steps required as set out in HMRC's official guidance.",
+      "figure_ids": []
+    },
+    {
+      "id": "mtd-it-first-year",
+      "when": {
+        "any": [
+          "q2-agent-topic:first_year_agent",
+          "q3-first-year-or-software:first_year_overview"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What do I need to do in my first year on MTD IT?",
+      "result_copy": "Indicated result: your answers suggest you need a full picture of your obligations in your first year on MTD IT. This dish is indicated to explain the first-year steps including authorising software, keeping digital records, submitting quarterly updates, and completing your end-of-period statement.",
+      "figure_ids": []
+    },
+    {
+      "id": "mtd-it-agent-roles",
+      "when": {
+        "any": [
+          "q2-agent-topic:agent_roles"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What can an agent or accountant do on my behalf under MTD IT?",
+      "result_copy": "Indicated result: your answers suggest you are an agent or accountant seeking to understand what you can do on behalf of a client under MTD IT. This dish is indicated to explain agent roles and the authorisation process.",
+      "figure_ids": []
+    },
+    {
+      "id": "mtd-it-access-service",
+      "when": {
+        "any": [
+          "q2-agent-topic:access_service",
+          "q3-first-year-or-software:access_service"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How do I access the MTD IT service after signing up?",
+      "result_copy": "Indicated result: your answers suggest you need to know how to access the MTD IT service after signing up. This dish is indicated to explain how to access and navigate the service through your authorised software rather than the traditional HMRC Self Assessment portal.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-role:out_of_scope",
+          "q2-agent-topic:agent_other"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Making Tax Digital for Income Tax may not apply to you",
+      "result_copy": "Making Tax Digital for Income Tax applies to sole traders and landlords who file a Self Assessment return. If your only income is employment taxed through PAYE, with no self-employment and no rental property, it does not apply to you and there is nothing you need to do. If that changes — you start a side business, or you begin letting a property — the position changes with it, because MTD follows self-employment and property income. If you are an agent whose question is not covered here, HMRC's guidance for agents is the right starting point.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2-topic:unsure_topic",
+          "q2-agent-topic:agent_unsure",
+          "q3-first-year-or-software:first_year_unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Let's narrow down what you need",
+      "result_copy": "Your answers do not yet identify which part of Making Tax Digital for Income Tax you need. That is common — it covers several separate things: whether it applies to you and from when, the digital records you must keep, the quarterly updates you send during the year, getting compatible software authorised, and what happens at the end of the year. A short personalised review works out which of these actually affect you and in what order to deal with them.",
+      "figure_ids": []
+    }
+  ]
+}

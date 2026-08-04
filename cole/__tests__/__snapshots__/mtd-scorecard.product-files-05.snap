@@ -99,9 +99,9 @@ export default function MtdScorecardFile05() {
             MTD Mandation Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            MTD Penalty Risk Assessment
+            How HMRC's Late Submission Points Work
           </h1>
-          <p className="text-neutral-500 text-sm">What HMRC can charge and how to stay out of the penalty path.</p>
+          <p className="text-neutral-500 text-sm">How the points-based late submission system is structured, and where to check the current figures.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -130,7 +130,7 @@ export default function MtdScorecardFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your MTD Mandation Verdict</span>
+                <span className="text-sm font-semibold text-neutral-950">Your MTD Orientation Summary</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +139,7 @@ export default function MtdScorecardFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">MTD Software Migration Path</span>
+                <span className="text-sm font-semibold text-neutral-950">MTD Software and Authorisation</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +148,7 @@ export default function MtdScorecardFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Quarterly Submission Calendar</span>
+                <span className="text-sm font-semibold text-neutral-950">How Quarterly Updates Work</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -165,7 +165,7 @@ export default function MtdScorecardFile05() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">05</span>
-                <span className="text-sm font-semibold text-white">MTD Penalty Risk Assessment</span>
+                <span className="text-sm font-semibold text-white">How HMRC's Late Submission Points Work</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>

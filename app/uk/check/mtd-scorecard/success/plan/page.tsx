@@ -3,27 +3,28 @@
 // Product: mtd-scorecard · Tier 2 Success Page
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
     "num": "01",
     "slug": "mtd-01",
-    "name": "Your MTD Mandation Verdict",
-    "desc": "Which MTD phase applies to you, the exact mandate date, and what your gross income position means.",
+    "name": "Your MTD Orientation Summary",
+    "desc": "The part of MTD for Income Tax your answers point to, and where HMRC states the thresholds and dates.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "mtd-02",
-    "name": "MTD Software Migration Path",
-    "desc": "HMRC-approved software ranked for your situation, migration sequencing, and bridging options.",
+    "name": "MTD Software and Authorisation",
+    "desc": "How compatible software is chosen and authorised, and how bridging software fits.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "mtd-03",
-    "name": "Your Quarterly Submission Calendar",
-    "desc": "Exact dates for all 4 quarterly updates + final declaration, with penalty windows.",
+    "name": "How Quarterly Updates Work",
+    "desc": "The quarterly update cycle and the final declaration, and where HMRC publishes the dates that apply to you.",
     "tier": 1
   },
   {
@@ -36,8 +37,8 @@ const FILES = [
   {
     "num": "05",
     "slug": "mtd-05",
-    "name": "MTD Penalty Risk Assessment",
-    "desc": "What HMRC can charge and how to stay out of the penalty path.",
+    "name": "How HMRC's Late Submission Points Work",
+    "desc": "How the points-based late submission system is structured, and where to check the current figures.",
     "tier": 1
   },
   {
@@ -78,25 +79,16 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "unresolvable", reason: "authority_page_stating_the_deadline_not_captured").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
-
-  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
-  // expired or will not parse, is a real defect — surface it so it is never silent.
-  // Phase 5 replaces this with real alerting.
-  useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "mtd-scorecard", deadlineIso: "" });
-  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -135,30 +127,12 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const income_band = sessionStorage.getItem("mtd-scorecard_income_band") || "30k_to_50k";
-      const income_source = sessionStorage.getItem("mtd-scorecard_income_source") || "both";
-      const record_keeping = sessionStorage.getItem("mtd-scorecard_record_keeping") || "spreadsheets";
-      const quarterly_aware = sessionStorage.getItem("mtd-scorecard_quarterly_aware") || "false";
-      const mandated = sessionStorage.getItem("mtd-scorecard_mandated") || "true";
-      const mandate_date = sessionStorage.getItem("mtd-scorecard_mandate_date") || "6 April 2027";
-      const mandate_wave = sessionStorage.getItem("mtd-scorecard_mandate_wave") || "2";
-      const software_gap = sessionStorage.getItem("mtd-scorecard_software_gap") || "true";
-      const status = sessionStorage.getItem("mtd-scorecard_status") || "YOU ARE IN NEXT WAVE";
-      const tier = sessionStorage.getItem("mtd-scorecard_tier") || "147";
-
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-        "income_band": income_band,
-        "income_source": income_source,
-        "record_keeping": record_keeping,
-        "quarterly_aware": quarterly_aware,
-        "mandated": mandated,
-        "mandate_date": mandate_date,
-        "mandate_wave": mandate_wave,
-        "software_gap": software_gap,
-        "status": status,
-        "tier": tier,
-      }).some(v => v && v !== "30k_to_50k");
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
+      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // (F5 contract). The legacy per-field keys are never written by an engine-native
+      // calculator, so reading them would always fall back to defaults → a generic,
+      // corpus-contradicting assessment.
+      const inputs = buildComposerInputsFromSession("mtd-scorecard");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -169,19 +143,8 @@ export default function SuccessPlan() {
           authority:  "HMRC",
           tier:       2,
           name: name === "there" ? "" : name,
-          inputs: {
-        "Income band": income_band,
-        "Income source": income_source,
-        "Record keeping method": record_keeping,
-        "Aware of quarterly requirement": quarterly_aware,
-        "Mandated under MTD": mandated,
-        "Exact mandate date": mandate_date,
-        "Mandate wave (1/2/3/null)": mandate_wave,
-        "Software gap detected": software_gap,
-        "Verdict status": status,
-        "Product tier purchased": tier,
-          },
-          fields: ["mandationStatus","exactMandateDate","mandateWaveAnalysis","incomeSourceImpact","softwareGapAssessment","awarenessGapAssessment","quarterlyCalendar","penaltyExposure","softwareMigrationPath","multiPropertyReportingPlan","accountantCoordinationBrief","firstYearDryRunSchedule","ongoingComplianceChecklist"],
+          inputs,
+          fields: ["whichPartApplies","whoMtdAppliesTo","digitalRecordsRequired","quarterlyUpdateCycle","softwareAndAuthorisation","endOfYearProcess","agentAuthorisation","whereToCheckThresholds","softwareMigrationPath","multiPropertyReportingPlan","accountantCoordinationBrief","firstYearDryRunSchedule","ongoingComplianceChecklist"],
         }),
       });
       const data = await res.json();
@@ -191,14 +154,14 @@ export default function SuccessPlan() {
       setError(err instanceof Error ? err.message : "Failed to generate assessment");
       // Graceful fallback — page still shows files and calendar
       setAssessment({
-        mandationStatus: "Your personalised mandationStatus is being prepared — please refresh in a moment.",
-        exactMandateDate: "Your personalised exactMandateDate is being prepared — please refresh in a moment.",
-        mandateWaveAnalysis: "Your personalised mandateWaveAnalysis is being prepared — please refresh in a moment.",
-        incomeSourceImpact: "Your personalised incomeSourceImpact is being prepared — please refresh in a moment.",
-        softwareGapAssessment: "Your personalised softwareGapAssessment is being prepared — please refresh in a moment.",
-        awarenessGapAssessment: "Your personalised awarenessGapAssessment is being prepared — please refresh in a moment.",
-        quarterlyCalendar: "Your personalised quarterlyCalendar is being prepared — please refresh in a moment.",
-        penaltyExposure: "Your personalised penaltyExposure is being prepared — please refresh in a moment.",
+        whichPartApplies: "Your personalised whichPartApplies is being prepared — please refresh in a moment.",
+        whoMtdAppliesTo: "Your personalised whoMtdAppliesTo is being prepared — please refresh in a moment.",
+        digitalRecordsRequired: "Your personalised digitalRecordsRequired is being prepared — please refresh in a moment.",
+        quarterlyUpdateCycle: "Your personalised quarterlyUpdateCycle is being prepared — please refresh in a moment.",
+        softwareAndAuthorisation: "Your personalised softwareAndAuthorisation is being prepared — please refresh in a moment.",
+        endOfYearProcess: "Your personalised endOfYearProcess is being prepared — please refresh in a moment.",
+        agentAuthorisation: "Your personalised agentAuthorisation is being prepared — please refresh in a moment.",
+        whereToCheckThresholds: "Your personalised whereToCheckThresholds is being prepared — please refresh in a moment.",
         softwareMigrationPath: "Your personalised softwareMigrationPath is being prepared — please refresh in a moment.",
         multiPropertyReportingPlan: "Your personalised multiPropertyReportingPlan is being prepared — please refresh in a moment.",
         accountantCoordinationBrief: "Your personalised accountantCoordinationBrief is being prepared — please refresh in a moment.",
@@ -206,7 +169,7 @@ export default function SuccessPlan() {
         ongoingComplianceChecklist: "Your personalised ongoingComplianceChecklist is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
-          "What is the single most important action I should take before Live since 6 April 2026?",
+          "What is the single most important action I should take before Quarterly update deadline — not in captured authority?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -218,16 +181,6 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const income_band = sessionStorage.getItem("mtd-scorecard_income_band") || "30k_to_50k";
-    const income_source = sessionStorage.getItem("mtd-scorecard_income_source") || "both";
-    const record_keeping = sessionStorage.getItem("mtd-scorecard_record_keeping") || "spreadsheets";
-    const quarterly_aware = sessionStorage.getItem("mtd-scorecard_quarterly_aware") || "false";
-    const mandated = sessionStorage.getItem("mtd-scorecard_mandated") || "true";
-    const mandate_date = sessionStorage.getItem("mtd-scorecard_mandate_date") || "6 April 2027";
-    const mandate_wave = sessionStorage.getItem("mtd-scorecard_mandate_wave") || "2";
-    const software_gap = sessionStorage.getItem("mtd-scorecard_software_gap") || "true";
-    const status = sessionStorage.getItem("mtd-scorecard_status") || "YOU ARE IN NEXT WAVE";
-    const tier = sessionStorage.getItem("mtd-scorecard_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -279,7 +232,7 @@ export default function SuccessPlan() {
     const text = (assessment.accountantQuestions as string[])
       .map((q,i) => `${i+1}. "${q}"`).join("\n");
     await navigator.clipboard.writeText(
-      `Your MTD Implementation Plan — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
+      `Your MTD Setup Guide — questions for my accountant:\n\n${text}\n\nTaxCheckNow · taxchecknow.com`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -308,10 +261,10 @@ export default function SuccessPlan() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your MTD Implementation Plan · £147
+            Payment confirmed · Your MTD Setup Guide · £147
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}MTD Implementation Plan
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}MTD Setup Guide
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
@@ -355,7 +308,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["mandationStatus","exactMandateDate","mandateWaveAnalysis","incomeSourceImpact","softwareGapAssessment","awarenessGapAssessment"] as string[]).map(key => {
+                {(["whichPartApplies","whoMtdAppliesTo","digitalRecordsRequired","quarterlyUpdateCycle","softwareAndAuthorisation","endOfYearProcess"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -378,7 +331,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before Live since 6 April 2026
+                  What to do — in order — before Quarterly update deadline — not in captured authority
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
