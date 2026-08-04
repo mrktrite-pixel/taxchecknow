@@ -468,7 +468,7 @@ export default function EngineCalculator({
           escapeLabel={escapeLabelFor(config)}
           escapeBody={escapeBodyFor(config)}
           ctaLabel={showCta ? (escape ? escapeCtaLabelFor(config, tierInfo.price) : ctaLabelFor(config, tierInfo.price)) : undefined}
-          ctaNote={showCta ? `${fmtPrice(tierInfo.price)} · one-time · built around your answers` : undefined}
+          ctaNote={showCta ? `${fmtPrice(tierInfo.price, config)} · one-time · built around your answers` : undefined}
           onCta={showCta ? () => openPopup(tierInfo) : undefined}
           secondaryLabel={!escape && showCta ? secondaryTierLabelFor(config, alt.price) : undefined}
           onSecondary={!escape && showCta ? () => openPopup(alt) : undefined}

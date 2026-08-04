@@ -124,8 +124,24 @@ export function altTier(config: EngineConfig | undefined, tier: number): PinnedT
   return { tier: other, price: priceForTier(config, other) };
 }
 
-export function fmtPrice(n: number): string {
-  return `$${n}`;
+/**
+ * Currency symbol for the product, driven by config.currency.
+ *
+ * MIRRORS cole/generators/generate-success-pages.ts:51-53 sym(), which is how the
+ * paid success banner already gets £ right — deliberately the SAME dollar-currency
+ * list rather than inventing a second source of truth. If that list changes, both
+ * should change together.
+ *
+ * DO NOT HARDCODE A SYMBOL HERE. This template is shared by every product, so a
+ * hardcoded £ would regress the AU/US/NZ/CA products on their next regen exactly
+ * as the hardcoded $ regressed the UK ones.
+ */
+export function currencySymbol(config: EngineConfig | undefined): string {
+  return ["USD", "NZD", "CAD", "AUD"].includes(config?.currency ?? "AUD") ? "$" : "£";
+}
+
+export function fmtPrice(n: number, config?: EngineConfig): string {
+  return `${currencySymbol(config)}${n}`;
 }
 
 export function qualFields(config: EngineConfig | undefined): QualField[] {
@@ -133,22 +149,22 @@ export function qualFields(config: EngineConfig | undefined): QualField[] {
 }
 
 /** Substitute the {price} token in a copy template. */
-export function withPrice(template: string, price: number): string {
-  return template.replace(/\{price\}/g, fmtPrice(price));
+export function withPrice(template: string, price: number, config?: EngineConfig): string {
+  return template.replace(/\{price\}/g, fmtPrice(price, config));
 }
 
 // ── copy accessors (config value → generic default) ──────────────────────────
 export function ctaLabelFor(config: EngineConfig | undefined, price: number): string {
-  return withPrice(config?.copy?.ctaLabel ?? "Get my personalised plan — {price} →", price);
+  return withPrice(config?.copy?.ctaLabel ?? "Get my personalised plan — {price} →", price, config);
 }
 export function payLabelFor(config: EngineConfig | undefined, price: number): string {
-  return withPrice(config?.copy?.payLabel ?? "Pay {price} →", price);
+  return withPrice(config?.copy?.payLabel ?? "Pay {price} →", price, config);
 }
 export function secondaryTierLabelFor(config: EngineConfig | undefined, price: number): string {
-  return withPrice(config?.copy?.secondaryTierLabel ?? "Want the complete system instead? — {price}", price);
+  return withPrice(config?.copy?.secondaryTierLabel ?? "Want the complete system instead? — {price}", price, config);
 }
 export function escapeCtaLabelFor(config: EngineConfig | undefined, price: number): string {
-  return withPrice(config?.copy?.escapeCtaLabel ?? "Get my personalised review — {price} →", price);
+  return withPrice(config?.copy?.escapeCtaLabel ?? "Get my personalised review — {price} →", price, config);
 }
 export function resultLabelFor(config: EngineConfig | undefined): string {
   return config?.copy?.resultLabel ?? "Your result";
@@ -207,5 +223,5 @@ export function sellSubheadFor(config: EngineConfig | undefined): string {
   return config?.copy?.sellSubhead ?? "Here's what's included — built around your answers.";
 }
 export function getItLabelFor(config: EngineConfig | undefined, price: number): string {
-  return withPrice(config?.copy?.getItLabel ?? "Get it — {price} →", price);
+  return withPrice(config?.copy?.getItLabel ?? "Get it — {price} →", price, config);
 }
