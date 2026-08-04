@@ -87,7 +87,7 @@ export default function MtdScorecardFile03() {
           {/* Deadline bar */}
           <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
             <span className="text-sm font-bold text-white">
-              🔴 MANDATED — NOT OPTIONAL: 6 April 2026
+              🔴 PHASE 1: Live since 6 April 2026
             </span>
             <a href="/uk/check/mtd-scorecard"
               className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
@@ -204,7 +204,7 @@ export default function MtdScorecardFile03() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
+            Always consult a qualified United Kingdom tax adviser for your personal situation.
             Based on HMRC guidance April 2026.
           </p>
         </div>

@@ -23,10 +23,10 @@ export async function GET() {
     "legislation": "Finance Act 2021 — MTD ITSA phased implementation from 6 April 2026 · Income Tax (Digital Requirements) Regulations implementing quarterly update obligations · Schedule 24 Finance Act 2021 penalty regime (£200 initial + £10/day up to 90 days per missed quarterly update) · HMRC points-based late-submission penalty system",
     "legal_anchor": "Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)",
     "deadline": {
-        "iso_date": "2026-04-06T00:00:00.000+01:00",
-        "display": "6 April 2026",
-        "description": "6 April 2026 — MTD ITSA Phase 1 mandate date for gross income over £50,000",
-        "urgency_label": "MANDATED — NOT OPTIONAL"
+        "iso_date": "",
+        "display": "Live since 6 April 2026",
+        "description": "MTD for Income Tax Phase 1 began on 6 April 2026 for gross income over £50,000. That date has passed — if you are in Phase 1 you are already mandated.",
+        "urgency_label": "PHASE 1"
     },
     "key_facts": {
         "phase_1_mandate_date": "6 April 2026",
@@ -171,7 +171,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/mtd-scorecard",
     "api_endpoint": "/api/rules/mtd-scorecard",
-    "generated_at": "2026-04-23T01:02:33.858Z"
+    "generated_at": "2026-08-04T02:10:58.881Z"
 };
 
   return NextResponse.json(rules, {

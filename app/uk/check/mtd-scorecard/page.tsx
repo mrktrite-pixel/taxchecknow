@@ -25,15 +25,18 @@ export const metadata: Metadata = {
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "6 April 2026";
-const DEADLINE_ISO   = "2026-04-06T00:00:00.000+01:00";
+const DEADLINE_LABEL = "Live since 6 April 2026";
+const DEADLINE_ISO   = "";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -330,8 +333,13 @@ const countdownStats = [
 
 export default function MtdScorecardPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "uk/check/mtd-scorecard", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -444,6 +452,18 @@ export default function MtdScorecardPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "Am I mandated under MTD ITSA? The £4,400 trap",
+    description: "MTD for Income Tax is live from 6 April 2026 for gross income over £50,000. Most people don't know the reporting changes from 1 annual return to 5 submissions per year — and miss the £1,100-per-quarter penalty regime. Run your MTD check in 2 minutes.",
+    thumbnailUrl: "https://i.ytimg.com/vi/i4O6GBeyMO0/hqdefault.jpg",
+    uploadDate: "2026-06-15T11:00:24.109+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=i4O6GBeyMO0",
+    embedUrl: "https://www.youtube.com/embed/i4O6GBeyMO0",
+    transcript: "Am I mandated under MTD ITSA? Sound like you? You earn over £50,000 gross and you're not sure if this applies. The actual truth is — MTD doesn't just mean filing online. HMRC replaces your one annual return with five submissions a year: four quarterly updates plus one final declaration. Miss a quarter and the penalty hits £1,100. Miss all four and you're up for £4,400. The Phase 1 deadline is 6 April 2026 — that's not far away. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -453,6 +473,7 @@ export default function MtdScorecardPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -476,7 +497,7 @@ export default function MtdScorecardPage() {
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · MANDATED — NOT OPTIONAL
+        🔴 {countdown} days · {DEADLINE_LABEL} · PHASE 1
       </div>
       )}
 
@@ -572,11 +593,11 @@ export default function MtdScorecardPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to MTD ITSA Phase 1 — 6 April 2026
+            
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 6 April 2026</span>
+            <span className="text-lg text-neutral-300">days until Live since 6 April 2026</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -1052,7 +1073,7 @@ export default function MtdScorecardPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before 6 April 2026
+            Ask these before you file
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -1162,6 +1183,15 @@ export default function MtdScorecardPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=i4O6GBeyMO0" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"Am I mandated under MTD ITSA? Sound like you? You earn over £50,000 gross and you're not sure if this applies. The actual truth is — MTD doesn't just mean filing online. HMRC replaces your one annual return with five submissions a year: four quarterly updates plus one final declaration. Miss a quarter and the penalty hits £1,100. Miss all four and you're up for £4,400. The Phase 1 deadline is 6 April 2026 — that's not far away. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
