@@ -11,12 +11,25 @@ import Stripe from "stripe";
 // Preview → STRIPE_SECRET_TEST_KEY unconditionally; STRIPE_SECRET_KEY only off-preview.
 const isPreview = (): boolean => process.env.VERCEL_ENV === "preview";
 
+// TEMP FRCGW SANDBOX TEST — revert commit after test.
+// The two FRCGW product keys ride the sandbox rail in EVERY environment (Production
+// included): TEST price + TEST secret key, unconditionally. No other product's path
+// is affected — every other key still resolves by environment exactly as before.
+const FRCGW_SANDBOX_KEYS = new Set<string>([
+  "au_67_frcgw_clearance_certificate",
+  "au_147_frcgw_clearance_certificate",
+]);
+
 // keyMode is derived from the key PREFIX only (never the secret itself) — safe to log.
 // It exposes a mislabeled/stale var (e.g. STRIPE_SECRET_TEST_KEY holding an sk_live_ value,
 // as happened in the Jul-20 live swap) that isPreview() alone cannot reveal.
-function getStripe(): { stripe: Stripe; keyMode: string } {
-  const key = isPreview() ? process.env.STRIPE_SECRET_TEST_KEY : process.env.STRIPE_SECRET_KEY;
-  if (!key) throw new Error(isPreview() ? "Missing STRIPE_SECRET_TEST_KEY (Preview sandbox)" : "Missing STRIPE_SECRET_KEY — add to Vercel environment variables");
+// TEMP FRCGW SANDBOX TEST — revert commit after test.
+// forceTestKey is passed true ONLY for the two FRCGW keys above; every other caller
+// gets the unchanged environment-selected key.
+function getStripe(forceTestKey = false): { stripe: Stripe; keyMode: string } {
+  const useTestKey = forceTestKey || isPreview();
+  const key = useTestKey ? process.env.STRIPE_SECRET_TEST_KEY : process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error(useTestKey ? "Missing STRIPE_SECRET_TEST_KEY (Preview sandbox)" : "Missing STRIPE_SECRET_KEY — add to Vercel environment variables");
   const keyMode = key.startsWith("sk_live_") ? "live" : key.startsWith("sk_test_") ? "test" : "unknown";
   return { stripe: new Stripe(key, { apiVersion: "2026-03-25.dahlia" }), keyMode };
 }
@@ -70,6 +83,12 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {
+  // TEMP FRCGW SANDBOX TEST — revert commit after test.
+  // FRCGW resolves the sandbox TEST price UNCONDITIONALLY (not only on Preview), so a
+  // Production buy of these two keys transacts against the sandbox. Checked before the
+  // registry so the registered live vars (STRIPE_AU_FRCGW_67/147) are never consulted.
+  if (FRCGW_SANDBOX_KEYS.has(productKey)) return process.env[`STRIPE_AU_TEST_${tier}`];
+
   const registered = PRICE_ENV_REGISTRY[productKey];
   if (registered) {
     // INVARIANT: a Preview deployment runs the TEST secret key and must NEVER be handed a live price ID,
@@ -347,7 +366,6 @@ function getSuccessPath(productKey: string, tier: number): string {
 
 export async function POST(req: Request) {
   try {
-    const { stripe, keyMode } = getStripe();
     const body = await req.json();
     const { decision_session_id, tier, product_key, success_url, cancel_url } = body;
 
@@ -369,6 +387,13 @@ export async function POST(req: Request) {
     }
 
     const productKey = product_key || `supertax_${normalizedTier}_div296_wealth_eraser`;
+
+    // TEMP FRCGW SANDBOX TEST — revert commit after test.
+    // getStripe() moved below the body parse so the key can be chosen per product key.
+    // Only the two FRCGW keys force the TEST secret; every other product authenticates
+    // with the environment-selected key exactly as before.
+    const { stripe, keyMode } = getStripe(FRCGW_SANDBOX_KEYS.has(productKey));
+
     const priceId = getPriceId(normalizedTier, productKey);
 
     if (!priceId) {
