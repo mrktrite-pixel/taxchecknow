@@ -3,7 +3,29 @@
 // Product: day-183-rule · File 02 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts global-day-183-rule
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "day-183-rule";
+const BODY = `<h2>Weighted Day Count</h2><table><tr><th>Year</th><th>Days physically present in the U.S.</th><th>Weight</th><th>Counts as</th></tr><tr><td>Current year</td><td>your count</td><td>All days</td><td>days × 1</td></tr><tr><td>Year before</td><td>your count</td><td>One third</td><td>days ÷ 3</td></tr><tr><td>Two years before</td><td>your count</td><td>One sixth</td><td>days ÷ 6</td></tr><tr><td colspan="3"><strong>Weighted three-year total</strong></td><td><strong>≥ 183?</strong></td></tr></table><div class="warning-box"><strong>Check the current-year minimum separately.</strong> The weighted total does nothing on its own — you must also have at least 31 days of U.S. presence in the current year. 25 days this year and 330 in each of the two prior years gives 190 weighted days and still does not meet the test.</div><p>Count only days you were physically present. Excluded days come out before the weighting is applied — see document 03.</p>`;
+
 export default function Day183RuleFile02() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function Day183RuleFile02() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 PER-FILER: Your income tax return due date
-            </span>
-            <a href="/nomad/check/183-day-rule"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="PER-FILER: Your income tax return due date"
+            checkHref="/nomad/check/183-day-rule"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             183-Day Rule Reality Check · File 02 of 8
@@ -114,10 +131,7 @@ export default function Day183RuleFile02() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Weighted Day Count</h2><table><tr><th>Year</th><th>Days physically present in the U.S.</th><th>Weight</th><th>Counts as</th></tr><tr><td>Current year</td><td>your count</td><td>All days</td><td>days × 1</td></tr><tr><td>Year before</td><td>your count</td><td>One third</td><td>days ÷ 3</td></tr><tr><td>Two years before</td><td>your count</td><td>One sixth</td><td>days ÷ 6</td></tr><tr><td colspan="3"><strong>Weighted three-year total</strong></td><td><strong>≥ 183?</strong></td></tr></table><div class="warning-box"><strong>Check the current-year minimum separately.</strong> The weighted total does nothing on its own — you must also have at least 31 days of U.S. presence in the current year. 25 days this year and 330 in each of the two prior years gives 190 weighted days and still does not meet the test.</div><p>Count only days you were physically present. Excluded days come out before the weighting is applied — see document 03.</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">

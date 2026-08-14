@@ -3,7 +3,29 @@
 // Product: can-eot-exit · File 08 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts can-can-eot-exit
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "can-eot-exit";
+const BODY = `<h2>Vendor Financing + Governance</h2><h3>Vendor financing fundamentals</h3><ul><li>EOT typically has no initial capital — cannot pay cash upfront</li><li>Vendor accepts promissory note for all / most of purchase price</li><li>Note repaid from future corporation earnings (dividends to EOT used to service debt)</li><li>Term: typically 5-10 years; longer acceptable if business cash flow supports it</li></ul><h3>Interest rate considerations</h3><ul><li>Must be reasonable rate (CRA could impute if too low)</li><li>Prescribed rate (currently ~5%) or commercial rate acceptable</li><li>Too high = excessive income to vendor; too low = imputed benefit issue</li><li>Fixed vs variable: either acceptable with justification</li></ul><h3>Security for vendor</h3><ul><li>Share pledge (EOT pledges shares back to vendor as security)</li><li>General security agreement against corporation's assets</li><li>Personal guarantees typically not required from employees</li><li>Subordination to senior bank debt often necessary</li></ul><h3>Governance framework</h3><ul><li><strong>Trustees:</strong> majority must be qualifying employees or elected by them</li><li><strong>Trustee powers:</strong> real authority over trust decisions (share voting, distributions)</li><li><strong>Employee voting rights:</strong> meaningful input on major decisions (sale, amalgamation, trustee changes)</li><li><strong>Vendor role:</strong> can remain as CEO / director but not controlling</li><li><strong>Deadlock resolution:</strong> appointed by truly independent party (not vendor)</li></ul><h3>CRA substance-over-form review</h3><ul><li>CRA examines whether vendor retains effective control — if yes, exemption denied</li><li>Warning signs: vendor veto on all major decisions; vendor-friendly trustee appointees; vendor's family or close associates as trustees</li><li>Safe signs: genuine employee trustee election; independent chair; employee voting with meaningful frequency</li></ul><h3>Ongoing compliance</h3><ul><li>Annual T3 return for the EOT</li><li>Corporation remains standard T2 filer</li><li>Vendor receives annual interest income (T5 slips) on note</li><li>Retain all documentation 6+ years</li></ul>`;
+
 export default function CanEotExitFile08() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function CanEotExitFile08() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 EOT WINDOW CLOSES: 31 December 2026
-            </span>
-            <a href="/can/check/eot-exit-optimizer"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="EOT WINDOW CLOSES: 31 December 2026"
+            checkHref="/can/check/eot-exit-optimizer"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Canada EOT Exit Optimizer · File 08 of 8
@@ -114,10 +131,7 @@ export default function CanEotExitFile08() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Vendor Financing + Governance</h2><h3>Vendor financing fundamentals</h3><ul><li>EOT typically has no initial capital — cannot pay cash upfront</li><li>Vendor accepts promissory note for all / most of purchase price</li><li>Note repaid from future corporation earnings (dividends to EOT used to service debt)</li><li>Term: typically 5-10 years; longer acceptable if business cash flow supports it</li></ul><h3>Interest rate considerations</h3><ul><li>Must be reasonable rate (CRA could impute if too low)</li><li>Prescribed rate (currently ~5%) or commercial rate acceptable</li><li>Too high = excessive income to vendor; too low = imputed benefit issue</li><li>Fixed vs variable: either acceptable with justification</li></ul><h3>Security for vendor</h3><ul><li>Share pledge (EOT pledges shares back to vendor as security)</li><li>General security agreement against corporation's assets</li><li>Personal guarantees typically not required from employees</li><li>Subordination to senior bank debt often necessary</li></ul><h3>Governance framework</h3><ul><li><strong>Trustees:</strong> majority must be qualifying employees or elected by them</li><li><strong>Trustee powers:</strong> real authority over trust decisions (share voting, distributions)</li><li><strong>Employee voting rights:</strong> meaningful input on major decisions (sale, amalgamation, trustee changes)</li><li><strong>Vendor role:</strong> can remain as CEO / director but not controlling</li><li><strong>Deadlock resolution:</strong> appointed by truly independent party (not vendor)</li></ul><h3>CRA substance-over-form review</h3><ul><li>CRA examines whether vendor retains effective control — if yes, exemption denied</li><li>Warning signs: vendor veto on all major decisions; vendor-friendly trustee appointees; vendor's family or close associates as trustees</li><li>Safe signs: genuine employee trustee election; independent chair; employee voting with meaningful frequency</li></ul><h3>Ongoing compliance</h3><ul><li>Annual T3 return for the EOT</li><li>Corporation remains standard T2 filer</li><li>Vendor receives annual interest income (T5 slips) on note</li><li>Retain all documentation 6+ years</li></ul>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +218,7 @@ export default function CanEotExitFile08() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Canada tax adviser for your personal situation.
+            Always consult a qualified Canadian tax adviser for your personal situation.
             Based on Canada Revenue Agency (CRA) guidance April 2026.
           </p>
         </div>

@@ -3,7 +3,29 @@
 // Product: can-nrls · File 05 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts can-can-nrls
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "can-nrls";
+const BODY = `<div class="info-box"><strong>Use this brief</strong> with a Canadian tax professional experienced with non-resident rental (not a generic tax preparer). Typical fee: $500-$2,000 per Section 216 return.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Am I currently having withholding applied correctly — at 25% gross or a lower rate via NR6?</p></div><h3>Question 2</h3><p>Should we apply for NR6 going forward to reduce the monthly cashflow drag?</p><h3>Question 3</h3><p>Have I been filing Section 216 returns? If not, are there years still within the 2-year refund window?</p><h3>Question 4</h3><p>Should I claim CCA (Capital Cost Allowance) on the rental property?</p><h3>Question 5</h3><p>What is my exit plan — if I sell, what is the Section 116 process and timing?</p>`;
+
 export default function CanNrlsFile05() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function CanNrlsFile05() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 CRA S216 DEADLINE: 30 June 2027
-            </span>
-            <a href="/can/check/non-resident-landlord-withholding"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="CRA S216 DEADLINE: 30 June 2027"
+            checkHref="/can/check/non-resident-landlord-withholding"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Canada Non-Resident Landlord Withholding Trap · File 05 of 8
@@ -114,10 +131,7 @@ export default function CanNrlsFile05() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<div class="info-box"><strong>Use this brief</strong> with a Canadian tax professional experienced with non-resident rental (not a generic tax preparer). Typical fee: $500-$2,000 per Section 216 return.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Am I currently having withholding applied correctly — at 25% gross or a lower rate via NR6?</p></div><h3>Question 2</h3><p>Should we apply for NR6 going forward to reduce the monthly cashflow drag?</p><h3>Question 3</h3><p>Have I been filing Section 216 returns? If not, are there years still within the 2-year refund window?</p><h3>Question 4</h3><p>Should I claim CCA (Capital Cost Allowance) on the rental property?</p><h3>Question 5</h3><p>What is my exit plan — if I sell, what is the Section 116 process and timing?</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +218,7 @@ export default function CanNrlsFile05() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Canada tax adviser for your personal situation.
+            Always consult a qualified Canadian tax adviser for your personal situation.
             Based on Canada Revenue Agency (CRA) guidance April 2026.
           </p>
         </div>

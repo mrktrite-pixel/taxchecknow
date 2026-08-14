@@ -3,7 +3,29 @@
 // Product: allowance-sniper · File 06 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-allowance-sniper
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "allowance-sniper";
+const BODY = `<h2>Multi-Year Pension Planning</h2><p>Pension annual allowance is typically £60,000 per tax year (for earners below £260,000). Unused allowance from the three prior tax years can be carried forward. For 60% trap escape, rarely is the annual allowance a constraint — but for high earners making catch-up contributions, carry forward is the lever.</p><h3>Carry Forward Rules</h3><ul><li>You must have been a member of a registered pension scheme in each prior year</li><li>Current year annual allowance used first, then oldest carry-forward year</li><li>Contributions above annual allowance receive tax charge at marginal rate</li></ul><h3>Strategy</h3><p>For someone at £125,000 adjusted net income with low recent pension history: use current year £60k annual allowance + carry forward £180k = £240k capacity. Can wipe multiple years of 60% trap exposure in one big contribution if cashflow allows.</p>`;
+
 export default function AllowanceSniperFile06() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function AllowanceSniperFile06() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 YEAR END — ALLOWANCE LOST IF MISSED: 5 April 2027
-            </span>
-            <a href="/uk/check/allowance-sniper"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="YEAR END — ALLOWANCE LOST IF MISSED: 5 April 2027"
+            checkHref="/uk/check/allowance-sniper"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             60% Tax Trap Engine · File 06 of 8
@@ -114,10 +131,7 @@ export default function AllowanceSniperFile06() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Multi-Year Pension Planning</h2><p>Pension annual allowance is typically £60,000 per tax year (for earners below £260,000). Unused allowance from the three prior tax years can be carried forward. For 60% trap escape, rarely is the annual allowance a constraint — but for high earners making catch-up contributions, carry forward is the lever.</p><h3>Carry Forward Rules</h3><ul><li>You must have been a member of a registered pension scheme in each prior year</li><li>Current year annual allowance used first, then oldest carry-forward year</li><li>Contributions above annual allowance receive tax charge at marginal rate</li></ul><h3>Strategy</h3><p>For someone at £125,000 adjusted net income with low recent pension history: use current year £60k annual allowance + carry forward £180k = £240k capacity. Can wipe multiple years of 60% trap exposure in one big contribution if cashflow allows.</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +218,7 @@ export default function AllowanceSniperFile06() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United Kingdom tax adviser for your personal situation.
+            Always consult a qualified UK tax adviser for your personal situation.
             Based on HMRC guidance April 2026.
           </p>
         </div>

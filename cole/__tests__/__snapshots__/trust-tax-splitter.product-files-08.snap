@@ -3,7 +3,29 @@
 // Product: trust-tax-splitter · File 08 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts nz-trust-tax-splitter
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "trust-tax-splitter";
+const BODY = `<h2>The Multi-Entity Approach</h2><p>The most tax-efficient structure often combines elements: a company for business income, a trust for asset protection, and personal ownership for specific assets.</p><h2>Common NZ Structures</h2><table><tr><th>Structure</th><th>Best For</th><th>Tax Rate</th></tr><tr><td>Personal</td><td>Employment income, simple assets</td><td>10.5%-39%</td></tr><tr><td>Company</td><td>Business income, retained profits</td><td>28%</td></tr><tr><td>Trust with distribution</td><td>Income splitting, asset protection</td><td>10.5%-33%</td></tr><tr><td>Trust retained</td><td>Asset protection only — tax inefficient</td><td>39%</td></tr></table><div class="warning-box"><strong>Get specific advice:</strong> The optimal structure depends on your income level, family situation, asset mix, and long-term goals. A one-hour session with a specialist accountant will pay for itself many times over.</div>`;
+
 export default function TrustTaxSplitterFile08() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function TrustTaxSplitterFile08() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 DISTRIBUTION DEADLINE: 31 March 2027
-            </span>
-            <a href="/nz/check/trust-tax-splitter"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="DISTRIBUTION DEADLINE: 31 March 2027"
+            checkHref="/nz/check/trust-tax-splitter"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Trust Income Allocation Decision Engine · File 08 of 8
@@ -114,10 +131,7 @@ export default function TrustTaxSplitterFile08() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>The Multi-Entity Approach</h2><p>The most tax-efficient structure often combines elements: a company for business income, a trust for asset protection, and personal ownership for specific assets.</p><h2>Common NZ Structures</h2><table><tr><th>Structure</th><th>Best For</th><th>Tax Rate</th></tr><tr><td>Personal</td><td>Employment income, simple assets</td><td>10.5%-39%</td></tr><tr><td>Company</td><td>Business income, retained profits</td><td>28%</td></tr><tr><td>Trust with distribution</td><td>Income splitting, asset protection</td><td>10.5%-33%</td></tr><tr><td>Trust retained</td><td>Asset protection only — tax inefficient</td><td>39%</td></tr></table><div class="warning-box"><strong>Get specific advice:</strong> The optimal structure depends on your income level, family situation, asset mix, and long-term goals. A one-hour session with a specialist accountant will pay for itself many times over.</div>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">

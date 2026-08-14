@@ -3,7 +3,29 @@
 // Product: mtd-scorecard · File 03 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-mtd-scorecard
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "mtd-scorecard";
+const BODY = `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th><th>Late after</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td><td>Penalty point + fee clock starts</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td><td>Same</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td><td>Same</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td><td>Same</td></tr><tr><td>Final declaration</td><td>Full tax year</td><td>31 January</td><td>Standard SA penalty</td></tr></table><h3>Penalty Accumulation</h3><p>Each missed quarterly update: £200 initial + £10/day × up to 90 days = up to £1,100 per quarter. Missing all 4 in a year = up to £4,400 annually. Plus points-based system (4 points = £200 additional penalty).</p><div class="info-box"><strong>Calendar discipline:</strong> Set recurring reminders 2 weeks before each quarterly deadline. First-year breaches usually come from forgotten deadlines, not incapability.</div>`;
+
 export default function MtdScorecardFile03() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function MtdScorecardFile03() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 PHASE 1: Live since 6 April 2026
-            </span>
-            <a href="/uk/check/mtd-scorecard"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="PHASE 1: Live since 6 April 2026"
+            checkHref="/uk/check/mtd-scorecard"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             MTD Mandation Engine · File 03 of 8
@@ -114,10 +131,7 @@ export default function MtdScorecardFile03() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th><th>Late after</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td><td>Penalty point + fee clock starts</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td><td>Same</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td><td>Same</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td><td>Same</td></tr><tr><td>Final declaration</td><td>Full tax year</td><td>31 January</td><td>Standard SA penalty</td></tr></table><h3>Penalty Accumulation</h3><p>Each missed quarterly update: £200 initial + £10/day × up to 90 days = up to £1,100 per quarter. Missing all 4 in a year = up to £4,400 annually. Plus points-based system (4 points = £200 additional penalty).</p><div class="info-box"><strong>Calendar discipline:</strong> Set recurring reminders 2 weeks before each quarterly deadline. First-year breaches usually come from forgotten deadlines, not incapability.</div>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +218,7 @@ export default function MtdScorecardFile03() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United Kingdom tax adviser for your personal situation.
+            Always consult a qualified UK tax adviser for your personal situation.
             Based on HMRC guidance April 2026.
           </p>
         </div>

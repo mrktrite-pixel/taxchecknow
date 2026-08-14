@@ -3,7 +3,29 @@
 // Product: bring-forward-window · File 07 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts au-bring-forward-window
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "bring-forward-window";
+const BODY = `<h2>SMSF + Division 296 Interaction</h2><p>For TSB approaching $3M, contributing more super increases Division 296 exposure from 1 July 2026. The two decisions must be modelled together.</p><h2>The Trade-Off</h2><p>Division 296 applies an additional 15% tax on realised earnings attributable to the TSB proportion above $3M. Adding $510,000 to super pushes more of your balance into the Division 296 net.</p><div class="action-box"><h3>Scenario A — TSB $2.5M, sequencing $510k</h3><p>Post-contribution TSB: $3.01M. Division 296 applies on realised earnings attributable to the $10,000 above $3M. Minimal impact in year 1. Long-term: as balance grows, proportion above $3M grows.</p><h3>Scenario B — TSB $2.8M, sequencing $510k</h3><p>Post-contribution TSB: $3.31M. Division 296 applies on earnings attributable to 9.4% of balance. On $150,000 realised earnings/year, that's approximately $2,110 additional tax annually.</p><h3>Scenario C — TSB $2.9M, sequencing $510k</h3><p>Post-contribution TSB: $3.41M. Division 296 applies on 12.0% of earnings. On $150,000 realised earnings, approximately $2,700 additional tax annually — and compounding.</p></div><h2>The Decision Rule</h2><p>If TSB at 30 June 2026 will be under $2.5M: sequencing is almost always beneficial — Division 296 impact is marginal.</p><p>If TSB will be $2.5M-$3M: model both scenarios. Sequencing is usually still beneficial but the trade-off needs to be quantified.</p><p>If TSB will be over $3M: consider withdrawing before 30 June 2026 to bring TSB under $3M for the transitional year, rather than adding more.</p>`;
+
 export default function BringForwardWindowFile07() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function BringForwardWindowFile07() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 CONTRIBUTION DEADLINE: 30 June 2026
-            </span>
-            <a href="/au/check/bring-forward-window"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="CONTRIBUTION DEADLINE: 30 June 2026"
+            checkHref="/au/check/bring-forward-window"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Super Contribution Bring-Forward Window Engine · File 07 of 8
@@ -114,10 +131,7 @@ export default function BringForwardWindowFile07() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>SMSF + Division 296 Interaction</h2><p>For TSB approaching $3M, contributing more super increases Division 296 exposure from 1 July 2026. The two decisions must be modelled together.</p><h2>The Trade-Off</h2><p>Division 296 applies an additional 15% tax on realised earnings attributable to the TSB proportion above $3M. Adding $510,000 to super pushes more of your balance into the Division 296 net.</p><div class="action-box"><h3>Scenario A — TSB $2.5M, sequencing $510k</h3><p>Post-contribution TSB: $3.01M. Division 296 applies on realised earnings attributable to the $10,000 above $3M. Minimal impact in year 1. Long-term: as balance grows, proportion above $3M grows.</p><h3>Scenario B — TSB $2.8M, sequencing $510k</h3><p>Post-contribution TSB: $3.31M. Division 296 applies on earnings attributable to 9.4% of balance. On $150,000 realised earnings/year, that's approximately $2,110 additional tax annually.</p><h3>Scenario C — TSB $2.9M, sequencing $510k</h3><p>Post-contribution TSB: $3.41M. Division 296 applies on 12.0% of earnings. On $150,000 realised earnings, approximately $2,700 additional tax annually — and compounding.</p></div><h2>The Decision Rule</h2><p>If TSB at 30 June 2026 will be under $2.5M: sequencing is almost always beneficial — Division 296 impact is marginal.</p><p>If TSB will be $2.5M-$3M: model both scenarios. Sequencing is usually still beneficial but the trade-off needs to be quantified.</p><p>If TSB will be over $3M: consider withdrawing before 30 June 2026 to bring TSB under $3M for the transitional year, rather than adding more.</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +218,7 @@ export default function BringForwardWindowFile07() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Australia tax adviser for your personal situation.
+            Always consult a qualified Australian tax adviser for your personal situation.
             Based on ATO guidance April 2026.
           </p>
         </div>

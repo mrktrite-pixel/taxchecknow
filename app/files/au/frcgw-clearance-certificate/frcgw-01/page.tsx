@@ -3,7 +3,29 @@
 // Product: frcgw-clearance-certificate · File 01 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts au-frcgw-clearance-certificate
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "frcgw-clearance-certificate";
+const BODY = `<h2>Your withholding position</h2><div class="action-box"><h3>The three facts</h3><p>1. From 1 January 2025 there is no value threshold — every Australian real property sale is in scope, whatever the price.</p><p>2. If a valid clearance certificate is not given to the purchaser at or before settlement, the purchaser must withhold 15% of the sale price and remit it to the ATO.</p><p>3. A clearance certificate is free, most issue within days, and it stays valid for 12 months. There is no obligation to use one you obtain.</p></div><h3>How the amount is worked out</h3><p>Withholding = sale price x 15%. It is calculated on the <strong>sale price</strong>, not on your profit, and not on the capital gain. That is why it can exceed the tax you actually owe — and why it is credited back to you rather than kept.</p><div class="info-box"><p><strong>Your sale price:</strong> {{bind:sale_price|this check did not ask for your sale price, so we have not put a figure here. Multiply your contract price by 0.15 to get the amount that would be withheld.}}</p></div><h3>Worked examples</h3><p>These are illustrations, not your numbers.</p><table><thead><tr><th>Sale price (example)</th><th>Withheld at 15% (example)</th></tr></thead><tbody><tr><td>$450,000</td><td>$67,500</td></tr><tr><td>$900,000</td><td>$135,000</td></tr><tr><td>$1,200,000</td><td>$180,000</td></tr></tbody></table><p>In each case the amount is remitted to the ATO and credited to the vendor when they lodge the return for the income year the contract was signed.</p>{{#if section:per_vendor}}<h3>You co-own this property — the 15% is per owner</h3><div class="highlight"><p>A clearance certificate covers one <strong>vendor</strong>, not one property. Each owner named on the title applies separately and the applications are processed separately, so they can issue on different days.</p><p>If one co-owner's certificate is missing at settlement, the purchaser withholds 15% of <strong>that owner's share</strong> of the sale price. The other owners are unaffected. On a $600,000 sale held equally by two owners, one missing certificate means 15% of $300,000 — $45,000 — is withheld for that owner alone. Again, an illustration, not your figures.</p><p>Each certificate is free, so there is nothing to gain by waiting until every owner is ready to apply together.</p></div>{{/if}}{{#if has:settlement_date}}<h3>Your dates</h3><div class="action-box"><p><strong>Settlement:</strong> {{bind:settlement_date}}</p><p><strong>Lodge by:</strong> {{bind:lodge_by_date}} — 28 days out, which is the outer processing time the ATO asks you to allow. Most certificates issue well inside that.</p></div>{{/if}}{{#unless has:settlement_date}}<h3>Your dates</h3><p>You did not give us a settlement date, so this pack does not state one. Put your settlement date in your calendar and count back 28 days — that is the date to lodge by if you want the full margin the ATO asks you to allow.</p>{{/unless}}<p>Source: <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/foreign-resident-capital-gains-withholding">ATO — Foreign resident capital gains withholding</a> · TAA 1953 Sch 1 Subdiv 14-D</p>`;
+
 export default function FrcgwClearanceCertificateFile01() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -64,7 +86,7 @@ export default function FrcgwClearanceCertificateFile01() {
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
           <div><a href="/au/check/frcgw-clearance-certificate" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← Back to Foreign Resident CGT Withholding Clearance Certificate</a></div>
           <span className="font-mono">File 01 of 8</span>
-          <div><a href="/files/au/frcgw-clearance-certificate/frcgw-02" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 02: ATO Clearance Certificate — Application Process →</a></div>
+          <div><a href="/files/au/frcgw-clearance-certificate/frcgw-02" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 02: Applying For Your Clearance Certificate →</a></div>
         </div>
       </div>
 
@@ -74,7 +96,7 @@ export default function FrcgwClearanceCertificateFile01() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 ATO · TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments
+              🇦🇺 ATO · TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -84,24 +106,19 @@ export default function FrcgwClearanceCertificateFile01() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 CERTIFICATE MUST ARRIVE BEFORE SETTLEMENT: Settlement Date (Critical)
-            </span>
-            <a href="/au/check/frcgw-clearance-certificate"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="Your certificate needs to reach the purchaser before settlement"
+            checkHref="/au/check/frcgw-clearance-certificate"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Foreign Resident CGT Withholding Clearance Certificate · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Withholding Exposure & Certificate Status
+            Your Withholding Position
           </h1>
-          <p className="text-neutral-500 text-sm">Your exact withholding amount at settlement and whether you need a clearance certificate.</p>
+          <p className="text-neutral-500 text-sm">Whether withholding applies to your sale, and how the 15% is worked out.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +131,7 @@ export default function FrcgwClearanceCertificateFile01() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Your FRCGW Exposure — The Numbers That Matter</h2><div class="action-box"><h3>The Three Facts</h3><p>Fact 1: Your sale price × 15% = amount withheld at settlement if you do not have a certificate</p><p>Fact 2: You need an ATO clearance certificate to prevent withholding (free, 1–4 weeks processing)</p><p>Fact 3: Certificate must be in the buyer's solicitor's office BEFORE settlement morning</p></div><h3>FRCGW Withholding Calculation</h3><p>Withholding = Sale price × 15%</p><p>Example: $900,000 sale = $135,000 withheld (if no certificate)</p><p>Source: <a href="https://www.ato.gov.au/businesses-and-organisations/international-tax-for-business/capital-gains-withholding">ATO — Capital Gains Withholding</a> · TAA 1953 Sch 1 Subdiv 14-D</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -129,7 +143,7 @@ export default function FrcgwClearanceCertificateFile01() {
             <div className="flex items-center justify-between rounded-xl border border-neutral-950 bg-neutral-950 px-4 py-3">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-300">01</span>
-                <span className="text-sm font-semibold text-white">Your Withholding Exposure & Certificate Status</span>
+                <span className="text-sm font-semibold text-white">Your Withholding Position</span>
               </div>
               <span className="text-xs text-neutral-400">You are here</span>
             </div>
@@ -138,7 +152,7 @@ export default function FrcgwClearanceCertificateFile01() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">ATO Clearance Certificate — Application Process</span>
+                <span className="text-sm font-semibold text-neutral-950">Applying For Your Clearance Certificate</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -147,7 +161,7 @@ export default function FrcgwClearanceCertificateFile01() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Settlement-Day Buyer Instruction Template</span>
+                <span className="text-sm font-semibold text-neutral-950">What To Send The Purchaser's Side</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -156,7 +170,7 @@ export default function FrcgwClearanceCertificateFile01() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Residency Evidence Checklist</span>
+                <span className="text-sm font-semibold text-neutral-950">Details To Have Ready</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -174,7 +188,7 @@ export default function FrcgwClearanceCertificateFile01() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Full Pre-Settlement Execution Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Your Pre-Settlement Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +197,7 @@ export default function FrcgwClearanceCertificateFile01() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Certificate-Misses-Settlement Recovery Path<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Recovering A Withheld Amount<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -192,7 +206,7 @@ export default function FrcgwClearanceCertificateFile01() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">08</span>
-                <span className="text-sm font-semibold text-neutral-950">Foreign Resident Variation Application<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Foreign Resident Variation Notice<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -204,7 +218,7 @@ export default function FrcgwClearanceCertificateFile01() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
+            Always consult a qualified Australian tax adviser for your personal situation.
             Based on ATO guidance April 2026.
           </p>
         </div>

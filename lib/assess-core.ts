@@ -20,6 +20,14 @@ export interface AssessInput {
   tier: number; // 1 or 2
   name: string;
   fields: string[];
+  /**
+   * E7 — a REAL calendar date the customer supplied, ISO "YYYY-MM-DD", plus what it is.
+   * Present ⇒ the model may write absolute dates. Absent ⇒ it must write relative ones.
+   * OPTIONAL BY DESIGN: the webhook does not pass it (that file is not being changed), so
+   * the webhook path gets the relative-only instruction — which is the correct and safe
+   * default for it and for every other product.
+   */
+  deadline?: { isoDate: string; label: string };
 }
 
 export type AssessResult =
@@ -41,7 +49,7 @@ const RULES_SLUG: Record<string, string> = {
 };
 
 export async function generateAssessment(input: AssessInput): Promise<AssessResult> {
-  const { inputs, product_id, market, authority, tier, name, fields } = input;
+  const { inputs, product_id, market, authority, tier, name, fields, deadline } = input;
 
   if (!inputs || !product_id || !fields) {
     return { ok: false, status: 400, error: "Missing required fields: inputs, product_id, fields" };
@@ -107,8 +115,34 @@ Never state a superseded threshold or rate as current. Never contradict the corp
 taxpayer's own calculator answers.
 `;
 
+  // ── E7 — HOW DEADLINES MAY BE EXPRESSED ───────────────────────────────────
+  // A model asked for "a specific deadline date" with no date in its inputs will invent one.
+  // It did: the tier-2 action checklist rendered LLM-authored dates in a red urgency chip on
+  // a product that captured no date at all, and the fallback question hardcoded the string
+  // "Settlement Date (Critical)" — a LABEL — into a sentence as though it were a date.
+  //
+  // So the permission is now explicit and conditional. No captured date ⇒ relative language
+  // only. A real captured date ⇒ absolute, and it is quoted so the model uses THAT date
+  // rather than one it computed.
+  const deadlineBlock = deadline?.isoDate
+    ? `
+THEIR REAL DEADLINE — USE ABSOLUTE DATES:
+${deadline.label}: ${deadline.isoDate}
+This date came from the customer. You MAY state calendar dates, and when you do they must be
+this date or a date you derive from it and show your working for. Never invent a different one.
+`
+    : `
+NO DATE WAS CAPTURED — USE RELATIVE LANGUAGE ONLY:
+The customer did not give a date, so you do not have one. Express every deadline RELATIVELY —
+"within 7 days", "before settlement", "as soon as the contract is signed", "at your next tax
+return". You MUST NOT state, guess, derive or imply any calendar date, month or year for THIS
+customer's deadline, and you must not describe a countdown or a number of days remaining.
+(Dates that are part of the LAW — a rule commencing 1 January 2025, a 30 June year end — are
+facts from the corpus above and remain fine to state as law.)
+`;
+
   const prompt = `You are a ${market} ${authority} tax expert writing a personalised ${isTier2 ? "action plan" : "tax assessment"} for ${displayName}.
-${corpusBlock}
+${corpusBlock}${deadlineBlock}
 THEIR CALCULATOR ANSWERS:
 ${inputsSummary}
 
@@ -128,17 +162,17 @@ ${fields.map((f) => `"${f}": "2-3 sentence personalised value referencing their 
 "actions": [
   {
     "title": "Specific action title for ${displayName}",
-    "deadline": "Specific deadline date",
+    "deadline": "${deadline?.isoDate ? "When this must be done — an absolute date derived from the real deadline above" : "When this must be done, RELATIVE only — e.g. \"Today\", \"Within 7 days\", \"Before settlement\", \"At your next tax return\". Never a calendar date."}",
     "steps": ["specific step 1", "specific step 2", "specific step 3"]
   },
   {
     "title": "Second action",
-    "deadline": "deadline",
+    "deadline": "${deadline?.isoDate ? "absolute date" : "relative timing only, never a calendar date"}",
     "steps": ["step 1", "step 2", "step 3"]
   },
   {
     "title": "Third action",
-    "deadline": "deadline",
+    "deadline": "${deadline?.isoDate ? "absolute date" : "relative timing only, never a calendar date"}",
     "steps": ["step 1", "step 2", "step 3"]
   }
 ]` : ""},
@@ -151,7 +185,17 @@ ${fields.map((f) => `"${f}": "2-3 sentence personalised value referencing their 
 ]
 
 For every field: reference the person's specific inputs. Never write generic advice.
-If their name is provided, use it. Reference their income band, cover status, family situation etc directly.`;
+If their name is provided, use it. Reference their income band, cover status, family situation etc directly.
+
+Do NOT state a figure the customer did not give you. If an amount depends on a number they did
+not supply (a sale price, a balance, an income), give them the METHOD to work it out in their
+own case and say plainly that you do not have the figure. A worked example is fine when it is
+labelled as an example; presenting one as their number is not.
+
+Any input beginning "_conflict." is a DETECTED CONTRADICTION between what the customer answered
+in the checker and what they answered just before checkout. Follow its instruction exactly:
+treat the checker answers as authoritative, and name the discrepancy plainly in your opening
+rather than quietly resolving it. Do not average the two and do not ignore either.`;
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",

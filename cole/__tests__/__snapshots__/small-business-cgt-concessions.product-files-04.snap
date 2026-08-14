@@ -3,7 +3,29 @@
 // Product: small-business-cgt-concessions · File 04 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts au-small-business-cgt-concessions
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "small-business-cgt-concessions";
+const BODY = `<h2>Pre-Sale Actions</h2><div class="action-box"><h3>Before You Sign the Sale Contract</h3><p>1. Confirm aggregate turnover — include all connected entities</p><p>2. Confirm net assets under $6M — calculate correctly</p><p>3. Confirm active asset test — document business use history</p><p>4. Check remaining lifetime retirement exemption — prior elections</p><p>5. Consider age — if close to 55, model the benefit of waiting</p><p>6. Engage specialist CGT adviser before agreeing to sale terms</p></div>`;
+
 export default function SmallBusinessCgtConcessionsFile04() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function SmallBusinessCgtConcessionsFile04() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 RETURN DUE: 31 October 2026
-            </span>
-            <a href="/au/check/small-business-cgt-concessions"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="RETURN DUE: 31 October 2026"
+            checkHref="/au/check/small-business-cgt-concessions"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Small Business CGT Concessions Engine · File 04 of 8
@@ -114,10 +131,7 @@ export default function SmallBusinessCgtConcessionsFile04() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Pre-Sale Actions</h2><div class="action-box"><h3>Before You Sign the Sale Contract</h3><p>1. Confirm aggregate turnover — include all connected entities</p><p>2. Confirm net assets under $6M — calculate correctly</p><p>3. Confirm active asset test — document business use history</p><p>4. Check remaining lifetime retirement exemption — prior elections</p><p>5. Consider age — if close to 55, model the benefit of waiting</p><p>6. Engage specialist CGT adviser before agreeing to sale terms</p></div>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +218,7 @@ export default function SmallBusinessCgtConcessionsFile04() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Australia tax adviser for your personal situation.
+            Always consult a qualified Australian tax adviser for your personal situation.
             Based on ATO guidance April 2026.
           </p>
         </div>

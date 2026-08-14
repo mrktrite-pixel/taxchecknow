@@ -3,7 +3,29 @@
 // Product: section-174-auditor · File 03 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts us-section-174-auditor
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "section-174-auditor";
+const BODY = `<h2>Amendment Path Decision</h2><h3>Form 3115 — Change in Accounting Method</h3><p>Use when: your prior treatment was under the old rules and you want to correct going forward WITH a catch-up adjustment for missed amortization.</p><ul><li>Section 481(a) adjustment spreads the catch-up over 1 or 4 years</li><li>Avoids opening every prior year to examination</li><li>IRS prefers this route for systematic errors</li><li>Files with current-year return (automatic consent in many cases)</li></ul><h3>Amended Returns (Forms 1120X / 1040X / 1065X)</h3><p>Use when: you need to restate specific prior years individually (e.g. for refund claims related to other line items).</p><ul><li>3-year window from original filing deadline</li><li>Opens that specific year to examination</li><li>Generates interest on underpayments from original due date</li><li>May generate refund with interest if overpaid</li></ul><h3>Which Path for Section 174?</h3><p>Most businesses: Form 3115 is the cleaner path for switching from "immediate expensing" to "amortization" treatment. It restarts compliance without year-by-year amendments.</p><p>However: if you also have Section 41 credit opportunities in prior years, amended returns may be better because Form 3115 doesn't automatically unlock prior-year credit claims.</p>`;
+
 export default function Section174AuditorFile03() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function Section174AuditorFile03() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 FILING DEADLINE APPROACHING: April 15, 2026
-            </span>
-            <a href="/us/check/section-174-auditor"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="FILING DEADLINE APPROACHING: April 15, 2026"
+            checkHref="/us/check/section-174-auditor"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             R&D Tax Cashflow Shock Engine · File 03 of 8
@@ -114,10 +131,7 @@ export default function Section174AuditorFile03() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Amendment Path Decision</h2><h3>Form 3115 — Change in Accounting Method</h3><p>Use when: your prior treatment was under the old rules and you want to correct going forward WITH a catch-up adjustment for missed amortization.</p><ul><li>Section 481(a) adjustment spreads the catch-up over 1 or 4 years</li><li>Avoids opening every prior year to examination</li><li>IRS prefers this route for systematic errors</li><li>Files with current-year return (automatic consent in many cases)</li></ul><h3>Amended Returns (Forms 1120X / 1040X / 1065X)</h3><p>Use when: you need to restate specific prior years individually (e.g. for refund claims related to other line items).</p><ul><li>3-year window from original filing deadline</li><li>Opens that specific year to examination</li><li>Generates interest on underpayments from original due date</li><li>May generate refund with interest if overpaid</li></ul><h3>Which Path for Section 174?</h3><p>Most businesses: Form 3115 is the cleaner path for switching from "immediate expensing" to "amortization" treatment. It restarts compliance without year-by-year amendments.</p><p>However: if you also have Section 41 credit opportunities in prior years, amended returns may be better because Form 3115 doesn't automatically unlock prior-year credit claims.</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +218,7 @@ export default function Section174AuditorFile03() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United States tax adviser for your personal situation.
+            Always consult a qualified US tax adviser for your personal situation.
             Based on IRS guidance April 2026.
           </p>
         </div>

@@ -9,57 +9,57 @@ const FILES = [
   {
     "num": "01",
     "slug": "frcgw-01",
-    "name": "Your Withholding Exposure & Certificate Status",
-    "desc": "Your exact withholding amount at settlement and whether you need a clearance certificate.",
+    "name": "Your Withholding Position",
+    "desc": "Whether withholding applies to your sale, and how the 15% is worked out.",
     "tier": 1
   },
   {
     "num": "02",
     "slug": "frcgw-02",
-    "name": "ATO Clearance Certificate — Application Process",
-    "desc": "How to apply for your clearance certificate and timeline to settlement.",
+    "name": "Applying For Your Clearance Certificate",
+    "desc": "Who applies, what the form asks, and when to lodge.",
     "tier": 1
   },
   {
     "num": "03",
     "slug": "frcgw-03",
-    "name": "Settlement-Day Buyer Instruction Template",
-    "desc": "What to send the buyer's solicitor to prevent withholding on the day.",
+    "name": "What To Send The Purchaser's Side",
+    "desc": "Wording for handing over the certificate, or for putting them on notice that one is pending.",
     "tier": 1
   },
   {
     "num": "04",
     "slug": "frcgw-04",
-    "name": "Residency Evidence Checklist",
-    "desc": "What documentation the ATO needs to approve your clearance certificate.",
+    "name": "Details To Have Ready",
+    "desc": "What the ATO clearance certificate form actually asks you for.",
     "tier": 1
   },
   {
     "num": "05",
     "slug": "frcgw-05",
     "name": "Your Accountant Brief",
-    "desc": "4 questions to ask your accountant before settlement.",
+    "desc": "The questions worth asking, and the ones you can skip.",
     "tier": 1
   },
   {
     "num": "06",
     "slug": "frcgw-06",
-    "name": "Full Pre-Settlement Execution Plan",
-    "desc": "Step-by-step 4-phase plan to lodge the certificate and prevent withholding.",
+    "name": "Your Pre-Settlement Plan",
+    "desc": "What to do, in order, between now and settlement.",
     "tier": 2
   },
   {
     "num": "07",
     "slug": "frcgw-07",
-    "name": "Certificate-Misses-Settlement Recovery Path",
-    "desc": "If the certificate does not arrive in time — refund timeline and dispute options.",
+    "name": "Recovering A Withheld Amount",
+    "desc": "Where the money went, how you claim it, and how long it takes.",
     "tier": 2
   },
   {
     "num": "08",
     "slug": "frcgw-08",
-    "name": "Foreign Resident Variation Application",
-    "desc": "If you are a foreign resident — the variation certificate process and what it costs.",
+    "name": "Foreign Resident Variation Notice",
+    "desc": "The instrument that replaces the clearance certificate, and the trap in it.",
     "tier": 2
   }
 ];
@@ -79,12 +79,11 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
-  // (temporal.kind = "unresolvable", reason: "settlement_date_contingent_not_captured").
-  // There is no countdown to suppress and nothing to alert about: the absence is the
-  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
-  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
-  // channel — a channel trained to be ignored is worse than no channel.
+  // TEMPORAL v1 — this product's deadline is PER CUSTOMER
+  // (temporal.kind = "deadline", rule source "user_supplied"/"user_derived").
+  // A real date exists, but only once a customer has given it, so there is no product-level
+  // date to count down to here and nothing to alert about. The page resolves the customer's
+  // own date at runtime from their session instead.
   const daysToDeadline: number | null = null;
   const deadlineLive = false;
 
@@ -144,7 +143,7 @@ export default function SuccessPlan() {
           tier:       2,
           name: name === "there" ? "" : name,
           inputs,
-          fields: ["salePrice","witholdingExposure","residencyStatusConfirm","certificateEligibility","certificateProcessingTime","daysToSettlementAnalysis","applicationUrgency","cashFlowImpact","preSettlementExecutionPlan","evidenceGatheringChecklist","buyerSolicitorInstruction","witholdingContingencyPlan","accountantImplementationCheckIist"],
+          fields: ["salePrice","withholdingExposure","residencyStatusConfirm","certificateEligibility","certificateProcessingTime","daysToSettlementAnalysis","applicationUrgency","cashFlowImpact","preSettlementExecutionPlan","applicationDetailsChecklist","buyerSolicitorInstruction","withholdingContingencyPlan","accountantImplementationChecklist"],
         }),
       });
       const data = await res.json();
@@ -155,7 +154,7 @@ export default function SuccessPlan() {
       // Graceful fallback — page still shows files and calendar
       setAssessment({
         salePrice: "Your personalised salePrice is being prepared — please refresh in a moment.",
-        witholdingExposure: "Your personalised witholdingExposure is being prepared — please refresh in a moment.",
+        withholdingExposure: "Your personalised withholdingExposure is being prepared — please refresh in a moment.",
         residencyStatusConfirm: "Your personalised residencyStatusConfirm is being prepared — please refresh in a moment.",
         certificateEligibility: "Your personalised certificateEligibility is being prepared — please refresh in a moment.",
         certificateProcessingTime: "Your personalised certificateProcessingTime is being prepared — please refresh in a moment.",
@@ -163,13 +162,13 @@ export default function SuccessPlan() {
         applicationUrgency: "Your personalised applicationUrgency is being prepared — please refresh in a moment.",
         cashFlowImpact: "Your personalised cashFlowImpact is being prepared — please refresh in a moment.",
         preSettlementExecutionPlan: "Your personalised preSettlementExecutionPlan is being prepared — please refresh in a moment.",
-        evidenceGatheringChecklist: "Your personalised evidenceGatheringChecklist is being prepared — please refresh in a moment.",
+        applicationDetailsChecklist: "Your personalised applicationDetailsChecklist is being prepared — please refresh in a moment.",
         buyerSolicitorInstruction: "Your personalised buyerSolicitorInstruction is being prepared — please refresh in a moment.",
-        witholdingContingencyPlan: "Your personalised witholdingContingencyPlan is being prepared — please refresh in a moment.",
-        accountantImplementationCheckIist: "Your personalised accountantImplementationCheckIist is being prepared — please refresh in a moment.",
+        withholdingContingencyPlan: "Your personalised withholdingContingencyPlan is being prepared — please refresh in a moment.",
+        accountantImplementationChecklist: "Your personalised accountantImplementationChecklist is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
-          "What is the single most important action I should take before Settlement date?",
+          "What is the single most important action I should take before Lodge-by date (28 days before your settlement)?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -194,8 +193,8 @@ export default function SuccessPlan() {
       `DTSTART;VALUE=DATE:${relativeDate(0)}`,
       `DTEND;VALUE=DATE:${relativeDate(0)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:FRCGW — apply for clearance certificate now",
-      "DESCRIPTION:Do not wait. Processing takes 1–4 weeks. Apply to the ATO for your clearance certificate now. Assemble residency evidence first.",
+      "SUMMARY:FRCGW — apply for your ATO clearance certificate",
+      "DESCRIPTION:Free\\, online at ato.gov.au/clearancecertificate. Check the vendor name on the title first and apply in exactly that name. Supplying your TFN is optional but is what lets the application process automatically.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -203,17 +202,8 @@ export default function SuccessPlan() {
       `DTSTART;VALUE=DATE:${relativeDate(21)}`,
       `DTEND;VALUE=DATE:${relativeDate(21)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:FRCGW — confirm certificate arrival with buyer's solicitor",
-      "DESCRIPTION:Call the buyer's solicitor to confirm the certificate has been received and is in the right form. Do not assume. Move this to a few days before your actual settlement.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:frcgw-settlement-b-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(28)}`,
-      `DTEND;VALUE=DATE:${relativeDate(28)}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:FRCGW — settlement date (SET TO YOUR ACTUAL SETTLEMENT DATE)",
-      "DESCRIPTION:Placeholder 28 days out — move it to your real settlement date. Your ATO clearance certificate must be issued and in the buyer's solicitor's office BEFORE settlement. After settlement\\, 15% is withheld automatically.",
+      "SUMMARY:FRCGW — confirm the purchaser's side has your certificate",
+      "DESCRIPTION:Check the certificate reached the purchaser or their conveyancer and that the name matches the title. Ask for written confirmation — 'sent' is not 'received'. Move this to a few days before your actual settlement.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -269,12 +259,12 @@ export default function SuccessPlan() {
           <p className="mt-1 text-sm text-emerald-800">
             This is your full implementation plan — built around your specific inputs, not the average taxpayer.
           </p>
-          {/* No date resolves for this product (temporal kind "unresolvable"), so the
+          {/* No date resolves for this product (temporal kind "deadline"), so the
               countdown is replaced by its DECLARED qualitative urgency — corpus-true for every
               customer, and not a fabricated day-count. */}
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 Certificate must reach the buyer's solicitor BEFORE settlement</span>
-            <span className="font-mono text-sm font-bold text-white">Lodge ≥28 days out</span>
+            <span className="text-sm font-bold text-white">🔴 Your certificate needs to reach the purchaser before settlement</span>
+            <span className="font-mono text-sm font-bold text-white">Free · valid 12 months</span>
           </div>
         </div>
 
@@ -309,7 +299,7 @@ export default function SuccessPlan() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["salePrice","witholdingExposure","residencyStatusConfirm","certificateEligibility","certificateProcessingTime","daysToSettlementAnalysis"] as string[]).map(key => {
+                {(["salePrice","withholdingExposure","residencyStatusConfirm","certificateEligibility","certificateProcessingTime","daysToSettlementAnalysis"] as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
@@ -332,7 +322,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before Settlement date
+                  What to do — in order — before Lodge-by date (28 days before your settlement)
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
@@ -407,8 +397,8 @@ export default function SuccessPlan() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">FRCGW — apply for clearance certificate now</p>
-                    <p className="text-xs text-neutral-500">Do not wait. Processing takes 1–4 weeks. Apply to the ATO for your clearance certificate now. Assemble residency evidence first.</p>
+                    <p className="text-sm font-semibold text-neutral-900">FRCGW — apply for your ATO clearance certificate</p>
+                    <p className="text-xs text-neutral-500">Free, online at ato.gov.au/clearancecertificate. Check the vendor name on the title first and apply in exactly that name. Supplying your TFN is optional but is what lets the application process automatically.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     Now
@@ -416,20 +406,11 @@ export default function SuccessPlan() {
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">FRCGW — confirm certificate arrival with buyer's solicitor</p>
-                    <p className="text-xs text-neutral-500">Call the buyer's solicitor to confirm the certificate has been received and is in the right form. Do not assume. Move this to a few days before your actual settlement.</p>
+                    <p className="text-sm font-semibold text-neutral-900">FRCGW — confirm the purchaser's side has your certificate</p>
+                    <p className="text-xs text-neutral-500">Check the certificate reached the purchaser or their conveyancer and that the name matches the title. Ask for written confirmation — 'sent' is not 'received'. Move this to a few days before your actual settlement.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     In 21 days
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">FRCGW — settlement date (SET TO YOUR ACTUAL SETTLEMENT DATE)</p>
-                    <p className="text-xs text-neutral-500">Placeholder 28 days out — move it to your real settlement date. Your ATO clearance certificate must be issued and in the buyer's solicitor's office BEFORE settlement. After settlement, 15% is withheld automatically.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    In 28 days
                   </span>
                 </div>
               </div>
@@ -485,7 +466,7 @@ export default function SuccessPlan() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                Lodge your clearance certificate now — it must reach the buyer's solicitor before settlement.
+                Apply for your clearance certificate now — it is free, most issue within days, and it stays valid for 12 months.
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -509,8 +490,8 @@ export default function SuccessPlan() {
             
             <div className="no-print rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Also relevant</p>
-              <p className="mb-1 text-sm font-bold text-neutral-950">Also check your CGT main residence exemption — FRCGW stacks with other property rules.</p>
-              <p className="mb-2 text-xs text-neutral-600">The 15% withholding applies regardless of whether the property is your main residence. If it is your main residence, you may not owe CGT at all — but you still need the clearance certificate. If you are selling an investment property, CGT is also due. Different rules apply. Running both checks together is faster than discovering a separate CGT issue after settlement.</p>
+              <p className="mb-1 text-sm font-bold text-neutral-950">Also check your CGT main residence exemption — FRCGW sits on top of the other property rules.</p>
+              <p className="mb-2 text-xs text-neutral-600">The 15% withholding applies whether or not the property is your main residence. If it is your main residence you may owe no capital gains tax at all — but you still need the clearance certificate, because the purchaser cannot assess that themselves. If you are selling an investment property, CGT is assessed separately from the withholding. Running both checks together is faster than finding a separate CGT issue after settlement.</p>
               <Link href="/au/check/cgt-main-residence" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
                 Check your main residence exemption →
               </Link>

@@ -3,7 +3,29 @@
 // Product: bring-forward-window · File 01 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts au-bring-forward-window
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "bring-forward-window";
+const BODY = `<h2>Your 30 June Sequencing Verdict</h2><div class="action-box"><h3>Your Three Tests</h3><p>Test 1: TSB bracket at 30 June 2026 — determines full 3-year, 2-year, annual, or nil eligibility from 1 July</p><p>Test 2: Bring-forward status — must NOT be triggered in 2024-25 or 2025-26 to access the new $390,000 cap</p><p>Test 3: Age and work test — 75+ locked out, 67-74 must meet 40-hour work test</p></div><h3>Your Sequencing Capacity</h3><p>Before 30 June 2026: up to $120,000 under 2025-26 annual NCC cap</p><p>From 1 July 2026: up to $390,000 under 2026-27 3-year bring-forward (if TSB under $1.84M)</p><p>Total across sequencing window: up to $510,000</p><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/growing-and-keeping-track-of-your-super/caps-limits-and-tax-on-super-contributions/non-concessional-contributions-cap">ATO — Non-concessional contributions cap</a></p>`;
+
 export default function BringForwardWindowFile01() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function BringForwardWindowFile01() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 CONTRIBUTION DEADLINE: 30 June 2026
-            </span>
-            <a href="/au/check/bring-forward-window"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="CONTRIBUTION DEADLINE: 30 June 2026"
+            checkHref="/au/check/bring-forward-window"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Super Contribution Bring-Forward Window Engine · File 01 of 8
@@ -114,10 +131,7 @@ export default function BringForwardWindowFile01() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Your 30 June Sequencing Verdict</h2><div class="action-box"><h3>Your Three Tests</h3><p>Test 1: TSB bracket at 30 June 2026 — determines full 3-year, 2-year, annual, or nil eligibility from 1 July</p><p>Test 2: Bring-forward status — must NOT be triggered in 2024-25 or 2025-26 to access the new $390,000 cap</p><p>Test 3: Age and work test — 75+ locked out, 67-74 must meet 40-hour work test</p></div><h3>Your Sequencing Capacity</h3><p>Before 30 June 2026: up to $120,000 under 2025-26 annual NCC cap</p><p>From 1 July 2026: up to $390,000 under 2026-27 3-year bring-forward (if TSB under $1.84M)</p><p>Total across sequencing window: up to $510,000</p><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/growing-and-keeping-track-of-your-super/caps-limits-and-tax-on-super-contributions/non-concessional-contributions-cap">ATO — Non-concessional contributions cap</a></p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +218,7 @@ export default function BringForwardWindowFile01() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Australia tax adviser for your personal situation.
+            Always consult a qualified Australian tax adviser for your personal situation.
             Based on ATO guidance April 2026.
           </p>
         </div>

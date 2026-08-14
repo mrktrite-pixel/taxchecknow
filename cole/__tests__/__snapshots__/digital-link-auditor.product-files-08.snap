@@ -3,7 +3,29 @@
 // Product: digital-link-auditor · File 08 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-digital-link-auditor
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation } from "@/lib/terminal-presentation";
+
+const PRODUCT_ID = "digital-link-auditor";
+const BODY = `<h2>Post-Mandate Verification Checklist</h2><h3>Every Quarter</h3><ul class="checklist"><li>Verify quarterly submission was made via compliant chain (not manually rescued)</li><li>Check that no new tools or processes have been added without chain verification</li><li>Confirm no figures were manually adjusted between records and submission</li><li>Save submission confirmation emails — evidence of on-time filing</li></ul><h3>Annually</h3><ul class="checklist"><li>Full chain re-audit using this product's 4-step test</li><li>Accountant written confirmation of chain compliance</li><li>Review HMRC's approved software list — confirm your tools are still listed</li><li>Update process documentation if anything changed during the year</li></ul><h3>Red Flags to Watch</h3><ul class="checklist"><li>Accountant starts 'tidying up' your numbers in their own spreadsheet</li><li>Software vendor drops HMRC-approved status</li><li>You add a new income stream (rental, side-gig) without extending the chain</li><li>Year-end adjustments start creeping in to 'correct' minor issues</li></ul>`;
+
 export default function DigitalLinkAuditorFile08() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,16 +106,11 @@ export default function DigitalLinkAuditorFile08() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 MANDATE ACTIVE — CHAIN MUST BE LINKED: 6 April 2026
-            </span>
-            <a href="/uk/check/digital-link-auditor"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="MANDATE ACTIVE — CHAIN MUST BE LINKED: 6 April 2026"
+            checkHref="/uk/check/digital-link-auditor"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             MTD Digital Link Compliance Engine · File 08 of 8
@@ -114,10 +131,7 @@ export default function DigitalLinkAuditorFile08() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Post-Mandate Verification Checklist</h2><h3>Every Quarter</h3><ul class="checklist"><li>Verify quarterly submission was made via compliant chain (not manually rescued)</li><li>Check that no new tools or processes have been added without chain verification</li><li>Confirm no figures were manually adjusted between records and submission</li><li>Save submission confirmation emails — evidence of on-time filing</li></ul><h3>Annually</h3><ul class="checklist"><li>Full chain re-audit using this product's 4-step test</li><li>Accountant written confirmation of chain compliance</li><li>Review HMRC's approved software list — confirm your tools are still listed</li><li>Update process documentation if anything changed during the year</li></ul><h3>Red Flags to Watch</h3><ul class="checklist"><li>Accountant starts 'tidying up' your numbers in their own spreadsheet</li><li>Software vendor drops HMRC-approved status</li><li>You add a new income stream (rental, side-gig) without extending the chain</li><li>Year-end adjustments start creeping in to 'correct' minor issues</li></ul>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +218,7 @@ export default function DigitalLinkAuditorFile08() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United Kingdom tax adviser for your personal situation.
+            Always consult a qualified UK tax adviser for your personal situation.
             Based on HMRC guidance April 2026.
           </p>
         </div>
