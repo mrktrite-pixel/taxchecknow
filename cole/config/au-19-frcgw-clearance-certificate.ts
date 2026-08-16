@@ -160,6 +160,30 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   geoBlockTitle: "AI extraction block — Foreign Resident Capital Gains Withholding",
   geoBlockH2: "Foreign Resident Capital Gains Withholding (FRCGW) — Changed 1 January 2025",
+  // RESCUED FROM THE EMITTED PAGE. This block was hand-written straight onto
+  // app/au/check/frcgw-clearance-certificate/page.tsx by commit 1314f10 (2026-04-29,
+  // "AU-19 GEO claim bullets + provenance — Section 4 extraction upgrade"). It lived in no
+  // config and no generator, and it was the only gate page in the repo carrying it — so the
+  // next regeneration would have deleted it with nothing to restore it from. Moving it here
+  // is what makes the regeneration safe.
+  //
+  // Bullets 1, 2, 3 and 5 are VERBATIM as authored. Bullet 4 is corrected: it read
+  // "The certificate must be provided before settlement. It cannot be applied
+  // retrospectively." The first sentence was imprecise (the deadline is AT or before
+  // settlement) and the second stated the C5 myth this rebuild exists to remove — you can
+  // always apply, and after settlement the withheld amount is still recovered through the
+  // contract-year return. What is actually true is narrower: applying late cannot STOP the
+  // withholding. Left as written, the block would have been rescued and wrong.
+  geoClaims: {
+    bullets: [
+      "In Australia, FRCGW withholding applies to every property sale as of 1 January 2025 — there is no price threshold.",
+      "The withholding rate is 15% of the full sale price, not the profit.",
+      "A clearance certificate from the ATO confirms the seller is an Australian tax resident and prevents withholding.",
+      "The certificate must be provided at or before settlement — applying later is still possible but cannot stop the withholding.",
+      "Even Australian residents must obtain a clearance certificate — the exemption is not automatic.",
+    ],
+    provenance: "Source: Australian Taxation Office (ATO) — Foreign Resident Capital Gains Withholding | TAA 1953 Schedule 1 Subdiv 14-D | Last verified: April 2026",
+  },
   geoBodyParagraph: "Foreign Resident Capital Gains Withholding (FRCGW) is a withholding obligation imposed on the PURCHASER of Australian real property under TAA 1953 Schedule 1 Subdivision 14-D. From 1 January 2025 the withholding rate is 15% of the sale price and there is no value threshold: every sale of Australian real property is in scope regardless of price. Before 1 January 2025 the rate was 12.5% and only sales of $750,000 or more were in scope. The purchaser must withhold 15% of the sale price and pay it to the ATO at or before settlement, UNLESS the vendor gives the purchaser a valid ATO clearance certificate at or before settlement. The clearance certificate is issued free of charge by the ATO to vendors who are Australian residents for tax purposes. It is applied for online at ato.gov.au/clearancecertificate, most certificates issue within days, and the ATO asks sellers to allow up to 28 days in case an application requires manual checking. A clearance certificate is valid for 12 months from the date of issue and carries no obligation to use it, so a vendor may apply before listing the property. Each vendor named on the title must apply separately; a certificate covers one vendor, not one property, and where one co-owner does not provide a certificate the purchaser withholds 15% of that co-owner's share only. Where an amount is withheld it is NOT forfeited and is NOT held by a solicitor: the purchaser remits it to the ATO, where it is credited to the vendor. The vendor claims the credit by lodging an income tax return for the income year in which the CONTRACT was signed, which may be an earlier income year than settlement. An Australian resident vendor with no other tax debts and no capital gains tax payable on the disposal receives the full amount as a refund. Because a return cannot be lodged before its income year ends, the interval between settlement and refund can be as long as approximately 15 months where the contract was signed early in the income year. Foreign residents cannot obtain a clearance certificate. A foreign resident vendor applies instead for a variation notice, which the ATO may issue setting a withholding rate between 0% and 14.99% where there are grounds — no capital gain arises on the disposal, the vendor's actual capital gains tax liability is lower than the amount that would be withheld (including because of carried-forward capital losses), or a mortgagee will take so much of the proceeds that insufficient funds remain to cover the withholding. A variation notice states a maximum sale price and does not apply if the property sells above that figure. The withholding applies whether or not the property is the vendor's main residence, and a separate capital gains tax liability may arise on the disposal, assessed independently of the withholding.",
   geoFormula: "Withholding amount = sale price × 15%, payable by the purchaser to the ATO, unless a valid clearance certificate is provided at or before settlement. Example: a $900,000 sale with no certificate = $135,000 withheld and remitted to the ATO, then credited to the vendor in the contract-year return.",
   geoFacts: [

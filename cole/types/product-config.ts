@@ -265,6 +265,26 @@ export interface ProductConfig {
   // ─── GEO BLOCK ─────────────────────────────────────────────────────────
   geoBlockTitle: string;
   geoBlockH2: string;
+  /**
+   * OPTIONAL — lead claim bullets + a provenance line, emitted at the top of the GEO block
+   * (Section 4), above `geoBodyParagraph`.
+   *
+   * WHY THIS FIELD EXISTS. FRCGW's gate page carried exactly this markup, hand-written
+   * straight onto the emitted page by commit 1314f10 ("AU-19 GEO claim bullets + provenance
+   * — Section 4 extraction upgrade"). It was in no config and no generator, and it appeared
+   * on exactly one of the repo's gate pages, so the next regeneration of that page would
+   * have silently deleted it with nothing to restore it from. Promoting it to a config field
+   * makes the content survive regeneration and makes it available to every other product.
+   *
+   * ABSENT ⇒ NOTHING IS EMITTED. Products that do not declare it produce a byte-identical
+   * gate page to before this field existed.
+   */
+  geoClaims?: {
+    /** Short, self-contained factual claims. Plain text; emitted one per <li>. */
+    bullets: string[];
+    /** One line naming the authority and the legal instrument the claims rest on. */
+    provenance: string;
+  };
   geoBodyParagraph: string;
   geoFormula: string;
   geoFacts: Array<{ label: string; value: string }>;

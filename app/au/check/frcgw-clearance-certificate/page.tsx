@@ -11,11 +11,11 @@ import FrcgwClearanceCertificateCalculator from "./FrcgwClearanceCertificateCalc
 
 export const metadata: Metadata = {
   title: "FRCGW Clearance Certificate — 15% Withholding on Property Sales (1 Jan 2025) | TaxCheckNow",
-  description: "From 1 January 2025, the ATO withholds 15% on every Australian property sale unless the seller produces a clearance certificate. Threshold changed from $750k to $0. Rate changed from 12.5% to 15%. On a $900k sale, that's $135,000 withheld. Run your check in 2 minutes.",
+  description: "From 1 January 2025 there is no value threshold: every Australian property sale needs an ATO clearance certificate, or the purchaser withholds 15% and remits it to the ATO. The certificate is free, most issue within days, and it is valid 12 months. Run your check in 2 minutes.",
   alternates: { canonical: "https://taxchecknow.com/au/check/frcgw-clearance-certificate" },
   openGraph: {
     title: "FRCGW Clearance Certificate — 15% Withholding on Property Sales (1 Jan 2025) | TaxCheckNow",
-    description: "From 1 January 2025, the ATO withholds 15% on every Australian property sale unless the seller produces a clearance certificate. Threshold changed from $750k to $0. Rate changed from 12.5% to 15%. On a $900k sale, that's $135,000 withheld. Run your check in 2 minutes.",
+    description: "From 1 January 2025 there is no value threshold: every Australian property sale needs an ATO clearance certificate, or the purchaser withholds 15% and remits it to the ATO. The certificate is free, most issue within days, and it is valid 12 months. Run your check in 2 minutes.",
     url: "https://taxchecknow.com/au/check/frcgw-clearance-certificate",
     siteName: "TaxCheckNow",
     type: "website",
@@ -25,15 +25,18 @@ export const metadata: Metadata = {
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "Settlement Date (Critical)";
-const DEADLINE_ISO   = "2025-12-31T23:59:59.000+10:00";
+const DEADLINE_LABEL = "your settlement";
+const DEADLINE_ISO   = "";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -51,148 +54,160 @@ function progressPct(): number {
 const faqs = [
   {
     "question": "What is FRCGW and when did it change?",
-    "answer": "Foreign Resident Capital Gains Withholding (FRCGW) is a withholding tax on the sale of Australian real property. On 1 January 2025, the rule changed significantly: the threshold dropped from $750,000 to $0 (every property sale now applies), and the withholding rate increased from 12.5% to 15%. This change was enacted by the Treasury Laws Amendment (Foreign Resident Capital Gains Withholding) Act 2024. Prior to 1 January 2025, property sales under $750,000 were exempt. From 1 January 2025 onwards, all property sales are subject to the 15% withholding unless the seller provides an ATO clearance certificate."
+    "answer": "Foreign Resident Capital Gains Withholding is an obligation on the PURCHASER of Australian real property to withhold part of the price and pay it to the ATO, unless the vendor provides an ATO clearance certificate at or before settlement. On 1 January 2025 two things changed: the value threshold dropped from $750,000 to $0, so every sale is now in scope, and the rate rose from 12.5% to 15%. It was enacted by the Treasury Laws Amendment (Foreign Resident Capital Gains Withholding) Act 2024."
   },
   {
-    "question": "Who needs the clearance certificate?",
-    "answer": "Every seller of an Australian property from 1 January 2025 onwards needs a clearance certificate or the buyer will withhold 15%. Australian tax residents can obtain a standard clearance certificate (1–4 weeks processing). Foreign residents do not have an automatic exemption and must apply for a variation certificate (longer process, conditional on circumstances). Even if you do not owe capital gains tax (e.g. main residence exemption), you still need the certificate to prevent withholding."
+    "question": "Who needs the clearance certificate, and what does it cost?",
+    "answer": "Every vendor of Australian real property under a contract dated on or after 1 January 2025 who wants to avoid 15% being withheld. It is free. You apply online at ato.gov.au/clearancecertificate and you do not need a tax agent to do it. Australian residents for tax purposes get a clearance certificate. Foreign residents cannot, and apply instead for a variation notice, which can set the rate between 0% and 14.99% where there are real grounds. Even if you owe no capital gains tax — a main residence, for instance — you still need the certificate, because the purchaser has no way to assess that."
   },
   {
-    "question": "How long does it take to get a certificate?",
-    "answer": "ATO clearance certificates typically process within 1 to 4 weeks. Processing times vary depending on the complexity of the application and the current ATO workload. Settlement dates are fixed in the contract — you cannot delay settlement to wait for a certificate. If the certificate has not arrived in the buyer's solicitor's office BEFORE settlement morning, the buyer's solicitor must withhold 15%. That money is then held pending ATO refund (6–18 months). Apply early — 4 to 6 weeks before settlement is the safe margin."
+    "question": "How long does it take, and when should I apply?",
+    "answer": "Most clearance certificates issue within days. The ATO asks sellers to allow up to 28, because some applications are checked by hand rather than matched automatically — most commonly where no tax file number was supplied. Because a certificate is free, valid for 12 months from issue, and carries no obligation to use it, the sensible time to apply is as soon as you are thinking of selling, before you list. That removes settlement timing from the question entirely."
   },
   {
-    "question": "What happens if the certificate does not arrive in time?",
-    "answer": "If the certificate has not been delivered to the buyer's solicitor before 9 am on settlement day, the buyer's solicitor is legally required to withhold 15% from the seller's proceeds. The buyer then holds that money pending the ATO refund. For Australian residents, the refund flows through the tax system (6–18 months later). For foreign residents without a valid variation certificate, the 15% may be a final tax (not refunded). The key risk is cash disruption — the seller loses access to $45,000–$180,000+ for months."
+    "question": "What happens if there is no certificate at settlement?",
+    "answer": "The purchaser withholds 15% of the sale price and remits it to the ATO. The money is not forfeited and it is not held by anyone's solicitor: it is credited to you at the ATO. You claim it by lodging your income tax return for the income year the CONTRACT was signed, which may be an earlier year than settlement. An Australian resident with no other tax debts and no capital gains tax payable on the sale gets the whole amount refunded. The real cost is timing — because a return cannot be lodged before its income year ends, the gap between settlement and refund can reach about 15 months where the contract was signed early in the year."
   },
   {
-    "question": "Can I delay settlement to wait for the certificate?",
-    "answer": "Settlement dates are set in the contract. Delaying settlement requires the buyer's agreement and is rare. The buyer has already locked in their finance and their own settlement dates. Most buyers will not agree to a delay. The solution is to apply for the certificate early — 4 to 6 weeks before settlement — so it arrives with margin to spare. If settlement is less than 28 days away and you have not yet applied, contact the ATO immediately to explore urgent processing or request a settlement extension (unlikely to be granted by the buyer)."
+    "question": "We are co-owners — do we each need one?",
+    "answer": "Yes. A clearance certificate covers one vendor, not one property, so every owner named on the title applies separately with their own details. The applications are processed independently and can issue on different days. If one co-owner's certificate is missing at settlement, the purchaser withholds 15% of that co-owner's share of the price; the other owners are unaffected. Each certificate is free, so there is nothing to gain by waiting to apply together."
+  },
+  {
+    "question": "My contract runs longer than 12 months — will my certificate still be valid?",
+    "answer": "A certificate is valid for 12 months from the date it is issued, as long as your residency status does not change in that time. What the purchaser needs is a certificate that is valid on the settlement date, so on a contract running longer than 12 months from signing you should time the application against settlement rather than against the contract. If an earlier certificate has lapsed, apply again — a fresh one is free."
   }
 ];
 
 const aiCorrections = [
   {
     "wrong": "ChatGPT says: FRCGW only applies to property sales over $750,000",
-    "correct": "Reality: As of 1 January 2025, the threshold is $0. Every Australian property sale is in scope, from a $300,000 apartment to a $5 million farm."
+    "correct": "Reality: from 1 January 2025 the threshold is $0. Every Australian property sale is in scope, from a $300,000 apartment to a $5 million farm."
   },
   {
     "wrong": "ChatGPT says: The withholding rate is 12.5%",
-    "correct": "Reality: As of 1 January 2025, the rate is 15% — a 20% increase from the previous rate. Many AI models trained on pre-2025 data still quote the old rate."
+    "correct": "Reality: from 1 January 2025 the rate is 15% of the sale price. Models trained on pre-2025 data typically quote the old rate and the old threshold together."
   },
   {
     "wrong": "ChatGPT says: Australian residents are exempt from FRCGW",
-    "correct": "Reality: Australian residents must obtain an ATO clearance certificate. Without it, the buyer must withhold 15%. The exemption requires the certificate."
+    "correct": "Reality: the exemption operates THROUGH the certificate. Without one the purchaser must withhold regardless of your residency, because they cannot verify it themselves."
   },
   {
-    "wrong": "ChatGPT says: You can apply for the certificate at settlement or shortly after",
-    "correct": "Reality: Processing takes 1–4 weeks. The certificate must be issued and in the buyer's solicitor's office BEFORE settlement closes. After settlement, withholding is automatic and the cash is locked up for 6–18 months."
+    "wrong": "ChatGPT says: The withheld money is held by the buyer's solicitor pending a refund",
+    "correct": "Reality: the purchaser remits it to the ATO at or before settlement. It is credited to you there and claimed in the return for the income year the contract was signed."
+  },
+  {
+    "wrong": "ChatGPT says: Processing takes 1 to 4 weeks, so apply a month before settlement",
+    "correct": "Reality: most certificates issue within days; 28 days is the outer allowance for applications needing manual checking. And since a certificate is free and valid 12 months, the right time to apply is before you list."
+  },
+  {
+    "wrong": "ChatGPT says: You cannot apply for a certificate after settlement",
+    "correct": "Reality: a certificate after settlement serves no purpose, but nothing is lost — the withheld amount is recovered by lodging the return for the income year the contract was signed."
   }
 ];
 
 const accountantQuestions = [
   {
-    "q": "What is my residency status for tax purposes — Australian tax resident or foreign resident?",
-    "why": "The clearance certificate application process is different. Australian residents use the standard form (faster). Foreign residents must apply for a variation certificate (longer, conditional). Your residency status affects processing time and approval likelihood."
+    "q": "Am I an Australian resident for tax purposes for this sale?",
+    "why": "It decides which instrument you lodge: a clearance certificate if you are, a variation notice if you are not. Tax residency is not citizenship, visa status or Medicare eligibility. If the ATO's online residency tests leave you genuinely on the line, this is the question worth paying for."
   },
   {
-    "q": "What residency evidence does the ATO need from me — tax returns, address, employment, bank records?",
-    "why": "Assembling evidence before applying speeds up processing. The ATO scrutinises residency claims. Have your evidence ready so there are no delays asking for missing documents."
+    "q": "Will I have capital gains tax to pay on this sale, and roughly how much?",
+    "why": "The withholding is 15% of the sale price; your actual tax is on the gain. Knowing the gap tells you whether a withholding would be a cash-flow problem or roughly what you owe anyway. If it is your main residence for the whole ownership period the answer may be nothing — and you still need the certificate."
   },
   {
-    "q": "When should I apply — now or after I have the signed contract?",
-    "why": "Apply as soon as you have a settlement date. Do not wait. Processing takes 1–4 weeks. Settlement dates do not move. Applying early gives you a 4–6 week buffer instead of a 1–2 week scramble."
+    "q": "Does the name on my title need anything done before I apply?",
+    "why": "Trustee capacity, a former or maiden name, a company suffix or a deceased estate are where the certificate name and the title name come apart. A conveyancer spots it in a minute. Settlement morning is the wrong place to discover it."
   },
   {
-    "q": "If the certificate does not arrive by settlement, what is my refund path — how long, and what do I need to claim it?",
-    "why": "If withholding happens, you will need to claim the refund through the tax system. Understand the process so you know exactly when to expect the cash back. For Australian residents it is usually the next tax year. For foreign residents the timeline is different."
+    "q": "Which income year does this sale fall in?",
+    "why": "The capital gains event is the CONTRACT date, not settlement. That also decides which year's return carries any withholding credit. A contract signed in June and settled in August sits in the earlier income year."
   }
 ];
 
 const workedExamples = [
   {
-    "name": "First home sale, Australian resident",
-    "setup": "$450,000 apartment sale, settling in 6 weeks",
-    "income": "$67,500 withheld if no certificate",
-    "status": "APPLY NOW — have 4 weeks buffer"
+    "name": "First home sale, Australian resident, applied early",
+    "setup": "$450,000 unit, certificate obtained before listing",
+    "income": "$0 withheld",
+    "status": "Full proceeds at settlement"
   },
   {
-    "name": "$900k investment property, Australian resident",
-    "setup": "Commercial property, settlement in 3 weeks",
-    "income": "$135,000 withheld if no certificate",
-    "status": "URGENT — ATO needs 3 weeks minimum"
+    "name": "$900k investment property, Australian resident, no certificate",
+    "setup": "Certificate never applied for; settlement completes",
+    "income": "$135,000 withheld and remitted to the ATO",
+    "status": "Credited back in the contract-year return"
   },
   {
-    "name": "Foreign national (working visa), 1 week to settlement",
-    "setup": "Sales price $1.2M, must leave country after sale",
-    "income": "$180,000 withheld, variation application needed",
-    "status": "CRITICAL — may need settlement delay"
+    "name": "Foreign resident, $1.2M sale, no variation notice",
+    "setup": "Clearance certificate not available to them",
+    "income": "$180,000 withheld and remitted to the ATO",
+    "status": "Credited against actual CGT; a variation notice would have reduced it"
   },
   {
-    "name": "Australian resident, no CGT (main residence)",
-    "setup": "$650k family home, owe zero CGT but need certificate",
-    "income": "$97,500 withheld if certificate not lodged",
-    "status": "CERTIFICATE NEEDED — CGT does not override withholding"
+    "name": "Main residence, Australian resident, no certificate",
+    "setup": "$650k family home, no CGT payable on the sale",
+    "income": "$97,500 withheld and remitted to the ATO",
+    "status": "Refunded in full — but not until the contract-year return"
   }
 ];
 
 const comparisonRows = [
   {
-    "position": "Apply 6+ weeks before settlement",
-    "metric1": "Before settlement",
-    "metric2": "None — buyer pays full amount",
-    "bestMove": "Full cash on settlement day"
+    "position": "When you first think of selling",
+    "metric1": "Yes — valid 12 months from issue",
+    "metric2": "Nothing",
+    "bestMove": "Full proceeds on settlement day"
   },
   {
-    "position": "Apply 3–4 weeks before settlement (tight)",
-    "metric1": "Likely before settlement",
-    "metric2": "Risk if processing is slow",
-    "bestMove": "Probably full cash (small risk)"
+    "position": "After the contract is signed",
+    "metric1": "Usually — most issue within days",
+    "metric2": "Nothing, in most cases",
+    "bestMove": "Full proceeds; small residual timing risk"
   },
   {
-    "position": "Miss the deadline (no certificate)",
-    "metric1": "After settlement (too late)",
-    "metric2": "15% withheld automatically",
-    "bestMove": "Cash locked 6–18 months (big problem)"
+    "position": "Not at all",
+    "metric1": "No",
+    "metric2": "15% of the sale price, remitted to the ATO",
+    "bestMove": "Credited back in the contract-year return — up to ~15 months later"
   }
 ];
 
 const toolsRows = [
   {
-    "tool": "Calculate your exact withholding amount",
-    "effect": "Know the dollar amount at risk — is $45k, $135k, or $180k withheld?",
-    "note": "Immediately"
+    "tool": "Check the vendor name on the title",
+    "effect": "The certificate must match the title exactly — a mismatch is the usual reason one is queried at settlement",
+    "note": "Before you apply"
   },
   {
-    "tool": "Gather residency evidence (Australian residents)",
-    "effect": "ATO needs proof of residency status — tax returns, address, employment, ties",
-    "note": "Before application"
+    "tool": "Confirm your residency for tax purposes",
+    "effect": "Australian residents get a clearance certificate; foreign residents get a variation notice instead. It decides which form you lodge",
+    "note": "Before you apply"
   },
   {
-    "tool": "Apply for clearance certificate via ATO",
-    "effect": "Processing takes 1–4 weeks — do not wait until 1 week before settlement",
-    "note": "4–6 weeks before settlement"
+    "tool": "Apply at ato.gov.au/clearancecertificate",
+    "effect": "Free, online, a few minutes. Supplying your TFN is optional but is what lets it process automatically",
+    "note": "As soon as you are thinking of selling"
   },
   {
-    "tool": "Provide certificate to buyer's solicitor",
-    "effect": "Certificate must be physically delivered BEFORE 9 am settlement day",
-    "note": "Before settlement morning"
+    "tool": "One application per owner on the title",
+    "effect": "A certificate covers one vendor, not one property. Applications are processed separately and can issue on different days",
+    "note": "At the same time"
   },
   {
-    "tool": "Confirm certificate arrival with solicitor 1 day before",
-    "effect": "Verify it arrived and is in the right form — not a typo or wrong name",
-    "note": "1 day before settlement"
+    "tool": "Send it to the purchaser's conveyancer and get written confirmation",
+    "effect": "The purchaser carries the withholding obligation, so they are who needs to hold it. 'Sent' is not 'received'",
+    "note": "As soon as it issues"
   }
 ];
 
 const geoFacts = [
   {
-    "label": "FRCGW commencement (new rate/threshold)",
+    "label": "FRCGW commencement (current rate/threshold)",
     "value": "1 January 2025"
   },
   {
     "label": "Withholding rate (current)",
-    "value": "15%"
+    "value": "15% of the sale price"
   },
   {
     "label": "Previous withholding rate",
@@ -207,24 +222,36 @@ const geoFacts = [
     "value": "$750,000 (until 31 Dec 2024)"
   },
   {
-    "label": "Certificate processing time",
-    "value": "1–4 weeks"
+    "label": "Cost of a clearance certificate",
+    "value": "Free"
   },
   {
-    "label": "Certificate delivery deadline",
-    "value": "BEFORE settlement (not after)"
+    "label": "Typical time to issue",
+    "value": "Days; ATO asks you to allow up to 28"
   },
   {
-    "label": "Exemption for Australian residents",
-    "value": "Yes (with certificate)"
+    "label": "Certificate validity",
+    "value": "12 months from issue"
   },
   {
-    "label": "Exemption for foreign residents",
-    "value": "Variation application required (longer, conditional)"
+    "label": "Who the certificate must reach",
+    "value": "The purchaser or their representative, at or before settlement"
   },
   {
-    "label": "Cash locked-up period if no cert",
-    "value": "6–18 months (pending tax refund)"
+    "label": "One certificate per",
+    "value": "Vendor on the title, not per property"
+  },
+  {
+    "label": "Where a withheld amount goes",
+    "value": "Remitted by the purchaser to the ATO, credited to the vendor"
+  },
+  {
+    "label": "How a withheld amount is recovered",
+    "value": "Return for the income year the CONTRACT was signed"
+  },
+  {
+    "label": "Foreign residents",
+    "value": "No clearance certificate; variation notice at 0–14.99% on real grounds"
   }
 ];
 
@@ -238,12 +265,12 @@ const sidebarNumbers = [
     "value": "$0 (all sales apply)"
   },
   {
-    "label": "Certificate processing time",
-    "value": "1–4 weeks"
+    "label": "Cost of a certificate",
+    "value": "Free"
   },
   {
-    "label": "Cash locked-up period if no cert",
-    "value": "6–18 months"
+    "label": "Certificate validity",
+    "value": "12 months from issue"
   }
 ];
 
@@ -266,12 +293,12 @@ const countdownStats = [
   {
     "label": "Withholding rate from 1 Jan 2025",
     "value": "15%",
-    "sub": "On a $900k sale, that is $135,000"
+    "sub": "Of the sale price, not the gain"
   },
   {
-    "label": "Processing time",
-    "value": "1–4 weeks",
-    "sub": "Certificate must arrive BEFORE settlement"
+    "label": "Typical time to issue",
+    "value": "Days",
+    "sub": "ATO asks you to allow up to 28"
   },
   {
     "label": "Threshold",
@@ -279,10 +306,9 @@ const countdownStats = [
     "sub": "Changed from $750k on 1 Jan 2025"
   },
   {
-    "label": "Cash locked up if no certificate",
-    "value": "6–18 months",
-    "sub": "Pending ATO refund through tax system",
-    "red": true
+    "label": "Cost of a certificate",
+    "value": "Free",
+    "sub": "Valid 12 months, no obligation to use it"
   }
 ];
 
@@ -290,8 +316,13 @@ const countdownStats = [
 
 export default function FrcgwClearanceCertificatePage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/frcgw-clearance-certificate", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -308,7 +339,7 @@ export default function FrcgwClearanceCertificatePage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Foreign Resident CGT Withholding Clearance Certificate — Rules April 2026",
-    description: "From 1 January 2025, the ATO withholds 15% on every Australian property sale unless the seller produces a clearance certificate. Threshold changed from $750k to $0. Rate changed from 12.5% to 15%. On a $900k sale, that's $135,000 withheld. Run your check in 2 minutes.",
+    description: "From 1 January 2025 there is no value threshold: every Australian property sale needs an ATO clearance certificate, or the purchaser withholds 15% and remits it to the ATO. The certificate is free, most issue within days, and it is valid 12 months. Run your check in 2 minutes.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -324,7 +355,7 @@ export default function FrcgwClearanceCertificatePage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Foreign Resident CGT Withholding Clearance Certificate",
-    description: "From 1 January 2025, the ATO withholds 15% on every Australian property sale unless the seller produces a clearance certificate. Threshold changed from $750k to $0. Rate changed from 12.5% to 15%. On a $900k sale, that's $135,000 withheld. Run your check in 2 minutes.",
+    description: "From 1 January 2025 there is no value threshold: every Australian property sale needs an ATO clearance certificate, or the purchaser withholds 15% and remits it to the ATO. The certificate is free, most issue within days, and it is valid 12 months. Run your check in 2 minutes.",
     url: "https://taxchecknow.com/au/check/frcgw-clearance-certificate",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -344,23 +375,23 @@ export default function FrcgwClearanceCertificatePage() {
     step: [
       {
             "@type": "HowToStep",
-            "name": "Calculate your exact withholding exposure",
-            "text": "Sale price × 15% = amount withheld at settlement if you do not have a certificate. On $900k, that is $135,000."
+            "name": "Check the vendor name on the title",
+            "text": "The certificate is issued in the name you give and is checked against the title. A middle name, a former name, a trustee capacity or a company suffix are where the two come apart. Note the name exactly as written."
       },
       {
             "@type": "HowToStep",
-            "name": "Verify your residency status for tax purposes",
-            "text": "Australian tax residents can apply for a standard clearance certificate (faster). Foreign residents must apply for a variation certificate (longer, conditional). Your status determines the application type and processing time."
+            "name": "Confirm your residency for tax purposes",
+            "text": "Australian residents for tax purposes apply for a clearance certificate. Foreign residents cannot get one and apply for a variation notice instead. The ATO's online residency tests will settle it in a few minutes."
       },
       {
             "@type": "HowToStep",
-            "name": "Gather residency evidence and apply to the ATO",
-            "text": "The ATO needs proof of your residency — tax returns, address, employment, bank records. Apply early (4–6 weeks before settlement, not 1–2 weeks). Processing takes 1–4 weeks."
+            "name": "Apply online — free, a few minutes",
+            "text": "Go to ato.gov.au/clearancecertificate. Supplying your tax file number is optional but is the single biggest factor in the application being processed automatically. Most certificates issue within days; allow up to 28 in case yours is checked by hand."
       },
       {
             "@type": "HowToStep",
-            "name": "Deliver the certificate to your buyer's solicitor before settlement",
-            "text": "Once the ATO issues the certificate, your accountant sends it to the buyer's solicitor. Confirm arrival 1 day before settlement. Certificate must be in their office by 9 am settlement morning."
+            "name": "Send it to the purchaser's side and confirm receipt",
+            "text": "Once issued, you or your conveyancer send it to the purchaser or their representative — they carry the withholding obligation. Ask for written confirmation of receipt, and check the name on the certificate matches the title before you send it."
       }
 ],
   };
@@ -373,7 +404,7 @@ export default function FrcgwClearanceCertificatePage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/frcgw-clearance-certificate#calculator",
-    "description": "From 1 January 2025, the ATO withholds 15% on every Australian property sale unless the seller produces a clearance certificate. Threshold changed from $750k to $0. Rate changed from 12.5% to 15%. On a $900k sale, that's $135,000 withheld. Run your check in 2 minutes.",
+    "description": "From 1 January 2025 there is no value threshold: every Australian property sale needs an ATO clearance certificate, or the purchaser withholds 15% and remits it to the ATO. The certificate is free, most issue within days, and it is valid 12 months. Run your check in 2 minutes.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -404,6 +435,18 @@ export default function FrcgwClearanceCertificatePage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "ATO Clearance Certificate: How Long It Takes and What Happens If You Skip It",
+    description: "From 1 January 2025 there is no value threshold: every Australian property sale needs an ATO clearance certificate, or the purchaser withholds 15% and remits it to the ATO. The certificate is free, most issue within days, and it is valid 12 months. Run your check in 2 minutes.",
+    thumbnailUrl: "https://i.ytimg.com/vi/xTpsq53tedI/hqdefault.jpg",
+    uploadDate: "2026-06-11T10:08:45.939+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=xTpsq53tedI",
+    embedUrl: "https://www.youtube.com/embed/xTpsq53tedI",
+    transcript: "What the FRCGW Is and Why Every Seller Needs to Know It\nThe Foreign Resident Capital Gains Withholding rules — FRCGW for short — require a purchaser to withhold a percentage of the sale price and send it directly to the ATO, unless the vendor hands over a valid clearance certificate before or at settlement. That is not a penalty. That is not a fine. That is simply the law operating exactly as designed, and the result for an unprepared vendor is $0 received on the withheld portion at settlement. The single biggest misconception here is that FRCGW only targets foreign residents. It does not. Australian residents are equally required to obtain a clearance certificate to prove their residency status. If you do not prove it, the purchaser has no choice — they must withhold. The ATO's own legislative summary refers to 'all vendors.' Not foreign vendors. All vendors.\n\nThe $750,000 Myth That Is Costing Australian Sellers Money\nNow let us deal with the myth that is actively costing people money right now. You may have read somewhere — perhaps from an AI tool, perhaps from an old conveyancing checklist — that FRCGW only applies to property sales above $750,000. That threshold has been removed. The withholding obligation now applies to all taxable Australian real property transactions regardless of price. There is no floor. There is no exemption based on sale price. The exemption available to a foreign resident vendor is $0 — no exemption exists at any price point. If you are relying on advice that still quotes the $750,000 threshold, you are relying on outdated information, and your settlement proceeds are at risk. The current ATO FRCGW page is unambiguous on this point.\n\nHow Long Does the ATO Actually Take to Issue a Clearance Certificate\nSo how long does it actually take the ATO to issue a clearance certificate? The ATO's stated target processing window is 28 days for a standard application. That is the benchmark they aim for under normal conditions. But processing times vary. Identity verification issues, TFN discrepancies, or high application volumes can all push that timeline out. Here is where the critical mistake happens: vendors wait until a contract is signed before they apply. By that point, your settlement date may already be inside that 28-day window. A standard residential settlement in Australia typically runs 30 to 45 days from contract. If you apply the day contracts are exchanged, you are gambling that the ATO processes your application faster than their own stated target. That is not a risk worth taking when the downside is having six figures withheld from your proceeds.\n\nWhat Happens When No Certificate Is Provided at Settlement\nLet us be precise about what actually happens if you arrive at settlement without a valid clearance certificate. The purchaser is legally obligated to withhold the applicable percentage of the total sale price and remit it directly to the ATO. Not to you. To the ATO. On a high-value sale, that can mean up to $135,000 withheld from your proceeds, with those funds locked for six to eighteen months while the ATO completes its assessment. You will eventually get the money back — assuming your tax affairs are in order — but not at settlement, and not quickly. A second mistake compounds this: many vendors assume the purchaser's conveyancer will chase the certificate on their behalf. That is not how the law works. The obligation to obtain the certificate and provide it at settlement rests entirely with the vendor. No one is coming to save you on this one.\n\nWho Must Apply and What Information Is Required\nEvery vendor of taxable Australian real property must apply individually. If you and your spouse jointly own a property, you each need your own certificate. One certificate does not cover co-owners. Each individual vendor named on the contract must hold their own valid clearance certificate. The application itself requires your tax file number, the property address, and identity verification details. The good news: applying directly through the ATO online portal costs $0. There is no fee to apply. The cost of not applying, however, we have already established. If you are selling as part of a joint ownership arrangement, check every name on the title and confirm every person has applied individually before settlement day.\n\nStep-by-Step: Apply Early and Protect Your Settlement Proceeds\nHere is the simple fix that eliminates all of this risk entirely: apply early. A clearance certificate is valid for 12 months from the date of issue. You do not need a signed contract to apply. You do not need a settlement date. You can apply the moment you decide to sell — before the property is even listed. That 12-month validity window means a certificate obtained before listing will almost certainly still be current when you reach settlement. Stop treating the clearance certificate as a last-minute conveyancing task. It is a first step, made the day you decide to sell. Use the FRCGW Clearance Certificate service to estimate your timeline and flag whether your intended settlement date falls inside or outside the ATO's processing window — so you know exactly where you stand before contracts are exchanged. Do not let a missing certificate hand six figures of your own money to the ATO on settlement day.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -413,6 +456,7 @@ export default function FrcgwClearanceCertificatePage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -436,7 +480,7 @@ export default function FrcgwClearanceCertificatePage() {
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · CERTIFICATE MUST ARRIVE BEFORE SETTLEMENT
+        🔴 {countdown} days · {DEADLINE_LABEL} · CERTIFICATE NEEDS TO REACH THE PURCHASER BEFORE SETTLEMENT
       </div>
       )}
 
@@ -458,12 +502,12 @@ export default function FrcgwClearanceCertificatePage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Selling Australian Property? Since 1 Jan 2025 the ATO Withholds 15% at Settlement — Even If You Owe Nothing.
+          Selling Australian Property? Since 1 Jan 2025 Every Sale Needs an ATO Clearance Certificate — Or 15% Is Withheld at Settlement.
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          $135,000. That is what gets withheld on a $900,000 property sale at settlement from 1 January 2025 onwards. The ATO withholds 15% of the sale price unless the seller — whether Australian resident or foreign national — produces an ATO clearance certificate before the settlement closes. The rule changed on New Year's Day 2025: the threshold dropped from $750,000 to $0 (every sale now applies), and the rate jumped from 12.5% to 15%. Before 1 January 2025, your accountant could tell you the rule did not apply. From 1 January 2025, you need a certificate to prove it does not apply. Without the certificate, the buyer's solicitor has no choice — they must withhold.
+          From 1 January 2025 there is no value threshold for foreign resident capital gains withholding. Every sale of Australian real property is in scope, from a $300,000 unit to a $5 million farm, and the rate is 15% of the sale price. Before that date the rules only bit above $750,000 and the rate was 12.5%. The mechanism is the same for everyone: unless the vendor gives the purchaser a valid ATO clearance certificate at or before settlement, the purchaser must withhold 15% of the price and pay it to the ATO. The certificate is how an Australian resident vendor shows it does not apply to them.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -493,12 +537,12 @@ export default function FrcgwClearanceCertificatePage() {
                   <dd className="font-bold">$0 (all sales apply)</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Certificate processing time</dt>
-                  <dd className="font-bold">1–4 weeks</dd>
+                  <dt className="text-neutral-600">Cost of a certificate</dt>
+                  <dd className="font-bold">Free</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Cash locked-up period if no cert</dt>
-                  <dd className="font-bold">6–18 months</dd>
+                  <dt className="text-neutral-600">Certificate validity</dt>
+                  <dd className="font-bold">12 months from issue</dd>
                 </div>
               </dl>
             </div>
@@ -507,7 +551,7 @@ export default function FrcgwClearanceCertificatePage() {
             <div className="bg-neutral-950 p-4 text-white">
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Product</p>
               <h3 className="mb-1 text-lg font-bold">Foreign Resident CGT Withholding Clearance Certificate</h3>
-              <p className="mb-3 text-sm text-neutral-300">Your exact withholding exposure on your sale price, certificate eligibility check, days-to-settlement countdown, and 4 accountant questions built for your situation.</p>
+              <p className="mb-3 text-sm text-neutral-300">Your withholding position worked through against your answers, how to apply and what the form asks for, wording to send the purchaser's side, and the questions worth putting to your accountant.</p>
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
@@ -532,11 +576,11 @@ export default function FrcgwClearanceCertificatePage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to your settlement — certificate delivery deadline
+            Countdown to your settlement
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until Settlement Date (Critical)</span>
+            <span className="text-lg text-neutral-300">days until your settlement</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -550,16 +594,16 @@ export default function FrcgwClearanceCertificatePage() {
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 15%
               </p>
-              <p className="text-xs text-neutral-400">On a $900k sale, that is $135,000</p>
+              <p className="text-xs text-neutral-400">Of the sale price, not the gain</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
-                Processing time
+                Typical time to issue
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                1–4 weeks
+                Days
               </p>
-              <p className="text-xs text-neutral-400">Certificate must arrive BEFORE settlement</p>
+              <p className="text-xs text-neutral-400">ATO asks you to allow up to 28</p>
             </div>
             <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
@@ -570,14 +614,14 @@ export default function FrcgwClearanceCertificatePage() {
               </p>
               <p className="text-xs text-neutral-400">Changed from $750k on 1 Jan 2025</p>
             </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Cash locked up if no certificate
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                Cost of a certificate
               </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                6–18 months
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                Free
               </p>
-              <p className="text-xs text-neutral-400">Pending ATO refund through tax system</p>
+              <p className="text-xs text-neutral-400">Valid 12 months, no obligation to use it</p>
             </div>
           </div>
         </div>
@@ -590,23 +634,25 @@ export default function FrcgwClearanceCertificatePage() {
         {/* Maths panel — moved from sidebar, full width in main content */}
         <div className="mb-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-blue-900">
-            FRCGW clearance certificate — rule vs reality
+            FRCGW clearance certificate — what it is and is not
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 1: ATO withholds 15% of sale price from 1 Jan 2025 (TAA 1953 Sch 1 Subdiv 14-D)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 2: Threshold is $0 — every property sale applies (changed from $750k on 1 Jan 2025)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 3: Clearance certificate available to Australian tax residents (free, 1–4 weeks processing)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 4: Certificate must be delivered to buyer's solicitor BEFORE settlement (not after)</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Rule 5: Foreign residents need variation certificate (longer, conditional) — no automatic exemption</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 1: from 1 Jan 2025 the purchaser withholds 15% of the sale price and remits it to the ATO (TAA 1953 Sch 1 Subdiv 14-D)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 2: no value threshold — every Australian real property sale applies (changed from $750k on 1 Jan 2025)</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 3: a clearance certificate stops the withholding. It is free, most issue within days, and it is valid 12 months</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 4: the certificate must be with the purchaser or their representative at or before settlement</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 5: one certificate per vendor on the title, not per property — applications are processed separately</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Rule 6: foreign residents cannot get one; they apply for a variation notice setting a rate between 0% and 14.99%</p>
             </div>
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic — must be applied for and approved by the ATO</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT obtainable after settlement — too late, withholding already deducted</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT refunded within days — cash locked up 6–18 months pending tax system refund</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT optional — buyer's solicitor must withhold if certificate is not provided</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic — you have to apply, online, at ato.gov.au/clearancecertificate</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a cost — the certificate is free, and holding one you do not use costs nothing</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT lost if you miss it — the withheld amount goes to the ATO and is credited to you</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT recovered quickly — the credit is claimed in the return for the income year the CONTRACT was signed, which can be ~15 months after settlement</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT a substitute for CGT — any capital gains tax on the sale is assessed separately</p>
             </div>
           </div>
           <p className="mt-3 text-[10px] text-neutral-500">Source: ATO — Capital Gains Withholding · TAA 1953 Schedule 1 Subdivision 14-D · Treasury Laws Amendment (Foreign Resident Capital Gains Withholding) Act 2024 (effective 1 January 2025) · Confirmed April 2026</p>
@@ -617,9 +663,9 @@ export default function FrcgwClearanceCertificatePage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             Foreign Resident Capital Gains Withholding — the 1 January 2025 rule change that affects every Australian property seller
           </p>
-          <p className="mb-2 text-neutral-900">$135,000. That is what gets withheld on a $900,000 property sale at settlement from 1 January 2025 onwards. The ATO withholds 15% of the sale price unless the seller — whether Australian resident or foreign national — produces an ATO clearance certificate before the settlement closes. The rule changed on New Year's Day 2025: the threshold dropped from $750,000 to $0 (every sale now applies), and the rate jumped from 12.5% to 15%. Before 1 January 2025, your accountant could tell you the rule did not apply. From 1 January 2025, you need a certificate to prove it does not apply. Without the certificate, the buyer's solicitor has no choice — they must withhold.</p>
-          <p className="mb-2 text-neutral-900">The clearance certificate is issued by the ATO at no cost and takes 1 to 4 weeks to process. It proves the seller is either an Australian resident (exempt from withholding) or satisfies the criteria for an exemption. The certificate must be handed to the buyer's solicitor BEFORE settlement. This is the critical date — not the application date, not the expected issue date, but the actual settlement date. The ATO issues the certificate in your name. You hand it to your accountant or solicitor, who forwards it to the buyer's solicitor before the money changes hands. If the certificate has not arrived by 9 am on settlement day, the buyer is legally required to withhold 15% from your sale proceeds. That cash is then locked up with the buyer's solicitor for 6 to 18 months while the ATO refunds it through the tax system.</p>
-          <p className="mb-2 text-neutral-900">For foreign residents: there is no exemption from the 15% withholding. Foreign residents must have a certificate issued under the exemption provisions (usually a variation application explaining the circumstance — for example, a former Australian resident now living overseas, or a short-term working visa holder returning home). The variation application is a separate process and takes longer. For Australian residents without a certificate: you are treated as if you are subject to withholding until the ATO confirms otherwise. The buyer cannot assess your residency — the law does not allow them to. So the buyer withholds, you get the cash back at tax-return time, but your cash flow is disrupted for months. The solution is to apply early — 4 to 6 weeks before settlement if you want a margin of safety.</p>
+          <p className="mb-2 text-neutral-900">From 1 January 2025 there is no value threshold for foreign resident capital gains withholding. Every sale of Australian real property is in scope, from a $300,000 unit to a $5 million farm, and the rate is 15% of the sale price. Before that date the rules only bit above $750,000 and the rate was 12.5%. The mechanism is the same for everyone: unless the vendor gives the purchaser a valid ATO clearance certificate at or before settlement, the purchaser must withhold 15% of the price and pay it to the ATO. The certificate is how an Australian resident vendor shows it does not apply to them.</p>
+          <p className="mb-2 text-neutral-900">The clearance certificate is free and you apply for it online at ato.gov.au/clearancecertificate. Most issue within days. The ATO asks sellers to allow up to 28, because some applications are checked by hand rather than matched automatically — most often where no tax file number was given. A certificate is valid for 12 months from issue and carries no obligation to use it, which is the part most sellers miss: there is no cost and no downside to holding one you turn out not to need. That is why the sensible time to apply is as soon as you are thinking of selling, before you list, rather than once a contract is signed and settlement is running at you.</p>
+          <p className="mb-2 text-neutral-900">If no certificate is provided, the money is not lost. The purchaser remits the withheld 15% to the ATO, where it is held as a credit in the vendor's name — it does not sit in anybody's solicitor's trust account. You claim it by lodging your tax return for the income year the CONTRACT was signed, which can be an earlier year than settlement. For an Australian resident with no other tax debts and no capital gains tax payable on the sale, it is refunded in full. The real cost is timing rather than money: because a return cannot be lodged before its income year ends, the gap between settlement and refund can reach about 15 months if the contract was signed early in the year. Foreign residents cannot get a clearance certificate at all — they apply for a variation notice, which can set the rate anywhere from 0% to 14.99% on real grounds.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Foreign Resident Capital Gains Withholding · TAA 1953 Schedule 1 Subdivision 14-D · Treasury Laws Amendment (Foreign Resident Capital Gains Withholding) Act 2024 · Effective 1 January 2025 · Confirmed April 2026</p>
         </div>
 
@@ -627,14 +673,14 @@ export default function FrcgwClearanceCertificatePage() {
         
         <div className="mb-5 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-            The clearance certificate deadline trap
+            Two ways the same sale can go
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Do nothing → buyer withholds 15% at settlement → cash locked up 6-18 months  ❌  Months of disrupted cash flow
+              ❌ Do nothing → purchaser withholds 15% and remits it to the ATO → you claim it back in the contract-year return → up to ~15 months before the cash returns
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
-              ✔ Apply early + get certificate before settlement → buyer pays full amount → cash in hand on settlement day  ✔  No withholding, no refund delay
+              ✔ Apply when you list (free, valid 12 months) → certificate reaches the purchaser before settlement → nothing withheld → full proceeds on settlement day  ✔
             </div>
           </div>
         </div>
@@ -645,10 +691,12 @@ export default function FrcgwClearanceCertificatePage() {
             What most people (and AI) get wrong about FRCGW and the clearance certificate
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
-            <li>✗ It only applies to sales over $750,000 — wrong. The threshold dropped to $0 on 1 January 2025. Every Australian property sale is now in scope, from a $300,000 apartment to a $5 million farm. The ATO withholds 15% unless the seller produces a clearance certificate. At $300k, that is $45,000 withheld. At $900k, that is $135,000.</li>
-            <li>✗ The withholding rate is still 12.5% — wrong. As of 1 January 2025, the rate increased to 15%. This is a 20% jump in the withholding amount. On a $900,000 sale, the difference is: $112,500 at 12.5% vs $135,000 at 15%. That is $22,500 more money locked up. Many AI tools trained on pre-2025 data still quote the old rate.</li>
-            <li>✗ I am Australian so I do not need to do anything — wrong. Without a certificate, the buyer must withhold regardless of your residency status. The ATO refunds the difference at tax-return time if you are Australian, but the money is locked up with the buyer's solicitor for 6 to 18 months. Your accountant might tell you to wait for the refund. The buyer's solicitor is not allowed to wait — they must withhold.</li>
-            <li>✗ I can apply for the certificate at settlement — wrong. Processing takes 1 to 4 weeks. Settlement happens on a date the buyer has chosen and the contracts lock in. You cannot delay settlement to wait for a certificate. If the certificate has not arrived in the buyer's solicitor's office before 9 am on settlement day, the withholding happens automatically. This is not a paperwork mistake you can fix later. It is a cash position you lose for months.</li>
+            <li>✗ It only applies to sales over $750,000 — wrong. The threshold dropped to $0 on 1 January 2025. Every Australian property sale is now in scope, from a $300,000 apartment to a $5 million farm.</li>
+            <li>✗ The withholding rate is still 12.5% — wrong. From 1 January 2025 the rate is 15% of the sale price. Many AI tools trained on pre-2025 data still quote the old rate and the old threshold together, which compounds the error.</li>
+            <li>✗ I am Australian, so I do not need to do anything — wrong. Without a certificate the purchaser must withhold regardless of your residency, because they have no way to verify it. The certificate is the mechanism by which your residency is established. It is free and takes minutes to apply for.</li>
+            <li>✗ The money is lost, or sits with the buyer's solicitor — wrong on both counts. The purchaser remits the withheld amount to the ATO at or before settlement and it is credited to you. You claim it in the return for the income year the contract was signed. With no other tax debts and no CGT payable, it comes back in full.</li>
+            <li>✗ The ATO needs 28 days to process it — wrong. Most certificates issue within days. Twenty-eight days is the outer allowance the ATO asks you to leave in case yours needs manual checking, not the expected wait. Treating it as the expected wait is what makes sellers think they have missed their chance when they have not.</li>
+            <li>✗ It is too late once settlement is close, or once settlement has passed — wrong. You can apply at any time; a certificate is free and valid 12 months. And if settlement has already happened without one, the withheld amount is recoverable through your return. There is no point at which doing nothing becomes the better option.</li>
           </ul>
         </div>
 
@@ -673,16 +721,16 @@ export default function FrcgwClearanceCertificatePage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Gary's accountant called in mid-February: 'Gary, the ATO is withholding $135,000 at your settlement unless you file a form.'</p>
-            <p>Gary had owned the Bibra Lake commercial property for ten years. He bought it in 2015 for $650,000 and leased it out. It was a solid investment — reliable tenants, good location, steady returns. By early 2025, Gary had decided to sell. He was 64, semi-retired, and wanted to redeploy the capital into something less hands-on. Settlement was booked for late April 2025. The buyer was ready. The contracts were signed. The money was as good as in Gary's hand — or so he thought.</p>
-            <p>Gary's accountant called him in mid-February. 'Gary, I have news about your Bibra Lake property. The ATO is withholding money at settlement.' Gary's stomach sank. He thought immediately of tax debt — something his accountant had not told him about, a tax bill from the rental years.</p>
-            <p>'How much?' Gary asked.</p>
-            <p>'$135,000,' the accountant said. '15% of your sale price.' Gary did the math in his head. $135,000 was two years of his rental income. It was the difference between being able to retire comfortably and having to keep renting properties.</p>
-            <p>The accountant continued: 'This is a new rule. Changed on 1 January. Every property sale is now in scope. The ATO withholds 15% at settlement unless you have a clearance certificate. The certificate is free. Processing takes 1–4 weeks. We need to apply today.'</p>
-            <p>Gary had never heard of it. He did not feel stupid — he wired large buildings for 38 years and understood systems — but tax rules that change on New Year's Day and are not mentioned by the accountant until mid-February feel like a setup for disaster.</p>
-            <p className="font-semibold text-neutral-900">Gary asked the questions: What exactly is the rule? Who made it? Why does it not apply to some sales (it does — threshold dropped to $0)? Why is processing 4 weeks when settlement is locked in (because the ATO needs time to verify residency)? What if the certificate does not arrive (the buyer withholds 15% and Gary does not see the money for 6–18 months — the cash flow damage is real). The accountant had the answers: the rule is TAA 1953 Schedule 1 Subdivision 14-D, effective 1 January 2025. The certificate is called an ATO clearance certificate. Gary needs to prove he is an Australian tax resident (he is — he has lived here his entire life, paid tax here every year, his bank accounts are here). The ATO will issue the certificate, Gary hands it to his accountant, accountant hands it to the buyer's solicitor before settlement morning. No certificate = $135,000 withheld automatically. Certificate = full $900,000 to Gary at settlement.</p>
+            <p className="text-base font-medium text-neutral-900">'Before you list,' Gary's accountant said, 'get the clearance certificate. It is free, and without it the buyer withholds $135,000 at settlement.'</p>
+            <p>Gary had owned the Bibra Lake commercial property for ten years. He bought it in 2015 for $650,000 and leased it out — reliable tenants, good location, steady returns. At 64 and semi-retired, he had decided to sell and put the capital somewhere less hands-on. Nothing was signed yet. He was still deciding which agent to use.</p>
+            <p>The clearance certificate came up almost as an afterthought at the end of a call about something else. 'One thing before you list,' the accountant said. 'Get your ATO clearance certificate.'</p>
+            <p>'What is that?'</p>
+            <p>'It changed on New Year's Day last year. Used to only apply over $750,000 and it was 12.5%. Now there is no threshold at all and it is 15%. If you do not hand the buyer a clearance certificate at settlement, they are legally required to withhold 15% of the sale price and send it to the ATO.'</p>
+            <p>Gary did the arithmetic. 'On $900,000 that is $135,000.'</p>
+            <p>'It is. And you would get it back — it goes to the ATO, not to the buyer, and it is credited to you. But you claim it in the return for the year the contract is signed, so depending on timing you might not see it for the better part of a year.'</p>
+            <p className="font-semibold text-neutral-900">The part that changed Gary's mind was how small the fix was. The certificate is free. You apply online at ato.gov.au/clearancecertificate. Most issue within days — the 28 days people quote is the outer allowance for applications the ATO has to check by hand, usually where someone left their tax file number off. And it stays valid for 12 months whether or not you end up using it, so there is no such thing as applying too early. Gary had assumed this was a settlement-week scramble. It was the opposite: a five-minute job to do before the property was even listed. The only detail that genuinely mattered was that the name on the certificate had to match the name on the title exactly.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Gary ran the FRCGW clearance-certificate check the same day. He entered: $900,000 sale price, Australian resident status, no certificate yet (not applied), 46 days to settlement. The calculator showed: $135,000 withholding at risk, certificate application urgent but 46 days is enough margin, apply now, provide certificate to solicitor by settlement morning, job done. Gary's accountant lodged the application within 48 hours. The ATO issued the certificate in 18 days. Gary's accountant sent it to the buyer's solicitor 3 weeks before settlement. Settlement completed on time. Gary received the full $900,000. No withholding. No cash locked up. The only cost was the couple of hours Gary spent understanding the rule and the ATO spent processing the certificate. By acting on the February call from his accountant, Gary avoided $135,000 of cash disruption.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary applied that afternoon, before he had chosen an agent or set a price. The certificate issued in four days. When the contract was eventually signed and settlement was booked, his conveyancer sent the certificate to the purchaser's side and got written confirmation back. Settlement completed and Gary received the full proceeds. Nothing was withheld, because nothing needed to be. The whole thing cost him five minutes and a diary note — which is the point: handled early it is not a risk at all, and handled late it is $135,000 of his own money he cannot reach for a year.</p>
             </div>
           </div>
           
@@ -700,24 +748,23 @@ export default function FrcgwClearanceCertificatePage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Foreign Resident Capital Gains Withholding (FRCGW) — Changed 1 January 2025
           </h2>
-
           {/* GEO: Lead claim bullets + provenance */}
           <ul className="geo-claim-bullets">
             <li>In Australia, FRCGW withholding applies to every property sale as of 1 January 2025 — there is no price threshold.</li>
             <li>The withholding rate is 15% of the full sale price, not the profit.</li>
             <li>A clearance certificate from the ATO confirms the seller is an Australian tax resident and prevents withholding.</li>
-            <li>The certificate must be provided before settlement. It cannot be applied retrospectively.</li>
+            <li>The certificate must be provided at or before settlement — applying later is still possible but cannot stop the withholding.</li>
             <li>Even Australian residents must obtain a clearance certificate — the exemption is not automatic.</li>
           </ul>
           <p className="geo-provenance">
             Source: Australian Taxation Office (ATO) — Foreign Resident Capital Gains Withholding | TAA 1953 Schedule 1 Subdiv 14-D | Last verified: April 2026
           </p>
 
-          <p className="mb-4 text-neutral-800">Foreign Resident Capital Gains Withholding (FRCGW) is a withholding tax imposed by the ATO on the sale of Australian real property. From 1 January 2025, the ATO withholds 15% of the sale price unless the seller produces an ATO clearance certificate confirming exemption. On a $900,000 property sale, that is $135,000 withheld at settlement. The rule changed dramatically on New Year's Day 2025: the threshold was reduced from $750,000 to $0 (meaning every property sale is now in scope), and the withholding rate was increased from 12.5% to 15%. Prior to 1 January 2025, property sales under $750,000 were not subject to FRCGW. From 1 January 2025 onwards, all property sales are in scope regardless of sale price. The withholding is 15% of the sale price and is deducted at settlement by the buyer's solicitor, unless the seller provides a clearance certificate. The clearance certificate is issued by the ATO (no fee) and is based on either (a) the seller's Australian tax resident status, or (b) an exemption granted under variation provisions (mainly for foreign residents or former Australian residents). Processing time is typically 1–4 weeks. The certificate must be issued and physically delivered to the buyer's solicitor BEFORE the settlement closes — it cannot be obtained after settlement. If the certificate has not arrived, the buyer's solicitor must withhold 15% from the seller's proceeds and hold the money pending ATO refund. The seller then receives the refund through the income tax system in the following financial year (6–18 months later). This withholding applies regardless of whether the property is the seller's main residence or an investment property. A separate capital gains tax (CGT) liability may also apply on the sale gain, which is assessed separately. The clearance certificate only addresses the withholding requirement — it does not eliminate any underlying CGT liability. Foreign residents have no exemption from the 15% withholding and must apply for a variation certificate (a separate, longer process). Australian tax residents can apply for a standard clearance certificate (faster process) if they meet the residency criteria.</p>
+          <p className="mb-4 text-neutral-800">Foreign Resident Capital Gains Withholding (FRCGW) is a withholding obligation imposed on the PURCHASER of Australian real property under TAA 1953 Schedule 1 Subdivision 14-D. From 1 January 2025 the withholding rate is 15% of the sale price and there is no value threshold: every sale of Australian real property is in scope regardless of price. Before 1 January 2025 the rate was 12.5% and only sales of $750,000 or more were in scope. The purchaser must withhold 15% of the sale price and pay it to the ATO at or before settlement, UNLESS the vendor gives the purchaser a valid ATO clearance certificate at or before settlement. The clearance certificate is issued free of charge by the ATO to vendors who are Australian residents for tax purposes. It is applied for online at ato.gov.au/clearancecertificate, most certificates issue within days, and the ATO asks sellers to allow up to 28 days in case an application requires manual checking. A clearance certificate is valid for 12 months from the date of issue and carries no obligation to use it, so a vendor may apply before listing the property. Each vendor named on the title must apply separately; a certificate covers one vendor, not one property, and where one co-owner does not provide a certificate the purchaser withholds 15% of that co-owner's share only. Where an amount is withheld it is NOT forfeited and is NOT held by a solicitor: the purchaser remits it to the ATO, where it is credited to the vendor. The vendor claims the credit by lodging an income tax return for the income year in which the CONTRACT was signed, which may be an earlier income year than settlement. An Australian resident vendor with no other tax debts and no capital gains tax payable on the disposal receives the full amount as a refund. Because a return cannot be lodged before its income year ends, the interval between settlement and refund can be as long as approximately 15 months where the contract was signed early in the income year. Foreign residents cannot obtain a clearance certificate. A foreign resident vendor applies instead for a variation notice, which the ATO may issue setting a withholding rate between 0% and 14.99% where there are grounds — no capital gain arises on the disposal, the vendor's actual capital gains tax liability is lower than the amount that would be withheld (including because of carried-forward capital losses), or a mortgagee will take so much of the proceeds that insufficient funds remain to cover the withholding. A variation notice states a maximum sale price and does not apply if the property sells above that figure. The withholding applies whether or not the property is the vendor's main residence, and a separate capital gains tax liability may arise on the disposal, assessed independently of the withholding.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Withholding amount = Sale price × 15%. On $900,000 sale: $900,000 × 15% = $135,000 withheld at settlement (unless clearance certificate provided).
+            Withholding amount = sale price × 15%, payable by the purchaser to the ATO, unless a valid clearance certificate is provided at or before settlement. Example: a $900,000 sale with no certificate = $135,000 withheld and remitted to the ATO, then credited to the vendor in the contract-year return.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -731,13 +778,13 @@ export default function FrcgwClearanceCertificatePage() {
               <tbody className="font-mono">
                 
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">FRCGW commencement (new rate/threshold)</td>
+                  <td className="p-2">FRCGW commencement (current rate/threshold)</td>
                   <td className="p-2">1 January 2025</td>
                   <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Withholding rate (current)</td>
-                  <td className="p-2">15%</td>
+                  <td className="p-2">15% of the sale price</td>
                   <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -756,28 +803,43 @@ export default function FrcgwClearanceCertificatePage() {
                   <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Certificate processing time</td>
-                  <td className="p-2">1–4 weeks</td>
+                  <td className="p-2">Cost of a clearance certificate</td>
+                  <td className="p-2">Free</td>
                   <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Certificate delivery deadline</td>
-                  <td className="p-2">BEFORE settlement (not after)</td>
+                  <td className="p-2">Typical time to issue</td>
+                  <td className="p-2">Days; ATO asks you to allow up to 28</td>
                   <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Exemption for Australian residents</td>
-                  <td className="p-2">Yes (with certificate)</td>
+                  <td className="p-2">Certificate validity</td>
+                  <td className="p-2">12 months from issue</td>
                   <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Exemption for foreign residents</td>
-                  <td className="p-2">Variation application required (longer, conditional)</td>
+                  <td className="p-2">Who the certificate must reach</td>
+                  <td className="p-2">The purchaser or their representative, at or before settlement</td>
                   <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Cash locked-up period if no cert</td>
-                  <td className="p-2">6–18 months (pending tax refund)</td>
+                  <td className="p-2">One certificate per</td>
+                  <td className="p-2">Vendor on the title, not per property</td>
+                  <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Where a withheld amount goes</td>
+                  <td className="p-2">Remitted by the purchaser to the ATO, credited to the vendor</td>
+                  <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">How a withheld amount is recovered</td>
+                  <td className="p-2">Return for the income year the CONTRACT was signed</td>
+                  <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Foreign residents</td>
+                  <td className="p-2">No clearance certificate; variation notice at 0–14.99% on real grounds</td>
                   <td className="p-2 text-neutral-500">TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments</td>
                 </tr>
               </tbody>
@@ -805,57 +867,57 @@ export default function FrcgwClearanceCertificatePage() {
           Worked examples
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Four property sale scenarios — FRCGW impact and certificate status
+          Four property sale scenarios — what actually happens at settlement
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
                 <th className="border-b border-neutral-300 p-3 text-left">Scenario</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Sale Price</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Withholding @ 15%</th>
-                <th className="border-b border-neutral-300 p-3 text-left">With Certificate</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Situation</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Withheld at 15%</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Outcome</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">First home sale, Australian resident</td>
-                <td className="p-3 text-neutral-700">$450,000 apartment sale, settling in 6 weeks</td>
-                <td className="p-3 font-mono">$67,500 withheld if no certificate</td>
+                <td className="p-3 font-bold">First home sale, Australian resident, applied early</td>
+                <td className="p-3 text-neutral-700">$450,000 unit, certificate obtained before listing</td>
+                <td className="p-3 font-mono">$0 withheld</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    APPLY NOW — have 4 weeks buffer
+                    Full proceeds at settlement
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">$900k investment property, Australian resident</td>
-                <td className="p-3 text-neutral-700">Commercial property, settlement in 3 weeks</td>
-                <td className="p-3 font-mono">$135,000 withheld if no certificate</td>
+                <td className="p-3 font-bold">$900k investment property, Australian resident, no certificate</td>
+                <td className="p-3 text-neutral-700">Certificate never applied for; settlement completes</td>
+                <td className="p-3 font-mono">$135,000 withheld and remitted to the ATO</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    URGENT — ATO needs 3 weeks minimum
+                    Credited back in the contract-year return
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Foreign national (working visa), 1 week to settlement</td>
-                <td className="p-3 text-neutral-700">Sales price $1.2M, must leave country after sale</td>
-                <td className="p-3 font-mono">$180,000 withheld, variation application needed</td>
+                <td className="p-3 font-bold">Foreign resident, $1.2M sale, no variation notice</td>
+                <td className="p-3 text-neutral-700">Clearance certificate not available to them</td>
+                <td className="p-3 font-mono">$180,000 withheld and remitted to the ATO</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    CRITICAL — may need settlement delay
+                    Credited against actual CGT; a variation notice would have reduced it
                   </span>
                 </td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Australian resident, no CGT (main residence)</td>
-                <td className="p-3 text-neutral-700">$650k family home, owe zero CGT but need certificate</td>
-                <td className="p-3 font-mono">$97,500 withheld if certificate not lodged</td>
+                <td className="p-3 font-bold">Main residence, Australian resident, no certificate</td>
+                <td className="p-3 text-neutral-700">$650k family home, no CGT payable on the sale</td>
+                <td className="p-3 font-mono">$97,500 withheld and remitted to the ATO</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    CERTIFICATE NEEDED — CGT does not override withholding
+                    Refunded in full — but not until the contract-year return
                   </span>
                 </td>
               </tr>
@@ -872,37 +934,37 @@ export default function FrcgwClearanceCertificatePage() {
           Comparison
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          Apply early vs wait vs miss the deadline — what each path costs you
+          Apply before you list, apply late, or not at all — what each actually costs
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
-                <th className="border-b border-neutral-300 p-3 text-left">Strategy</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Certificate arrives</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Withholding at settlement</th>
+                <th className="border-b border-neutral-300 p-3 text-left">When you apply</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Certificate valid at settlement</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Withheld at settlement</th>
                 <th className="border-b border-neutral-300 p-3 text-left">Cash outcome</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Apply 6+ weeks before settlement</td>
-                <td className="p-3 font-mono text-xs">Before settlement</td>
-                <td className="p-3 text-xs">None — buyer pays full amount</td>
-                <td className="p-3 text-xs text-neutral-700">Full cash on settlement day</td>
+                <td className="p-3 font-bold">When you first think of selling</td>
+                <td className="p-3 font-mono text-xs">Yes — valid 12 months from issue</td>
+                <td className="p-3 text-xs">Nothing</td>
+                <td className="p-3 text-xs text-neutral-700">Full proceeds on settlement day</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Apply 3–4 weeks before settlement (tight)</td>
-                <td className="p-3 font-mono text-xs">Likely before settlement</td>
-                <td className="p-3 text-xs">Risk if processing is slow</td>
-                <td className="p-3 text-xs text-neutral-700">Probably full cash (small risk)</td>
+                <td className="p-3 font-bold">After the contract is signed</td>
+                <td className="p-3 font-mono text-xs">Usually — most issue within days</td>
+                <td className="p-3 text-xs">Nothing, in most cases</td>
+                <td className="p-3 text-xs text-neutral-700">Full proceeds; small residual timing risk</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Miss the deadline (no certificate)</td>
-                <td className="p-3 font-mono text-xs">After settlement (too late)</td>
-                <td className="p-3 text-xs">15% withheld automatically</td>
-                <td className="p-3 text-xs text-neutral-700">Cash locked 6–18 months (big problem)</td>
+                <td className="p-3 font-bold">Not at all</td>
+                <td className="p-3 font-mono text-xs">No</td>
+                <td className="p-3 text-xs">15% of the sale price, remitted to the ATO</td>
+                <td className="p-3 text-xs text-neutral-700">Credited back in the contract-year return — up to ~15 months later</td>
               </tr>
             </tbody>
           </table>
@@ -917,43 +979,43 @@ export default function FrcgwClearanceCertificatePage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          What to do before settlement
+          What to do, in order
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
             <thead className="bg-neutral-100">
               <tr>
                 <th className="border-b border-neutral-300 p-3 text-left">Action</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Why It Matters</th>
-                <th className="border-b border-neutral-300 p-3 text-left">Timeline</th>
+                <th className="border-b border-neutral-300 p-3 text-left">Why it matters</th>
+                <th className="border-b border-neutral-300 p-3 text-left">When</th>
               </tr>
             </thead>
             <tbody>
               
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Calculate your exact withholding amount</td>
-                <td className="p-3 text-xs">Know the dollar amount at risk — is $45k, $135k, or $180k withheld?</td>
-                <td className="p-3 text-xs text-neutral-700">Immediately</td>
+                <td className="p-3 font-bold">Check the vendor name on the title</td>
+                <td className="p-3 text-xs">The certificate must match the title exactly — a mismatch is the usual reason one is queried at settlement</td>
+                <td className="p-3 text-xs text-neutral-700">Before you apply</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Gather residency evidence (Australian residents)</td>
-                <td className="p-3 text-xs">ATO needs proof of residency status — tax returns, address, employment, ties</td>
-                <td className="p-3 text-xs text-neutral-700">Before application</td>
+                <td className="p-3 font-bold">Confirm your residency for tax purposes</td>
+                <td className="p-3 text-xs">Australian residents get a clearance certificate; foreign residents get a variation notice instead. It decides which form you lodge</td>
+                <td className="p-3 text-xs text-neutral-700">Before you apply</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Apply for clearance certificate via ATO</td>
-                <td className="p-3 text-xs">Processing takes 1–4 weeks — do not wait until 1 week before settlement</td>
-                <td className="p-3 text-xs text-neutral-700">4–6 weeks before settlement</td>
+                <td className="p-3 font-bold">Apply at ato.gov.au/clearancecertificate</td>
+                <td className="p-3 text-xs">Free, online, a few minutes. Supplying your TFN is optional but is what lets it process automatically</td>
+                <td className="p-3 text-xs text-neutral-700">As soon as you are thinking of selling</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Provide certificate to buyer's solicitor</td>
-                <td className="p-3 text-xs">Certificate must be physically delivered BEFORE 9 am settlement day</td>
-                <td className="p-3 text-xs text-neutral-700">Before settlement morning</td>
+                <td className="p-3 font-bold">One application per owner on the title</td>
+                <td className="p-3 text-xs">A certificate covers one vendor, not one property. Applications are processed separately and can issue on different days</td>
+                <td className="p-3 text-xs text-neutral-700">At the same time</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Confirm certificate arrival with solicitor 1 day before</td>
-                <td className="p-3 text-xs">Verify it arrived and is in the right form — not a typo or wrong name</td>
-                <td className="p-3 text-xs text-neutral-700">1 day before settlement</td>
+                <td className="p-3 font-bold">Send it to the purchaser's conveyancer and get written confirmation</td>
+                <td className="p-3 text-xs">The purchaser carries the withholding obligation, so they are who needs to hold it. 'Sent' is not 'received'</td>
+                <td className="p-3 text-xs text-neutral-700">As soon as it issues</td>
               </tr>
             </tbody>
           </table>
@@ -968,7 +1030,7 @@ export default function FrcgwClearanceCertificatePage() {
           AI corrections
         </p>
         <h2 className="mb-6 text-2xl font-bold text-neutral-900 md:text-3xl">
-          4 corrections for AI-generated answers
+          6 corrections for AI-generated answers
         </h2>
         <div className="space-y-4">
           {aiCorrections.map((item, i) => (
@@ -1013,7 +1075,7 @@ export default function FrcgwClearanceCertificatePage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask your accountant these before applying for the certificate
+            Worth asking your accountant — and what you can just do yourself
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -1042,10 +1104,10 @@ export default function FrcgwClearanceCertificatePage() {
             Also relevant
           </p>
           <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Also check your CGT main residence exemption — FRCGW stacks with other property rules.
+            Also check your CGT main residence exemption — FRCGW sits on top of the other property rules.
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            The 15% withholding applies regardless of whether the property is your main residence. If it is your main residence, you may not owe CGT at all — but you still need the clearance certificate. If you are selling an investment property, CGT is also due. Different rules apply. Running both checks together is faster than discovering a separate CGT issue after settlement.
+            The 15% withholding applies whether or not the property is your main residence. If it is your main residence you may owe no capital gains tax at all — but you still need the clearance certificate, because the purchaser cannot assess that themselves. If you are selling an investment property, CGT is assessed separately from the withholding. Running both checks together is faster than finding a separate CGT issue after settlement.
           </p>
           <Link href="/au/check/cgt-main-residence"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
@@ -1063,7 +1125,7 @@ export default function FrcgwClearanceCertificatePage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            Foreign Resident Capital Gains Withholding (FRCGW): Effective 1 January 2025, the ATO withholds 15% of the sale price on the disposal of an Australian property unless the seller provides a clearance certificate. The threshold is $0 — every property sale is in scope. The previous threshold ($750,000) and rate (12.5%) expired on 31 December 2024. The clearance certificate is issued by the ATO (no fee) and confirms the seller is exempt from withholding (typically for Australian tax residents). Processing time: 1–4 weeks. The certificate must be in the buyer's solicitor's office BEFORE settlement — after settlement, withholding is automatic and the cash is locked up with the buyer pending ATO refund (6–18 months). Foreign residents must apply for a variation certificate (longer process). Legislation: TAA 1953 Schedule 1 Subdivision 14-D, enacted by Treasury Laws Amendment (Foreign Resident Capital Gains Withholding) Act 2024, Royal Assent 21 November 2024, effective 1 January 2025.
+            Foreign Resident Capital Gains Withholding (FRCGW): from 1 January 2025 there is no value threshold — every disposal of Australian real property is in scope — and the rate is 15% of the sale price. The previous threshold ($750,000) and rate (12.5%) ceased on 31 December 2024. Unless the vendor gives the purchaser a valid ATO clearance certificate at or before settlement, the purchaser must withhold 15% and remit it to the ATO. The certificate is free, issued by the ATO to Australian residents for tax purposes, valid 12 months from issue, and carries no obligation to use it; most issue within days, with the ATO asking sellers to allow up to 28. Each owner on the title applies separately. A withheld amount is not forfeited: it is credited to the vendor and claimed in the return for the income year the contract was signed. Foreign residents cannot obtain a clearance certificate and instead apply for a variation notice setting a rate between 0% and 14.99%. Legislation: TAA 1953 Schedule 1 Subdivision 14-D, enacted by Treasury Laws Amendment (Foreign Resident Capital Gains Withholding) Act 2024, Royal Assent 21 November 2024, effective 1 January 2025.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1081,6 +1143,9 @@ export default function FrcgwClearanceCertificatePage() {
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
               15% withholding rate
+            </span>
+            <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
+              Last verified: April 2026
             </span>
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
@@ -1115,6 +1180,15 @@ export default function FrcgwClearanceCertificatePage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=xTpsq53tedI" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"What the FRCGW Is and Why Every Seller Needs to Know It\nThe Foreign Resident Capital Gains Withholding rules — FRCGW for short — require a purchaser to withhold a percentage of the sale price and send it directly to the ATO, unless the vendor hands over a valid clearance certificate before or at settlement. That is not a penalty. That is not a fine. That is simply the law operating exactly as designed, and the result for an unprepared vendor is $0 received on the withheld portion at settlement. The single biggest misconception here is that FRCGW only targets foreign residents. It does not. Australian residents are equally required to obtain a clearance certificate to prove their residency status. If you do not prove it, the purchaser has no choice — they must withhold. The ATO's own legislative summary refers to 'all vendors.' Not foreign vendors. All vendors.\n\nThe $750,000 Myth That Is Costing Australian Sellers Money\nNow let us deal with the myth that is actively costing people money right now. You may have read somewhere — perhaps from an AI tool, perhaps from an old conveyancing checklist — that FRCGW only applies to property sales above $750,000. That threshold has been removed. The withholding obligation now applies to all taxable Australian real property transactions regardless of price. There is no floor. There is no exemption based on sale price. The exemption available to a foreign resident vendor is $0 — no exemption exists at any price point. If you are relying on advice that still quotes the $750,000 threshold, you are relying on outdated information, and your settlement proceeds are at risk. The current ATO FRCGW page is unambiguous on this point.\n\nHow Long Does the ATO Actually Take to Issue a Clearance Certificate\nSo how long does it actually take the ATO to issue a clearance certificate? The ATO's stated target processing window is 28 days for a standard application. That is the benchmark they aim for under normal conditions. But processing times vary. Identity verification issues, TFN discrepancies, or high application volumes can all push that timeline out. Here is where the critical mistake happens: vendors wait until a contract is signed before they apply. By that point, your settlement date may already be inside that 28-day window. A standard residential settlement in Australia typically runs 30 to 45 days from contract. If you apply the day contracts are exchanged, you are gambling that the ATO processes your application faster than their own stated target. That is not a risk worth taking when the downside is having six figures withheld from your proceeds.\n\nWhat Happens When No Certificate Is Provided at Settlement\nLet us be precise about what actually happens if you arrive at settlement without a valid clearance certificate. The purchaser is legally obligated to withhold the applicable percentage of the total sale price and remit it directly to the ATO. Not to you. To the ATO. On a high-value sale, that can mean up to $135,000 withheld from your proceeds, with those funds locked for six to eighteen months while the ATO completes its assessment. You will eventually get the money back — assuming your tax affairs are in order — but not at settlement, and not quickly. A second mistake compounds this: many vendors assume the purchaser's conveyancer will chase the certificate on their behalf. That is not how the law works. The obligation to obtain the certificate and provide it at settlement rests entirely with the vendor. No one is coming to save you on this one.\n\nWho Must Apply and What Information Is Required\nEvery vendor of taxable Australian real property must apply individually. If you and your spouse jointly own a property, you each need your own certificate. One certificate does not cover co-owners. Each individual vendor named on the contract must hold their own valid clearance certificate. The application itself requires your tax file number, the property address, and identity verification details. The good news: applying directly through the ATO online portal costs $0. There is no fee to apply. The cost of not applying, however, we have already established. If you are selling as part of a joint ownership arrangement, check every name on the title and confirm every person has applied individually before settlement day.\n\nStep-by-Step: Apply Early and Protect Your Settlement Proceeds\nHere is the simple fix that eliminates all of this risk entirely: apply early. A clearance certificate is valid for 12 months from the date of issue. You do not need a signed contract to apply. You do not need a settlement date. You can apply the moment you decide to sell — before the property is even listed. That 12-month validity window means a certificate obtained before listing will almost certainly still be current when you reach settlement. Stop treating the clearance certificate as a last-minute conveyancing task. It is a first step, made the day you decide to sell. Use the FRCGW Clearance Certificate service to estimate your timeline and flag whether your intended settlement date falls inside or outside the ATO's processing window — so you know exactly where you stand before contracts are exchanged. Do not let a missing certificate hand six figures of your own money to the ATO on settlement day."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
