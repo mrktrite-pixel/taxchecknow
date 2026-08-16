@@ -624,6 +624,22 @@ test("frcgw-rebuild · W5 · a settled buyer with a captured date still gets no 
     { settlement_date: "1 December 2026", lodge_by_date: "3 November 2026" })["frcgw-01"];
   t.assert.ok(!/Lodge by:/i.test(f1), "a lodge-by date rendered for a settled sale");
   t.assert.ok(!/3 November 2026/.test(f1), "the computed lodge-by date leaked onto a settled sale");
+
+  // D8 — and the same must hold when the date arrives from the STORED path rather than from
+  // sessionStorage. The precedence is a property of the terminal, not of where the date came
+  // from, so resolving dates server-side must not quietly reopen the lodge-by on a settled sale.
+  const stored = buildBuyerContext({
+    productId: PRODUCT, terminalId: "no-certificate-resident", tier: 2,
+    rawAnswers: { [SETTLEMENT_DATE_FIELD]: "2026-12-01" },
+  });
+  const pres = getTerminalPresentation(PRODUCT, stored.terminalId, { headline: "", fileSlugs: [] });
+  const storedF1 = renderDocTemplate(docs["frcgw-01"].content,
+    { values: stored.values, flags: [...stored.flags, ...pres.docFlags] });
+  t.assert.ok(stored.values.lodge_by_date, "the context did compute a lodge-by date");
+  t.assert.ok(!/Lodge by:/i.test(storedF1), "stored path reopened the lodge-by on a settled sale");
+  t.assert.ok(!new RegExp(stored.values.lodge_by_date).test(storedF1),
+    "the stored-path lodge-by date leaked onto a settled sale");
+  t.assert.match(storedF1, /settlement has already happened/i, "lost the settled dates variant");
 });
 
 // ── W1 · no document may branch on suppress:* to assert a positive fact ──────
@@ -816,7 +832,9 @@ test("frcgw-rebuild · W4 · the stored path can recover the terminal server-sid
     const page = fs.readFileSync(
       path.join(REPO, "app", "au", "check", PRODUCT, "success", tierDir, "page.tsx"), "utf8");
     t.assert.match(page, /d\.terminalId/, `${tierDir} page ignores the server-resolved terminal`);
-    t.assert.match(page, /buyerContextFromSession\(PRODUCT_ID, TIER, d\.terminalId\)/,
+    // D8 widened this call to carry the settlement date too; the terminal is the first
+    // override and must still be passed.
+    t.assert.match(page, /buyerContextFromSession\(PRODUCT_ID, TIER, storedTerminal[,)]/,
       `${tierDir} page does not rebuild its context from the server-resolved terminal`);
   }
 });
@@ -892,4 +910,121 @@ test("frcgw-rebuild · NIT · the fact sheet forbids naming ATO forms not in the
   t.assert.match(sheet, /do NOT name a specific ATO form/i, "the prohibition is missing");
   t.assert.match(sheet, /unless that exact name appears in the corpus/i, "the corpus exception is missing");
   t.assert.match(sheet, /payment notification to the ATO/i, "the dispatched example wording is missing");
+});
+
+
+// ═════════════════════════════════════════════════════════════════════════════
+// D8 — the buyer's settlement date on the STORED path. Added 2026-08-16.
+// ═════════════════════════════════════════════════════════════════════════════
+
+const { SETTLEMENT_DATE_FIELD, dateAnswerField, DATE_ANSWER_FIELD } =
+  req(path.join(REPO, "lib", "buyer-context.ts"));
+
+/** The dated surfaces, derived exactly as the pages derive them. */
+function datedSurfaces(ctx: any) {
+  const pres = getTerminalPresentation(PRODUCT, ctx.terminalId, { headline: "", fileSlugs: [] });
+  const cal = resolveCalendar(pres.calendar, ctx, new Date("2026-08-16T00:00:00Z"));
+  return {
+    settlement_date: ctx.values.settlement_date ?? null,
+    lodge_by_date: ctx.values.lodge_by_date ?? null,
+    days_to_settlement: ctx.values.days_to_settlement ?? null,
+    hasFlag: ctx.flags.includes("has:settlement_date"),
+    proximity: ctx.flags.filter((f: string) => f.startsWith("settlement:")).join(",") || null,
+    datedEvents: cal.filter((e: any) => e.isoDate).map((e: any) => `${e.uid}@${e.isoDate}`).join(" | "),
+  };
+}
+
+test("frcgw-rebuild · D8 · the measured raw-answer key is the one the code reads", (t) => {
+  // MEASURED on live decision_sessions row d1c7df00-e116-4ffc-b480-d05061c04c21 (2026-08-16):
+  //   output.raw_answers.q6_settlement_date = "2026-08-26"
+  t.assert.strictEqual(SETTLEMENT_DATE_FIELD, "q6_settlement_date");
+  t.assert.strictEqual(dateAnswerField(PRODUCT), "q6_settlement_date");
+  t.assert.strictEqual(dateAnswerField("some-other-product"), null,
+    "a product with no date question must resolve to null, not to FRCGW's key");
+  // And the engine really does emit that id, so the map cannot rot against the question set.
+  t.assert.ok(engine.questions.some((q: any) => q.id === SETTLEMENT_DATE_FIELD && q.type === "date"),
+    "engine.json has no date question with that id");
+  t.assert.ok(Object.keys(DATE_ANSWER_FIELD).includes(PRODUCT));
+});
+
+test("frcgw-rebuild · D8 · stored-path date produces surfaces identical to the client path", (t) => {
+  const ISO = "2026-12-01";
+  // CLIENT: the date came out of sessionStorage with the rest of the answers.
+  const client = buildBuyerContext({
+    productId: PRODUCT, terminalId: "when-to-apply-timeline", tier: 2,
+    rawAnswers: { q1_scope: "in_scope", [SETTLEMENT_DATE_FIELD]: ISO },
+  });
+  // STORED: no sessionStorage at all; terminal and date both came from the DB.
+  const stored = buildBuyerContext({
+    productId: PRODUCT, terminalId: "when-to-apply-timeline", tier: 2,
+    rawAnswers: { [SETTLEMENT_DATE_FIELD]: ISO },
+  });
+
+  t.assert.deepStrictEqual(datedSurfaces(stored), datedSurfaces(client),
+    "the stored path renders different dated surfaces from the client path");
+
+  // and they are actually populated, not identically empty.
+  const s = datedSurfaces(stored);
+  t.assert.strictEqual(s.settlement_date, "1 December 2026");
+  t.assert.strictEqual(s.lodge_by_date, "3 November 2026", "lodge-by must be settlement minus 28 days");
+  t.assert.ok(s.hasFlag, "has:settlement_date not set");
+  t.assert.ok(s.datedEvents.includes("frcgw-settlement@2026-12-01"), "no dated settlement event");
+  t.assert.ok(s.datedEvents.includes("frcgw-lodge-by@2026-11-03"), "no dated lodge-by event");
+});
+
+test("frcgw-rebuild · D8 · no date on the stored path keeps today's undated behaviour", (t) => {
+  const none = buildBuyerContext({ productId: PRODUCT, terminalId: "when-to-apply-timeline", tier: 2 });
+  const s = datedSurfaces(none);
+  t.assert.strictEqual(s.settlement_date, null);
+  t.assert.strictEqual(s.lodge_by_date, null);
+  t.assert.ok(!s.hasFlag);
+  // Settlement-anchored events are DROPPED, never defaulted.
+  t.assert.ok(!/frcgw-settlement@|frcgw-lodge-by@/.test(s.datedEvents),
+    "a settlement-anchored event was dated without a settlement date");
+
+  // The skip answer must behave as no date, not as an unparseable one.
+  const skipped = buildBuyerContext({
+    productId: PRODUCT, terminalId: "when-to-apply-timeline", tier: 2,
+    rawAnswers: { [SETTLEMENT_DATE_FIELD]: "not_scheduled" },
+  });
+  t.assert.deepStrictEqual(datedSurfaces(skipped), s, "the skip value did not degrade to undated");
+});
+
+test("frcgw-rebuild · D8 · get-assessment returns the date and both pages consume it", (t) => {
+  const api = fs.readFileSync(path.join(REPO, "app", "api", "get-assessment", "route.ts"), "utf8");
+  t.assert.match(api, /raw_answers/, "the API does not read raw_answers");
+  t.assert.match(api, /dateAnswerField\(data\.product_id\)/,
+    "the API hardcodes the answer key instead of resolving it per product");
+  t.assert.match(api, /settlementDate/, "the API does not return settlementDate");
+  // Only a well-formed ISO date may be forwarded — the same slot holds the skip value.
+  t.assert.match(api, /\\d\{4\}-\\d\{2\}-\\d\{2\}/, "the API forwards the answer without validating it");
+
+  for (const tierDir of ["assess", "plan"]) {
+    const page = fs.readFileSync(
+      path.join(REPO, "app", "au", "check", PRODUCT, "success", tierDir, "page.tsx"), "utf8");
+    t.assert.match(page, /d\.settlementDate/, `${tierDir} page ignores the server-resolved date`);
+    t.assert.match(page, /buyerContextFromSession\(PRODUCT_ID, TIER, storedTerminal, storedDate\)/,
+      `${tierDir} page does not rebuild its context from both overrides in one call`);
+  }
+});
+
+test("frcgw-rebuild · D8 · a stored date does not override a settled terminal's suppression", (t) => {
+  // The same precedence the client path has, asserted on the stored path: settled wins.
+  for (const id of ["no-certificate-resident", "no-certificate-unsure-residency",
+                    "certificate-provided-no-withholding"]) {
+    const ctx = buildBuyerContext({
+      productId: PRODUCT, terminalId: id, tier: 2,
+      rawAnswers: { [SETTLEMENT_DATE_FIELD]: "2026-12-01" },
+    });
+    const pres = getTerminalPresentation(PRODUCT, id, { headline: "", fileSlugs: [] });
+    const f1 = renderDocTemplate(docs["frcgw-01"].content,
+      { values: ctx.values, flags: [...ctx.flags, ...pres.docFlags] });
+    t.assert.ok(!/Lodge by:/i.test(f1), `${id}: lodge-by rendered on a settled sale`);
+    t.assert.match(f1, /settlement has already happened/i, `${id}: missing the settled variant`);
+
+    const f6 = renderDocTemplate(docs["frcgw-06"].content,
+      { values: ctx.values, flags: [...ctx.flags, ...pres.docFlags] });
+    t.assert.ok(!/Lodge by:/i.test(f6), `${id}: File 06 rendered a lodge-by on a settled sale`);
+    t.assert.ok(!/pre-settlement plan/i.test(f6), `${id}: File 06 rendered the pre-settlement heading`);
+  }
 });

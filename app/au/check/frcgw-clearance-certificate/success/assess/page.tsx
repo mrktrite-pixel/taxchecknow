@@ -67,14 +67,23 @@ export default function SuccessAssess() {
           const d = await r.json();
           if (d.assessment) {
             setAssessment(d.assessment);
-            // W4 — the STORED path now carries the terminal, resolved server-side from the
-            // linked decision_sessions row. Adopt it whenever it disagrees with (or fills in
-            // for) what sessionStorage had. sessionStorage is empty on every visit that is not
-            // the checkout tab — the receipt-email link, another device, a reopened browser —
-            // and without this every terminal-conditioned surface on the page silently fell
-            // back to the neutral default.
-            if (typeof d.terminalId === "string" && d.terminalId && d.terminalId !== buyer?.terminalId) {
-              setCtx(buyerContextFromSession(PRODUCT_ID, TIER, d.terminalId));
+            // The STORED path carries both the terminal (W4) and the buyer's settlement
+            // date, resolved server-side from the linked decision_sessions row. Adopt
+            // whichever the server could supply.
+            //
+            // sessionStorage is empty on every visit that is not the checkout tab — the
+            // receipt-email link, another device, a reopened browser. Without this, every
+            // terminal-conditioned surface fell back to the neutral default and every dated
+            // surface (countdown, lodge-by, settlement-anchored calendar) simply vanished,
+            // even though the buyer had typed a date and it was sitting in the database.
+            //
+            // Rebuilt in ONE call so the whole context is derived by the same code the client
+            // path runs; the date goes in as a raw answer, not as pre-computed values.
+            const storedTerminal = typeof d.terminalId === "string" && d.terminalId ? d.terminalId : null;
+            const storedDate = typeof d.settlementDate === "string" && d.settlementDate ? d.settlementDate : null;
+            if ((storedTerminal && storedTerminal !== buyer?.terminalId) ||
+                (storedDate && storedDate !== buyer?.values.settlement_date_iso)) {
+              setCtx(buyerContextFromSession(PRODUCT_ID, TIER, storedTerminal, storedDate));
             }
             setLoading(false);
             return;

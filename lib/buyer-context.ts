@@ -169,6 +169,33 @@ export function formatIsoDate(iso: string): string {
 /** The engine answer key that, when present, holds a real customer-supplied settlement date. */
 export const SETTLEMENT_DATE_FIELD = "q6_settlement_date";
 
+/**
+ * productId → the raw-answer key holding that product's customer-supplied date.
+ *
+ * MEASURED against a live decision_sessions row (2026-08-16,
+ * d1c7df00-e116-4ffc-b480-d05061c04c21): `output.raw_answers.q6_settlement_date` = "2026-08-26",
+ * rendered in the labelled inputs as "What is your settlement date?" → "26 August 2026".
+ * One of 25 recent FRCGW sessions carries it — the date question is optional and only asked on
+ * the paths where settlement is still ahead.
+ *
+ * WHY A SMALL EXPLICIT MAP RATHER THAN THE TEMPORAL DECLARATION. The product's own
+ * `temporal.rule.field` already names this key, which would be the generic source — but
+ * lib/temporal-registry.ts is a GENERATED SNAPSHOT and it has drifted: it still carries
+ * FRCGW's pre-E3 `kind: "unresolvable"` declaration, with no rule and no field. Regenerating
+ * it would rewrite every product's entry and change what the webhook's reminder path reads
+ * platform-wide, which is far outside this change. Reported instead; this map is the
+ * zero-blast-radius equivalent and follows the same registry pattern as fact-rules and
+ * assessment-fields.
+ */
+export const DATE_ANSWER_FIELD: Record<string, string> = {
+  "frcgw-clearance-certificate": SETTLEMENT_DATE_FIELD,
+};
+
+/** The date answer key for a product, or null if it captures no date. */
+export function dateAnswerField(productId: string): string | null {
+  return DATE_ANSWER_FIELD[productId] ?? null;
+}
+
 /** Lead time the ATO corpus states for lodging before settlement. */
 export const LODGE_LEAD_DAYS = 28;
 
@@ -249,11 +276,19 @@ export function buildBuyerContext(src: BuyerContextSource): BuyerContext {
  * sessionStorage is simply absent on every visit that is not the checkout tab — the receipt
  * email link, another device, a reopened browser. Without it `terminalId` is null there and
  * every terminal-conditioned surface degrades to the neutral default.
+ *
+ * `settlementDateOverride` is the same idea for the buyer's own date, and is injected into
+ * the RAW ANSWERS rather than into `values` on purpose: every derived value — the formatted
+ * date, lodge-by, days-to-settlement, `has:settlement_date`, the settlement:past /
+ * inside_28 / outside_28 flag — is then computed by exactly the code the client path runs.
+ * Setting the derived values directly would let the two paths drift; deriving them from the
+ * same input makes them identical by construction.
  */
 export function buyerContextFromSession(
   productId: string,
   tier?: 1 | 2,
   terminalIdOverride?: string | null,
+  settlementDateOverride?: string | null,
 ): BuyerContext {
   const read = (k: string): Record<string, string> => {
     try {
@@ -271,9 +306,17 @@ export function buyerContextFromSession(
     }
   };
 
+  // Server-resolved date wins; sessionStorage remains the fallback. Injected as a raw answer
+  // so everything downstream is derived by the shared code path (see the note above).
+  const rawAnswers = read(`${productId}_raw`);
+  const dateField = dateAnswerField(productId);
+  if (dateField && settlementDateOverride && parseIsoDate(settlementDateOverride)) {
+    rawAnswers[dateField] = settlementDateOverride;
+  }
+
   return buildBuyerContext({
     productId,
-    rawAnswers: read(`${productId}_raw`),
+    rawAnswers,
     labeledAnswers: read(`${productId}_answers`),
     qualification: read(`${productId}_qualification`),
     terminalId: terminalIdOverride ?? readStr(`${productId}_terminal`),

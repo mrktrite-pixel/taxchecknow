@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { dateAnswerField } from "@/lib/buyer-context";
 
 // GET /api/get-assessment?session_id=cs_xxx
 // Fetches pre-generated assessment from Supabase (stored by Stripe webhook).
@@ -50,13 +51,32 @@ export async function GET(req: Request) {
     // Best-effort by design: a missing link degrades to today's behaviour rather than 500ing a
     // page whose assessment we already have in hand.
     let terminalId: string | null = null;
+    let settlementDate: string | null = null;
     if (data.decision_session_id) {
       const { data: ds } = await (supabase as any)
         .from("decision_sessions")
         .select("output")
         .eq("id", data.decision_session_id)
-        .single() as { data: { output: { terminal_id?: string } | null } | null };
+        .single() as { data: { output: { terminal_id?: string; raw_answers?: Record<string, unknown> } | null } | null };
       terminalId = ds?.output?.terminal_id ?? null;
+
+      // THE BUYER'S OWN DATE, same journey as the terminal above.
+      //
+      // Everything dated on the success page — the countdown, the lodge-by date, the
+      // settlement-anchored calendar entries — was derived from sessionStorage alone, so it
+      // vanished on exactly the visits the terminal used to vanish on. The date is recorded
+      // on the same decision_sessions row; it just was not being read.
+      //
+      // MEASURED (2026-08-16, row d1c7df00-e116-4ffc-b480-d05061c04c21):
+      //   output.raw_answers.q6_settlement_date = "2026-08-26"
+      // The key is per-product, so it comes from dateAnswerField() rather than a literal.
+      //
+      // Only a well-formed ISO date is passed on. The same answer slot also holds the skip
+      // value ("not_scheduled"), and forwarding that would turn "I have no date" into a
+      // parse failure downstream instead of the honest undated render.
+      const field = dateAnswerField(data.product_id);
+      const raw = field ? ds?.output?.raw_answers?.[field] : undefined;
+      if (typeof raw === "string" && /^\d{4}-\d{2}-\d{2}$/.test(raw)) settlementDate = raw;
     }
 
     return NextResponse.json({
@@ -67,6 +87,7 @@ export async function GET(req: Request) {
       tier:         data.tier,
       generatedAt:  data.created_at,
       terminalId,
+      settlementDate,
     });
 
   } catch (err: unknown) {
