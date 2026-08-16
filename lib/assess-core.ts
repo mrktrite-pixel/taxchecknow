@@ -12,6 +12,8 @@
 // fetched over HTTP from the PUBLIC origin — that is env-independent and unaffected by Deployment
 // Protection.)
 
+import { getFactRules } from "./fact-rules";
+
 export interface AssessInput {
   inputs: Record<string, unknown>;
   product_id: string;
@@ -28,6 +30,21 @@ export interface AssessInput {
    * default for it and for every other product.
    */
   deadline?: { isoDate: string; label: string };
+  /**
+   * W2 — product FACT RULES. Short, imperative statements of how this product's facts must
+   * be expressed, injected verbatim into the prompt above the corpus.
+   *
+   * WHY THIS IS SEPARATE FROM THE CORPUS. The corpus states what the law IS. It does not
+   * say which true-sounding paraphrases are wrong, and that is where the model kept going:
+   * "processing takes 1-4 weeks", "the money is locked up for 6-18 months", "the ATO
+   * withholds". Each is adjacent to something true and none is contradicted by any single
+   * corpus figure, so corpus grounding alone never caught them. A fact rule names the wrong
+   * phrasing and the right one together, which is the only form that reliably displaces it.
+   *
+   * GENERIC: authored per product in `factRules`. Absent ⇒ nothing is injected and the
+   * prompt is unchanged, so every other product is unaffected.
+   */
+  factRules?: string[];
 }
 
 export type AssessResult =
@@ -49,7 +66,7 @@ const RULES_SLUG: Record<string, string> = {
 };
 
 export async function generateAssessment(input: AssessInput): Promise<AssessResult> {
-  const { inputs, product_id, market, authority, tier, name, fields, deadline } = input;
+  const { inputs, product_id, market, authority, tier, name, fields, deadline, factRules } = input;
 
   if (!inputs || !product_id || !fields) {
     return { ok: false, status: 400, error: "Missing required fields: inputs, product_id, fields" };
@@ -141,8 +158,24 @@ customer's deadline, and you must not describe a countdown or a number of days r
 facts from the corpus above and remain fine to state as law.)
 `;
 
+  // W2 — how this product's facts must be PHRASED. Sits directly under the corpus so the two
+  // read as one authority: the corpus gives the figures, these give the wording.
+  // Explicit argument wins; otherwise resolve from the registry. The registry lookup is what
+  // puts these on the Stripe webhook's path — it builds its own AssessInput and is out of
+  // scope to edit, so a rule that only travelled as an argument would reach the client
+  // fallback and miss every real purchase.
+  const rules_ = factRules?.length ? factRules : getFactRules(product_id);
+  const factRulesBlock = rules_.length
+    ? `
+HOW THIS PRODUCT'S FACTS MUST BE STATED — NON-NEGOTIABLE:
+${rules_.map((r) => `- ${r}`).join("\n")}
+These override any more familiar phrasing you may have seen. If a sentence you are about to
+write conflicts with one of them, the rule wins and the sentence is rewritten.
+`
+    : "";
+
   const prompt = `You are a ${market} ${authority} tax expert writing a personalised ${isTier2 ? "action plan" : "tax assessment"} for ${displayName}.
-${corpusBlock}${deadlineBlock}
+${corpusBlock}${factRulesBlock}${deadlineBlock}
 THEIR CALCULATOR ANSWERS:
 ${inputsSummary}
 
@@ -195,7 +228,23 @@ labelled as an example; presenting one as their number is not.
 Any input beginning "_conflict." is a DETECTED CONTRADICTION between what the customer answered
 in the checker and what they answered just before checkout. Follow its instruction exactly:
 treat the checker answers as authoritative, and name the discrepancy plainly in your opening
-rather than quietly resolving it. Do not average the two and do not ignore either.`;
+rather than quietly resolving it. Do not average the two and do not ignore either.
+
+ACCOUNTANT QUESTIONS — WHO CAN ACTUALLY ANSWER THEM:
+Every entry in "accountantQuestions" must be answerable BY THE ACCOUNTANT, from their own
+professional knowledge or from the records they hold. Write them as questions the customer
+puts to a professional and gets a real answer to.
+Facts only the CUSTOMER knows — what they sold it for, whether settlement has happened, what
+they originally paid, what the contract says, when they moved in or out — must NEVER be asked
+of the accountant. The accountant does not know them and the question wastes the meeting.
+Where such a fact is needed, phrase the entry as something to BRING, not something to ask:
+  GOOD: "Am I an Australian resident for tax purposes for this sale?"          (they can answer)
+  GOOD: "Which income year does this sale fall in, and what does that mean for the credit?"
+  GOOD: "Bring the contract and the settlement statement to the meeting."      (customer supplies)
+  BAD:  "What was my sale price?"                                              (only I know that)
+  BAD:  "Has my settlement happened yet?"                                      (only I know that)
+  BAD:  "What did I originally pay for the property?"                          (only I know that)
+Apply this test to every entry before you emit it.`;
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",

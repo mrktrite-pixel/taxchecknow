@@ -51,7 +51,28 @@ export interface TerminalPresentation {
   spine: string[];
   /** Slug to badge START HERE. Falls back to the first available file in the spine. */
   startHere: string;
-  /** Extra flags handed to document templates for {{#if}} sections. */
+  /**
+   * Extra flags handed to document templates for {{#if}} sections.
+   *
+   * TWO KINDS OF FLAG LIVE HERE, AND CONFLATING THEM CAUSED REAL DEFECTS (W1/W5):
+   *
+   *   `state:*`    — WHERE THE BUYER IS. Mutually exclusive facts about their sale:
+   *                  state:pending (an application is lodged and outstanding),
+   *                  state:settled (settlement has already happened),
+   *                  state:have_cert (a certificate is in hand).
+   *   `section:*`  — WHICH CONTENT to include. Several can be true at once.
+   *   `suppress:*` — which content to REMOVE. Deliberately coarse.
+   *
+   * A document branching on a `suppress:` flag to decide WHAT TO SAY is the bug this
+   * distinction exists to prevent. `suppress:apply_now` is true for pending, provided AND
+   * settled buyers — correct as "do not print apply-now steps", useless as "they have
+   * already lodged", because two of those three never lodged anything. Files 02 and 06 did
+   * exactly that and told a buyer whose settlement had passed without a certificate to go
+   * and check the status of an application they never made.
+   *
+   * Rule: to say something POSITIVE about the buyer's situation, branch on `state:*` (or a
+   * specific `section:*`). Reserve `suppress:*` for omission.
+   */
   docFlags: string[];
 }
 
@@ -210,7 +231,7 @@ const FRCGW: Record<string, TerminalPresentation> = {
     calendar: [MONITOR_PENDING, NOTIFY_PENDING, CONFIRM_ARRIVAL, SETTLEMENT_DAY],
     spine: spineOf(["frcgw-03", "frcgw-01", "frcgw-05", "frcgw-02", "frcgw-04"]),
     startHere: "frcgw-03",
-    docFlags: ["section:pending_monitoring", "section:pending_notice", "suppress:apply_now"],
+    docFlags: ["state:pending", "section:pending_monitoring", "section:pending_notice", "suppress:apply_now"],
   },
   "certificate-pending-non-resident": {
     strip: {
@@ -221,7 +242,7 @@ const FRCGW: Record<string, TerminalPresentation> = {
     calendar: [MONITOR_PENDING, NOTIFY_PENDING, CONFIRM_ARRIVAL, SETTLEMENT_DAY],
     spine: spineOf(["frcgw-08", "frcgw-03", "frcgw-01", "frcgw-05", "frcgw-02"]),
     startHere: "frcgw-08",
-    docFlags: ["section:pending_monitoring", "section:pending_notice", "section:variation", "suppress:apply_now"],
+    docFlags: ["state:pending", "section:pending_monitoring", "section:pending_notice", "section:variation", "suppress:apply_now"],
   },
   "certificate-pending-unsure-residency": {
     strip: {
@@ -232,7 +253,7 @@ const FRCGW: Record<string, TerminalPresentation> = {
     calendar: [MONITOR_PENDING, NOTIFY_PENDING, CONFIRM_ARRIVAL, SETTLEMENT_DAY],
     spine: spineOf(["frcgw-04", "frcgw-03", "frcgw-01", "frcgw-05", "frcgw-02"]),
     startHere: "frcgw-04",
-    docFlags: ["section:pending_monitoring", "section:residency_first", "suppress:apply_now"],
+    docFlags: ["state:pending", "section:pending_monitoring", "section:pending_notice", "section:residency_first", "suppress:apply_now"],
   },
 
   // ── 4 · provided · GREEN ──
@@ -245,7 +266,7 @@ const FRCGW: Record<string, TerminalPresentation> = {
     calendar: [VERIFY_NAME, CONFIRM_ARRIVAL, SETTLEMENT_DAY],
     spine: spineOf(["frcgw-03", "frcgw-01", "frcgw-05", "frcgw-04", "frcgw-02"]),
     startHere: "frcgw-03",
-    docFlags: ["section:name_match", "section:keep_a_copy", "suppress:apply_now", "suppress:28_day"],
+    docFlags: ["state:settled", "state:have_cert", "section:name_match", "section:keep_a_copy", "suppress:apply_now", "suppress:28_day"],
   },
 
   // ── 5 · no certificate (+ residency variants) · RED · no 28-day copy ──
@@ -258,7 +279,7 @@ const FRCGW: Record<string, TerminalPresentation> = {
     calendar: [LODGE_RETURN],
     spine: spineOf(["frcgw-07", "frcgw-01", "frcgw-05"]),
     startHere: "frcgw-07",
-    docFlags: ["section:recovery", "suppress:apply_now", "suppress:28_day"],
+    docFlags: ["state:settled", "section:recovery", "suppress:apply_now", "suppress:28_day"],
   },
   "no-certificate-non-resident": {
     strip: {
@@ -269,7 +290,7 @@ const FRCGW: Record<string, TerminalPresentation> = {
     calendar: [LODGE_RETURN],
     spine: spineOf(["frcgw-07", "frcgw-08", "frcgw-01", "frcgw-05"]),
     startHere: "frcgw-07",
-    docFlags: ["section:recovery", "section:variation", "suppress:apply_now", "suppress:28_day"],
+    docFlags: ["state:settled", "section:recovery", "section:variation", "suppress:apply_now", "suppress:28_day"],
   },
   "no-certificate-unsure-residency": {
     strip: {
@@ -280,7 +301,7 @@ const FRCGW: Record<string, TerminalPresentation> = {
     calendar: [LODGE_RETURN],
     spine: spineOf(["frcgw-07", "frcgw-04", "frcgw-01", "frcgw-05"]),
     startHere: "frcgw-07",
-    docFlags: ["section:recovery", "section:residency_first", "suppress:apply_now", "suppress:28_day"],
+    docFlags: ["state:settled", "section:recovery", "section:residency_first", "suppress:apply_now", "suppress:28_day"],
   },
 
   // ── 6 · co-owners ──

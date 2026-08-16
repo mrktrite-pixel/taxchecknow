@@ -361,6 +361,23 @@ export interface ProductConfig {
   howToSteps: Array<{ position: number; name: string; text: string }>;
 
   // ─── SUCCESS PAGE ──────────────────────────────────────────────────────
+  /**
+   * W2 — OPTIONAL. How this product's facts must be PHRASED in generated content, injected
+   * into the assessment prompt under the corpus.
+   *
+   * The corpus says what the law IS. These say which true-adjacent paraphrase is WRONG —
+   * the class of error corpus grounding cannot catch, because no single figure contradicts
+   * "processing takes 1-4 weeks" or "the money is locked up for 6-18 months".
+   *
+   * AUTHORING HOME ONLY. The runtime copy is lib/fact-rules.ts, because lib/ cannot import
+   * from cole/ and because the Stripe webhook builds its own AssessInput — a rule that
+   * travelled only as an argument would reach the client fallback and miss every real
+   * purchase. The two must agree; a behaviour test asserts it element by element, exactly
+   * as it does for tier1/tier2AssessmentFields.
+   *
+   * Absent ⇒ nothing is injected and the prompt is unchanged.
+   */
+  factRules?: string[];
   successPromptFields: Array<{ key: string; label: string; defaultVal: string }>;
   tier1AssessmentFields: string[];
   tier2AssessmentFields: string[];

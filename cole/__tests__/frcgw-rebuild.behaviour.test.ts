@@ -536,3 +536,195 @@ test("frcgw-rebuild · C7 · no page can produce the doubled possessive", (t) =>
     t.assert.ok(!/Start with File 02/.test(src), `${tierDir}: the hardcoded File-02 START HERE copy is back`);
   }
 });
+
+// ═════════════════════════════════════════════════════════════════════════════
+// WALK-B defect fixes (W1–W5). Added 2026-08-16.
+// ═════════════════════════════════════════════════════════════════════════════
+
+/** Render every document for a terminal, exactly as the pack renders it. */
+function renderPack(terminalId: string, extraValues: Record<string, string> = {}): Record<string, string> {
+  const p = getTerminalPresentation(PRODUCT, terminalId, { headline: "", fileSlugs: [] });
+  const out: Record<string, string> = {};
+  for (const slug of Object.keys(docs)) {
+    out[slug] = renderDocTemplate(docs[slug].content, {
+      values: extraValues,
+      flags: [...p.docFlags, `terminal:${terminalId}`, ...Object.keys(extraValues).map((k) => `has:${k}`)],
+    });
+  }
+  return out;
+}
+
+// ── W1 · the pending strings must not reach a buyer who never lodged ─────────
+test("frcgw-rebuild · W1 · no_cert+resident never sees pending or apply-now copy", (t) => {
+  const pack = renderPack("no-certificate-resident");
+
+  const BANNED: Array<[RegExp, string]> = [
+    [/You have already lodged/i, "File 02's pending banner"],
+    [/application you have already lodged/i, "File 06's phase-1 pending step"],
+    [/while your application is pending/i, "pending cross-reference"],
+    [/Send the pending-notice/i, "pending-notice instruction"],
+    [/Check daily as settlement approaches/i, "pending monitoring loop"],
+    [/There is nothing further to apply for\./i, "the pending phrasing of 'nothing to apply for'"],
+  ];
+  for (const slug of Object.keys(pack)) {
+    for (const [re, why] of BANNED) {
+      t.assert.ok(!re.test(pack[slug]), `${slug}: ${why} rendered for a buyer who never lodged`);
+    }
+  }
+
+  t.assert.match(pack["frcgw-02"], /nothing to apply for on this sale; File 07 is your route/i,
+    "File 02 is missing the settled variant");
+  t.assert.match(pack["frcgw-06"], /nothing to apply for on this sale; File 07 is your route/i,
+    "File 06 is missing the settled variant");
+});
+
+test("frcgw-rebuild · W1 · the pending banner still fires on every pending terminal", (t) => {
+  for (const id of ["certificate-pending-resident", "certificate-pending-non-resident", "certificate-pending-unsure-residency"]) {
+    const pack = renderPack(id);
+    t.assert.match(pack["frcgw-02"], /You have already lodged/i, `${id}: File 02 lost its pending banner`);
+    t.assert.match(pack["frcgw-06"], /application you have already lodged/i, `${id}: File 06 lost its pending step`);
+    t.assert.ok(!/nothing to apply for on this sale; File 07/i.test(pack["frcgw-02"]),
+      `${id}: File 02 shows the SETTLED variant to a pending buyer`);
+  }
+});
+
+test("frcgw-rebuild · W1 · exactly one Phase 1 renders on every terminal", (t) => {
+  for (const term of engine.terminals) {
+    const pack = renderPack(term.id);
+    const n = (pack["frcgw-06"].match(/<h2>Phase 1 —/g) ?? []).length;
+    t.assert.strictEqual(n, 1, `${term.id}: File 06 rendered ${n} "Phase 1" headings`);
+  }
+});
+
+test("frcgw-rebuild · W1 · certificate-provided is told it holds a certificate, not that it lodged", (t) => {
+  const pack = renderPack("certificate-provided-no-withholding");
+  t.assert.match(pack["frcgw-02"], /You already hold a certificate and provided it/i);
+  t.assert.ok(!/You have already lodged/i.test(pack["frcgw-02"]),
+    "a buyer who HAS a certificate is told they 'already lodged'");
+  t.assert.ok(!/File 07 is your route/i.test(pack["frcgw-02"]),
+    "a buyer with no withholding is pointed at the recovery file");
+});
+
+// ── W5 · "Your dates" must not survive settlement ────────────────────────────
+test("frcgw-rebuild · W5 · File 01 drops the lodge-by dates once settlement has happened", (t) => {
+  for (const id of ["no-certificate-resident", "no-certificate-non-resident",
+    "no-certificate-unsure-residency", "certificate-provided-no-withholding"]) {
+    const f1 = renderPack(id)["frcgw-01"];
+    t.assert.ok(!/count back 28 days/i.test(f1), `${id}: still tells a settled buyer to count back 28 days`);
+    t.assert.ok(!/Lodge by:/i.test(f1), `${id}: still prints a lodge-by date`);
+    t.assert.match(f1, /settlement has already happened/i, `${id}: missing the settled dates variant`);
+  }
+  const ahead = renderPack("when-to-apply-timeline");
+  t.assert.match(ahead["frcgw-01"], /count back 28 days/i, "a pre-settlement buyer lost their dates guidance");
+});
+
+test("frcgw-rebuild · W5 · a settled buyer with a captured date still gets no lodge-by", (t) => {
+  // state:settled must win over has:settlement_date — the date is real, the deadline is gone.
+  const f1 = renderPack("no-certificate-resident",
+    { settlement_date: "1 December 2026", lodge_by_date: "3 November 2026" })["frcgw-01"];
+  t.assert.ok(!/Lodge by:/i.test(f1), "a lodge-by date rendered for a settled sale");
+  t.assert.ok(!/3 November 2026/.test(f1), "the computed lodge-by date leaked onto a settled sale");
+});
+
+// ── W1 · no document may branch on suppress:* to assert a positive fact ──────
+test("frcgw-rebuild · W1 · no {{#if suppress:*}} block remains in any document", (t) => {
+  for (const slug of Object.keys(docs)) {
+    const hits = docs[slug].content.match(/\{\{#if\s+suppress:[a-z_]+\}\}/g) ?? [];
+    t.assert.deepStrictEqual(hits, [],
+      `${slug} branches on a suppress: flag to decide what to SAY — suppress flags are coarse ` +
+      `(apply_now is true for pending, provided AND settled) and must only ever remove content`);
+  }
+});
+
+test("frcgw-rebuild · W1 · File 05 cannot render two blocks with the same heading", (t) => {
+  for (const term of engine.terminals) {
+    const f5 = renderPack(term.id)["frcgw-05"];
+    const headings = f5.match(/<h3>[^<]*<\/h3>/g) ?? [];
+    t.assert.strictEqual(new Set(headings).size, headings.length,
+      `${term.id}: File 05 repeated a heading — ${headings.join(" | ")}`);
+  }
+});
+
+// ── W2 · fact rules ──────────────────────────────────────────────────────────
+test("frcgw-rebuild · W2 · fact rules resolve by product id, so both assess paths get them", (t) => {
+  const { getFactRules, PRODUCT_FACT_RULES } = req(path.join(REPO, "lib", "fact-rules.ts"));
+  const rules = getFactRules(PRODUCT);
+  t.assert.ok(rules.length >= 5, `expected a fact sheet, got ${rules.length} rules`);
+  t.assert.ok(PRODUCT_FACT_RULES[PRODUCT], "FRCGW missing from the registry");
+  t.assert.deepStrictEqual(getFactRules("some-unregistered-product"), [],
+    "an unregistered product must inject nothing");
+
+  // The registry lookup inside generateAssessment is what reaches the webhook, which builds
+  // its own AssessInput and passes no factRules argument.
+  const core = fs.readFileSync(path.join(REPO, "lib", "assess-core.ts"), "utf8");
+  t.assert.match(core, /getFactRules\(product_id\)/,
+    "assess-core does not resolve fact rules from the registry — the webhook path would miss them");
+});
+
+test("frcgw-rebuild · W2 · the config's factRules match the runtime registry exactly", (t) => {
+  const { PRODUCT_CONFIG } = req(path.join(COLE_ROOT, "config", "au-19-frcgw-clearance-certificate.ts"));
+  const { getFactRules } = req(path.join(REPO, "lib", "fact-rules.ts"));
+  t.assert.deepStrictEqual(PRODUCT_CONFIG.factRules, getFactRules(PRODUCT),
+    "cole/config and lib/fact-rules.ts have drifted");
+});
+
+test("frcgw-rebuild · W2 · every dispatched fact rule is present in the sheet", (t) => {
+  const sheet = req(path.join(REPO, "lib", "fact-rules.ts")).getFactRules(PRODUCT).join("\n");
+  const REQUIRED: Array<[RegExp, string]> = [
+    [/1-4 weeks/i, "must forbid the 1-4 weeks phrasing"],
+    [/issue within days/i, "must give the correct processing phrasing"],
+    [/allow up to 28/i, "must give the ATO's outer allowance"],
+    [/locked up/i, "must forbid 'locked up'"],
+    [/WITHHELD AND CREDITED/i, "must state withheld-and-credited"],
+    [/6-18 months/i, "must forbid the generic 6-18 months range"],
+    [/AROUND\s+15\s+MONTHS/i, "must give the contract-year-derived ~15 months"],
+    [/income year the CONTRACT was/i, "must state the contract-year rule"],
+    [/PURCHASER withholds/i, "must name the purchaser as the withholder"],
+    [/never exempt/i, "must say a resident without a certificate was not exempt"],
+    [/variation NOTICE/i, "must say notice, not certificate"],
+  ];
+  for (const [needle, why] of REQUIRED) t.assert.match(sheet, needle, why);
+});
+
+// ── W3 · accountant questions must be answerable by an accountant ────────────
+test("frcgw-rebuild · W3 · the prompt forbids asking the accountant buyer-only facts", (t) => {
+  const src = fs.readFileSync(path.join(REPO, "lib", "assess-core.ts"), "utf8");
+  t.assert.match(src, /answerable BY THE ACCOUNTANT/i, "the rule is missing from the prompt");
+  t.assert.match(src, /must NEVER be asked/i, "the prohibition is missing");
+  t.assert.match(src, /BRING, not something to ask/i, "the bring-vs-ask instruction is missing");
+  // The worked examples are what make the rule operational rather than decorative.
+  t.assert.match(src, /BAD:\s+"What was my sale price\?"/, "missing the sale-price counter-example");
+  t.assert.match(src, /BAD:\s+"Has my settlement happened yet\?"/, "missing the settlement counter-example");
+  t.assert.match(src, /GOOD:.*Am I an Australian resident for tax purposes/, "missing a GOOD example");
+});
+
+test("frcgw-rebuild · W3 · File 05's own questions obey the same rule", (t) => {
+  for (const term of engine.terminals) {
+    const f5 = renderPack(term.id)["frcgw-05"];
+    for (const q of f5.match(/"[^"]{15,200}\?"/g) ?? []) {
+      t.assert.ok(!/what (was|did) (my|I)\b[^"]*\b(sale price|pay)/i.test(q),
+        `${term.id}: File 05 asks the accountant a buyer-only fact — ${q}`);
+      t.assert.ok(!/has my settlement/i.test(q),
+        `${term.id}: File 05 asks the accountant whether settlement happened — ${q}`);
+    }
+  }
+});
+
+// ── W4 · checklist heading ───────────────────────────────────────────────────
+test("frcgw-rebuild · W4 · the tier-2 checklist heading follows the terminal", (t) => {
+  const src = fs.readFileSync(
+    path.join(REPO, "app", "au", "check", PRODUCT, "success", "plan", "page.tsx"), "utf8");
+  t.assert.match(src, /export function checklistHeading/, "checklistHeading is not exported for test");
+  t.assert.match(src, /to recover the withheld amount/, "the settled heading is missing");
+  t.assert.match(src, /section:recovery/,
+    "the settled heading must key on section:recovery — state:settled is also true of " +
+    "certificate-provided, where nothing was withheld");
+  t.assert.match(src, /before settlement/, "the pre-settlement heading is missing");
+
+  // The old label-as-a-date must not come back — but strip comments first. The fix is
+  // DOCUMENTED in a comment that quotes the offending string, and a naive scan flags the
+  // explanation as the defect.
+  const code = src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  t.assert.ok(!/Settlement Date \(Critical\)/.test(code),
+    "the deadline LABEL is rendered as a date again");
+});

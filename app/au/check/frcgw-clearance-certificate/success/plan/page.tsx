@@ -36,6 +36,35 @@ const FIELDS = [
   "accountantImplementationChecklist",
 ];
 
+/**
+ * W4 — the action-checklist heading, from the terminal the buyer actually reached.
+ *
+ * Exported so the behaviour test can assert it directly rather than through a DOM render.
+ * `state:settled` is set by lib/terminal-presentation.ts on the three no-certificate
+ * terminals and on certificate-provided — every case where settlement has already happened
+ * and "before settlement" is simply false.
+ */
+export function checklistHeading(ctx: BuyerContext | null): string {
+  const flags = ctx?.flags ?? [];
+
+  // Settled WITHOUT a certificate — an amount was withheld and the checklist is about
+  // getting it back. `section:recovery`, not `state:settled`: the latter is also true of
+  // certificate-provided, where nothing was withheld and "recover the withheld amount"
+  // would assert a withholding that never happened.
+  if (flags.includes("section:recovery")) {
+    return "What to do, in order, to recover the withheld amount";
+  }
+
+  // Settled WITH a certificate — nothing withheld, nothing to recover, nothing to lodge.
+  if (flags.includes("state:settled")) {
+    return "What to do, in order, to close this sale out";
+  }
+
+  return ctx?.values.settlement_date
+    ? `What to do — in order — before ${ctx.values.settlement_date}`
+    : "What to do, in order, before settlement";
+}
+
 interface Action { title: string; deadline: string; steps: string[] }
 type Assessment = Record<string, unknown> & {
   accountantQuestions?: string[];
@@ -217,11 +246,12 @@ export default function SuccessPlan() {
                 </p>
                 {/* E7 — plain language. This heading used to interpolate config.deadline.display,
                     which is a LABEL ("Settlement Date (Critical)"), and read as though the buyer
-                    had been given a date. */}
+                    had been given a date.
+                    W4 — and it must not say "before settlement" to someone whose settlement has
+                    already happened. On the settled terminals the whole checklist is about
+                    recovering an amount already withheld, so the heading says so. */}
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  {ctx?.values.settlement_date
-                    ? `What to do — in order — before ${ctx.values.settlement_date}`
-                    : "What to do, in order, before settlement"}
+                  {checklistHeading(ctx)}
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
