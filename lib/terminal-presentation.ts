@@ -175,6 +175,18 @@ const VERIFY_NAME: PackCalendarEvent = {
   relativeLabel: "Today",
 };
 
+const REAPPLY_LONG_CONTRACT: PackCalendarEvent = {
+  uid: "frcgw-reapply",
+  summary: "FRCGW — diarise re-applying so the certificate is valid AT settlement",
+  description:
+    "A clearance certificate is valid for 12 months from issue. On a contract running longer " +
+    "than that, one obtained at signing can lapse before settlement. Apply again close enough " +
+    "to settlement that the certificate is still valid on the day — a fresh one is free.",
+  anchor: "today",
+  offsetDays: 0,
+  relativeLabel: "Today",
+};
+
 const LODGE_RETURN: PackCalendarEvent = {
   uid: "frcgw-lodge-return",
   summary: "FRCGW — lodge the tax return for the year the CONTRACT was signed",
@@ -324,7 +336,11 @@ const FRCGW: Record<string, TerminalPresentation> = {
       headline: "A certificate lasts 12 months — on a longer contract, time your application to still be valid at settlement",
       badge: "Valid 12 months",
     },
-    calendar: [LODGE_BY, CONFIRM_ARRIVAL, SETTLEMENT_DAY],
+    // REAPPLY_LONG_CONTRACT is today-anchored on purpose. The other three events here are all
+    // settlement-anchored, and resolveCalendar drops those when no date was captured rather
+    // than defaulting them — which left this the one resolved terminal whose calendar rendered
+    // completely empty. A buyer on a >12-month contract has an action they can diarise today.
+    calendar: [REAPPLY_LONG_CONTRACT, LODGE_BY, CONFIRM_ARRIVAL, SETTLEMENT_DAY],
     spine: spineOf(["frcgw-02", "frcgw-01", "frcgw-04", "frcgw-03", "frcgw-05"]),
     startHere: "frcgw-02",
     docFlags: ["section:validity_12_months", "section:reapplication"],

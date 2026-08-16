@@ -1008,23 +1008,148 @@ test("frcgw-rebuild · D8 · get-assessment returns the date and both pages cons
   }
 });
 
-test("frcgw-rebuild · D8 · a stored date does not override a settled terminal's suppression", (t) => {
-  // The same precedence the client path has, asserted on the stored path: settled wins.
-  for (const id of ["no-certificate-resident", "no-certificate-unsure-residency",
-                    "certificate-provided-no-withholding"]) {
+/** Every document that renders a lodge-by / settlement dates box, found not assumed. */
+function filesWithDatesBox(): string[] {
+  return Object.keys(docs).filter((s) => /Lodge by:/i.test(docs[s].content));
+}
+
+/** Every terminal whose docFlags mark the sale as already settled. */
+function settledTerminals(): string[] {
+  return engine.terminals
+    .map((x: any) => x.id)
+    .filter((id: string) =>
+      getTerminalPresentation(PRODUCT, id, { headline: "", fileSlugs: [] })
+        .docFlags.includes("state:settled"));
+}
+
+test("frcgw-rebuild · D9 · no settled terminal renders a lodge-by, in ANY file carrying a dates box", (t) => {
+  // ENUMERATED, not hardcoded. The D8 version of this test named File 01 and File 06 by hand
+  // and therefore could not see File 02, which had no state:settled guard at all and rendered
+  // "Your settlement: 1 December 2026. Lodge by: 3 November 2026" on a settled sale. A test
+  // that lists the files it checks can only ever find the files someone remembered.
+  const files = filesWithDatesBox();
+  const settled = settledTerminals();
+  t.assert.ok(files.length >= 3, `expected several files with a dates box, found ${files.length}`);
+  t.assert.ok(settled.length >= 4, `expected the settled terminals, found ${settled.length}`);
+
+  for (const id of settled) {
     const ctx = buildBuyerContext({
       productId: PRODUCT, terminalId: id, tier: 2,
       rawAnswers: { [SETTLEMENT_DATE_FIELD]: "2026-12-01" },
     });
     const pres = getTerminalPresentation(PRODUCT, id, { headline: "", fileSlugs: [] });
-    const f1 = renderDocTemplate(docs["frcgw-01"].content,
-      { values: ctx.values, flags: [...ctx.flags, ...pres.docFlags] });
-    t.assert.ok(!/Lodge by:/i.test(f1), `${id}: lodge-by rendered on a settled sale`);
-    t.assert.match(f1, /settlement has already happened/i, `${id}: missing the settled variant`);
+    const flags = [...ctx.flags, ...pres.docFlags];
+    t.assert.ok(ctx.values.lodge_by_date, "the context did compute a lodge-by date to leak");
 
-    const f6 = renderDocTemplate(docs["frcgw-06"].content,
-      { values: ctx.values, flags: [...ctx.flags, ...pres.docFlags] });
-    t.assert.ok(!/Lodge by:/i.test(f6), `${id}: File 06 rendered a lodge-by on a settled sale`);
+    for (const slug of files) {
+      const html = renderDocTemplate(docs[slug].content, { values: ctx.values, flags });
+      t.assert.ok(!/Lodge by:/i.test(html), `${id} / ${slug}: lodge-by rendered on a settled sale`);
+      t.assert.ok(!html.includes(ctx.values.lodge_by_date),
+        `${id} / ${slug}: the computed lodge-by date leaked onto a settled sale`);
+    }
+  }
+});
+
+test("frcgw-rebuild · D9 · every file with a dates box guards it on state:settled", (t) => {
+  // The structural counterpart: the render test above proves today's output is right, this
+  // proves the guard is actually present, so a new dates box cannot be added without one.
+  for (const slug of filesWithDatesBox()) {
+    t.assert.match(docs[slug].content, /\{\{#unless state:settled\}\}/,
+      `${slug} renders a lodge-by but never guards on state:settled`);
+  }
+});
+
+test("frcgw-rebuild · D9 · settled terminals keep their settled variants", (t) => {
+  for (const id of settledTerminals()) {
+    const ctx = buildBuyerContext({
+      productId: PRODUCT, terminalId: id, tier: 2,
+      rawAnswers: { [SETTLEMENT_DATE_FIELD]: "2026-12-01" },
+    });
+    const pres = getTerminalPresentation(PRODUCT, id, { headline: "", fileSlugs: [] });
+    const flags = [...ctx.flags, ...pres.docFlags];
+    const f1 = renderDocTemplate(docs["frcgw-01"].content, { values: ctx.values, flags });
+    const f6 = renderDocTemplate(docs["frcgw-06"].content, { values: ctx.values, flags });
+    t.assert.match(f1, /settlement has already happened/i, `${id}: File 01 lost the settled variant`);
     t.assert.ok(!/pre-settlement plan/i.test(f6), `${id}: File 06 rendered the pre-settlement heading`);
+  }
+});
+
+// ── D9-2 · File 03 must not offer a hand-over template to a settled sale ─────
+test("frcgw-rebuild · D9 · File 03 renders no cover-note template on the recovery terminals", (t) => {
+  const recovery = engine.terminals
+    .map((x: any) => x.id)
+    .filter((id: string) =>
+      getTerminalPresentation(PRODUCT, id, { headline: "", fileSlugs: [] })
+        .docFlags.includes("section:recovery"));
+  t.assert.strictEqual(recovery.length, 3, `expected the three no-certificate terminals, got ${recovery.length}`);
+
+  for (const id of recovery) {
+    const f3 = renderPack(id)["frcgw-03"];
+    t.assert.ok(!/Cover-note template/i.test(f3), `${id}: still offers the hand-over cover note`);
+    t.assert.ok(!/Handing over the certificate/i.test(f3), `${id}: still offers the hand-over heading`);
+    t.assert.ok(!/Please find attached the ATO clearance certificate/i.test(f3),
+      `${id}: still transmits a certificate the buyer never held`);
+    t.assert.ok(!/Pending-notice template/i.test(f3), `${id}: offers a pending notice too`);
+    // The recovery variant, and the dispatched wording.
+    t.assert.match(f3, /nothing to send about the withholding/i, `${id}: missing the recovery variant`);
+    t.assert.match(f3, /payment notification to the ATO/i, `${id}: missing the payment-notification request`);
+  }
+});
+
+test("frcgw-rebuild · D9 · File 03 still serves the pending and hand-over cases", (t) => {
+  for (const id of ["certificate-pending-resident", "certificate-pending-non-resident",
+                    "certificate-pending-unsure-residency"]) {
+    const f3 = renderPack(id)["frcgw-03"];
+    t.assert.match(f3, /Pending-notice template/i, `${id}: lost the pending notice`);
+    t.assert.ok(!/nothing to send about the withholding/i.test(f3), `${id}: got the recovery variant`);
+  }
+  for (const id of ["when-to-apply-timeline", "certificate-provided-no-withholding", "co-owners-separate-certificates"]) {
+    const f3 = renderPack(id)["frcgw-03"];
+    t.assert.match(f3, /Cover-note template/i, `${id}: lost the hand-over cover note`);
+    t.assert.ok(!/nothing to send about the withholding/i.test(f3), `${id}: got the recovery variant`);
+  }
+});
+
+test("frcgw-rebuild · D9 · File 03 renders exactly one template on every terminal", (t) => {
+  for (const term of engine.terminals) {
+    const f3 = renderPack(term.id)["frcgw-03"];
+    const n = ["Pending-notice template", "Cover-note template", "What to request instead"]
+      .filter((h) => f3.includes(h)).length;
+    t.assert.strictEqual(n, 1, `${term.id}: File 03 rendered ${n} templates, expected exactly 1`);
+  }
+});
+
+// ── D9-3 · no resolved terminal may render an empty calendar ─────────────────
+test("frcgw-rebuild · D9 · certificate-expired-long-contract has a dated event without a date", (t) => {
+  const id = "certificate-expired-long-contract";
+  const ctx = buildBuyerContext({ productId: PRODUCT, terminalId: id, tier: 1 });
+  const pres = getTerminalPresentation(PRODUCT, id, { headline: "", fileSlugs: [] });
+  const cal = resolveCalendar(pres.calendar, ctx, new Date("2026-08-16T00:00:00Z"));
+  t.assert.ok(cal.length > 0, "the undated calendar is empty again");
+  t.assert.ok(cal.some((e: any) => e.uid === "frcgw-reapply" && e.isoDate === "2026-08-16"),
+    "the today-anchored re-apply event is missing or undated");
+  // and the settlement-anchored ones are still dropped, not defaulted.
+  t.assert.ok(!cal.some((e: any) => ["frcgw-lodge-by", "frcgw-settlement", "frcgw-confirm"].includes(e.uid)),
+    "a settlement-anchored event was dated without a settlement date");
+
+  // With a date, all four resolve.
+  const dated = buildBuyerContext({
+    productId: PRODUCT, terminalId: id, tier: 1,
+    rawAnswers: { [SETTLEMENT_DATE_FIELD]: "2026-12-01" },
+  });
+  const cal2 = resolveCalendar(pres.calendar, dated, new Date("2026-08-16T00:00:00Z"));
+  t.assert.strictEqual(cal2.length, 4, "the dated calendar lost an event");
+  t.assert.ok(cal2.every((e: any) => e.isoDate), "an event resolved without a date");
+});
+
+test("frcgw-rebuild · D9 · no RESOLVED terminal renders an empty undated calendar", (t) => {
+  // Escapes are allowed to have none — they assert no position and offer no plan.
+  for (const term of engine.terminals) {
+    if (term.escape) continue;
+    const ctx = buildBuyerContext({ productId: PRODUCT, terminalId: term.id, tier: term.tier >= 147 ? 2 : 1 });
+    const pres = getTerminalPresentation(PRODUCT, term.id, { headline: "", fileSlugs: [] });
+    const cal = resolveCalendar(pres.calendar, ctx, new Date("2026-08-16T00:00:00Z"));
+    t.assert.ok(cal.length > 0,
+      `${term.id}: a paying buyer with no captured date is given no dates at all`);
   }
 });
