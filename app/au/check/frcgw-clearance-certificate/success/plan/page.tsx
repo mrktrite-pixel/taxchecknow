@@ -12,6 +12,7 @@ import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context"
 import { resolveDisplayFields, humaniseFieldKey } from "@/lib/assessment-fields";
 import SuccessDeadline from "@/app/_components/SuccessDeadline";
 import SuccessPack, { type PackDoc } from "@/app/_components/SuccessPack";
+import { terminalFlags } from "@/lib/terminal-presentation";
 import docsJson from "../../docs.json";
 
 const PRODUCT_ID = "frcgw-clearance-certificate";
@@ -45,7 +46,12 @@ const FIELDS = [
  * and "before settlement" is simply false.
  */
 export function checklistHeading(ctx: BuyerContext | null): string {
-  const flags = ctx?.flags ?? [];
+  // W4 — read the MERGED flag set. `section:recovery` and `state:settled` are docFlags,
+  // produced by lib/terminal-presentation.ts; BuyerContext.flags carries engine answers plus
+  // terminal:/tier:/has: and has never contained a docFlag. Reading ctx.flags directly meant
+  // neither branch could ever be taken, on any path, even with a perfect session — measured
+  // on no-certificate-resident, which returned "before settlement".
+  const flags = terminalFlags(PRODUCT_ID, ctx);
 
   // Settled WITHOUT a certificate — an amount was withheld and the checklist is about
   // getting it back. `section:recovery`, not `state:settled`: the latter is also true of
@@ -92,6 +98,15 @@ export default function SuccessPlan() {
           const d = await r.json();
           if (d.assessment) {
             setAssessment(d.assessment);
+            // W4 — the STORED path now carries the terminal, resolved server-side from the
+            // linked decision_sessions row. Adopt it whenever it disagrees with (or fills in
+            // for) what sessionStorage had. sessionStorage is empty on every visit that is not
+            // the checkout tab — the receipt-email link, another device, a reopened browser —
+            // and without this every terminal-conditioned surface on the page silently fell
+            // back to the neutral default.
+            if (typeof d.terminalId === "string" && d.terminalId && d.terminalId !== buyer?.terminalId) {
+              setCtx(buyerContextFromSession(PRODUCT_ID, TIER, d.terminalId));
+            }
             setLoading(false);
             return;
           }

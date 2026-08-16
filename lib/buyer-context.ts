@@ -240,8 +240,21 @@ export function buildBuyerContext(src: BuyerContextSource): BuyerContext {
   };
 }
 
-/** Client variant — reads the blobs EngineCalculator wrote for this product. */
-export function buyerContextFromSession(productId: string, tier?: 1 | 2): BuyerContext {
+/**
+ * Client variant — reads the blobs EngineCalculator wrote for this product.
+ *
+ * `terminalIdOverride` (W4) is the terminal resolved SERVER-SIDE from the stored
+ * decision_sessions row, passed by the success page once /api/get-assessment answers. It
+ * wins over sessionStorage because it is authoritative and, more importantly, because
+ * sessionStorage is simply absent on every visit that is not the checkout tab — the receipt
+ * email link, another device, a reopened browser. Without it `terminalId` is null there and
+ * every terminal-conditioned surface degrades to the neutral default.
+ */
+export function buyerContextFromSession(
+  productId: string,
+  tier?: 1 | 2,
+  terminalIdOverride?: string | null,
+): BuyerContext {
   const read = (k: string): Record<string, string> => {
     try {
       const v = sessionStorage.getItem(k);
@@ -263,7 +276,7 @@ export function buyerContextFromSession(productId: string, tier?: 1 | 2): BuyerC
     rawAnswers: read(`${productId}_raw`),
     labeledAnswers: read(`${productId}_answers`),
     qualification: read(`${productId}_qualification`),
-    terminalId: readStr(`${productId}_terminal`),
+    terminalId: terminalIdOverride ?? readStr(`${productId}_terminal`),
     tier: tier ?? (readStr(`${productId}_tier`) === "147" ? 2 : 1),
     engineFlags: (() => {
       const f = readStr(`${productId}_flags`);

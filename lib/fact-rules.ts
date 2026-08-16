@@ -53,6 +53,11 @@ export const PRODUCT_FACT_RULES: Record<string, string[]> = {
       "use it. Applied for online at ato.gov.au/clearancecertificate. One per VENDOR on the title, " +
       "not one per property.",
 
+    "FORM NAMES: do NOT name a specific ATO form, form number, schedule or online-service " +
+      "menu path unless that exact name appears in the corpus above. Describe the INSTRUMENT " +
+      "instead — the clearance certificate application, a variation notice, the purchaser's " +
+      "payment notification to the ATO. An invented or half-remembered form identifier reads " +
+      "as precise and sends people looking for something that does not exist.",
     "FOREIGN RESIDENTS: cannot obtain a clearance certificate at all. The instrument available to " +
       "them is a variation NOTICE (never a \"variation certificate\"), which can set the rate " +
       "anywhere between 0% and 14.99% on real grounds.",

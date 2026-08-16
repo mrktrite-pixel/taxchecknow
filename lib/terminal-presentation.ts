@@ -399,6 +399,34 @@ export const TERMINAL_PRESENTATION: Record<string, Record<string, TerminalPresen
 };
 
 /**
+ * RETIRED TERMINAL IDS → their replacement.
+ *
+ * A stored decision_sessions row keeps whatever terminal id was current when it was written,
+ * and E2 split two terminals into three residency variants each. Measured on the live table
+ * 2026-08-16: of 8 FRCGW assessments, two reference `certificate-pending-at-settlement` and
+ * one references `no-certificate-withholding-applies` — ids that no longer exist. Without an
+ * alias those buyers resolve to the neutral default and lose every terminal-conditioned
+ * surface, which is the same failure the server-side resolution above exists to remove.
+ *
+ * Both map to the UNSURE variant on purpose. The residency question did not exist when those
+ * sessions were recorded, so their residency is genuinely unknown; the unsure variant is the
+ * one that says so rather than guessing resident and asserting a refund-in-full they may not
+ * be entitled to.
+ */
+export const RETIRED_TERMINALS: Record<string, Record<string, string>> = {
+  "frcgw-clearance-certificate": {
+    "certificate-pending-at-settlement": "certificate-pending-unsure-residency",
+    "no-certificate-withholding-applies": "no-certificate-unsure-residency",
+  },
+};
+
+/** Current id for a possibly-retired terminal id. Unknown ids pass through unchanged. */
+export function resolveTerminalId(productId: string, terminalId: string | null | undefined): string | null {
+  if (!terminalId) return null;
+  return RETIRED_TERMINALS[productId]?.[terminalId] ?? terminalId;
+}
+
+/**
  * The presentation for a terminal. Unmapped product OR unmapped terminal → the neutral
  * default built from the caller's own copy, i.e. exactly today's behaviour.
  */
@@ -408,8 +436,30 @@ export function getTerminalPresentation(
   fallback: { headline: string; badge?: string; fileSlugs: string[] },
 ): TerminalPresentation {
   const product = TERMINAL_PRESENTATION[productId];
-  const hit = terminalId ? product?.[terminalId] : undefined;
+  const id = resolveTerminalId(productId, terminalId);
+  const hit = id ? product?.[id] : undefined;
   return hit ?? defaultPresentation(fallback);
+}
+
+/**
+ * W4 — THE ONE PLACE a caller asks "what does this terminal mean?" outside document
+ * rendering.
+ *
+ * The bug this exists to prevent, measured 2026-08-16: the tier-2 checklist heading read
+ * `ctx.flags` looking for `section:recovery`. That flag is a docFlag — it is produced HERE,
+ * and BuyerContext.flags carries engine answers plus terminal:/tier:/has: and has never
+ * contained a docFlag. So the heading returned "before settlement" on every path, including
+ * a perfect client session, and the test that "passed" only ever regex-matched the page's
+ * source text for the string it hoped would render.
+ *
+ * Callers get the merged set from here instead of guessing which bag a flag lives in.
+ */
+export function terminalFlags(
+  productId: string,
+  ctx: { terminalId?: string | null; flags?: string[] } | null | undefined,
+): string[] {
+  const docFlags = getTerminalPresentation(productId, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  return [...new Set([...(ctx?.flags ?? []), ...docFlags])];
 }
 
 // ── rendering helpers ─────────────────────────────────────────────────────────────────

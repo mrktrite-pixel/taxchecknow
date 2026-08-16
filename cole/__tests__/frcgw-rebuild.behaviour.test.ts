@@ -711,20 +711,185 @@ test("frcgw-rebuild · W3 · File 05's own questions obey the same rule", (t) =>
 });
 
 // ── W4 · checklist heading ───────────────────────────────────────────────────
-test("frcgw-rebuild · W4 · the tier-2 checklist heading follows the terminal", (t) => {
+
+// ═════════════════════════════════════════════════════════════════════════════
+// WALK-B RERUN (W4 stored path, W6, NIT). Added 2026-08-16.
+// ═════════════════════════════════════════════════════════════════════════════
+
+const { terminalFlags, resolveTerminalId, RETIRED_TERMINALS } =
+  req(path.join(REPO, "lib", "terminal-presentation.ts"));
+
+/**
+ * The shipped checklistHeading(), re-expressed against the real terminalFlags().
+ *
+ * WHY A MIRROR AND WHY THAT IS NOW SAFE. success/plan/page.tsx is a .tsx using the "@/"
+ * alias, which this CommonJS ts-node project cannot resolve, so the function itself cannot be
+ * imported here. The PREVIOUS version of this test dealt with that by regex-matching the
+ * page's SOURCE TEXT for the strings it hoped would render — which is exactly why it passed
+ * while the live render failed: the strings were present, the logic that selects them was
+ * reading the wrong flag bag. This mirror calls the real terminalFlags() on the real
+ * presentation map, so the SELECTION is genuinely exercised; a guard test below pins the
+ * mirror to the page's actual source so the two cannot drift.
+ */
+function checklistHeadingMirror(ctx: any): string {
+  const flags = terminalFlags(PRODUCT, ctx);
+  if (flags.includes("section:recovery")) return "What to do, in order, to recover the withheld amount";
+  if (flags.includes("state:settled")) return "What to do, in order, to close this sale out";
+  return ctx?.values?.settlement_date
+    ? `What to do — in order — before ${ctx.values.settlement_date}`
+    : "What to do, in order, before settlement";
+}
+
+/** A context as the STORED path builds it: no sessionStorage, terminal from the DB. */
+function storedCtx(terminalId: string | null) {
+  return buildBuyerContext({ productId: PRODUCT, terminalId, tier: 2 });
+}
+
+test("frcgw-rebuild · W4 · docFlags are NOT in ctx.flags — the bug the heading had", (t) => {
+  const ctx = storedCtx("no-certificate-resident");
+  // This is the measured root cause, pinned so it cannot be forgotten: section:recovery is a
+  // docFlag and has never been in BuyerContext.flags. Any code reading ctx.flags for one is
+  // silently dead.
+  t.assert.ok(!ctx.flags.includes("section:recovery"),
+    "ctx.flags now carries docFlags — if that changed deliberately, terminalFlags() is redundant");
+  t.assert.ok(!ctx.flags.includes("state:settled"));
+  t.assert.ok(terminalFlags(PRODUCT, ctx).includes("section:recovery"),
+    "terminalFlags() must merge the docFlags in");
+});
+
+test("frcgw-rebuild · W4 · the heading resolves identically on the stored and client paths", (t) => {
+  const CASES: Array<[string, string]> = [
+    ["no-certificate-resident", "What to do, in order, to recover the withheld amount"],
+    ["no-certificate-non-resident", "What to do, in order, to recover the withheld amount"],
+    ["no-certificate-unsure-residency", "What to do, in order, to recover the withheld amount"],
+    ["certificate-provided-no-withholding", "What to do, in order, to close this sale out"],
+    ["when-to-apply-timeline", "What to do, in order, before settlement"],
+    ["certificate-pending-resident", "What to do, in order, before settlement"],
+  ];
+  for (const [terminalId, expected] of CASES) {
+    // STORED path: terminal from the DB, no sessionStorage at all.
+    t.assert.strictEqual(checklistHeadingMirror(storedCtx(terminalId)), expected,
+      `${terminalId}: stored path`);
+    // CLIENT path: same terminal, plus the engine answers sessionStorage would carry.
+    const client = buildBuyerContext({
+      productId: PRODUCT, terminalId, tier: 2,
+      rawAnswers: { q1_scope: "in_scope", q2_knowledge: "no_cert" },
+    });
+    t.assert.strictEqual(checklistHeadingMirror(client), expected, `${terminalId}: client path`);
+  }
+});
+
+test("frcgw-rebuild · W4 · a captured settlement date does not override a settled terminal", (t) => {
+  const ctx = buildBuyerContext({
+    productId: PRODUCT, terminalId: "no-certificate-resident", tier: 2,
+    rawAnswers: { q6_settlement_date: "2026-12-01" },
+  });
+  t.assert.strictEqual(checklistHeadingMirror(ctx),
+    "What to do, in order, to recover the withheld amount",
+    "the date branch won over the settled branch");
+});
+
+test("frcgw-rebuild · W4 · the mirror matches the shipped checklistHeading source", (t) => {
   const src = fs.readFileSync(
     path.join(REPO, "app", "au", "check", PRODUCT, "success", "plan", "page.tsx"), "utf8");
-  t.assert.match(src, /export function checklistHeading/, "checklistHeading is not exported for test");
-  t.assert.match(src, /to recover the withheld amount/, "the settled heading is missing");
-  t.assert.match(src, /section:recovery/,
-    "the settled heading must key on section:recovery — state:settled is also true of " +
-    "certificate-provided, where nothing was withheld");
-  t.assert.match(src, /before settlement/, "the pre-settlement heading is missing");
+  const fn = /export function checklistHeading[\s\S]*?\n}/.exec(src);
+  t.assert.ok(fn, "checklistHeading not found");
+  const body = fn![0];
+  t.assert.match(body, /terminalFlags\(PRODUCT_ID, ctx\)/,
+    "the shipped function no longer reads the merged flag set — the mirror is now lying");
+  t.assert.ok(!/ctx\?\.flags\s*\?\?\s*\[\]/.test(body),
+    "the shipped function went back to reading ctx.flags directly");
+  for (const s2 of ["section:recovery", "state:settled",
+                    "to recover the withheld amount", "to close this sale out",
+                    "before settlement"]) {
+    t.assert.ok(body.includes(s2), `shipped function missing ${s2}`);
+  }
+});
 
-  // The old label-as-a-date must not come back — but strip comments first. The fix is
-  // DOCUMENTED in a comment that quotes the offending string, and a naive scan flags the
-  // explanation as the defect.
-  const code = src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
-  t.assert.ok(!/Settlement Date \(Critical\)/.test(code),
-    "the deadline LABEL is rendered as a date again");
+test("frcgw-rebuild · W4 · the stored path can recover the terminal server-side", (t) => {
+  const api = fs.readFileSync(path.join(REPO, "app", "api", "get-assessment", "route.ts"), "utf8");
+  t.assert.match(api, /decision_session_id/, "get-assessment does not read the decision-session link");
+  t.assert.match(api, /decision_sessions/, "get-assessment does not resolve the terminal");
+  t.assert.match(api, /terminalId/, "get-assessment does not return terminalId");
+
+  for (const tierDir of ["assess", "plan"]) {
+    const page = fs.readFileSync(
+      path.join(REPO, "app", "au", "check", PRODUCT, "success", tierDir, "page.tsx"), "utf8");
+    t.assert.match(page, /d\.terminalId/, `${tierDir} page ignores the server-resolved terminal`);
+    t.assert.match(page, /buyerContextFromSession\(PRODUCT_ID, TIER, d\.terminalId\)/,
+      `${tierDir} page does not rebuild its context from the server-resolved terminal`);
+  }
+});
+
+test("frcgw-rebuild · W4 · retired pre-E2 terminal ids still resolve", (t) => {
+  // Measured on the live table 2026-08-16: stored rows still reference these ids, which E2
+  // split into residency variants. Without the alias they fall back to the neutral default.
+  const aliases = RETIRED_TERMINALS[PRODUCT];
+  t.assert.ok(aliases["certificate-pending-at-settlement"], "pending alias missing");
+  t.assert.ok(aliases["no-certificate-withholding-applies"], "no-cert alias missing");
+  for (const [oldId, newId] of Object.entries(aliases) as Array<[string, string]>) {
+    t.assert.ok(engine.terminals.some((x: any) => x.id === newId),
+      `${oldId} aliases to ${newId}, which is not a real terminal`);
+    t.assert.strictEqual(resolveTerminalId(PRODUCT, oldId), newId);
+    t.assert.ok(getTerminalPresentation(PRODUCT, oldId, { headline: "FALLBACK", fileSlugs: [] }).strip.headline !== "FALLBACK",
+      `${oldId} still degrades to the neutral default`);
+  }
+  t.assert.strictEqual(checklistHeadingMirror(storedCtx("no-certificate-withholding-applies")),
+    "What to do, in order, to recover the withheld amount",
+    "a pre-E2 no-certificate row still gets the pre-settlement heading");
+  // A live id must pass straight through.
+  t.assert.strictEqual(resolveTerminalId(PRODUCT, "no-certificate-resident"), "no-certificate-resident");
+});
+
+// ── W6 · File 06 must contain no pre-settlement content on a settled sale ────
+test("frcgw-rebuild · W6 · File 06 on no_cert+resident has no pre-settlement content", (t) => {
+  const f6 = renderPack("no-certificate-resident")["frcgw-06"];
+
+  const BANNED: Array<[RegExp, string]> = [
+    [/week before settlement/i, "Phase 3's 'the week before settlement'"],
+    [/calendar first/i, "the 'put your settlement date in your calendar first' intro"],
+    [/pre-settlement plan/i, "the pre-settlement heading"],
+    [/Phase 3/i, "Phase 3 (pre-settlement by definition)"],
+    [/Phase 4/i, "Phase 4 (pre-settlement by definition)"],
+    [/work backwards from it/i, "the work-back-from-settlement instruction"],
+    [/before settlement/i, "any future-settlement instruction"],
+    [/Confirm in writing that the purchaser's side holds the certificate/i, "the pre-settlement confirmation step"],
+  ];
+  for (const [re, why] of BANNED) {
+    t.assert.ok(!re.test(f6), `File 06 still renders ${why} for a settled sale`);
+  }
+
+  // and the recovery sequence IS there, and is the only sequence.
+  t.assert.match(f6, /Your recovery plan/i, "missing the recovery heading");
+  t.assert.match(f6, /Phase 1 — Now/, "missing the recovery Phase 1");
+  t.assert.match(f6, /Phase 2 — At the next return/, "missing the recovery Phase 2");
+  t.assert.strictEqual((f6.match(/<h2>Phase \d/g) ?? []).length, 2,
+    "a settled sale must render exactly the two recovery phases");
+});
+
+test("frcgw-rebuild · W6 · pre-settlement terminals keep Phases 3 and 4", (t) => {
+  for (const id of ["when-to-apply-timeline", "certificate-pending-resident", "co-owners-separate-certificates"]) {
+    const f6 = renderPack(id)["frcgw-06"];
+    t.assert.match(f6, /Phase 3 — The week before settlement/, `${id}: lost Phase 3`);
+    t.assert.match(f6, /Phase 4 — If a certificate is not held at settlement/, `${id}: lost Phase 4`);
+    t.assert.match(f6, /pre-settlement plan/i, `${id}: lost the pre-settlement heading`);
+  }
+});
+
+test("frcgw-rebuild · W6 · certificate-provided gets the close-out sequence, not recovery", (t) => {
+  const f6 = renderPack("certificate-provided-no-withholding")["frcgw-06"];
+  t.assert.match(f6, /Closing this sale out/i, "missing the close-out heading");
+  t.assert.ok(!/pre-settlement plan/i.test(f6), "a settled sale still shows the pre-settlement heading");
+  t.assert.ok(!/Phase 3|Phase 4/.test(f6), "a settled sale still shows the pre-settlement phases");
+  t.assert.ok(!/Your recovery plan/i.test(f6),
+    "a buyer who provided a certificate is offered a recovery plan for a withholding that never happened");
+});
+
+// ── NIT · no invented ATO form names ─────────────────────────────────────────
+test("frcgw-rebuild · NIT · the fact sheet forbids naming ATO forms not in the corpus", (t) => {
+  const sheet = req(path.join(REPO, "lib", "fact-rules.ts")).getFactRules(PRODUCT).join("\n");
+  t.assert.match(sheet, /FORM NAMES/, "the form-name rule is missing");
+  t.assert.match(sheet, /do NOT name a specific ATO form/i, "the prohibition is missing");
+  t.assert.match(sheet, /unless that exact name appears in the corpus/i, "the corpus exception is missing");
+  t.assert.match(sheet, /payment notification to the ATO/i, "the dispatched example wording is missing");
 });

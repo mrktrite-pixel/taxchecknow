@@ -67,6 +67,15 @@ export default function SuccessAssess() {
           const d = await r.json();
           if (d.assessment) {
             setAssessment(d.assessment);
+            // W4 — the STORED path now carries the terminal, resolved server-side from the
+            // linked decision_sessions row. Adopt it whenever it disagrees with (or fills in
+            // for) what sessionStorage had. sessionStorage is empty on every visit that is not
+            // the checkout tab — the receipt-email link, another device, a reopened browser —
+            // and without this every terminal-conditioned surface on the page silently fell
+            // back to the neutral default.
+            if (typeof d.terminalId === "string" && d.terminalId && d.terminalId !== buyer?.terminalId) {
+              setCtx(buyerContextFromSession(PRODUCT_ID, TIER, d.terminalId));
+            }
             setLoading(false);
             return;
           }
