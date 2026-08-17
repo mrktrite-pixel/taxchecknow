@@ -5,6 +5,10 @@
 // `qualification.*` key and can NEVER collide with, merge into, or override a maze flag. The
 // composer (P2 grounding) treats maze/terminal/figures as fact and `qualification.*` as
 // non-authoritative buyer context only.
+//
+// E6 extends that rule from "cannot override" to "must say so when they disagree" — see the
+// conflict block in buildComposerInputs below.
+
 
 export function buildComposerInputs(
   maze: Record<string, unknown>,
@@ -15,6 +19,13 @@ export function buildComposerInputs(
     if (v === undefined || v === null || v === "") continue;
     out[`qualification.${k}`] = v; // namespaced — structurally cannot override a maze key
   }
+
+  // E6 detection used to live here. It now runs inside generateAssessment(), resolved from
+  // product_id — see lib/assess-core.ts. THE REASON IS THE WEBHOOK: it builds its own
+  // AssessInput and calls this with two arguments, so a productId parameter here was
+  // undefined on the one path that matters and conflicts were never detected for a stored
+  // assessment. Measured on the live table: not one stored row has ever carried a conflict
+  // note. Resolving inside the generator reaches BOTH callers without editing the webhook.
   return out;
 }
 

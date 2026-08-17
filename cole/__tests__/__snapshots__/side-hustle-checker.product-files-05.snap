@@ -3,7 +3,36 @@
 // Product: side-hustle-checker · File 05 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-side-hustle-checker
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "side-hustle-checker";
+const SLUG = "sh-05";
+const FALLBACK_LABEL = { name: "Accountant Brief — Side Income", desc: "5 questions to ask your accountant before registering or disclosing." };
+const BODY = `<div class="info-box">Take to your accountant or online tax service. These force specific numbers and disclosure route clarity.</div><h2>Questions for Your Accountant</h2><div class="action-box"><h3>Question 1</h3><p>"What is my exact declaration position for each side income source and each tax year going back 4 years?"</p></div><h3>Question 2</h3><p>"What tax rate applies to my side income given my full income picture — 20%, 40%, or mixed?"</p><h3>Question 3</h3><p>"Should I use the £1,000 trading allowance or itemise expenses — which gives the lower tax for my specific income and expense profile?"</p><h3>Question 4</h3><p>"If I need to disclose past years, is HMRC Digital Disclosure Service the best route — or is there a better campaign for my specific income type?"</p><h3>Question 5</h3><p>"How do I set up proper bookkeeping going forward so I am compliant from next tax year onwards?"</p>`;
+
 export default function SideHustleCheckerFile05() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function SideHustleCheckerFile05() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 REGISTRATION DEADLINE: 5 October 2026
-            </span>
-            <a href="/uk/check/side-hustle-checker"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="REGISTRATION DEADLINE: 5 October 2026"
+            checkHref="/uk/check/side-hustle-checker"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             HMRC Side Income Declaration Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Accountant Brief — Side Income
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">5 questions to ask your accountant before registering or disclosing.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function SideHustleCheckerFile05() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<div class="info-box">Take to your accountant or online tax service. These force specific numbers and disclosure route clarity.</div><h2>Questions for Your Accountant</h2><div class="action-box"><h3>Question 1</h3><p>"What is my exact declaration position for each side income source and each tax year going back 4 years?"</p></div><h3>Question 2</h3><p>"What tax rate applies to my side income given my full income picture — 20%, 40%, or mixed?"</p><h3>Question 3</h3><p>"Should I use the £1,000 trading allowance or itemise expenses — which gives the lower tax for my specific income and expense profile?"</p><h3>Question 4</h3><p>"If I need to disclose past years, is HMRC Digital Disclosure Service the best route — or is there a better campaign for my specific income type?"</p><h3>Question 5</h3><p>"How do I set up proper bookkeeping going forward so I am compliant from next tax year onwards?"</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +225,7 @@ export default function SideHustleCheckerFile05() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United Kingdom tax adviser for your personal situation.
+            Always consult a qualified UK tax adviser for your personal situation.
             Based on HMRC guidance April 2026.
           </p>
         </div>

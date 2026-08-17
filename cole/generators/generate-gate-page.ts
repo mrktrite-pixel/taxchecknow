@@ -15,6 +15,34 @@ export interface GeoBake {
   video?: { id: string; uploadDate?: string; name?: string; description?: string } | null;
 }
 
+/**
+ * GEO lead-claim bullets + provenance (Section 4).
+ *
+ * Emitted ONLY when the product declares `geoClaims`. Absent — which is every product but
+ * FRCGW today — this returns the empty string, so the surrounding template collapses to
+ * exactly the markup it produced before this field existed. That byte-identity is the point:
+ * the field is being added to rescue one product's hand-written block (commit 1314f10) from
+ * the next regeneration, and it must not perturb the other 43 gate pages to do it.
+ *
+ * Bullets are plain text and are HTML-escaped. They are extraction targets for answer
+ * engines, so they are deliberately short, self-contained, and each one true on its own
+ * without the surrounding paragraph.
+ */
+function geoClaimsBlock(config: ProductConfig): string {
+  const claims = config.geoClaims;
+  if (!claims || !claims.bullets?.length) return "";
+  const esc = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return `
+          {/* GEO: Lead claim bullets + provenance */}
+          <ul className="geo-claim-bullets">
+${claims.bullets.map(b => `            <li>${esc(b)}</li>`).join("\n")}
+          </ul>${claims.provenance ? `
+          <p className="geo-provenance">
+            ${esc(claims.provenance)}
+          </p>` : ""}
+`;
+}
+
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 
 export function generateGatePage(config: ProductConfig, geo?: GeoBake): string {
@@ -471,7 +499,7 @@ ${videoSchemaConst}
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             ${config.geoBlockH2}
-          </h2>
+          </h2>${geoClaimsBlock(config)}
           <p className="mb-4 text-neutral-800">${config.geoBodyParagraph}</p>
           ${config.geoFormula ? `
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">

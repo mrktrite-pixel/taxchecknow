@@ -1,13 +1,19 @@
 {
   "_doc": "OPERATOR presentation overlay (FRCGW migration — ruled 2026-07-22). The emitter merges the machine engine (content+routing) with this overlay → engine.json (terminals schema). Bee-D never sets tier/severity. Dishes take heading from the menu label + result_copy from the grounded result_state unless overridden. Escapes REQUIRE heading+result_copy here; tier=67 FORCED on escapes.",
   "_ruling": "Flag 1 certificate-pending-at-settlement → tier 147/amber/critical (live deadline, 15% conditionally at stake — Execution Pack). Flag 2 unsure-tax-residency-status → 67/amber/standard (guidance dish, asserts no outcome). Other 6 rows + escape copy approved as drafted. Seeded from the live bespoke FrcgwClearanceCertificateCalculator.tsx (RATE 0.15, THRESHOLD 0; cert-provided→67/green, no-cert/foreign→147/red).",
+  "_amendment_2026_08_14": "E2 — residency is now asked on BOTH 147 paths before their terminals, so `certificate-pending-at-settlement` and `no-certificate-withholding-applies` each split into resident / non_resident / unsure_residency variants (6 rows replacing 2). Tier and criticality are INHERITED UNCHANGED from the row each variant replaces (147/critical throughout); severity is inherited too (pending→amber, no_cert→red) because the residency answer changes WHAT THE BUYER MUST DO, not how bad the position is. `foreign-resident-variation-required` is new: q4_residency:non_resident previously emitted a flag no terminal referenced, so a declared foreign resident on the sole-vendor path silently received the same dish as a declared Australian resident. It is 147/amber/critical by the same logic as the pending rows — a live pre-settlement deadline with a different instrument (variation notice, not clearance certificate). `what-is-clearance-certificate` moves green→amber: it is reached by a seller who does not know the rule exists, which is an action-required position, not a clear one.",
   "states": {
-    "what-is-clearance-certificate":        { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product" },
+    "what-is-clearance-certificate":        { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
     "when-to-apply-timeline":               { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
-    "certificate-pending-at-settlement":    { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "certificate-pending-resident":         { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "certificate-pending-non-resident":     { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
+    "certificate-pending-unsure-residency": { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
     "certificate-provided-no-withholding":  { "tier": 67,  "severity": "green", "criticality": "standard", "title_key": "product" },
-    "no-certificate-withholding-applies":   { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product" },
+    "no-certificate-resident":              { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product" },
+    "no-certificate-non-resident":          { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product" },
+    "no-certificate-unsure-residency":      { "tier": 147, "severity": "red",   "criticality": "critical", "title_key": "product" },
     "co-owners-separate-certificates":      { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
+    "foreign-resident-variation-required":  { "tier": 147, "severity": "amber", "criticality": "critical", "title_key": "product" },
     "certificate-expired-long-contract":    { "tier": 67,  "severity": "amber", "criticality": "critical", "title_key": "product" },
     "unsure-tax-residency-status":          { "tier": 67,  "severity": "amber", "criticality": "standard", "title_key": "product" },
 
@@ -19,7 +25,7 @@
     "insufficient_information": {
       "severity": "amber", "criticality": "critical", "title_key": "review_guide",
       "heading": "Your situation needs a closer look",
-      "result_copy": "Your answers do not yet confirm your FRCGW position — a key detail (your tax residency, your settlement date, or whether you have already applied for the certificate) is unconfirmed. A short personalised review confirms where you stand and exactly what to lodge, and by when, before settlement."
+      "result_copy": "Your answers do not yet confirm your FRCGW position — a key detail (your tax residency, how many owners are on the title, or how long your contract runs) is unconfirmed. A short personalised review confirms where you stand and exactly what to lodge, and when, before settlement."
     }
   }
 }

@@ -3,7 +3,36 @@
 // Product: spain-beckham · File 01 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts global-spain-beckham
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "spain-beckham";
+const SLUG = "beck-01";
+const FALLBACK_LABEL = { name: "Your Beckham Eligibility Assessment", desc: "Your specific eligibility across the four core Beckham conditions." };
+const BODY = `<h2>Your Beckham Eligibility Assessment</h2><div class="action-box"><h3>Four conditions — all must be met</h3><p>1. Relocation for qualifying work (employment / posting / director / DNV / highly qualified)</p><p>2. No Spanish tax residency in 5 years before arrival</p><p>3. Valid SS coverage (Spanish SS / EU A1 / bilateral)</p><p>4. Modelo 149 submitted within 6 months of Spanish SS registration</p></div><p>Source: <a href="https://sede.agenciatributaria.gob.es/Sede/procedimientoini/GI24.shtml">AEAT Modelo 149 guidance</a></p>`;
+
 export default function SpainBeckhamFile01() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function SpainBeckhamFile01() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 AEAT IRPF DEADLINE: 30 June 2027
-            </span>
-            <a href="/nomad/check/spain-beckham-eligibility"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="AEAT IRPF DEADLINE: 30 June 2027"
+            checkHref="/nomad/check/spain-beckham-eligibility"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Spain Beckham Eligibility Wall · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Beckham Eligibility Assessment
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your specific eligibility across the four core Beckham conditions.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function SpainBeckhamFile01() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Your Beckham Eligibility Assessment</h2><div class="action-box"><h3>Four conditions — all must be met</h3><p>1. Relocation for qualifying work (employment / posting / director / DNV / highly qualified)</p><p>2. No Spanish tax residency in 5 years before arrival</p><p>3. Valid SS coverage (Spanish SS / EU A1 / bilateral)</p><p>4. Modelo 149 submitted within 6 months of Spanish SS registration</p></div><p>Source: <a href="https://sede.agenciatributaria.gob.es/Sede/procedimientoini/GI24.shtml">AEAT Modelo 149 guidance</a></p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">

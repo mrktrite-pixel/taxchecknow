@@ -150,8 +150,13 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // ── GAP 2: is the absence of a date DECLARED, or is it a failure? ─────────
   // Declared-absent (unresolvable / none) is a reviewed answer and must be silent.
   // Anything else that fails to produce a countdown IS a defect and must still alert.
+  // A user_supplied/user_derived rule joins this group: there is no product-level date to
+  // count down to at generate time, and that is DECLARED rather than broken — so it must be
+  // silent for the same reason unresolvable/none are. See declaresOnlyAPerCustomerDate().
   const deadlineDeclaredAbsent =
-    config.temporal?.kind === "unresolvable" || config.temporal?.kind === "none";
+    config.temporal?.kind === "unresolvable"
+    || config.temporal?.kind === "none"
+    || declaresOnlyAPerCustomerDate(config);
   // The declared stand-in for the countdown. Only honoured when the product has
   // actually declared it has no date — never as a way to dodge a real deadline.
   const qualitative = deadlineDeclaredAbsent ? config.deadline?.qualitative : undefined;
@@ -233,12 +238,16 @@ export default function Success${isTier2 ? "Plan" : "Assess"}() {
 ${emittableEvents.length === 0 ? "" : `  const [calDone,    setCalDone]    = useState(false);`}
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-${deadlineDeclaredAbsent ? `  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPORAL v1 — this product's deadline is PER CUSTOMER
+  // (temporal.kind = "${config.temporal?.kind}", rule source "user_supplied"/"user_derived").
+  // A real date exists, but only once a customer has given it, so there is no product-level
+  // date to count down to here and nothing to alert about. The page resolves the customer's
+  // own date at runtime from their session instead.` : `  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
   // (temporal.kind = "${config.temporal?.kind}"${temporalReason ? `, reason: "${temporalReason}"` : ""}).
   // There is no countdown to suppress and nothing to alert about: the absence is the
   // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
   // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
-  // channel — a channel trained to be ignored is worse than no channel.
+  // channel — a channel trained to be ignored is worse than no channel.`}
   const daysToDeadline: number | null = null;
   const deadlineLive = false;
 
@@ -726,12 +735,49 @@ function icsText(s: string): string {
  */
 function productClaimsADate(config: ProductConfig): boolean {
   if (config.temporal) {
-    return config.temporal.kind === "deadline"
-        || config.temporal.kind === "window"
-        || config.temporal.kind === "effective_from";
+    const computable =
+      config.temporal.kind === "deadline"
+      || config.temporal.kind === "window"
+      || config.temporal.kind === "effective_from";
+    // A PER-CUSTOMER date is not a PRODUCT-LEVEL date — see declaresOnlyAPerCustomerDate().
+    return computable && !declaresOnlyAPerCustomerDate(config);
   }
   const iso = Date.parse(config.deadline?.isoDate ?? "");
   return !Number.isNaN(iso) && iso >= Date.now();
+}
+
+/**
+ * Does this product declare a real date that only ever exists PER CUSTOMER?
+ *
+ * TEMPORAL v1 split the world into "has a computable date" (deadline / window /
+ * effective_from) and "declared it has none" (unresolvable / none), and the generator
+ * treated the first group as necessarily having a date AT GENERATE TIME. That holds for a
+ * `fixed` rule — "30 June" resolves without a customer. It does not hold for a
+ * `user_supplied` or `user_derived` rule, where the date is an answer and there is no
+ * customer standing in front of the generator.
+ *
+ * Nothing hit this until FRCGW re-declared as user_supplied (E3), and the result was
+ * revealing: the generator classified it as claiming a date, could not produce one from
+ * `deadline.isoDate` (empty by design), and therefore emitted the EXPIRED-DEADLINE branch —
+ * a console.error on every page load, for a product behaving exactly as declared. That is
+ * the "channel trained to be ignored" failure the Phase 0 comment in this file warns about,
+ * arriving through the one door it did not cover.
+ *
+ * So: statically, such a product is silent and may use its qualitative stand-in, exactly
+ * like a declared-absent one. Dynamically it is richer than either — the page resolves the
+ * customer's own date at runtime. Both are true; this predicate answers only the static
+ * question the generator is entitled to ask.
+ */
+function declaresOnlyAPerCustomerDate(config: ProductConfig): boolean {
+  const t = config.temporal;
+  if (!t) return false;
+  const src = (rule: { source?: string } | undefined): boolean =>
+    rule?.source === "user_supplied" || rule?.source === "user_derived";
+  if (t.kind === "deadline" || t.kind === "effective_from") return src(t.rule);
+  // A window needs a customer for BOTH edges before it can be called per-customer; if only
+  // one edge is user-supplied the other is still a real product-level date worth stating.
+  if (t.kind === "window") return src(t.opens) && src(t.closes);
+  return false;
 }
 
 /**

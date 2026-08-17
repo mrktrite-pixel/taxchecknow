@@ -191,8 +191,17 @@ async function generateAndStoreAssessment(
     // fetch(`${NEXT_PUBLIC_SITE_URL}/api/assess`). The HTTP self-call hit PRODUCTION, so a branch
     // webhook ran against pre-merge prod assess semantics (no `grounded` field → every store
     // skipped). Direct call = same deployment's code always runs; holds on prod after merge and on
-    // every preview. fields: per-product list (== the client success-page list, PQ-C0) so the paid
-    // deliverable is identical regardless of path.
+    // every preview.
+    //
+    // fields: getAssessmentFields() returns the per-product list WHEN THE PRODUCT IS REGISTERED in
+    // lib/assessment-fields.ts, and GENERIC_FIELDS when it is not. The previous wording here said
+    // flatly "per-product list (== the client success-page list, PQ-C0)", which was not true for
+    // any unregistered product and was measurably untrue for FRCGW: it was absent from the map, so
+    // this call returned the generic list while both FRCGW success pages POSTed the per-product one,
+    // and every stored FRCGW assessment carried keys the pages did not render. FRCGW is registered
+    // as of 2026-08-14, but the comment is corrected rather than re-asserted — the guarantee comes
+    // from the registration, not from this call site, and the next unregistered product will hit
+    // the same fallback. COMMENT ONLY: no logic in this file is changed.
     const result = await generateAssessment({
       product_id: delivery.productId,
       market:     delivery.market,

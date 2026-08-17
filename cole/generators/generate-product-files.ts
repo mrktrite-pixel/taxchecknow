@@ -27,25 +27,26 @@ function countryFlag(country: string): string {
  */
 function deadlineBar(config: ProductConfig): string {
   const q = config.deadline?.qualitative;
-  const text = config.deadline?.display?.trim()
-    ? `${config.deadline.urgencyLabel}: ${config.deadline.display}`
-    : q?.headline?.trim()
-      ? `${config.deadline.urgencyLabel}: ${q.headline}`
+  // The FALLBACK line only — shown when there is no session to read a terminal from.
+  // Prefer the qualitative headline: it is a whole sentence, whereas `display` is a short
+  // label meant to be embedded in one, and gluing urgencyLabel to it produced doubled copy
+  // ("CERTIFICATE NEEDS TO REACH THE PURCHASER BEFORE SETTLEMENT: your settlement").
+  const text = q?.headline?.trim()
+    ? q.headline.trim()
+    : config.deadline?.display?.trim()
+      ? `${config.deadline.urgencyLabel}: ${config.deadline.display}`
       : "";
   if (!text) {
     return `          {/* Deadline bar suppressed: this product declares no date and no
               qualitative urgency, so there is nothing truthful to put here. */}`;
   }
-  return `          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 ${text}
-            </span>
-            <a href="/${config.slug}"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>`;
+  // R2 — the live bar is terminal-driven (DocStrip). This is only what it shows before a
+  // session is read, and for a reader who has none.
+  return `          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText=${JSON.stringify(text)}
+            checkHref="/${config.slug}"
+          />`;
 }
 
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
@@ -103,7 +104,36 @@ export function generateProductFile(
 // Product: ${config.id} · File ${file.num} of ${config.files.length}
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts ${config.country}-${config.id}
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = ${JSON.stringify(config.id)};
+const SLUG = ${JSON.stringify(file.slug)};
+const FALLBACK_LABEL = { name: ${JSON.stringify(file.name)}, desc: ${JSON.stringify(file.desc)} };
+const BODY = \`${escapeContent(file.content)}\`;
+
 export default function ${toPascal(config.id)}File${file.num}() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{\`
@@ -190,9 +220,9 @@ ${deadlineBar(config)}
             ${config.name} · File ${file.num} of ${config.files.length}
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            ${file.name}
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">${file.desc}</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -205,10 +235,7 @@ ${deadlineBar(config)}
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: \`${escapeContent(file.content)}\` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -225,7 +252,7 @@ ${deadlineBar(config)}
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified ${config.market} tax adviser for your personal situation.
+            Always consult a qualified ${adviserJurisdiction(config)} tax adviser for your personal situation.
             Based on ${config.authority} guidance ${config.lastVerified}.
           </p>
         </div>
@@ -257,6 +284,40 @@ ${deadlineBar(config)}
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
+
+/**
+ * C6 — the ADJECTIVE for the disclaimer's "consult a qualified <X> tax adviser".
+ *
+ * Two things were wrong with the old `${config.market}`.
+ *
+ * 1. GRAMMAR. `market` is a noun ("Australia", "Canada", "United States"), so the sentence
+ *    read "consult a qualified Australia tax adviser". The slot needs a demonym.
+ *
+ * 2. THE WRONG FIELD. `market` is free prose; `country` is the controlled code the rest of
+ *    the pipeline routes on (URL segment, price registry, corpus slug). Deriving the
+ *    jurisdiction from `country` means the disclaimer cannot drift from the product's actual
+ *    jurisdiction — which is exactly what it did: 394 emitted documents across 44 products
+ *    currently say "qualified UK tax adviser" while citing the ATO, the IRS, the CRA and the
+ *    IRD, because they were emitted before `market` was interpolated here at all and have
+ *    never been regenerated.
+ *
+ * Unknown country → fall back to `market`, so a new jurisdiction degrades to today's
+ * behaviour rather than to a wrong country.
+ */
+export function adviserJurisdiction(config: { country?: string; market?: string }): string {
+  const byCountry: Record<string, string> = {
+    au: "Australian",
+    uk: "UK",
+    gb: "UK",
+    us: "US",
+    nz: "New Zealand",
+    can: "Canadian",
+    ca: "Canadian",
+  };
+  const key = (config.country ?? "").toLowerCase();
+  return byCountry[key] ?? config.market ?? "qualified";
+}
+
 
 function toPascal(str: string): string {
   return str.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("");

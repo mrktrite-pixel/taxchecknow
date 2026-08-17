@@ -1,5 +1,5 @@
 {
-  "synced_at": "2026-07-28T09:32:08.671Z",
+  "synced_at": "2026-08-14T14:05:15.817Z",
   "source": "C:\\Users\\MATTV\\CitationGap\\cole-marketing\\lib",
   "files": [
     "cole-email.ts",
@@ -14,11 +14,11 @@
   "hashes": {
     "email-types.ts": "bc5b3cef4b207d7f",
     "email-product-copy.ts": "ecdb7a02f569e0a8",
-    "product-deadlines.ts": "8507119743565df6",
+    "product-deadlines.ts": "46aa23cfb21e6e8c",
     "email-context.ts": "ef4410c09d1dab74",
     "cole-email.ts": "40758693f2b77a3d",
-    "temporal-types.ts": "82fa21c6b9f77ff8",
-    "temporal-resolver.ts": "17f9b7e1377a49f8",
-    "nurture-types.ts": "0cd2f931895d8985"
+    "temporal-types.ts": "14deb5ceb79a2433",
+    "temporal-resolver.ts": "275c4a837f2337d4",
+    "nurture-types.ts": "3da3d22490539589"
   }
 }

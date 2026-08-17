@@ -3,7 +3,36 @@
 // Product: bright-line-auditor · File 03 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts nz-bright-line-auditor
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "bright-line-auditor";
+const SLUG = "bl-03";
+const FALLBACK_LABEL = { name: "Main Home Area Test Auditor", desc: "Verify over 50% of land used as main home — the IRD area test." };
+const BODY = `<h2>The Area Test</h2><p>The property must have been used as your main home for over 50% of the land area throughout the ownership period.</p><div class="action-box"><h3>Common Area Test Issues</h3><p>Flatmate with separate entrance: may reduce main home area</p><p>Airbnb of a full room: reduces main home area percentage</p><p>Home office used for business: generally still counts as main home</p><p>Subdivision of section: affects area calculation</p></div><table><tr><th>Situation</th><th>Area Test Impact</th></tr><tr><td>Pure main home — no rental</td><td>100% — passes easily</td></tr><tr><td>One flatmate in one room</td><td>Depends on room proportion</td></tr><tr><td>Airbnb of guest room</td><td>Minor impact if under 50%</td></tr><tr><td>Subdivided section sold off</td><td>Significant — get advice</td></tr></table>`;
+
 export default function BrightLineAuditorFile03() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function BrightLineAuditorFile03() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 TAX YEAR END: 31 March 2027
-            </span>
-            <a href="/nz/check/bright-line-auditor"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="TAX YEAR END: 31 March 2027"
+            checkHref="/nz/check/bright-line-auditor"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Bright-Line Property Tax Decision Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Main Home Area Test Auditor
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Verify over 50% of land used as main home — the IRD area test.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function BrightLineAuditorFile03() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>The Area Test</h2><p>The property must have been used as your main home for over 50% of the land area throughout the ownership period.</p><div class="action-box"><h3>Common Area Test Issues</h3><p>Flatmate with separate entrance: may reduce main home area</p><p>Airbnb of a full room: reduces main home area percentage</p><p>Home office used for business: generally still counts as main home</p><p>Subdivision of section: affects area calculation</p></div><table><tr><th>Situation</th><th>Area Test Impact</th></tr><tr><td>Pure main home — no rental</td><td>100% — passes easily</td></tr><tr><td>One flatmate in one room</td><td>Depends on room proportion</td></tr><tr><td>Airbnb of guest room</td><td>Minor impact if under 50%</td></tr><tr><td>Subdivided section sold off</td><td>Significant — get advice</td></tr></table>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">

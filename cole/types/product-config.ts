@@ -265,6 +265,26 @@ export interface ProductConfig {
   // ─── GEO BLOCK ─────────────────────────────────────────────────────────
   geoBlockTitle: string;
   geoBlockH2: string;
+  /**
+   * OPTIONAL — lead claim bullets + a provenance line, emitted at the top of the GEO block
+   * (Section 4), above `geoBodyParagraph`.
+   *
+   * WHY THIS FIELD EXISTS. FRCGW's gate page carried exactly this markup, hand-written
+   * straight onto the emitted page by commit 1314f10 ("AU-19 GEO claim bullets + provenance
+   * — Section 4 extraction upgrade"). It was in no config and no generator, and it appeared
+   * on exactly one of the repo's gate pages, so the next regeneration of that page would
+   * have silently deleted it with nothing to restore it from. Promoting it to a config field
+   * makes the content survive regeneration and makes it available to every other product.
+   *
+   * ABSENT ⇒ NOTHING IS EMITTED. Products that do not declare it produce a byte-identical
+   * gate page to before this field existed.
+   */
+  geoClaims?: {
+    /** Short, self-contained factual claims. Plain text; emitted one per <li>. */
+    bullets: string[];
+    /** One line naming the authority and the legal instrument the claims rest on. */
+    provenance: string;
+  };
   geoBodyParagraph: string;
   geoFormula: string;
   geoFacts: Array<{ label: string; value: string }>;
@@ -341,6 +361,23 @@ export interface ProductConfig {
   howToSteps: Array<{ position: number; name: string; text: string }>;
 
   // ─── SUCCESS PAGE ──────────────────────────────────────────────────────
+  /**
+   * W2 — OPTIONAL. How this product's facts must be PHRASED in generated content, injected
+   * into the assessment prompt under the corpus.
+   *
+   * The corpus says what the law IS. These say which true-adjacent paraphrase is WRONG —
+   * the class of error corpus grounding cannot catch, because no single figure contradicts
+   * "processing takes 1-4 weeks" or "the money is locked up for 6-18 months".
+   *
+   * AUTHORING HOME ONLY. The runtime copy is lib/fact-rules.ts, because lib/ cannot import
+   * from cole/ and because the Stripe webhook builds its own AssessInput — a rule that
+   * travelled only as an argument would reach the client fallback and miss every real
+   * purchase. The two must agree; a behaviour test asserts it element by element, exactly
+   * as it does for tier1/tier2AssessmentFields.
+   *
+   * Absent ⇒ nothing is injected and the prompt is unchanged.
+   */
+  factRules?: string[];
   successPromptFields: Array<{ key: string; label: string; defaultVal: string }>;
   tier1AssessmentFields: string[];
   tier2AssessmentFields: string[];

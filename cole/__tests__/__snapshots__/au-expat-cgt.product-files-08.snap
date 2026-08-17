@@ -3,7 +3,36 @@
 // Product: au-expat-cgt · File 08 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts global-au-expat-cgt
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "au-expat-cgt";
+const SLUG = "aucgt-08";
+const FALLBACK_LABEL = { name: "ATO Clearance Certificate Process", desc: "Step-by-step: how to apply, timing, documentation, avoiding pitfalls." };
+const BODY = `<h2>ATO Clearance Certificate — Full Process</h2><h3>Eligibility</h3><ul><li>Available to Australian tax residents</li><li>Vendor applies — not purchaser</li><li>Foreign residents cannot obtain a clearance certificate (but can apply for variation — reducing 12.5% to lower rate)</li></ul><h3>Application steps</h3><ol><li>Log in to ATO portal (myGov or Business Portal)</li><li>Select "Foreign resident capital gains withholding" → "Apply for a clearance certificate"</li><li>Complete online form — property details, expected sale date, vendor details</li><li>Submit and monitor status</li></ol><h3>Timing</h3><ul><li>Simple cases: 2-4 weeks</li><li>Complex (trusts, companies, contested residency): 6-12 weeks</li><li>Apply WELL before settlement — no certificate at settlement = 12.5% withheld automatically</li></ul><h3>Variation (foreign residents)</h3><p>Foreign residents expecting final tax below 12.5% can apply for a variation — reducing the withholding percentage. Supporting evidence required (valuation, cost base evidence, tax liability modelling).</p><h3>Audit documentation</h3><ul><li>Certificate + application reference</li><li>Settlement statement showing withholding amount (if any)</li><li>Tax return with CGT schedule + withholding credit</li><li>Cost base documentation (purchase contract, improvements, legal fees)</li></ul>`;
+
 export default function AuExpatCgtFile08() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function AuExpatCgtFile08() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 ATO LODGMENT DEADLINE: 31 October 2026
-            </span>
-            <a href="/nomad/check/au-expat-cgt"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="ATO LODGMENT DEADLINE: 31 October 2026"
+            checkHref="/nomad/check/au-expat-cgt"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Australian Expat CGT Trap Auditor · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            ATO Clearance Certificate Process
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step: how to apply, timing, documentation, avoiding pitfalls.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function AuExpatCgtFile08() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>ATO Clearance Certificate — Full Process</h2><h3>Eligibility</h3><ul><li>Available to Australian tax residents</li><li>Vendor applies — not purchaser</li><li>Foreign residents cannot obtain a clearance certificate (but can apply for variation — reducing 12.5% to lower rate)</li></ul><h3>Application steps</h3><ol><li>Log in to ATO portal (myGov or Business Portal)</li><li>Select "Foreign resident capital gains withholding" → "Apply for a clearance certificate"</li><li>Complete online form — property details, expected sale date, vendor details</li><li>Submit and monitor status</li></ol><h3>Timing</h3><ul><li>Simple cases: 2-4 weeks</li><li>Complex (trusts, companies, contested residency): 6-12 weeks</li><li>Apply WELL before settlement — no certificate at settlement = 12.5% withheld automatically</li></ul><h3>Variation (foreign residents)</h3><p>Foreign residents expecting final tax below 12.5% can apply for a variation — reducing the withholding percentage. Supporting evidence required (valuation, cost base evidence, tax liability modelling).</p><h3>Audit documentation</h3><ul><li>Certificate + application reference</li><li>Settlement statement showing withholding amount (if any)</li><li>Tax return with CGT schedule + withholding credit</li><li>Cost base documentation (purchase contract, improvements, legal fees)</li></ul>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">

@@ -3,7 +3,36 @@
 // Product: exit-tax-trap · File 07 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts global-exit-tax-trap
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "exit-tax-trap";
+const SLUG = "ett-07";
+const FALLBACK_LABEL = { name: "Deemed Disposition Management Strategy", desc: "Canada-specific: managing the deemed disposition tax with T1244 deferral and security." };
+const BODY = `<h2>Canada Deemed Disposition — Management</h2><p>The deemed disposition under s128.1 crystallises tax on unrealised gains at departure. Without planning, this can create a significant cash-flow mismatch — tax payable but no asset sale proceeds.</p><h2>T1244 Deferral Election</h2><ol><li>Identify all property deemed disposed at departure</li><li>Calculate the deemed gain per asset (FMV at departure − ACB)</li><li>Compute the departure tax payable without deferral</li><li>File Form T1244 electing to defer payment of the departure tax</li><li>Post security with CRA (cash, bank guarantee, or other acceptable form)</li><li>The deferred tax is payable when the asset is actually sold, or at latest over 10 years</li></ol><div class="info-box"><strong>Note:</strong> the election preserves cash flow but the tax liability itself is unchanged. Interest may accrue on the deferred amount. Canadian professional advice is essential.</div>`;
+
 export default function ExitTaxTrapFile07() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function ExitTaxTrapFile07() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 DEPARTURE-YEAR BOUNDARY: 31 December 2026
-            </span>
-            <a href="/nomad/check/exit-tax-trap"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="DEPARTURE-YEAR BOUNDARY: 31 December 2026"
+            checkHref="/nomad/check/exit-tax-trap"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Exit Tax Trap Auditor · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Deemed Disposition Management Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Canada-specific: managing the deemed disposition tax with T1244 deferral and security.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function ExitTaxTrapFile07() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Canada Deemed Disposition — Management</h2><p>The deemed disposition under s128.1 crystallises tax on unrealised gains at departure. Without planning, this can create a significant cash-flow mismatch — tax payable but no asset sale proceeds.</p><h2>T1244 Deferral Election</h2><ol><li>Identify all property deemed disposed at departure</li><li>Calculate the deemed gain per asset (FMV at departure − ACB)</li><li>Compute the departure tax payable without deferral</li><li>File Form T1244 electing to defer payment of the departure tax</li><li>Post security with CRA (cash, bank guarantee, or other acceptable form)</li><li>The deferred tax is payable when the asset is actually sold, or at latest over 10 years</li></ol><div class="info-box"><strong>Note:</strong> the election preserves cash flow but the tax liability itself is unchanged. Interest may accrue on the deferred amount. Canadian professional advice is essential.</div>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">

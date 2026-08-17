@@ -6,7 +6,10 @@ import { generateAssessment, type AssessInput } from "@/lib/assess-core";
 // Used by the client success-page fallback. The Stripe webhook calls generateAssessment()
 // IN-PROCESS (no HTTP self-call) — see lib/assess-core.ts for why.
 //
-// Request body: { inputs, product_id, market, authority, tier: 1|2, name, fields }
+// Request body: { inputs, product_id, market, authority, tier: 1|2, name, fields, deadline? }
+//   deadline (E7, optional) — { isoDate, label } for a REAL date the customer supplied.
+//   Present ⇒ the generator may write absolute dates; absent ⇒ relative language only.
+//   The fail-closed 424 path below is untouched.
 // Response (success): { assessment, grounded: true, corpus_source, corpus_verified }
 // Response (failure): { error, ... } with a matching status (424 = fail-closed, corpus unreachable).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -22,6 +25,7 @@ export async function POST(req: Request) {
       tier: body.tier as number,
       name: body.name as string,
       fields: body.fields as string[],
+      deadline: body.deadline,
     });
 
     if (!result.ok) {

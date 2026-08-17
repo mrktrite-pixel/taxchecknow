@@ -3,7 +3,36 @@
 // Product: section-174-auditor · File 06 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts us-section-174-auditor
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "section-174-auditor";
+const SLUG = "s174-06";
+const FALLBACK_LABEL = { name: "Multi-Year Cashflow Forecast", desc: "How the amortization stacking affects your cashflow across 2022-2027+." };
+const BODY = `<h2>Multi-Year Section 174 Cashflow Forecast</h2><p>The shock compounds over years as each year's deferred deductions stack on prior years' ongoing amortization.</p><h3>Worked Example — $1M Annual Domestic R&amp;D, C-corp (21%)</h3><table><tr><th>Year</th><th>New R&amp;D</th><th>Year 1 deduction (10%)</th><th>Prior-year amortization</th><th>Total deduction</th><th>Additional tax vs old rules</th></tr><tr><td>2022</td><td>$1M</td><td>$100k</td><td>$0</td><td>$100k</td><td>$189k</td></tr><tr><td>2023</td><td>$1M</td><td>$100k</td><td>$200k</td><td>$300k</td><td>$147k</td></tr><tr><td>2024</td><td>$1M</td><td>$100k</td><td>$400k</td><td>$500k</td><td>$105k</td></tr><tr><td>2025</td><td>$1M</td><td>$100k</td><td>$600k</td><td>$700k</td><td>$63k</td></tr><tr><td>2026</td><td>$1M</td><td>$100k</td><td>$800k</td><td>$900k</td><td>$21k</td></tr><tr><td>2027</td><td>$1M</td><td>$100k</td><td>$900k</td><td>$1.0M</td><td>$0 (steady state)</td></tr></table><h3>Cashflow Summary</h3><p>Over 6 years of consistent $1M R&amp;D spend, total additional cashflow out compared to pre-2022 rules: approximately $525k (sum of additional tax columns). Steady state reached in year 6 when current year's partial deduction matches prior years' stacking.</p><h3>Planning Implications</h3><ul><li>Years 1-3 are the worst cashflow years — largest delta from pre-2022</li><li>Plan financing or reserves to bridge the shock</li><li>Section 41 R&amp;D credit can offset 30-50% of the shock if claimed</li><li>Section 174A if enacted stops the bleeding going forward (but existing schedules continue)</li></ul>`;
+
 export default function Section174AuditorFile06() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function Section174AuditorFile06() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 FILING DEADLINE APPROACHING: April 15, 2026
-            </span>
-            <a href="/us/check/section-174-auditor"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="FILING DEADLINE APPROACHING: April 15, 2026"
+            checkHref="/us/check/section-174-auditor"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             R&D Tax Cashflow Shock Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Year Cashflow Forecast
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How the amortization stacking affects your cashflow across 2022-2027+.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function Section174AuditorFile06() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Multi-Year Section 174 Cashflow Forecast</h2><p>The shock compounds over years as each year's deferred deductions stack on prior years' ongoing amortization.</p><h3>Worked Example — $1M Annual Domestic R&amp;D, C-corp (21%)</h3><table><tr><th>Year</th><th>New R&amp;D</th><th>Year 1 deduction (10%)</th><th>Prior-year amortization</th><th>Total deduction</th><th>Additional tax vs old rules</th></tr><tr><td>2022</td><td>$1M</td><td>$100k</td><td>$0</td><td>$100k</td><td>$189k</td></tr><tr><td>2023</td><td>$1M</td><td>$100k</td><td>$200k</td><td>$300k</td><td>$147k</td></tr><tr><td>2024</td><td>$1M</td><td>$100k</td><td>$400k</td><td>$500k</td><td>$105k</td></tr><tr><td>2025</td><td>$1M</td><td>$100k</td><td>$600k</td><td>$700k</td><td>$63k</td></tr><tr><td>2026</td><td>$1M</td><td>$100k</td><td>$800k</td><td>$900k</td><td>$21k</td></tr><tr><td>2027</td><td>$1M</td><td>$100k</td><td>$900k</td><td>$1.0M</td><td>$0 (steady state)</td></tr></table><h3>Cashflow Summary</h3><p>Over 6 years of consistent $1M R&amp;D spend, total additional cashflow out compared to pre-2022 rules: approximately $525k (sum of additional tax columns). Steady state reached in year 6 when current year's partial deduction matches prior years' stacking.</p><h3>Planning Implications</h3><ul><li>Years 1-3 are the worst cashflow years — largest delta from pre-2022</li><li>Plan financing or reserves to bridge the shock</li><li>Section 41 R&amp;D credit can offset 30-50% of the shock if claimed</li><li>Section 174A if enacted stops the bleeding going forward (but existing schedules continue)</li></ul>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +225,7 @@ export default function Section174AuditorFile06() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United States tax adviser for your personal situation.
+            Always consult a qualified US tax adviser for your personal situation.
             Based on IRS guidance April 2026.
           </p>
         </div>

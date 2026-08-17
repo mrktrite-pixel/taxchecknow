@@ -3,7 +3,36 @@
 // Product: allowance-sniper · File 04 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-allowance-sniper
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "allowance-sniper";
+const SLUG = "as-04";
+const FALLBACK_LABEL = { name: "Bonus Timing Around £125,140", desc: "How to time bonuses and irregular income to stay in the trap band (escapable) rather than crossing into additional rate territory." };
+const BODY = `<h2>Bonus Timing Strategy</h2><p>Above £125,140 the allowance is fully gone and the marginal rate drops from 60% to 45% (additional rate). You no longer face the taper — but you've permanently lost the £12,570 tax-free band.</p><h3>The Key Question</h3><p>Are you better off at £125,000 (in trap, recoverable via pension) or £135,000 (past trap, allowance gone)?</p><h3>Answer: Depends on Your Pension Capacity</h3><ul><li>If you can contribute enough pension to bring ANI to £100,000: STAY IN the trap range and contribute. Full allowance recovered.</li><li>If you cannot contribute to reach £100,000: CROSSING into additional rate may be cheaper because you only pay 45% on the top slice instead of 60%.</li></ul><h3>Practical Levers</h3><ul><li>Defer bonus to next tax year if timing helps</li><li>Request part of bonus as pension contribution</li><li>Take bonus as shares / LTIPs that vest later</li></ul>`;
+
 export default function AllowanceSniperFile04() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function AllowanceSniperFile04() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 YEAR END — ALLOWANCE LOST IF MISSED: 5 April 2027
-            </span>
-            <a href="/uk/check/allowance-sniper"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="YEAR END — ALLOWANCE LOST IF MISSED: 5 April 2027"
+            checkHref="/uk/check/allowance-sniper"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             60% Tax Trap Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Bonus Timing Around £125,140
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to time bonuses and irregular income to stay in the trap band (escapable) rather than crossing into additional rate territory.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function AllowanceSniperFile04() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Bonus Timing Strategy</h2><p>Above £125,140 the allowance is fully gone and the marginal rate drops from 60% to 45% (additional rate). You no longer face the taper — but you've permanently lost the £12,570 tax-free band.</p><h3>The Key Question</h3><p>Are you better off at £125,000 (in trap, recoverable via pension) or £135,000 (past trap, allowance gone)?</p><h3>Answer: Depends on Your Pension Capacity</h3><ul><li>If you can contribute enough pension to bring ANI to £100,000: STAY IN the trap range and contribute. Full allowance recovered.</li><li>If you cannot contribute to reach £100,000: CROSSING into additional rate may be cheaper because you only pay 45% on the top slice instead of 60%.</li></ul><h3>Practical Levers</h3><ul><li>Defer bonus to next tax year if timing helps</li><li>Request part of bonus as pension contribution</li><li>Take bonus as shares / LTIPs that vest later</li></ul>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +225,7 @@ export default function AllowanceSniperFile04() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United Kingdom tax adviser for your personal situation.
+            Always consult a qualified UK tax adviser for your personal situation.
             Based on HMRC guidance April 2026.
           </p>
         </div>

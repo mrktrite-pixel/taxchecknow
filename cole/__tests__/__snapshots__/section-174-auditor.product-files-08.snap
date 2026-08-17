@@ -3,7 +3,36 @@
 // Product: section-174-auditor · File 08 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts us-section-174-auditor
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "section-174-auditor";
+const SLUG = "s174-08";
+const FALLBACK_LABEL = { name: "Section 174A Preparedness Plan", desc: "How to structure your R&D operations to benefit if Section 174A is enacted." };
+const BODY = `<h2>Section 174A Preparedness Plan</h2><p>Proposed Section 174A under the One Big Beautiful Bill Act would restore immediate expensing of R&amp;D. Not yet enacted as of April 2026 — but worth preparing for.</p><h3>If Enacted — What Changes</h3><ul><li>R&amp;D costs immediately deductible in year incurred</li><li>Prospective from enactment date — not retroactive</li><li>Existing 2022-2024 amortization schedules continue on original timeline</li><li>New R&amp;D spend from enactment date onwards gets immediate expensing</li></ul><h3>If Not Enacted — Continue as Current</h3><p>The 2022 amendment remains in force. All planning from files 01-07 applies.</p><h3>Preparedness Actions (Low Risk, Work in Both Scenarios)</h3><ul class="checklist"><li>Clean Section 174 tracking — separate categorization in books</li><li>Section 41 credit claimed annually (stacks regardless)</li><li>Amend prior years if classified incorrectly (now, not after 174A)</li><li>Quarterly estimated tax reviews as legislative status evolves</li></ul><h3>Preparedness Actions (Only If 174A Enacted)</h3><ul class="checklist"><li>Consider accelerating R&amp;D spend into post-enactment period for immediate expensing</li><li>Pause any planned amendments until post-enactment window</li><li>Model cashflow with restored expensing vs ongoing amortization stacking</li></ul><h3>Monitoring</h3><p>Watch: Congressional calendar for OBBBA progress. Treasury/IRS implementation guidance once enacted. State-level conformity (some states have not conformed to the 2022 amendment — their treatment may differ).</p><p>Source: <a href="https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174">IRS — IRC §174</a> · Track legislative progress at <a href="https://www.congress.gov">Congress.gov</a>.</p>`;
+
 export default function Section174AuditorFile08() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function Section174AuditorFile08() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 FILING DEADLINE APPROACHING: April 15, 2026
-            </span>
-            <a href="/us/check/section-174-auditor"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="FILING DEADLINE APPROACHING: April 15, 2026"
+            checkHref="/us/check/section-174-auditor"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             R&D Tax Cashflow Shock Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Section 174A Preparedness Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to structure your R&D operations to benefit if Section 174A is enacted.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function Section174AuditorFile08() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Section 174A Preparedness Plan</h2><p>Proposed Section 174A under the One Big Beautiful Bill Act would restore immediate expensing of R&amp;D. Not yet enacted as of April 2026 — but worth preparing for.</p><h3>If Enacted — What Changes</h3><ul><li>R&amp;D costs immediately deductible in year incurred</li><li>Prospective from enactment date — not retroactive</li><li>Existing 2022-2024 amortization schedules continue on original timeline</li><li>New R&amp;D spend from enactment date onwards gets immediate expensing</li></ul><h3>If Not Enacted — Continue as Current</h3><p>The 2022 amendment remains in force. All planning from files 01-07 applies.</p><h3>Preparedness Actions (Low Risk, Work in Both Scenarios)</h3><ul class="checklist"><li>Clean Section 174 tracking — separate categorization in books</li><li>Section 41 credit claimed annually (stacks regardless)</li><li>Amend prior years if classified incorrectly (now, not after 174A)</li><li>Quarterly estimated tax reviews as legislative status evolves</li></ul><h3>Preparedness Actions (Only If 174A Enacted)</h3><ul class="checklist"><li>Consider accelerating R&amp;D spend into post-enactment period for immediate expensing</li><li>Pause any planned amendments until post-enactment window</li><li>Model cashflow with restored expensing vs ongoing amortization stacking</li></ul><h3>Monitoring</h3><p>Watch: Congressional calendar for OBBBA progress. Treasury/IRS implementation guidance once enacted. State-level conformity (some states have not conformed to the 2022 amendment — their treatment may differ).</p><p>Source: <a href="https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174">IRS — IRC §174</a> · Track legislative progress at <a href="https://www.congress.gov">Congress.gov</a>.</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +225,7 @@ export default function Section174AuditorFile08() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United States tax adviser for your personal situation.
+            Always consult a qualified US tax adviser for your personal situation.
             Based on IRS guidance April 2026.
           </p>
         </div>

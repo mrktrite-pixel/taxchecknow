@@ -3,7 +3,36 @@
 // Product: section-174-auditor · File 07 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts us-section-174-auditor
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "section-174-auditor";
+const SLUG = "s174-07";
+const FALLBACK_LABEL = { name: "Section 174 vs Ordinary Expense Classification", desc: "The classification audit that can reduce your amortization base by 15-30%." };
+const BODY = `<h2>Section 174 vs Ordinary Business Expense</h2><p>Not every engineering-related cost is a Section 174 expenditure. Proper classification can reduce the amortization base significantly.</p><h3>Section 174 (Amortize)</h3><ul><li>Direct development of products and processes</li><li>Elimination of technical uncertainty via experimentation</li><li>Software development for company products</li><li>Cloud computing DIRECTLY used for development/testing</li><li>Contractor payments for qualified research</li></ul><h3>Ordinary Business Expense (Immediately Deductible)</h3><ul><li>Routine software maintenance and bug fixes (NOT new development)</li><li>Customer support and operations (not engineering)</li><li>Cloud hosting for PRODUCTION (not development) environments</li><li>Administrative tools (project management, payroll, etc.)</li><li>Training and professional development (NOT learning for specific R&amp;D)</li><li>Pre-existing software purchases and subscriptions (not developed in-house)</li></ul><h3>Mixed Categories — Requires Allocation</h3><ul><li>Engineer wages: time spent on routine maintenance vs new development (typically 70-90% R&amp;D for pure product engineers)</li><li>Cloud compute: production vs development split (often 40-70% production)</li><li>IT infrastructure: split between development and operations</li></ul><h3>Documentation Standard</h3><p>For any Section 174 classification, maintain: (1) project descriptions showing qualifying technical uncertainty, (2) time allocation for mixed-function employees, (3) clear split between development and production infrastructure, (4) policies for routine software maintenance vs new development.</p>`;
+
 export default function Section174AuditorFile07() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function Section174AuditorFile07() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 FILING DEADLINE APPROACHING: April 15, 2026
-            </span>
-            <a href="/us/check/section-174-auditor"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="FILING DEADLINE APPROACHING: April 15, 2026"
+            checkHref="/us/check/section-174-auditor"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             R&D Tax Cashflow Shock Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Section 174 vs Ordinary Expense Classification
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The classification audit that can reduce your amortization base by 15-30%.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function Section174AuditorFile07() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Section 174 vs Ordinary Business Expense</h2><p>Not every engineering-related cost is a Section 174 expenditure. Proper classification can reduce the amortization base significantly.</p><h3>Section 174 (Amortize)</h3><ul><li>Direct development of products and processes</li><li>Elimination of technical uncertainty via experimentation</li><li>Software development for company products</li><li>Cloud computing DIRECTLY used for development/testing</li><li>Contractor payments for qualified research</li></ul><h3>Ordinary Business Expense (Immediately Deductible)</h3><ul><li>Routine software maintenance and bug fixes (NOT new development)</li><li>Customer support and operations (not engineering)</li><li>Cloud hosting for PRODUCTION (not development) environments</li><li>Administrative tools (project management, payroll, etc.)</li><li>Training and professional development (NOT learning for specific R&amp;D)</li><li>Pre-existing software purchases and subscriptions (not developed in-house)</li></ul><h3>Mixed Categories — Requires Allocation</h3><ul><li>Engineer wages: time spent on routine maintenance vs new development (typically 70-90% R&amp;D for pure product engineers)</li><li>Cloud compute: production vs development split (often 40-70% production)</li><li>IT infrastructure: split between development and operations</li></ul><h3>Documentation Standard</h3><p>For any Section 174 classification, maintain: (1) project descriptions showing qualifying technical uncertainty, (2) time allocation for mixed-function employees, (3) clear split between development and production infrastructure, (4) policies for routine software maintenance vs new development.</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +225,7 @@ export default function Section174AuditorFile07() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United States tax adviser for your personal situation.
+            Always consult a qualified US tax adviser for your personal situation.
             Based on IRS guidance April 2026.
           </p>
         </div>

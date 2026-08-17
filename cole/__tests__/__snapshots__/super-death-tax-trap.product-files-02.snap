@@ -3,7 +3,36 @@
 // Product: super-death-tax-trap · File 02 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts au-super-death-tax-trap
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "super-death-tax-trap";
+const SLUG = "sdtt-02";
+const FALLBACK_LABEL = { name: "Beneficiary Dependant Assessment", desc: "Who qualifies as a 'death benefits dependant' under ITAA 1997 s302-195 — and who doesn't." };
+const BODY = `<h2>Who is a 'Death Benefits Dependant'?</h2><table><tr><th>Relationship</th><th>Dependant Status</th><th>Tax on Taxable Component</th></tr><tr><td>Spouse (legal or de facto)</td><td>YES</td><td>0%</td></tr><tr><td>Former spouse</td><td>YES</td><td>0%</td></tr><tr><td>Child under 18</td><td>YES</td><td>0%</td></tr><tr><td>Adult child (18+, independent)</td><td>NO</td><td>17%</td></tr><tr><td>Financial dependant (provable)</td><td>YES</td><td>0%</td></tr><tr><td>Interdependency relationship (s302-200)</td><td>YES</td><td>0%</td></tr><tr><td>Grandchildren (if not a dependant)</td><td>NO</td><td>17%</td></tr><tr><td>Parents, siblings (usually)</td><td>NO</td><td>17%</td></tr></table><h3>Evidence Requirements for Financial Dependency</h3><p>The ATO has ruled that financial dependency is established where one person provides a better standard of living to another on a regular and continuing basis. Ad hoc support does not qualify. Formal arrangements (e.g. regular monthly payments, board) may.</p>`;
+
 export default function SuperDeathTaxTrapFile02() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -84,24 +113,19 @@ export default function SuperDeathTaxTrapFile02() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 DIV 296 COMMENCES 1 JULY 2026: 30 June 2026
-            </span>
-            <a href="/au/check/super-death-tax-trap"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="DIV 296 COMMENCES 1 JULY 2026: 30 June 2026"
+            checkHref="/au/check/super-death-tax-trap"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Super Death Tax Trap Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Beneficiary Dependant Assessment
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Who qualifies as a 'death benefits dependant' under ITAA 1997 s302-195 — and who doesn't.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function SuperDeathTaxTrapFile02() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Who is a 'Death Benefits Dependant'?</h2><table><tr><th>Relationship</th><th>Dependant Status</th><th>Tax on Taxable Component</th></tr><tr><td>Spouse (legal or de facto)</td><td>YES</td><td>0%</td></tr><tr><td>Former spouse</td><td>YES</td><td>0%</td></tr><tr><td>Child under 18</td><td>YES</td><td>0%</td></tr><tr><td>Adult child (18+, independent)</td><td>NO</td><td>17%</td></tr><tr><td>Financial dependant (provable)</td><td>YES</td><td>0%</td></tr><tr><td>Interdependency relationship (s302-200)</td><td>YES</td><td>0%</td></tr><tr><td>Grandchildren (if not a dependant)</td><td>NO</td><td>17%</td></tr><tr><td>Parents, siblings (usually)</td><td>NO</td><td>17%</td></tr></table><h3>Evidence Requirements for Financial Dependency</h3><p>The ATO has ruled that financial dependency is established where one person provides a better standard of living to another on a regular and continuing basis. Ad hoc support does not qualify. Formal arrangements (e.g. regular monthly payments, board) may.</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,7 +225,7 @@ export default function SuperDeathTaxTrapFile02() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Australia tax adviser for your personal situation.
+            Always consult a qualified Australian tax adviser for your personal situation.
             Based on ATO guidance April 2026.
           </p>
         </div>

@@ -3,7 +3,36 @@
 // Product: frcgw-clearance-certificate · File 05 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts au-frcgw-clearance-certificate
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "frcgw-clearance-certificate";
+const SLUG = "frcgw-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "The questions worth asking, and the ones you can skip." };
+const BODY = `<div class="info-box">Most sellers do not need an accountant for the clearance certificate itself — the form is short, free, and you can lodge it yourself. These are the questions worth asking if you are already speaking to one, or if one of the situations below applies to you.</div>{{#if section:residency_first}}<div class="action-box"><h3>Ask this first</h3><p>"Am I an Australian resident for tax purposes for this sale?"</p><p><strong>Why:</strong> it decides which instrument you lodge — a clearance certificate if you are, a variation notice if you are not. You have told us this is unconfirmed, which makes it the only question that needs answering before anything else can be.</p></div>{{/if}}<h3>Question 1</h3><p>"Will I have capital gains tax to pay on this sale, and roughly how much?"</p><p><strong>Why:</strong> the withholding is 15% of the <em>sale price</em>, while your actual tax is on the <em>gain</em>. Knowing the gap tells you whether the withholding would be a cash-flow issue or roughly what you owe anyway. If the property is your main residence for the whole period you owned it, the answer may be nothing — but you still need the certificate.</p><h3>Question 2</h3><p>"Does the name on my title need anything done before I apply?"</p><p><strong>Why:</strong> trustee capacity, a former name, a deceased estate or a company suffix are the situations where the name on the certificate and the name on the title come apart. An accountant or conveyancer will spot it in a minute; settlement is the wrong place to find out.</p><h3>Question 3</h3><p>"Which income year does this sale fall in for my return?"</p><p><strong>Why:</strong> the capital gains event is the <strong>contract date</strong>, not the settlement date. That also decides which year's return carries any withholding credit. A contract signed in June and settled in August sits in the earlier income year.</p>{{#if section:recovery}}<h3>Also ask — an amount was withheld</h3><p>"An amount was withheld at settlement — when do I get it back and how much?"</p><p><strong>Why:</strong> the amount was remitted to the ATO and is credited to you in the return for the income year the contract was signed. Your accountant can tell you what that return will look like and roughly when the refund lands. See File 07.</p>{{/if}}{{#if section:variation}}<h3>Also ask — foreign resident</h3><p>"Do I have grounds for a variation notice, and at what rate?"</p><p><strong>Why:</strong> a variation can set the rate between 0% and 14.99%, but only on real grounds — no gain, a reduced liability or losses, or a mortgagee taking most of the proceeds. This is the question where a cross-border accountant genuinely earns their fee. See File 08.</p>{{/if}}{{#if section:per_vendor}}<h3>Also worth asking</h3><p>"We are co-owners — is the split on the title what we both think it is?"</p><p><strong>Why:</strong> the withholding on a missing certificate is 15% of <em>that owner's share</em>, so the ownership split decides the amount. Worth confirming before settlement rather than after.</p>{{/if}}`;
+
 export default function FrcgwClearanceCertificateFile05() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -62,9 +91,9 @@ export default function FrcgwClearanceCertificateFile05() {
       {/* FILE NAV BAR */}
       <div className="no-print border-b border-neutral-100 bg-neutral-50 px-4 py-2">
         <div className="mx-auto flex max-w-3xl items-center justify-between text-xs text-neutral-500">
-          <div><a href="/files/au/frcgw-clearance-certificate/frcgw-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 04: Residency Evidence Checklist</a></div>
+          <div><a href="/files/au/frcgw-clearance-certificate/frcgw-04" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">← File 04: Details To Have Ready</a></div>
           <span className="font-mono">File 05 of 8</span>
-          <div><a href="/files/au/frcgw-clearance-certificate/frcgw-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 06: Full Pre-Settlement Execution Plan →</a></div>
+          <div><a href="/files/au/frcgw-clearance-certificate/frcgw-06" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File 06: Your Pre-Settlement Plan →</a></div>
         </div>
       </div>
 
@@ -74,7 +103,7 @@ export default function FrcgwClearanceCertificateFile05() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 ATO · TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments
+              🇦🇺 ATO · TAA 1953 Schedule 1 Subdivision 14-D — Foreign Resident Capital Gains Withholding Payments
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: April 2026
@@ -84,24 +113,19 @@ export default function FrcgwClearanceCertificateFile05() {
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 CERTIFICATE MUST ARRIVE BEFORE SETTLEMENT: Settlement Date (Critical)
-            </span>
-            <a href="/au/check/frcgw-clearance-certificate"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="Your certificate needs to reach the purchaser before settlement"
+            checkHref="/au/check/frcgw-clearance-certificate"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Foreign Resident CGT Withholding Clearance Certificate · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">4 questions to ask your accountant before settlement.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +138,7 @@ export default function FrcgwClearanceCertificateFile05() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<div class="info-box">Ask these at your pre-settlement review — not the day before settlement.</div><div class="action-box"><h3>Question 1</h3><p>"What is my residency status for tax purposes — Australian tax resident, foreign resident, or something else?"</p><p><strong>Why:</strong> This determines the certificate application type (standard vs variation) and processing time.</p></div><h3>Question 2</h3><p>"What residency evidence do you need from me, and should I assemble it now before we apply?"</p><p><strong>Why:</strong> Complete applications process faster. Missing evidence causes delays.</p><h3>Question 3</h3><p>"When will you apply for the certificate, and what is your expected timeline to ATO approval?"</p><p><strong>Why:</strong> You need to know when to expect the certificate so you can confirm arrival with the buyer's solicitor before settlement.</p><h3>Question 4</h3><p>"If the certificate does not arrive before settlement and the buyer withholds, what is the refund path and timeline?"</p><p><strong>Why:</strong> Understand exactly when you will see the $135,000+ if withholding happens. Plan your cash flow accordingly.</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -130,7 +151,7 @@ export default function FrcgwClearanceCertificateFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">01</span>
-                <span className="text-sm font-semibold text-neutral-950">Your Withholding Exposure & Certificate Status</span>
+                <span className="text-sm font-semibold text-neutral-950">Your Withholding Position</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -139,7 +160,7 @@ export default function FrcgwClearanceCertificateFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">02</span>
-                <span className="text-sm font-semibold text-neutral-950">ATO Clearance Certificate — Application Process</span>
+                <span className="text-sm font-semibold text-neutral-950">Applying For Your Clearance Certificate</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -148,7 +169,7 @@ export default function FrcgwClearanceCertificateFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">03</span>
-                <span className="text-sm font-semibold text-neutral-950">Settlement-Day Buyer Instruction Template</span>
+                <span className="text-sm font-semibold text-neutral-950">What To Send The Purchaser's Side</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -157,7 +178,7 @@ export default function FrcgwClearanceCertificateFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">04</span>
-                <span className="text-sm font-semibold text-neutral-950">Residency Evidence Checklist</span>
+                <span className="text-sm font-semibold text-neutral-950">Details To Have Ready</span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -174,7 +195,7 @@ export default function FrcgwClearanceCertificateFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">06</span>
-                <span className="text-sm font-semibold text-neutral-950">Full Pre-Settlement Execution Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Your Pre-Settlement Plan<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -183,7 +204,7 @@ export default function FrcgwClearanceCertificateFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">07</span>
-                <span className="text-sm font-semibold text-neutral-950">Certificate-Misses-Settlement Recovery Path<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Recovering A Withheld Amount<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -192,7 +213,7 @@ export default function FrcgwClearanceCertificateFile05() {
               className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3 transition hover:border-neutral-300">
               <div className="flex items-center">
                 <span className="mr-2 font-mono text-xs font-bold text-neutral-500">08</span>
-                <span className="text-sm font-semibold text-neutral-950">Foreign Resident Variation Application<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
+                <span className="text-sm font-semibold text-neutral-950">Foreign Resident Variation Notice<span className="ml-2 font-mono text-[9px] uppercase tracking-widest text-blue-400">Plan only</span></span>
               </div>
               <span className="font-mono text-xs text-neutral-500">Open →</span>
             </a>
@@ -204,7 +225,7 @@ export default function FrcgwClearanceCertificateFile05() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
+            Always consult a qualified Australian tax adviser for your personal situation.
             Based on ATO guidance April 2026.
           </p>
         </div>

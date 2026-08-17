@@ -22,7 +22,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import EngineVerdictPanel from "@/app/_components/EngineVerdictPanel";
 import EngineQualPopup from "@/app/_components/EngineQualPopup";
 import EngineSellPopup from "@/app/_components/EngineSellPopup";
-import { resolveTerminalFigures, type EngineConfidence, type EngineFigure } from "@/app/_components/engine-terms";
+import { isHedge, resolveTerminalFigures, type EngineConfidence, type EngineFigure } from "@/app/_components/engine-terms";
+import { formatIsoDate, parseIsoDate } from "@/lib/buyer-context";
 import {
   altTier,
   bridgeCopyFor,
@@ -51,8 +52,41 @@ import {
 
 // ── v2 engine contract (permissive — extra fields tolerated) ─────────────────
 export interface FlagExpr { all?: string[]; any?: string[]; none?: string[] }
-export interface EngineOption { label: string; value: string; flags?: string[]; sub_label?: string; subLabel?: string }
-export interface EngineQuestion { id: string; text: string; criticality?: string; sub_label?: string; showIf?: FlagExpr; options: EngineOption[] }
+export interface EngineOption {
+  label: string;
+  value: string;
+  flags?: string[];
+  sub_label?: string;
+  subLabel?: string;
+  /**
+   * E1 — explicit "this answer is a hedge" marker. Authoritative when present; when absent
+   * the renderer falls back to reading the label/value text (see isHedgeOption below).
+   * Authoring it explicitly is preferred: it survives copy edits that reword "I'm not sure".
+   */
+  unsure?: boolean;
+}
+export interface EngineQuestion {
+  id: string;
+  text: string;
+  criticality?: string;
+  sub_label?: string;
+  showIf?: FlagExpr;
+  /**
+   * E3 — "options" (default) renders the option grid. "date" renders a real date input plus
+   * a skip control, for the case where a genuine calendar date exists and only the customer
+   * can supply it. A date question's answer VALUE is the ISO date itself, so it flows into
+   * decision_sessions.output.raw_answers under the question id and can be resolved by
+   * lib/temporal-resolver.ts's user_supplied rule with no extra plumbing.
+   */
+  type?: "options" | "date";
+  /** date only — flags emitted when a real date is given. */
+  dateFlags?: string[];
+  /** date only — label + flags for the "I don't have one" control. Omit to force an answer. */
+  skip?: { label: string; value: string; flags?: string[]; unsure?: boolean };
+  /** date only — reject dates before today (a settlement date in the past is a mis-entry). */
+  minToday?: boolean;
+  options?: EngineOption[];
+}
 export interface EngineTerminalDef {
   id: string;
   when?: FlagExpr;
@@ -79,7 +113,7 @@ export interface EngineTerminal { kind: "menu" | "escape"; id: string; label: st
 export interface EngineCompletion { answers: Record<string, string>; terminal: EngineTerminal; confidence: EngineConfidence | null; statFigures: EngineFigure[] }
 export interface EngineCheckout { sessionId: string | null; terminal: EngineTerminal; tier: number; price: number; answers: Record<string, string>; qualification: Record<string, string> }
 
-interface TrailEntry { qId: string; value: string; label: string; flags: string[] }
+interface TrailEntry { qId: string; value: string; label: string; flags: string[]; unsure: boolean }
 
 // ── flag evaluation ──────────────────────────────────────────────────────────
 export function matchExpr(expr: FlagExpr | undefined, flags: Set<string>): boolean {
@@ -89,10 +123,77 @@ export function matchExpr(expr: FlagExpr | undefined, flags: Set<string>): boole
   if (expr.none && expr.none.some((f) => flags.has(f))) return false;
   return true;
 }
+
+/**
+ * E1 — is this option a hedge ("I'm not sure", "I don't know")?
+ *
+ * THE BUG THIS REPLACES. The old test was `flag.startsWith("unsure:")`, which assumed a flag
+ * NAMESPACE no engine has ever used. Every engine namespaces its flags by QUESTION ID —
+ * `q4_residency:unsure_residency`, `q2_availability:unsure_availability`,
+ * `q1_scope:unsure_scope` — so the prefix never matched and `any_unsure` was never set,
+ * in ANY product. Measured across all six engine-native products: all six ship "not sure"
+ * options and none of them could ever raise the flag. Consequences: the confidence badge
+ * read "HIGH" on a path whose defining answer was "I'm not sure about my tax residency
+ * status", and the $147→$67 demotion for an unconfirmed position could never fire.
+ *
+ * The replacement reads the ANSWER, not the flag string:
+ *   1. an explicit `unsure` on the option — authoritative IN BOTH DIRECTIONS, else
+ *   2. isHedge(value, label) from engine-terms — the same matcher deriveConfidence() has
+ *      always used, so the two agree by construction instead of by coincidence.
+ * Both are namespace-independent, so this fixes every product at once and cannot re-break
+ * when the next engine picks a different flag naming convention.
+ *
+ * WHY `unsure: false` HAS TO OVERRIDE THE TEXT MATCH. isHedge() looks for "not sure",
+ * "unsure", "don't know" anywhere in the label, and some perfectly decisive answers contain
+ * those words. FRCGW's own q2_knowledge option 1 is "I don't know what a clearance
+ * certificate is or why I need one" — a statement about what the seller KNOWS, not doubt
+ * about their facts. It routes straight to the explainer dish, where the position is fully
+ * determined and the confidence is legitimately HIGH. Text-matching alone would have
+ * downgraded it, trading the old always-HIGH bug for a new sometimes-wrongly-MEDIUM one.
+ * So an author can assert either answer, and only an unmarked option is guessed at.
+ */
+function isHedgeOption(o: { value: string; label: string; unsure?: boolean }): boolean {
+  if (typeof o.unsure === "boolean") return o.unsure;
+  return isHedge(o.value, o.label);
+}
+
+/** ISO "YYYY-MM-DD" or null. Never coerces — an unparseable value is not a date. */
+function isoOrNull(s: string): string | null {
+  return parseIsoDate(s) ? s : null;
+}
+
+/**
+ * E3 — the trail entry for a date question, from whatever is stored for it.
+ * A real date carries `dateFlags` and is NOT a hedge; the skip control carries its own
+ * flags and IS treated as a hedge by default (an unknown settlement date genuinely is one).
+ */
+function dateTrailEntry(q: EngineQuestion, stored: string): TrailEntry | null {
+  const iso = isoOrNull(stored);
+  if (iso) {
+    return {
+      qId: q.id,
+      value: iso,
+      label: formatIsoDate(iso),
+      flags: q.dateFlags ?? [`${q.id}:provided`],
+      unsure: false,
+    };
+  }
+  if (q.skip && stored === q.skip.value) {
+    return {
+      qId: q.id,
+      value: q.skip.value,
+      label: q.skip.label,
+      flags: q.skip.flags ?? [`${q.id}:${q.skip.value}`],
+      unsure: q.skip.unsure ?? true,
+    };
+  }
+  return null;
+}
+
 function computeFlags(trail: TrailEntry[], derived: DerivedFlag[]): Set<string> {
   const f = new Set<string>();
   for (const t of trail) for (const fl of t.flags ?? []) f.add(fl);
-  if ([...f].some((x) => x.startsWith("unsure:"))) f.add("any_unsure"); // generic, domain-free
+  if (trail.some((t) => t.unsure)) f.add("any_unsure"); // generic, domain-free
   for (const d of derived) if (matchExpr(d.when, f)) f.add(d.name);      // engine-defined derived
   return f;
 }
@@ -127,6 +228,7 @@ export default function EngineCalculator({
 
   const [trail, setTrail] = useState<TrailEntry[]>([]);
   const [pending, setPending] = useState<string | null>(null);
+  const [dateDraft, setDateDraft] = useState("");
 
   // ── session / tier / popup / email state ──
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -165,7 +267,14 @@ export default function EngineCalculator({
   // still-unanswered question). So M narrows as gates are ruled out (PR/unsure → fewer).
   const remainingDepth = useMemo(() => {
     const achievable = new Set(flags);
-    for (const q of questions) if (!answeredIds.has(q.id)) for (const o of q.options ?? []) for (const fl of o.flags ?? []) achievable.add(fl);
+    for (const q of questions) {
+      if (answeredIds.has(q.id)) continue;
+      for (const o of q.options ?? []) for (const fl of o.flags ?? []) achievable.add(fl);
+      // E3 — a date question emits flags too; omitting them made every question gated on a
+      // date answer look unreachable, under-counting the step total.
+      for (const fl of q.dateFlags ?? []) achievable.add(fl);
+      for (const fl of q.skip?.flags ?? []) achievable.add(fl);
+    }
     const couldShow = (q: EngineQuestion): boolean => {
       const s = q.showIf;
       if (!s) return true;
@@ -236,9 +345,19 @@ export default function EngineCalculator({
       const f = computeFlags(t, derived);
       const q = questions.find((x) => matchExpr(x.showIf, f) && !answered.has(x.id));
       if (!q) break;
-      const o = (q.options ?? []).find((x) => x.value === raw[q.id]);
+      const stored = raw[q.id];
+      if (q.type === "date") {
+        // A date question's stored value is either the ISO date itself or the skip value.
+        if (!stored) break;
+        const entry = dateTrailEntry(q, stored);
+        if (!entry) break;
+        t.push(entry);
+        answered.add(q.id);
+        continue;
+      }
+      const o = (q.options ?? []).find((x) => x.value === stored);
       if (!o) break;
-      t.push({ qId: q.id, value: o.value, label: o.label, flags: o.flags ?? [] });
+      t.push({ qId: q.id, value: o.value, label: o.label, flags: o.flags ?? [], unsure: isHedgeOption(o) });
       answered.add(q.id);
     }
     return t;
@@ -296,6 +415,13 @@ export default function EngineCalculator({
       sessionStorage.setItem(`${slug}_status`, terminal.heading);
       sessionStorage.setItem(`${slug}_tier`, String(tierInfo.tier));
       if (terminal.confidence) sessionStorage.setItem(`${slug}_confidence`, terminal.confidence.level);
+      // R1/R2 — the raw answers and the computed flag set. The success pages and the
+      // templated documents need the MACHINE values (question id → option value, plus the
+      // flag set) to bind and to branch; `_answers` alone is prose keyed by question text
+      // and cannot drive a conditional. Written alongside the existing keys, never instead
+      // of them, so anything already reading `_answers` is untouched.
+      sessionStorage.setItem(`${slug}_raw`, JSON.stringify(answers));
+      sessionStorage.setItem(`${slug}_flags`, JSON.stringify([...flags]));
     } catch { /* ignore */ }
     fetch("/api/decision-sessions", {
       method: "POST",
@@ -318,7 +444,7 @@ export default function EngineCalculator({
       .then((r) => r.json())
       .then((d) => { if (d?.id) { setSessionId(d.id); setPinnedTier(tierInfo); } })
       .catch(() => {});
-  }, [hydrated, monetizable, terminal, tierInfo, config, sessionId, answers, labeledAnswers]);
+  }, [hydrated, monetizable, terminal, tierInfo, config, sessionId, answers, labeledAnswers, flags]);
 
   function openPopup(t: PinnedTier) { setPopupTier(t); setPopupStage(1); }
   function closePopup() { setPopupStage(0); }
@@ -380,14 +506,28 @@ export default function EngineCalculator({
     setPending(o.value);
     const qid = currentQ.id;
     window.setTimeout(() => {
-      setTrail((prev) => [...prev, { qId: qid, value: o.value, label: o.label, flags: o.flags ?? [] }]);
+      setTrail((prev) => [...prev, { qId: qid, value: o.value, label: o.label, flags: o.flags ?? [], unsure: isHedgeOption(o) }]);
       setPending(null);
+    }, 220);
+  }
+
+  /** E3 — commit a date question: a real ISO date, or its skip value. */
+  function commitDate(q: EngineQuestion, stored: string) {
+    if (pending) return;
+    const entry = dateTrailEntry(q, stored);
+    if (!entry) return;
+    setPending(stored);
+    window.setTimeout(() => {
+      setTrail((prev) => [...prev, entry]);
+      setPending(null);
+      setDateDraft("");
     }, 220);
   }
   function back() {
     if (!trail.length) return;
     const wasTerminal = !currentQ;
     setPending(null);
+    setDateDraft("");
     setTrail((t) => t.slice(0, -1));
     firedFor.current = null;
     if (wasTerminal) clearSession();
@@ -426,6 +566,38 @@ export default function EngineCalculator({
           </div>
           <h2 className="mb-1 text-[21px] font-semibold leading-snug text-[#0F172A]">{currentQ.text}</h2>
           {currentQ.sub_label && <p className="mb-4 text-[13px] text-[#64748B]">{currentQ.sub_label}</p>}
+          {/* E3 — DATE QUESTION. A real calendar input, with an explicit way out. The skip is
+              first-class, not a nag: an unscheduled settlement is a legitimate answer, and
+              forcing a date would manufacture exactly the fake precision this exists to avoid. */}
+          {currentQ.type === "date" ? (
+            <div className="mt-4">
+              <label className="block">
+                <span className="sr-only">{currentQ.text}</span>
+                <input
+                  type="date"
+                  value={dateDraft}
+                  min={currentQ.minToday ? new Date().toISOString().split("T")[0] : undefined}
+                  onChange={(e) => setDateDraft(e.target.value)}
+                  className="min-h-[56px] w-full rounded-2xl border border-[#E2E8F0] bg-white px-4 text-[16px] text-[#0F172A] outline-none transition-colors focus-visible:border-[#2563EB] focus-visible:ring-2 focus-visible:ring-[#2563EB] motion-reduce:transition-none"
+                />
+              </label>
+              <button
+                onClick={() => commitDate(currentQ, dateDraft)}
+                disabled={!parseIsoDate(dateDraft)}
+                className="mt-3 w-full rounded-xl bg-[#0B1F44] py-4 text-[16px] font-semibold text-white transition-colors hover:bg-[#132F62] disabled:cursor-not-allowed disabled:bg-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 motion-reduce:transition-none"
+              >
+                Continue →
+              </button>
+              {currentQ.skip && (
+                <button
+                  onClick={() => commitDate(currentQ, currentQ.skip!.value)}
+                  className="mt-3 w-full rounded-xl border border-[#E2E8F0] bg-white py-3 text-[14px] font-medium text-[#64748B] transition-colors hover:border-[#2563EB]/40 hover:text-[#0F172A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 motion-reduce:transition-none"
+                >
+                  {currentQ.skip.label}
+                </button>
+              )}
+            </div>
+          ) : (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {(currentQ.options ?? []).map((o) => {
               const selected = pending === o.value || (pending === null && prevValue === o.value);
@@ -444,6 +616,7 @@ export default function EngineCalculator({
               );
             })}
           </div>
+          )}
         </div>
       </div>
     );
