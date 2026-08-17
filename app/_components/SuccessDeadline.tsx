@@ -23,6 +23,7 @@ import type { BuyerContext } from "@/lib/buyer-context";
 import { daysUntilIso } from "@/lib/buyer-context";
 import {
   getTerminalPresentation,
+  isPastSettlement,
   resolveCalendar,
   type ResolvedCalendarEvent,
   type StripTone,
@@ -102,6 +103,25 @@ export default function SuccessDeadline({
   const settlementIso = ctx?.values.settlement_date_iso;
   const daysToSettlement = settlementIso ? daysUntilIso(settlementIso) : null;
 
+  // ── P1 — "you did not give us a settlement date" is a PRE-settlement sentence ──────────
+  //
+  // Measured on a live $147 recovery buy (17 Aug 2026, c0a51e9): a buyer whose settlement had
+  // already passed was told "You did not give us a settlement date, so these are sequenced
+  // rather than dated — and anything that could only be timed from your settlement is left out
+  // rather than guessed." Nothing false, but there was never a date for him to give and nothing
+  // was left out for want of one; it reads as an omission on his part that cost him content.
+  //
+  // Exactly the class D14 fixed for the labels, and the last surface still reading the wrong
+  // bag: the note was gated on `!settlementIso` alone while every other conditional on the page
+  // branches on the terminal. Same merged set here (terminalFlags), so this note and the File 01
+  // / File 06 "Your dates" blocks — already {{#unless state:settled}}-guarded — cannot disagree.
+  //
+  // OMISSION ONLY, never a substitute assertion: the suppress: doctrine. All four past-settlement
+  // terminals carry state:settled (the three no-certificate-* and certificate-provided), so
+  // state:settled alone would do it; section:recovery is kept because that is what the sentence
+  // is actually wrong ABOUT, and a future recovery terminal must not have to remember this file.
+  const settlementIsBehindThem = isPastSettlement(productId, ctx);
+
   function download() {
     const blob = new Blob([buildIcs(productName, events)], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -158,7 +178,7 @@ export default function SuccessDeadline({
           <h2 className="mb-4 font-serif text-lg font-bold text-neutral-950">
             {settlementIso ? "Your dates — add them now" : "What to do, and when"}
           </h2>
-          {!settlementIso && (
+          {!settlementIso && !settlementIsBehindThem && (
             <p className="mb-3 text-xs text-neutral-500">
               You did not give us a settlement date, so these are sequenced rather than dated — and anything
               that could only be timed from your settlement is left out rather than guessed.

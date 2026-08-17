@@ -478,6 +478,25 @@ export function terminalFlags(
   return [...new Set([...(ctx?.flags ?? []), ...docFlags])];
 }
 
+/**
+ * D16-P1 — "is the event this pack is timed around already behind them?"
+ *
+ * A predicate rather than an inline flag check in one component, for the reason W4 exists:
+ * the moment two surfaces each decide this for themselves, one of them reads the wrong bag
+ * or forgets a flag. It reads terminalFlags, so it agrees with the {{#if}} sections and the
+ * D14 labels by construction.
+ *
+ * A product with no state:settled / section:recovery terminal always gets false, so every
+ * unmapped product behaves exactly as it did before this function existed.
+ */
+export function isPastSettlement(
+  productId: string,
+  ctx: { terminalId?: string | null; flags?: string[] } | null | undefined,
+): boolean {
+  const flags = terminalFlags(productId, ctx);
+  return flags.includes("state:settled") || flags.includes("section:recovery");
+}
+
 // ── rendering helpers ─────────────────────────────────────────────────────────────────
 
 export interface ResolvedCalendarEvent {

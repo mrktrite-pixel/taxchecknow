@@ -1372,3 +1372,196 @@ test("frcgw-rebuild · D14 · the prompt makes naming a delivered conflict manda
   // and it is conditional — a buyer with no conflict must not see the block.
   t.assert.match(core, /\$\{conflicts\.length \?/, "the mandate is unconditional");
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// D16 — the two findings from the 17 Aug Peter audit, plus the P3 phrasing rule.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const UNDATED_NOTE = "You did not give us a settlement date, so these are sequenced rather than dated";
+
+test("frcgw-rebuild · D16-P1 · the undated note is suppressed on exactly the past-settlement terminals", (t) => {
+  const { isPastSettlement, TERMINAL_PRESENTATION } =
+    req(path.join(REPO, "lib", "terminal-presentation.ts"));
+
+  // ENUMERATED, not named: every terminal the product ships, classified by the real predicate.
+  const ids = Object.keys(TERMINAL_PRESENTATION[PRODUCT]);
+  t.assert.ok(ids.length >= 15, `only ${ids.length} terminals enumerated — the map shrank`);
+
+  const suppressed: string[] = [];
+  const shown: string[] = [];
+  for (const id of ids) {
+    const ctx = buildBuyerContext({ productId: PRODUCT, terminalId: id, maze: {}, qualification: {} });
+    (isPastSettlement(PRODUCT, ctx) ? suppressed : shown).push(id);
+  }
+
+  // The four whose settlement is behind them. Derived from the shipped flags, then asserted by
+  // name so that adding a recovery terminal without thinking about this file fails here.
+  t.assert.deepStrictEqual(suppressed.sort(), [
+    "certificate-provided-no-withholding",
+    "no-certificate-non-resident",
+    "no-certificate-resident",
+    "no-certificate-unsure-residency",
+  ], "the set of past-settlement terminals changed");
+
+  // Everyone else is still pre-settlement and must still be told why their pack is undated.
+  for (const id of shown) {
+    const flags = req(path.join(REPO, "lib", "terminal-presentation.ts"))
+      .terminalFlags(PRODUCT, { terminalId: id });
+    t.assert.ok(!flags.includes("state:settled") && !flags.includes("section:recovery"),
+      `${id}: shown the pre-settlement note but its flags say settlement is past`);
+  }
+  t.assert.ok(shown.length >= 11, `only ${shown.length} pre-settlement terminals — expected 11+`);
+});
+
+test("frcgw-rebuild · D16-P1 · the strip's note is guarded by that predicate, not by the date alone", (t) => {
+  const src = fs.readFileSync(path.join(REPO, "app", "_components", "SuccessDeadline.tsx"), "utf8");
+
+  // Exactly one copy of the sentence, so there is no second unguarded one.
+  const hits = src.split(UNDATED_NOTE).length - 1;
+  t.assert.strictEqual(hits, 1, `the undated note appears ${hits} times in SuccessDeadline`);
+
+  // It is inside a conditional that consults the terminal, not just the date. The pre-fix guard
+  // was `{!settlementIso && (` — that exact form must no longer wrap it.
+  const guard = /\{!settlementIso && ([^(]*)\(/.exec(src);
+  t.assert.ok(guard, "the undated note is no longer behind a !settlementIso conditional at all");
+  t.assert.match(guard![1], /!settlementIsBehindThem/,
+    "the undated note renders on a date check alone — a settled buyer sees it again");
+
+  // And that variable comes from the shared predicate, not a local re-derivation of the flags.
+  t.assert.match(src, /const settlementIsBehindThem = isPastSettlement\(productId, ctx\)/,
+    "the guard re-derives the flags locally instead of using isPastSettlement");
+  t.assert.ok(!/flags\.includes\("state:settled"\)/.test(src),
+    "SuccessDeadline reads the flag bag itself — that is how the D10 heading bug happened");
+});
+
+test("frcgw-rebuild · D16-P1 · both success pages get the fix, and the documents already had it", (t) => {
+  // The component is the ONE surface both pages use for this block, so proving they route
+  // through it proves the fix applies to both. Asserted rather than assumed.
+  for (const page of ["assess", "plan"]) {
+    const src = fs.readFileSync(
+      path.join(REPO, "app", "au", "check", PRODUCT, "success", page, "page.tsx"), "utf8");
+    t.assert.match(src, /<SuccessDeadline/, `success/${page} does not render SuccessDeadline`);
+    t.assert.ok(!src.includes(UNDATED_NOTE),
+      `success/${page} carries its own copy of the undated note, outside the guard`);
+  }
+
+  // The documents' equivalents were already {{#unless state:settled}}-guarded (D9/W6). Confirm,
+  // so P1 cannot be "fixed" on the strip while a document quietly regresses.
+  for (const [slug, doc] of Object.entries(docs) as Array<[string, { content: string }]>) {
+    if (!/did not give us a settlement date/i.test(doc.content)) continue;
+    const rendered = renderDocTemplate(doc.content, {
+      flags: req(path.join(REPO, "lib", "terminal-presentation.ts"))
+        .terminalFlags(PRODUCT, { terminalId: "no-certificate-resident" }),
+      values: {},
+    });
+    t.assert.ok(!/did not give us a settlement date/i.test(rendered),
+      `${slug}: renders the undated note to a settled buyer`);
+  }
+});
+
+test("frcgw-rebuild · D16-P1 · unmapped products are untouched by the predicate", (t) => {
+  const { isPastSettlement, TERMINAL_PRESENTATION } =
+    req(path.join(REPO, "lib", "terminal-presentation.ts"));
+  for (const other of Object.keys(TERMINAL_PRESENTATION).filter((p) => p !== PRODUCT)) {
+    for (const id of Object.keys(TERMINAL_PRESENTATION[other])) {
+      const flags = req(path.join(REPO, "lib", "terminal-presentation.ts")).terminalFlags(other, { terminalId: id });
+      const past = flags.includes("state:settled") || flags.includes("section:recovery");
+      t.assert.strictEqual(isPastSettlement(other, { terminalId: id }), past, `${other}/${id}`);
+    }
+  }
+  // No context at all — the shared/unknown case — must never suppress.
+  t.assert.strictEqual(isPastSettlement("some-unmapped-product", null), false);
+  t.assert.strictEqual(isPastSettlement(PRODUCT, null), false);
+});
+
+test("frcgw-rebuild · D16-P2 · 'Sold — waiting on settlement' contradicts a settled maze answer", (t) => {
+  const SETTLED_MAZE = "Settlement has passed and I did not provide a clearance certificate";
+  const PROVIDED_MAZE = "I have a clearance certificate and provided it to the purchaser at or before settlement";
+  const WAITING = "Sold — waiting on settlement";
+  const Q = "What best describes where you are in the clearance certificate process?";
+
+  for (const [maze, id] of [[SETTLED_MAZE, "settlement_passed_vs_upcoming"],
+                            [PROVIDED_MAZE, "certificate_provided_vs_upcoming"]] as Array<[string, string]>) {
+    const c = detectConflicts(PRODUCT, { [Q]: maze }, { "What is your situation?": WAITING });
+    t.assert.strictEqual(c.length, 1, `${id}: the situation answer alone produced ${c.length} notes`);
+    t.assert.strictEqual(c[0].id, id);
+    t.assert.match(c[0].contradicting, /Sold/, "the note does not quote the contradicting answer");
+    t.assert.strictEqual(c[0].authoritative, `${Q} → ${maze}`, "the maze answer is not the authoritative one");
+  }
+
+  // THE REGRESSION THIS GUARDS. Peter's live buy answered BOTH the situation and the timing
+  // wrongly. One disagreement must stay ONE note — a second rule with the same mazeMatches
+  // would emit two, and D14 requires every one of them be named in the first two sentences.
+  const both = detectConflicts(PRODUCT,
+    { [Q]: SETTLED_MAZE },
+    { "What is your situation?": WAITING, "How close is settlement?": "Within a month" });
+  t.assert.strictEqual(both.length, 1,
+    `two qual answers disagreeing about the same fact produced ${both.length} notes`);
+  t.assert.strictEqual(both[0].id, "settlement_passed_vs_upcoming");
+});
+
+test("frcgw-rebuild · D16-P2 · the widened rules invent no new false positives", (t) => {
+  const Q = "What best describes where you are in the clearance certificate process?";
+  const SIT = "What is your situation?";
+  // Pairs that are COMPATIBLE and must stay silent. "Sold — waiting on settlement" against a
+  // maze answer that does NOT claim a completed settlement is ordinary, not contradictory.
+  const compatible: Array<[string, string]> = [
+    ["I know what it is, but I haven't applied yet and want to know when to apply", "Sold — waiting on settlement"],
+    ["I have already applied and my application is still pending", "Sold — waiting on settlement"],
+    ["I don't know what a clearance certificate is or why I need one", "Sold — waiting on settlement"],
+    ["Yes, I am selling or about to sell Australian real property", "Sold — waiting on settlement"],
+    ["Settlement has passed and I did not provide a clearance certificate", "Selling an Australian property now"],
+  ];
+  for (const [maze, sit] of compatible) {
+    const c = detectConflicts(PRODUCT, { [Q]: maze }, { [SIT]: sit });
+    t.assert.strictEqual(c.length, 0,
+      `false positive: "${maze.slice(0, 40)}…" vs "${sit}" → ${c.map((x) => x.id).join(",")}`);
+  }
+  // And the agreeing case still says nothing.
+  t.assert.strictEqual(
+    detectConflicts(PRODUCT,
+      { [Q]: "Settlement has passed and I did not provide a clearance certificate" },
+      { "How close is settlement?": "Already settled" }).length, 0);
+});
+
+test("frcgw-rebuild · D16-P2 · every qualification situation answer is classified, none left silent by accident", (t) => {
+  const { CONFLICT_RULES } = req(path.join(REPO, "lib", "buyer-context.ts"));
+  const rules = CONFLICT_RULES[PRODUCT];
+  const SIT = ["Selling an Australian property now", "Sold — waiting on settlement",
+               "Planning to sell soon", "Helping someone else"];
+  // Every situation answer must be reachable by at least one rule's qualMatches — otherwise an
+  // axis is silently uncoverable, which is exactly how vendor_identity and this one were missed.
+  for (const s of SIT) {
+    t.assert.ok(rules.some((r: { qualMatches: RegExp }) => r.qualMatches.test(s)),
+      `qualification situation "${s}" matches no rule at all — it can never raise a conflict`);
+  }
+  // Same for the urgency axis.
+  for (const u of ["Within a month", "Within 3 months", "Not scheduled yet", "Already settled"]) {
+    t.assert.ok(rules.some((r: { qualMatches: RegExp }) => r.qualMatches.test(u)),
+      `qualification urgency "${u}" matches no rule at all`);
+  }
+});
+
+test("frcgw-rebuild · D16-P3 · the purchaser's-side rule reaches both callers and both copies agree", (t) => {
+  const { getFactRules } = req(path.join(REPO, "lib", "fact-rules.ts"));
+  const live = getFactRules(PRODUCT);
+  const rule = live.find((r: string) => /LEAD WITH THE ASK/.test(r));
+  t.assert.ok(rule, "the P3 rule is not in the registry — the webhook would never see it");
+
+  // What it actually has to do: kill the negation opener and the wrong party name, and say what
+  // to ask for instead. Measured opener on the 17 Aug $147: "There is no instruction to give the
+  // buyer's solicitor at this stage" — under a heading reading "…FROM THE PURCHASER'S SIDE".
+  t.assert.match(rule!, /never begin "there is no instruction"/i, "the measured opener is not named");
+  t.assert.match(rule!, /Never "the buyer's solicitor"/i, "the wrong party name is not banned");
+  t.assert.match(rule!, /payment notification to the ATO/i, "the rule bans an opener without supplying one");
+
+  // The authoring copy in cole/config must carry it too. Compared as MODULE VALUES, not source
+  // text — the config concatenates each rule across several string literals, so a substring
+  // search of the file would fail on a rule that is in fact present. (The W2 test above already
+  // deep-equals the two arrays; this pins that the new element is on both sides of that equality
+  // rather than absent from both.)
+  const { PRODUCT_CONFIG } = req(path.join(COLE_ROOT, "config", "au-19-frcgw-clearance-certificate.ts"));
+  t.assert.ok((PRODUCT_CONFIG.factRules as string[]).includes(rule!),
+    "the config's factRules copy does not carry the P3 rule");
+  t.assert.strictEqual(live.length, 9, `the registry has ${live.length} rules, expected 9`);
+});

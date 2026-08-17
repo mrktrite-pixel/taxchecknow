@@ -75,20 +75,33 @@ export const CONFLICT_RULES: Record<string, ConflictRule[]> = {
     {
       id: "settlement_passed_vs_upcoming",
       mazeMatches: /Settlement has passed and I did not provide/i,
-      qualMatches: /within a month|within 3 months|not scheduled yet|planning to sell soon/i,
+      // D16-P2. "Sold — waiting on settlement" says the sale is DONE but settlement is NOT, which
+      // contradicts a settled maze answer just as squarely as an upcoming timing does. Measured on
+      // the 17 Aug $147 buy, which answered exactly that AND "Within a month": the timing answer
+      // fired this rule and the situation answer matched nothing, so the right note was produced
+      // by luck of which qual field the buyer also got wrong.
+      //
+      // WIDENED RATHER THAN GIVEN ITS OWN RULE, deliberately. detectConflicts takes the FIRST
+      // matching qual entry per rule, so one disagreement stays one note. A sixth rule with the
+      // same mazeMatches would have emitted two near-identical notes for that buy, and the D14
+      // mandate would then require BOTH be named in the first two sentences.
+      qualMatches: /within a month|within 3 months|not scheduled yet|planning to sell soon|sold — waiting on settlement|sold - waiting on settlement/i,
       note:
         "The buyer's checker answers say settlement has ALREADY passed without a clearance certificate, " +
-        "but the pre-checkout question describes settlement as still upcoming or unscheduled. Treat the " +
+        "but the pre-checkout question describes settlement as still upcoming, unscheduled, or awaited. Treat the " +
         "checker answers as authoritative — write the recovery position — and name the discrepancy in one " +
         "sentence so they can correct it if the checker answer was a mis-click.",
     },
     {
       id: "certificate_provided_vs_upcoming",
+      // The maze option reads "…and provided it to the purchaser AT OR BEFORE SETTLEMENT", so this
+      // answer asserts a completed settlement. "Sold — waiting on settlement" contradicts it for
+      // the same reason it contradicts the no-certificate answer above. (D16-P2.)
       mazeMatches: /I have a clearance certificate and provided it/i,
-      qualMatches: /within a month|within 3 months|not scheduled yet|planning to sell soon/i,
+      qualMatches: /within a month|within 3 months|not scheduled yet|planning to sell soon|sold — waiting on settlement|sold - waiting on settlement/i,
       note:
         "The buyer's checker answers say the certificate was already provided at or before settlement, but " +
-        "the pre-checkout question describes settlement as still upcoming. Treat the checker answers as " +
+        "the pre-checkout question describes settlement as still upcoming or awaited. Treat the checker answers as " +
         "authoritative and name the discrepancy in one sentence.",
     },
     {

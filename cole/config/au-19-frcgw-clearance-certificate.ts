@@ -377,6 +377,15 @@ export const PRODUCT_CONFIG: ProductConfig = {
     "FOREIGN RESIDENTS: cannot obtain a clearance certificate at all. The instrument available to " +
       "them is a variation NOTICE (never a \"variation certificate\"), which can set the rate " +
       "anywhere between 0% and 14.99% on real grounds.",
+
+    "THE PURCHASER'S SIDE — LEAD WITH THE ASK: call them the PURCHASER, or the purchaser's " +
+      "conveyancer or solicitor. Never \"the buyer's solicitor\". When you write about what to " +
+      "send or request, OPEN with the thing to ask for, not with a negation — never begin \"there " +
+      "is no instruction\", \"there is nothing to send\" or \"this no longer applies\". Once an " +
+      "amount has been withheld there is still something to request: the purchaser's payment " +
+      "notification to the ATO, the amount remitted and the date it was paid, which is what " +
+      "evidences the credit at lodgement. Say what to ask for first; note that the certificate " +
+      "wording no longer applies afterwards, if at all.",
   ],
   successPromptFields: [
     { key: "sale_price",             label: "Property sale price",                       defaultVal: "" },
