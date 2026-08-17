@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-main-residence-trap";
+const SLUG = "mr-06";
+const FALLBACK_LABEL = { name: "Full CGT Minimisation Plan", desc: "All strategies to minimise CGT before and after sale." };
 const BODY = `<h2>CGT Minimisation — Full Strategy</h2><h3>Before Sale</h3><ul><li>Consider moving back in to extend the exempt period</li><li>Maximise cost base — document all capital improvements</li><li>Time the contract date for optimal CGT discount (after 12-month anniversary)</li><li>Consider income timing — large CGT gain in a low-income year reduces tax</li></ul><h3>At Sale</h3><ul><li>Use the 50% CGT discount (12+ months held)</li><li>Apply any capital losses from other assets to reduce net gain</li><li>Consider superannuation contributions to reduce taxable income in the sale year</li></ul>`;
 
 export default function CgtMainResidenceTrapFile06() {
@@ -25,6 +28,10 @@ export default function CgtMainResidenceTrapFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtMainResidenceTrapFile06() {
             CGT Main Residence Trap Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full CGT Minimisation Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">All strategies to minimise CGT before and after sale.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

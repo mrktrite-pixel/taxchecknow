@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "wayfair-nexus-sniper";
+const SLUG = "nexus-04";
+const FALLBACK_LABEL = { name: "Filing Sequence Roadmap", desc: "The order to register across states — minimise compliance cost and complexity." };
 const BODY = `<h2>Where to Register First</h2><p>Prioritise states by: (1) highest exposure / oldest nexus date, (2) highest audit risk, (3) highest sales volume.</p><div class="action-box"><h3>Registration Order</h3><p>Step 1: Identify all nexus states (economic + physical)</p><p>Step 2: Calculate estimated liability per state</p><p>Step 3: File VDA in highest-exposure states first</p><p>Step 4: Register in remaining states</p><p>Step 5: Set up collection and filing in each registered state</p></div><h2>VDA vs Direct Registration</h2><table><tr><th>Option</th><th>Lookback</th><th>Penalties</th><th>When</th></tr><tr><td>VDA</td><td>Limited (3–4yr)</td><td>Reduced</td><td>Before audit contact</td></tr><tr><td>Direct registration</td><td>From nexus date</td><td>Full</td><td>Going forward only</td></tr><tr><td>Amnesty programme</td><td>Varies</td><td>Waived</td><td>During amnesty window</td></tr></table>`;
 
 export default function WayfairNexusSniperFile04() {
@@ -25,6 +28,10 @@ export default function WayfairNexusSniperFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function WayfairNexusSniperFile04() {
             Sales Tax Nexus Liability Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Filing Sequence Roadmap
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The order to register across states — minimise compliance cost and complexity.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

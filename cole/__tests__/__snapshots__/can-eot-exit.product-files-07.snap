@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-eot-exit";
+const SLUG = "eot-07";
+const FALLBACK_LABEL = { name: "EOT Transaction Execution Plan", desc: "Step-by-step 6-12 month timeline from decision to closing." };
 const BODY = `<h2>EOT Transaction Execution Plan</h2><h3>Month 1-2 (Planning)</h3><ul><li>Engage CPA + legal counsel (EOT specialty)</li><li>Confirm eligibility (all 4 gates)</li><li>Identify any restructuring needed</li><li>Model exemption quantum + LCGE interaction</li><li>Valuation of business — third-party preferred</li></ul><h3>Month 2-5 (Pre-sale restructuring if needed)</h3><ul><li>Execute trust distribution / holdco extraction if required</li><li>File any tax election forms (T2057, etc.)</li><li>Confirm 24-month QSBC holding period intact</li></ul><h3>Month 3-6 (EOT establishment)</h3><ul><li>Draft EOT trust deed to s56.3 specifications</li><li>Draft employee beneficiary class definitions</li><li>Draft governance policies (trustee appointment, employee voting)</li><li>Establish trust (settle, appoint trustees, open bank account)</li></ul><h3>Month 5-8 (Transaction structuring)</h3><ul><li>Draft share purchase agreement</li><li>Draft vendor promissory note + security if financing</li><li>Negotiate interest rate + repayment schedule</li><li>Coordinate with corporation's existing agreements (shareholders agreement, debt)</li></ul><h3>Month 7-10 (Execution)</h3><ul><li>Due diligence complete</li><li>Board approvals (seller-side + EOT-side)</li><li>Sign + close transaction</li><li>Issue new shares to EOT / transfer existing</li><li>Pay proceeds (cash + note) to vendor(s)</li></ul><h3>Month 10-12 (Post-closing)</h3><ul><li>File T1 return with EOT exemption claim</li><li>Document all eligibility evidence (6+ year retention)</li><li>Establish EOT annual governance cadence (employee meetings, trustee reporting)</li><li>Ongoing tax compliance for corporation + EOT + vendor note</li></ul>`;
 
 export default function CanEotExitFile07() {
@@ -25,6 +28,10 @@ export default function CanEotExitFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanEotExitFile07() {
             Canada EOT Exit Optimizer · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            EOT Transaction Execution Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step 6-12 month timeline from decision to closing.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

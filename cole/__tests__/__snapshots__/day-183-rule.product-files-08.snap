@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "day-183-rule";
+const SLUG = "d183-08";
+const FALLBACK_LABEL = { name: "Audit Defence Documentation", desc: "The evidence file behind a U.S. day count and every excluded day in it." };
 const BODY = `<h2>Audit-Ready Evidence Pack (annual)</h2><ul class="checklist"><li>Passport with U.S. entry and exit stamps</li><li>Flight records (airline confirmations or card statements) for every U.S. arrival and departure</li><li>Day-count spreadsheet for the current year and the two years before it, with the weighting shown</li><li>Transit evidence: itineraries and boarding records showing both endpoints outside the U.S. and elapsed time under 24 hours</li><li>Crew documentation and voyage records, where foreign-vessel days are excluded</li><li>Evidence of the foreign residence and the regular commuting pattern, where commuter days are excluded</li><li>Medical records establishing that the condition arose while you were in the United States</li><li>Visa and status documents for any exempt-individual days</li><li>Filed Form 8843 with proof of the filing date</li><li>Tax home and closer-connection evidence, where that exception is claimed</li></ul><div class="warning-box"><strong>Retention:</strong> the burden of showing a day does not count is yours, and a day count is challenged long after the year it covers. Keep the pack for at least seven years from the filing date.</div>`;
 
 export default function Day183RuleFile08() {
@@ -25,6 +28,10 @@ export default function Day183RuleFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Day183RuleFile08() {
             183-Day Rule Reality Check · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Audit Defence Documentation
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The evidence file behind a U.S. day count and every excluded day in it.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

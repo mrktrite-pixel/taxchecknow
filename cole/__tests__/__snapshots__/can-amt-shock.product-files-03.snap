@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-amt-shock";
+const SLUG = "amt-03";
+const FALLBACK_LABEL = { name: "AMT Trigger Analysis by Income Type", desc: "How each income type flows through AMTI — which generate AMT risk and which are neutral." };
 const BODY = `<h2>AMT Trigger Analysis by Income Type</h2><h3>High-risk (major AMTI additions)</h3><ul class="checklist"><li>Capital gains: 100% inclusion (vs 50% / 2/3)</li><li>Stock option benefits: 50% deduction reversed</li><li>Tax shelter losses: 50% disallowed</li><li>Resource property deductions: 50% limited</li></ul><h3>Moderate risk</h3><ul><li>Non-capital losses: limited application</li><li>Limited partnership losses: restricted</li><li>Employment expenses: 50% limited</li><li>Carrying charges + interest: 50% limited</li></ul><h3>Low risk / neutral</h3><ul><li>Employment income: same in both</li><li>Business income (sole proprietor): same in both</li><li>Interest income: same in both</li><li>Dividend income (with tax credit adjustment): same in both</li><li>RRSP deductions: fully deductible for AMT</li><li>CPP/EI contributions: same in both</li></ul>`;
 
 export default function CanAmtShockFile03() {
@@ -25,6 +28,10 @@ export default function CanAmtShockFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanAmtShockFile03() {
             Canada AMT Shock Auditor · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            AMT Trigger Analysis by Income Type
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How each income type flows through AMTI — which generate AMT risk and which are neutral.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

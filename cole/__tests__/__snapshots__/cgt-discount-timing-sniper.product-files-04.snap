@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-discount-timing-sniper";
+const SLUG = "cgtd-04";
+const FALLBACK_LABEL = { name: "Capital Loss Offset Planner", desc: "How to use capital losses to reduce your CGT bill in the sale year." };
 const BODY = `<h2>Using Capital Losses Effectively</h2><p>Capital losses reduce your net gain before the 50% discount is applied. Selling loss-making assets in the same income year as a large gain can significantly reduce your tax bill.</p><div class="action-box"><h3>The Sequence</h3><p>1. Add all capital gains for the year</p><p>2. Subtract all capital losses (current year and carried forward)</p><p>3. Apply 50% CGT discount to the NET gain (if held over 12 months)</p><p>4. Add discounted gain to income — apply marginal rate</p></div>`;
 
 export default function CgtDiscountTimingSniperFile04() {
@@ -25,6 +28,10 @@ export default function CgtDiscountTimingSniperFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtDiscountTimingSniperFile04() {
             CGT Discount Timing Sniper · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Capital Loss Offset Planner
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to use capital losses to reduce your CGT bill in the sale year.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

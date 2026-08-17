@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "side-hustle-checker";
+const SLUG = "sh-02";
+const FALLBACK_LABEL = { name: "Your DAC7 Exposure Summary", desc: "What platform data HMRC has on you and how they use it." };
 const BODY = `<h2>DAC7 Platform Reporting — What HMRC Knows</h2><p>Since 1 January 2024, platforms report sellers who meet minimum thresholds directly to HMRC.</p><h3>Platforms Reporting</h3><table><tr><th>Platform</th><th>What they report</th></tr><tr><td>eBay</td><td>Seller income, items sold, address, tax ID (if held)</td></tr><tr><td>Etsy</td><td>Seller income, number of sales, shop details</td></tr><tr><td>Vinted</td><td>Seller income, number of items sold</td></tr><tr><td>Airbnb</td><td>Host income, nights rented, property address</td></tr><tr><td>Amazon</td><td>Third-party seller income, volume</td></tr><tr><td>Fiverr</td><td>Freelancer earnings, gig volume</td></tr><tr><td>Upwork</td><td>Freelancer earnings, project volume</td></tr></table><h3>Reporting Thresholds</h3><p>Minimum: sellers with more than 30 transactions OR earning more than €2,000 (~£1,700) in a calendar year.</p><p>Below these thresholds: platforms may still choose to report, but are not required to. You are still obliged to declare above £1,000.</p><h3>How HMRC Uses the Data</h3><ul><li>Automated cross-reference against Self Assessment returns</li><li>Nudge letters for discrepancies</li><li>Formal compliance checks if discrepancies persist</li></ul>`;
 
 export default function SideHustleCheckerFile02() {
@@ -25,6 +28,10 @@ export default function SideHustleCheckerFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SideHustleCheckerFile02() {
             HMRC Side Income Declaration Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your DAC7 Exposure Summary
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What platform data HMRC has on you and how they use it.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

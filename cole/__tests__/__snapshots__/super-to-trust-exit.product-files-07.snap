@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-to-trust-exit";
+const SLUG = "strexit-07";
+const FALLBACK_LABEL = { name: "Pension Phase Transition Playbook", desc: "The 0% earnings environment — the in-super option that always beats exit for pension-eligible members." };
 const BODY = `<h2>Pension Phase Transition — The 0% Play</h2><p>Pension phase earnings on the Transfer Balance Cap portion are taxed at 0% under ITAA 1997 s295-385. This is the single largest tax advantage available in Australian super — bigger than the accumulation 15% rate, bigger than any trust distribution strategy.</p><h2>Who Qualifies</h2><ul><li>Age 60+ with a condition of release (retirement, or reaching 65)</li><li>Transfer Balance Cap currently $2.0M (indexed in $100k steps)</li><li>Earnings on the $2.0M pension portion = 0% forever</li><li>Earnings on amounts above the TBC = 15% (accumulation rate)</li></ul><h2>Why It Beats Exit</h2><p>On $2.0M in pension phase earning 5%: $100,000/year earnings × 0% = $0 tax. Same $2.0M in a family trust distributed at 34% effective = $34,000/year. That's $34,000 of permanent annual saving — from simply starting a pension instead of exiting.</p><h2>Execution Steps</h2><ol><li>Verify condition of release (retirement declaration or age 65)</li><li>Calculate TBC utilisation room ($2.0M cap)</li><li>Commence an account-based pension — minimum 4% annual drawdown</li><li>Structure asset allocation inside pension vs accumulation accounts for tax efficiency</li><li>Monitor TBC at each 30 June — excess contributions trigger Transfer Balance Cap breaches</li></ol>`;
 
 export default function SuperToTrustExitFile07() {
@@ -25,6 +28,10 @@ export default function SuperToTrustExitFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperToTrustExitFile07() {
             Super-to-Trust Exit Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Pension Phase Transition Playbook
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The 0% earnings environment — the in-super option that always beats exit for pension-eligible members.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

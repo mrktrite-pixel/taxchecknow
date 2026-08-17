@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-discount-timing-sniper";
+const SLUG = "cgtd-07";
+const FALLBACK_LABEL = { name: "Trust and Entity Optimisation", desc: "How to use trusts to access CGT discounts not available in companies." };
 const BODY = `<h2>Entity Structure for CGT Optimisation</h2><table><tr><th>Structure</th><th>CGT Discount</th><th>Additional Benefit</th></tr><tr><td>Individual</td><td>50%</td><td>Simple — direct ownership</td></tr><tr><td>Discretionary trust</td><td>50% (via beneficiaries)</td><td>Distribute to low-income beneficiaries</td></tr><tr><td>SMSF (pension phase)</td><td>100% exempt</td><td>Zero CGT on pension-phase assets</td></tr><tr><td>Company</td><td>0%</td><td>Avoid for long-term CGT assets</td></tr></table>`;
 
 export default function CgtDiscountTimingSniperFile07() {
@@ -25,6 +28,10 @@ export default function CgtDiscountTimingSniperFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtDiscountTimingSniperFile07() {
             CGT Discount Timing Sniper · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Trust and Entity Optimisation
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to use trusts to access CGT discounts not available in companies.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

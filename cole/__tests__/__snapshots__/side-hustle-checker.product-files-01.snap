@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "side-hustle-checker";
+const SLUG = "sh-01";
+const FALLBACK_LABEL = { name: "Your Declaration Position Report", desc: "Exact declaration requirement for your income band and registration status, with statutory citations." };
 const BODY = `<h2>Your Declaration Position</h2><div class="action-box"><h3>The Binary Test</h3><p>Gross side income over £1,000 in a tax year = declaration required.</p><p>Below £1,000 = no action needed (but watch for growth).</p></div><h3>Decision Tree</h3><table><tr><th>Situation</th><th>Required action</th><th>Deadline</th></tr><tr><td>Under £1,000 total side income</td><td>No action</td><td>N/A</td></tr><tr><td>Over £1,000 + never registered for SA</td><td>Register for Self Assessment</td><td>5 October following tax year</td></tr><tr><td>Over £1,000 + registered, declared</td><td>Compliant — verify rate</td><td>31 January filing deadline</td></tr><tr><td>Over £1,000 + registered, NOT declared</td><td>Amend return</td><td>31 Jan following year OR use DDS</td></tr><tr><td>Not sure if registered</td><td>Check HMRC online account</td><td>Immediate — resolve before deadlines</td></tr></table><p>Source: <a href="https://www.gov.uk/check-if-you-need-tax-return">HMRC — Self Assessment</a> · ITTOIA 2005 s783A</p>`;
 
 export default function SideHustleCheckerFile01() {
@@ -25,6 +28,10 @@ export default function SideHustleCheckerFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SideHustleCheckerFile01() {
             HMRC Side Income Declaration Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Declaration Position Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Exact declaration requirement for your income band and registration status, with statutory citations.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

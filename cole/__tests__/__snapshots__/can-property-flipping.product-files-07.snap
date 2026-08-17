@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-property-flipping";
+const SLUG = "pft-07";
+const FALLBACK_LABEL = { name: "Life Event Documentation Kit", desc: "Documentation templates + evidence requirements for each of the 8 qualifying life events." };
 const BODY = `<h2>Life Event Documentation Kit</h2><h3>Death</h3><ul class="checklist"><li>Death certificate</li><li>Relationship documentation (spouse, household member)</li><li>Estate documents or housing change evidence</li><li>Timeline: event date → listing date → sale date</li></ul><h3>Household addition (birth / adoption)</h3><ul class="checklist"><li>Birth or adoption certificate</li><li>Prior home size / occupancy records</li><li>New property purchase details</li><li>Connection: space required for expanded household</li></ul><h3>Marital breakdown</h3><ul class="checklist"><li>Separation agreement / divorce order</li><li>Joint ownership records</li><li>Communication documenting the breakdown timing</li><li>Property division terms</li></ul><h3>Serious illness / disability</h3><ul class="checklist"><li>Medical certification / diagnosis records</li><li>Accessibility requirements documentation</li><li>Physician letter re: housing change necessity</li><li>Treatment location if factor</li></ul><h3>Employment change (40km+ closer test)</h3><ul class="checklist"><li>Termination letter OR new employment offer</li><li>New workplace address</li><li>Driving distance calculation (Google Maps printout acceptable)</li><li>Old home to new workplace vs new home to new workplace — 40km+ difference</li><li>Timing: job change date → listing date → sale date</li></ul><h3>Personal safety threat</h3><ul class="checklist"><li>Police reports</li><li>Restraining orders</li><li>Documented incident communications</li><li>Safety recommendations from authorities</li></ul><h3>Insolvency</h3><ul class="checklist"><li>Bankruptcy filing (s128)</li><li>Consumer proposal documentation</li><li>Trustee correspondence</li></ul><h3>Involuntary disposition</h3><ul class="checklist"><li>Expropriation notice</li><li>Insurance claim documentation (disaster)</li><li>Government order</li></ul><p><strong>General rule:</strong> documentation must establish CAUSAL necessity — not just the event occurred, but that the event required the sale.</p>`;
 
 export default function CanPropertyFlippingFile07() {
@@ -25,6 +28,10 @@ export default function CanPropertyFlippingFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanPropertyFlippingFile07() {
             Canada Property Flipping Tax Trap Auditor · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Life Event Documentation Kit
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Documentation templates + evidence requirements for each of the 8 qualifying life events.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

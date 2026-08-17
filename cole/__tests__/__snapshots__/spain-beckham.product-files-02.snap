@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SLUG = "beck-02";
+const FALLBACK_LABEL = { name: "Qualifying Structure Checklist", desc: "What counts as a qualifying work arrangement — and what does not." };
 const BODY = `<h2>Qualifying Structure Checklist</h2><h3>Qualifying</h3><ul class="checklist"><li>Employment contract with a Spanish entity (standard inbound hire)</li><li>Posted worker — foreign employer sends to Spain under assignment letter + A1</li><li>Director of Spanish company holding under 25% capital (post-Startup Law)</li><li>Director of certified startup regardless of ownership (post-Startup Law)</li><li>Highly qualified professional in startup / innovation activity</li><li>Remote worker with Spanish Digital Nomad Visa (post-Startup Law)</li><li>Entrepreneur conducting innovative economic activity</li></ul><h3>Does NOT qualify (standard conditions)</h3><ul><li>Retirement / pension / investment income only</li><li>Move for family reasons without qualifying role</li><li>Standard autónomo without DNV or qualifying activity</li><li>Director 25%+ in non-startup company</li><li>Spouse/partner of qualifying person (separate application required)</li></ul>`;
 
 export default function SpainBeckhamFile02() {
@@ -25,6 +28,10 @@ export default function SpainBeckhamFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SpainBeckhamFile02() {
             Spain Beckham Eligibility Wall · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Qualifying Structure Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What counts as a qualifying work arrangement — and what does not.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

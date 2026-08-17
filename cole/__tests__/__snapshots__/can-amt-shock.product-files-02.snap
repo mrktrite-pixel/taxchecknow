@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-amt-shock";
+const SLUG = "amt-02";
+const FALLBACK_LABEL = { name: "Regular Tax vs AMT Comparison", desc: "Side-by-side comparison of regular federal tax calculation vs AMT for your scenario." };
 const BODY = `<h2>Regular Tax vs AMT — Side-by-Side</h2><h3>Regular federal tax</h3><ul><li>Graduated rates: 15% / 20.5% / 26% / 29% / 33%</li><li>Capital gains: 50% inclusion (first $250k); 2/3 inclusion above $250k (individuals, post 25 June 2024)</li><li>Stock option: 50% employment deduction on benefit</li><li>Charitable donation credit: graduated (15% / 29%) federal</li><li>Full range of non-refundable credits</li></ul><h3>AMT</h3><ul><li>Flat 20.5% rate on AMTI minus $173,205 exemption</li><li>Capital gains: 100% inclusion (no preferential rate)</li><li>Stock option: 50% deduction reversed (100% of benefit in AMTI)</li><li>Donation credit: 50% of regular value</li><li>Many non-refundable credits: 50% of regular value</li></ul><h3>Outcome</h3><p>Pay the HIGHER of regular federal tax or AMT. Excess of AMT over regular tax = AMT credit carryforward (indefinite period).</p>`;
 
 export default function CanAmtShockFile02() {
@@ -25,6 +28,10 @@ export default function CanAmtShockFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanAmtShockFile02() {
             Canada AMT Shock Auditor · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Regular Tax vs AMT Comparison
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Side-by-side comparison of regular federal tax calculation vs AMT for your scenario.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

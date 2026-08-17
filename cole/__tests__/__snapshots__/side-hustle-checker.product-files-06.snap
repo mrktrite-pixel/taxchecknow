@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "side-hustle-checker";
+const SLUG = "sh-06";
+const FALLBACK_LABEL = { name: "Voluntary Disclosure Playbook", desc: "Step-by-step guide to disclosing past undeclared side income via HMRC DDS or LPC." };
 const BODY = `<h2>Voluntary Disclosure — Full Playbook</h2><h3>Why Disclose Voluntarily</h3><p>Unprompted disclosure typically reduces penalties from 30-70% of tax to 20-30% or less. HMRC DDS and Let Property Campaign both offer beneficial terms for taxpayers who come forward before HMRC opens a formal case.</p><h3>Phase 1 — Gather Data</h3><ul class="checklist"><li>Platform statements for each year undeclared (eBay, Etsy, etc.)</li><li>Bank statements corroborating receipts</li><li>Expense records (receipts, invoices)</li><li>Total gross income per year per source</li></ul><h3>Phase 2 — Calculate Tax Owed</h3><ul class="checklist"><li>Apply trading allowance or itemise expenses — whichever gives lower tax</li><li>Determine marginal rate per year (include employment income)</li><li>Calculate interest at HMRC's late payment rate (~7.5%)</li><li>Estimate penalty (typically 20-30% of tax for unprompted disclosure)</li></ul><h3>Phase 3 — Choose Route</h3><ul class="checklist"><li>General trading income: HMRC Digital Disclosure Service (DDS) online</li><li>Rental/property income: Let Property Campaign (LPC)</li><li>Complex or very large: consult accountant for CDF route</li></ul><h3>Phase 4 — File and Pay</h3><ul class="checklist"><li>Submit DDS / LPC disclosure online</li><li>Pay tax + interest + penalty (payment plan available if needed)</li><li>Register for Self Assessment for ongoing years</li></ul>`;
 
 export default function SideHustleCheckerFile06() {
@@ -25,6 +28,10 @@ export default function SideHustleCheckerFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SideHustleCheckerFile06() {
             HMRC Side Income Declaration Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Voluntary Disclosure Playbook
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step guide to disclosing past undeclared side income via HMRC DDS or LPC.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

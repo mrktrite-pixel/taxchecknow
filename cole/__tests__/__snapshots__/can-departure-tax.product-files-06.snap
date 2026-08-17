@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-departure-tax";
+const SLUG = "dtt-06";
+const FALLBACK_LABEL = { name: "Pre-Departure Tax Optimisation Plan", desc: "All the levers available in the window before you leave." };
 const BODY = `<h2>Pre-Departure Optimisation</h2><h3>Loss harvesting</h3><ul><li>Identify positions with unrealised losses</li><li>Realise losses before departure date</li><li>Losses offset deemed gains on departure</li><li>Avoid superficial loss rules (30-day repurchase)</li></ul><h3>Capital Gains Exemption (LCGE)</h3><ul><li>QSBC shares: up to $1,016,836 (2024) exemption</li><li>QFFP: up to $1,000,000 exemption</li><li>24-month holding period + 90% asset tests</li><li>Pre-departure CRA clearance recommended</li></ul><h3>Departure date timing</h3><ul><li>Lower-income year = lower marginal rate on deemed gain</li><li>Sale of significant employment income before departure = higher current-year income</li><li>Coordinate with other life events (retirement, bonus timing)</li></ul><h3>Asset restructuring</h3><ul><li>Transfer to spousal arrangements pre-departure (attribution rules)</li><li>Gift to family members (fair market value transfer with deemed disposition consequences)</li><li>Roll into holding structure (complex; requires specialist)</li></ul><h3>Pre-departure checklist</h3><ul class="checklist"><li>Realise loss positions</li><li>Confirm LCGE eligibility</li><li>Obtain ACB records for all assets (sometimes hard to reconstruct)</li><li>Document departure date (passport, employment records, family moves)</li><li>Arrange Canadian banking + mailing address post-departure</li></ul>`;
 
 export default function CanDepartureTaxFile06() {
@@ -25,6 +28,10 @@ export default function CanDepartureTaxFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanDepartureTaxFile06() {
             Canada Departure Tax Trap Auditor · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Pre-Departure Tax Optimisation Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">All the levers available in the window before you leave.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-death-tax-trap";
+const SLUG = "sdtt-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "4 questions to take to your SMSF accountant." };
 const BODY = `<div class="info-box">Bring this to your next SMSF review — ideally before 30 June 2026.</div><div class="action-box"><h3>Question 1</h3><p>"What is my current taxable component %, and what death benefit tax would my specific beneficiaries pay?"</p></div><h3>Question 2</h3><p>"Am I eligible for a recontribution strategy before 30 June 2026 — age, NCC bring-forward, TSB — and what would it save?"</p><h3>Question 3</h3><p>"What is my Division 296 exposure over 5 years, and can withdrawing keep me under the $3M threshold?"</p><h3>Question 4</h3><p>"Should I route through my estate with a testamentary trust, or pay directly — which gives MY family the best outcome?"</p>`;
 
 export default function SuperDeathTaxTrapFile05() {
@@ -25,6 +28,10 @@ export default function SuperDeathTaxTrapFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperDeathTaxTrapFile05() {
             Super Death Tax Trap Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">4 questions to take to your SMSF accountant.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

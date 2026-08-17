@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "app-tax-gst-sniper";
+const SLUG = "gst-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "Print and take to your next meeting — GST questions your adviser must answer." };
 const BODY = `<div class="info-box"><strong>How to use:</strong> Print or forward to your accountant before your next meeting.</div><h2>Client GST Position</h2><table><tr><th>Item</th><th>Detail</th></tr><tr><td>Current status</td><td>Not registered — flat-rate credit applies</td></tr><tr><td>Flat-rate credit rate</td><td>8.5% of platform income</td></tr><tr><td>Registration threshold</td><td>$60,000 per year</td></tr></table><div class="action-box"><h3>Question 1</h3><p>"Based on my income and expenses, am I better off registered or on the flat-rate credit?"</p></div><h3>Question 2</h3><p>"What expenses can I claim GST on — and how do I apportion for private use?"</p><h3>Question 3</h3><p>"When exactly do I hit the $60,000 threshold and what happens if I miss it?"</p><h3>Question 4</h3><p>"If I register and then stop, what GST do I owe on deregistration?"</p><h3>Question 5</h3><p>"How do I notify my platform of my GST number?"</p>`;
 
 export default function AppTaxGstSniperFile05() {
@@ -25,6 +28,10 @@ export default function AppTaxGstSniperFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AppTaxGstSniperFile05() {
             Platform GST Decision Engine (NZ) · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Print and take to your next meeting — GST questions your adviser must answer.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

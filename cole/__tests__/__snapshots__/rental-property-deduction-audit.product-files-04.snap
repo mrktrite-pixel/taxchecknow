@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "rental-property-deduction-audit";
+const SLUG = "rda-04";
+const FALLBACK_LABEL = { name: "Expense Tracker Template", desc: "Monthly tracking system for all rental income and expenses." };
 const BODY = `<h2>Monthly Rental Expense Tracker</h2><table><tr><th>Expense Category</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Annual Total</th></tr><tr><td>Rental income received</td><td>$ ___</td><td>$ ___</td><td>$ ___</td><td>$ ___</td></tr><tr><td>Mortgage interest</td><td>$ ___</td><td>$ ___</td><td>$ ___</td><td>$ ___</td></tr><tr><td>Council rates (monthly)</td><td>$ ___</td><td>$ ___</td><td>$ ___</td><td>$ ___</td></tr><tr><td>Insurance</td><td>$ ___</td><td>$ ___</td><td>$ ___</td><td>$ ___</td></tr><tr><td>Management fees</td><td>$ ___</td><td>$ ___</td><td>$ ___</td><td>$ ___</td></tr><tr><td>Repairs and maintenance</td><td>$ ___</td><td>$ ___</td><td>$ ___</td><td>$ ___</td></tr><tr><td>Depreciation (QS report)</td><td>$ ___</td><td>$ ___</td><td>$ ___</td><td>$ ___</td></tr></table>`;
 
 export default function RentalPropertyDeductionAuditFile04() {
@@ -25,6 +28,10 @@ export default function RentalPropertyDeductionAuditFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function RentalPropertyDeductionAuditFile04() {
             Rental Property Deduction Audit · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Expense Tracker Template
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Monthly tracking system for all rental income and expenses.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

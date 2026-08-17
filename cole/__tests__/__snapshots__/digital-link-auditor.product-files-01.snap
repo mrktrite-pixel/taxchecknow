@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "digital-link-auditor";
+const SLUG = "dla-01";
+const FALLBACK_LABEL = { name: "Your Chain Break Point Report", desc: "Which step in your MTD process breaks the digital link — with HMRC citation." };
 const BODY = `<h2>Your Digital Link Break Point</h2><div class="action-box"><h3>The Four-Step Chain</h3><p>Step 1: Record-keeping (records must be digital at source)</p><p>Step 2: Data transfer (between systems — must be automated)</p><p>Step 3: Bridging (spreadsheet-to-submission needs HMRC-approved tool)</p><p>Step 4: Submission (no manual figure adjustments anywhere in chain)</p></div><h3>Where Your Chain Breaks</h3><p>See your verdict panel for the specific step where your process fails the digital link test, with the HMRC regulation that applies.</p><h3>HMRC Anchor</h3><p>All four steps must pass for compliance under Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076). A break at any single step makes the whole submission non-compliant.</p><p>Source: <a href="https://www.legislation.gov.uk/uksi/2021/1076/contents">SI 2021/1076</a> · <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax">HMRC MTD ITSA</a></p>`;
 
 export default function DigitalLinkAuditorFile01() {
@@ -25,6 +28,10 @@ export default function DigitalLinkAuditorFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DigitalLinkAuditorFile01() {
             MTD Digital Link Compliance Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Chain Break Point Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Which step in your MTD process breaks the digital link — with HMRC citation.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

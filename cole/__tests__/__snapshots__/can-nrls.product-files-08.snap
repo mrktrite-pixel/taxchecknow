@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-nrls";
+const SLUG = "nrl-08";
+const FALLBACK_LABEL = { name: "Future Disposal — Section 116 Pathway", desc: "Planning the Canadian real estate sale as a non-resident: Section 116 certificate + CGT." };
 const BODY = `<h2>Canadian Real Estate Sale (Non-Resident)</h2><h3>Part XIII sale withholding</h3><ul><li>Purchaser required to withhold 25% of GROSS sale price</li><li>Applied to prevent non-residents exiting with unpaid Canadian CGT</li></ul><h3>Section 116 certificate process</h3><ul><li>Seller applies to CRA for Section 116 certificate BEFORE closing</li><li>CRA reviews cost base + expected gain + CCA recapture</li><li>Certificate issued showing REDUCED withholding (typically 25% of the expected gain rather than 25% of gross)</li><li>Processing: 2-3 months typical</li><li>Without certificate: purchaser withholds 25% of gross; seller files Canadian return to reconcile</li></ul><h3>Final Canadian return</h3><ul><li>CGT: 50% inclusion rate × (sale price minus cost base minus selling costs)</li><li>CCA recapture: all CCA previously claimed added back to income</li><li>Tax at graduated rates (federal + provincial)</li><li>Credit for 25% withheld or Section 116 certificate amount</li></ul><h3>Timing matters</h3><ul><li>Apply for Section 116 certificate 3-4 months before expected closing</li><li>Engage Canadian tax professional experienced with non-resident dispositions</li><li>Coordinate with destination country tax position (often Canadian CGT + step-up in destination)</li></ul><h3>Documentation for sale</h3><ul class="checklist"><li>Original purchase documents (cost base)</li><li>All capital improvement receipts (adds to cost base)</li><li>CCA claim history (triggers recapture)</li><li>Section 216 returns for all prior rental years</li><li>Section 116 certificate application + approval</li><li>Sale documents</li><li>Purchaser withholding documentation</li></ul>`;
 
 export default function CanNrlsFile08() {
@@ -25,6 +28,10 @@ export default function CanNrlsFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanNrlsFile08() {
             Canada Non-Resident Landlord Withholding Trap · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Future Disposal — Section 116 Pathway
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Planning the Canadian real estate sale as a non-resident: Section 116 certificate + CGT.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

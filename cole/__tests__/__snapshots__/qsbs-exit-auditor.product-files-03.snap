@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "qsbs-exit-auditor";
+const SLUG = "qsbs-03";
+const FALLBACK_LABEL = { name: "Mixed LLC / C-Corp Founder Equity", desc: "How to identify qualifying vs non-qualifying shares when your company started as an LLC." };
 const BODY = `<h2>Mixed LLC / C-Corp Founder Equity — Critical Analysis</h2><p>Many founders have BOTH qualifying and non-qualifying shares. The equity received during the LLC phase does NOT qualify for QSBS. Only post-conversion C-corp shares qualify.</p><h3>How to Identify</h3><ol><li>Pull the company's formation history — Delaware (or state) secretary of state records</li><li>Find the C-corp conversion date (typically a Certificate of Conversion filing)</li><li>Pull your cap table — identify which shares / units you held before vs after conversion</li><li>Pre-conversion LLC units = NON-QUALIFYING</li><li>Post-conversion C-corp shares = QUALIFYING (subject to other gates)</li></ol><h3>Common Patterns</h3><ul><li><strong>Founder formed LLC, ran 6-18 months, then converted to C-corp for funding:</strong> LLC phase units fail, post-conversion shares qualify</li><li><strong>Founder formed as C-corp from day 1:</strong> all equity qualifies (subject to other gates)</li><li><strong>Founder formed as LLC, kept as LLC (no conversion):</strong> no equity qualifies for QSBS</li><li><strong>Multiple option exercises before/after conversion:</strong> each exercise assessed separately based on entity type at that date</li></ul><h3>Planning Action</h3><p>Before exit: run a complete cap table analysis tagging each share lot as qualifying/non-qualifying. Calculate exit proceeds attributable to each category. Model total federal tax — do not assume uniform QSBS treatment.</p>`;
 
 export default function QsbsExitAuditorFile03() {
@@ -25,6 +28,10 @@ export default function QsbsExitAuditorFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function QsbsExitAuditorFile03() {
             QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Mixed LLC / C-Corp Founder Equity
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to identify qualifying vs non-qualifying shares when your company started as an LLC.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

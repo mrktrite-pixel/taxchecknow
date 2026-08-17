@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "iso-amt-sniper";
+const SLUG = "iso-amt-03";
+const FALLBACK_LABEL = { name: "AMT Credit Tracker (Form 8801)", desc: "How to recover AMT paid on ISO exercise in future years." };
 const BODY = `<h2>The AMT Credit Is a Real Asset</h2><p>AMT paid on ISO exercise creates a Minimum Tax Credit. In future years when your regular tax exceeds your tentative minimum tax, the credit reduces your regular tax liability — dollar for dollar.</p><div class="info-box"><strong>The credit never expires.</strong> It carries forward indefinitely until fully used.</div><h2>How Form 8801 Works</h2><ol><li>Year 1: Exercise ISOs → pay AMT (e.g. $50,000)</li><li>Year 2: Regular income drops or AMT preference disappears</li><li>Year 2: Regular tax exceeds tentative minimum tax</li><li>Year 2: Claim Minimum Tax Credit on Form 8801</li><li>Credit reduces regular tax by up to $50,000</li></ol><div class="action-box"><h3>Recovery Acceleration</h3><p>Disqualifying disposition (selling within 1 year) can reverse the AMT preference entirely — recovering the credit immediately rather than waiting.</p></div>`;
 
 export default function IsoAmtSniperFile03() {
@@ -25,6 +28,10 @@ export default function IsoAmtSniperFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function IsoAmtSniperFile03() {
             ISO AMT Exercise Sniper · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            AMT Credit Tracker (Form 8801)
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to recover AMT paid on ISO exercise in future years.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

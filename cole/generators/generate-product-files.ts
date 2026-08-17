@@ -108,9 +108,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = ${JSON.stringify(config.id)};
+const SLUG = ${JSON.stringify(file.slug)};
+const FALLBACK_LABEL = { name: ${JSON.stringify(file.name)}, desc: ${JSON.stringify(file.desc)} };
 const BODY = \`${escapeContent(file.content)}\`;
 
 export default function ${toPascal(config.id)}File${file.num}() {
@@ -126,6 +129,10 @@ export default function ${toPascal(config.id)}File${file.num}() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -213,9 +220,9 @@ ${deadlineBar(config)}
             ${config.name} · File ${file.num} of ${config.files.length}
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            ${file.name}
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">${file.desc}</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

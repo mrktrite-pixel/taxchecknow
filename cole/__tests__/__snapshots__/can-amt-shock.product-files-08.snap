@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-amt-shock";
+const SLUG = "amt-08";
+const FALLBACK_LABEL = { name: "Multi-Year AMT Credit Recovery Plan", desc: "Project AMT credit utilisation across future years to ensure full recovery." };
 const BODY = `<h2>Multi-Year AMT Credit Recovery</h2><h3>Recovery planning framework</h3><ol><li>Quantify current-year AMT credit amount</li><li>Project next 3-5 years of expected regular federal tax</li><li>Identify years where regular tax will substantially exceed AMT (credit absorption years)</li><li>Structure future income to create regular-tax-dominant years</li></ol><h3>Accelerating credit recovery</h3><ul><li>Realise additional capital gains in future years at normal (50%/2/3) inclusion — regular tax rises, absorbs credit</li><li>Withdraw from RRIF above minimum — higher regular income</li><li>Accelerate pension / annuity starts</li><li>Defer RRSP contributions in recovery years (preserve regular tax level)</li></ul><h3>Risk scenarios</h3><ul><li>Retirement year follows AMT year — regular income drops; credit may never recover</li><li>Emigration post-AMT — credit unusable abroad</li><li>Death after AMT but before recovery — credit terminates</li><li>Permanent low-income change (disability, unemployment) — recovery window closes</li></ul><h3>Tracking</h3><ul><li>Annual review of T691 carryforward balance</li><li>Update projection each year</li><li>Coordinate with retirement / RRIF planning</li><li>Consider proactive income realisation if recovery looks unlikely</li></ul>`;
 
 export default function CanAmtShockFile08() {
@@ -25,6 +28,10 @@ export default function CanAmtShockFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanAmtShockFile08() {
             Canada AMT Shock Auditor · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Year AMT Credit Recovery Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Project AMT credit utilisation across future years to ensure full recovery.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

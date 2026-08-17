@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "australia-smsf-residency";
+const SLUG = "smsf-06";
+const FALLBACK_LABEL = { name: "Corporate Trustee Restructure Guide", desc: "Step-by-step restructure from individual trustees to corporate trustee with AU-director shield." };
 const BODY = `<h2>Corporate Trustee Restructure</h2><h3>Why restructure</h3><ul><li>Individual trusteeship follows the members — if members move, CM&C risk follows</li><li>Corporate trusteeship is a separate legal person — directors can be independent of members</li><li>AU-resident director provides stable CM&C anchor regardless of member location</li></ul><h3>Restructure steps</h3><ol><li>Establish corporate trustee company (sole purpose trustee)</li><li>Appoint AU-resident director (trusted individual — accountant, lawyer, family member)</li><li>Update SMSF trust deed to reflect corporate trustee</li><li>Transfer fund assets to new trustee (title/registry updates)</li><li>Update ATO records + bank signatories</li><li>Adopt decision-making protocol with AU director as lead</li></ol><h3>Cost estimates</h3><ul><li>Company incorporation: ~$500-$1,200</li><li>SMSF deed update: $600-$2,000 (depending on lawyer)</li><li>Asset retitling: variable, can be substantial for property</li><li>Ongoing: ~$300-$500/year ASIC annual fee (sole purpose trustee reduced rate)</li></ul>`;
 
 export default function AustraliaSmsfResidencyFile06() {
@@ -25,6 +28,10 @@ export default function AustraliaSmsfResidencyFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AustraliaSmsfResidencyFile06() {
             Australian SMSF Residency Kill-Switch · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Corporate Trustee Restructure Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step restructure from individual trustees to corporate trustee with AU-director shield.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

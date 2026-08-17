@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-main-residence-trap";
+const SLUG = "mr-07";
+const FALLBACK_LABEL = { name: "Ownership Structuring Strategy", desc: "How ownership structure affects your main residence exemption." };
 const BODY = `<h2>Ownership Structure and CGT</h2><table><tr><th>Structure</th><th>Exemption Available?</th><th>Notes</th></tr><tr><td>Individual</td><td>Yes</td><td>Full main residence exemption available</td></tr><tr><td>Joint tenants (couple)</td><td>Yes</td><td>Each owner's share is exempt</td></tr><tr><td>Company</td><td>No</td><td>No main residence exemption for companies</td></tr><tr><td>Discretionary trust</td><td>No</td><td>No main residence exemption for trusts</td></tr><tr><td>SMSF</td><td>No</td><td>Cannot hold main residence in SMSF</td></tr></table>`;
 
 export default function CgtMainResidenceTrapFile07() {
@@ -25,6 +28,10 @@ export default function CgtMainResidenceTrapFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtMainResidenceTrapFile07() {
             CGT Main Residence Trap Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Ownership Structuring Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How ownership structure affects your main residence exemption.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

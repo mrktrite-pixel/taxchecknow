@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-eot-exit";
+const SLUG = "eot-08";
+const FALLBACK_LABEL = { name: "Vendor Financing and Governance Framework", desc: "How to structure vendor financing + employee governance to satisfy CRA and maintain operational stability." };
 const BODY = `<h2>Vendor Financing + Governance</h2><h3>Vendor financing fundamentals</h3><ul><li>EOT typically has no initial capital — cannot pay cash upfront</li><li>Vendor accepts promissory note for all / most of purchase price</li><li>Note repaid from future corporation earnings (dividends to EOT used to service debt)</li><li>Term: typically 5-10 years; longer acceptable if business cash flow supports it</li></ul><h3>Interest rate considerations</h3><ul><li>Must be reasonable rate (CRA could impute if too low)</li><li>Prescribed rate (currently ~5%) or commercial rate acceptable</li><li>Too high = excessive income to vendor; too low = imputed benefit issue</li><li>Fixed vs variable: either acceptable with justification</li></ul><h3>Security for vendor</h3><ul><li>Share pledge (EOT pledges shares back to vendor as security)</li><li>General security agreement against corporation's assets</li><li>Personal guarantees typically not required from employees</li><li>Subordination to senior bank debt often necessary</li></ul><h3>Governance framework</h3><ul><li><strong>Trustees:</strong> majority must be qualifying employees or elected by them</li><li><strong>Trustee powers:</strong> real authority over trust decisions (share voting, distributions)</li><li><strong>Employee voting rights:</strong> meaningful input on major decisions (sale, amalgamation, trustee changes)</li><li><strong>Vendor role:</strong> can remain as CEO / director but not controlling</li><li><strong>Deadlock resolution:</strong> appointed by truly independent party (not vendor)</li></ul><h3>CRA substance-over-form review</h3><ul><li>CRA examines whether vendor retains effective control — if yes, exemption denied</li><li>Warning signs: vendor veto on all major decisions; vendor-friendly trustee appointees; vendor's family or close associates as trustees</li><li>Safe signs: genuine employee trustee election; independent chair; employee voting with meaningful frequency</li></ul><h3>Ongoing compliance</h3><ul><li>Annual T3 return for the EOT</li><li>Corporation remains standard T2 filer</li><li>Vendor receives annual interest income (T5 slips) on note</li><li>Retain all documentation 6+ years</li></ul>`;
 
 export default function CanEotExitFile08() {
@@ -25,6 +28,10 @@ export default function CanEotExitFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanEotExitFile08() {
             Canada EOT Exit Optimizer · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Vendor Financing and Governance Framework
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to structure vendor financing + employee governance to satisfy CRA and maintain operational stability.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

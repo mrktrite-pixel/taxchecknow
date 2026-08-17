@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "fbt-hidden-exposure";
+const SLUG = "fbt-06";
+const FALLBACK_LABEL = { name: "Full FBT Audit Report", desc: "Complete FBT audit across all benefit types in the business." };
 const BODY = `<h2>Full FBT Audit — All Benefit Categories</h2><p>A comprehensive FBT audit covers every benefit type provided to employees and directors during the FBT year.</p><h3>Audit Categories</h3><ul><li>Car fringe benefits — all vehicles with private access</li><li>Car parking benefits — employer-provided or reimbursed</li><li>Loan benefits — company loans at below-benchmark rates</li><li>Entertainment — meals, functions, sporting events</li><li>Property benefits — goods provided at below-market value</li><li>Residual benefits — any other non-cash benefit</li></ul>`;
 
 export default function FbtHiddenExposureFile06() {
@@ -25,6 +28,10 @@ export default function FbtHiddenExposureFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FbtHiddenExposureFile06() {
             FBT Hidden Exposure Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full FBT Audit Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Complete FBT audit across all benefit types in the business.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

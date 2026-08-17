@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "tax-treaty-navigator";
+const SLUG = "ttn-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief — Treaty Position", desc: "The questions your cross-border accountant must answer before you file." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with a tax advisor qualified in BOTH jurisdictions (or two specialists who coordinate).</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Based on my facts, which test in the tie-breaker sequence resolves my case, and what is the evidence?</p></div><h3>Question 2</h3><p>What treaty relief forms do I need to file in each country, and by when?</p><h3>Question 3</h3><p>What are my filing obligations in the PRIMARY country (worldwide) vs SECONDARY country (source-only)?</p><h3>Question 4</h3><p>If I am a US citizen or green card holder, how does the US worldwide taxation layer overlay the treaty outcome?</p><h3>Question 5</h3><p>What audit-ready documentation should I build now to defend this position if challenged in 3-5 years?</p>`;
 
 export default function TaxTreatyNavigatorFile05() {
@@ -25,6 +28,10 @@ export default function TaxTreatyNavigatorFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TaxTreatyNavigatorFile05() {
             Double Tax Treaty Navigator · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — Treaty Position
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The questions your cross-border accountant must answer before you file.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

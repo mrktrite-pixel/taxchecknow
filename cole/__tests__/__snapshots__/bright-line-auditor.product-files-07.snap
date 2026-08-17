@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bright-line-auditor";
+const SLUG = "bl-07";
+const FALLBACK_LABEL = { name: "Rollover Relief Eligibility Check", desc: "Confirm your transfer qualifies for rollover — so the bright-line clock does not reset." };
 const BODY = `<h2>What Is Rollover Relief?</h2><p>Rollover relief allows the bright-line period to continue after certain transfers without triggering a taxable event. The recipient steps into the original owner's position and must continue the clock from the original start date.</p><div class="action-box"><h3>Rollover Relief Qualifies For:</h3><p>Relationship property transfers on relationship breakdown</p><p>Transfers on death (executor to beneficiary)</p><p>Some look-through company transfers</p></div><h2>The 2-Year Reuse Restriction</h2><p>You cannot claim the main home exclusion on more than 2 properties in any 2-year period. If you have sold 2 main homes and claimed the exclusion on both in the past 2 years, a third sale may not qualify.</p>`;
 
 export default function BrightLineAuditorFile07() {
@@ -25,6 +28,10 @@ export default function BrightLineAuditorFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function BrightLineAuditorFile07() {
             Bright-Line Property Tax Decision Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Rollover Relief Eligibility Check
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Confirm your transfer qualifies for rollover — so the bright-line clock does not reset.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

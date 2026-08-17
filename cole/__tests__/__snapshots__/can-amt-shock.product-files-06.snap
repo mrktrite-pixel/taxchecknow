@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-amt-shock";
+const SLUG = "amt-06";
+const FALLBACK_LABEL = { name: "AMT Optimisation Strategy", desc: "Specific moves to reduce or eliminate AMT: income spreading, deduction timing, structural changes." };
 const BODY = `<h2>AMT Optimisation Strategy</h2><h3>Year-spreading (primary lever)</h3><ul><li>Capital gains: sell half before 31 December, half after — splits gain across 2 tax years</li><li>Stock options: exercise across 2-3 years if grant permits</li><li>Large donations: split across tax years</li></ul><h3>Deduction timing</h3><ul><li>Match big deductions to high-regular-tax years (maximum benefit)</li><li>Avoid stacking all deductions in the same year as large capital gains (creates low regular tax + high AMTI mismatch)</li><li>Defer optional deductions (carryforward losses) where possible</li></ul><h3>AMT-safe deductions</h3><ul><li>RRSP contributions: fully deductible for AMT</li><li>Home Buyer's Plan / Lifelong Learning Plan repayments: AMT-neutral</li><li>Pension adjustment reversal: AMT-neutral</li></ul><h3>Structural moves</h3><ul><li>Corporate holdings: capital gains earned through a corporation are subject to corporate AMT (different regime); may be preferable for large ongoing gains</li><li>Family income splitting: capital gains to lower-income spouse (attribution rules permitting)</li><li>Trust holding: specific trust tax rules; less common for typical individual planning</li></ul><h3>Donation restructuring</h3><ul><li>Donate cash instead of appreciated securities if AMT would apply</li><li>Defer donation to year with higher regular tax</li><li>Use donation over 5-year carryforward (split claim)</li></ul>`;
 
 export default function CanAmtShockFile06() {
@@ -25,6 +28,10 @@ export default function CanAmtShockFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanAmtShockFile06() {
             Canada AMT Shock Auditor · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            AMT Optimisation Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Specific moves to reduce or eliminate AMT: income spreading, deduction timing, structural changes.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

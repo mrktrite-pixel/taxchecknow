@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "allowance-sniper";
+const SLUG = "as-08";
+const FALLBACK_LABEL = { name: "Full 60% Trap Escape Execution Plan", desc: "Step-by-step execution plan for the tax year — diagnosis through post-year-end record keeping." };
 const BODY = `<h2>60% Trap Escape — Full Execution Plan</h2><h3>Phase 1 — Diagnosis (Month 1-2)</h3><ul class="checklist"><li>Project total adjusted net income including all sources</li><li>Calculate current trap exposure</li><li>Determine pension contribution capacity (salary sacrifice + SIPP)</li><li>Model net cost of full escape</li></ul><h3>Phase 2 — Setup (Month 2-3)</h3><ul class="checklist"><li>Increase employer salary sacrifice to practical maximum</li><li>Open SIPP for top-up contributions if needed</li><li>Brief accountant/IFA on plan</li><li>Schedule quarterly income reviews to catch bonus/side-income surprises</li></ul><h3>Phase 3 — Execution (Months 3-12)</h3><ul class="checklist"><li>Monthly salary sacrifice running</li><li>Quarterly top-up SIPP contributions if tracking above £100k</li><li>Bonus timing discussions with employer</li><li>Year-end (Feb-March) final top-up to hit £100k exactly</li></ul><h3>Phase 4 — Year-End Verification (April)</h3><ul class="checklist"><li>Confirm final adjusted net income sits at or below £100,000</li><li>Retain pension contribution certificates</li><li>Set up next year's plan based on projected bonuses and raises</li></ul>`;
 
 export default function AllowanceSniperFile08() {
@@ -25,6 +28,10 @@ export default function AllowanceSniperFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AllowanceSniperFile08() {
             60% Tax Trap Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full 60% Trap Escape Execution Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step execution plan for the tax year — diagnosis through post-year-end record keeping.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

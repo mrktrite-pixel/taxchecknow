@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "div296-wealth-eraser";
+const SLUG = "div296-08";
+const FALLBACK_LABEL = { name: "Long-Term Two-Track Record-Keeping Model", desc: "How to maintain the dual ordinary-CGT and Division 296 cost bases over 5-20 years." };
 const BODY = `<h2>Two-Track Record-Keeping Model</h2><p>Post-election, every CGT asset has TWO cost bases — one for ordinary CGT (unchanged) and one for Division 296 (reset to 30 June 2026 market value). Both must be tracked through every future corporate action and on disposal.</p><h2>Per-Asset Data Required</h2><ul><li>Original acquisition date and cost (ordinary CGT base)</li><li>30 June 2026 market value (the Division 296 reset base)</li><li>Any subsequent improvements or reinvestments</li></ul><h2>On Disposal — Two Calculations</h2><p>Ordinary CGT gain = Sale price − original cost base</p><p>Division 296 gain = Sale price − 30 June 2026 market value</p><h2>Software Implications</h2><p>Most SMSF admin software (Class, BGL, Supermate) is being updated to handle the two-track model. Confirm your provider's capability before electing. Retention: records must be kept for 5 years from lodgement of the election, and effectively for the life of the asset plus 5 years after disposal.</p>`;
 
 export default function Div296WealthEraserFile08() {
@@ -25,6 +28,10 @@ export default function Div296WealthEraserFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Div296WealthEraserFile08() {
             Division 296 Wealth Eraser Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Long-Term Two-Track Record-Keeping Model
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to maintain the dual ordinary-CGT and Division 296 cost bases over 5-20 years.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

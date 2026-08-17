@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "app-tax-gst-sniper";
+const SLUG = "gst-01";
+const FALLBACK_LABEL = { name: "Your GST Registration Verdict", desc: "Register or stay on flat-rate — your personalised break-even analysis." };
 const BODY = `<h2>Your GST Position</h2><div class="action-box"><h3>The Core Calculation</h3><p>Flat-rate credit = Platform income × 8.5%</p><p>GST on expenses if registered = Expenses × (15 ÷ 115)</p><p>Registration benefit = GST on expenses minus flat-rate credit</p><p>If positive: registration saves you money</p></div><h2>Flat-Rate Credit vs Registration</h2><table><tr><th>Your Situation</th><th>Better Option</th></tr><tr><td>Low expenses (under 56% of income)</td><td>Flat-rate credit fine</td></tr><tr><td>High expenses (over 56% of income)</td><td>Register for GST</td></tr><tr><td>Large purchase coming</td><td>Register before purchase</td></tr><tr><td>Approaching $60k</td><td>Must register — plan timing</td></tr></table><p>Source: <a href="https://www.ird.govt.nz/gst/gst-for-marketplace-sellers">IRD — GST for marketplace sellers</a></p>`;
 
 export default function AppTaxGstSniperFile01() {
@@ -25,6 +28,10 @@ export default function AppTaxGstSniperFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AppTaxGstSniperFile01() {
             Platform GST Decision Engine (NZ) · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your GST Registration Verdict
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Register or stay on flat-rate — your personalised break-even analysis.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

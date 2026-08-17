@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-nrls";
+const SLUG = "nrl-04";
+const FALLBACK_LABEL = { name: "Allowable Expenses Checklist (Section 216)", desc: "Comprehensive list of deductible rental expenses with documentation requirements." };
 const BODY = `<h2>Section 216 Allowable Expenses</h2><ul class="checklist"><li>Mortgage interest (Form T5008 or lender statement)</li><li>Property tax (municipal tax bills)</li><li>Building insurance</li><li>Landlord liability insurance</li><li>Condominium fees / strata fees</li><li>Ground rent (if leasehold)</li><li>Utilities paid by landlord (electricity, gas, water, internet if included)</li><li>Repairs and maintenance (receipts — NOT improvements)</li><li>Advertising (e.g. online listings)</li><li>Management fees (often 8-10% of rent)</li><li>Professional fees (accountant preparing Section 216)</li><li>Legal fees (re: tenants, not purchase)</li><li>Travel to manage property (within limits; must be necessary)</li><li>Landscaping / snow removal</li><li>Supplies (cleaning, small items)</li><li>Capital Cost Allowance (CCA) — building only, not land; 4% class 1 residential</li></ul><h3>NOT deductible</h3><ul><li>Mortgage principal repayments</li><li>Capital improvements (added to cost base)</li><li>Personal use portion of expenses</li><li>Vacant period costs (some judgement required)</li></ul><h3>Documentation retention</h3><p>6+ years from the year of filing (CRA standard). Retain bank statements, receipts, invoices, NR4 slips, property tax statements, insurance policies.</p>`;
 
 export default function CanNrlsFile04() {
@@ -25,6 +28,10 @@ export default function CanNrlsFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanNrlsFile04() {
             Canada Non-Resident Landlord Withholding Trap · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Allowable Expenses Checklist (Section 216)
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Comprehensive list of deductible rental expenses with documentation requirements.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

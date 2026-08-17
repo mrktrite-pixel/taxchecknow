@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "app-tax-gst-sniper";
+const SLUG = "gst-06";
+const FALLBACK_LABEL = { name: "Change-of-Use Calculator", desc: "Avoid IRD clawbacks when your asset use changes between taxable and private." };
 const BODY = `<h2>What Is Change of Use?</h2><p>When a GST-registered person uses a business asset for private purposes (or vice versa), IRD requires a GST adjustment. This most commonly affects Airbnb hosts who start using their property privately or stop the rental activity.</p><div class="warning-box"><strong>The clawback risk:</strong> If you claim GST on property costs and then stop Airbnb, IRD may require you to repay some of the GST you claimed. The amount depends on how much the use has changed.</div><h2>Change of Use Rules</h2><table><tr><th>Scenario</th><th>GST Impact</th></tr><tr><td>Start private use of business asset</td><td>Output tax adjustment required</td></tr><tr><td>Start business use of private asset</td><td>Input tax credit available</td></tr><tr><td>Deregister from GST</td><td>Deemed disposal at market value</td></tr></table>`;
 
 export default function AppTaxGstSniperFile06() {
@@ -25,6 +28,10 @@ export default function AppTaxGstSniperFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AppTaxGstSniperFile06() {
             Platform GST Decision Engine (NZ) · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Change-of-Use Calculator
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Avoid IRD clawbacks when your asset use changes between taxable and private.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

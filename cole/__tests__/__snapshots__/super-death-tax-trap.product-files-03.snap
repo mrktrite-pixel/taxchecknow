@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-death-tax-trap";
+const SLUG = "sdtt-03";
+const FALLBACK_LABEL = { name: "Division 296 Exposure Model", desc: "Annual Division 296 tax projection at your TSB trajectory." };
 const BODY = `<h2>Division 296 — How It Actually Works</h2><p>From 1 July 2026, individuals with a Total Super Balance above $3 million pay an additional 15% tax on realised earnings attributable to the portion of their balance above the threshold.</p><h3>Formula</h3><p>Division 296 tax = Earnings × ((TSB − $3,000,000) / TSB) × 15%</p><h3>Your Exposure By Balance</h3><table><tr><th>TSB</th><th>% Above $3M</th><th>On $150k earnings</th><th>5-year cumulative</th></tr><tr><td>$3.0M</td><td>0%</td><td>$0</td><td>$0</td></tr><tr><td>$3.5M</td><td>14.3%</td><td>$3,214</td><td>~$16,500</td></tr><tr><td>$4.0M</td><td>25.0%</td><td>$5,625</td><td>~$29,000</td></tr><tr><td>$5.0M</td><td>40.0%</td><td>$9,000</td><td>~$47,000</td></tr><tr><td>$7.0M</td><td>57.1%</td><td>$12,857</td><td>~$68,000</td></tr></table><p>Balances above $10M add further 10% on earnings attributable to that portion. Both thresholds indexed to CPI.</p>`;
 
 export default function SuperDeathTaxTrapFile03() {
@@ -25,6 +28,10 @@ export default function SuperDeathTaxTrapFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperDeathTaxTrapFile03() {
             Super Death Tax Trap Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Division 296 Exposure Model
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Annual Division 296 tax projection at your TSB trajectory.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-property-flipping";
+const SLUG = "pft-02";
+const FALLBACK_LABEL = { name: "Business Income vs Capital Gain Comparison", desc: "Side-by-side tax outcome: flipping rule treatment vs capital gain vs PRE." };
 const BODY = `<h2>Classification Comparison</h2><h3>Business income (flipping rule)</h3><ul><li>100% of profit included in income</li><li>Taxed at marginal rate (up to ~53% combined federal + provincial)</li><li>No principal residence exemption</li><li>Reported on T2125 Statement of Business Activities</li></ul><h3>Capital gain (outside flipping rule)</h3><ul><li>50% inclusion (pre 25 June 2024) or 50% on first $250k / 2/3 above (post 25 June 2024 for individuals)</li><li>Taxed at marginal rate on included portion</li><li>PRE may apply if primary residence</li><li>Reported on Schedule 3 capital gains</li></ul><h3>PRE (principal residence)</h3><ul><li>Can eliminate 100% of capital gain</li><li>Requires: property ordinarily inhabited + designated as PR</li><li>Only one property per year per family can be designated</li><li>Form T2091 filed with T1</li></ul><h3>Numbers: $200,000 profit at 40% marginal</h3><table><tr><th>Scenario</th><th>Tax</th></tr><tr><td>Business income (flipping)</td><td>$80,000</td></tr><tr><td>Capital gain (50%)</td><td>$40,000</td></tr><tr><td>Capital gain + PRE</td><td>$0</td></tr></table>`;
 
 export default function CanPropertyFlippingFile02() {
@@ -25,6 +28,10 @@ export default function CanPropertyFlippingFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanPropertyFlippingFile02() {
             Canada Property Flipping Tax Trap Auditor · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Business Income vs Capital Gain Comparison
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Side-by-side tax outcome: flipping rule treatment vs capital gain vs PRE.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "wayfair-nexus-sniper";
+const SLUG = "nexus-06";
+const FALLBACK_LABEL = { name: "VDA Templates and Strategy", desc: "Voluntary Disclosure Agreements — how to file, what to say, how to limit your exposure." };
 const BODY = `<h2>What Is a VDA?</h2><p>A Voluntary Disclosure Agreement is a formal agreement with a state revenue authority where you come forward before being contacted. In exchange, the state limits your lookback period and reduces or eliminates penalties.</p><div class="action-box"><h3>VDA Benefits</h3><p>Lookback limited: typically 3–4 years vs unlimited for non-filers</p><p>Penalties: often waived or significantly reduced</p><p>Anonymous filing: available in many states via a representative</p><p>Protection: once VDA filed, prevents audit for covered period</p></div><h2>VDA Filing Process</h2><ol><li>Calculate your liability for the lookback period</li><li>Engage a sales tax adviser (anonymous filing requires a representative)</li><li>Submit VDA application to state revenue authority</li><li>Negotiate lookback period and penalty terms</li><li>File back returns and pay agreed liability</li><li>Register for ongoing collection and filing</li></ol>`;
 
 export default function WayfairNexusSniperFile06() {
@@ -25,6 +28,10 @@ export default function WayfairNexusSniperFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function WayfairNexusSniperFile06() {
             Sales Tax Nexus Liability Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            VDA Templates and Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Voluntary Disclosure Agreements — how to file, what to say, how to limit your exposure.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

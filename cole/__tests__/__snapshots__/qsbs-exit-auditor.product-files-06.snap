@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "qsbs-exit-auditor";
+const SLUG = "qsbs-06";
+const FALLBACK_LABEL = { name: "Exit Timing Optimisation (Post-2025)", desc: "When to exit for maximum QSBS benefit under the new partial exclusion rules." };
 const BODY = `<h2>Exit Timing Optimisation — Post-July 2025 Stock</h2><p>For stock acquired on or after July 4, 2025, holding period milestones are high-value:</p><table><tr><th>Holding</th><th>Exclusion</th><th>Tax on $5M gain</th><th>Savings vs selling earlier</th></tr><tr><td>Under 3 years</td><td>0%</td><td>$1,190,000</td><td>—</td></tr><tr><td>3 years</td><td>50%</td><td>$595,000</td><td>Save $595k by waiting to 3yr</td></tr><tr><td>4 years</td><td>75%</td><td>$297,500</td><td>Save $297k more by waiting to 4yr</td></tr><tr><td>5 years</td><td>100%</td><td>$0</td><td>Save $297k more by waiting to 5yr</td></tr></table><h3>Decision Framework</h3><ul><li>Consider opportunity cost of waiting vs tax savings</li><li>Company-specific risk (deal certainty, market conditions) — waiting is not always better</li><li>Partial sale possibility — sell some now at current %, hold rest to next milestone</li><li>Personal liquidity needs — immediate cash may outweigh tax optimisation</li></ul><h3>Partial Sale Strategy</h3><p>If you need some liquidity before 5 years, consider selling the minimum required. Hold the rest to hit higher exclusion % at 4 or 5 years. Model: sell 30% at year 3 (50% exclusion), hold 70% to year 5 (100% exclusion). Blended tax rate dramatically lower than selling all at year 3.</p>`;
 
 export default function QsbsExitAuditorFile06() {
@@ -25,6 +28,10 @@ export default function QsbsExitAuditorFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function QsbsExitAuditorFile06() {
             QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Exit Timing Optimisation (Post-2025)
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">When to exit for maximum QSBS benefit under the new partial exclusion rules.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

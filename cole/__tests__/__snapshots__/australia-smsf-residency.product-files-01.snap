@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "australia-smsf-residency";
+const SLUG = "smsf-01";
+const FALLBACK_LABEL = { name: "Your SMSF Residency Status Assessment", desc: "Your fund's specific residency position across all three SIS Act tests." };
 const BODY = `<h2>Your SMSF Residency Status</h2><div class="action-box"><h3>Three tests — all must pass</h3><p>Establishment: fund set up in Australia OR at least one asset located in Australia</p><p>CM&C: strategic decisions made in Australia (or temporary absence up to ~2 years)</p><p>Active member: 50%+ of active member balances held by AU residents (or no active members)</p></div><p>Source: <a href="https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements">ATO SMSF Residency Requirements</a></p>`;
 
 export default function AustraliaSmsfResidencyFile01() {
@@ -25,6 +28,10 @@ export default function AustraliaSmsfResidencyFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AustraliaSmsfResidencyFile01() {
             Australian SMSF Residency Kill-Switch · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your SMSF Residency Status Assessment
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your fund's specific residency position across all three SIS Act tests.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

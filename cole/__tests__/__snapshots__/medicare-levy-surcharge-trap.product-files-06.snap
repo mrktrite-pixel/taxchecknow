@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "medicare-levy-surcharge-trap";
+const SLUG = "mls-06";
+const FALLBACK_LABEL = { name: "Full Income and Tax Optimisation", desc: "Coordinate income, super, and private cover for minimum overall tax." };
 const BODY = `<h2>Income and MLS Optimisation</h2><p>The MLS interacts with superannuation strategy, salary packaging, and overall income structuring. An integrated approach minimises total tax.</p><div class="action-box"><h3>Integrated Strategy</h3><p>1. Calculate income for MLS purposes accurately — include fringe benefits, reportable super contributions, and net investment losses including net rental property losses</p><p>2. Model super contributions — does a contribution eliminate MLS?</p><p>3. Compare net benefit of each strategy against its cost</p><p>4. Select minimum-cost approach to avoid surcharge</p></div>`;
 
 export default function MedicareLevySurchargeTrapFile06() {
@@ -25,6 +28,10 @@ export default function MedicareLevySurchargeTrapFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MedicareLevySurchargeTrapFile06() {
             Medicare Levy Surcharge Trap Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full Income and Tax Optimisation
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Coordinate income, super, and private cover for minimum overall tax.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "australia-smsf-residency";
+const SLUG = "smsf-04";
+const FALLBACK_LABEL = { name: "Temporary Absence Documentation Protocol", desc: "How to establish and document a genuine temporary absence under the ATO's 2-year guidance." };
 const BODY = `<h2>Temporary Absence Documentation</h2><div class="info-box"><strong>ATO position:</strong> CM&C remains 'ordinarily' in Australia during genuine temporary absence. Typically up to ~2 years with return intent.</div><h3>Required documentation</h3><ul class="checklist"><li>Statement of intention to return (dated, signed, retained)</li><li>Visa or work arrangement showing defined end date</li><li>AU housing retained (rented out but retained)</li><li>AU bank accounts, investments, ongoing AU ties</li><li>Family members remaining in AU (if applicable)</li><li>Return ticket evidence</li></ul><h3>What undermines temporary absence</h3><ul><li>Selling AU primary home</li><li>Closing AU bank accounts / super contributions cessation</li><li>Vague or open-ended absence</li><li>Acquiring permanent residency / citizenship overseas</li></ul>`;
 
 export default function AustraliaSmsfResidencyFile04() {
@@ -25,6 +28,10 @@ export default function AustraliaSmsfResidencyFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AustraliaSmsfResidencyFile04() {
             Australian SMSF Residency Kill-Switch · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Temporary Absence Documentation Protocol
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to establish and document a genuine temporary absence under the ATO's 2-year guidance.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

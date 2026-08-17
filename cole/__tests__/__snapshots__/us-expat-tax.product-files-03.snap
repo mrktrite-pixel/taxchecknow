@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "us-expat-tax";
+const SLUG = "uset-03";
+const FALLBACK_LABEL = { name: "Filing Requirements Checklist", desc: "All the US federal filings a US expat must complete — forms, deadlines, and extensions." };
 const BODY = `<h2>US Expat Filing Requirements</h2><h3>Core filings</h3><ul class="checklist"><li>Form 1040 (Federal Income Tax Return) — due 15 April; automatic extension to 15 June for citizens abroad; further extension to 15 October via Form 4868</li><li>Form 2555 (FEIE election) — if claiming FEIE</li><li>Form 1116 (FTC) — if claiming FTC</li><li>Schedule B — if foreign accounts exceed $1,500 interest/dividends</li></ul><h3>Informational filings</h3><ul class="checklist"><li>FinCEN Form 114 (FBAR) — if aggregate foreign accounts exceed $10,000 at any point; filed separately from 1040; due 15 April with automatic extension to 15 October</li><li>Form 8938 (FATCA) — if specified foreign financial assets exceed thresholds ($200k/$400k single/joint abroad)</li><li>Form 8621 — each PFIC ownership</li><li>Form 5471 — if 10%+ ownership in foreign corporation</li><li>Form 3520 / 3520-A — foreign trusts + gifts from non-US persons over $100k</li><li>Form 8833 — treaty position disclosure (if taking treaty benefits)</li></ul>`;
 
 export default function UsExpatTaxFile03() {
@@ -25,6 +28,10 @@ export default function UsExpatTaxFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UsExpatTaxFile03() {
             US Citizen Abroad Optimizer · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Filing Requirements Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">All the US federal filings a US expat must complete — forms, deadlines, and extensions.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

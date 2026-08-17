@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "feie-nomad-auditor";
+const SLUG = "feie-02";
+const FALLBACK_LABEL = { name: "Day Count Methodology", desc: "How to count days precisely for the physical presence test." };
 const BODY = `<h2>Day Count Methodology — Physical Presence Test</h2><h3>What Counts as a Foreign Day</h3><p>A FULL 24-hour day in a foreign country. Example: if you arrive in Paris at 6pm on Monday and depart Friday at 10am, you have 3 full foreign days (Tue, Wed, Thu) — not 4.</p><h3>What Does NOT Count</h3><ul><li>Transit days through the US (including airport layovers)</li><li>The arrival day (unless you arrived before midnight of the prior day)</li><li>The departure day (unless you left after midnight into the next day)</li><li>Days at sea in international waters</li><li>Partial days</li></ul><h3>The 12-Month Window</h3><p>Choose ANY 12 consecutive months — not calendar year. Example: if you spent 15 days in the US in January, choose the window Feb 1 - Jan 31 next year to exclude those US days from your count.</p><h3>Day Counting Process</h3><ol><li>Compile travel dates from passport stamps, boarding passes, credit card statements</li><li>Map each day to a country (arrival and departure times matter)</li><li>Count full 24-hour foreign days</li><li>Test multiple 12-month windows to find the one with 330+ foreign days</li><li>Document with a travel log for IRS audit defence</li></ol><h3>Common Counting Mistakes</h3><ul><li>Treating layovers in US airports as foreign days (they are US)</li><li>Counting the arrival day when you arrive in the afternoon (partial, doesn't count)</li><li>Using calendar year when a different 12-month window would qualify</li><li>Not tracking precisely — guessing 'around 340' when actual is 325</li></ul>`;
 
 export default function FeieNomadAuditorFile02() {
@@ -25,6 +28,10 @@ export default function FeieNomadAuditorFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FeieNomadAuditorFile02() {
             FEIE Qualification & Failure Risk Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Day Count Methodology
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to count days precisely for the physical presence test.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

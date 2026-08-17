@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "investment-boost-auditor";
+const SLUG = "ib-03";
+const FALLBACK_LABEL = { name: "New to NZ Import Shield", desc: "Prove your imported asset qualifies as new to New Zealand — the documentation requirements." };
 const BODY = `<h2>Importing Used Assets — Qualification Guide</h2><p>An asset previously used overseas can qualify for the Investment Boost if it has not been used in New Zealand before. You need to prove both the import timing and the asset's prior non-NZ use history.</p><div class="action-box"><h3>Documentation Required</h3><p>Shipping documents (bill of lading or airway bill)</p><p>NZ Customs import entry</p><p>Purchase contract showing overseas origin</p><p>Statutory declaration that asset was not used in NZ before</p><p>Commissioning records showing first NZ use date</p></div><h2>Evidence Summary</h2><table><tr><th>Document</th><th>Proves</th></tr><tr><td>Bill of lading</td><td>Asset arrived in NZ from overseas</td></tr><tr><td>Customs entry</td><td>Official import date</td></tr><tr><td>Purchase contract</td><td>Asset origin and acquisition</td></tr><tr><td>Commissioning record</td><td>First available-for-use in NZ</td></tr></table>`;
 
 export default function InvestmentBoostAuditorFile03() {
@@ -25,6 +28,10 @@ export default function InvestmentBoostAuditorFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InvestmentBoostAuditorFile03() {
             Investment Boost Timing Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            New to NZ Import Shield
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Prove your imported asset qualifies as new to New Zealand — the documentation requirements.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

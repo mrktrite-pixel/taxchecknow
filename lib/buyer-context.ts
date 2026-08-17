@@ -75,7 +75,7 @@ export const CONFLICT_RULES: Record<string, ConflictRule[]> = {
     {
       id: "settlement_passed_vs_upcoming",
       mazeMatches: /Settlement has passed and I did not provide/i,
-      qualMatches: /within a month|within 3 months|not scheduled yet/i,
+      qualMatches: /within a month|within 3 months|not scheduled yet|planning to sell soon/i,
       note:
         "The buyer's checker answers say settlement has ALREADY passed without a clearance certificate, " +
         "but the pre-checkout question describes settlement as still upcoming or unscheduled. Treat the " +
@@ -85,11 +85,51 @@ export const CONFLICT_RULES: Record<string, ConflictRule[]> = {
     {
       id: "certificate_provided_vs_upcoming",
       mazeMatches: /I have a clearance certificate and provided it/i,
-      qualMatches: /within a month|within 3 months|not scheduled yet/i,
+      qualMatches: /within a month|within 3 months|not scheduled yet|planning to sell soon/i,
       note:
         "The buyer's checker answers say the certificate was already provided at or before settlement, but " +
         "the pre-checkout question describes settlement as still upcoming. Treat the checker answers as " +
         "authoritative and name the discrepancy in one sentence.",
+    },
+    {
+      // D12-C. Measured on a live buy: maze "Yes, I am selling…" + qualification "Helping
+      // someone else" produced an assessment written entirely in the third person about
+      // "the vendor" — E6's maze-wins rule silently losing on an axis no rule covered.
+      id: "vendor_identity",
+      mazeMatches: /Yes, I am selling or about to sell Australian real property/i,
+      qualMatches: /helping someone else/i,
+      note:
+        "The buyer's checker answers say THEY are the vendor selling the property, but the " +
+        "pre-checkout question says they are helping someone else. Treat the checker answers as " +
+        "authoritative: write to the reader as the VENDOR, in the second person (\"you\", " +
+        "\"your sale\") throughout — never in the third person about \"the vendor\" or \"the " +
+        "person you are helping\". Name the discrepancy in one sentence so they can correct it " +
+        "if they are in fact acting for someone else, because that changes who must sign the " +
+        "application.",
+    },
+    {
+      id: "not_selling_vs_selling",
+      mazeMatches: /No, I am not selling Australian real property/i,
+      qualMatches: /selling an Australian property now|sold — waiting on settlement|sold - waiting on settlement/i,
+      note:
+        "The buyer's checker answers say they are NOT selling Australian real property — which " +
+        "is why they reached an out-of-scope result — but the pre-checkout question says they " +
+        "are selling or have sold. Treat the checker answers as authoritative, and open by " +
+        "naming the discrepancy: if they ARE selling Australian real property under a contract " +
+        "dated on or after 1 January 2025, foreign resident capital gains withholding applies " +
+        "and they should re-run the check.",
+    },
+    {
+      id: "settlement_date_vs_already_settled",
+      // The maze value here is a formatted date ("1 December 2026"), so it is matched by shape.
+      mazeMatches: /^\d{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) \d{4}$/,
+      qualMatches: /already settled/i,
+      note:
+        "The buyer typed a settlement DATE in the checker, but the pre-checkout question says " +
+        "settlement has already happened. Treat the typed date as authoritative. If that date " +
+        "is in the future, write the pre-settlement position; name the discrepancy in one " +
+        "sentence so they can correct it, because a settled sale and an upcoming one need " +
+        "opposite actions.",
     },
   ],
 };

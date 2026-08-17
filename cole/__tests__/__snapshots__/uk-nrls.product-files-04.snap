@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "uk-nrls";
+const SLUG = "nrls-04";
+const FALLBACK_LABEL = { name: "Self-Assessment Filing Guide (Non-Resident)", desc: "How to file UK SA as a non-resident landlord — forms, pages, timing." };
 const BODY = `<h2>Non-Resident Landlord Self Assessment</h2><div class="action-box"><h3>Required forms</h3><p>SA100 (main return)</p><p>SA105 (UK property income pages)</p><p>SA109 (residence pages — confirm non-resident status)</p></div><h3>Deadlines</h3><ul><li>Paper return: 31 October following tax year end</li><li>Online return: 31 January following tax year end</li><li>Tax payment: 31 January + payments on account 31 January and 31 July</li></ul><h3>How it works with NRLS withholding</h3><ol><li>Letting agent / tenant withholds 20% throughout the year and pays HMRC</li><li>Agent issues annual statement NRLY showing tax withheld</li><li>Landlord files SA100 + SA105 + SA109</li><li>On the return: declare full gross rent, claim allowable expenses, show withheld amount as tax already paid</li><li>Result: excess withholding refunded; shortfall topped up</li></ol>`;
 
 export default function UkNrlsFile04() {
@@ -25,6 +28,10 @@ export default function UkNrlsFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UkNrlsFile04() {
             UK Non-Resident Landlord Scheme Auditor · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Self-Assessment Filing Guide (Non-Resident)
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to file UK SA as a non-resident landlord — forms, pages, timing.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

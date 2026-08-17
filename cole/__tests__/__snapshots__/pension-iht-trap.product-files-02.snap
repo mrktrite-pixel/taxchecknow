@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "pension-iht-trap";
+const SLUG = "piht-02";
+const FALLBACK_LABEL = { name: "Beneficiary Nomination Review", desc: "How beneficiary designation affects IHT treatment under the proposal." };
 const BODY = `<h2>Beneficiary Nomination — Tax Implications</h2><table><tr><th>Nomination</th><th>Current</th><th>Proposed from 2027</th></tr><tr><td>Spouse / civil partner only</td><td>Exempt (s18)</td><td>Exempt on first death; risk on second</td></tr><tr><td>Children / grandchildren</td><td>No IHT; income tax only if 75+</td><td>Full IHT above NRB + income tax</td></tr><tr><td>Mix of spouse and children</td><td>Partial exempt on spouse share</td><td>Spouse share exempt; child share exposed</td></tr><tr><td>Not nominated</td><td>Defaults to estate — no tax advantage</td><td>Full exposure</td></tr></table><h3>Action</h3><p>Review your nomination at your pension provider. Many pensions have an "expression of wishes" form — confirm the current version matches your intent. Discretionary nominations (leaving it to the scheme trustees) can allow post-death tax optimisation.</p>`;
 
 export default function PensionIhtTrapFile02() {
@@ -25,6 +28,10 @@ export default function PensionIhtTrapFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function PensionIhtTrapFile02() {
             Pension IHT Trap 2027 Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Beneficiary Nomination Review
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How beneficiary designation affects IHT treatment under the proposal.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

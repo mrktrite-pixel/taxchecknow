@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "residency-risk-index";
+const SLUG = "rri-02";
+const FALLBACK_LABEL = { name: "Country-by-Country Residency Test Summary", desc: "How UK, AU, NZ, CA, US each determine residency — the specific test that applies to your situation." };
 const BODY = `<h2>Country Residency Tests</h2><table><tr><th>Country</th><th>Primary test</th><th>Threshold / criterion</th></tr><tr><td>UK</td><td>Statutory Residence Test</td><td>Up to 46 factors; as few as 16 days with UK ties</td></tr><tr><td>Australia</td><td>Resides + domicile + 183-day</td><td>Behavioural + intent-based + statutory</td></tr><tr><td>New Zealand</td><td>183-day + permanent place of abode</td><td>Either test makes you resident</td></tr><tr><td>Canada</td><td>Factual residence</td><td>Ties-based — primary, secondary, other ties</td></tr><tr><td>United States</td><td>Substantial Presence Test + citizenship</td><td>Weighted day count OR citizen/green card (worldwide)</td></tr></table>`;
 
 export default function ResidencyRiskIndexFile02() {
@@ -25,6 +28,10 @@ export default function ResidencyRiskIndexFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function ResidencyRiskIndexFile02() {
             Nomad Residency Risk Index · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Country-by-Country Residency Test Summary
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How UK, AU, NZ, CA, US each determine residency — the specific test that applies to your situation.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

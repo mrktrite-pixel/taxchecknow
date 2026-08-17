@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "qsbs-exit-auditor";
+const SLUG = "qsbs-01";
+const FALLBACK_LABEL = { name: "Your Gate-by-Gate QSBS Qualification Report", desc: "Pass/fail analysis of each of the seven QSBS gates for your specific stock." };
 const BODY = `<h2>QSBS Gate-by-Gate Qualification</h2><div class="action-box"><h3>The Seven Gates</h3><p>Gate 1: Domestic C-corporation at issuance</p><p>Gate 2: Original issuance (not secondary)</p><p>Gate 3: Gross assets under $50M at issuance</p><p>Gate 4: Qualified active business — not excluded</p><p>Gate 5: Held by original recipient</p><p>Gate 6: Holding period (5 years for full exclusion)</p><p>Gate 7: Within cap (greater of $10M/$15M or 10× basis)</p></div><h3>Failure Modes</h3><table><tr><th>Failure</th><th>Result</th></tr><tr><td>Not a C-corp at issuance</td><td>DISQUALIFIED (LLC, S-corp, partnership all fail)</td></tr><tr><td>Secondary market purchase</td><td>DISQUALIFIED (no remedy)</td></tr><tr><td>Gross assets over $50M at issuance</td><td>DISQUALIFIED for that issuance</td></tr><tr><td>Excluded business</td><td>DISQUALIFIED (services, finance, hospitality, farming)</td></tr><tr><td>Holding under 5 years (pre-2025)</td><td>NO exclusion (all-or-nothing)</td></tr><tr><td>Holding 3-5 years (post-2025)</td><td>PARTIAL 50%/75%</td></tr><tr><td>Gain above cap</td><td>Excess fully taxable</td></tr></table><p>Source: <a href="https://www.law.cornell.edu/uscode/text/26/1202">IRC §1202</a></p>`;
 
 export default function QsbsExitAuditorFile01() {
@@ -25,6 +28,10 @@ export default function QsbsExitAuditorFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function QsbsExitAuditorFile01() {
             QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Gate-by-Gate QSBS Qualification Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Pass/fail analysis of each of the seven QSBS gates for your specific stock.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

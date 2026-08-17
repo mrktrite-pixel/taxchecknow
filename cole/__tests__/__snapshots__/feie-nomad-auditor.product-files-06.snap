@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "feie-nomad-auditor";
+const SLUG = "feie-06";
+const FALLBACK_LABEL = { name: "FEIE vs Foreign Tax Credit Analysis", desc: "Which is better for your situation — and when to use both." };
 const BODY = `<h2>FEIE vs Foreign Tax Credit — Deep Analysis</h2><h3>FEIE (IRC §911)</h3><p><strong>Mechanism:</strong> excludes foreign earned income from US taxable income (up to $126,500 in 2026).</p><p><strong>Best for:</strong> expats in LOW-tax countries (Panama, UAE, etc.) with foreign earned income. No foreign tax paid to credit against US tax, so FEIE excluding the income entirely is net better.</p><p><strong>Limitations:</strong> earned income only, requires qualification tests, election bound for 5 years.</p><h3>Foreign Tax Credit (Form 1116)</h3><p><strong>Mechanism:</strong> credits foreign income tax paid against US income tax on the same income.</p><p><strong>Best for:</strong> expats in HIGH-tax countries (UK, Germany, France, etc.) where foreign tax exceeds US tax on the same income. FTC credits 100% of the foreign tax up to the US tax amount — often fully offsets.</p><p><strong>Limitations:</strong> only credits tax actually paid, complex categorisation rules (general, passive, etc.), excess credits can be carried forward 10 years.</p><h3>Combined Strategy</h3><p>Many expats use BOTH, on different income:</p><ul><li>FEIE on earned income (excludes up to $126,500)</li><li>FTC on passive income (credits foreign tax paid on dividends, capital gains, rental)</li><li>FTC on earned income ABOVE $126,500 (if foreign tax was paid)</li></ul><h3>Decision Matrix</h3><table><tr><th>Scenario</th><th>Best choice</th></tr><tr><td>Low-tax country, earned income only</td><td>FEIE</td></tr><tr><td>High-tax country, earned income</td><td>FTC (often fully offsets US tax)</td></tr><tr><td>High-tax country, passive income</td><td>FTC</td></tr><tr><td>Earned income over $126,500</td><td>FEIE + FTC for excess</td></tr><tr><td>Mix of earned + substantial passive</td><td>FEIE on earned + FTC on passive</td></tr></table>`;
 
 export default function FeieNomadAuditorFile06() {
@@ -25,6 +28,10 @@ export default function FeieNomadAuditorFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FeieNomadAuditorFile06() {
             FEIE Qualification & Failure Risk Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            FEIE vs Foreign Tax Credit Analysis
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Which is better for your situation — and when to use both.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-property-flipping";
+const SLUG = "pft-04";
+const FALLBACK_LABEL = { name: "365-Day Threshold and Timing Analysis", desc: "How the 365-day threshold works in practice — closing dates, partial-year adjustments, planning windows." };
 const BODY = `<h2>365-Day Timing</h2><h3>How to count</h3><ul><li>Day 1: day after purchase closing</li><li>Day 365: 365th day after purchase closing</li><li>Sale on day 364 or earlier = within rule (business income)</li><li>Sale on day 365 or later = outside rule (capital gain treatment possible)</li><li>Closing date of SALE is the test date (not listing or offer acceptance)</li></ul><h3>Planning windows</h3><ul><li>Have not signed sale contract yet: maximum flexibility</li><li>Signed but not closed: may be able to extend closing to day 365+</li><li>Already closed: classification locked in</li></ul><h3>Typical residential transaction timeline</h3><ol><li>List property (no timing impact)</li><li>Receive offers + accept (no timing impact)</li><li>Signing of Agreement of Purchase and Sale (no timing impact)</li><li>Closing date = the critical test</li></ol><h3>Contract flexibility</h3><ul><li>Most AoPS have 30-60 day closing windows</li><li>Negotiate closing date to fall after 365-day mark if close</li><li>Buyer cooperation generally achievable for short delays</li></ul><h3>Example</h3><p>Purchase closed 15 June 2025. 365-day mark: 15 June 2026. Sale on 10 June 2026 = within rule. Sale on 15 June 2026 or later = outside rule. If listed in May and offer accepted on 30 May with 45-day close, closing falls on 14 July 2026 — OUTSIDE rule. 5-day deferral can save tens of thousands.</p>`;
 
 export default function CanPropertyFlippingFile04() {
@@ -25,6 +28,10 @@ export default function CanPropertyFlippingFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanPropertyFlippingFile04() {
             Canada Property Flipping Tax Trap Auditor · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            365-Day Threshold and Timing Analysis
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How the 365-day threshold works in practice — closing dates, partial-year adjustments, planning windows.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

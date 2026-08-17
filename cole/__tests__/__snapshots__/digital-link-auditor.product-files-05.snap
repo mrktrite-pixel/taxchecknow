@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "digital-link-auditor";
+const SLUG = "dla-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief — Digital Link", desc: "5 questions for your accountant about your MTD chain." };
 const BODY = `<div class="info-box">Forward to your accountant or take to your next meeting. These questions force specific process disclosure — vague 'we handle it' responses mean the chain has not been verified.</div><h2>Ask Your Accountant</h2><div class="action-box"><h3>Question 1</h3><p>"How does data move from my records to the submission — step by step, with every intermediate system named?"</p></div><h3>Question 2</h3><p>"If I keep my rental in a spreadsheet, do you submit via bridging software or by typing into the portal?"</p><h3>Question 3</h3><p>"Do you manually adjust any figures between my records and the submission — and if so, why?"</p><h3>Question 4</h3><p>"What is my mandate date based on my total gross income from self-employment and property?"</p><h3>Question 5</h3><p>"If HMRC audited my MTD submissions today, would my process pass the digital link test — and can you put that in writing?"</p>`;
 
 export default function DigitalLinkAuditorFile05() {
@@ -25,6 +28,10 @@ export default function DigitalLinkAuditorFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DigitalLinkAuditorFile05() {
             MTD Digital Link Compliance Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — Digital Link
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">5 questions for your accountant about your MTD chain.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

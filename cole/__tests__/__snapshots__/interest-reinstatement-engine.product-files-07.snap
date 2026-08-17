@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "interest-reinstatement-engine";
+const SLUG = "ir-07";
+const FALLBACK_LABEL = { name: "LTC vs Personal Ownership Audit", desc: "Does your Look-Through Company structure still make sense with restored deductibility?" };
 const BODY = `<h2>LTC vs Personal Ownership — 2026 Analysis</h2><p>During the interest limitation period, some landlords moved properties into Look-Through Companies (LTCs) or other structures. With full deductibility restored, reassess whether your structure is still optimal.</p><table><tr><th>Structure</th><th>Interest Deductible?</th><th>Loss Offset</th><th>Admin Cost</th></tr><tr><td>Personal ownership</td><td>Yes — 100%</td><td>Ring-fenced</td><td>Low</td></tr><tr><td>LTC</td><td>Yes — 100%</td><td>Passes through to shareholder</td><td>Medium</td></tr><tr><td>Company</td><td>Yes — 100%</td><td>Stays in company</td><td>Medium</td></tr><tr><td>Trust</td><td>Yes — 100%</td><td>Ring-fenced or distributed</td><td>Higher</td></tr></table><div class="info-box"><strong>Key point:</strong> The LTC can pass losses through to shareholders even when ring-fenced at the LTC level. This can be advantageous if you have other property income to offset.</div>`;
 
 export default function InterestReinstatementEngineFile07() {
@@ -25,6 +28,10 @@ export default function InterestReinstatementEngineFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InterestReinstatementEngineFile07() {
             Property Interest Deductibility Recovery Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            LTC vs Personal Ownership Audit
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Does your Look-Through Company structure still make sense with restored deductibility?</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

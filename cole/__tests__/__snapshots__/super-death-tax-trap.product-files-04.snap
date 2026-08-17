@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-death-tax-trap";
+const SLUG = "sdtt-04";
+const FALLBACK_LABEL = { name: "Evidence & Records Checklist", desc: "What your SMSF trustee and accountant need to document for each strategy." };
 const BODY = `<h2>Evidence Checklist</h2><ul class="checklist"><li>Super fund statement showing tax-free vs taxable component split</li><li>Binding death benefit nomination — current and valid (expires 3 years)</li><li>Evidence of any financial dependency relationships (regular payments, board, etc.)</li><li>Evidence of any interdependency relationships (mutual support, living arrangements)</li><li>SMSF trust deed provisions for death benefit payments</li><li>Testamentary trust structure in Will (if using estate routing)</li><li>TSB projection for next 5 years for Division 296 modelling</li><li>Recontribution history if any prior rounds executed</li><li>Member's age-60+ tax-free withdrawal eligibility confirmation</li></ul>`;
 
 export default function SuperDeathTaxTrapFile04() {
@@ -25,6 +28,10 @@ export default function SuperDeathTaxTrapFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperDeathTaxTrapFile04() {
             Super Death Tax Trap Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Evidence & Records Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What your SMSF trustee and accountant need to document for each strategy.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

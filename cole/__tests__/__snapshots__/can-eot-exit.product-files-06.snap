@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-eot-exit";
+const SLUG = "eot-06";
+const FALLBACK_LABEL = { name: "Pre-Sale Restructuring Strategy", desc: "Detailed pre-sale restructuring options and tax-modelled impact." };
 const BODY = `<h2>Pre-Sale Restructuring</h2><h3>From family trust</h3><ul><li><strong>Distribution to beneficiary:</strong> Trust distributes shares at FMV → disposition for the trust. Shares now individually owned; ACB = FMV at distribution.</li><li><strong>Tax impact:</strong> Trust pays tax on gain to distribution date. If beneficiary was allocated gain under trust terms, allocation rules apply.</li><li><strong>Timing:</strong> 2-6 months; engage trust counsel to amend deed if needed.</li><li><strong>24-month period:</strong> clock restarts for QSBC holding period — may not meet test unless trust held for 24+ months already (beneficiary can tack trust's holding period in limited circumstances).</li></ul><h3>From holding company</h3><ul><li><strong>Dividend extraction:</strong> Holdco pays dividend-in-kind of operating company shares. Integrated dividend tax ~40%.</li><li><strong>Section 85 rollover:</strong> Defers tax if structured correctly. Requires qualifying consideration (preferred shares typically); filed via T2057.</li><li><strong>Winding up holdco:</strong> s88(2) wind-up. Complex; requires thorough modelling.</li><li><strong>Timing:</strong> 3-9 months; significant legal + tax work.</li></ul><h3>From partnership</h3><ul><li><strong>Distribution to partners:</strong> Partnership disposes of shares; gain allocated to partners.</li><li><strong>Partnership wind-up:</strong> s98(5) rollover if applicable.</li><li><strong>Complexity:</strong> highest — partnership tax is specialised.</li></ul><h3>Modelling framework</h3><ul><li>Calculate trust / holdco tax cost of restructuring</li><li>Calculate individual tax saving from EOT exemption after restructure</li><li>Net benefit = EOT saving − restructuring tax cost − professional fees</li><li>Net positive usually — but not always; model carefully</li></ul>`;
 
 export default function CanEotExitFile06() {
@@ -25,6 +28,10 @@ export default function CanEotExitFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanEotExitFile06() {
             Canada EOT Exit Optimizer · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Pre-Sale Restructuring Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Detailed pre-sale restructuring options and tax-modelled impact.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

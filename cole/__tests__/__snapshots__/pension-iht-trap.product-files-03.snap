@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "pension-iht-trap";
+const SLUG = "piht-03";
+const FALLBACK_LABEL = { name: "Planning Options Ranked", desc: "Drawdown, gifting, insurance, rebalancing — what to do before April 2027." };
 const BODY = `<h2>Planning Levers — Before April 2027 (If Enacted)</h2><h3>Rank 1 — Drawdown During Lifetime</h3><p>Spend pension during your lifetime. Reduces pension value in eventual estate. Works whether or not proposal enacted. Most flexible lever. Income tax on withdrawals at your marginal rate.</p><h3>Rank 2 — Whole-of-Life Insurance in Trust</h3><p>Policy pays out on death, outside your estate (in trust). Sum assured sized to cover projected IHT liability. Premium depends on age/health. Must be in trust to avoid increasing the estate.</p><h3>Rank 3 — Lifetime Gifts (PET Rules)</h3><p>Gifts to individuals exempt from IHT after 7 years (Potentially Exempt Transfers). Also £3,000/year annual exemption and £250/year small gifts exemption. Earlier gifts = more survive the 7-year cliff.</p><h3>Rank 4 — ISA vs Pension Rebalancing</h3><p>ISAs are already in estate for IHT (always have been). Pensions currently outside. Post-2027, both would be in estate — meaning the tax-efficiency reason to prefer pensions over ISAs disappears. Consider drawing pension and moving to ISA shelter.</p><h3>Rank 5 — Spouse Equalisation</h3><p>For couples: ensure both partners use their individual NRB effectively. Split pension contributions and withdrawals. More relevant at second-death stage.</p>`;
 
 export default function PensionIhtTrapFile03() {
@@ -25,6 +28,10 @@ export default function PensionIhtTrapFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function PensionIhtTrapFile03() {
             Pension IHT Trap 2027 Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Planning Options Ranked
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Drawdown, gifting, insurance, rebalancing — what to do before April 2027.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

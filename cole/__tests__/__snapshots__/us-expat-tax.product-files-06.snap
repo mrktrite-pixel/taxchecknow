@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "us-expat-tax";
+const SLUG = "uset-06";
+const FALLBACK_LABEL = { name: "Hybrid FEIE/FTC Optimisation Plan", desc: "Detailed implementation of the hybrid strategy: income allocation, form preparation, year-over-year tracking." };
 const BODY = `<h2>Hybrid FEIE + FTC Implementation</h2><h3>Income allocation logic</h3><ul><li>Earned income up to $126,500: exclude via FEIE (Form 2555)</li><li>Earned income above $126,500: FTC on foreign tax attributable to that portion (Form 1116, general category)</li><li>All passive income (dividends, interest, capital gains, rental): FTC applies (Form 1116, passive category)</li></ul><h3>Allocation of foreign tax paid</h3><p>Foreign tax paid must be split pro-rata between excluded and non-excluded income. Example: $150k earned in UK, 40% tax = $60k UK tax. Allocation: $126,500 excluded × 60/150 = $50,600 NOT creditable; $23,500 included × 60/150 = $9,400 creditable.</p><h3>Tracking</h3><ul><li>Maintain FTC carryforward schedule by basket (general, passive, other)</li><li>Monitor 10-year expiry of earliest carryforward</li><li>Re-model annually as income / country / rates change</li></ul>`;
 
 export default function UsExpatTaxFile06() {
@@ -25,6 +28,10 @@ export default function UsExpatTaxFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UsExpatTaxFile06() {
             US Citizen Abroad Optimizer · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Hybrid FEIE/FTC Optimisation Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Detailed implementation of the hybrid strategy: income allocation, form preparation, year-over-year tracking.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

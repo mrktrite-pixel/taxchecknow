@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "trust-tax-splitter";
+const SLUG = "tt-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "Print and take to your pre-year-end meeting — trust tax questions your adviser must answer." };
 const BODY = `<div class="info-box"><strong>How to use:</strong> Print or forward to your accountant at least 4 weeks before 31 March.</div><h2>Client Trust Tax Status</h2><table><tr><th>Item</th><th>Detail</th></tr><tr><td>Trustee rate</td><td>39%</td></tr><tr><td>De minimis</td><td>33% if under $10,000</td></tr><tr><td>Distribution deadline</td><td><strong>31 March 2027</strong></td></tr></table><div class="action-box"><h3>Question 1</h3><p>"What is our trust net income this year — does de minimis apply?"</p></div><h3>Question 2</h3><p>"Which beneficiaries are 16 or over with low personal income?"</p><h3>Question 3</h3><p>"Are any distributions going to minors — should we redirect?"</p><h3>Question 4</h3><p>"Should we compare the trust structure against a company?"</p><h3>Question 5</h3><p>"What resolutions do we need to pass before 31 March?"</p>`;
 
 export default function TrustTaxSplitterFile05() {
@@ -25,6 +28,10 @@ export default function TrustTaxSplitterFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TrustTaxSplitterFile05() {
             Trust Income Allocation Decision Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Print and take to your pre-year-end meeting — trust tax questions your adviser must answer.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

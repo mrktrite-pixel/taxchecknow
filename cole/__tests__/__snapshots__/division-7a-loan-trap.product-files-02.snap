@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "division-7a-loan-trap";
+const SLUG = "d7a-02";
+const FALLBACK_LABEL = { name: "Minimum Repayment Calculator", desc: "Calculate the exact minimum repayment due before 30 June." };
 const BODY = `<h2>Minimum Repayment Calculation</h2><p>The minimum annual repayment depends on your loan balance, the ATO benchmark rate, and the remaining loan term.</p><div class="action-box"><h3>2025/26 Benchmark Rate: 8.27%</h3><p>Unsecured 7-year loan of $100,000:</p><p>Approximate minimum repayment: $19,808 per year</p><p>Use the ATO's online calculator for your exact amount.</p></div><table><tr><th>Loan Balance</th><th>7yr Unsecured (approx)</th><th>25yr Secured (approx)</th></tr><tr><td>$50,000</td><td>$9,904/yr</td><td>$4,540/yr</td></tr><tr><td>$100,000</td><td>$19,808/yr</td><td>$9,080/yr</td></tr><tr><td>$200,000</td><td>$39,616/yr</td><td>$18,160/yr</td></tr></table>`;
 
 export default function Division7aLoanTrapFile02() {
@@ -25,6 +28,10 @@ export default function Division7aLoanTrapFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Division7aLoanTrapFile02() {
             Division 7A Loan Trap Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Minimum Repayment Calculator
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Calculate the exact minimum repayment due before 30 June.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

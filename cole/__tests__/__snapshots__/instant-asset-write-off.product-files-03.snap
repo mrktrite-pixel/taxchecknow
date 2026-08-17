@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "instant-asset-write-off";
+const SLUG = "iawo-03";
+const FALLBACK_LABEL = { name: "Asset Splitting Method Guide", desc: "When you can legitimately claim multiple write-offs on related purchases." };
 const BODY = `<h2>Asset Splitting — What Is Legitimate</h2><table><tr><th>Scenario</th><th>Legitimate Split?</th></tr><tr><td>Two separate pieces of equipment, each under $20k</td><td>Yes — each qualifies independently</td></tr><tr><td>Computer ($12k) and monitor ($1.5k) invoiced separately</td><td>Yes — genuinely separate assets</td></tr><tr><td>Single machine split across multiple invoices artificially</td><td>No — ATO looks at substance</td></tr><tr><td>Workshop tools ($8k each, 3 separate tools)</td><td>Yes — each is an independent asset</td></tr></table>`;
 
 export default function InstantAssetWriteOffFile03() {
@@ -25,6 +28,10 @@ export default function InstantAssetWriteOffFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InstantAssetWriteOffFile03() {
             Instant Asset Write-Off Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Asset Splitting Method Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">When you can legitimately claim multiple write-offs on related purchases.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

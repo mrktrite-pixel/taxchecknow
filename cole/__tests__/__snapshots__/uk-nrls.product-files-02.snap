@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "uk-nrls";
+const SLUG = "nrls-02";
+const FALLBACK_LABEL = { name: "NRL1 Application Guide", desc: "How to apply for gross payment approval — forms, criteria, timing." };
 const BODY = `<h2>NRL1 / NRL2 / NRL3 Application</h2><table><tr><th>Form</th><th>Applies to</th></tr><tr><td>NRL1</td><td>Individual landlord</td></tr><tr><td>NRL2</td><td>Company landlord</td></tr><tr><td>NRL3</td><td>Trustee landlord</td></tr></table><h3>Criteria for approval</h3><ul><li>UK tax affairs up to date (no outstanding returns or tax debts)</li><li>Landlord agrees to file UK Self Assessment annually</li><li>Landlord has a UK tax reference (obtain via HMRC registration if not already)</li></ul><h3>Process</h3><ol><li>Download form NRL1/2/3 from HMRC</li><li>Complete with personal details, property details, letting agent details</li><li>Submit to HMRC Centre for Non-Residents</li><li>Approval typically 4-8 weeks</li><li>Once approved: notify letting agent / tenant; gross payment begins next rent cycle</li></ol>`;
 
 export default function UkNrlsFile02() {
@@ -25,6 +28,10 @@ export default function UkNrlsFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UkNrlsFile02() {
             UK Non-Resident Landlord Scheme Auditor · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            NRL1 Application Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to apply for gross payment approval — forms, criteria, timing.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

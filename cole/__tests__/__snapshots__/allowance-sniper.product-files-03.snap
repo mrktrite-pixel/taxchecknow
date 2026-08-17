@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "allowance-sniper";
+const SLUG = "as-03";
+const FALLBACK_LABEL = { name: "Salary Sacrifice vs Personal Contribution", desc: "Why salary sacrifice beats personal SIPP contributions at this income level." };
 const BODY = `<h2>Salary Sacrifice vs Personal Contribution</h2><table><tr><th>Mechanism</th><th>Saves income tax?</th><th>Saves employee NI?</th><th>Saves employer NI?</th><th>Typical effective saving</th></tr><tr><td>Personal SIPP contribution</td><td>Yes (40% relief)</td><td>No</td><td>No</td><td>~40% of contribution</td></tr><tr><td>Employer salary sacrifice</td><td>Yes (40% relief)</td><td>Yes (2-13%)</td><td>Often reinvested (13.8%)</td><td>~55-65% of contribution</td></tr></table><h3>Bottom Line</h3><p>If your employer offers salary sacrifice, use it first. Only use personal SIPP to top up above whatever your employer allows. At £115k income salary-sacrificing £15k can save £9,000-£10,500 vs £9,000 for a personal contribution.</p>`;
 
 export default function AllowanceSniperFile03() {
@@ -25,6 +28,10 @@ export default function AllowanceSniperFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AllowanceSniperFile03() {
             60% Tax Trap Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Salary Sacrifice vs Personal Contribution
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Why salary sacrifice beats personal SIPP contributions at this income level.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

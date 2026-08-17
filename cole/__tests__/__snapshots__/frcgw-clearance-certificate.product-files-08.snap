@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "frcgw-clearance-certificate";
+const SLUG = "frcgw-08";
+const FALLBACK_LABEL = { name: "Foreign Resident Variation Notice", desc: "The instrument that replaces the clearance certificate, and the trap in it." };
 const BODY = `<h2>Foreign resident variation notice</h2><div class="warning-box"><p>A clearance certificate is only issued to Australian residents for tax purposes. If you are a foreign resident, applying for one will not produce the result you want. The instrument available to you is a <strong>variation notice</strong>.</p></div><h3>What a variation notice does</h3><p>The default for a foreign resident vendor is that the purchaser withholds 15% of the sale price and remits it to the ATO. A variation notice asks the ATO to set a different rate for your sale — anywhere from <strong>0% to 14.99%</strong>. It does not change what tax you owe; it changes how much is taken at settlement, so that the amount withheld is closer to your actual liability.</p><h3>The grounds that work</h3><p>A variation is granted on evidence, not on inconvenience. The grounds that are actually accepted:</p><ul class="checklist"><li><strong>You will not make a capital gain on the disposal.</strong> A sale at or below cost base — genuinely common where a property was bought near the top of a market.</li><li><strong>Your capital gains tax liability is lower than the amount that would be withheld</strong>, including where carried-forward capital losses reduce it.</li><li><strong>A mortgagee is taking so much of the proceeds that there is not enough left to fund the withholding.</strong> This is the case where the sale cannot physically complete otherwise.</li></ul><p>"I need the cash" is not a ground. Neither is "I intend to return to Australia".</p><div class="highlight"><h3>The trap: the notice states a maximum sale price</h3><p>A variation notice is issued in respect of a sale up to a stated maximum price. <strong>If the property sells for more than that figure, the notice does not apply</strong> and the purchaser reverts to withholding the full 15%.</p><p>This bites at auction, and it bites where a variation was obtained early on a conservative estimate and the market moved. If your expected price changes after the notice issues, apply again with the higher figure. Do not assume a notice obtained at one price covers a sale at another.</p></div><h3>When to apply</h3><p>As soon as the contract is signed. A variation application asks for details of the actual sale, so it cannot sensibly be lodged before there is one — which makes it the opposite of the clearance certificate, where the advice is to apply before you even list.</p><p>Allow more time than a clearance certificate takes. A variation is assessed on its merits by a person, not matched automatically against a record.</p>{{#if section:recovery}}<div class="info-box"><p><strong>Settlement has already passed in your case.</strong> A variation notice cannot be applied retrospectively — its only function is to reduce what is withheld at a settlement that has not happened yet. Your route is File 07: the amount withheld was remitted to the ATO and is credited against the capital gains tax you actually owe, claimed in the return for the income year the contract was signed.</p></div>{{/if}}<h3>Deceased estates</h3><p>A separate instrument exists for a related situation: where a property passes to beneficiaries under a will, a legislative instrument provides for nil withholding on that transfer. It is not a variation notice and it is not applied for in the same way. If you are dealing with a deceased estate rather than an ordinary sale, say so to your conveyancer early — the wrong form here wastes weeks.</p><h3>Getting help</h3><p>This is the part of FRCGW where professional advice is worth paying for. The grounds are evidentiary, the maximum-price mechanic catches people out, and a cross-border tax adviser will have done it before. Apply at <a href="https://www.ato.gov.au/clearancecertificate">ato.gov.au/clearancecertificate</a>, which is also the entry point for variation applications.</p>`;
 
 export default function FrcgwClearanceCertificateFile08() {
@@ -25,6 +28,10 @@ export default function FrcgwClearanceCertificateFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FrcgwClearanceCertificateFile08() {
             Foreign Resident CGT Withholding Clearance Certificate · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Foreign Resident Variation Notice
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The instrument that replaces the clearance certificate, and the trap in it.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "dividend-trap";
+const SLUG = "dt-06";
+const FALLBACK_LABEL = { name: "Spousal Shareholding Execution Plan", desc: "Step-by-step guide to implementing spousal dividend splitting without triggering HMRC settlements challenge." };
 const BODY = `<h2>Spousal Shareholding — Execution Plan</h2><h3>Legal Basis</h3><p>Established under Jones v Garnett (Arctic Systems) 2007. HMRC accepts genuine spousal shareholding as legitimate tax planning provided the arrangement is real — not artificial.</p><h3>Phase 1 — Structural Setup</h3><ul class="checklist"><li>Decide share percentage for spouse (typically 10-30% depending on dividend needs)</li><li>Accountant drafts share transfer documentation</li><li>Update company articles of association if needed</li><li>File share transfer with Companies House</li></ul><h3>Phase 2 — Compliance Safeguards</h3><ul class="checklist"><li>Ensure spouse has genuine voting rights (not just dividend rights)</li><li>Spouse attends AGM or signs shareholder resolutions</li><li>Dividends paid directly to spouse's bank account</li><li>Spouse includes dividends on THEIR Self Assessment return, not yours</li></ul><h3>Phase 3 — Ongoing Operation</h3><ul class="checklist"><li>Separate dividend vouchers for each shareholder each dividend payment</li><li>Annual review of split — adjust if spouse's income changes</li><li>Document the commercial rationale in minutes if HMRC ever queries</li></ul><h3>Risk — Settlements Legislation</h3><p>ITTOIA 2005 s624 can challenge artificial arrangements. Safe if: spouse has full rights, is genuinely involved in the business or family unit, and the shareholding is permanent (not temporary for tax years). Risky if: shares with only dividend rights but no voting, transferred just before dividend then back, spouse has no knowledge of the arrangement.</p>`;
 
 export default function DividendTrapFile06() {
@@ -25,6 +28,10 @@ export default function DividendTrapFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DividendTrapFile06() {
             Salary + Dividend Tax Trap Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Spousal Shareholding Execution Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step guide to implementing spousal dividend splitting without triggering HMRC settlements challenge.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

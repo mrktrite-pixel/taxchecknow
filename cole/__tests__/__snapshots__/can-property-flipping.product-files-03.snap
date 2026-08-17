@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-property-flipping";
+const SLUG = "pft-03";
+const FALLBACK_LABEL = { name: "Life Event Exception Assessment", desc: "All eight qualifying life events with conditions and documentation requirements." };
 const BODY = `<h2>Life Event Exceptions — 8 Categories</h2><h3>1. Death</h3><p>Death of the taxpayer or a related person living with the taxpayer</p><ul><li>Proof: death certificate</li><li>Connection: sale necessitated by death (estate liquidation, survivor housing change)</li></ul><h3>2. Household addition</h3><p>Birth or adoption of child, or person becoming household member</p><ul><li>Proof: birth/adoption certificate; household change records</li><li>Connection: space constraints require larger property</li></ul><h3>3. Marital / common-law breakdown</h3><p>End of marriage or common-law partnership</p><ul><li>Proof: separation agreement, divorce order, or similar</li><li>Connection: joint property division requires sale</li></ul><h3>4. Serious disability or illness</h3><p>Of taxpayer or related person</p><ul><li>Proof: medical records, disability certification</li><li>Connection: accessibility / care needs require change</li></ul><h3>5. Qualifying employment change</h3><p>(a) Involuntary termination, OR (b) new employment requiring relocation 40km+ closer</p><ul><li>Proof: termination letter / offer letter / relocation package</li><li>Connection: commute distance / necessity of move</li></ul><h3>6. Personal safety threat</h3><p>Taxpayer or related person faces threat to personal safety</p><ul><li>Proof: police reports, restraining orders, documented incidents</li><li>Connection: safety requires relocation</li></ul><h3>7. Insolvency</h3><p>Under section 128 of the Income Tax Act</p><ul><li>Proof: bankruptcy filing, consumer proposal documentation</li><li>Connection: debt-resolution requires property sale</li></ul><h3>8. Involuntary disposition</h3><p>Expropriation, natural disaster, forced sale</p><ul><li>Proof: expropriation notice, insurance documentation, government order</li><li>Connection: sale was not voluntary</li></ul>`;
 
 export default function CanPropertyFlippingFile03() {
@@ -25,6 +28,10 @@ export default function CanPropertyFlippingFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanPropertyFlippingFile03() {
             Canada Property Flipping Tax Trap Auditor · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Life Event Exception Assessment
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">All eight qualifying life events with conditions and documentation requirements.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

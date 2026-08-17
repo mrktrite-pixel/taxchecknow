@@ -13,6 +13,7 @@
 // Protection.)
 
 import { getFactRules } from "./fact-rules";
+import { detectConflicts } from "./buyer-context";
 
 export interface AssessInput {
   inputs: Record<string, unknown>;
@@ -80,7 +81,35 @@ export async function generateAssessment(input: AssessInput): Promise<AssessResu
   const displayName = name && name !== "your" ? name : "this taxpayer";
   const isTier2 = tier === 2;
 
-  const inputsSummary = Object.entries(inputs)
+  // ── E6 (structural) — CONFLICT DETECTION LIVES HERE, NOT IN THE CALLER ──────
+  //
+  // It used to live in buildComposerInputs(maze, qual, productId?). The Stripe webhook calls
+  // that with TWO arguments and is out of scope to edit, so productId was undefined on the
+  // real purchase path and no stored assessment could ever carry a conflict note — measured
+  // across every FRCGW row on the live table. Same failure shape as the fact-rules problem,
+  // and the same fix: resolve by product_id inside the generator, so both callers inherit it.
+  //
+  // The composed inputs are split back apart to do it. buildComposerInputs namespaces the
+  // qualification answers as `qualification.<label>` and leaves maze answers bare, so the
+  // split is exact and needs no extra plumbing from either caller.
+  const mazeLabels: Record<string, unknown> = {};
+  const qualLabels: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(inputs)) {
+    if (k.startsWith("_conflict.")) continue;      // never re-detect an injected note
+    if (k.startsWith("qualification.")) qualLabels[k.slice("qualification.".length)] = v;
+    else mazeLabels[k] = v;
+  }
+  const conflicts = detectConflicts(product_id, mazeLabels, qualLabels);
+  const conflictInputs: Record<string, string> = {};
+  conflicts.forEach((c, i) => {
+    conflictInputs[`_conflict.${i + 1}`] =
+      "CONTRADICTION — the buyer's checker answers and their pre-checkout answers disagree. " +
+      `AUTHORITATIVE (checker): ${c.authoritative}. NOT AUTHORITATIVE (pre-checkout): ` +
+      `${c.contradicting}. ${c.note}`;
+  });
+  const allInputs = { ...inputs, ...conflictInputs };
+
+  const inputsSummary = Object.entries(allInputs)
     .map(([k, v]) => `- ${k.replace(/_/g, " ")}: ${v}`)
     .join("\n");
 
@@ -175,7 +204,17 @@ write conflicts with one of them, the rule wins and the sentence is rewritten.
     : "";
 
   const prompt = `You are a ${market} ${authority} tax expert writing a personalised ${isTier2 ? "action plan" : "tax assessment"} for ${displayName}.
-${corpusBlock}${factRulesBlock}${deadlineBlock}
+${corpusBlock}${factRulesBlock}
+${conflicts.length ? `
+A CONTRADICTION WAS DETECTED IN THIS CUSTOMER'S ANSWERS — NAMING IT IS MANDATORY.
+There ${conflicts.length === 1 ? "is 1 input" : `are ${conflicts.length} inputs`} beginning
+"_conflict." below. You MUST state the discrepancy explicitly, in your own words, in the FIRST
+TWO SENTENCES of the very first field you write. Not later, not only in an action step, not
+implied. A reader who has answered inconsistently cannot act on advice that silently picks one
+side — they will not know which answer the advice was built on.
+Then follow the instruction inside the _conflict input for how to resolve it.
+This is not optional and it is not satisfied by merely writing advice consistent with the
+authoritative answer.` : ""}${deadlineBlock}
 THEIR CALCULATOR ANSWERS:
 ${inputsSummary}
 
@@ -227,8 +266,8 @@ labelled as an example; presenting one as their number is not.
 
 Any input beginning "_conflict." is a DETECTED CONTRADICTION between what the customer answered
 in the checker and what they answered just before checkout. Follow its instruction exactly:
-treat the checker answers as authoritative, and name the discrepancy plainly in your opening
-rather than quietly resolving it. Do not average the two and do not ignore either.
+treat the checker answers as authoritative, and name the discrepancy plainly rather than
+quietly resolving it. Do not average the two and do not ignore either.
 
 ACCOUNTANT QUESTIONS — WHO CAN ACTUALLY ANSWER THEM:
 Every entry in "accountantQuestions" must be answerable BY THE ACCOUNTANT, from their own

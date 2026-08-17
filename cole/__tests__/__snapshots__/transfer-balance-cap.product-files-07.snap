@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "transfer-balance-cap";
+const SLUG = "tbc-07";
+const FALLBACK_LABEL = { name: "Spouse Balance Equalisation Strategy", desc: "Household-level TBC maximisation through contribution splitting, withdrawal/recontribution, and spousal planning." };
 const BODY = `<h2>Spouse Balance Equalisation for TBC Maximisation</h2><p>Each member has their own personal Transfer Balance Cap. For couples, optimising combined household pension phase utilisation often matters more than any individual commutation strategy.</p><h2>The Three Mechanisms</h2><h3>1. Contribution Splitting (SIS Reg 6.01)</h3><p>Up to 85% of concessional contributions made in a financial year can be split to a spouse in the following year. Must be same fund or cooperative funds. Typically $25,500/year maximum per member.</p><h3>2. Withdrawal + Non-Concessional Recontribution</h3><p>Member A withdraws (tax-free if 60+ retired) and Member B makes a non-concessional contribution. Subject to NCC cap: $120k/year or $360k bring-forward. Effective for up to ~$360k shift per 3-year window.</p><h3>3. Spouse Contribution Tax Offset</h3><p>If spouse has income under $40k, contributing up to $3,000 p.a. to their super gets you an 18% tax offset (max $540). Small but additive over years.</p><h2>Worked Example — Steve and Oksana</h2><ul><li>Steve: $2.1M pension, personal cap $1.6M = $500k excess</li><li>Oksana: $680k accumulation, hasn't started pension (prospective $1.9M cap)</li><li>Plan: Steve commutes $500k back to accumulation. Over 3-year window, Steve withdraws $360k and Oksana makes NCC contributions of $360k</li><li>After 3 years: Steve at $1.6M pension + $140k accumulation (net of drawdowns), Oksana at $1.04M accumulation ready to commence at ~62</li><li>Combined household pension phase potential: $1.6M + up to $1.9M = $3.5M at 0% earnings tax</li></ul>`;
 
 export default function TransferBalanceCapFile07() {
@@ -25,6 +28,10 @@ export default function TransferBalanceCapFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TransferBalanceCapFile07() {
             Transfer Balance Cap Optimiser · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Spouse Balance Equalisation Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Household-level TBC maximisation through contribution splitting, withdrawal/recontribution, and spousal planning.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

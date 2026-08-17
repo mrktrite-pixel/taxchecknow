@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "frcgw-clearance-certificate";
+const SLUG = "frcgw-07";
+const FALLBACK_LABEL = { name: "Recovering A Withheld Amount", desc: "Where the money went, how you claim it, and how long it takes." };
 const BODY = `<h2>Recovering a withheld amount</h2><div class="action-box"><h3>Where the money is</h3><p>The purchaser did not keep it, and it is not sitting in anybody's trust account. The purchaser was required to pay the withheld amount <strong>to the ATO</strong> at or before settlement, and to report the payment. It is held by the ATO as a credit in your name.</p></div><h3>How you claim it</h3><p>You claim the credit by lodging your Australian income tax return for <strong>the income year in which the contract was signed</strong>.</p><div class="warning-box"><p>The contract year, not the settlement year. The capital gains event happens on the contract date. A contract signed in June 2026 and settled in August 2026 belongs to the 2025–26 income year, and the credit is claimed in that return — even though the money did not move until the following year.</p></div><h3>How much comes back</h3>{{#if section:variation}}<p>As a foreign resident, the withheld amount is credited against the capital gains tax you actually owe on the disposal. If the credit is larger than your liability, the balance is refunded. If your liability is larger, the credit reduces what remains to pay. The withholding is not a final tax.</p>{{/if}}{{#unless section:variation}}<p>If you are an Australian resident for tax purposes, have no other tax debts, and no capital gains tax is payable on the sale — a main residence held for the whole ownership period, for instance — the withheld amount is refunded <strong>in full</strong>.</p><p>If you do have capital gains tax to pay, the credit is applied against it and the balance is refunded. If you have other tax debts, the credit is applied to those first.</p>{{/unless}}<h3>How long it takes</h3><p>The wait is a function of where the contract date falls in the income year, not of ATO processing speed.</p><ul><li>A contract signed in May settles into an income year that ends weeks later, so the return can be lodged soon after and the refund follows within weeks.</li><li>A contract signed in July sits at the start of an income year that does not end for another eleven months. Adding lodgement and processing, the gap between settlement and refund can reach <strong>around 15 months</strong>.</li></ul><p>Nothing you do speeds this up materially — the return cannot be lodged before the income year ends. That asymmetry is the real argument for applying for the certificate early, and it is worth understanding rather than worrying about: the money is not at risk, it is just not available.</p><h3>Worked examples</h3><p>Illustrations, not your figures.</p><table><thead><tr><th>Sale price</th><th>Withheld and remitted to ATO</th><th>Refunded if no CGT payable and no tax debts</th></tr></thead><tbody><tr><td>$450,000</td><td>$67,500</td><td>$67,500</td></tr><tr><td>$900,000</td><td>$135,000</td><td>$135,000</td></tr><tr><td>$1,200,000</td><td>$180,000</td><td>$180,000</td></tr></tbody></table><h3>What to do now</h3><ol><li>Get the payment confirmation from the purchaser's conveyancer — the ATO receipt for the withheld amount. You want it on file.</li><li>Confirm the <strong>contract date</strong> and therefore which income year the sale falls in.</li><li>Make sure whoever prepares your return knows a credit is coming, so it is claimed rather than missed. It does not appear automatically in every case.</li>{{#if section:residency_first}}<li>Settle your residency for tax purposes — it decides whether the whole amount comes back or only the part above your actual liability.</li>{{/if}}</ol><div class="info-box"><p>There is no separate refund application, no early-release process, and no dispute mechanism for a correctly withheld amount. The withholding was the purchaser complying with the law, not an error to be reversed. The return is the route.</p></div>`;
 
 export default function FrcgwClearanceCertificateFile07() {
@@ -25,6 +28,10 @@ export default function FrcgwClearanceCertificateFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FrcgwClearanceCertificateFile07() {
             Foreign Resident CGT Withholding Clearance Certificate · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Recovering A Withheld Amount
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Where the money went, how you claim it, and how long it takes.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

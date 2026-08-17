@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "side-hustle-checker";
+const SLUG = "sh-07";
+const FALLBACK_LABEL = { name: "Multi-Year Disclosure Strategy", desc: "If you have multiple undeclared years, how to approach the full disclosure efficiently." };
 const BODY = `<h2>Multi-Year Disclosure — How Far Back to Go</h2><p>HMRC's "behaviour" rules determine how many years you must disclose:</p><table><tr><th>Behaviour</th><th>Assessment window</th></tr><tr><td>Not careless (reasonable error)</td><td>Current year only</td></tr><tr><td>Careless</td><td>4 years back</td></tr><tr><td>Failure to notify (negligent)</td><td>6 years back</td></tr><tr><td>Deliberate</td><td>20 years back</td></tr></table><h3>Most Side-Hustle Cases</h3><p>For someone who genuinely didn't know about the £1,000 threshold and the DAC7 reporting, HMRC typically assesses 4 years under "careless" treatment.</p><h3>Disclosure Sequencing</h3><ol><li>File earliest year first — establishes the timeline</li><li>File each subsequent year in sequence</li><li>Match disclosure to platform statement figures (HMRC cross-references)</li><li>Pay full amount at time of disclosure or agree payment plan</li></ol><h3>Penalty Mitigation</h3><p>Unprompted disclosure of 4 years: typical penalty 20-30% of tax. Prompted (after HMRC letter): 30-50%. Discovered: 50%+.</p>`;
 
 export default function SideHustleCheckerFile07() {
@@ -25,6 +28,10 @@ export default function SideHustleCheckerFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SideHustleCheckerFile07() {
             HMRC Side Income Declaration Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Year Disclosure Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">If you have multiple undeclared years, how to approach the full disclosure efficiently.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

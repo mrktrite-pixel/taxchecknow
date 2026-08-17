@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-property-flipping";
+const SLUG = "pft-06";
+const FALLBACK_LABEL = { name: "Sale Timing Optimisation Strategy", desc: "Specific timing strategies — closing deferral, purchase date restructuring, multi-property coordination." };
 const BODY = `<h2>Sale Timing Optimisation</h2><h3>Lever 1 — Defer sale closing past 365 days</h3><ul><li>If approaching 365-day mark: negotiate closing date post-threshold</li><li>Buyer typically flexible on 30-60 day window; rarely resists short deferral</li><li>Document closing change to protect position</li></ul><h3>Lever 2 — Establish life event first, sell second</h3><ul><li>If life event imminent (marriage ending, job change): wait for documented event before listing</li><li>Clear sequence strengthens exception claim</li></ul><h3>Lever 3 — Multi-property year-spanning</h3><ul><li>If multiple sales planned + post-25 June 2024: stay under $250k annual capital gain threshold to keep 50% inclusion</li><li>Time second property disposition into subsequent year</li></ul><h3>Lever 4 — Corporate / trust holding considerations</h3><ul><li>Corporation / trust: 2/3 inclusion on all capital gains (post 25 June 2024) — less attractive than individual below $250k</li><li>Different rule set for trust/corp dispositions</li></ul><h3>Lever 5 — Purchase date renegotiation (pre-closing)</h3><ul><li>If original purchase closing can be accelerated (before actual occupancy): shift day 1 earlier</li><li>Rarely applicable but worth checking with seller</li></ul><h3>Lever 6 — Gift / transfer to family (pre-sale)</h3><ul><li>Gift to spouse: attribution rules generally apply — not effective for flipping rule purposes</li><li>Gift to adult child: deemed disposition at FMV — triggers immediate tax; flipping rule passes to child; rarely beneficial</li></ul>`;
 
 export default function CanPropertyFlippingFile06() {
@@ -25,6 +28,10 @@ export default function CanPropertyFlippingFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanPropertyFlippingFile06() {
             Canada Property Flipping Tax Trap Auditor · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Sale Timing Optimisation Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Specific timing strategies — closing deferral, purchase date restructuring, multi-property coordination.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

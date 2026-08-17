@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "division-7a-loan-trap";
+const SLUG = "d7a-01";
+const FALLBACK_LABEL = { name: "Your Division 7A Risk Assessment", desc: "Your loan compliance status and deemed dividend risk calculation." };
 const BODY = `<h2>Your Div 7A Position</h2><div class="action-box"><h3>The Risk Calculation</h3><p>No agreement = full balance is deemed dividend</p><p>Missed repayment = shortfall is deemed dividend</p><p>Deemed dividend is unfranked — taxed at marginal rate</p></div><p>Source: <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends">ATO — Division 7A</a></p>`;
 
 export default function Division7aLoanTrapFile01() {
@@ -25,6 +28,10 @@ export default function Division7aLoanTrapFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Division7aLoanTrapFile01() {
             Division 7A Loan Trap Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Division 7A Risk Assessment
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your loan compliance status and deemed dividend risk calculation.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

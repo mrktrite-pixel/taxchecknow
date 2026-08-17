@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "app-tax-gst-sniper";
+const SLUG = "gst-07";
+const FALLBACK_LABEL = { name: "Apportionment Engine", desc: "Calculate your exact private vs business GST split for mixed-use assets." };
 const BODY = `<h2>Mixed-Use Apportionment</h2><p>If an asset is used for both taxable (GST) and private purposes, you can only claim the business-use proportion of the GST. IRD requires you to calculate this accurately.</p><div class="action-box"><h3>Common Apportionment Methods</h3><p>Vehicle: business kilometres divided by total kilometres</p><p>Home office: business floor area divided by total floor area</p><p>Property: Airbnb nights divided by total nights available</p></div><table><tr><th>Asset</th><th>Method</th><th>Record Needed</th></tr><tr><td>Vehicle</td><td>Kilometre logbook</td><td>IRD logbook or 90-day sample</td></tr><tr><td>Home office</td><td>Floor area</td><td>Floor plan or measurements</td></tr><tr><td>Rental property</td><td>Days available</td><td>Booking calendar</td></tr></table>`;
 
 export default function AppTaxGstSniperFile07() {
@@ -25,6 +28,10 @@ export default function AppTaxGstSniperFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AppTaxGstSniperFile07() {
             Platform GST Decision Engine (NZ) · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Apportionment Engine
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Calculate your exact private vs business GST split for mixed-use assets.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

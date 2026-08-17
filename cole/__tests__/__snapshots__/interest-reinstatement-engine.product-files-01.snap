@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "interest-reinstatement-engine";
+const SLUG = "ir-01";
+const FALLBACK_LABEL = { name: "Your Interest Recovery Calculation", desc: "Your exact annual tax saving from restored interest deductibility." };
 const BODY = `<h2>Your Interest Deduction Restored</h2><div class="action-box"><h3>The Simple Calculation</h3><p>Annual interest paid on rental loans × Your marginal tax rate = Annual tax saving</p><p>Example: $25,000 × 33% = $8,250 per year restored</p></div><h2>Before vs After</h2><table><tr><th>Tax Year</th><th>Deductibility</th><th>On $25k Interest</th></tr><tr><td>2024/25</td><td>0%</td><td>$0 deductible</td></tr><tr><td>2025/26</td><td>100%</td><td>$25,000 deductible</td></tr><tr><td>Your saving</td><td>—</td><td>$8,250 at 33%</td></tr></table><p>Source: <a href="https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/deductions-for-residential-rental-property/interest">IRD — Interest deductibility</a></p>`;
 
 export default function InterestReinstatementEngineFile01() {
@@ -25,6 +28,10 @@ export default function InterestReinstatementEngineFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InterestReinstatementEngineFile01() {
             Property Interest Deductibility Recovery Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Interest Recovery Calculation
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your exact annual tax saving from restored interest deductibility.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

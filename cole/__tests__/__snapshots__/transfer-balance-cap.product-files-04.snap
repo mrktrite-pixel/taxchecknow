@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "transfer-balance-cap";
+const SLUG = "tbc-04";
+const FALLBACK_LABEL = { name: "Reversionary Pension Impact", desc: "How inheriting a spouse's pension affects your transfer balance account — and what can be done before the event." };
 const BODY = `<h2>Reversionary Pensions and Your TBA</h2><p>If you're entitled to receive a deceased spouse's pension (reversionary pension), the reversion creates a credit to your transfer balance account on the day it reverts — potentially pushing you over your personal cap instantly.</p><h3>The Credit Amount</h3><p>The credit equals the value of the reversionary pension on the reversion date (12 months after the spouse's death, or the date the reversion is processed by the fund).</p><h3>The Trap</h3><ul><li>If you already have your own pension and the combined reverted balance exceeds your personal cap, you're immediately in excess</li><li>Excess transfer balance tax starts accruing from that date</li><li>ATO issues commutation authority — must commute the excess back to accumulation OR withdraw</li></ul><h3>Pre-Reversion Planning</h3><ul><li>Model combined pension balance vs personal cap BEFORE death event</li><li>Consider commuting some of your own pension to accumulation in advance to make room</li><li>Spouse's pension can be alternately paid as a lump sum rather than reversionary pension, avoiding the cap credit</li><li>Alternative: re-route via estate to a testamentary trust — different tax treatment but no TBA credit</li></ul>`;
 
 export default function TransferBalanceCapFile04() {
@@ -25,6 +28,10 @@ export default function TransferBalanceCapFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TransferBalanceCapFile04() {
             Transfer Balance Cap Optimiser · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Reversionary Pension Impact
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How inheriting a spouse's pension affects your transfer balance account — and what can be done before the event.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

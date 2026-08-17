@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "side-hustle-checker";
+const SLUG = "sh-08";
+const FALLBACK_LABEL = { name: "Ongoing Compliance Setup", desc: "How to structure your side income record-keeping so you stay compliant from this year onwards." };
 const BODY = `<h2>Ongoing Compliance — From Next Tax Year</h2><h3>Month-by-Month</h3><ul class="checklist"><li>Weekly: log all income and expenses in spreadsheet or app</li><li>Monthly: reconcile bank statements against records</li><li>Quarterly: review total income vs £1,000 and £50,270 thresholds</li><li>Annually: prepare Self Assessment by 31 January (online)</li></ul><h3>Tools</h3><ul><li>Simple spreadsheet (date, description, amount, category)</li><li>QuickBooks Self-Employed (£10/month)</li><li>FreeAgent (free with some business bank accounts)</li><li>Starling Business bank (free, with Xero integration)</li></ul><h3>Record Keeping Requirements</h3><p>Keep records for 5 years after 31 January filing deadline. For 2025-26 tax year: records until 31 January 2032.</p><h3>Trigger Points to Watch</h3><ul><li>Crossing £1,000 threshold — registration becomes mandatory</li><li>Total income crossing £50,270 — marginal rate jumps to 40%</li><li>Total income crossing £100,000 — personal allowance starts tapering (60% trap)</li><li>Side income growth above £50k — potential VAT registration threshold</li></ul>`;
 
 export default function SideHustleCheckerFile08() {
@@ -25,6 +28,10 @@ export default function SideHustleCheckerFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SideHustleCheckerFile08() {
             HMRC Side Income Declaration Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Ongoing Compliance Setup
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to structure your side income record-keeping so you stay compliant from this year onwards.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

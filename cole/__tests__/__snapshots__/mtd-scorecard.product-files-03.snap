@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "mtd-scorecard";
+const SLUG = "mtd-03";
+const FALLBACK_LABEL = { name: "How Quarterly Updates Work", desc: "The quarterly update cycle and the final declaration, and where HMRC publishes the dates that apply to you." };
 const BODY = `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th><th>Late after</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td><td>Penalty point + fee clock starts</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td><td>Same</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td><td>Same</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td><td>Same</td></tr><tr><td>Final declaration</td><td>Full tax year</td><td>31 January</td><td>Standard SA penalty</td></tr></table><h3>Penalty Accumulation</h3><p>Each missed quarterly update: £200 initial + £10/day × up to 90 days = up to £1,100 per quarter. Missing all 4 in a year = up to £4,400 annually. Plus points-based system (4 points = £200 additional penalty).</p><div class="info-box"><strong>Calendar discipline:</strong> Set recurring reminders 2 weeks before each quarterly deadline. First-year breaches usually come from forgotten deadlines, not incapability.</div>`;
 
 export default function MtdScorecardFile03() {
@@ -25,6 +28,10 @@ export default function MtdScorecardFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MtdScorecardFile03() {
             MTD Mandation Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            How Quarterly Updates Work
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The quarterly update cycle and the final declaration, and where HMRC publishes the dates that apply to you.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

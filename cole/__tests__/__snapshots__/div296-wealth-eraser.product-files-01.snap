@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "div296-wealth-eraser";
+const SLUG = "div296-01";
+const FALLBACK_LABEL = { name: "Your Div 296 Exposure & Reset Decision", desc: "Your exact Division 296 exposure and whether the cost-base reset is net beneficial for your fund." };
 const BODY = `<h2>Your Division 296 Exposure</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: Your TSB vs $3M threshold (and $10M threshold if applicable)</p><p>Number 2: Total embedded unrealised gains across fund CGT assets</p><p>Number 3: Loss-position assets and their impact on the all-or-nothing election</p></div><h3>Division 296 Tax Calculation</h3><p>Tax = Realised earnings × ((TSB − $3M) / TSB) × 15%</p><p>For TSB above $10M: further 10% on attributable portion (40% total)</p><p>Source: <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds">ATO — Key superannuation rates and thresholds</a> · ITAA 1997 Subdiv 296-B</p>`;
 
 export default function Div296WealthEraserFile01() {
@@ -25,6 +28,10 @@ export default function Div296WealthEraserFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Div296WealthEraserFile01() {
             Division 296 Wealth Eraser Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Div 296 Exposure & Reset Decision
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your exact Division 296 exposure and whether the cost-base reset is net beneficial for your fund.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

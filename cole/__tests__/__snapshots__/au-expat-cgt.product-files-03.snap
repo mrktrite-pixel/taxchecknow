@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "au-expat-cgt";
+const SLUG = "aucgt-03";
+const FALLBACK_LABEL = { name: "Contract Timing Risk Analysis", desc: "The single most important lever: aligning contract date with Australian residency status." };
 const BODY = `<h2>Contract Timing Risk Analysis</h2><div class="warning-box"><strong>The CGT event date is the CONTRACT SIGNATURE DATE — not settlement.</strong> If you sign as a foreign resident, exemption is denied permanently for this sale, regardless of settlement timing or later return to Australia.</div><h3>Planning levers</h3><ul><li>Return to Australia and resume genuine residency before signing (substance over form — ATO examines intent and facts)</li><li>Delay listing until residency has been re-established</li><li>If already non-resident and selling urgently — accept the exemption loss and model the actual tax cost</li></ul><h3>What does NOT work</h3><ul><li>Returning just for the signing — ATO examines genuine residency, not presence on a single day</li><li>Backdating contracts — prohibited and easily detected</li><li>Splitting contract / settlement — does not help; contract date is the test</li></ul>`;
 
 export default function AuExpatCgtFile03() {
@@ -25,6 +28,10 @@ export default function AuExpatCgtFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AuExpatCgtFile03() {
             Australian Expat CGT Trap Auditor · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Contract Timing Risk Analysis
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The single most important lever: aligning contract date with Australian residency status.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

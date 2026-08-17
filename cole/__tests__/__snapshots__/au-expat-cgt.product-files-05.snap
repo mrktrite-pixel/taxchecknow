@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "au-expat-cgt";
+const SLUG = "aucgt-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief — Expat CGT", desc: "Questions for your Australian tax advisor before signing any sale contract." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with an Australian tax advisor familiar with foreign resident CGT — ideally CA/CPA registered with international tax experience.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Based on my facts, am I likely a foreign resident for CGT purposes at the time I would sign a contract?</p></div><h3>Question 2</h3><p>What would it take for me to be Australian resident for CGT at contract date — and is it viable given my situation?</p><h3>Question 3</h3><p>Does any life events exception apply to my situation?</p><h3>Question 4</h3><p>Should I obtain an ATO clearance certificate before settlement — and what is the application timing?</p><h3>Question 5</h3><p>What is my estimated CGT liability under my current residency position, vs a plausible alternative scenario?</p>`;
 
 export default function AuExpatCgtFile05() {
@@ -25,6 +28,10 @@ export default function AuExpatCgtFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AuExpatCgtFile05() {
             Australian Expat CGT Trap Auditor · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — Expat CGT
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Questions for your Australian tax advisor before signing any sale contract.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

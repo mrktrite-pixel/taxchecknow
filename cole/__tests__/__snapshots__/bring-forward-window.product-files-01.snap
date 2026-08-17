@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bring-forward-window";
+const SLUG = "bfw-01";
+const FALLBACK_LABEL = { name: "Your 30 June Sequencing Verdict", desc: "Your exact contribution capacity across 30 June and 1 July — sequenced or not." };
 const BODY = `<h2>Your 30 June Sequencing Verdict</h2><div class="action-box"><h3>Your Three Tests</h3><p>Test 1: TSB bracket at 30 June 2026 — determines full 3-year, 2-year, annual, or nil eligibility from 1 July</p><p>Test 2: Bring-forward status — must NOT be triggered in 2024-25 or 2025-26 to access the new $390,000 cap</p><p>Test 3: Age and work test — 75+ locked out, 67-74 must meet 40-hour work test</p></div><h3>Your Sequencing Capacity</h3><p>Before 30 June 2026: up to $120,000 under 2025-26 annual NCC cap</p><p>From 1 July 2026: up to $390,000 under 2026-27 3-year bring-forward (if TSB under $1.84M)</p><p>Total across sequencing window: up to $510,000</p><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/growing-and-keeping-track-of-your-super/caps-limits-and-tax-on-super-contributions/non-concessional-contributions-cap">ATO — Non-concessional contributions cap</a></p>`;
 
 export default function BringForwardWindowFile01() {
@@ -25,6 +28,10 @@ export default function BringForwardWindowFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function BringForwardWindowFile01() {
             Super Contribution Bring-Forward Window Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your 30 June Sequencing Verdict
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your exact contribution capacity across 30 June and 1 July — sequenced or not.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "australia-smsf-residency";
+const SLUG = "smsf-03";
+const FALLBACK_LABEL = { name: "Trustee Positioning Strategy", desc: "How to position trustees and directors to maintain CM&C in Australia while members are overseas." };
 const BODY = `<h2>Trustee Positioning</h2><h3>Option 1 — Corporate trustee + AU-resident director</h3><ul><li>Appoint trusted AU-resident as corporate trustee director</li><li>Director must genuinely exercise control — chair investment committee / make binding decisions</li><li>Documented minutes showing AU director decision-making</li></ul><h3>Option 2 — Retain AU-resident individual trustee</h3><ul><li>Only effective if AU-resident trustee is the 'real' decision-maker, not a nominee</li><li>Requires active participation, not passive signature</li></ul><h3>Option 3 — Short-term absence positioning</h3><ul><li>Document definite return plan (under 2 years)</li><li>Continue making decisions from AU during visits</li><li>Appoint accountant/adviser to execute pre-approved strategy</li></ul>`;
 
 export default function AustraliaSmsfResidencyFile03() {
@@ -25,6 +28,10 @@ export default function AustraliaSmsfResidencyFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AustraliaSmsfResidencyFile03() {
             Australian SMSF Residency Kill-Switch · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Trustee Positioning Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to position trustees and directors to maintain CM&C in Australia while members are overseas.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "rental-property-deduction-audit";
+const SLUG = "rda-08";
+const FALLBACK_LABEL = { name: "Audit-Proof Documentation System", desc: "A filing and evidence system to defend any ATO audit." };
 const BODY = `<h2>ATO Audit Defence — Document System</h2><p>The ATO can audit rental property schedules for up to 4 years after lodgement. Keep all evidence for at least 5 years.</p><div class="action-box"><h3>Essential Files</h3><p>Lease agreements — all current and historical</p><p>Rental income bank statements — matching rental schedule</p><p>All expense receipts — categorised by type and year</p><p>Quantity surveyor depreciation report</p><p>Renovation quotes and invoices — with dates</p><p>Loan statements — interest portion confirmed</p><p>Rental availability calendar — for holiday or mixed-use properties</p></div>`;
 
 export default function RentalPropertyDeductionAuditFile08() {
@@ -25,6 +28,10 @@ export default function RentalPropertyDeductionAuditFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function RentalPropertyDeductionAuditFile08() {
             Rental Property Deduction Audit · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Audit-Proof Documentation System
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">A filing and evidence system to defend any ATO audit.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "small-business-cgt-concessions";
+const SLUG = "sbcgt-08";
+const FALLBACK_LABEL = { name: "Multi-Entity Structuring Plan", desc: "How to structure ownership across entities to maximise Division 152 eligibility." };
 const BODY = `<h2>Entity Structuring for Division 152</h2><p>The structure of ownership affects both the basic conditions test and the active asset test.</p><table><tr><th>Structure</th><th>Concessions Available?</th><th>Notes</th></tr><tr><td>Sole trader / individual</td><td>Yes — all four</td><td>Simplest — direct access</td></tr><tr><td>Partnership</td><td>Yes — each partner separately</td><td>Each partner accesses their share</td></tr><tr><td>Trust</td><td>Yes — via beneficiaries</td><td>CGT concession stakeholder conditions apply</td></tr><tr><td>Company</td><td>Yes — with CGT concession stakeholder</td><td>Complex — specialist advice required</td></tr></table>`;
 
 export default function SmallBusinessCgtConcessionsFile08() {
@@ -25,6 +28,10 @@ export default function SmallBusinessCgtConcessionsFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SmallBusinessCgtConcessionsFile08() {
             Small Business CGT Concessions Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Entity Structuring Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to structure ownership across entities to maximise Division 152 eligibility.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

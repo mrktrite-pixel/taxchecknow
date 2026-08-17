@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-eot-exit";
+const SLUG = "eot-03";
+const FALLBACK_LABEL = { name: "Exemption Quantum and LCGE Interaction", desc: "How the $10M exemption interacts with LCGE across single and multi-vendor scenarios." };
 const BODY = `<h2>Exemption Quantum + LCGE</h2><h3>Single vendor scenarios</h3><table><tr><th>Gain</th><th>LCGE</th><th>EOT exemption</th><th>Taxable gain</th></tr><tr><td>$1M</td><td>$1.016M (caps at gain)</td><td>$0 needed</td><td>$0</td></tr><tr><td>$6M</td><td>$1.016M</td><td>$4.98M</td><td>$0</td></tr><tr><td>$15M</td><td>$1.016M</td><td>$10M</td><td>$3.98M taxable</td></tr></table><h3>Multi-vendor scenarios</h3><table><tr><th>Setup</th><th>Allocation</th><th>Per-vendor exemption</th></tr><tr><td>2 vendors (50/50)</td><td>$5M each</td><td>Plus each uses own LCGE (~$1M)</td></tr><tr><td>3 vendors (equal)</td><td>$3.33M each</td><td>Plus each uses own LCGE</td></tr><tr><td>Couple 70/30 split</td><td>$7M / $3M</td><td>Proportional to ownership</td></tr></table><h3>LCGE mechanics</h3><ul><li>Tracked per individual (not per transaction)</li><li>2024 amount: $1,016,602 (indexed annually)</li><li>If previously used: remaining amount only</li><li>Check CRA My Account for remaining LCGE balance</li></ul><h3>Combined maximum (single vendor)</h3><p>LCGE $1,016,602 + EOT $10,000,000 = $11,016,602 potential exemption per qualifying sale. Tax saved at ~50% combined marginal: up to $2.75M.</p>`;
 
 export default function CanEotExitFile03() {
@@ -25,6 +28,10 @@ export default function CanEotExitFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanEotExitFile03() {
             Canada EOT Exit Optimizer · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Exemption Quantum and LCGE Interaction
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How the $10M exemption interacts with LCGE across single and multi-vendor scenarios.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

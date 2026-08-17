@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SLUG = "beck-08";
+const FALLBACK_LABEL = { name: "Full Beckham Application Roadmap", desc: "Step-by-step 6-month roadmap from arrival to AEAT acknowledgment." };
 const BODY = `<h2>Full Beckham Application Roadmap</h2><h3>Pre-arrival (2-3 months before)</h3><ul class="checklist"><li>Confirm qualifying category with Spanish adviser</li><li>Apply for A1 if EU posted worker (home country SS authority)</li><li>Apply for DNV if remote worker route</li><li>Gather 5-year prior residency documentation</li><li>Engage Spanish gestor or tax adviser</li></ul><h3>Month 0-1 (arrival)</h3><ul><li>Register with Spanish SS (NAF) — employer or self</li><li>Obtain NIE (Spanish foreigner ID number)</li><li>Open Spanish bank account</li><li>Confirm employment contract / assignment letter filed</li></ul><h3>Month 1-3 (preparation)</h3><ul><li>Finalise all supporting documentation</li><li>Prepare Modelo 149 (typically via gestor)</li><li>Review tax modelling — Beckham vs standard IRPF</li><li>File NIE with AEAT for tax administration setup</li></ul><h3>Month 3-5 (submission prep)</h3><ul><li>Final adviser review + gestor sign-off</li><li>Submit Modelo 149 electronically via AEAT Sede</li><li>Retain submission receipt</li></ul><h3>Month 5-6 (confirmation)</h3><ul><li>AEAT acknowledgment (typically 2-4 weeks post-submission)</li><li>Beckham regime becomes effective from tax year of arrival</li><li>First IRPF return due by 30 June following year (reflects Beckham election)</li></ul><h3>Ongoing (during 6-year regime)</h3><ul><li>Annual IRPF filing at Beckham rate</li><li>Monitor continued eligibility (employment continuity, SS coverage)</li><li>Retain 6+ years of documentation</li></ul>`;
 
 export default function SpainBeckhamFile08() {
@@ -25,6 +28,10 @@ export default function SpainBeckhamFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SpainBeckhamFile08() {
             Spain Beckham Eligibility Wall · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full Beckham Application Roadmap
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step 6-month roadmap from arrival to AEAT acknowledgment.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

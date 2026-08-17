@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "mtd-scorecard";
+const SLUG = "mtd-04";
+const FALLBACK_LABEL = { name: "Accountant Brief — MTD Mandation", desc: "5 questions to ask your accountant BEFORE mandate day." };
 const BODY = `<div class="info-box">Forward to your accountant or take to your next meeting. These are the questions that determine first-year compliance vs penalty exposure.</div><h2>Ask Your Accountant</h2><div class="action-box"><h3>Question 1</h3><p>"Am I mandated under MTD ITSA — and from which April?"</p></div><h3>Question 2</h3><p>"Is my current software MTD-compatible — or do I need to switch or add bridging software?"</p><h3>Question 3</h3><p>"Will you handle my quarterly updates — and what will that cost in addition to annual fees?"</p><h3>Question 4</h3><p>"Do I need separate quarterly submissions for each rental property, or are they combined?"</p><h3>Question 5</h3><p>"What happens to my payments on account and 31 January tax bill under MTD?"</p>`;
 
 export default function MtdScorecardFile04() {
@@ -25,6 +28,10 @@ export default function MtdScorecardFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MtdScorecardFile04() {
             MTD Mandation Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Accountant Brief — MTD Mandation
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">5 questions to ask your accountant BEFORE mandate day.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "rental-property-deduction-audit";
+const SLUG = "rda-01";
+const FALLBACK_LABEL = { name: "Your Rental Deduction Assessment", desc: "The deduction class your expense falls into, and the ATO rule behind it." };
 const BODY = `<h2>Rental Deduction Audit Results</h2><div class="action-box"><h3>Highest Risk Items</h3><p>1. Capital improvements claimed as repairs — overclaim risk</p><p>2. Depreciation not claimed — underclaim (missing deductions)</p><p>3. Holiday home apportionment — incorrect proportion claimed</p><p>4. Travel claimed — disallowed since July 2017</p></div><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties">ATO — Rental properties</a></p>`;
 
 export default function RentalPropertyDeductionAuditFile01() {
@@ -25,6 +28,10 @@ export default function RentalPropertyDeductionAuditFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function RentalPropertyDeductionAuditFile01() {
             Rental Property Deduction Audit · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Rental Deduction Assessment
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The deduction class your expense falls into, and the ATO rule behind it.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

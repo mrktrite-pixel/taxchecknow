@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "us-expat-tax";
+const SLUG = "uset-08";
+const FALLBACK_LABEL = { name: "Global Income Structuring Plan", desc: "Structural levers: self-employment vs employment, entity choice, retirement accounts, PFIC avoidance." };
 const BODY = `<h2>Global Income Structuring</h2><h3>Self-employment vs employment</h3><ul><li>Self-employment: SE tax (15.3%) applies regardless of FEIE. Totalization agreement with residence country may exempt from SE tax.</li><li>Local employment (foreign company): no SE tax; foreign social security generally replaces. Usually better for SE-type work if local employment option available.</li></ul><h3>Entity choice</h3><ul><li>Foreign corporations owned by US persons: CFC rules (Subpart F), GILTI, PFIC — complex. Mass-market US expat small business ownership should avoid FoD corporations unless advised.</li><li>S-corp election (if US entity used): preserves pass-through treatment.</li></ul><h3>Retirement accounts</h3><ul><li>US-domiciled IRAs/401ks: remain US tax-advantaged regardless of residence</li><li>Foreign pensions: varies by treaty. Some treaties defer US tax until distribution; most don't — can cause double taxation on contributions</li></ul><h3>Investment structure</h3><ul><li>Hold investments via US-domiciled brokerage (Interactive Brokers, Schwab International) — avoids PFIC</li><li>Non-US mutual funds and ETFs: presumptive PFIC treatment — avoid unless QEF election feasible</li></ul>`;
 
 export default function UsExpatTaxFile08() {
@@ -25,6 +28,10 @@ export default function UsExpatTaxFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UsExpatTaxFile08() {
             US Citizen Abroad Optimizer · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Global Income Structuring Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Structural levers: self-employment vs employment, entity choice, retirement accounts, PFIC avoidance.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

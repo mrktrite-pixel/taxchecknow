@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "qsbs-exit-auditor";
+const SLUG = "qsbs-05";
+const FALLBACK_LABEL = { name: "Your Tax Attorney Brief — QSBS", desc: "5 questions to ask your tax attorney before any QSBS exit." };
 const BODY = `<div class="info-box">QSBS is specialist territory. Take to a tax attorney with §1202 experience — not a generalist CPA. These questions force the specific analysis.</div><h2>Questions for Your Tax Attorney</h2><div class="action-box"><h3>Question 1</h3><p>"Has the issuing company provided a §1202 attestation letter — and if not, can we obtain one before exit?"</p></div><h3>Question 2</h3><p>"For my specific shares, what was the exact entity structure and gross assets at the issuance date — separated by share lot if necessary?"</p><h3>Question 3</h3><p>"If my company has been close to the $50M gross assets threshold, have we verified the test was met at MY specific issuance date?"</p><h3>Question 4</h3><p>"Is our business clearly in a qualified trade under §1202(e)(3), or are we in a gray area (tech-enabled services, hybrid product/service)?"</p><h3>Question 5</h3><p>"If I'm in California (or another non-conforming state), what is my state tax exposure — and should I consider residency planning before exit?"</p>`;
 
 export default function QsbsExitAuditorFile05() {
@@ -25,6 +28,10 @@ export default function QsbsExitAuditorFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function QsbsExitAuditorFile05() {
             QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Tax Attorney Brief — QSBS
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">5 questions to ask your tax attorney before any QSBS exit.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

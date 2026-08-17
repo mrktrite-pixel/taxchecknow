@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "exit-tax-trap";
+const SLUG = "ett-01";
+const FALLBACK_LABEL = { name: "Your Exit Tax Risk Assessment", desc: "Specific exit tax exposure for your departure country, asset mix, and timing." };
 const BODY = `<h2>Your Exit Tax Position</h2><div class="action-box"><h3>The rule that applies to you</h3><p>Canada — ITA s128.1 deemed disposition (severe)</p><p>Australia — no exit tax, but non-resident CGT treatment changes permanently</p><p>UK — no exit tax, but temporary non-residence claw-back within 5 years</p><p>US (covered expatriates) — IRC §877A expatriation tax</p><p>New Zealand — no exit tax</p></div><p>Source: national tax authority guidance + country-specific statutory anchors.</p>`;
 
 export default function ExitTaxTrapFile01() {
@@ -25,6 +28,10 @@ export default function ExitTaxTrapFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function ExitTaxTrapFile01() {
             Exit Tax Trap Auditor · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Exit Tax Risk Assessment
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Specific exit tax exposure for your departure country, asset mix, and timing.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

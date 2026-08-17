@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "iso-amt-sniper";
+const SLUG = "iso-amt-02";
+const FALLBACK_LABEL = { name: "Your 409A Timing Strategy", desc: "How the 409A valuation affects your AMT exposure — and when to exercise." };
 const BODY = `<h2>Why the 409A Valuation Matters</h2><p>The 409A fair market value is the number used to calculate your AMT spread. A higher 409A means more AMT per share exercised.</p><div class="action-box"><h3>Key Principle</h3><p>Exercise before the next 409A update if the company is growing — the spread (and AMT) increases with each valuation raise.</p></div><h2>409A Impact on AMT</h2><table><tr><th>409A Value</th><th>Strike Price</th><th>Spread per Share</th><th>AMT per 1,000 shares</th></tr><tr><td>$10</td><td>$1</td><td>$9</td><td>$9,000 AMT income</td></tr><tr><td>$50</td><td>$1</td><td>$49</td><td>$49,000 AMT income</td></tr><tr><td>$100</td><td>$1</td><td>$99</td><td>$99,000 AMT income</td></tr></table><div class="warning-box"><strong>After a funding round:</strong> 409A valuations typically increase within 30–90 days of a priced round. Exercise before the new 409A is published to lock in the lower spread.</div>`;
 
 export default function IsoAmtSniperFile02() {
@@ -25,6 +28,10 @@ export default function IsoAmtSniperFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function IsoAmtSniperFile02() {
             ISO AMT Exercise Sniper · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your 409A Timing Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How the 409A valuation affects your AMT exposure — and when to exercise.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "gst-registration-trap";
+const SLUG = "gst-02";
+const FALLBACK_LABEL = { name: "Backdating Risk Plan", desc: "How to calculate and manage your GST backdate liability." };
 const BODY = `<h2>Backdated GST Liability Calculation</h2><p>If you should have registered before today's date, the ATO can assess GST on all taxable sales since the threshold was crossed.</p><div class="action-box"><h3>Calculate Your Backdate Exposure</h3><p>Step 1: Identify when rolling 12-month turnover first exceeded $75,000</p><p>Step 2: Calculate total taxable sales from that date to today</p><p>Step 3: GST = Total sales / 11 (extracted from GST-inclusive price)</p><p>Step 4: Subtract any input tax credits you could have claimed</p></div>`;
 
 export default function GstRegistrationTrapFile02() {
@@ -25,6 +28,10 @@ export default function GstRegistrationTrapFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function GstRegistrationTrapFile02() {
             GST Registration Trap Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Backdating Risk Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to calculate and manage your GST backdate liability.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

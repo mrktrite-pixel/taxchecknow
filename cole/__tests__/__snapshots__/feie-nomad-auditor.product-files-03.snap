@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "feie-nomad-auditor";
+const SLUG = "feie-03";
+const FALLBACK_LABEL = { name: "Passive Income Is Not Excluded", desc: "What FEIE does NOT cover, and how to handle passive income as an expat." };
 const BODY = `<h2>Passive Income — Not Excluded by FEIE</h2><p>FEIE under §911 covers ONLY foreign earned income. Passive income is taxed separately in the US regardless of where you live.</p><h3>Income Types by FEIE Treatment</h3><table><tr><th>Income type</th><th>FEIE-excluded?</th><th>Notes</th></tr><tr><td>Wages from foreign employer</td><td>Yes (up to $126,500)</td><td>Primary FEIE use case</td></tr><tr><td>Salary from US employer (work done abroad)</td><td>Yes (up to $126,500)</td><td>Remote workers</td></tr><tr><td>Self-employment / freelance income (work abroad)</td><td>Yes (up to $126,500)</td><td>SE tax still applies separately</td></tr><tr><td>Dividends from US or foreign stocks</td><td>NO</td><td>Fully taxable</td></tr><tr><td>Interest income</td><td>NO</td><td>Fully taxable</td></tr><tr><td>Capital gains (stock, crypto, property)</td><td>NO</td><td>Fully taxable</td></tr><tr><td>Rental income (US property)</td><td>NO</td><td>Fully taxable</td></tr><tr><td>Rental income (foreign property)</td><td>NO</td><td>Fully taxable (FTC may apply)</td></tr><tr><td>Pension / Social Security</td><td>NO</td><td>Fully taxable (treaty may modify)</td></tr><tr><td>Business distributions not for services</td><td>NO</td><td>Passive — not excluded</td></tr></table><h3>Planning for Passive Income</h3><ul><li><strong>Foreign Tax Credit (Form 1116):</strong> if you paid foreign tax on the passive income, credit against US tax</li><li><strong>US retirement accounts:</strong> 401(k), IRA — tax-deferred regardless of location</li><li><strong>State residency:</strong> if you've left a sticky state, break state residency to avoid state tax on passive income</li><li><strong>PFIC rules:</strong> if holding foreign mutual funds, punitive tax treatment — separate analysis</li></ul>`;
 
 export default function FeieNomadAuditorFile03() {
@@ -25,6 +28,10 @@ export default function FeieNomadAuditorFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FeieNomadAuditorFile03() {
             FEIE Qualification & Failure Risk Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Passive Income Is Not Excluded
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What FEIE does NOT cover, and how to handle passive income as an expat.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

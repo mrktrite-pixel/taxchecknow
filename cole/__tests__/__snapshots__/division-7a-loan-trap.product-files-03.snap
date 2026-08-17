@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "division-7a-loan-trap";
+const SLUG = "d7a-03";
+const FALLBACK_LABEL = { name: "Loan Compliance Template Guide", desc: "What a complying Division 7A loan agreement must contain." };
 const BODY = `<h2>Division 7A Loan Agreement — Required Elements</h2><ul class="checklist"><li>Names of lender (company) and borrower (shareholder/associate)</li><li>Loan amount and date</li><li>Interest rate — must be at least ATO benchmark rate</li><li>Loan term — maximum 7 years (25 years if secured by real property)</li><li>Minimum repayment schedule</li><li>Security details if applicable</li><li>Signatures of both parties</li><li>Date — must be before company lodgement day</li></ul><div class="warning-box"><strong>Critical:</strong> The agreement must be in place BEFORE the company's lodgement day. A backdated or late agreement does not protect against deemed dividend treatment.</div>`;
 
 export default function Division7aLoanTrapFile03() {
@@ -25,6 +28,10 @@ export default function Division7aLoanTrapFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Division7aLoanTrapFile03() {
             Division 7A Loan Trap Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Loan Compliance Template Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What a complying Division 7A loan agreement must contain.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

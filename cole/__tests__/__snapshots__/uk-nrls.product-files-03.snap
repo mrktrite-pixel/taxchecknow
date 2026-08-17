@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "uk-nrls";
+const SLUG = "nrls-03";
+const FALLBACK_LABEL = { name: "Allowable Expenses Checklist", desc: "What you can claim against UK rental income to reduce taxable profit." };
 const BODY = `<h2>Allowable Rental Expenses</h2><ul class="checklist"><li>Letting agent fees and commissions</li><li>Repairs and maintenance (NOT improvements — those reduce CGT base)</li><li>Insurance — buildings, contents, rent guarantee, landlord liability</li><li>Council tax / utilities (if paid by landlord)</li><li>Ground rent + service charges</li><li>Accountancy and professional fees</li><li>Mortgage arrangement fees</li><li>Legal fees relating to letting (not property purchase)</li><li>Advertising for tenants</li><li>Rent-a-chair professional fees (e.g. for DBS checks, referencing)</li></ul><div class="warning-box"><strong>Finance cost restriction:</strong> mortgage interest since 6 April 2020 is NOT deductible as an expense for individuals. Basic rate (20%) tax reducer applies instead. For higher-rate taxpayers this is materially less beneficial than full deduction was. Companies (UK and non-UK) retain full deduction.</div>`;
 
 export default function UkNrlsFile03() {
@@ -25,6 +28,10 @@ export default function UkNrlsFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UkNrlsFile03() {
             UK Non-Resident Landlord Scheme Auditor · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Allowable Expenses Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What you can claim against UK rental income to reduce taxable profit.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

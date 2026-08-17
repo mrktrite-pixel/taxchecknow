@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "day-183-rule";
+const SLUG = "d183-03";
+const FALLBACK_LABEL = { name: "Excluded Days Checklist", desc: "The five categories of day that do not count, and what each one requires." };
 const BODY = `<h2>Days That Do Not Count</h2><ul class="checklist"><li><strong>Transit under 24 hours:</strong> days in transit through the United States of less than 24 hours while travelling between two places outside it</li><li><strong>Foreign vessel crew:</strong> days as a regular crew member of a foreign vessel travelling between the United States and a foreign country</li><li><strong>Regular commuters:</strong> days you regularly commute to work in the United States from a residence in Canada or Mexico</li><li><strong>Medical condition:</strong> days you could not leave the United States because of a medical condition that arose while you were there</li><li><strong>Exempt individuals:</strong> days present as a student, teacher or trainee</li></ul><div class="warning-box"><strong>Two of these depend on a filing.</strong> Excluding days as an exempt individual, or for a medical condition that arose while you were in the U.S., requires Form 8843 filed by the due date for your income tax return. Filed late, the IRS position is that you cannot exclude those days at all.</div><div class="info-box"><strong>Evidence:</strong> the burden of showing a day does not count is yours. Keep the itinerary, crew documentation, commuting evidence or medical records that establish each excluded day, dated.</div>`;
 
 export default function Day183RuleFile03() {
@@ -25,6 +28,10 @@ export default function Day183RuleFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Day183RuleFile03() {
             183-Day Rule Reality Check · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Excluded Days Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The five categories of day that do not count, and what each one requires.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

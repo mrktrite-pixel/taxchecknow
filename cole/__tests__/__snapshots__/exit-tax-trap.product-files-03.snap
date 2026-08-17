@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "exit-tax-trap";
+const SLUG = "ett-03";
+const FALLBACK_LABEL = { name: "Asset-by-Asset Departure Impact", desc: "How different asset types are treated at departure in each country." };
 const BODY = `<h2>Asset Treatment by Country</h2><table><tr><th>Asset type</th><th>Canada (deemed)</th><th>Australia (future sale)</th><th>US (§877A)</th></tr><tr><td>Shares / investments</td><td>Deemed sold at FMV</td><td>No discount + non-resident rates</td><td>Included in worldwide</td></tr><tr><td>Domestic real property</td><td>EXCEPTION — not deemed sold</td><td>MRE lost; 50% discount lost</td><td>Included</td></tr><tr><td>Business interests</td><td>Canadian-used assets excepted</td><td>Non-resident rates apply</td><td>Included</td></tr><tr><td>Pension / retirement</td><td>Certain pensions excepted</td><td>Super — separate rules</td><td>Deemed distributed / taxed</td></tr><tr><td>Stock options</td><td>Separate rules</td><td>Depends on vesting vs departure</td><td>Deferred comp — special treatment</td></tr><tr><td>Cryptocurrency</td><td>Treated as property — deemed sold</td><td>Non-resident rules apply</td><td>Included at FMV</td></tr></table>`;
 
 export default function ExitTaxTrapFile03() {
@@ -25,6 +28,10 @@ export default function ExitTaxTrapFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function ExitTaxTrapFile03() {
             Exit Tax Trap Auditor · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Asset-by-Asset Departure Impact
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How different asset types are treated at departure in each country.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

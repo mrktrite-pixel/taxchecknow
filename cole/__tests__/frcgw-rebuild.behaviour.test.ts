@@ -1153,3 +1153,222 @@ test("frcgw-rebuild · D9 · no RESOLVED terminal renders an empty undated calen
       `${term.id}: a paying buyer with no captured date is given no dates at all`);
   }
 });
+
+// ═════════════════════════════════════════════════════════════════════════════
+// D14 — terminal-conditioned labels (D12-B), vendor_identity + rule audit
+// (D12-C), and E6 moved inside generateAssessment. Added 2026-08-17.
+// ═════════════════════════════════════════════════════════════════════════════
+
+const { resolveDocLabel, resolveFieldLabel, DOC_LABELS, FIELD_LABELS } =
+  req(path.join(REPO, "lib", "terminal-labels.ts"));
+const { CONFLICT_RULES } = req(path.join(REPO, "lib", "buyer-context.ts"));
+
+/** Every surface that shows a document's NAME or DESC, for one terminal. */
+function labelSurfaces(terminalId: string): Array<{ slug: string; name: string; desc: string }> {
+  const ctx = buildBuyerContext({ productId: PRODUCT, terminalId, tier: 2 });
+  const flags = terminalFlags(PRODUCT, ctx);
+  return Object.keys(docs).map((slug) => ({
+    slug,
+    ...resolveDocLabel(PRODUCT, slug, flags, docs[slug]),
+  }));
+}
+
+test("frcgw-rebuild · D14 · no settled terminal shows pre-settlement wording on ANY label surface", (t) => {
+  // ENUMERATED over every document × every settled terminal, and over both the name and the
+  // desc — the two surfaces D9 left static while the bodies became terminal-aware.
+  const BANNED = [/pre-settlement/i, /between now and settlement/i, /before settlement/i,
+                  /handing over the certificate/i];
+  for (const id of settledTerminals()) {
+    for (const s of labelSurfaces(id)) {
+      for (const re of BANNED) {
+        t.assert.ok(!re.test(s.name), `${id} / ${s.slug}: NAME still reads "${s.name}"`);
+        t.assert.ok(!re.test(s.desc), `${id} / ${s.slug}: DESC still reads "${s.desc}"`);
+      }
+    }
+  }
+});
+
+test("frcgw-rebuild · D14 · the dispatched label variants render exactly", (t) => {
+  const rec = Object.fromEntries(labelSurfaces("no-certificate-resident").map((s) => [s.slug, s]));
+  t.assert.strictEqual(rec["frcgw-06"].name, "Your Recovery Plan");
+  t.assert.strictEqual(rec["frcgw-06"].desc, "Claiming back the amount withheld at settlement.");
+  t.assert.strictEqual(rec["frcgw-03"].desc, "What still needs requesting from the purchaser's side.");
+
+  const have = Object.fromEntries(labelSurfaces("certificate-provided-no-withholding").map((s) => [s.slug, s]));
+  t.assert.match(have["frcgw-06"].name, /clos(e|ing) this sale out/i, "have_cert needs close-out naming");
+});
+
+test("frcgw-rebuild · D14 · pre-settlement terminals keep the config's own labels", (t) => {
+  for (const id of ["when-to-apply-timeline", "certificate-pending-resident", "co-owners-separate-certificates"]) {
+    for (const s of labelSurfaces(id)) {
+      t.assert.strictEqual(s.name, docs[s.slug].name, `${id} / ${s.slug}: name changed unexpectedly`);
+      t.assert.strictEqual(s.desc, docs[s.slug].desc, `${id} / ${s.slug}: desc changed unexpectedly`);
+    }
+  }
+});
+
+test("frcgw-rebuild · D14 · no context ⇒ the config's own labels, unchanged", (t) => {
+  for (const slug of Object.keys(docs)) {
+    const r = resolveDocLabel(PRODUCT, slug, [], docs[slug]);
+    t.assert.strictEqual(r.name, docs[slug].name);
+    t.assert.strictEqual(r.desc, docs[slug].desc);
+  }
+  t.assert.deepStrictEqual(resolveDocLabel("some-other-product", "x", ["state:settled"],
+    { name: "N", desc: "D" }), { name: "N", desc: "D" }, "an unmapped product must be untouched");
+});
+
+test("frcgw-rebuild · D14 · the assessment field LABEL follows the terminal", (t) => {
+  const flagsFor = (id: string) => terminalFlags(PRODUCT, buildBuyerContext({ productId: PRODUCT, terminalId: id, tier: 2 }));
+  const hum = (k: string) => req(path.join(REPO, "lib", "assessment-fields.ts")).humaniseFieldKey(k);
+
+  const rec = resolveFieldLabel(PRODUCT, "preSettlementExecutionPlan", flagsFor("no-certificate-resident"), hum("preSettlementExecutionPlan"));
+  t.assert.match(rec, /recovery execution plan/i, "settled label not applied");
+  t.assert.ok(!/pre[- ]settlement/i.test(rec), "settled sale still labelled PRE SETTLEMENT");
+
+  const ahead = resolveFieldLabel(PRODUCT, "preSettlementExecutionPlan", flagsFor("when-to-apply-timeline"), hum("preSettlementExecutionPlan"));
+  t.assert.strictEqual(ahead, hum("preSettlementExecutionPlan"), "pre-settlement terminal lost the default label");
+
+  // Unmapped key and unmapped product both fall through untouched.
+  t.assert.strictEqual(resolveFieldLabel(PRODUCT, "salePrice", flagsFor("no-certificate-resident"), "Sale price"), "Sale price");
+  t.assert.strictEqual(resolveFieldLabel("other", "preSettlementExecutionPlan", ["section:recovery"], "X"), "X");
+});
+
+test("frcgw-rebuild · D14 · every label rule keys on a flag some terminal actually emits", (t) => {
+  const emitted = new Set<string>();
+  for (const term of engine.terminals) {
+    for (const f of terminalFlags(PRODUCT, buildBuyerContext({ productId: PRODUCT, terminalId: term.id, tier: 2 }))) emitted.add(f);
+  }
+  emitted.add("terminal:*"); // the explicit any-terminal default
+  const bad: string[] = [];
+  for (const [slug, rules] of Object.entries(DOC_LABELS[PRODUCT]) as Array<[string, any[]]>) {
+    for (const r of rules) if (!emitted.has(r.when)) bad.push(`DOC ${slug}:${r.when}`);
+  }
+  for (const [key, rules] of Object.entries(FIELD_LABELS[PRODUCT]) as Array<[string, any[]]>) {
+    for (const r of rules) if (!emitted.has(r.when)) bad.push(`FIELD ${key}:${r.when}`);
+  }
+  t.assert.deepStrictEqual(bad, [], `label rules keyed on flags nothing emits: ${bad.join(", ")}`);
+});
+
+// ── D12-C · conflict rules ───────────────────────────────────────────────────
+test("frcgw-rebuild · D14 · vendor_identity fires and demands the second person", (t) => {
+  const c = detectConflicts(PRODUCT,
+    { "Are you selling (or planning to sell) Australian real property?":
+        "Yes, I am selling or about to sell Australian real property" },
+    { "What is your situation?": "Helping someone else" });
+  t.assert.strictEqual(c.length, 1);
+  t.assert.strictEqual(c[0].id, "vendor_identity");
+  t.assert.match(c[0].note, /second person/i, "the note must demand second-person voice");
+  t.assert.match(c[0].note, /never in the third person/i);
+});
+
+test("frcgw-rebuild · D14 · the other audited gaps are now covered", (t) => {
+  const CASES: Array<[string, Record<string, string>, Record<string, string>, string]> = [
+    ["not selling vs selling",
+     { q: "No, I am not selling Australian real property" },
+     { s: "Selling an Australian property now" }, "not_selling_vs_selling"],
+    ["not selling vs sold",
+     { q: "No, I am not selling Australian real property" },
+     { s: "Sold — waiting on settlement" }, "not_selling_vs_selling"],
+    ["settled vs planning to sell",
+     { q: "Settlement has passed and I did not provide a clearance certificate" },
+     { s: "Planning to sell soon" }, "settlement_passed_vs_upcoming"],
+    ["provided vs planning to sell",
+     { q: "I have a clearance certificate and provided it to the purchaser at or before settlement" },
+     { s: "Planning to sell soon" }, "certificate_provided_vs_upcoming"],
+    ["typed date vs already settled",
+     { "What is your settlement date?": "1 December 2026" },
+     { s: "Already settled" }, "settlement_date_vs_already_settled"],
+  ];
+  for (const [label, maze, qual, wantId] of CASES) {
+    const c = detectConflicts(PRODUCT, maze, qual);
+    t.assert.ok(c.some((x: any) => x.id === wantId), `${label}: expected ${wantId}, got ${c.map((x: any) => x.id).join(",") || "none"}`);
+  }
+});
+
+test("frcgw-rebuild · D14 · agreeing answers still produce no conflict", (t) => {
+  for (const [maze, qual] of [
+    [{ q: "Settlement has passed and I did not provide a clearance certificate" }, { s: "Already settled" }],
+    [{ q: "Yes, I am selling or about to sell Australian real property" }, { s: "Selling an Australian property now" }],
+    [{ q: "No, I am not selling Australian real property" }, { s: "Planning to sell soon" }],
+    [{ q: "I have already applied and my application is still pending" }, { s: "Already settled" }],
+  ] as Array<[Record<string, string>, Record<string, string>]>) {
+    t.assert.deepStrictEqual(detectConflicts(PRODUCT, maze, qual), [],
+      `false positive on ${JSON.stringify(maze)} + ${JSON.stringify(qual)}`);
+  }
+  // The conveyancer question has no maze axis and must never trigger anything.
+  for (const a of ["Yes", "No", "Considering one"]) {
+    t.assert.deepStrictEqual(
+      detectConflicts(PRODUCT,
+        { q: "Yes, I am selling or about to sell Australian real property" },
+        { "Do you have a conveyancer or accountant?": a }), []);
+  }
+});
+
+// ── E6 structural ────────────────────────────────────────────────────────────
+test("frcgw-rebuild · D14 · conflict detection lives in the generator, not the caller", (t) => {
+  const core = fs.readFileSync(path.join(REPO, "lib", "assess-core.ts"), "utf8");
+  const comp = fs.readFileSync(path.join(REPO, "lib", "composer-inputs.ts"), "utf8");
+
+  t.assert.match(core, /detectConflicts\(product_id, mazeLabels, qualLabels\)/,
+    "generateAssessment does not detect conflicts by product_id");
+  t.assert.match(core, /_conflict\.\$\{i \+ 1\}/, "generateAssessment does not inject the notes");
+  t.assert.ok(!/detectConflicts/.test(comp),
+    "composer-inputs still detects — there must be exactly ONE place, or the webhook and the " +
+    "client can diverge again");
+
+  // The webhook's two-arg call must now be sufficient. Its arity is the whole point.
+  const hook = fs.readFileSync(path.join(REPO, "app", "api", "stripe", "webhook", "route.ts"), "utf8");
+  const call = /buildComposerInputs\(([\s\S]*?)\);/.exec(hook);
+  t.assert.ok(call, "webhook no longer calls buildComposerInputs");
+  // Counting commas would split inside `Record<string, unknown>`. The property that matters
+  // is that the webhook passes NO product identifier — which is why detection had to move.
+  t.assert.ok(!/product_?[Ii]d/.test(call![1]),
+    "the webhook now passes a product id — if that is deliberate, this fix's premise changed");
+});
+
+test("frcgw-rebuild · D14 · BOTH paths inject _conflict from the same composed inputs", (t) => {
+  const { buildComposerInputs } = req(path.join(REPO, "lib", "composer-inputs.ts"));
+  // Sammy's real answers, live row 2026-08-16 08:39:15Z — a conflict that reached production
+  // with no note on it.
+  const maze = { "What best describes where you are in the clearance certificate process?":
+                   "Settlement has passed and I did not provide a clearance certificate" };
+  const qual = { "How close is settlement?": "Within 3 months" };
+
+  // WEBHOOK path: two-arg compose, exactly as route.ts:185 does it.
+  const webhookInputs = buildComposerInputs(maze, qual);
+  // CLIENT path: same helper, same two arguments now.
+  const clientInputs = buildComposerInputs(maze, qual);
+  t.assert.deepStrictEqual(webhookInputs, clientInputs, "the two paths compose differently");
+
+  // Neither carries a note yet — that is now the generator's job, for both.
+  for (const [label, inp] of [["webhook", webhookInputs], ["client", clientInputs]] as Array<[string, Record<string, unknown>]>) {
+    t.assert.ok(!Object.keys(inp).some((k) => k.startsWith("_conflict.")),
+      `${label}: composer injected a note; detection must live in ONE place`);
+  }
+
+  // Re-run the generator's own split + detect on those composed inputs.
+  const split = (inp: Record<string, unknown>) => {
+    const m: Record<string, unknown> = {}, q: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(inp)) {
+      if (k.startsWith("_conflict.")) continue;
+      if (k.startsWith("qualification.")) q[k.slice("qualification.".length)] = v; else m[k] = v;
+    }
+    return detectConflicts(PRODUCT, m, q);
+  };
+  for (const [label, inp] of [["webhook", webhookInputs], ["client", clientInputs]] as Array<[string, Record<string, unknown>]>) {
+    const c = split(inp);
+    t.assert.strictEqual(c.length, 1, `${label}: conflict not recovered from composed inputs`);
+    t.assert.strictEqual(c[0].id, "settlement_passed_vs_upcoming", `${label}`);
+  }
+});
+
+test("frcgw-rebuild · D14 · the prompt makes naming a delivered conflict mandatory", (t) => {
+  // The 5-buy audit measured the model receiving a conflict and silently skipping it.
+  const core = fs.readFileSync(path.join(REPO, "lib", "assess-core.ts"), "utf8");
+  t.assert.match(core, /NAMING IT IS MANDATORY/, "the mandate is missing");
+  t.assert.match(core, /FIRST\s*\n?TWO SENTENCES/, "the mandate does not say WHERE it must appear");
+  t.assert.match(core, /not satisfied by merely writing advice consistent with/i,
+    "the mandate does not close the 'I followed it silently' loophole");
+  // and it is conditional — a buyer with no conflict must not see the block.
+  t.assert.match(core, /\$\{conflicts\.length \?/, "the mandate is unconditional");
+});

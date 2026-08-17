@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-property-flipping";
+const SLUG = "pft-08";
+const FALLBACK_LABEL = { name: "CRA Audit Defence for Property Sales", desc: "How to prepare documentation to withstand CRA review of flipping rule position or life event exception." };
 const BODY = `<h2>CRA Audit Defence Framework</h2><h3>CRA data sources (match-risk)</h3><ul><li>Provincial land title registry data</li><li>Real estate board transaction records</li><li>MLS listing history (days on market, prior sale)</li><li>CRA's real estate audit program (ramped up since 2015)</li><li>Taxpayer's reported T1 + Schedule 3 history</li></ul><h3>Red flags for CRA review</h3><ul><li>Multiple short-hold sales in a year</li><li>Consistent pattern of primary-residence claims on short holds</li><li>Holding period 300-364 days (near-miss on threshold)</li><li>Large unreported profit</li><li>Inconsistent address / occupancy records</li></ul><h3>Documentation retention</h3><ul class="checklist"><li>Purchase documents (AoPS, closing statement, land transfer tax)</li><li>Sale documents (AoPS, closing statement, commission records)</li><li>Occupancy evidence (utility bills, drivers licence address, tax records showing home address)</li><li>Improvements invoices (capital cost base additions)</li><li>Life event documentation (if exception claimed)</li><li>Tax advisor engagement + advice records</li></ul><h3>CRA response protocol</h3><ul><li>Assessment proposal received → respond within 30 days</li><li>Notice of reassessment → 90-day formal objection window</li><li>If position reasonable: may negotiate settlement</li><li>If confident in position: Tax Court of Canada appeal</li></ul><h3>Retention period</h3><p>6 years minimum (standard CRA). 7+ years recommended given complexity of real estate transactions.</p>`;
 
 export default function CanPropertyFlippingFile08() {
@@ -25,6 +28,10 @@ export default function CanPropertyFlippingFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanPropertyFlippingFile08() {
             Canada Property Flipping Tax Trap Auditor · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            CRA Audit Defence for Property Sales
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to prepare documentation to withstand CRA review of flipping rule position or life event exception.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

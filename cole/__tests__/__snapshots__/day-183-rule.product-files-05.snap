@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "day-183-rule";
+const SLUG = "d183-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief — U.S. Presence", desc: "Five questions for a U.S. tax advisor, with why each one matters." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with an advisor qualified in U.S. tax, and bring your travel history with you.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Run my actual travel history through the weighted three-year count — what is my total, and does it reach 183?</p></div><h3>Question 2</h3><p>Was I physically present in the United States on at least 31 days of the current year?</p><h3>Question 3</h3><p>Which of my U.S. days fall into an excluded category, and what evidence do I hold for each?</p><h3>Question 4</h3><p>Do I need to file Form 8843, and by what date for my own filing position?</p><h3>Question 5</h3><p>If the test does treat me as a U.S. resident, does the closer connection exception apply on my facts?</p>`;
 
 export default function Day183RuleFile05() {
@@ -25,6 +28,10 @@ export default function Day183RuleFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Day183RuleFile05() {
             183-Day Rule Reality Check · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — U.S. Presence
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Five questions for a U.S. tax advisor, with why each one matters.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

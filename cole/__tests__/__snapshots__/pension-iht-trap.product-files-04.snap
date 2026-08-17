@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "pension-iht-trap";
+const SLUG = "piht-04";
+const FALLBACK_LABEL = { name: "Timing Before Royal Assent", desc: "What to do now vs what to defer — given the proposal is not yet law." };
 const BODY = `<h2>Timing Decisions — Proposal Not Yet Enacted</h2><h3>Act Now (Works in Both Scenarios)</h3><ul><li>Review and update beneficiary nominations</li><li>Obtain whole-of-life insurance quotes while younger/healthier</li><li>Begin tracking pension values and eventual estate size</li><li>Start systematic lifetime gifts (£3k/year) to utilise annual exemption</li><li>Confirm Residence NRB eligibility — ensure main home passes to direct descendants</li></ul><h3>Consider Now, Commit Later</h3><ul><li>Drawdown strategy — model scenarios but decide timing based on legislative progress</li><li>ISA vs pension rebalancing — the case strengthens if proposal enacted</li><li>Large lifetime gifts — PET rules favour earlier gifts but irreversible</li></ul><h3>Wait Until Enactment</h3><ul><li>Irrevocable trust structures (if tax-only motivated)</li><li>Permanent surrender of pension tax-free cash</li><li>Purchase of expensive insurance products with heavy exit penalties</li></ul><div class="info-box"><strong>Key principle:</strong> reversible actions can be taken now. Irreversible actions should wait until legal status clarifies — unless there's a non-tax reason.</div>`;
 
 export default function PensionIhtTrapFile04() {
@@ -25,6 +28,10 @@ export default function PensionIhtTrapFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function PensionIhtTrapFile04() {
             Pension IHT Trap 2027 Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Timing Before Royal Assent
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What to do now vs what to defer — given the proposal is not yet law.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

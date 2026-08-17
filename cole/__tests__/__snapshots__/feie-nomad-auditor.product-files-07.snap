@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "feie-nomad-auditor";
+const SLUG = "feie-07";
+const FALLBACK_LABEL = { name: "State Residency Strategy", desc: "How to break state tax residency when leaving California, New York, or other sticky states." };
 const BODY = `<h2>State Residency Strategy for Expats</h2><p>FEIE handles federal tax. State tax is separate — and many states continue to tax former residents without a clear residency break.</p><h3>Sticky States</h3><ul><li><strong>California:</strong> closest-connection test, can tax former residents for years after leaving</li><li><strong>New York:</strong> 183-day rule PLUS permanent place of abode test</li><li><strong>Virginia:</strong> strict domicile test</li><li><strong>New Mexico:</strong> source-of-income based</li></ul><h3>Steps to Break Residency</h3><ul class="checklist"><li>Change driver's licence to new state (or foreign)</li><li>Register to vote in new state or cancel voter registration</li><li>Sell or lease out former state residence</li><li>Move bank accounts, brokerage to new state address</li><li>Update address on tax returns, employer records, credit cards</li><li>Obtain residence documentation in new location (lease, utility bills)</li><li>Break memberships tied to former state (gym, clubs, professional associations)</li><li>File final partial-year resident return</li><li>File non-resident returns if earning state-sourced income in following years</li></ul><h3>Expats and State Tax</h3><p>Living abroad doesn't automatically break state residency. Some states require you to establish residency ELSEWHERE (not just leave). If you are genuinely abroad with no US state residency, establishing the foreign country as your tax home helps — but sticky states may still argue closest connection.</p><h3>State-Specific Notes</h3><ul><li>California: file FTB 540NR or claim non-resident status; prepare for audit if CA connections persist</li><li>New York: 183-day count matters; keep travel records</li><li>Florida, Texas, Nevada, Tennessee, Washington, Wyoming, South Dakota, Alaska: no state income tax — moving to any of these first before going abroad simplifies the residency break</li></ul>`;
 
 export default function FeieNomadAuditorFile07() {
@@ -25,6 +28,10 @@ export default function FeieNomadAuditorFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FeieNomadAuditorFile07() {
             FEIE Qualification & Failure Risk Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            State Residency Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to break state tax residency when leaving California, New York, or other sticky states.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

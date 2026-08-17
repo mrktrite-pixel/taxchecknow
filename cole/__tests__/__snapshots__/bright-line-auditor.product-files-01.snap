@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bright-line-auditor";
+const SLUG = "bl-01";
+const FALLBACK_LABEL = { name: "Your Bright-Line Verdict", desc: "Your exact bright-line position — days held, applicable rule, and tax exposure." };
 const BODY = `<h2>Your Bright-Line Position</h2><div class="action-box"><h3>The 2026 Rule</h3><p>Bright-line period: 2 years (730 days)</p><p>Start: title registration date</p><p>End: binding sale agreement date</p><p>Result: over 730 days = generally tax-free</p></div><h2>Date Logic Table</h2><table><tr><th>Event</th><th>Counts?</th></tr><tr><td>Title registration date</td><td>YES — start date</td></tr><tr><td>Purchase agreement date</td><td>NO — not used</td></tr><tr><td>Settlement date</td><td>NO — not used</td></tr><tr><td>Binding sale agreement</td><td>YES — end date</td></tr></table><p>Source: <a href="https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test">IRD — Bright-line property rule</a></p>`;
 
 export default function BrightLineAuditorFile01() {
@@ -25,6 +28,10 @@ export default function BrightLineAuditorFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function BrightLineAuditorFile01() {
             Bright-Line Property Tax Decision Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Bright-Line Verdict
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your exact bright-line position — days held, applicable rule, and tax exposure.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

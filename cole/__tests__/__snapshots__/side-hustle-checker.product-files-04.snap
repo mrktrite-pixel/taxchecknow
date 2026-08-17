@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "side-hustle-checker";
+const SLUG = "sh-04";
+const FALLBACK_LABEL = { name: "Expense Deduction Guide", desc: "Allowable expenses for your income type, with HMRC citations." };
 const BODY = `<h2>Allowable Expense Deductions</h2><p>For each side income type, specific expenses can be deducted from gross income before tax.</p><h3>Online Selling (eBay, Etsy, Vinted, Amazon)</h3><ul><li>Platform fees and commission</li><li>PayPal/Stripe transaction fees</li><li>Cost of goods sold (for resellers — purchase price)</li><li>Shipping and packaging materials</li><li>Photography equipment (pro-rated if personal use)</li><li>Advertising (platform promotion, social media ads)</li></ul><h3>Property Rental (Airbnb, SpareRoom)</h3><ul><li>Mortgage interest (subject to property income restrictions)</li><li>Cleaning and laundry between stays</li><li>Utilities for the rented portion</li><li>Insurance (pro-rated)</li><li>Maintenance and repairs</li><li>Council tax (pro-rated)</li></ul><h3>Freelance / Gig Work (Fiverr, Upwork, Uber)</h3><ul><li>Home office (£6/week flat rate OR actual costs pro-rated)</li><li>Business mileage (45p/mile first 10,000; 25p/mile over)</li><li>Phone and internet (pro-rated for business use)</li><li>Software subscriptions</li><li>Training courses</li><li>Platform fees</li></ul><h3>Trading Allowance Alternative</h3><p>Instead of itemising expenses, you can claim the £1,000 trading allowance as a flat deduction. Use whichever gives the lower tax outcome.</p>`;
 
 export default function SideHustleCheckerFile04() {
@@ -25,6 +28,10 @@ export default function SideHustleCheckerFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SideHustleCheckerFile04() {
             HMRC Side Income Declaration Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Expense Deduction Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Allowable expenses for your income type, with HMRC citations.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

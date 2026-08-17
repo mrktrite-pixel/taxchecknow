@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "dividend-trap";
+const SLUG = "dt-02";
+const FALLBACK_LABEL = { name: "Optimal Salary/Dividend Split Calculator", desc: "Your recommended salary and dividend combination to minimise total tax." };
 const BODY = `<h2>Optimal Salary/Dividend Split</h2><p>For most single-director limited companies with no other employees, the optimal gross annual salary is £12,570 with dividends filling the remainder up to £50,270.</p><h3>Why £12,570 Salary</h3><ul><li>Uses full personal allowance — no income tax</li><li>Employee NI starts at £12,570 — no employee NI at this level</li><li>Employer NI on £3,470 above secondary threshold (£9,100) — ~£479/year company cost</li><li>Corporation tax relief on the salary expense (~25%)</li></ul><h3>Why Dividends to £50,270</h3><ul><li>£37,700 of dividends taxed at 8.75% (after £500 allowance)</li><li>Maximum basic rate band usage before 33.75% kicks in</li><li>No NI on dividends at any level</li></ul><h3>Beyond £50,270 Total Income</h3><p>Each £1 of additional dividend = 33.75p tax. Weigh against: leave in company (25% corp tax), spouse shareholding, pension contribution, defer to next year.</p>`;
 
 export default function DividendTrapFile02() {
@@ -25,6 +28,10 @@ export default function DividendTrapFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DividendTrapFile02() {
             Salary + Dividend Tax Trap Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Optimal Salary/Dividend Split Calculator
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your recommended salary and dividend combination to minimise total tax.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

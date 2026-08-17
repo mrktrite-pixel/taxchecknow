@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "australia-smsf-residency";
+const SLUG = "smsf-07";
+const FALLBACK_LABEL = { name: "Global Control Strategy — Decision-Making Framework", desc: "The decision-making framework for long-term overseas members with AU-controlled SMSF." };
 const BODY = `<h2>Global Control Strategy</h2><h3>Decision layers</h3><ul><li>Strategic (must be AU-based): annual strategy review, material asset allocation changes, trustee board decisions</li><li>Operational (can be remote): routine rebalancing, contribution processing, distribution processing</li><li>Execution (broker/adviser): buy/sell execution within pre-approved parameters</li></ul><h3>AU-based decision cadence</h3><ul><li>Annual: full strategy review with AU director in AU</li><li>Quarterly: investment committee meeting (AU director chair)</li><li>Ad-hoc: material decisions escalated to AU director</li></ul><h3>Communication + minutes</h3><ul><li>AU director maintains minute book</li><li>Member (overseas) receives minutes for review — does not make binding decisions</li><li>Investment proposals documented as recommendations to AU director</li><li>AU director signs resolutions; documented AU location</li></ul>`;
 
 export default function AustraliaSmsfResidencyFile07() {
@@ -25,6 +28,10 @@ export default function AustraliaSmsfResidencyFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AustraliaSmsfResidencyFile07() {
             Australian SMSF Residency Kill-Switch · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Global Control Strategy — Decision-Making Framework
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The decision-making framework for long-term overseas members with AU-controlled SMSF.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "negative-gearing-illusion";
+const SLUG = "ng-06";
+const FALLBACK_LABEL = { name: "Property Portfolio Strategy", desc: "How to structure a property portfolio for long-term after-tax wealth." };
 const BODY = `<h2>Portfolio-Level Property Strategy</h2><p>A balanced property portfolio typically combines negatively geared growth properties with positively geared yield properties to manage cashflow while building capital.</p><h3>Portfolio Structure Principles</h3><ul><li>Calculate the after-tax cashflow position of each property individually</li><li>Model the break-even capital growth required for each negatively geared property</li><li>Consider adding a positively geared property to offset cashflow drain</li><li>Review the portfolio annually — property positions change as rents grow and debt reduces</li></ul>`;
 
 export default function NegativeGearingIllusionFile06() {
@@ -25,6 +28,10 @@ export default function NegativeGearingIllusionFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function NegativeGearingIllusionFile06() {
             Negative Gearing Illusion Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Property Portfolio Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to structure a property portfolio for long-term after-tax wealth.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

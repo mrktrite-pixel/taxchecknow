@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "uk-residency";
+const SLUG = "ukr-04";
+const FALLBACK_LABEL = { name: "Split Year Treatment Guide", desc: "Cases 1-8 of split year treatment — when the tax year can be split into resident and non-resident portions." };
 const BODY = `<h2>Split Year Treatment — Cases 1-8</h2><p>Split year treatment allows a single UK tax year to be divided into a resident portion and a non-resident portion where the taxpayer becomes or ceases UK resident during the year. The SRT determines full-year status first; split year treatment then applies if conditions for one of 8 cases are met.</p><table><tr><th>Case</th><th>Description</th></tr><tr><td>Case 1</td><td>Starting full-time work overseas</td></tr><tr><td>Case 2</td><td>Accompanying spouse/partner starting full-time overseas work</td></tr><tr><td>Case 3</td><td>Ceasing to have UK home</td></tr><tr><td>Case 4</td><td>Starting to have UK home (arrival)</td></tr><tr><td>Case 5</td><td>Starting full-time work in UK</td></tr><tr><td>Case 6</td><td>Ceasing full-time work overseas (return)</td></tr><tr><td>Case 7</td><td>Accompanying spouse/partner ceasing full-time overseas work</td></tr><tr><td>Case 8</td><td>Starting to have UK home (alternative entry case)</td></tr></table>`;
 
 export default function UkResidencyFile04() {
@@ -25,6 +28,10 @@ export default function UkResidencyFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UkResidencyFile04() {
             UK Statutory Residence Test Auditor · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Split Year Treatment Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Cases 1-8 of split year treatment — when the tax year can be split into resident and non-resident portions.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

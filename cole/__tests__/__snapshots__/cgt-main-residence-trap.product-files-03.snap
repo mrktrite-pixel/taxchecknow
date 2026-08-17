@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-main-residence-trap";
+const SLUG = "mr-03";
+const FALLBACK_LABEL = { name: "Partial Exemption Calculator", desc: "Calculate the exact taxable portion of your gain based on rental and business-use days." };
 const BODY = `<h2>Partial Exemption Calculation</h2><p>Use this worksheet to calculate your exact taxable fraction.</p><div class="action-box"><h3>Step-by-Step</h3><p>Step 1: Total days owned = Settlement to contract date of sale</p><p>Step 2: Non-exempt days = Rental days + business-use days outside 6-year rule</p><p>Step 3: Taxable fraction = Non-exempt days / Total days owned</p><p>Step 4: Taxable gain = Capital gain × taxable fraction</p><p>Step 5: Apply 50% CGT discount if held over 12 months</p><p>Step 6: Add to income and apply marginal tax rate</p></div>`;
 
 export default function CgtMainResidenceTrapFile03() {
@@ -25,6 +28,10 @@ export default function CgtMainResidenceTrapFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtMainResidenceTrapFile03() {
             CGT Main Residence Trap Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Partial Exemption Calculator
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Calculate the exact taxable portion of your gain based on rental and business-use days.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

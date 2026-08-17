@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "residency-risk-index";
+const SLUG = "rri-04";
+const FALLBACK_LABEL = { name: "Tax Treaty Applicability Guide", desc: "Which bilateral tax treaties apply to your country pair — and how to claim the benefit." };
 const BODY = `<h2>Treaty Applicability</h2><p>OECD Model Article 4 applies via bilateral treaties. The UK, AU, NZ, CA, and US each have extensive treaty networks. Treaty relief requires active claiming — typically via a position statement or treaty form.</p><table><tr><th>Country pair</th><th>Treaty exists?</th><th>Relief mechanism</th></tr><tr><td>UK ↔ AU / NZ / CA / US</td><td>Yes (all)</td><td>Article 4 tie-breaker + foreign tax credit</td></tr><tr><td>AU ↔ NZ / CA / US</td><td>Yes</td><td>Article 4 + credit</td></tr><tr><td>Country without treaty</td><td>No</td><td>Unilateral foreign tax credit only (if available)</td></tr></table>`;
 
 export default function ResidencyRiskIndexFile04() {
@@ -25,6 +28,10 @@ export default function ResidencyRiskIndexFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function ResidencyRiskIndexFile04() {
             Nomad Residency Risk Index · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Tax Treaty Applicability Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Which bilateral tax treaties apply to your country pair — and how to claim the benefit.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

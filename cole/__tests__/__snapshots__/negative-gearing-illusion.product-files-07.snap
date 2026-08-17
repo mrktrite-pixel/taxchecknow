@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "negative-gearing-illusion";
+const SLUG = "ng-07";
+const FALLBACK_LABEL = { name: "Debt Restructuring Plan", desc: "How to restructure property debt to maximise deductible interest." };
 const BODY = `<h2>Debt Restructuring for Tax Efficiency</h2><p>The deductibility of interest depends on the purpose of the loan — not which property it is secured against. Interest on loans used to acquire or improve income-producing property is deductible.</p><div class="action-box"><h3>Debt Recycling Strategy</h3><p>Step 1: Direct salary income to home loan offset account</p><p>Step 2: Redraw the same amount for investment purposes</p><p>Step 3: Interest on the redrawn amount is now deductible</p><p>Step 4: Repeat — converting non-deductible to deductible debt over time</p></div>`;
 
 export default function NegativeGearingIllusionFile07() {
@@ -25,6 +28,10 @@ export default function NegativeGearingIllusionFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function NegativeGearingIllusionFile07() {
             Negative Gearing Illusion Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Debt Restructuring Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to restructure property debt to maximise deductible interest.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

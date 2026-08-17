@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "tax-treaty-navigator";
+const SLUG = "ttn-07";
+const FALLBACK_LABEL = { name: "Treaty Optimisation Plan", desc: "Where treaties offer choices — and where they don't." };
 const BODY = `<h2>Optimisation Levers</h2><p>Treaty residence is determined by facts — BUT facts can be shaped legitimately. The optimisation levers:</p><table><tr><th>Lever</th><th>Effect</th><th>Risk</th></tr><tr><td>Where permanent home is located</td><td>Test 1 resolution</td><td>Must be genuine continuous availability</td></tr><tr><td>Where family lives</td><td>Test 2 (personal ties)</td><td>Genuine, not nominal</td></tr><tr><td>Where business is managed</td><td>Test 2 (economic ties)</td><td>Evidence of board meetings, signatures, contracts</td></tr><tr><td>Relative time per country</td><td>Test 3</td><td>Only if Tests 1 and 2 don't resolve</td></tr><tr><td>Nationality choice</td><td>Test 4</td><td>Citizenship changes are slow and rare</td></tr></table><div class="info-box"><strong>Key principle:</strong> the treaty applies to your facts. You cannot argue a fact you haven't established. Build the facts first; the treaty position follows.</div>`;
 
 export default function TaxTreatyNavigatorFile07() {
@@ -25,6 +28,10 @@ export default function TaxTreatyNavigatorFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TaxTreatyNavigatorFile07() {
             Double Tax Treaty Navigator · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Treaty Optimisation Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Where treaties offer choices — and where they don't.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

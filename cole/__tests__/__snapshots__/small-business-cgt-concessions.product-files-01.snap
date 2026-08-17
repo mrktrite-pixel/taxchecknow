@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "small-business-cgt-concessions";
+const SLUG = "sbcgt-01";
+const FALLBACK_LABEL = { name: "Your Division 152 Eligibility Report", desc: "Whether you qualify for small business CGT concessions and which apply." };
 const BODY = `<h2>Division 152 Eligibility Check</h2><div class="action-box"><h3>Basic Conditions</h3><p>Test 1: Aggregate turnover under $2M — include connected entities and affiliates</p><p>Test 2: OR net assets under $6M — excluding personal use assets and super</p><p>Active Asset Test: Asset used in business for 50%+ of ownership period</p></div><p>Source: <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions">ATO — Small business CGT concessions</a></p>`;
 
 export default function SmallBusinessCgtConcessionsFile01() {
@@ -25,6 +28,10 @@ export default function SmallBusinessCgtConcessionsFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SmallBusinessCgtConcessionsFile01() {
             Small Business CGT Concessions Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Division 152 Eligibility Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Whether you qualify for small business CGT concessions and which apply.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

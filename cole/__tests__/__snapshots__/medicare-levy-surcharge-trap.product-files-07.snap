@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "medicare-levy-surcharge-trap";
+const SLUG = "mls-07";
+const FALLBACK_LABEL = { name: "Family Structuring Strategy", desc: "How couples and families can structure income to minimise MLS." };
 const BODY = `<h2>Family MLS Strategy</h2><p>Families have a combined income threshold of $202,000 for 2025/26, increased by $1,500 for each dependent child after the first. This can create planning opportunities for couples where income can be spread.</p><table><tr><th>Couple Income Split</th><th>MLS Applies?</th><th>Action</th></tr><tr><td>$120k + $80k = $200,000</td><td>No — under $202,000</td><td>No MLS even without cover</td></tr><tr><td>$110k + $95k = $205,000</td><td>Yes — just over</td><td>1% on combined income; a small reduction may bring you under</td></tr><tr><td>$150k + $100k = $250,000</td><td>Yes — over</td><td>1.25% tier; both partners need appropriate cover</td></tr><tr><td>Spouse own income $27,222 or less</td><td>Exempt</td><td>Exempt even if combined income is above the threshold (QC71227)</td></tr></table>`;
 
 export default function MedicareLevySurchargeTrapFile07() {
@@ -25,6 +28,10 @@ export default function MedicareLevySurchargeTrapFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MedicareLevySurchargeTrapFile07() {
             Medicare Levy Surcharge Trap Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Family Structuring Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How couples and families can structure income to minimise MLS.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

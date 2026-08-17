@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-main-residence-trap";
+const SLUG = "mr-05";
+const FALLBACK_LABEL = { name: "Record-Keeping Checklist", desc: "What to keep to defend your main residence exemption if ATO audits." };
 const BODY = `<h2>ATO Evidence Checklist</h2><ul class="checklist"><li>Settlement statement showing purchase date and price</li><li>Contract of sale showing sale date and price</li><li>Utility bills (power, gas, water) at the property address</li><li>Bank statements showing property address during main residence periods</li><li>Electoral roll registration at the property</li><li>All rental agreements and rental income records</li><li>Any home office deduction claims from prior tax returns</li><li>Receipts for all capital improvements</li></ul><div class="info-box">Keep these for 5 years after you lodge the return in which the CGT gain is reported. ATO can audit for 4 years from lodgement date.</div>`;
 
 export default function CgtMainResidenceTrapFile05() {
@@ -25,6 +28,10 @@ export default function CgtMainResidenceTrapFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtMainResidenceTrapFile05() {
             CGT Main Residence Trap Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Record-Keeping Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What to keep to defend your main residence exemption if ATO audits.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

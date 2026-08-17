@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "pension-iht-trap";
+const SLUG = "piht-07";
+const FALLBACK_LABEL = { name: "Whole-of-Life Insurance in Trust", desc: "How to use a WoL policy to cover IHT on pension — full execution guide." };
 const BODY = `<h2>Whole-of-Life Insurance in Trust</h2><h3>Concept</h3><p>A whole-of-life insurance policy pays out a guaranteed sum on your death. Placed in trust, the payout sits outside your estate — meaning it can be used to pay IHT without increasing the taxable estate further. The payout is typically sized to cover the IHT liability on your pension.</p><h3>Sizing</h3><p>Calculate projected IHT on pension at your likely death age. For a 68-year-old with £450k pension projected to grow to £550k by age 80: projected pension IHT = ~£220k. Sum assured on WoL: £220k.</p><h3>Premium Estimate</h3><p>For a 68-year-old non-smoker in good health, a guaranteed WoL with £220k sum assured: roughly £350-600/month. Total premium over 12-15 years: £50k-£100k. Trade-off: you pay in premiums, family receives full sum assured tax-free on death.</p><h3>Trust Structure</h3><ul><li>Policy written in Trust from day one — NOT owned by you personally</li><li>Beneficiaries named in trust deed (usually children or grandchildren)</li><li>Trustees manage the payout — can be you + spouse + independent trustee</li><li>Proceeds paid directly to trustees, outside your estate, outside probate</li></ul><h3>Execution Steps</h3><ol><li>Get 3 quotes from specialist whole-of-life providers (Legal &amp; General, Aviva, Royal London)</li><li>Complete medical underwriting (may be extensive at older ages)</li><li>Set up the trust structure with your solicitor BEFORE policy starts</li><li>Ensure first premium is paid from the trust, not personally</li><li>Review annually for premium sustainability</li></ol>`;
 
 export default function PensionIhtTrapFile07() {
@@ -25,6 +28,10 @@ export default function PensionIhtTrapFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function PensionIhtTrapFile07() {
             Pension IHT Trap 2027 Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Whole-of-Life Insurance in Trust
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to use a WoL policy to cover IHT on pension — full execution guide.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

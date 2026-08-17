@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "small-business-cgt-concessions";
+const SLUG = "sbcgt-04";
+const FALLBACK_LABEL = { name: "Pre-Sale Positioning Strategy", desc: "Steps to take before signing the sale contract to maximise concessions." };
 const BODY = `<h2>Pre-Sale Actions</h2><div class="action-box"><h3>Before You Sign the Sale Contract</h3><p>1. Confirm aggregate turnover — include all connected entities</p><p>2. Confirm net assets under $6M — calculate correctly</p><p>3. Confirm active asset test — document business use history</p><p>4. Check remaining lifetime retirement exemption — prior elections</p><p>5. Consider age — if close to 55, model the benefit of waiting</p><p>6. Engage specialist CGT adviser before agreeing to sale terms</p></div>`;
 
 export default function SmallBusinessCgtConcessionsFile04() {
@@ -25,6 +28,10 @@ export default function SmallBusinessCgtConcessionsFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SmallBusinessCgtConcessionsFile04() {
             Small Business CGT Concessions Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Pre-Sale Positioning Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Steps to take before signing the sale contract to maximise concessions.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

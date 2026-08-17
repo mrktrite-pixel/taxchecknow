@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-amt-shock";
+const SLUG = "amt-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief — AMT Planning", desc: "Questions for your Canadian tax professional before filing if AMT triggers apply." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with a Canadian tax professional (CPA Canada member) familiar with AMT planning. Post-2024 reforms make generic advice unreliable.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Based on my income + deductions + triggers this year, does AMT apply?</p></div><h3>Question 2</h3><p>If AMT applies, what is the credit carryforward and when might I recover it?</p><h3>Question 3</h3><p>Can I spread capital gains / options / donations across years to manage AMT?</p><h3>Question 4</h3><p>If I donated appreciated securities, is AMT triggered by the capital gain inclusion?</p><h3>Question 5</h3><p>Should I make additional RRSP contributions in this AMT year?</p>`;
 
 export default function CanAmtShockFile05() {
@@ -25,6 +28,10 @@ export default function CanAmtShockFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanAmtShockFile05() {
             Canada AMT Shock Auditor · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — AMT Planning
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Questions for your Canadian tax professional before filing if AMT triggers apply.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

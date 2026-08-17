@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "gst-registration-trap";
+const SLUG = "gst-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "GST questions to take if your business is growing." };
 const BODY = `<div class="info-box">Check these questions NOW — not when the ATO contacts you.</div><div class="action-box"><h3>Question 1</h3><p>"What is my current rolling 12-month GST turnover — and when am I expected to cross $75,000?"</p></div><h3>Question 2</h3><p>"Have I already crossed the threshold in a prior period without registering?"</p><h3>Question 3</h3><p>"Should I voluntarily disclose late registration to the ATO?"</p>`;
 
 export default function GstRegistrationTrapFile05() {
@@ -25,6 +28,10 @@ export default function GstRegistrationTrapFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function GstRegistrationTrapFile05() {
             GST Registration Trap Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">GST questions to take if your business is growing.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

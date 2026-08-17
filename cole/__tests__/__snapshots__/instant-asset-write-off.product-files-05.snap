@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "instant-asset-write-off";
+const SLUG = "iawo-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "Instant write-off questions to take before EOFY." };
 const BODY = `<div class="info-box">Send to your accountant in May — not June. Timing is everything.</div><div class="action-box"><h3>Question 1</h3><p>"What assets do I have planned before 30 June — and will they be installed in time?"</p></div><h3>Question 2</h3><p>"Should I bring forward any July purchases to June to claim the write-off this year?"</p><h3>Question 3</h3><p>"For assets over $20k — which method gives better depreciation: pool or effective life?"</p>`;
 
 export default function InstantAssetWriteOffFile05() {
@@ -25,6 +28,10 @@ export default function InstantAssetWriteOffFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InstantAssetWriteOffFile05() {
             Instant Asset Write-Off Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Instant write-off questions to take before EOFY.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

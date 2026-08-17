@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "au-expat-cgt";
+const SLUG = "aucgt-02";
+const FALLBACK_LABEL = { name: "Main Residence Exemption Eligibility", desc: "When the exemption applies and when it is denied — plus the life events exception (s118-115(3))." };
 const BODY = `<h2>Main Residence Exemption Eligibility</h2><h3>Exemption applies when</h3><ul><li>You are an Australian resident at the date of contract signing</li><li>The property was your principal place of abode for the entire ownership period (or partial exemption for part)</li><li>You satisfy the main residence conditions under s118-110</li></ul><h3>Exemption denied when (post 9 May 2017)</h3><ul><li>You are a foreign resident at the date of contract signing</li><li>Applies regardless of how long the property was your main residence</li><li>Applies regardless of when you became non-resident</li></ul><h3>Life events exception (s118-115(3))</h3><p>The exemption can still apply to a foreign resident where the disposal is connected to:</p><ul><li>Death of spouse or de facto partner</li><li>Terminal medical condition of owner, spouse, or minor child</li><li>Family Law Act order resulting from divorce or separation</li></ul><p>AND the property was the main residence for the relevant period ending at the life event. Narrow — not a general expat protection.</p>`;
 
 export default function AuExpatCgtFile02() {
@@ -25,6 +28,10 @@ export default function AuExpatCgtFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AuExpatCgtFile02() {
             Australian Expat CGT Trap Auditor · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Main Residence Exemption Eligibility
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">When the exemption applies and when it is denied — plus the life events exception (s118-115(3)).</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

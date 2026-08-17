@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-nrls";
+const SLUG = "nrl-07";
+const FALLBACK_LABEL = { name: "CCA and Recapture Planning", desc: "When to claim Capital Cost Allowance and how to manage recapture on sale." };
 const BODY = `<h2>CCA and Recapture Strategy</h2><h3>CCA basics</h3><ul><li>Capital Cost Allowance = depreciation for tax purposes</li><li>Building only (not land) — apportion purchase price</li><li>Residential rental: Class 1 — 4% declining balance</li><li>Commercial rental: Class 1 — generally 4-6%</li><li>Half-year rule applies in acquisition year</li></ul><h3>Benefit during ownership</h3><ul><li>Reduces annual net rental income for Section 216</li><li>Lower annual tax payable</li><li>Useful if marginal rate is high in the destination country</li></ul><h3>Recapture on sale</h3><ul><li>CCA previously claimed is RECAPTURED (added back to income) in year of sale</li><li>Also 25% Part XIII withholding applied on gross sale price (Section 116 reduces to gain-based amount)</li><li>Net effect: CCA defers rather than eliminates tax</li></ul><h3>Decision framework</h3><ul><li>Long-term hold (10+ years): CCA often beneficial (time value of deferred tax)</li><li>Short-term hold (under 5 years): usually NOT claim CCA (recapture cost soon outweighs benefit)</li><li>Sale year planning: CCA claim in sale year has full-year recapture — usually skip that year</li></ul><h3>CCA + destination country interaction</h3><ul><li>Some destination countries don't recognise Canadian CCA — creates deduction timing mismatch</li><li>Destination country may tax the full rental income regardless of CCA</li><li>Treaty-based foreign tax credit may not align with CCA-adjusted Canadian tax</li></ul>`;
 
 export default function CanNrlsFile07() {
@@ -25,6 +28,10 @@ export default function CanNrlsFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanNrlsFile07() {
             Canada Non-Resident Landlord Withholding Trap · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            CCA and Recapture Planning
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">When to claim Capital Cost Allowance and how to manage recapture on sale.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

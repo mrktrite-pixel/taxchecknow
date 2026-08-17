@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "superannuation-tax-leaving-australia-confusion-2026";
+const SLUG = "dasp-06";
+const FALLBACK_LABEL = { name: "Taxed vs Untaxed Element Breakdown", desc: "How your balance splits and the exact rate on each portion." };
 const BODY = `<h2>Taxed vs Untaxed Element — Full Breakdown</h2><p>Your DASP tax depends on how your balance splits between the taxed and untaxed elements of the taxable component.</p><table><tr><th>Visa class</th><th>Taxed element</th><th>Untaxed element</th></tr><tr><td>Working holiday maker (417/462)</td><td>65%</td><td>65%</td></tr><tr><td>Other temporary visa</td><td>35%</td><td>45%</td></tr></table><p>Request a component statement from your fund so the split — and therefore your exact withholding — is known before you claim.</p>`;
 
 export default function SuperannuationTaxLeavingAustraliaConfusion2026File06() {
@@ -25,6 +28,10 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File06() {
             Superannuation Tax When Leaving Australia (DASP) · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Taxed vs Untaxed Element Breakdown
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How your balance splits and the exact rate on each portion.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

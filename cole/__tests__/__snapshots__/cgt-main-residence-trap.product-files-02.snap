@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-main-residence-trap";
+const SLUG = "mr-02";
+const FALLBACK_LABEL = { name: "6-Year Rule Optimiser", desc: "Confirm whether the 6-year absence rule applies to your situation." };
 const BODY = `<h2>6-Year Absence Rule — Eligibility Check</h2><p>The 6-year rule allows you to treat a property as your main residence for up to 6 years while absent.</p><div class="action-box"><h3>Conditions Required</h3><p>1. The property was your main residence before the absence</p><p>2. You did not nominate another property as your main residence during the absence</p><p>3. The absence was less than 6 continuous years (resets if you move back in)</p></div><table><tr><th>Scenario</th><th>Exempt?</th></tr><tr><td>Absence under 6 years, no other main residence</td><td>Yes — fully exempt</td></tr><tr><td>Absence over 6 years</td><td>Partial — excess days taxable</td></tr><tr><td>Another property nominated as main residence</td><td>No — 6-year rule does not apply</td></tr></table>`;
 
 export default function CgtMainResidenceTrapFile02() {
@@ -25,6 +28,10 @@ export default function CgtMainResidenceTrapFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtMainResidenceTrapFile02() {
             CGT Main Residence Trap Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            6-Year Rule Optimiser
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Confirm whether the 6-year absence rule applies to your situation.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

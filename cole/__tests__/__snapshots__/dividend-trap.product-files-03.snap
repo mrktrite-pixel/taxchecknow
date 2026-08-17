@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "dividend-trap";
+const SLUG = "dt-03";
+const FALLBACK_LABEL = { name: "The Dividend Allowance Collapse — 2017 to 2024", desc: "How the allowance cuts affect your specific structure — and why pre-2018 splits are out of date." };
 const BODY = `<h2>The Dividend Allowance Collapse</h2><table><tr><th>Tax Year</th><th>Dividend Allowance</th><th>Change</th></tr><tr><td>2016-17</td><td>First introduced at £5,000</td><td>—</td></tr><tr><td>2017-18</td><td>£5,000</td><td>Peak</td></tr><tr><td>2018-22</td><td>£2,000</td><td>−£3,000</td></tr><tr><td>2023-24</td><td>£1,000</td><td>−£1,000</td></tr><tr><td>2024-25 onwards</td><td>£500</td><td>−£500</td></tr></table><h3>Impact on a Typical Director Taking £10,000 Dividends</h3><table><tr><th>Year</th><th>Tax-free portion</th><th>Taxable at 8.75%</th><th>Tax owed</th></tr><tr><td>2017-18</td><td>£5,000</td><td>£5,000</td><td>£438</td></tr><tr><td>2024-25</td><td>£500</td><td>£9,500</td><td>£831</td></tr></table><p>Same dividend, same taxpayer — tax owed DOUBLED due to allowance cuts. Most directors haven't noticed.</p>`;
 
 export default function DividendTrapFile03() {
@@ -25,6 +28,10 @@ export default function DividendTrapFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DividendTrapFile03() {
             Salary + Dividend Tax Trap Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            The Dividend Allowance Collapse — 2017 to 2024
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How the allowance cuts affect your specific structure — and why pre-2018 splits are out of date.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

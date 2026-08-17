@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "div296-wealth-eraser";
+const SLUG = "div296-04";
+const FALLBACK_LABEL = { name: "Valuation & Records Checklist", desc: "Documentation required for the election and subsequent two-track record-keeping." };
 const BODY = `<h2>Evidence & Records Checklist</h2><ul class="checklist"><li>Complete SMSF CGT asset register with original cost base and dates</li><li>30 June 2026 market valuations — listed assets use closing price, illiquid need qualified valuer</li><li>Evidence of valuation methodology (for ATO audit defence)</li><li>Records of any pre-30-June disposals (triggering ordinary CGT in 2025-26)</li><li>SMSF trustee minutes resolving to make the election</li><li>Approved ATO election form lodged with 2026-27 annual return</li><li>Two-track cost base records established: ordinary CGT + Division 296 reset value</li><li>Multi-member fund: actuarial certificate for Division 296 attribution per member</li><li>Records retained for 5 years minimum</li></ul>`;
 
 export default function Div296WealthEraserFile04() {
@@ -25,6 +28,10 @@ export default function Div296WealthEraserFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Div296WealthEraserFile04() {
             Division 296 Wealth Eraser Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Valuation & Records Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Documentation required for the election and subsequent two-track record-keeping.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

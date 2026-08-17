@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-property-flipping";
+const SLUG = "pft-01";
+const FALLBACK_LABEL = { name: "Your Property Tax Classification Analysis", desc: "Your specific classification (business income vs capital gain) with reasoning." };
 const BODY = `<h2>Your Property Tax Classification</h2><div class="action-box"><h3>Rule applied</h3><p>ITA s12(12): residential property held under 365 consecutive days = business income presumed</p><p>Overrides: capital gain treatment + principal residence exemption</p><p>Exception: specific life events (narrow)</p></div><p>Source: <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/personal-income/residential-property-flipping.html">CRA Residential Property Flipping</a></p>`;
 
 export default function CanPropertyFlippingFile01() {
@@ -25,6 +28,10 @@ export default function CanPropertyFlippingFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanPropertyFlippingFile01() {
             Canada Property Flipping Tax Trap Auditor · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Property Tax Classification Analysis
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your specific classification (business income vs capital gain) with reasoning.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

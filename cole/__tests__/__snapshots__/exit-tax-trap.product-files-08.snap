@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "exit-tax-trap";
+const SLUG = "ett-08";
+const FALLBACK_LABEL = { name: "Multi-Country Exit Sequencing Plan", desc: "For people leaving one country and arriving in another — the order of operations matters." };
 const BODY = `<h2>Multi-Country Sequencing</h2><p>When leaving one country and arriving in another, the sequence of events affects tax outcomes in BOTH countries:</p><ol><li>Establish new country residency FIRST (permanent home, ties)</li><li>Confirm cessation of departure country residency under its domestic test</li><li>Apply treaty tie-breaker if dual residency exists in transition year</li><li>File departure return in old country (with exit tax if applicable)</li><li>Begin filing in new country as resident</li><li>Maintain dated evidence of each step</li></ol><h2>Common Sequencing Traps</h2><table><tr><th>Trap</th><th>Effect</th></tr><tr><td>Departing Canada before selling Canadian assets</td><td>Deemed disposition triggers on all worldwide property</td></tr><tr><td>Departing AU before selling AU home</td><td>Main residence exemption lost permanently</td></tr><tr><td>Returning to UK within 5 years of departure</td><td>Temporary non-residence claw-back on abroad gains</td></tr><tr><td>US renunciation without pre-certification</td><td>Triggers covered expatriate status even if otherwise exempt</td></tr></table>`;
 
 export default function ExitTaxTrapFile08() {
@@ -25,6 +28,10 @@ export default function ExitTaxTrapFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function ExitTaxTrapFile08() {
             Exit Tax Trap Auditor · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Country Exit Sequencing Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">For people leaving one country and arriving in another — the order of operations matters.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

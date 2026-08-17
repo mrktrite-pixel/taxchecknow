@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "medicare-levy-surcharge-trap";
+const SLUG = "mls-08";
+const FALLBACK_LABEL = { name: "Insurance and Tax Integration Plan", desc: "Full integration of private cover, MLS, and income structuring." };
 const BODY = `<h2>Integrated Insurance and Tax Strategy</h2><div class="action-box"><h3>Annual Review Checklist</h3><p>April: Review income forecast for current year — will MLS apply?</p><p>May: Compare cheapest qualifying hospital cover vs MLS</p><p>June: If cover not held — get it before 30 June to limit uncovered period</p><p>July-September: Lodge BAS / review income structuring for next year</p><p>October: Tax return — confirm MLS treatment is correct</p></div><p>For higher-income earners the surcharge is often larger than a basic hospital-only premium, and cover provides additional health access. Break-even depends on your income and the premium you are quoted — compare your own MLS figure against current quotes. The surcharge begins at $101,001 for singles.</p>`;
 
 export default function MedicareLevySurchargeTrapFile08() {
@@ -25,6 +28,10 @@ export default function MedicareLevySurchargeTrapFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MedicareLevySurchargeTrapFile08() {
             Medicare Levy Surcharge Trap Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Insurance and Tax Integration Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Full integration of private cover, MLS, and income structuring.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

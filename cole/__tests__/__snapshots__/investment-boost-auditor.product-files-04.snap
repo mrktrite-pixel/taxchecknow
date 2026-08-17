@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "investment-boost-auditor";
+const SLUG = "ib-04";
+const FALLBACK_LABEL = { name: "IR10 Box 60 Filing Guide", desc: "How to correctly disclose your Investment Boost claim in your tax return." };
 const BODY = `<h2>IR10 Disclosure — Mandatory</h2><p>The Investment Boost must be disclosed in specific boxes on the IR10 (Financial Statements Summary) form. Omitting or incorrectly completing these boxes is an IRD audit trigger.</p><div class="action-box"><h3>IR10 Required Entries</h3><p>Box 60: Total value of Investment Boost assets claimed (excluding private use portion)</p><p>Box 52: Depreciation claimed — this includes the Investment Boost amount within total depreciation</p></div><div class="info-box"><strong>Private use exclusion:</strong> If the asset has any private use, exclude the private use proportion from Box 60. The eligible amount is the business-use percentage of the asset cost.</div><h2>Example</h2><table><tr><th>Item</th><th>Amount</th></tr><tr><td>Asset cost</td><td>$100,000</td></tr><tr><td>Business use</td><td>80%</td></tr><tr><td>IR10 Box 60</td><td>$80,000 (business portion only)</td></tr><tr><td>Investment Boost deduction</td><td>$80,000 × 20% = $16,000</td></tr></table>`;
 
 export default function InvestmentBoostAuditorFile04() {
@@ -25,6 +28,10 @@ export default function InvestmentBoostAuditorFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InvestmentBoostAuditorFile04() {
             Investment Boost Timing Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            IR10 Box 60 Filing Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to correctly disclose your Investment Boost claim in your tax return.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

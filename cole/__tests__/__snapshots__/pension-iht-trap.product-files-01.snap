@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "pension-iht-trap";
+const SLUG = "piht-01";
+const FALLBACK_LABEL = { name: "Your Exposure Report — Current vs Proposed", desc: "Side-by-side IHT calculation under current law and the October 2024 proposal." };
 const BODY = `<h2>Current vs Proposed IHT Exposure</h2><div class="action-box"><h3>The Binary Change</h3><p>Under current law: pension OUTSIDE estate, £0 IHT.</p><p>Under October 2024 proposal: pension IN estate, 40% IHT above NRB.</p></div><h3>Your Numbers</h3><table><tr><th>Element</th><th>Current law</th><th>Proposed (if enacted 2027)</th></tr><tr><td>Pension in estate</td><td>No</td><td>Yes</td></tr><tr><td>IHT on pension</td><td>£0</td><td>40% above remaining NRB</td></tr><tr><td>Income tax on withdrawals</td><td>Marginal if 75+</td><td>Unchanged — stacks with IHT</td></tr><tr><td>Spouse exemption</td><td>Yes</td><td>Yes (retained)</td></tr></table><div class="warning-box"><strong>Status April 2026:</strong> PROPOSAL, not yet enacted. Royal Assent has not occurred. Plan for both scenarios.</div>`;
 
 export default function PensionIhtTrapFile01() {
@@ -25,6 +28,10 @@ export default function PensionIhtTrapFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function PensionIhtTrapFile01() {
             Pension IHT Trap 2027 Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Exposure Report — Current vs Proposed
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Side-by-side IHT calculation under current law and the October 2024 proposal.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

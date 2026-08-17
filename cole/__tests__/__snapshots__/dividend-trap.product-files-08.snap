@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "dividend-trap";
+const SLUG = "dt-08";
+const FALLBACK_LABEL = { name: "Annual Review Checklist", desc: "What to check every year before 5 April to ensure your salary/dividend split is still optimal." };
 const BODY = `<h2>Annual Dividend Review Checklist</h2><h3>February (2 months before year-end)</h3><ul class="checklist"><li>Pull YTD income figures: salary, dividends, other income</li><li>Project full-year total income</li><li>Identify whether total will cross £50,270 or £125,140 thresholds</li><li>Quantify higher-rate dividend exposure if any</li><li>Model restructure options (pension, spousal, deferral)</li></ul><h3>March (month before year-end)</h3><ul class="checklist"><li>Execute chosen restructure (pension contribution, dividend deferral, spousal shift)</li><li>Time final dividend payment to control year-end total</li><li>Confirm bookkeeping reflects actual dividend declaration dates</li><li>Brief accountant on changes</li></ul><h3>April (new tax year)</h3><ul class="checklist"><li>Check updated tax year figures (bands, allowances)</li><li>Adjust next-year strategy if rules have changed in the budget</li><li>Set up standing dividend schedule for the new year</li></ul><h3>Trigger Events (any time of year)</h3><ul class="checklist"><li>Salary change → review split immediately</li><li>New income source (rental, freelance) → recalculate band position</li><li>Spouse's income change → check spousal shareholding is still optimal</li><li>Major bonus or one-off income → plan dividend timing around it</li></ul>`;
 
 export default function DividendTrapFile08() {
@@ -25,6 +28,10 @@ export default function DividendTrapFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DividendTrapFile08() {
             Salary + Dividend Tax Trap Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Annual Review Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What to check every year before 5 April to ensure your salary/dividend split is still optimal.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

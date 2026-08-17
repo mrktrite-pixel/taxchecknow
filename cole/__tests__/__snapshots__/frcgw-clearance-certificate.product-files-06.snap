@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "frcgw-clearance-certificate";
+const SLUG = "frcgw-06";
+const FALLBACK_LABEL = { name: "Your Pre-Settlement Plan", desc: "What to do, in order, between now and settlement." };
 const BODY = `{{#unless state:settled}}<h2>Your pre-settlement plan</h2>{{#if has:settlement_date}}<div class="action-box"><p><strong>Settlement:</strong> {{bind:settlement_date}} · <strong>Lodge by:</strong> {{bind:lodge_by_date}} · <strong>Days to settlement:</strong> {{bind:days_to_settlement}}</p></div>{{/if}}{{#unless has:settlement_date}}<div class="info-box"><p>You did not give us a settlement date, so the steps below are sequenced rather than dated. Put your settlement date in your calendar first, then work backwards from it.</p></div>{{/unless}}{{/unless}}{{#if section:recovery}}<h2>Your recovery plan</h2><div class="info-box"><p>Your settlement has already happened. The 15% was remitted to the ATO and is credited to you; the sequence below is how you claim it.</p></div>{{/if}}{{#if state:have_cert}}<h2>Closing this sale out</h2><div class="info-box"><p>Your settlement has already happened and a valid certificate was provided, so nothing was withheld and nothing is outstanding. The short sequence below is record-keeping.</p></div>{{/if}}{{#unless suppress:apply_now}}<h2>Phase 1 — Now</h2><ol><li>Check the vendor name on the title and note it exactly as written.</li><li>Confirm your residency for tax purposes if there is any doubt about it.</li><li>Lodge the application at <a href="https://www.ato.gov.au/clearancecertificate">ato.gov.au/clearancecertificate</a>. It is free and takes a few minutes. Supply your tax file number — it is optional, but it is what lets the application process automatically.</li>{{#if section:per_vendor}}<li>Make sure <strong>every</strong> owner on the title lodges their own application. One per owner, not one per property.</li>{{/if}}</ol><h2>Phase 2 — Within days</h2><ol><li>Most certificates issue within days. Check whether yours has.</li><li>If it has issued, check the name on it against the title before you do anything else.</li><li>Send it to the purchaser's conveyancer with the cover note in File 03, and ask for written confirmation of receipt.</li></ol>{{/unless}}{{#if state:pending}}<h2>Phase 1 — Now</h2><ol><li>Check the status of the application you have already lodged. There is nothing further to apply for.</li><li>Send the pending-notice in File 03 to the purchaser's conveyancer, so the position is known in advance rather than discovered at settlement.</li>{{#if section:variation}}<li>Confirm you lodged the right instrument. A clearance certificate is not available to foreign residents — see File 08.</li>{{/if}}</ol><h2>Phase 2 — Until it issues</h2><ol><li>Check daily as settlement approaches.</li><li>The moment it issues, check the name against the title, then send it with the cover note in File 03 and get written confirmation.</li></ol>{{/if}}{{#if section:recovery}}<h2>Phase 1 — Now</h2><p>You did not hold a certificate at settlement — there is nothing to apply for on this sale; File 07 is your route.</p><ol><li>Get the payment confirmation from the purchaser's conveyancer showing the amount remitted to the ATO.</li><li>Confirm the <strong>contract</strong> date, which decides the income year the credit is claimed in.</li>{{#if section:residency_first}}<li>Settle your residency for tax purposes — it decides how much of the withheld amount comes back.</li>{{/if}}{{#if section:variation}}<li>Read File 08 before your next sale: a variation notice, applied for once the contract is signed, is what reduces the amount withheld.</li>{{/if}}</ol><h2>Phase 2 — At the next return</h2><ol><li>Make sure whoever prepares your return knows a credit is coming, so it is claimed rather than missed.</li><li>Expect the timing to follow the contract year, not the settlement date — see File 07.</li></ol>{{/if}}{{#if state:have_cert}}<h2>Phase 1 — Now</h2><p>You provided a valid certificate at or before settlement, so no withholding was due. There is nothing left to lodge on this sale.</p><ol><li>Keep the certificate and the written confirmation of receipt with your settlement papers.</li><li>Note the issue date: the certificate is valid for 12 months and may still cover another sale in that window.</li></ol>{{/if}}{{#unless state:settled}}<h2>Phase 3 — The week before settlement</h2><ol><li>Confirm in writing that the purchaser's side holds the certificate and that the name matches.</li>{{#if section:per_vendor}}<li>Confirm this separately for <strong>each</strong> owner. One owner's confirmation says nothing about another's.</li>{{/if}}<li>If a certificate has still not issued, tell the purchaser's conveyancer in writing now, so it is a known position rather than a surprise.</li></ol><h2>Phase 4 — If a certificate is not held at settlement</h2><p>The purchaser withholds 15% of the sale price and remits it to the ATO. This is not a loss and it is not a penalty — the amount is credited to you, and you claim it in the return for the income year the <strong>contract</strong> was signed. File 07 sets out exactly how that works and what the timing looks like.</p><p>There is no need to try to delay settlement over this. A settlement date is a contractual obligation to the purchaser and the withholding is recoverable; the two are not comparable problems.</p>{{/unless}}`;
 
 export default function FrcgwClearanceCertificateFile06() {
@@ -25,6 +28,10 @@ export default function FrcgwClearanceCertificateFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FrcgwClearanceCertificateFile06() {
             Foreign Resident CGT Withholding Clearance Certificate · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Pre-Settlement Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What to do, in order, between now and settlement.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

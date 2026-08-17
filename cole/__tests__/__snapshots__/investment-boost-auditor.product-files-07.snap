@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "investment-boost-auditor";
+const SLUG = "ib-07";
+const FALLBACK_LABEL = { name: "Identifiable Stage Claiming Strategy", desc: "Claim the Investment Boost before full project completion using the stage rule." };
 const BODY = `<h2>Claiming at an Identifiable Stage</h2><p>You do not need to wait for a full project to be complete before claiming the Investment Boost. IRD confirms that an improvement can qualify once it is complete to an identifiable stage — provided that stage increases the capital value and the asset is available for use.</p><div class="action-box"><h3>What Counts as an Identifiable Stage</h3><p>Completed floor of a building that is operational</p><p>A defined section of a fit-out that is in use</p><p>A standalone component that functions independently</p></div><div class="info-box"><strong>Documentation needed:</strong> You must be able to demonstrate that the identifiable stage is complete, that it adds capital value, and that it was available for use from the eligible date. Get written confirmation from your builder or project manager.</div>`;
 
 export default function InvestmentBoostAuditorFile07() {
@@ -25,6 +28,10 @@ export default function InvestmentBoostAuditorFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InvestmentBoostAuditorFile07() {
             Investment Boost Timing Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Identifiable Stage Claiming Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Claim the Investment Boost before full project completion using the stage rule.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

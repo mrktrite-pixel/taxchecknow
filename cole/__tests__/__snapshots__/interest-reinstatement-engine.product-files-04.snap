@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "interest-reinstatement-engine";
+const SLUG = "ir-04";
+const FALLBACK_LABEL = { name: "Ring-Fenced Loss Guide", desc: "How ring-fencing affects your restored interest deductions." };
 const BODY = `<h2>Ring-Fencing Rules — Still in Place</h2><p>While interest deductibility has been fully restored, the ring-fencing rules from 2019 remain. This means rental losses (where deductions including interest exceed rental income) cannot be offset against your salary or business income.</p><div class="warning-box"><strong>Key rule:</strong> Rental losses are ring-fenced to your rental portfolio. They can only be carried forward and offset against future rental income or a taxable gain when you sell the property.</div><h2>Ring-Fencing Example</h2><table><tr><th>Item</th><th>Amount</th></tr><tr><td>Rental income</td><td>$28,000</td></tr><tr><td>Interest deduction</td><td>$35,000</td></tr><tr><td>Other expenses</td><td>$5,000</td></tr><tr><td>Rental loss</td><td>$12,000 — ring-fenced</td></tr><tr><td>Offset against salary?</td><td>No — carried forward</td></tr></table>`;
 
 export default function InterestReinstatementEngineFile04() {
@@ -25,6 +28,10 @@ export default function InterestReinstatementEngineFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InterestReinstatementEngineFile04() {
             Property Interest Deductibility Recovery Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Ring-Fenced Loss Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How ring-fencing affects your restored interest deductions.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "day-183-rule";
+const SLUG = "d183-04";
+const FALLBACK_LABEL = { name: "Form 8843 Filing Brief", desc: "What Form 8843 supports, when it is due, and what late filing costs you." };
 const BODY = `<h2>Form 8843</h2><table><tr><th>Question</th><th>Answer</th></tr><tr><td>What does it support?</td><td>Excluding days as an exempt individual (student, teacher, trainee), and excluding days you could not leave because of a medical condition that arose while you were in the U.S.</td></tr><tr><td>When is it due?</td><td>By the due date for filing your income tax return.</td></tr><tr><td>What if I do not have to file a return?</td><td>Send Form 8843 on its own, to the address given in the instructions for Form 8843, by that same date.</td></tr><tr><td>What if it is filed late?</td><td>The IRS position is that you cannot exclude those days — they go back into the count, which can move you from nonresident to resident on the same travel history.</td></tr><tr><td>Is there any relief?</td><td>A reasonable-cause let-out exists where you can show, by clear and convincing evidence, that you took reasonable actions to become aware of the requirement and to comply with it.</td></tr></table><div class="warning-box"><strong>Your own due date.</strong> The return due date is not the same for every filer — it differs for U.S.-resident filers, filers abroad, and anyone on extension. Establish yours rather than assuming a date.</div>`;
 
 export default function Day183RuleFile04() {
@@ -25,6 +28,10 @@ export default function Day183RuleFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Day183RuleFile04() {
             183-Day Rule Reality Check · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Form 8843 Filing Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What Form 8843 supports, when it is due, and what late filing costs you.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

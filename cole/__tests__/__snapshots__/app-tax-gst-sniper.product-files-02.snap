@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "app-tax-gst-sniper";
+const SLUG = "gst-02";
+const FALLBACK_LABEL = { name: "Big Purchase GST Recovery Tool", desc: "How to time a large purchase to maximise your GST recovery." };
 const BODY = `<h2>Big Purchase — Register First</h2><p>If you are about to buy a vehicle, equipment or make a significant business investment, registering for GST before the purchase allows you to claim the full 15% GST back immediately.</p><div class="action-box"><h3>Example — $30,000 Vehicle</h3><p>GST content of $30,000 purchase: $3,913</p><p>Flat-rate credit on $30k income: approximately $2,550</p><p>Registering before purchase: $3,913 more recovered</p></div><table><tr><th>Asset</th><th>GST Recovery</th></tr><tr><td>$15,000 vehicle</td><td>$1,957</td></tr><tr><td>$30,000 vehicle</td><td>$3,913</td></tr><tr><td>$10,000 equipment</td><td>$1,304</td></tr></table><div class="warning-box"><strong>Timing matters:</strong> Register before settlement. You cannot claim GST on a purchase made before your registration date.</div>`;
 
 export default function AppTaxGstSniperFile02() {
@@ -25,6 +28,10 @@ export default function AppTaxGstSniperFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AppTaxGstSniperFile02() {
             Platform GST Decision Engine (NZ) · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Big Purchase GST Recovery Tool
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to time a large purchase to maximise your GST recovery.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

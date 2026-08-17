@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bright-line-auditor";
+const SLUG = "bl-04";
+const FALLBACK_LABEL = { name: "Audit-Ready Documentation Checklist", desc: "What IRD expects if they query your bright-line exemption claim." };
 const BODY = `<h2>IRD Evidence Checklist</h2><p>If IRD queries your bright-line position, you need documentation to support your claim. Prepare these before settlement.</p><ul class="checklist"><li>Certificate of Title showing registration date</li><li>Binding sale and purchase agreement showing date signed</li><li>Utility bills (power, internet, water) showing address throughout ownership</li><li>Bank statements showing address as primary account address</li><li>Electoral roll registration at the property address</li><li>Insurance policy showing property as main home</li><li>Records of any rental periods (tenancy agreements, Airbnb data)</li><li>Valuation or floorplan showing area proportions if mixed use</li></ul><div class="info-box"><strong>Keep these for 7 years</strong> after the sale. IRD can query bright-line positions years after the transaction.</div>`;
 
 export default function BrightLineAuditorFile04() {
@@ -25,6 +28,10 @@ export default function BrightLineAuditorFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function BrightLineAuditorFile04() {
             Bright-Line Property Tax Decision Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Audit-Ready Documentation Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What IRD expects if they query your bright-line exemption claim.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

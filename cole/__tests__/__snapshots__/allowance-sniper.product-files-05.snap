@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "allowance-sniper";
+const SLUG = "as-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief — 60% Trap", desc: "5 questions to take to your accountant or IFA about the 60% trap and pension escape strategy." };
 const BODY = `<div class="info-box">Forward to your accountant or take to your next meeting. These questions force specific numbers, not generic advice.</div><h2>Ask Your Accountant</h2><div class="action-box"><h3>Question 1</h3><p>"What is my projected adjusted net income for this tax year — including employment, self-employment, rental, savings, and dividends?"</p></div><h3>Question 2</h3><p>"Given that projection, what pension contribution brings me to £100,000 exactly — and what is the combined tax saving from pension relief plus allowance restoration?"</p><h3>Question 3</h3><p>"Is salary sacrifice available through my employer, and how does it compare to personal SIPP for me specifically?"</p><h3>Question 4</h3><p>"How should I time bonuses or large payments to avoid crossing £125,140?"</p><h3>Question 5</h3><p>"What should I do before 5 April to maximise allowance restoration for this tax year — and how early should we plan next year?"</p>`;
 
 export default function AllowanceSniperFile05() {
@@ -25,6 +28,10 @@ export default function AllowanceSniperFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AllowanceSniperFile05() {
             60% Tax Trap Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — 60% Trap
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">5 questions to take to your accountant or IFA about the 60% trap and pension escape strategy.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

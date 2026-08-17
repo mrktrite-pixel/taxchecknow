@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bright-line-auditor";
+const SLUG = "bl-06";
+const FALLBACK_LABEL = { name: "Associated Person Test", desc: "Family and trust transfer analysis — does your structure affect the bright-line period?" };
 const BODY = `<h2>Associated Persons and Bright-Line</h2><p>Transfers between associated persons can trigger the bright-line test or reset the clock. Associated persons include family members, trusts where you are a settlor or beneficiary, and companies you control.</p><div class="warning-box"><strong>Key risk:</strong> If you received the property from an associated person, your bright-line period may have started at the ORIGINAL purchase date, not the date you received it.</div><table><tr><th>Transfer Type</th><th>Bright-Line Impact</th></tr><tr><td>Spouse / partner to spouse</td><td>Rollover relief usually available</td></tr><tr><td>Trust to individual</td><td>May reset or trigger — get advice</td></tr><tr><td>Individual to trust</td><td>Can trigger bright-line on transfer</td></tr><tr><td>Company to shareholder</td><td>Associated person rules apply</td></tr></table>`;
 
 export default function BrightLineAuditorFile06() {
@@ -25,6 +28,10 @@ export default function BrightLineAuditorFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function BrightLineAuditorFile06() {
             Bright-Line Property Tax Decision Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Associated Person Test
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Family and trust transfer analysis — does your structure affect the bright-line period?</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

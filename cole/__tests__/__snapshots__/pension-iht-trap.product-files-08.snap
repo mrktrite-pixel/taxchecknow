@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "pension-iht-trap";
+const SLUG = "piht-08";
+const FALLBACK_LABEL = { name: "Multi-Scenario Planning Timeline", desc: "Action plan that works across enactment, delay, and amendment scenarios." };
 const BODY = `<h2>Multi-Scenario Planning Timeline</h2><p>The October 2024 proposal may be enacted as drafted, enacted with amendments, delayed, or (unlikely) withdrawn. Your plan should work across all scenarios.</p><h3>Scenario A — Enacted as Drafted (April 2027)</h3><ul class="checklist"><li>Before Jan 2027: complete beneficiary reviews, lock in insurance, start drawdowns</li><li>April 2027: new rules live — full IHT on pension above NRB</li><li>Post-2027: drawdown and gifting become even more valuable; ISA preference over pension for new contributions</li></ul><h3>Scenario B — Enacted with Amendments</h3><ul class="checklist"><li>Watch for thresholds changing (could be higher NRB for pensions, phased transition)</li><li>Watch for effective date slipping beyond April 2027</li><li>Watch for spouse exemption modifications (unlikely but possible)</li><li>Plan flexibility: drawdown and gifting work regardless; insurance is still useful</li></ul><h3>Scenario C — Delayed</h3><ul class="checklist"><li>Actions taken under Scenario A still work — just less urgency</li><li>Drawdowns and gifts already made cannot be reversed but are fine either way</li><li>Insurance premiums continue — still useful for IHT cover even under current rules if estate is large</li></ul><h3>Scenario D — Withdrawn (Unlikely)</h3><ul class="checklist"><li>Current rules continue — pension remains outside estate</li><li>Actions already taken are still reasonable — drawdowns fund lifestyle, gifts benefit family, insurance covers estate IHT</li><li>Post-withdrawal: may over-accumulate gifts (consider annual exemption only going forward)</li></ul><h3>Principle</h3><p>Your plan should be ROBUST across all four scenarios. If your plan only works in Scenario A, it is a bet — not a plan.</p>`;
 
 export default function PensionIhtTrapFile08() {
@@ -25,6 +28,10 @@ export default function PensionIhtTrapFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function PensionIhtTrapFile08() {
             Pension IHT Trap 2027 Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Scenario Planning Timeline
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Action plan that works across enactment, delay, and amendment scenarios.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

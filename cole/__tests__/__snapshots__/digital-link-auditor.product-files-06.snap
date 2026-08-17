@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "digital-link-auditor";
+const SLUG = "dla-06";
+const FALLBACK_LABEL = { name: "Migration Sequencing Playbook", desc: "Step-by-step plan to migrate from broken chain to compliant chain without disrupting current filings." };
 const BODY = `<h2>Digital Link Migration — Full Playbook</h2><h3>Phase 1 — Diagnose (Month 1)</h3><ul class="checklist"><li>Document current chain for each MTD business (use template from file 04)</li><li>Identify specific break points at each step</li><li>Decide path: bridging software (spreadsheet-stay) or full software migration</li></ul><h3>Phase 2 — Tool Selection (Month 2)</h3><ul class="checklist"><li>For bridging path: trial 2-3 HMRC-approved tools, pick based on spreadsheet compatibility</li><li>For migration path: evaluate software options, plan data import approach</li><li>Confirm accountant's preferred tools (they may already work with specific platforms)</li></ul><h3>Phase 3 — Parallel Run (Month 3)</h3><ul class="checklist"><li>Run new compliant chain alongside old process for one quarter</li><li>Reconcile outputs to catch discrepancies</li><li>Document new process in your records</li></ul><h3>Phase 4 — Cutover (Month 4)</h3><ul class="checklist"><li>Switch fully to compliant chain</li><li>Retire old manual steps</li><li>Confirm no handoff requires typing or copying</li></ul><h3>Phase 5 — Ongoing Verification (Every Quarter)</h3><ul class="checklist"><li>Quarterly review: any new tools or workflows added? Do they maintain digital link?</li><li>Annual audit: accountant confirms chain in writing</li></ul>`;
 
 export default function DigitalLinkAuditorFile06() {
@@ -25,6 +28,10 @@ export default function DigitalLinkAuditorFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DigitalLinkAuditorFile06() {
             MTD Digital Link Compliance Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Migration Sequencing Playbook
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step plan to migrate from broken chain to compliant chain without disrupting current filings.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

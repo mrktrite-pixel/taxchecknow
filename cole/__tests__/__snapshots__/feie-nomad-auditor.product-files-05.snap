@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "feie-nomad-auditor";
+const SLUG = "feie-05";
+const FALLBACK_LABEL = { name: "Your CPA Brief — FEIE", desc: "5 questions to ask your CPA about FEIE compliance and optimisation." };
 const BODY = `<div class="info-box">Take to your expat CPA. Not your domestic CPA — FEIE compliance requires specific expertise in international tax.</div><h2>Questions for Your Expat CPA</h2><div class="action-box"><h3>Question 1</h3><p>"What is my EXACT day count for the 12-month period I'm using, and is that the most favorable 12-month window for me?"</p></div><h3>Question 2</h3><p>"For my situation, should I use physical presence or bona fide residence — and have we documented the supporting facts?"</p><h3>Question 3</h3><p>"How is my passive income (dividends, capital gains, rental, crypto) being reported — and have we considered Foreign Tax Credit for any foreign tax paid on it?"</p><h3>Question 4</h3><p>"Have you filed Form 2555 every year I've qualified, and have prior years where I may have missed the election been reviewed for amendment?"</p><h3>Question 5</h3><p>"What is my state tax residency position — have we broken state residency if I've left California or New York, or am I still on the hook for state tax?"</p>`;
 
 export default function FeieNomadAuditorFile05() {
@@ -25,6 +28,10 @@ export default function FeieNomadAuditorFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FeieNomadAuditorFile05() {
             FEIE Qualification & Failure Risk Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your CPA Brief — FEIE
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">5 questions to ask your CPA about FEIE compliance and optimisation.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

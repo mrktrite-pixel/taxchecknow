@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "us-expat-tax";
+const SLUG = "uset-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief — US Expat Strategy", desc: "Questions for your US expat tax specialist — ideally EA or CPA with cross-border experience." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with a US expat tax specialist — Enrolled Agent (EA) or CPA with cross-border expatriate experience. Generic US tax preparers often miss FEIE/FTC optimisation.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Given my country and income level, have you modelled FEIE vs FTC vs hybrid side-by-side?</p></div><h3>Question 2</h3><p>Am I generating unused FTC carryforward credits, and are we tracking the baskets (passive vs general)?</p><h3>Question 3</h3><p>If I have passive income (dividends, rental, capital gains), how are we treating it?</p><h3>Question 4</h3><p>Am I filing FBAR AND Form 8938 correctly, and which accounts are reportable on each?</p><h3>Question 5</h3><p>Have you checked for PFIC exposure from any local mutual funds or ETFs I hold?</p>`;
 
 export default function UsExpatTaxFile05() {
@@ -25,6 +28,10 @@ export default function UsExpatTaxFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UsExpatTaxFile05() {
             US Citizen Abroad Optimizer · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — US Expat Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Questions for your US expat tax specialist — ideally EA or CPA with cross-border experience.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

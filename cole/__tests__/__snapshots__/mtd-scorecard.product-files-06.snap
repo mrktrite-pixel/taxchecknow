@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "mtd-scorecard";
+const SLUG = "mtd-06";
+const FALLBACK_LABEL = { name: "Multi-Property MTD Execution Guide", desc: "How to handle MTD if you have multiple rental properties and need separate quarterly submissions." };
 const BODY = `<h2>Multi-Property MTD Execution</h2><p>HMRC treats property types separately for MTD reporting purposes.</p><table><tr><th>Property type</th><th>MTD treatment</th></tr><tr><td>Residential rentals</td><td>Combined as ONE MTD business</td></tr><tr><td>Furnished holiday lets (UK)</td><td>Separate MTD business</td></tr><tr><td>Furnished holiday lets (EEA)</td><td>Separate MTD business</td></tr><tr><td>Commercial property</td><td>NOT in MTD ITSA scope</td></tr><tr><td>Self-employment</td><td>Separate MTD business per trade</td></tr></table><h3>Impact</h3><p>If you have residential rentals + FHL + self-employment = 3 MTD businesses = 12 quarterly updates + 3 final declarations per year.</p><h3>Software Strategy</h3><ol><li>Single software package with multi-business support (Xero does this cleanly)</li><li>Separate chart of accounts per MTD business</li><li>Accountant's quarterly fee applies per business — budget accordingly</li><li>Set up recurring calendar events 2 weeks before each deadline</li></ol>`;
 
 export default function MtdScorecardFile06() {
@@ -25,6 +28,10 @@ export default function MtdScorecardFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MtdScorecardFile06() {
             MTD Mandation Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Property MTD Execution Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to handle MTD if you have multiple rental properties and need separate quarterly submissions.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "investment-boost-auditor";
+const SLUG = "ib-02";
+const FALLBACK_LABEL = { name: "Available-for-Use Proof Pack", desc: "The documents IRD needs to support your first available-for-use date." };
 const BODY = `<h2>Proving Your Available-for-Use Date</h2><p>The Investment Boost eligibility turns on when the asset was first available for use. You must be able to document this date if IRD queries your claim.</p><div class="action-box"><h3>What to Collect</h3><p>Commissioning certificate (for machinery)</p><p>Code of Compliance certificate (for buildings)</p><p>Installation completion record</p><p>Handover documents from supplier or builder</p><p>First use records (logbook, work orders)</p></div><h2>Timing Trap</h2><table><tr><th>Scenario</th><th>Result</th></tr><tr><td>Available 21 May 2025</td><td>NOT eligible — one day too early</td></tr><tr><td>Available 22 May 2025</td><td>Eligible</td></tr><tr><td>Purchased earlier but available later</td><td>Eligible if available date is 22 May or later</td></tr></table>`;
 
 export default function InvestmentBoostAuditorFile02() {
@@ -25,6 +28,10 @@ export default function InvestmentBoostAuditorFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InvestmentBoostAuditorFile02() {
             Investment Boost Timing Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Available-for-Use Proof Pack
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The documents IRD needs to support your first available-for-use date.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

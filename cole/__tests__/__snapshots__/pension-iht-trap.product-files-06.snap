@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "pension-iht-trap";
+const SLUG = "piht-06";
+const FALLBACK_LABEL = { name: "Drawdown Strategy Playbook", desc: "Full drawdown strategy for reducing pension value before April 2027." };
 const BODY = `<h2>Drawdown Strategy — Full Playbook</h2><h3>Goal</h3><p>Reduce pension value in your eventual estate by drawing down during your lifetime. Works whether or not the proposal is enacted — it just becomes more valuable if enacted.</p><h3>Phase 1 — Baseline Assessment</h3><ul class="checklist"><li>Current pension value and growth projections</li><li>Your annual income needs (already covered by other sources?)</li><li>Your life expectancy based on age and health</li><li>Your beneficiaries' expected tax position on inherited withdrawals</li></ul><h3>Phase 2 — Withdrawal Schedule</h3><ul class="checklist"><li>Tax-free cash (25% of pot, once) — take if useful for immediate needs</li><li>Annual flexi-access drawdown — match to your basic rate band usage</li><li>Timing: use basic rate band every year, avoid higher rate if possible</li><li>Coordinate with other income (rental, savings) to optimise rate</li></ul><h3>Phase 3 — What to Do With Withdrawals</h3><ul class="checklist"><li>Option A: spend on lifestyle (reduces estate permanently)</li><li>Option B: gift to beneficiaries (PET rules — exempt after 7 years)</li><li>Option C: move to ISA (still in estate but tax-efficient growth)</li><li>Option D: whole-of-life insurance premiums (builds death benefit in trust)</li></ul><h3>Phase 4 — Review Triggers</h3><ul class="checklist"><li>Budget announcements — rate changes, allowance changes</li><li>Proposal enactment or delay — adjust urgency</li><li>Health changes — accelerate if material decline</li><li>Family changes — rebalance beneficiaries</li></ul>`;
 
 export default function PensionIhtTrapFile06() {
@@ -25,6 +28,10 @@ export default function PensionIhtTrapFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function PensionIhtTrapFile06() {
             Pension IHT Trap 2027 Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Drawdown Strategy Playbook
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Full drawdown strategy for reducing pension value before April 2027.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

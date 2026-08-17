@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "allowance-sniper";
+const SLUG = "as-02";
+const FALLBACK_LABEL = { name: "Pension Contribution to Escape", desc: "Exact pension contribution needed to restore full allowance and the tax saving it produces." };
 const BODY = `<h2>Pension Contribution — Escape Calculator</h2><p>To escape the 60% trap, you need to reduce adjusted net income to £100,000 or below.</p><h3>The Formula</h3><p>Pension contribution required = Adjusted Net Income − £100,000</p><p>Tax saving on contribution (higher-rate relief) = 40% of contribution</p><p>Additional saving from restored allowance = up to £5,028 (depending on how much allowance was lost)</p><p>Net cost of contribution = Contribution − Total tax saving</p><h3>Worked Example — £115,000 Adjusted Net Income</h3><table><tr><th>Item</th><th>Amount</th></tr><tr><td>Pension contribution needed</td><td>£15,000</td></tr><tr><td>Pension tax relief (40%)</td><td>£6,000</td></tr><tr><td>Restored allowance saving (£7,500 × 40%)</td><td>£3,000</td></tr><tr><td>Total tax saving</td><td>£9,000</td></tr><tr><td>Net cost of contribution</td><td>£6,000</td></tr></table><p>Pension pot grows by £15,000. Tax saved £9,000. Net cost only £6,000.</p>`;
 
 export default function AllowanceSniperFile02() {
@@ -25,6 +28,10 @@ export default function AllowanceSniperFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AllowanceSniperFile02() {
             60% Tax Trap Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Pension Contribution to Escape
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Exact pension contribution needed to restore full allowance and the tax saving it produces.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "trust-tax-splitter";
+const SLUG = "tt-06";
+const FALLBACK_LABEL = { name: "Trust vs Company Comparison", desc: "39% trustee rate vs 28% company rate — which structure wins for your income?" };
 const BODY = `<h2>Trust vs Company — 2026 Analysis</h2><table><tr><th>Structure</th><th>Income Tax Rate</th><th>On $100k Income</th><th>Key Consideration</th></tr><tr><td>Trust — retained</td><td>39%</td><td>$39,000</td><td>High rate, flexible distributions</td></tr><tr><td>Trust — distributed</td><td>10.5%-33%</td><td>$10,500-$33,000</td><td>Best if suitable beneficiaries exist</td></tr><tr><td>Company</td><td>28%</td><td>$28,000</td><td>Lower rate, imputation credits on dividends</td></tr></table><div class="action-box"><h3>When Company Wins</h3><p>No adult beneficiaries with low income</p><p>Income too high for effective distribution</p><p>Want to retain profits in the entity</p><p>Planning to sell the business (lower rate)</p></div>`;
 
 export default function TrustTaxSplitterFile06() {
@@ -25,6 +28,10 @@ export default function TrustTaxSplitterFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TrustTaxSplitterFile06() {
             Trust Income Allocation Decision Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Trust vs Company Comparison
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">39% trustee rate vs 28% company rate — which structure wins for your income?</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

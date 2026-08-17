@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-to-trust-exit";
+const SLUG = "strexit-01";
+const FALLBACK_LABEL = { name: "Your Exit Break-Even Number", desc: "Your exact break-even horizon at 3 earnings scenarios — the number most members never see." };
 const BODY = `<h2>Your Exit Break-Even Horizon</h2><div class="action-box"><h3>The Three Numbers That Decide Exit</h3><p>Number 1: Exit tax today (0% if 60+ retired, 15% on taxable if under 60)</p><p>Number 2: Annual earnings differential (trust rate − super rate including Div 296)</p><p>Number 3: Break-even year = Exit Tax ÷ (Annual Div 296 Saved − Annual Trust Differential)</p></div><h3>Why Most Exit Recommendations Skip This Math</h3><p>Generic Division 296 framing produces generic exit advice. Your break-even depends on: age (determines exit tax), taxable component %, TSB, phase (accumulation vs pension), beneficiary marginal rates, and horizon. No exit decision should happen without this number.</p><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/withdrawing-and-using-your-super/tax-on-super-benefits">ATO — Tax on super benefits</a> · ITAA 1997 s301-10, s295-385, Subdiv 296-B</p>`;
 
 export default function SuperToTrustExitFile01() {
@@ -25,6 +28,10 @@ export default function SuperToTrustExitFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperToTrustExitFile01() {
             Super-to-Trust Exit Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Exit Break-Even Number
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your exact break-even horizon at 3 earnings scenarios — the number most members never see.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

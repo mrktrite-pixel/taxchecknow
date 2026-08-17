@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "us-expat-tax";
+const SLUG = "uset-02";
+const FALLBACK_LABEL = { name: "Optimal Strategy Determination", desc: "Recommended approach for your country, income type, and income level — with reasoning." };
 const BODY = `<h2>Optimal Strategy — Decision Rules</h2><h3>High-tax country (foreign rate over US rate)</h3><ul><li>FTC typically better — excess foreign tax creates valuable carryforward</li><li>Examples: UK, Germany, France, Nordic countries, often Australia and Canada for higher earners</li><li>FEIE wastes credits on income up to $126,500</li></ul><h3>Low-tax or zero-tax country</h3><ul><li>FEIE typically better — exclusion eliminates US tax on earned income up to limit</li><li>Examples: UAE, Saudi Arabia, Singapore (at lower incomes), Hong Kong</li><li>FTC provides no meaningful credit when foreign tax is low/zero</li></ul><h3>Moderate-tax country, high income</h3><ul><li>Hybrid typically better — FEIE shelters up to $126,500, FTC handles above-limit + passive</li><li>Careful allocation between Form 2555 and Form 1116 required</li></ul>`;
 
 export default function UsExpatTaxFile02() {
@@ -25,6 +28,10 @@ export default function UsExpatTaxFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UsExpatTaxFile02() {
             US Citizen Abroad Optimizer · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Optimal Strategy Determination
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Recommended approach for your country, income type, and income level — with reasoning.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

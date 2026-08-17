@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "residency-risk-index";
+const SLUG = "rri-01";
+const FALLBACK_LABEL = { name: "Your Global Tax Residency Risk Report", desc: "Your classification (GREEN / YELLOW / RED / US citizen), country-by-country position, and prioritised actions." };
 const BODY = `<h2>Your Residency Classification</h2><div class="action-box"><h3>Risk States</h3><p><strong>GREEN:</strong> Single clear residency — one country claims. Route to that engine.</p><p><strong>YELLOW:</strong> Dual residency — two countries can claim. Treaty tie-breaker needed.</p><p><strong>RED:</strong> Undefined — no clear tax home. Highest audit risk.</p><p><strong>US CITIZEN:</strong> Always adds worldwide taxation layer.</p></div><p>Source: <a href="https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm">OECD Model Tax Convention Article 4</a></p>`;
 
 export default function ResidencyRiskIndexFile01() {
@@ -25,6 +28,10 @@ export default function ResidencyRiskIndexFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function ResidencyRiskIndexFile01() {
             Nomad Residency Risk Index · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Global Tax Residency Risk Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your classification (GREEN / YELLOW / RED / US citizen), country-by-country position, and prioritised actions.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

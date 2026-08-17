@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "frcgw-clearance-certificate";
+const SLUG = "frcgw-04";
+const FALLBACK_LABEL = { name: "Details To Have Ready", desc: "What the ATO clearance certificate form actually asks you for." };
 const BODY = `<h2>Details to have ready</h2><div class="info-box"><p>The clearance certificate application is a short online form, not a documentary submission. You do not need to assemble an evidence bundle, and the ATO does not ask you to upload tax returns, bank statements or utility bills to get one.</p></div><h3>What the form asks for</h3><ul class="checklist"><li><strong>Your full legal name — exactly as it appears on the title.</strong> This is the one that matters most; see below.</li><li><strong>Your tax file number.</strong> Providing it is not compulsory, but it lets the ATO match you to your record and is the single biggest factor in the application being processed automatically rather than by hand.</li><li><strong>Your date of birth</strong>, and your Australian business number if you are selling in the course of a business.</li><li><strong>Contact details</strong> — email and phone, so the ATO can reach you if something needs checking.</li><li><strong>Property details</strong> — the address of the property being sold.</li><li><strong>The residency question.</strong> The form asks whether you have lodged an Australian tax return in the last two years, and if not, why not. Have your answer ready; not having lodged is not a bar, it just means the question needs answering.</li></ul><h3>Why the name has to match the title</h3><div class="highlight"><p>The certificate is issued in the name you give. The purchaser's representative checks that name against the vendor name on the title. If the two differ, the certificate may not be accepted and the purchaser may withhold anyway.</p><p>Common mismatches: a middle name on one and not the other; a maiden or former name still on the title; selling as trustee; a company name with or without its suffix; a deceased estate.</p><p>Check the title first, then complete the form to match it. A second certificate, if you need one, is free.</p></div>{{#if section:per_vendor}}<h3>One application per owner</h3><p>Every owner named on the title lodges their own application, with their own name and their own tax file number. There is no joint application. The applications are processed separately, so they can issue on different days.</p>{{/if}}{{#if section:residency_first}}<h3>Settle your residency first</h3><p>The form is built around a residency answer, so it is worth being sure before you lodge. Australian tax residency is not citizenship, not visa status and not Medicare eligibility — it turns on where you actually live and the ties you keep here. The ATO publishes online residency tests that will give you a defensible answer in a few minutes. If they leave you genuinely on the line, that is the point at which an accountant is worth the fee.</p>{{/if}}{{#if section:variation}}<h3>You are a foreign resident — different form</h3><p>Everything above describes the clearance certificate, which is not available to you. The variation notice has its own application and asks for the grounds on which you say a lower rate should apply. File 08 covers it.</p>{{/if}}<h3>Timing</h3><p>Most applications issue within days. The ATO asks you to allow up to 28 in case yours needs manual checking — most commonly where no tax file number was supplied, or where the residency answer needs a look.</p><p>Apply at <a href="https://www.ato.gov.au/clearancecertificate">ato.gov.au/clearancecertificate</a>.</p>`;
 
 export default function FrcgwClearanceCertificateFile04() {
@@ -25,6 +28,10 @@ export default function FrcgwClearanceCertificateFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FrcgwClearanceCertificateFile04() {
             Foreign Resident CGT Withholding Clearance Certificate · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Details To Have Ready
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What the ATO clearance certificate form actually asks you for.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

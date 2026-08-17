@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "section-174-auditor";
+const SLUG = "s174-04";
+const FALLBACK_LABEL = { name: "Section 41 R&D Tax Credit Screening", desc: "How Section 174 interacts with Section 41 — and whether you qualify for the credit." };
 const BODY = `<h2>Section 41 R&amp;D Tax Credit Screening</h2><p>Section 41 provides a federal tax credit of up to 10% of Qualified Research Expenses (QREs). The credit STACKS with Section 174 — you can deduct R&amp;D (over 5/15 years) AND claim the credit (current year).</p><h3>Four-Part Test for QREs</h3><ol><li><strong>Permitted Purpose:</strong> developing or improving a product/process/formula</li><li><strong>Technological in Nature:</strong> based on hard sciences (engineering, computer science, physics)</li><li><strong>Elimination of Uncertainty:</strong> attempting to resolve technical uncertainty</li><li><strong>Process of Experimentation:</strong> systematic evaluation of alternatives</li></ol><h3>QRE Categories</h3><ul><li>Wages for qualified services (typically 85-100% of engineer wages)</li><li>Supplies used in research</li><li>Contractor services (65% of qualified contract research)</li><li>Cloud computing for research (where directly attributable)</li></ul><h3>Credit Calculation</h3><p>Simplified: ~10% of QREs above a base amount (rules vary for alternative simplified credit vs regular credit). Typical software companies achieve ~5-7% effective credit rate on R&amp;D wages.</p><h3>Section 280C Election</h3><p>Without Section 280C election: deduction must be reduced by credit amount. With Section 280C election: take full deduction but claim reduced credit (21% reduction for corporations). For most companies, the Section 280C election provides cleaner bookkeeping at similar net value.</p>`;
 
 export default function Section174AuditorFile04() {
@@ -25,6 +28,10 @@ export default function Section174AuditorFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Section174AuditorFile04() {
             R&D Tax Cashflow Shock Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Section 41 R&D Tax Credit Screening
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How Section 174 interacts with Section 41 — and whether you qualify for the credit.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

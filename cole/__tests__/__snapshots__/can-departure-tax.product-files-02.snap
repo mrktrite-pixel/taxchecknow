@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-departure-tax";
+const SLUG = "dtt-02";
+const FALLBACK_LABEL = { name: "Asset-by-Asset Departure Impact", desc: "How each asset class is treated on departure — inclusions, exclusions, and special rules." };
 const BODY = `<h2>Asset-by-Asset Treatment</h2><h3>Subject to deemed disposition</h3><ul class="checklist"><li>Publicly traded stocks, ETFs, bonds, mutual funds</li><li>Private company shares</li><li>Partnership interests</li><li>Trust interests</li><li>Foreign property and investments</li><li>Personal use property with significant gains</li></ul><h3>Excluded from deemed disposition</h3><ul class="checklist"><li>Canadian real property (taxed on actual sale under Part XIII)</li><li>Canadian resource property + timber resource property</li><li>Property used in Canadian business (if business continues)</li><li>Registered accounts: RRSP, RRIF, TFSA, RESP, RDSP</li><li>Stock options (separate s7 rules)</li></ul><h3>Special rules</h3><ul><li>Short-term resident (under 5 years): property owned before becoming resident may be partially exempt</li><li>Interest held before age 18: specific look-back rules</li></ul>`;
 
 export default function CanDepartureTaxFile02() {
@@ -25,6 +28,10 @@ export default function CanDepartureTaxFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanDepartureTaxFile02() {
             Canada Departure Tax Trap Auditor · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Asset-by-Asset Departure Impact
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How each asset class is treated on departure — inclusions, exclusions, and special rules.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

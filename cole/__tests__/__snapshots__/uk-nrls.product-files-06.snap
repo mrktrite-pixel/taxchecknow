@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "uk-nrls";
+const SLUG = "nrls-06";
+const FALLBACK_LABEL = { name: "Full UK Rental Tax Optimisation Plan", desc: "Structural planning: ownership, expenses, finance, treaty, cross-border — full stack." };
 const BODY = `<h2>UK Rental Tax Optimisation — Full Stack</h2><h3>Ownership structure</h3><ul><li>Individual: personal tax rates 20/40/45% with finance cost restriction</li><li>Joint ownership with spouse: income split 50/50 or by actual ownership share (election via Form 17)</li><li>UK company: 25% corporation tax (main rate); full mortgage interest deduction; extraction costs on distribution</li><li>Non-UK company (offshore): historically common but subject to ATED on residential and NR CGT on disposals</li></ul><h3>Expenses optimisation</h3><ul><li>Maximise replacement of domestic items relief (appliances, furniture)</li><li>Plan capital vs revenue expenditure — repairs vs improvements</li><li>Claim full agent fees, insurance, professional fees</li><li>Mortgage interest: 20% tax reducer for individuals; full deduction for companies</li></ul><h3>Treaty personal allowance</h3><p>Claim where applicable — £12,570 tax-free rental profit in UK. Requires treaty provision and claim on SA109.</p>`;
 
 export default function UkNrlsFile06() {
@@ -25,6 +28,10 @@ export default function UkNrlsFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UkNrlsFile06() {
             UK Non-Resident Landlord Scheme Auditor · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full UK Rental Tax Optimisation Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Structural planning: ownership, expenses, finance, treaty, cross-border — full stack.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

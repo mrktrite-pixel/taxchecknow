@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "digital-link-auditor";
+const SLUG = "dla-07";
+const FALLBACK_LABEL = { name: "Multi-Business Digital Link Strategy", desc: "How to maintain digital link compliance across multiple MTD businesses (self-employment + rental + etc)." };
 const BODY = `<h2>Multi-Business Digital Link Strategy</h2><p>If you have self-employment + rental properties + furnished holiday lets, you have multiple MTD businesses — each requiring its own compliant digital chain.</p><h3>Option A — Single Unified Software</h3><p>Xero or QuickBooks with multi-business support keeps all records in one system with multiple ledgers. One software, multiple chains, but each chain is independent and compliant.</p><h3>Option B — Spreadsheet Per Business + Shared Bridging</h3><p>Keep one spreadsheet per MTD business. Use one bridging tool that supports multiple spreadsheet connections. Cheaper than full software but harder to maintain.</p><h3>Option C — Hybrid</h3><p>Software for self-employment (higher volume), spreadsheet + bridging for rental (lower volume). Works provided each chain is independently compliant.</p><h3>Risk: Cross-Business Data Movement</h3><p>If you combine numbers across businesses for any purpose (personal budgeting, etc.), that combining must NOT flow into MTD submissions. Keep the submission chain strictly within each MTD business.</p>`;
 
 export default function DigitalLinkAuditorFile07() {
@@ -25,6 +28,10 @@ export default function DigitalLinkAuditorFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DigitalLinkAuditorFile07() {
             MTD Digital Link Compliance Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Business Digital Link Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to maintain digital link compliance across multiple MTD businesses (self-employment + rental + etc).</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

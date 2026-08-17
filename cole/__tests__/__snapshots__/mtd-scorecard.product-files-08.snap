@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "mtd-scorecard";
+const SLUG = "mtd-08";
+const FALLBACK_LABEL = { name: "MTD Transition Checklist", desc: "Step-by-step compliance checklist from now through mandate date." };
 const BODY = `<h2>MTD Transition Checklist</h2><h3>6+ Months Before Mandate</h3><ul class="checklist"><li>Confirm gross income total and mandate phase</li><li>Choose HMRC-approved software (see file 02 for ranking)</li><li>Brief accountant on software choice</li><li>Negotiate quarterly submission fees</li></ul><h3>3 Months Before Mandate</h3><ul class="checklist"><li>Set up software, chart of accounts, bank feeds</li><li>Migrate opening balances from previous system</li><li>Run parallel with old system for one month</li><li>Schedule calendar reminders for all 4 quarterly deadlines</li></ul><h3>1 Month Before Mandate</h3><ul class="checklist"><li>Switch fully to new system, archive old</li><li>Register for MTD ITSA with HMRC via online services account</li><li>Test a dry-run quarterly submission in approved software</li></ul><h3>First Year Under Mandate</h3><ul class="checklist"><li>Q1 submission: under accountant supervision</li><li>Build quarterly book-keeping habit (weekly or fortnightly, not month-end)</li><li>Complete first annual final declaration by 31 January following tax year end</li><li>Verify all quarterly submissions filed — check HMRC online services account</li></ul>`;
 
 export default function MtdScorecardFile08() {
@@ -25,6 +28,10 @@ export default function MtdScorecardFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MtdScorecardFile08() {
             MTD Mandation Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            MTD Transition Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step compliance checklist from now through mandate date.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

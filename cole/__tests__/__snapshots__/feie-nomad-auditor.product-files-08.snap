@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "feie-nomad-auditor";
+const SLUG = "feie-08";
+const FALLBACK_LABEL = { name: "Full Expat Compliance Checklist", desc: "Annual checklist for FEIE, FTC, FBAR, FATCA, and state tax compliance." };
 const BODY = `<h2>Annual Expat Compliance Checklist</h2><h3>Federal Tax</h3><ul class="checklist"><li>Form 1040 — main federal return (due April 15 or June 15 for expats)</li><li>Form 2555 — FEIE election (if qualifying)</li><li>Form 1116 — Foreign Tax Credit (if foreign tax paid)</li><li>Schedule B — if foreign account interest reported</li><li>Report worldwide income (wages, passive, all sources)</li></ul><h3>Foreign Account Reporting</h3><ul class="checklist"><li>FinCEN Form 114 (FBAR) — if aggregate foreign accounts exceed $10,000 at any point</li><li>Form 8938 (FATCA) — if foreign financial assets exceed thresholds (varies by filing status and location)</li><li>Form 3520 — if received gifts or bequests from foreign persons exceeding $100,000</li><li>Form 8621 — if holding PFICs (foreign mutual funds, some ETFs)</li></ul><h3>Self-Employment / Business</h3><ul class="checklist"><li>Schedule C (or equivalent) for SE income</li><li>Schedule SE — self-employment tax (can be reduced via totalisation agreements)</li><li>Form 5471 — if owning controlled foreign corporation</li><li>Form 5472 — if foreign ownership of US entity</li></ul><h3>State Tax</h3><ul class="checklist"><li>State return for former state if residency not broken</li><li>Non-resident state return if earning state-sourced income (e.g. US rental)</li><li>Verify state residency position annually</li></ul><h3>Documentation to Keep</h3><ul class="checklist"><li>Travel log with entry/exit dates per country</li><li>Passport pages showing stamps</li><li>Foreign residence records (lease, residence permit)</li><li>Foreign tax payment evidence</li><li>Form 2555 election documentation</li><li>Annual income statements from all sources (US and foreign)</li></ul>`;
 
 export default function FeieNomadAuditorFile08() {
@@ -25,6 +28,10 @@ export default function FeieNomadAuditorFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FeieNomadAuditorFile08() {
             FEIE Qualification & Failure Risk Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full Expat Compliance Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Annual checklist for FEIE, FTC, FBAR, FATCA, and state tax compliance.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

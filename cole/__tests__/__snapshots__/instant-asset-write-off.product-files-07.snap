@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "instant-asset-write-off";
+const SLUG = "iawo-07";
+const FALLBACK_LABEL = { name: "Multi-Year Asset Optimisation", desc: "Planning asset purchases across financial years for maximum deduction value." };
 const BODY = `<h2>Multi-Year Asset Planning</h2><p>Spreading large capital expenditure across financial years can create a smoother deduction profile and avoid years where deductions exceed income.</p><div class="action-box"><h3>Annual Asset Review</h3><p>April: identify all planned capital expenditure for the coming 12 months</p><p>May: decide which purchases to bring forward to June and which to defer</p><p>June: execute June purchases — confirm installation before 30 June</p><p>July: start the cycle again for the next financial year</p></div>`;
 
 export default function InstantAssetWriteOffFile07() {
@@ -25,6 +28,10 @@ export default function InstantAssetWriteOffFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InstantAssetWriteOffFile07() {
             Instant Asset Write-Off Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Year Asset Optimisation
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Planning asset purchases across financial years for maximum deduction value.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

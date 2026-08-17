@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "mtd-scorecard";
+const SLUG = "mtd-02";
+const FALLBACK_LABEL = { name: "MTD Software and Authorisation", desc: "How compatible software is chosen and authorised, and how bridging software fits." };
 const BODY = `<h2>HMRC-Approved MTD Software — Decision Framework</h2><table><tr><th>Software</th><th>Cost</th><th>Best for</th></tr><tr><td>QuickBooks</td><td>From £10/mo</td><td>Self-employed, small landlords</td></tr><tr><td>Xero</td><td>From £15/mo</td><td>Multi-property, accountant-shared</td></tr><tr><td>FreeAgent</td><td>Free–£19/mo</td><td>Freelancers, contractors</td></tr><tr><td>Sage</td><td>From £12/mo</td><td>Established businesses with payroll</td></tr><tr><td>Bridging software</td><td>£5-15/mo add-on</td><td>Keep existing spreadsheets</td></tr></table><div class="warning-box"><strong>Spreadsheets alone:</strong> Do not qualify under any scenario. Must be bridged with approved bridging software OR replaced.</div><h3>Migration Sequencing</h3><ol><li>6+ months before mandate: choose software, set up chart of accounts</li><li>3+ months before: run parallel with old system for one month</li><li>1 month before: switch fully, cut off old system</li><li>Post-mandate: first quarterly dry-run under your accountant's supervision</li></ol>`;
 
 export default function MtdScorecardFile02() {
@@ -25,6 +28,10 @@ export default function MtdScorecardFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MtdScorecardFile02() {
             MTD Mandation Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            MTD Software and Authorisation
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How compatible software is chosen and authorised, and how bridging software fits.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

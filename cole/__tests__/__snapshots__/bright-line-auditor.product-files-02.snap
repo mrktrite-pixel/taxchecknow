@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bright-line-auditor";
+const SLUG = "bl-02";
+const FALLBACK_LABEL = { name: "Main Home Time Test Calculator", desc: "Verify over 50% occupancy during ownership — the IRD time test." };
 const BODY = `<h2>The Time Test</h2><p>To qualify for the main home exclusion, you must have used the property as your main home for more than 50% of the bright-line period.</p><div class="action-box"><h3>How to Calculate</h3><p>Total days owned (title to sale): X days</p><p>Days used as main home: Y days</p><p>Percentage: Y divided by X × 100</p><p>Must exceed 50% to pass</p></div><div class="warning-box"><strong>Rental periods:</strong> Any period the property was rented counts against the time test. Even short Airbnb periods can affect your percentage.</div><table><tr><th>Usage</th><th>Counts as Main Home?</th></tr><tr><td>Primary residence</td><td>Yes</td></tr><tr><td>Rented to tenants</td><td>No</td></tr><tr><td>Airbnb / short-term rental</td><td>No</td></tr><tr><td>Vacant but not rented</td><td>Depends — take advice</td></tr></table>`;
 
 export default function BrightLineAuditorFile02() {
@@ -25,6 +28,10 @@ export default function BrightLineAuditorFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function BrightLineAuditorFile02() {
             Bright-Line Property Tax Decision Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Main Home Time Test Calculator
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Verify over 50% occupancy during ownership — the IRD time test.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

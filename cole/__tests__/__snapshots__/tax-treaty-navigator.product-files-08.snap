@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "tax-treaty-navigator";
+const SLUG = "ttn-08";
+const FALLBACK_LABEL = { name: "Audit Defence Documentation Pack", desc: "The evidence file to maintain per country per year." };
 const BODY = `<h2>Per-Country Evidence Pack (annual)</h2><ul class="checklist"><li>Lease or title for permanent home in each relevant country</li><li>Utility bills covering the year</li><li>Bank statements showing address</li><li>Employment contracts / invoicing records (economic ties)</li><li>Family location evidence (spouse, children, school registration, medical)</li><li>Passport with all travel stamps</li><li>Flight records (from airline accounts or credit card statements)</li><li>Day-count spreadsheet with supporting proof</li><li>Tax returns filed in each country</li><li>Treaty position forms (e.g. US 8833, UK DT-Individual)</li><li>Bank and credit card statements with geographical use pattern</li><li>Mobile phone / internet records showing location pattern</li></ul><div class="warning-box"><strong>Retention:</strong> 7 years minimum. Tie-breaker challenges often emerge years after the relevant tax year. Reconstruction is difficult and unpersuasive — maintain the file contemporaneously.</div>`;
 
 export default function TaxTreatyNavigatorFile08() {
@@ -25,6 +28,10 @@ export default function TaxTreatyNavigatorFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TaxTreatyNavigatorFile08() {
             Double Tax Treaty Navigator · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Audit Defence Documentation Pack
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The evidence file to maintain per country per year.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

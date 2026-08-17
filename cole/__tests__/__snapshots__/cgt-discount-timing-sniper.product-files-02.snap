@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-discount-timing-sniper";
+const SLUG = "cgtd-02";
+const FALLBACK_LABEL = { name: "Timing Adjustment Strategy", desc: "How to delay a sale contract by days to qualify for the discount." };
 const BODY = `<h2>Timing Strategy — When Every Day Counts</h2><p>If you are within days of the 12-month mark, delaying the contract date can halve your CGT bill.</p><div class="action-box"><h3>How to Check</h3><p>Step 1: Find your purchase contract date</p><p>Step 2: Add exactly 12 months and 1 day</p><p>Step 3: If your proposed sale contract date is before that — delay</p><p>Step 4: Calculate the CGT saving from waiting</p></div><div class="info-box">Important: the delay must be commercially reasonable. Do not sign a contract and then try to change the date — get advice before signing.</div>`;
 
 export default function CgtDiscountTimingSniperFile02() {
@@ -25,6 +28,10 @@ export default function CgtDiscountTimingSniperFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtDiscountTimingSniperFile02() {
             CGT Discount Timing Sniper · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Timing Adjustment Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to delay a sale contract by days to qualify for the discount.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "investment-boost-auditor";
+const SLUG = "ib-01";
+const FALLBACK_LABEL = { name: "Your Investment Boost Eligibility Verdict", desc: "Whether your asset qualifies, your estimated deduction, and your cashflow jolt." };
 const BODY = `<h2>Your Investment Boost Position</h2><div class="action-box"><h3>The Cashflow Jolt Formula</h3><p>Year 1 Deduction = Asset Cost × 20% + (Cost × 80% × Dep Rate)</p><p>Tax Saving = Year 1 Deduction × Your Tax Rate</p></div><h2>Eligibility Table</h2><table><tr><th>Asset Type</th><th>Eligible?</th></tr><tr><td>New machinery or equipment</td><td>Yes — if available from 22 May 2025</td></tr><tr><td>New commercial building</td><td>Yes — if available from 22 May 2025</td></tr><tr><td>New to NZ imported asset</td><td>Yes — if not previously used in NZ</td></tr><tr><td>Residential rental property</td><td>No — explicitly excluded</td></tr></table><p>Source: <a href="https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost">IRD — Investment Boost</a></p>`;
 
 export default function InvestmentBoostAuditorFile01() {
@@ -25,6 +28,10 @@ export default function InvestmentBoostAuditorFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InvestmentBoostAuditorFile01() {
             Investment Boost Timing Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Investment Boost Eligibility Verdict
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Whether your asset qualifies, your estimated deduction, and your cashflow jolt.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

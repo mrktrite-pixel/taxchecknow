@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "app-tax-gst-sniper";
+const SLUG = "gst-08";
+const FALLBACK_LABEL = { name: "Property GST Exposure Tool", desc: "Understand your GST position if you sell a property used for Airbnb." };
 const BODY = `<h2>GST on Property Sales</h2><p>If you have been running Airbnb from a property and are GST registered, selling the property can create a GST liability — particularly if the buyer is not GST registered.</p><div class="warning-box"><strong>The hidden risk:</strong> Selling an Airbnb property to a private buyer without applying the zero-rating rules can result in you owing 15% GST on the full sale price. For a $800,000 property that is $104,348.</div><h2>Key Rules</h2><table><tr><th>Scenario</th><th>GST Treatment</th></tr><tr><td>Sale to GST-registered buyer as going concern</td><td>Zero-rated — no GST</td></tr><tr><td>Sale to private buyer</td><td>GST at 15% may apply</td></tr><tr><td>Property stops Airbnb before sale</td><td>Change of use adjustment first</td></tr></table><div class="info-box"><strong>Always get specific advice</strong> before selling a GST-registered property. The interaction between GST, income tax, and bright-line rules creates significant complexity.</div>`;
 
 export default function AppTaxGstSniperFile08() {
@@ -25,6 +28,10 @@ export default function AppTaxGstSniperFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AppTaxGstSniperFile08() {
             Platform GST Decision Engine (NZ) · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Property GST Exposure Tool
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Understand your GST position if you sell a property used for Airbnb.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

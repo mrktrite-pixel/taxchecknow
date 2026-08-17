@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "iso-amt-sniper";
+const SLUG = "iso-amt-07";
+const FALLBACK_LABEL = { name: "State Tax Overlay (California Focus)", desc: "California and other states that do not recognise ISO tax treatment." };
 const BODY = `<h2>California Does Not Recognise ISO Treatment</h2><p>California treats ISOs the same as Non-Qualified Stock Options (NQSOs). The spread at exercise is ordinary income for California purposes — there is no capital gains rate at sale either.</p><div class="warning-box"><strong>California residents:</strong> You owe California income tax at exercise (up to 13.3%) on the full spread, regardless of federal AMT treatment. This is in addition to federal AMT.</div><h2>States That Do Not Recognise ISO Treatment</h2><table><tr><th>State</th><th>ISO Treatment</th></tr><tr><td>California</td><td>All income — ordinary income at exercise</td></tr><tr><td>Pennsylvania</td><td>All income — ordinary income at exercise</td></tr><tr><td>New Jersey</td><td>All income — ordinary income at exercise</td></tr><tr><td>Most others</td><td>Follow federal ISO treatment</td></tr></table>`;
 
 export default function IsoAmtSniperFile07() {
@@ -25,6 +28,10 @@ export default function IsoAmtSniperFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function IsoAmtSniperFile07() {
             ISO AMT Exercise Sniper · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            State Tax Overlay (California Focus)
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">California and other states that do not recognise ISO tax treatment.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

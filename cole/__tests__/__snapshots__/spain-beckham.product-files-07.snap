@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SLUG = "beck-07";
+const FALLBACK_LABEL = { name: "A1 Certificate and Social Security Strategy", desc: "Detailed A1 process for EU/EEA posted workers + alternative SS routes." };
 const BODY = `<h2>A1 Certificate and SS Strategy</h2><h3>A1 certificate (EU/EEA posted workers)</h3><ul><li>Issued by home country social security authority</li><li>Confirms continued coverage under home SS while working in another EU/EEA state</li><li>Application BEFORE posting begins; processing 4-8 weeks typical</li><li>Valid for duration of posting (up to 24 months initial, extendable in some cases)</li></ul><h3>Alternative SS routes</h3><ul><li>Spanish SS registration — standard for new hires; employer handles</li><li>Bilateral SS agreement — between Spain and specific non-EU countries (US, Canada, Australia, Japan, etc.)</li><li>Self-employed (RETA) — for DNV holders and qualifying autónomos</li></ul><h3>SS strategy by profile</h3><ul><li>UK posted worker: A1 from HMRC (post-Brexit bilateral arrangement)</li><li>EU posted worker: A1 from home country SS</li><li>US remote worker via DNV: Spanish RETA registration + totalization agreement</li><li>Australian posted: bilateral agreement; Certificate of Coverage from ATO</li></ul>`;
 
 export default function SpainBeckhamFile07() {
@@ -25,6 +28,10 @@ export default function SpainBeckhamFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SpainBeckhamFile07() {
             Spain Beckham Eligibility Wall · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            A1 Certificate and Social Security Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Detailed A1 process for EU/EEA posted workers + alternative SS routes.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

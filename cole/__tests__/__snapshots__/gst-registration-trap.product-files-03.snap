@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "gst-registration-trap";
+const SLUG = "gst-03";
+const FALLBACK_LABEL = { name: "GST Catch-Up Strategy", desc: "How to manage late registration and minimise penalties." };
 const BODY = `<h2>Late Registration — Catch-Up Strategy</h2><ol><li>Register for GST immediately via myGov Business or ABN registration portal</li><li>Prepare retrospective BAS for each quarter since threshold crossing</li><li>Calculate net GST payable (GST collected minus input tax credits)</li><li>Consider voluntary disclosure to reduce failure to lodge penalties</li><li>Negotiate payment plan with ATO if lump sum is not affordable</li></ol><div class="info-box">The ATO's voluntary disclosure process can reduce penalties significantly. Get specialist advice before contacting the ATO.</div>`;
 
 export default function GstRegistrationTrapFile03() {
@@ -25,6 +28,10 @@ export default function GstRegistrationTrapFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function GstRegistrationTrapFile03() {
             GST Registration Trap Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            GST Catch-Up Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to manage late registration and minimise penalties.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "investment-boost-auditor";
+const SLUG = "ib-06";
+const FALLBACK_LABEL = { name: "Commercial-to-Residential Risk Map", desc: "What happens if a building changes use after you claim the Investment Boost." };
 const BODY = `<h2>Change of Use After Claiming Investment Boost</h2><p>If a commercial building or asset moves to residential rental use after you have claimed the Investment Boost, IRD may require a recovery adjustment under the change-of-use rules.</p><div class="warning-box"><strong>The risk:</strong> Claiming the 20% boost on a commercial building and then converting it to residential rental can trigger a clawback of some or all of the boost claimed.</div><h2>Change of Use Scenarios</h2><table><tr><th>Scenario</th><th>Investment Boost Impact</th></tr><tr><td>Commercial → still commercial</td><td>No issue — boost intact</td></tr><tr><td>Commercial → residential rental</td><td>Recovery adjustment likely required</td></tr><tr><td>Business asset → private use</td><td>Proportion of boost recovered</td></tr><tr><td>Asset sold above tax value</td><td>Depreciation recovered on disposal</td></tr></table>`;
 
 export default function InvestmentBoostAuditorFile06() {
@@ -25,6 +28,10 @@ export default function InvestmentBoostAuditorFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InvestmentBoostAuditorFile06() {
             Investment Boost Timing Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Commercial-to-Residential Risk Map
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What happens if a building changes use after you claim the Investment Boost.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

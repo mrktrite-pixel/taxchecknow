@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "div296-wealth-eraser";
+const SLUG = "div296-03";
+const FALLBACK_LABEL = { name: "Asset-Level Exposure Table", desc: "Row-by-row modelling of each SMSF asset with and without the reset." };
 const BODY = `<h2>Asset-Level Exposure Model</h2><p>For every CGT asset in your fund, you need both: original cost base AND projected 30 June 2026 market value.</p><table><tr><th>Asset Type</th><th>Reset Effect</th><th>Action Trigger</th></tr><tr><td>Appreciated property</td><td>Cost base resets UP — protects pre-2026 gain</td><td>Elect (after mixed-portfolio analysis)</td></tr><tr><td>Appreciated shares</td><td>Cost base resets UP — protects pre-2026 gain</td><td>Elect</td></tr><tr><td>Loss-position shares</td><td>Cost base resets DOWN — locks in lower base</td><td>Sell before 30 June if electing</td></tr><tr><td>Collectibles / unlisted units</td><td>Need valuation — complex</td><td>Engage qualified valuer</td></tr><tr><td>Cash / TDs</td><td>No cost base reset relevant</td><td>Ignore for this decision</td></tr></table>`;
 
 export default function Div296WealthEraserFile03() {
@@ -25,6 +28,10 @@ export default function Div296WealthEraserFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Div296WealthEraserFile03() {
             Division 296 Wealth Eraser Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Asset-Level Exposure Table
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Row-by-row modelling of each SMSF asset with and without the reset.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

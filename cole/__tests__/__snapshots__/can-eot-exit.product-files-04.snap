@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-eot-exit";
+const SLUG = "eot-04";
+const FALLBACK_LABEL = { name: "Failure Points and Pre-Sale Fixes", desc: "The six most common failure points and how to fix each before transaction." };
 const BODY = `<h2>Six Failure Points — Pre-Sale Fixes</h2><h3>Failure 1 — Shares in family trust</h3><p><strong>Fix:</strong> Distribute shares to beneficiary individual before sale. Trust distribution is a disposition at FMV — creates gain for the trust. ACB of shares to individual = FMV at distribution. Model trust-level tax. Timing: 2-6 months.</p><h3>Failure 2 — Shares in holdco</h3><p><strong>Fix:</strong> Extract shares to shareholder via dividend / reorganisation. Dividend is taxable to shareholder (integrated rate ~40%). Alternative: s85 rollover to individual if s85 elections available + structured carefully. Timing: 3-6 months.</p><h3>Failure 3 — EOT structure not compliant</h3><p><strong>Fix:</strong> Engage EOT-experienced legal counsel. Draft trust deed to s56.3 specifications; draft governance policies; establish trustee structure. Timing: 3-9 months.</p><h3>Failure 4 — Held under 24 months</h3><p><strong>Fix:</strong> Wait until 24-month mark before sale. Cannot be accelerated. If approaching window close (Dec 2026) AND under 24 months: may not be possible to qualify.</p><h3>Failure 5 — Not CCPC / not active business</h3><p><strong>Fix:</strong> If recently changed (public listing / foreign control), may not be fixable in time. Active business test failure (too much investment income): may purify by distributing investment assets before sale.</p><h3>Failure 6 — Retained vendor control</h3><p><strong>Fix:</strong> Structure governance so employees have genuine control. Vendor retains operational role (CEO / board) but not veto / super-majority rights. Board composition + voting rights drafted carefully.</p>`;
 
 export default function CanEotExitFile04() {
@@ -25,6 +28,10 @@ export default function CanEotExitFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanEotExitFile04() {
             Canada EOT Exit Optimizer · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Failure Points and Pre-Sale Fixes
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The six most common failure points and how to fix each before transaction.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

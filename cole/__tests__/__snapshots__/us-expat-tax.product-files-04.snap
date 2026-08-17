@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "us-expat-tax";
+const SLUG = "uset-04";
+const FALLBACK_LABEL = { name: "FBAR and FATCA Obligations", desc: "Detailed FBAR + Form 8938 compliance — thresholds, deadlines, penalties, accounts covered." };
 const BODY = `<h2>FBAR + FATCA</h2><h3>FBAR (FinCEN Form 114)</h3><p>Threshold: aggregate foreign financial account balance exceeds $10,000 at any point during calendar year. Accounts covered: bank, brokerage, mutual fund, insurance cash value, joint accounts, signature authority accounts. Due 15 April + automatic extension to 15 October. Filed electronically via BSA E-Filing system. Penalties: up to $10,000 per non-wilful violation; higher (50% of account / $100k minimum) for wilful.</p><h3>Form 8938 (FATCA)</h3><p>Threshold (US persons abroad): $200k single / $400k joint on last day OR $300k single / $600k joint at any time. Filed with Form 1040. Covers: foreign bank + brokerage accounts; foreign stocks/bonds not held in accounts; interests in foreign entities; foreign pension interests. Overlaps with FBAR but not identical — some assets on FBAR only, some on 8938 only, many on both. Penalty: $10,000 minimum, up to $50,000 continuation penalty.</p>`;
 
 export default function UsExpatTaxFile04() {
@@ -25,6 +28,10 @@ export default function UsExpatTaxFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UsExpatTaxFile04() {
             US Citizen Abroad Optimizer · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            FBAR and FATCA Obligations
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Detailed FBAR + Form 8938 compliance — thresholds, deadlines, penalties, accounts covered.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

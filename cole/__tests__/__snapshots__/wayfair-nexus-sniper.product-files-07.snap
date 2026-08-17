@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "wayfair-nexus-sniper";
+const SLUG = "nexus-07";
+const FALLBACK_LABEL = { name: "Penalty Reduction Calculator", desc: "Estimate your penalty savings from VDA vs audit discovery — state by state." };
 const BODY = `<h2>The Cost of Waiting</h2><p>Every month of delay increases your nexus liability. Understanding the penalty savings from VDA vs audit motivates action.</p><h2>Typical Penalty Structure</h2><table><tr><th>Scenario</th><th>Tax Due</th><th>Penalties</th><th>Interest</th><th>Total</th></tr><tr><td>VDA — 3-year lookback</td><td>$15,000</td><td>$0 (waived)</td><td>$1,500</td><td>$16,500</td></tr><tr><td>Audit — 5-year lookback</td><td>$25,000</td><td>$5,000</td><td>$7,500</td><td>$37,500</td></tr><tr><td>VDA savings</td><td colspan="3">-</td><td>$21,000</td></tr></table><div class="action-box"><h3>Key Insight</h3><p>VDA limits lookback to 3–4 years. An audit can go back to the date nexus was established — potentially 5–10+ years. The lookback difference alone often saves $10,000–$50,000 in tax plus penalties.</p></div>`;
 
 export default function WayfairNexusSniperFile07() {
@@ -25,6 +28,10 @@ export default function WayfairNexusSniperFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function WayfairNexusSniperFile07() {
             Sales Tax Nexus Liability Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Penalty Reduction Calculator
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Estimate your penalty savings from VDA vs audit discovery — state by state.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

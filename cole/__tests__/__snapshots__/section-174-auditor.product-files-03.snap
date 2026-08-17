@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "section-174-auditor";
+const SLUG = "s174-03";
+const FALLBACK_LABEL = { name: "Amendment Path — Form 3115 vs 1120X", desc: "When to use Form 3115 (accounting method change) vs amended returns for prior years." };
 const BODY = `<h2>Amendment Path Decision</h2><h3>Form 3115 — Change in Accounting Method</h3><p>Use when: your prior treatment was under the old rules and you want to correct going forward WITH a catch-up adjustment for missed amortization.</p><ul><li>Section 481(a) adjustment spreads the catch-up over 1 or 4 years</li><li>Avoids opening every prior year to examination</li><li>IRS prefers this route for systematic errors</li><li>Files with current-year return (automatic consent in many cases)</li></ul><h3>Amended Returns (Forms 1120X / 1040X / 1065X)</h3><p>Use when: you need to restate specific prior years individually (e.g. for refund claims related to other line items).</p><ul><li>3-year window from original filing deadline</li><li>Opens that specific year to examination</li><li>Generates interest on underpayments from original due date</li><li>May generate refund with interest if overpaid</li></ul><h3>Which Path for Section 174?</h3><p>Most businesses: Form 3115 is the cleaner path for switching from "immediate expensing" to "amortization" treatment. It restarts compliance without year-by-year amendments.</p><p>However: if you also have Section 41 credit opportunities in prior years, amended returns may be better because Form 3115 doesn't automatically unlock prior-year credit claims.</p>`;
 
 export default function Section174AuditorFile03() {
@@ -25,6 +28,10 @@ export default function Section174AuditorFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Section174AuditorFile03() {
             R&D Tax Cashflow Shock Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Amendment Path — Form 3115 vs 1120X
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">When to use Form 3115 (accounting method change) vs amended returns for prior years.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

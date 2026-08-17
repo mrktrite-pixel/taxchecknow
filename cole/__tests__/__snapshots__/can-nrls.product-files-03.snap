@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-nrls";
+const SLUG = "nrl-03";
+const FALLBACK_LABEL = { name: "NR6 Pre-Approval Pathway", desc: "How to apply for NR6 to reduce withholding to estimated net income basis." };
 const BODY = `<h2>NR6 Pre-Approval</h2><h3>Effect</h3><p>With CRA-approved NR6, your agent withholds on estimated NET rental income rather than 25% gross. Eliminates monthly cashflow drag.</p><h3>Application steps</h3><ol><li>Estimate gross rent for the year</li><li>Estimate allowable expenses</li><li>Calculate estimated net rental income</li><li>Complete Form NR6 (landlord + agent sign)</li><li>Submit to CRA International Tax Services</li><li>CRA reviews — typically 4-8 weeks</li><li>If approved: agent begins withholding at estimated net rate</li><li>File Section 216 return at year-end to reconcile</li></ol><h3>Annual renewal</h3><ul><li>NR6 approval typically valid for one tax year</li><li>Renew annually with updated estimates</li><li>Significant property changes may require interim update</li></ul><h3>Common approval issues</h3><ul><li>Previous non-filing history — may not be approved</li><li>Unrealistic expense estimates — CRA may query</li><li>New property — less history; may require higher estimated withholding</li></ul>`;
 
 export default function CanNrlsFile03() {
@@ -25,6 +28,10 @@ export default function CanNrlsFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanNrlsFile03() {
             Canada Non-Resident Landlord Withholding Trap · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            NR6 Pre-Approval Pathway
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to apply for NR6 to reduce withholding to estimated net income basis.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

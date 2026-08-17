@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "day-183-rule";
+const SLUG = "d183-07";
+const FALLBACK_LABEL = { name: "Closer Connection Exception Brief", desc: "The remaining route where the day count is met, and what it turns on." };
 const BODY = `<h2>Closer Connection Exception</h2><p>A person who meets the day count under the Substantial Presence Test may still be treated as a nonresident where they have a tax home in another country and a closer connection to that country than to the United States. There is a separate variant of the exception for students.</p><ol><li>Establish that the day count is in fact met — the exception only operates on a test you have otherwise met</li><li>Identify your tax home for the year in question</li><li>Assemble what supports a closer connection to that country than to the United States</li><li>Take advice on whether the exception is available on your facts, and on how it is claimed</li></ol><div class="info-box">This is an exception to a met test, not an alternative to counting. Work the count first — documents 02 and 03 — and come to this only if it lands over the threshold.</div>`;
 
 export default function Day183RuleFile07() {
@@ -25,6 +28,10 @@ export default function Day183RuleFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Day183RuleFile07() {
             183-Day Rule Reality Check · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Closer Connection Exception Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The remaining route where the day count is met, and what it turns on.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

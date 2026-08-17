@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "allowance-sniper";
+const SLUG = "as-01";
+const FALLBACK_LABEL = { name: "Your 60% Trap Exposure Report", desc: "Your exact adjusted net income, allowance lost, and trap-band tax exposure." };
 const BODY = `<h2>Your 60% Trap Exposure</h2><div class="action-box"><h3>The Binary Test</h3><p>If adjusted net income is between £100,000 and £125,140, you are in the trap.</p></div><h3>The Three Numbers That Matter</h3><ul><li>Adjusted net income (gross income minus pension, Gift Aid)</li><li>Allowance lost = max(0, (ANI − £100,000) / 2), capped at £12,570</li><li>Trap-band income = max(0, min(ANI, £125,140) − £100,000)</li></ul><h3>Allowance Taper Table</h3><table><tr><th>Adjusted net income</th><th>Personal allowance</th><th>Allowance lost</th></tr><tr><td>£100,000</td><td>£12,570</td><td>£0</td></tr><tr><td>£105,000</td><td>£10,070</td><td>£2,500</td></tr><tr><td>£110,000</td><td>£7,570</td><td>£5,000</td></tr><tr><td>£115,000</td><td>£5,070</td><td>£7,500</td></tr><tr><td>£120,000</td><td>£2,570</td><td>£10,000</td></tr><tr><td>£125,140</td><td>£0</td><td>£12,570</td></tr></table><p>Source: <a href="https://www.gov.uk/income-tax-rates/income-over-100000">HMRC — Income over £100,000</a> · Income Tax Act 2007 s35</p>`;
 
 export default function AllowanceSniperFile01() {
@@ -25,6 +28,10 @@ export default function AllowanceSniperFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AllowanceSniperFile01() {
             60% Tax Trap Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your 60% Trap Exposure Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your exact adjusted net income, allowance lost, and trap-band tax exposure.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

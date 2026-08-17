@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "wayfair-nexus-sniper";
+const SLUG = "nexus-08";
+const FALLBACK_LABEL = { name: "Multi-State VDA Strategy and Amnesty Tracker", desc: "Filing order optimisation and 2026 amnesty programme tracking." };
 const BODY = `<h2>Multi-State Filing Strategy</h2><p>Filing VDAs in multiple states simultaneously is complex. The order matters — some states have more favourable terms or are higher risk.</p><div class="action-box"><h3>Optimal Filing Order</h3><p>Priority 1: States with unlimited lookback (no statute of limitations for non-filers)</p><p>Priority 2: States with current amnesty programmes (better terms than VDA)</p><p>Priority 3: States with highest sales volume / oldest nexus date</p><p>Priority 4: Remaining nexus states by risk level</p></div><h2>2026 Amnesty Programme Tracker</h2><table><tr><th>State</th><th>Programme Status</th><th>Deadline</th><th>Terms</th></tr><tr><td>Check Sales Tax Institute</td><td>Updated monthly</td><td>Varies</td><td>Better than VDA</td></tr></table><div class="info-box"><strong>Note:</strong> Amnesty programmes change frequently. Always verify current status with the state revenue authority or a sales tax adviser before filing. The Sales Tax Institute maintains a current tracker at salestaxinstitute.com.</div>`;
 
 export default function WayfairNexusSniperFile08() {
@@ -25,6 +28,10 @@ export default function WayfairNexusSniperFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function WayfairNexusSniperFile08() {
             Sales Tax Nexus Liability Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-State VDA Strategy and Amnesty Tracker
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Filing order optimisation and 2026 amnesty programme tracking.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

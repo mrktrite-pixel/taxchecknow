@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "wayfair-nexus-sniper";
+const SLUG = "nexus-02";
+const FALLBACK_LABEL = { name: "Big 5 State Playbooks", desc: "California, Texas, New York, Illinois, Pennsylvania — your highest-risk states." };
 const BODY = `<h2>The Big 5 States — Highest Priority</h2><div class="warning-box"><strong>These five states represent the highest enforcement risk for most online sellers. Prioritise registration here first.</strong></div><h2>California</h2><p>Threshold: $500,000 gross sales (higher than most states). But: physical presence rules are aggressive. FBA in California = immediate nexus. Personal liability for owners applies.</p><h2>Texas</h2><p>Threshold: $500,000 gross sales. Aggressive audit programme. Long lookback periods. VDA available — use it early.</p><h2>New York</h2><p>Threshold: $500,000 AND 100 transactions. Both tests must be met. Complex product taxability rules — many items are exempt in NY that are taxable elsewhere.</p><h2>Illinois</h2><p>Threshold: $100,000 gross sales ONLY from January 2026 (200-transaction threshold removed). Early mover advantage — register now before enforcement begins.</p><h2>Pennsylvania</h2><p>Threshold: $100,000 gross sales. Economic nexus applies to all tangible personal property and most digital goods. Enforcement active.</p>`;
 
 export default function WayfairNexusSniperFile02() {
@@ -25,6 +28,10 @@ export default function WayfairNexusSniperFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function WayfairNexusSniperFile02() {
             Sales Tax Nexus Liability Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Big 5 State Playbooks
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">California, Texas, New York, Illinois, Pennsylvania — your highest-risk states.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

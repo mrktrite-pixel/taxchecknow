@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bring-forward-window";
+const SLUG = "bfw-06";
+const FALLBACK_LABEL = { name: "Full Sequencing Execution Plan", desc: "Step-by-step implementation with SMSF trustee minutes, super fund contribution forms, and timing buffers." };
 const BODY = `<h2>Full Sequencing Execution Plan</h2><p>Sequencing across 30 June / 1 July requires precision. Missed timing = lost window = $150,000 gap.</p><h2>Phase 1 — Before 15 June 2026 (Preparation)</h2><ol><li>Obtain projected TSB at 30 June 2026 from super fund</li><li>Confirm no bring-forward in 2024-25 or 2025-26 (request contribution history)</li><li>If SMSF: draft trustee minute approving contribution strategy</li><li>If 67-74: document work test compliance</li><li>Confirm contribution banking details with super fund</li></ol><h2>Phase 2 — 15-25 June 2026 (First Contribution)</h2><ol><li>Transfer $120,000 to super fund as standard annual NCC</li><li>Do NOT select "bring-forward" on any paperwork — this is the annual cap</li><li>Request super fund confirmation of allocation before 30 June</li><li>Retain bank transfer confirmation timestamped before 30 June 23:59</li></ol><h2>Phase 3 — 1-5 July 2026 (Bring-Forward Trigger)</h2><ol><li>Transfer $390,000 to super fund on or after 1 July 2026</li><li>Formally trigger the 3-year bring-forward under 2026-27 rules</li><li>Update SMSF trustee minute (if applicable)</li><li>Retain confirmation that contribution was allocated in 2026-27 financial year</li></ol><h2>Phase 4 — After (Confirmation)</h2><ol><li>Request super fund statement showing 2025-26 and 2026-27 contributions</li><li>Lodge Notice of Intent if concessional portion applicable</li><li>Confirm 3-year bring-forward schedule start date for future planning</li></ol>`;
 
 export default function BringForwardWindowFile06() {
@@ -25,6 +28,10 @@ export default function BringForwardWindowFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function BringForwardWindowFile06() {
             Super Contribution Bring-Forward Window Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full Sequencing Execution Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step implementation with SMSF trustee minutes, super fund contribution forms, and timing buffers.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

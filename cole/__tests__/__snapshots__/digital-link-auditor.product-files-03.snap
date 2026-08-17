@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "digital-link-auditor";
+const SLUG = "dla-03";
+const FALLBACK_LABEL = { name: "The Five Common Break Points", desc: "Real-world break points most taxpayers do not realise are non-compliant." };
 const BODY = `<h2>Five Common Digital Link Breaks</h2><ol><li><strong>Spreadsheet-to-HMRC manual typing</strong> — the most common break. Fix: add bridging software.</li><li><strong>Multi-property landlord combining totals in Excel</strong> — if the combining is done by copy/paste, the chain breaks before submission. Fix: separate MTD businesses per property type, each with its own digital link.</li><li><strong>Accountant's internal spreadsheet adjustment</strong> — your accountant pulls data from your software into their own spreadsheet for review, then submits from the spreadsheet. Fix: ask them to use bridging software or integrated submission.</li><li><strong>Year-end correction adjustments</strong> — manually tweaking figures after export but before submission. Fix: correct at source in your records, re-run the automated transfer.</li><li><strong>Migration leftovers</strong> — just switched software, and the handover used manual re-entry. Fix: verify opening balances came via a digital migration tool, not typed.</li></ol>`;
 
 export default function DigitalLinkAuditorFile03() {
@@ -25,6 +28,10 @@ export default function DigitalLinkAuditorFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DigitalLinkAuditorFile03() {
             MTD Digital Link Compliance Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            The Five Common Break Points
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Real-world break points most taxpayers do not realise are non-compliant.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

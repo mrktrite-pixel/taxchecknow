@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-to-trust-exit";
+const SLUG = "strexit-02";
+const FALLBACK_LABEL = { name: "Trust vs Super — The Earnings Environment Comparison", desc: "Side-by-side rate comparison across the 6 main scenarios — so the differential is visible, not hidden." };
 const BODY = `<h2>Trust vs Super Earnings Tax — Full Comparison</h2><table><tr><th>Scenario</th><th>Super rate</th><th>Trust effective rate</th><th>Differential per $100k earnings</th></tr><tr><td>Accumulation + high-bracket beneficiaries</td><td>15%</td><td>45%</td><td>$30,000 MORE in trust</td></tr><tr><td>Accumulation + mid-bracket beneficiaries</td><td>15%</td><td>34%</td><td>$19,000 MORE in trust</td></tr><tr><td>Accumulation + low-bracket beneficiaries</td><td>15%</td><td>21%</td><td>$6,000 MORE in trust</td></tr><tr><td>Pension phase (TBC portion) + any</td><td>0%</td><td>21-45%</td><td>$21,000-$45,000 MORE in trust</td></tr><tr><td>With Division 296 (super side ~16.5%)</td><td>16.5%</td><td>34%</td><td>$17,500 MORE in trust (still)</td></tr></table><h3>Key Insight</h3><p>Trust earnings tax almost always exceeds super earnings tax — even after adding Division 296 to the super side. The exception is when beneficiary rates are genuinely low (retired spouse + non-working adult kids) AND distribution is actually flowing to them every year.</p>`;
 
 export default function SuperToTrustExitFile02() {
@@ -25,6 +28,10 @@ export default function SuperToTrustExitFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperToTrustExitFile02() {
             Super-to-Trust Exit Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Trust vs Super — The Earnings Environment Comparison
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Side-by-side rate comparison across the 6 main scenarios — so the differential is visible, not hidden.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

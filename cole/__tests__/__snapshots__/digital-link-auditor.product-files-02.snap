@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "digital-link-auditor";
+const SLUG = "dla-02";
+const FALLBACK_LABEL = { name: "HMRC-Approved Bridging Software Comparison", desc: "Ranked bridging software options if spreadsheets are your record-keeping choice." };
 const BODY = `<h2>HMRC-Approved Bridging Software</h2><p>Bridging software connects a spreadsheet to HMRC's MTD submission system directly — no manual typing, no broken chain.</p><table><tr><th>Tool</th><th>Cost</th><th>Best for</th></tr><tr><td>Tax Optimiser</td><td>From £5/month</td><td>Simple Excel users</td></tr><tr><td>123 Sheets</td><td>From £9/month</td><td>Google Sheets cloud users</td></tr><tr><td>Absolute Excel add-in</td><td>~£10/month</td><td>Complex Excel workbooks</td></tr><tr><td>VitalTax</td><td>From £15/month</td><td>Multi-business users</td></tr></table><h3>Selection Criteria</h3><ul><li>Confirm current HMRC-approved status at gov.uk</li><li>Check compatibility with your spreadsheet format</li><li>Test in parallel before mandate date</li></ul>`;
 
 export default function DigitalLinkAuditorFile02() {
@@ -25,6 +28,10 @@ export default function DigitalLinkAuditorFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DigitalLinkAuditorFile02() {
             MTD Digital Link Compliance Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            HMRC-Approved Bridging Software Comparison
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Ranked bridging software options if spreadsheets are your record-keeping choice.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

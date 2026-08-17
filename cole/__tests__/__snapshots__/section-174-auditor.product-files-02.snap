@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "section-174-auditor";
+const SLUG = "s174-02";
+const FALLBACK_LABEL = { name: "Prior-Year Filing Review Checklist", desc: "How to verify whether your 2022, 2023, 2024 returns correctly applied the amendment." };
 const BODY = `<h2>Prior-Year Filing Review</h2><p>For each of tax years 2022, 2023, and 2024, check your filed return for these specific items:</p><div class="action-box"><h3>What to Verify</h3><ul><li>Form 4562 (Depreciation and Amortization) with Section 174 R&amp;E capitalization entries</li><li>Schedule M-1 or M-3 reconciliation showing timing differences between book and tax</li><li>Attached amortization schedule showing multi-year spread</li><li>Year 1 deduction amount matches 10% of domestic spend (half-year convention)</li><li>Foreign R&amp;D separately tracked at 15-year period</li></ul></div><h3>If Review Shows...</h3><table><tr><th>Finding</th><th>Action</th></tr><tr><td>Full R&amp;D immediately expensed</td><td>Amendment risk — see file 03</td></tr><tr><td>Amortization applied with wrong percentages</td><td>Amendment with adjusted calculation</td></tr><tr><td>Correct amortization applied</td><td>Compliant — review for Section 41 credit opportunity</td></tr><tr><td>Cannot find Form 4562 Section 174 entries</td><td>Likely not applied — amendment needed</td></tr></table>`;
 
 export default function Section174AuditorFile02() {
@@ -25,6 +28,10 @@ export default function Section174AuditorFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Section174AuditorFile02() {
             R&D Tax Cashflow Shock Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Prior-Year Filing Review Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to verify whether your 2022, 2023, 2024 returns correctly applied the amendment.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

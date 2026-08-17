@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "gst-registration-trap";
+const SLUG = "gst-07";
+const FALLBACK_LABEL = { name: "BAS Compliance Framework", desc: "A quarter-by-quarter BAS management system." };
 const BODY = `<h2>Quarterly BAS Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>BAS Due Date</th></tr><tr><td>Q1</td><td>1 July – 30 September</td><td>28 October</td></tr><tr><td>Q2</td><td>1 October – 31 December</td><td>28 February</td></tr><tr><td>Q3</td><td>1 January – 31 March</td><td>28 April</td></tr><tr><td>Q4</td><td>1 April – 30 June</td><td>28 July</td></tr></table><div class="info-box">BAS agents may have extended deadlines. Check with your agent for your specific due dates.</div>`;
 
 export default function GstRegistrationTrapFile07() {
@@ -25,6 +28,10 @@ export default function GstRegistrationTrapFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function GstRegistrationTrapFile07() {
             GST Registration Trap Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            BAS Compliance Framework
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">A quarter-by-quarter BAS management system.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

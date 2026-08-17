@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "mtd-scorecard";
+const SLUG = "mtd-07";
+const FALLBACK_LABEL = { name: "Self-Employed + Landlord Combined MTD Plan", desc: "Managing MTD across two income streams — self-employment and property — in a single system." };
 const BODY = `<h2>Combined Income MTD Strategy</h2><p>If you have both self-employment and rental income, you have two separate MTD businesses each requiring quarterly updates.</p><div class="action-box"><h3>Three Key Decisions</h3><p>1. One software for both businesses or separate systems?</p><p>2. Combine with accountant's help or handle quarterly updates yourself?</p><p>3. Set up automatic bank feeds to reduce quarterly admin burden?</p></div><h3>Recommendation</h3><p>Single software (Xero or QuickBooks) with multi-business support is cleaner than two separate systems. Bank feeds from business banking reduce quarterly data entry from hours to minutes. Accountant handles final declaration; you handle quarterlies once the habit forms.</p><h3>First-Year Plan</h3><ol><li>Q1: Run first quarter under accountant supervision — they submit, you observe</li><li>Q2: Submit with accountant review — you draft, they check</li><li>Q3 onwards: You submit, accountant available for questions</li></ol>`;
 
 export default function MtdScorecardFile07() {
@@ -25,6 +28,10 @@ export default function MtdScorecardFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MtdScorecardFile07() {
             MTD Mandation Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Self-Employed + Landlord Combined MTD Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Managing MTD across two income streams — self-employment and property — in a single system.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

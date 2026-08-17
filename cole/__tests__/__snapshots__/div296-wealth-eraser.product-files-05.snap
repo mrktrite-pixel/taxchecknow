@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "div296-wealth-eraser";
+const SLUG = "div296-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "4 questions to take to your SMSF accountant before 30 June 2026." };
 const BODY = `<div class="info-box">Ask these at your pre-June 2026 SMSF review — not at the lodgement review in 2028.</div><div class="action-box"><h3>Question 1</h3><p>"What are the current market values vs original cost bases for every CGT asset in my SMSF?"</p></div><h3>Question 2</h3><p>"Based on my asset mix, is the cost-base reset net beneficial — and if not, what pre-30-June disposals fix it?"</p><h3>Question 3</h3><p>"Do I need independent valuations for illiquid assets — which valuer, when, and what evidence do you need?"</p><h3>Question 4</h3><p>"What's my two-track record-keeping obligation after electing, and how will you maintain it for the next 5+ years?"</p>`;
 
 export default function Div296WealthEraserFile05() {
@@ -25,6 +28,10 @@ export default function Div296WealthEraserFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Div296WealthEraserFile05() {
             Division 296 Wealth Eraser Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">4 questions to take to your SMSF accountant before 30 June 2026.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

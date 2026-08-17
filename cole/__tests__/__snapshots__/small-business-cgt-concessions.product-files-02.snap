@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "small-business-cgt-concessions";
+const SLUG = "sbcgt-02";
+const FALLBACK_LABEL = { name: "Active Asset Test Guide", desc: "Which assets qualify as active assets under Division 152." };
 const BODY = `<h2>Active Asset Test — What Qualifies</h2><table><tr><th>Asset</th><th>Active Asset?</th></tr><tr><td>Business goodwill</td><td>Yes</td></tr><tr><td>Business premises used in the business</td><td>Yes</td></tr><tr><td>Plant and equipment used in the business</td><td>Yes</td></tr><tr><td>Shares in operating company (if company passes test)</td><td>Yes — additional conditions</td></tr><tr><td>Rental property — investment use</td><td>No — passive investment</td></tr><tr><td>Cash or financial assets</td><td>No — financial assets excluded</td></tr></table>`;
 
 export default function SmallBusinessCgtConcessionsFile02() {
@@ -25,6 +28,10 @@ export default function SmallBusinessCgtConcessionsFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SmallBusinessCgtConcessionsFile02() {
             Small Business CGT Concessions Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Active Asset Test Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Which assets qualify as active assets under Division 152.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "negative-gearing-illusion";
+const SLUG = "ng-08";
+const FALLBACK_LABEL = { name: "Long-Term Investment Model", desc: "10-year model showing the true cost of negative gearing vs alternative investments." };
 const BODY = `<h2>10-Year Negative Gearing Model</h2><p>The real question: does the capital growth exceed the cumulative after-tax cashflow losses?</p><table><tr><th>Year</th><th>Annual After-Tax Loss</th><th>Cumulative Loss</th><th>Required Growth to Break Even</th></tr><tr><td>1</td><td>$9,450</td><td>$9,450</td><td>1.5% (on $630k property)</td></tr><tr><td>5</td><td>$9,450</td><td>$47,250</td><td>7.5% total growth</td></tr><tr><td>10</td><td>$9,450</td><td>$94,500</td><td>15% total growth</td></tr></table><div class="info-box">This model assumes no change in rental income, interest rate, or property value. Real models should be recalculated annually.</div>`;
 
 export default function NegativeGearingIllusionFile08() {
@@ -25,6 +28,10 @@ export default function NegativeGearingIllusionFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function NegativeGearingIllusionFile08() {
             Negative Gearing Illusion Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Long-Term Investment Model
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">10-year model showing the true cost of negative gearing vs alternative investments.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

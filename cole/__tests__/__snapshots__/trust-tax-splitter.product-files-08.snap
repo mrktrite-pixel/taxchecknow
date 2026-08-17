@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "trust-tax-splitter";
+const SLUG = "tt-08";
+const FALLBACK_LABEL = { name: "Multi-Entity Optimisation Plan", desc: "Combining trust, company, and personal structures for maximum tax efficiency." };
 const BODY = `<h2>The Multi-Entity Approach</h2><p>The most tax-efficient structure often combines elements: a company for business income, a trust for asset protection, and personal ownership for specific assets.</p><h2>Common NZ Structures</h2><table><tr><th>Structure</th><th>Best For</th><th>Tax Rate</th></tr><tr><td>Personal</td><td>Employment income, simple assets</td><td>10.5%-39%</td></tr><tr><td>Company</td><td>Business income, retained profits</td><td>28%</td></tr><tr><td>Trust with distribution</td><td>Income splitting, asset protection</td><td>10.5%-33%</td></tr><tr><td>Trust retained</td><td>Asset protection only — tax inefficient</td><td>39%</td></tr></table><div class="warning-box"><strong>Get specific advice:</strong> The optimal structure depends on your income level, family situation, asset mix, and long-term goals. A one-hour session with a specialist accountant will pay for itself many times over.</div>`;
 
 export default function TrustTaxSplitterFile08() {
@@ -25,6 +28,10 @@ export default function TrustTaxSplitterFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TrustTaxSplitterFile08() {
             Trust Income Allocation Decision Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Entity Optimisation Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Combining trust, company, and personal structures for maximum tax efficiency.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

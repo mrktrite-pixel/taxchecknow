@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "uk-nrls";
+const SLUG = "nrls-01";
+const FALLBACK_LABEL = { name: "Your NRLS Status and Withholding Check", desc: "Your specific NRLS position — whether withholding applies and at what rate." };
 const BODY = `<h2>Your NRLS Status</h2><div class="action-box"><h3>Rules applied</h3><p>Letting agent: ALWAYS withholds 20% unless NRL1 approved</p><p>Tenant (no agent): withholds 20% if rent over £100/week</p><p>No agent + rent under £100/week: no withholding, SA still required</p></div><p>Source: <a href="https://www.gov.uk/government/publications/non-resident-landlord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes">HMRC NRLS Guidance Notes</a></p>`;
 
 export default function UkNrlsFile01() {
@@ -25,6 +28,10 @@ export default function UkNrlsFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UkNrlsFile01() {
             UK Non-Resident Landlord Scheme Auditor · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your NRLS Status and Withholding Check
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your specific NRLS position — whether withholding applies and at what rate.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

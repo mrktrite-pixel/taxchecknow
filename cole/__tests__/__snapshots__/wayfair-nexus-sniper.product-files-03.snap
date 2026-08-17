@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "wayfair-nexus-sniper";
+const SLUG = "nexus-03";
+const FALLBACK_LABEL = { name: "FBA Inventory Nexus Audit", desc: "Which Amazon fulfilment centres create nexus — and your registration priority." };
 const BODY = `<h2>FBA Creates Physical Nexus</h2><p>Having inventory in any Amazon fulfilment centre creates physical nexus in that state — immediately, with no sales threshold. Amazon operates fulfilment centres in over 40 states.</p><div class="action-box"><h3>How to Find Your FBA States</h3><p>1. Log into Amazon Seller Central</p><p>2. Go to Reports → Tax Document Library</p><p>3. Download your "Inventory Event Detail" report</p><p>4. Filter by state — any state with inventory = nexus</p></div><h2>High-Risk FBA States (Major Fulfilment Centres)</h2><table><tr><th>State</th><th>Sales Tax Rate</th><th>Priority</th></tr><tr><td>California</td><td>7.25% + local</td><td>Very High</td></tr><tr><td>Texas</td><td>6.25% + local</td><td>High</td></tr><tr><td>Pennsylvania</td><td>6%</td><td>High</td></tr><tr><td>New Jersey</td><td>6.625%</td><td>High</td></tr></table>`;
 
 export default function WayfairNexusSniperFile03() {
@@ -25,6 +28,10 @@ export default function WayfairNexusSniperFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function WayfairNexusSniperFile03() {
             Sales Tax Nexus Liability Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            FBA Inventory Nexus Audit
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Which Amazon fulfilment centres create nexus — and your registration priority.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

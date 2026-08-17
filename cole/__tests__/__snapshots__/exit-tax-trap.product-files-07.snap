@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "exit-tax-trap";
+const SLUG = "ett-07";
+const FALLBACK_LABEL = { name: "Deemed Disposition Management Strategy", desc: "Canada-specific: managing the deemed disposition tax with T1244 deferral and security." };
 const BODY = `<h2>Canada Deemed Disposition — Management</h2><p>The deemed disposition under s128.1 crystallises tax on unrealised gains at departure. Without planning, this can create a significant cash-flow mismatch — tax payable but no asset sale proceeds.</p><h2>T1244 Deferral Election</h2><ol><li>Identify all property deemed disposed at departure</li><li>Calculate the deemed gain per asset (FMV at departure − ACB)</li><li>Compute the departure tax payable without deferral</li><li>File Form T1244 electing to defer payment of the departure tax</li><li>Post security with CRA (cash, bank guarantee, or other acceptable form)</li><li>The deferred tax is payable when the asset is actually sold, or at latest over 10 years</li></ol><div class="info-box"><strong>Note:</strong> the election preserves cash flow but the tax liability itself is unchanged. Interest may accrue on the deferred amount. Canadian professional advice is essential.</div>`;
 
 export default function ExitTaxTrapFile07() {
@@ -25,6 +28,10 @@ export default function ExitTaxTrapFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function ExitTaxTrapFile07() {
             Exit Tax Trap Auditor · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Deemed Disposition Management Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Canada-specific: managing the deemed disposition tax with T1244 deferral and security.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

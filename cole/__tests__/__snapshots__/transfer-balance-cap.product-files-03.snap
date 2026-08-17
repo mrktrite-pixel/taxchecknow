@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "transfer-balance-cap";
+const SLUG = "tbc-03";
+const FALLBACK_LABEL = { name: "Proportional Indexation Check", desc: "How to verify whether you're entitled to additional cap from indexation events since your pension commenced." };
 const BODY = `<h2>Proportional Indexation — The Cap You May Be Owed</h2><p>Under ITAA 1997 s294-40, your personal cap increases proportionally at each general cap indexation event based on your HIGHEST UNUSED PERCENTAGE at that date.</p><h3>The Formula</h3><p>New Personal Cap = Old Personal Cap + (General Cap Increase × Highest Unused % at indexation date)</p><h3>Worked Example</h3><p>Started pension at $1.6M cap, pension balance $1.2M at July 2023 indexation event:</p><ul><li>Highest unused % at 1 July 2023 = ($1.6M − $1.2M) / $1.6M = 25%</li><li>General cap increased $1.7M → $1.9M = $200,000 increase</li><li>Personal cap lift = $200,000 × 25% = $50,000</li><li>New personal cap = $1.65M (not $1.9M)</li></ul><h3>How to Verify</h3><p>Access your Transfer Balance Account Report via MyGov. Check the personal cap figure and the indexation history. If it looks wrong, request a review through your super fund or directly via the ATO.</p>`;
 
 export default function TransferBalanceCapFile03() {
@@ -25,6 +28,10 @@ export default function TransferBalanceCapFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TransferBalanceCapFile03() {
             Transfer Balance Cap Optimiser · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Proportional Indexation Check
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to verify whether you're entitled to additional cap from indexation events since your pension commenced.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

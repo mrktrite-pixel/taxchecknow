@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "section-174-auditor";
+const SLUG = "s174-01";
+const FALLBACK_LABEL = { name: "Your Section 174 Amortization Schedule", desc: "Year-by-year breakdown of your R&D deduction under the 2022 amendment." };
 const BODY = `<h2>Your Section 174 Amortization Schedule</h2><div class="action-box"><h3>The Math</h3><p>Domestic R&amp;D: 10% year 1 (half-year), 20% years 2-5, 10% year 6</p><p>Foreign R&amp;D: 3.33% year 1 (half-year), 6.67% years 2-15, 3.33% year 16</p></div><h3>Amortization Table — Domestic R&amp;D Example ($500k spend)</h3><table><tr><th>Year</th><th>Deduction %</th><th>Deduction $</th><th>Cumulative</th></tr><tr><td>Year 1</td><td>10%</td><td>$50,000</td><td>$50,000</td></tr><tr><td>Year 2</td><td>20%</td><td>$100,000</td><td>$150,000</td></tr><tr><td>Year 3</td><td>20%</td><td>$100,000</td><td>$250,000</td></tr><tr><td>Year 4</td><td>20%</td><td>$100,000</td><td>$350,000</td></tr><tr><td>Year 5</td><td>20%</td><td>$100,000</td><td>$450,000</td></tr><tr><td>Year 6</td><td>10%</td><td>$50,000</td><td>$500,000</td></tr></table><h3>Cashflow Impact</h3><p>Additional taxable income year 1: $450k (vs $0 under old rules). At 21% corporate rate: $94,500 additional tax. This is TIMING — total deduction still $500k over 6 years. But cashflow in year 1 is the issue.</p><p>Source: <a href="https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174">IRS — IRC §174</a></p>`;
 
 export default function Section174AuditorFile01() {
@@ -25,6 +28,10 @@ export default function Section174AuditorFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Section174AuditorFile01() {
             R&D Tax Cashflow Shock Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Section 174 Amortization Schedule
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Year-by-year breakdown of your R&D deduction under the 2022 amendment.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

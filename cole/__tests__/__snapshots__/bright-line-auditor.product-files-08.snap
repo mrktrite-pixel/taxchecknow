@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bright-line-auditor";
+const SLUG = "bl-08";
+const FALLBACK_LABEL = { name: "Transfer Strategy Roadmap", desc: "Safe restructuring options — how to move property without triggering bright-line." };
 const BODY = `<h2>Moving Property Without Triggering Tax</h2><p>If you need to transfer a property and want to avoid bright-line tax, careful structuring is required before the transfer.</p><h2>Options to Consider</h2><table><tr><th>Option</th><th>Effect</th><th>Complexity</th></tr><tr><td>Wait until outside bright-line period</td><td>Clean exit — no tax</td><td>Low</td></tr><tr><td>Relationship property rollover</td><td>No tax on transfer</td><td>Medium</td></tr><tr><td>Death and estate transfer</td><td>Exempt</td><td>N/A</td></tr><tr><td>Deed of family arrangement</td><td>Complex — get advice</td><td>High</td></tr></table><div class="warning-box"><strong>Always get legal and tax advice before any property transfer.</strong> Bright-line consequences can be significant and are difficult to reverse once a transfer has occurred.</div>`;
 
 export default function BrightLineAuditorFile08() {
@@ -25,6 +28,10 @@ export default function BrightLineAuditorFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function BrightLineAuditorFile08() {
             Bright-Line Property Tax Decision Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Transfer Strategy Roadmap
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Safe restructuring options — how to move property without triggering bright-line.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "small-business-cgt-concessions";
+const SLUG = "sbcgt-06";
+const FALLBACK_LABEL = { name: "Full Exit Tax Strategy", desc: "Combining all four concessions for minimum CGT on your business sale." };
 const BODY = `<h2>Stacking the Four Concessions</h2><p>The maximum tax reduction comes from combining concessions in the right sequence.</p><h3>Optimal Stack for Gains Under $2M</h3><ol><li>Apply 50% CGT discount (held over 12 months)</li><li>Apply 50% active asset reduction (reduces gain by a further 50%)</li><li>Apply retirement exemption to remaining gain (up to $500k lifetime)</li><li>Result: $0 or near-zero CGT on gains up to approximately $2M</li></ol><h3>Optimal Stack for 15-Year Assets</h3><ol><li>Confirm 15-year exemption eligibility — age 55+ or incapacitated</li><li>Apply 15-year exemption — entire gain eliminated</li><li>Result: $0 CGT regardless of gain size</li></ol>`;
 
 export default function SmallBusinessCgtConcessionsFile06() {
@@ -25,6 +28,10 @@ export default function SmallBusinessCgtConcessionsFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SmallBusinessCgtConcessionsFile06() {
             Small Business CGT Concessions Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full Exit Tax Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Combining all four concessions for minimum CGT on your business sale.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

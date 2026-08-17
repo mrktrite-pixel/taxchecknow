@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "rental-property-deduction-audit";
+const SLUG = "rda-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "Questions that put the classification in front of your accountant." };
 const BODY = `<div class="info-box">Review before lodging your rental schedule — not after.</div><div class="action-box"><h3>Question 1</h3><p>"Have I correctly classified all renovation work as capital — not repairs?"</p></div><h3>Question 2</h3><p>"Do I have a quantity surveyor report — and how much depreciation am I missing?"</p><h3>Question 3</h3><p>"Have I removed all travel deductions and correctly apportioned any mixed-use periods?"</p>`;
 
 export default function RentalPropertyDeductionAuditFile05() {
@@ -25,6 +28,10 @@ export default function RentalPropertyDeductionAuditFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function RentalPropertyDeductionAuditFile05() {
             Rental Property Deduction Audit · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Questions that put the classification in front of your accountant.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

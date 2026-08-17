@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-death-tax-trap";
+const SLUG = "sdtt-06";
+const FALLBACK_LABEL = { name: "Full Recontribution Execution Plan", desc: "Step-by-step recontribution strategy with SMSF trustee minutes, NCC cap sequencing, and component reset mechanics." };
 const BODY = `<h2>Recontribution Strategy — Full Execution</h2><p>Recontribution converts taxable component to tax-free component by withdrawing amounts (tax-free if 60+ and retired) and recontributing them as non-concessional contributions.</p><h2>Phase 1 — Pre-30 June 2026 (Reset Window 1)</h2><ol><li>Confirm age 60+ and met condition of release (retired, reached 65, etc.) — withdrawals tax-free</li><li>Confirm NCC eligibility: TSB under $1.84M at 30 June 2025 for full $360k bring-forward under 2025-26 rules</li><li>Withdraw up to $360,000 from super (taxable component portion by proportioning rule)</li><li>Recontribute same $360,000 as single NCC contribution triggering bring-forward</li><li>Result: $360k of taxable component now sits as tax-free component. Death tax on that $360k = $0 (was $61,200)</li></ol><h2>Phase 2 — Post-1 July 2026 (Reset Window 2)</h2><ol><li>Under new 2026-27 bring-forward rules, withdraw up to $390,000</li><li>Recontribute $390,000 under new $390k bring-forward</li><li>Additional $390k of taxable component reset to tax-free</li></ol><h2>Phase 3 — Ongoing</h2><ol><li>Each subsequent year — withdraw + recontribute annual $130k NCC (after bring-forward period expires)</li><li>Continue until taxable component reduced to desired level or age 75 (NCC cut-off)</li></ol><div class="action-box"><h3>Expected Outcome</h3><p>Two-year sequencing: $750,000 of taxable component reset to tax-free. Death tax reduction: $127,500 ($750k × 17%). Same money in super. Just in a different component bucket.</p></div>`;
 
 export default function SuperDeathTaxTrapFile06() {
@@ -25,6 +28,10 @@ export default function SuperDeathTaxTrapFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperDeathTaxTrapFile06() {
             Super Death Tax Trap Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full Recontribution Execution Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step recontribution strategy with SMSF trustee minutes, NCC cap sequencing, and component reset mechanics.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

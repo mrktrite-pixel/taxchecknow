@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "superannuation-tax-leaving-australia-confusion-2026";
+const SLUG = "dasp-04";
+const FALLBACK_LABEL = { name: "Unclaimed Super Risk Brief", desc: "What happens after 6 months and how to claim back from the ATO if it has already transferred." };
 const BODY = `<h2>Unclaimed Super — the 6-Month Rule</h2><p>Where 6 months or more have passed since you left Australia and your visa ceased, your super fund may transfer your balance to the ATO as unclaimed super money.</p><h3>If it has already transferred</h3><p>You then claim your DASP from the ATO directly rather than from your fund. The DASP withholding rates still apply — working holiday makers face the 65% rate on ATO-held unclaimed money.</p><p>Source: ATO — Departing Australia Superannuation Payment and unclaimed super.</p>`;
 
 export default function SuperannuationTaxLeavingAustraliaConfusion2026File04() {
@@ -25,6 +28,10 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File04() {
             Superannuation Tax When Leaving Australia (DASP) · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Unclaimed Super Risk Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What happens after 6 months and how to claim back from the ATO if it has already transferred.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

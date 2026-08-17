@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "wayfair-nexus-sniper";
+const SLUG = "nexus-01";
+const FALLBACK_LABEL = { name: "Your Nexus Exposure Report", desc: "Which states you have nexus in — and your estimated liability." };
 const BODY = `<h2>Your Nexus Position</h2><p>Economic nexus is triggered the day you cross the threshold in a state. Liability accrues from that date — not from the date you register.</p><div class="action-box"><h3>The Core Rule</h3><p>Economic nexus: $100,000 gross sales OR 200 transactions (threshold removed in some states in 2026)</p><p>Physical nexus (FBA): Immediate — no threshold</p><p>Gross sales = ALL channels, ALL products, INCLUDING exempt</p></div><h2>Nexus Triggers by Type</h2><table><tr><th>Trigger</th><th>Threshold</th><th>Timing</th></tr><tr><td>Economic nexus</td><td>$100k gross sales</td><td>Day threshold crossed</td></tr><tr><td>FBA inventory</td><td>None</td><td>Day inventory arrives in state</td></tr><tr><td>Employee in state</td><td>None</td><td>Day employment begins</td></tr></table><p>Source: <a href="https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide">Sales Tax Institute</a> · Last verified April 2026</p>`;
 
 export default function WayfairNexusSniperFile01() {
@@ -25,6 +28,10 @@ export default function WayfairNexusSniperFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function WayfairNexusSniperFile01() {
             Sales Tax Nexus Liability Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Nexus Exposure Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Which states you have nexus in — and your estimated liability.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

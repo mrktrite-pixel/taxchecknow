@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "au-expat-cgt";
+const SLUG = "aucgt-06";
+const FALLBACK_LABEL = { name: "Sale Timing and Residency Strategy", desc: "Structural planning: when to sell, when to re-establish residency, when to accept the hit." };
 const BODY = `<h2>Sale Timing and Residency Strategy</h2><h3>Option 1 — Sell as Australian resident</h3><ul><li>Re-establish genuine Australian residency (physical presence + ties + intent)</li><li>Document the return: close overseas rental/employment, resume Australian primary activities</li><li>Time the listing + contract to occur after clean residency re-establishment</li><li>Outcome: main residence exemption may apply (if s118-110 conditions met)</li></ul><h3>Option 2 — Accept foreign resident treatment</h3><ul><li>Sell at current market conditions without residency change</li><li>Model full CGT at non-resident rate (up to 45%) + no 50% discount</li><li>Apply for clearance certificate if eligible (most won't be)</li><li>Plan cashflow: 12.5% withholding + balance of CGT due at lodgment</li></ul><h3>Option 3 — Hold and wait</h3><ul><li>Continue renting; defer sale to a point when residency change is viable</li><li>Risk: rule change; market movement; ongoing property costs</li><li>Evaluate return on waiting vs. tax saved</li></ul>`;
 
 export default function AuExpatCgtFile06() {
@@ -25,6 +28,10 @@ export default function AuExpatCgtFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AuExpatCgtFile06() {
             Australian Expat CGT Trap Auditor · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Sale Timing and Residency Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Structural planning: when to sell, when to re-establish residency, when to accept the hit.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

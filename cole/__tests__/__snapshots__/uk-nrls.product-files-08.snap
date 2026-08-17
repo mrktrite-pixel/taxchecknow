@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "uk-nrls";
+const SLUG = "nrls-08";
+const FALLBACK_LABEL = { name: "Audit Defence and Compliance Documentation", desc: "What documentation to maintain for NRLS and wider rental compliance." };
 const BODY = `<h2>Documentation to Retain (7 years minimum)</h2><ul class="checklist"><li>Letting agent agreement and statements (monthly / quarterly)</li><li>Tenant lease agreement(s)</li><li>NRLY (annual NRLS statement from agent showing tax withheld)</li><li>NRL1/2/3 approval letter from HMRC (if applicable)</li><li>All receipts for allowable expenses (repairs, insurance, fees, etc.)</li><li>Mortgage interest certificates</li><li>Council tax + service charge statements</li><li>Bank statements showing rental receipts</li><li>UK Self Assessment returns filed</li><li>Evidence of 'usual place of abode outside UK' (lease/title in other country, utility bills, residence certificate if applicable)</li><li>Treaty residence certificate from country of residence (if claiming personal allowance under treaty)</li></ul><div class="info-box"><strong>Let Property Campaign option:</strong> if you have prior unfiled rental years, HMRC's dedicated let property disclosure programme reduces penalties materially. Pre-disclosure contact required.</div>`;
 
 export default function UkNrlsFile08() {
@@ -25,6 +28,10 @@ export default function UkNrlsFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UkNrlsFile08() {
             UK Non-Resident Landlord Scheme Auditor · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Audit Defence and Compliance Documentation
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What documentation to maintain for NRLS and wider rental compliance.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

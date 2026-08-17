@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-death-tax-trap";
+const SLUG = "sdtt-08";
+const FALLBACK_LABEL = { name: "Long-Term Super Succession Model", desc: "Multi-year model integrating recontribution, Division 296 management, and estate routing." };
 const BODY = `<h2>Long-Term Super Succession Model</h2><p>The death benefit tax trap is solved across years, not in a single event. The optimal strategy integrates three levers across the remaining contribution phase and beyond.</p><h2>Lever 1 — Recontribution Cycles (ages 60-75)</h2><p>Each NCC bring-forward cycle resets ~$390k of taxable component to tax-free. Typical client aged 60-64 can execute 3-4 cycles before age 75 cut-off. Cumulative reset: $1.2M+ of taxable component.</p><h2>Lever 2 — Division 296 Annual Management</h2><p>Each year: review TSB vs $3M threshold. Withdraw if approaching. Use spouse balance equalisation to reduce combined exposure.</p><h2>Lever 3 — Estate Routing Structure</h2><p>Testamentary trust with mixed beneficiaries allows streaming: tax-free component to non-dependants (adult kids), taxable component to dependants (spouse, minor children). Reduces death benefit tax quantum even after recontribution.</p><h2>Annual Decision Framework</h2><ol><li>March-April each year: review projected TSB at next 30 June</li><li>May: confirm NCC bring-forward status, taxable component %, Div 296 exposure</li><li>Before 30 June: execute recontribution + Div 296 withdrawal if needed</li><li>Post-30 June: trigger new bring-forward if schedule expired</li></ol><div class="action-box"><h3>The Core Insight</h3><p>Super is not a single-decision structure. It is an annual optimisation across contribution, withdrawal, taxable component %, and TSB level — all within the member's lifetime. At death, the levers disappear. The family inherits whatever configuration the member died with.</p></div>`;
 
 export default function SuperDeathTaxTrapFile08() {
@@ -25,6 +28,10 @@ export default function SuperDeathTaxTrapFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperDeathTaxTrapFile08() {
             Super Death Tax Trap Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Long-Term Super Succession Model
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Multi-year model integrating recontribution, Division 296 management, and estate routing.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

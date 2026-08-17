@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "qsbs-exit-auditor";
+const SLUG = "qsbs-08";
+const FALLBACK_LABEL = { name: "State Conformity and California Exit Planning", desc: "How state tax treatment varies — especially critical for California residents." };
 const BODY = `<h2>State Conformity to §1202</h2><p>Most states conform to federal §1202 — a QSBS exclusion at federal reduces state tax similarly. But several key states do NOT conform.</p><h3>Non-Conforming States</h3><table><tr><th>State</th><th>Treatment</th></tr><tr><td>California</td><td>Does NOT conform — full state tax on QSBS gain (up to ~13.3%)</td></tr><tr><td>Pennsylvania</td><td>Partial — rules differ from federal</td></tr><tr><td>New Jersey</td><td>Does NOT fully conform</td></tr><tr><td>Alabama</td><td>Limited conformity</td></tr><tr><td>Mississippi</td><td>Does NOT conform</td></tr></table><h3>California Impact</h3><p>California taxpayer with $10M QSBS gain, all federal gates pass:</p><ul><li>Federal tax: $0 (100% QSBS exclusion)</li><li>California state tax: ~$1.33M at top marginal rate</li></ul><h3>California Residency Planning</h3><p>Breaking California residency before exit can eliminate the state tax. Requirements: genuine change of domicile, typically 18-24 months prior to exit, establish ties elsewhere (no-income-tax state preferred — Texas, Florida, Nevada, Washington, Tennessee, Wyoming, South Dakota, Alaska).</p><h3>Steps to Break California Residency</h3><ul class="checklist"><li>Sell or permanently rent out California home — not just "snowbird" arrangement</li><li>Change driver's license to new state</li><li>Re-register to vote in new state</li><li>Move primary bank/brokerage accounts</li><li>Update credit cards, phone, utilities to new address</li><li>Establish genuine ties in new state (employment, community, religious, family)</li><li>File final California resident return (FTB 540) with part-year status</li><li>Maintain residency documentation for audit defence (California audits aggressively)</li></ul><p>Savings calculation: $10M gain × 13.3% = $1.33M state tax saved if residency genuinely broken.</p>`;
 
 export default function QsbsExitAuditorFile08() {
@@ -25,6 +28,10 @@ export default function QsbsExitAuditorFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function QsbsExitAuditorFile08() {
             QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            State Conformity and California Exit Planning
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How state tax treatment varies — especially critical for California residents.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

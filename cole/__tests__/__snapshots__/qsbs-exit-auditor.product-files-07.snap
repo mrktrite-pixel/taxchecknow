@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "qsbs-exit-auditor";
+const SLUG = "qsbs-07";
+const FALLBACK_LABEL = { name: "Multi-Shareholder Cap Stacking", desc: "How to use family member caps to extend your QSBS exclusion beyond the individual limit." };
 const BODY = `<h2>Multi-Shareholder Cap Stacking</h2><p>Each QSBS shareholder has their own cap. By gifting QSBS to family members before exit, you can stack multiple $10M ($15M post-2025) caps.</p><h3>Mechanics</h3><ol><li>Founder holds QSBS — has own $10M / $15M cap</li><li>Founder gifts shares to spouse — spouse gets own cap (unlimited marital deduction, no gift tax)</li><li>Founder gifts shares to each child / adult family member — each has own cap (subject to gift tax rules)</li><li>At exit, each shareholder uses their own cap separately</li></ol><h3>Requirements</h3><ul><li>Gift must be bona fide — irrevocable transfer, no strings</li><li>Holding period tacks for §1202 — recipient inherits original holder's timing</li><li>Other QSBS gates must be met (recipient is now the 'original holder' by tacking)</li><li>Gift tax: $18,000/year annual exclusion per recipient; lifetime exemption $13.99M (2026)</li></ul><h3>Planning Example</h3><p>Founder with $40M QSBS gain, pre-2025 rules ($10M cap per person):</p><ul><li>Without planning: $10M excluded, $30M × 23.8% = $7.14M tax</li><li>Gift 50% to spouse, 25% to each of two children, keep 0% for self: 4 × $10M cap = $40M excluded = $0 tax</li><li>Saves $7.14M in federal tax</li></ul><h3>Caveats</h3><ul><li>Gift tax exemption is shared with estate tax exemption — using it now reduces estate exemption later</li><li>Gifted shares are not yours — recipients own them and can do as they wish</li><li>Trust structures (intentionally defective grantor trusts) provide more control but are complex</li><li>Engage an estate planner alongside tax attorney</li></ul>`;
 
 export default function QsbsExitAuditorFile07() {
@@ -25,6 +28,10 @@ export default function QsbsExitAuditorFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function QsbsExitAuditorFile07() {
             QSBS Exit Risk Engine — Multi-Million Dollar Exclusion or Full Tax · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Shareholder Cap Stacking
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to use family member caps to extend your QSBS exclusion beyond the individual limit.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

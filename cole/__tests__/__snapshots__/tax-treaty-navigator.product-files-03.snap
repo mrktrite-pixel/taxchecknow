@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "tax-treaty-navigator";
+const SLUG = "ttn-03";
+const FALLBACK_LABEL = { name: "Filing Obligations by Country", desc: "What to file in primary country, what to file in secondary country, when." };
 const BODY = `<h2>Filing Obligations</h2><div class="action-box"><h3>Primary taxing country</h3><p>File full resident return; declare worldwide income; claim foreign tax credits for tax paid to secondary country on source income.</p></div><div class="action-box"><h3>Secondary country (source)</h3><p>File non-resident return; declare source income only; claim treaty-based reduction in withholding tax where applicable.</p></div><div class="warning-box"><strong>Treaty position disclosure:</strong> most countries require a specific form disclosing the treaty position (e.g. US Form 8833, UK DT-Individual). Failure to file can forfeit treaty protection.</div><h2>Filing Deadline Matrix (common)</h2><table><tr><th>Country</th><th>Return</th><th>Due (resident)</th><th>Due (non-resident)</th></tr><tr><td>UK</td><td>SA100</td><td>31 Jan</td><td>31 Oct (paper) / 31 Jan (online)</td></tr><tr><td>Australia</td><td>ATO individual</td><td>31 Oct</td><td>Same</td></tr><tr><td>NZ</td><td>IR3</td><td>7 Jul</td><td>Same</td></tr><tr><td>US</td><td>1040 + 8833</td><td>15 Apr (15 Jun for expats)</td><td>Same + 1040-NR</td></tr></table>`;
 
 export default function TaxTreatyNavigatorFile03() {
@@ -25,6 +28,10 @@ export default function TaxTreatyNavigatorFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TaxTreatyNavigatorFile03() {
             Double Tax Treaty Navigator · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Filing Obligations by Country
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What to file in primary country, what to file in secondary country, when.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

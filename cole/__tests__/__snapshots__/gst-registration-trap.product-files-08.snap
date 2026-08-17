@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "gst-registration-trap";
+const SLUG = "gst-08";
+const FALLBACK_LABEL = { name: "Ongoing GST Compliance Structure", desc: "Long-term GST management system to avoid future exposure." };
 const BODY = `<h2>Ongoing GST Compliance</h2><div class="action-box"><h3>Monthly Actions</h3><p>Record all GST-inclusive receipts and invoices in accounting software</p><p>Reconcile GST collected against sales records</p><p>Verify input tax credit amounts against purchase invoices</p></div><div class="action-box"><h3>Quarterly Actions</h3><p>Prepare and lodge BAS by due date</p><p>Pay net GST to ATO (or receive refund)</p><p>Review rolling 12-month turnover for threshold monitoring</p></div>`;
 
 export default function GstRegistrationTrapFile08() {
@@ -25,6 +28,10 @@ export default function GstRegistrationTrapFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function GstRegistrationTrapFile08() {
             GST Registration Trap Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Ongoing GST Compliance Structure
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Long-term GST management system to avoid future exposure.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

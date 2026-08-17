@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "instant-asset-write-off";
+const SLUG = "iawo-06";
+const FALLBACK_LABEL = { name: "Full Depreciation Plan", desc: "All depreciation methods for all asset types across the business." };
 const BODY = `<h2>Depreciation Methods Comparison</h2><table><tr><th>Method</th><th>Best For</th><th>Year 1 Deduction</th></tr><tr><td>Instant write-off ($20k threshold)</td><td>Assets under $20k, turnover under $10M</td><td>100% of cost</td></tr><tr><td>General small business pool</td><td>Assets over $20k, turnover under $10M</td><td>15% of cost</td></tr><tr><td>Effective life depreciation</td><td>Any business — prime or diminishing value</td><td>Based on asset life</td></tr><tr><td>Temporary full expensing (expired)</td><td>COVID-era — no longer available</td><td>N/A</td></tr></table>`;
 
 export default function InstantAssetWriteOffFile06() {
@@ -25,6 +28,10 @@ export default function InstantAssetWriteOffFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InstantAssetWriteOffFile06() {
             Instant Asset Write-Off Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full Depreciation Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">All depreciation methods for all asset types across the business.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

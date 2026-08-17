@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "fbt-hidden-exposure";
+const SLUG = "fbt-03";
+const FALLBACK_LABEL = { name: "Car Method Optimiser", desc: "Compare statutory formula vs operating cost for your vehicles." };
 const BODY = `<h2>Which Method Is Better for Your Car?</h2><p>The operating cost method is better when business use is high. Use this comparison:</p><table><tr><th>Business Use %</th><th>Statutory FBT ($60k car)</th><th>Operating Cost FBT (approx)</th></tr><tr><td>25% business</td><td>$5,640</td><td>$4,230 — marginal saving</td></tr><tr><td>50% business</td><td>$5,640</td><td>$2,820 — significant saving</td></tr><tr><td>75% business</td><td>$5,640</td><td>$1,410 — major saving</td></tr><tr><td>90% business</td><td>$5,640</td><td>$564 — 90% saving</td></tr></table><div class="info-box">Operating cost method requires a current ATO-compliant 12-week logbook.</div>`;
 
 export default function FbtHiddenExposureFile03() {
@@ -25,6 +28,10 @@ export default function FbtHiddenExposureFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FbtHiddenExposureFile03() {
             FBT Hidden Exposure Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Car Method Optimiser
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Compare statutory formula vs operating cost for your vehicles.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

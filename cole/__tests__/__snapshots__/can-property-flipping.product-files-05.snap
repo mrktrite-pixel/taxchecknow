@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-property-flipping";
+const SLUG = "pft-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief — Property Flipping Rule", desc: "Questions for your Canadian tax professional before listing or signing a sale." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with a Canadian tax professional (CPA Canada member) familiar with the flipping rule. Real estate lawyers alone may not cover the tax classification.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Based on my holding period + sale reason, does the 365-day flipping rule apply to me?</p></div><h3>Question 2</h3><p>Does any life event exception apply, and what documentation should I gather?</p><h3>Question 3</h3><p>If not yet sold, what is the net tax benefit of waiting until 365 days?</p><h3>Question 4</h3><p>How does the principal residence exemption interact with my situation?</p><h3>Question 5</h3><p>Post 25 June 2024: how should multi-property sales be structured across tax years?</p>`;
 
 export default function CanPropertyFlippingFile05() {
@@ -25,6 +28,10 @@ export default function CanPropertyFlippingFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanPropertyFlippingFile05() {
             Canada Property Flipping Tax Trap Auditor · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — Property Flipping Rule
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Questions for your Canadian tax professional before listing or signing a sale.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

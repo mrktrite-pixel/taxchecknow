@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "fbt-hidden-exposure";
+const SLUG = "fbt-04";
+const FALLBACK_LABEL = { name: "Safe Benefit Structuring Guide", desc: "How to provide benefits in a way that minimises or eliminates FBT." };
 const BODY = `<h2>FBT-Safe Benefit Structures</h2><ul><li><strong>Electric vehicles:</strong> Provide a BEV or PHEV under $89,332 — zero FBT</li><li><strong>Minor gifts:</strong> Keep under $300 per employee per occasion — exempt</li><li><strong>Work-related items:</strong> Laptops, phones, tools — portable electronic devices exempt once per year</li><li><strong>Employee contributions:</strong> Have employees contribute to private use costs — reduces taxable value</li><li><strong>Salary packaging:</strong> Novated lease structures can shift FBT and income tax advantages</li></ul>`;
 
 export default function FbtHiddenExposureFile04() {
@@ -25,6 +28,10 @@ export default function FbtHiddenExposureFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FbtHiddenExposureFile04() {
             FBT Hidden Exposure Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Safe Benefit Structuring Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to provide benefits in a way that minimises or eliminates FBT.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

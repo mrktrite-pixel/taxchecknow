@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "rental-property-deduction-audit";
+const SLUG = "rda-06";
+const FALLBACK_LABEL = { name: "Full Deduction Treatment Review", desc: "How each class of rental expense is treated, and where the lines fall." };
 const BODY = `<h2>Portfolio-Level Deduction Optimisation</h2><h3>Immediately: Get Depreciation Reports</h3><p>A quantity surveyor depreciation report on every rental property is the single highest-return tax action for landlords. The report identifies building depreciation (2.5%/yr) and plant depreciation (appliances, carpets, etc.) that most landlords are missing entirely.</p><h3>Annual Review: Reclassify Any Capital Items</h3><p>Review each year's work — any improvements or upgrades must be in the capital works schedule, not the repairs line. This is the most common ATO audit trigger.</p><h3>Loan Structure Review</h3><p>Ensure all loans for rental properties are clearly documented for purpose. Any refinance or redraw for private use must be tracked and excluded from interest deductions.</p>`;
 
 export default function RentalPropertyDeductionAuditFile06() {
@@ -25,6 +28,10 @@ export default function RentalPropertyDeductionAuditFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function RentalPropertyDeductionAuditFile06() {
             Rental Property Deduction Audit · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full Deduction Treatment Review
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How each class of rental expense is treated, and where the lines fall.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

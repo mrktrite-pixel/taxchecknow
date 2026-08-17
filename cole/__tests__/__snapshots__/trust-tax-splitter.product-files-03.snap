@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "trust-tax-splitter";
+const SLUG = "tt-03";
+const FALLBACK_LABEL = { name: "Student Optimisation Guide", desc: "How to use adult student beneficiaries to access the 10.5% tax bracket." };
 const BODY = `<h2>Using the 10.5% Bracket</h2><p>If your trust has an adult beneficiary (16+) with income under $15,600, distributions to them are taxed at just 10.5% — compared to 39% retained in the trust.</p><div class="action-box"><h3>The Saving</h3><p>39% trustee rate minus 10.5% personal rate = 28.5% saving</p><p>On $20,000 distributed to a student: $5,700 saved</p></div><h2>Requirements</h2><ul class="checklist"><li>Beneficiary must be aged 16 or over</li><li>Beneficiary must be named in the trust deed</li><li>Distribution must be passed by trustee resolution before 31 March</li><li>Funds should actually be paid or credited to the beneficiary</li><li>Beneficiary files their own tax return showing the trust income</li></ul><div class="info-box"><strong>Note:</strong> IRD scrutinises arrangements where trust income is distributed to low-income beneficiaries but the funds are controlled by the settlor. Genuine distributions to genuine beneficiaries are perfectly legal.</div>`;
 
 export default function TrustTaxSplitterFile03() {
@@ -25,6 +28,10 @@ export default function TrustTaxSplitterFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TrustTaxSplitterFile03() {
             Trust Income Allocation Decision Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Student Optimisation Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to use adult student beneficiaries to access the 10.5% tax bracket.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

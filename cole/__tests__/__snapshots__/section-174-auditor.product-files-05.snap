@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "section-174-auditor";
+const SLUG = "s174-05";
+const FALLBACK_LABEL = { name: "Your CPA Brief — Section 174", desc: "5 questions to ask your CPA about Section 174 compliance and optimisation." };
 const BODY = `<div class="info-box">Take to your CPA. These force specific answers, not generic 'we handle it' responses.</div><h2>Questions for Your CPA</h2><div class="action-box"><h3>Question 1</h3><p>"For my 2022, 2023, and 2024 returns — did you apply Section 174 amortization correctly, using 10% year 1 (half-year) for domestic and 3.33% year 1 for foreign?"</p></div><h3>Question 2</h3><p>"Given my R&amp;D spend mix, have we run a Section 41 R&amp;D tax credit analysis — and can we amend prior returns if we haven't claimed the credit?"</p><h3>Question 3</h3><p>"What is my classification of Section 174 expenditures vs ordinary business expenses — specifically for cloud computing, contractors, and software tools?"</p><h3>Question 4</h3><p>"If Section 174A is enacted, what is my plan to benefit from it — and how do existing 2022-2024 amortization schedules interact with post-enactment expensing?"</p><h3>Question 5</h3><p>"Are we tracking Section 174 expenditure categories separately in the books, so that if we need to amend or restructure, the supporting documentation is ready?"</p>`;
 
 export default function Section174AuditorFile05() {
@@ -25,6 +28,10 @@ export default function Section174AuditorFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Section174AuditorFile05() {
             R&D Tax Cashflow Shock Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your CPA Brief — Section 174
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">5 questions to ask your CPA about Section 174 compliance and optimisation.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

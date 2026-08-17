@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "can-eot-exit";
+const SLUG = "eot-02";
+const FALLBACK_LABEL = { name: "Structural Requirements Checklist", desc: "Full structural checklist: vendor side + business side + EOT side." };
 const BODY = `<h2>Structural Requirements Checklist</h2><h3>Vendor side</h3><ul class="checklist"><li>Individual (not corporation / trust / partnership)</li><li>Shares owned directly (not through holdco / trust / etc.)</li><li>Shares held 24+ consecutive months at sale date</li><li>Resident of Canada at time of sale</li></ul><h3>Business side (QSBC shares)</h3><ul class="checklist"><li>Canadian-controlled private corporation (CCPC)</li><li>Active business in Canada</li><li>All / substantially all (90%+) FMV of assets used in active business at sale date</li><li>All / substantially all active-business test met throughout 24 months preceding sale</li><li>Not public company / foreign-controlled</li></ul><h3>EOT side</h3><ul class="checklist"><li>Trust established in Canada</li><li>Holds shares of qualifying business</li><li>All / substantially all beneficiaries are qualifying employees</li><li>Trust terms give employees effective control</li><li>Administered by qualifying EOT controller (employee individual or group)</li><li>Trust deed drafted to meet s56.3 requirements</li></ul><h3>Timing side</h3><ul class="checklist"><li>Disposition occurs between 1 January 2024 and 31 December 2026 inclusive</li></ul>`;
 
 export default function CanEotExitFile02() {
@@ -25,6 +28,10 @@ export default function CanEotExitFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CanEotExitFile02() {
             Canada EOT Exit Optimizer · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Structural Requirements Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Full structural checklist: vendor side + business side + EOT side.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

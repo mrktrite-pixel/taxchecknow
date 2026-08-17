@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "au-expat-cgt";
+const SLUG = "aucgt-08";
+const FALLBACK_LABEL = { name: "ATO Clearance Certificate Process", desc: "Step-by-step: how to apply, timing, documentation, avoiding pitfalls." };
 const BODY = `<h2>ATO Clearance Certificate — Full Process</h2><h3>Eligibility</h3><ul><li>Available to Australian tax residents</li><li>Vendor applies — not purchaser</li><li>Foreign residents cannot obtain a clearance certificate (but can apply for variation — reducing 12.5% to lower rate)</li></ul><h3>Application steps</h3><ol><li>Log in to ATO portal (myGov or Business Portal)</li><li>Select "Foreign resident capital gains withholding" → "Apply for a clearance certificate"</li><li>Complete online form — property details, expected sale date, vendor details</li><li>Submit and monitor status</li></ol><h3>Timing</h3><ul><li>Simple cases: 2-4 weeks</li><li>Complex (trusts, companies, contested residency): 6-12 weeks</li><li>Apply WELL before settlement — no certificate at settlement = 12.5% withheld automatically</li></ul><h3>Variation (foreign residents)</h3><p>Foreign residents expecting final tax below 12.5% can apply for a variation — reducing the withholding percentage. Supporting evidence required (valuation, cost base evidence, tax liability modelling).</p><h3>Audit documentation</h3><ul><li>Certificate + application reference</li><li>Settlement statement showing withholding amount (if any)</li><li>Tax return with CGT schedule + withholding credit</li><li>Cost base documentation (purchase contract, improvements, legal fees)</li></ul>`;
 
 export default function AuExpatCgtFile08() {
@@ -25,6 +28,10 @@ export default function AuExpatCgtFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AuExpatCgtFile08() {
             Australian Expat CGT Trap Auditor · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            ATO Clearance Certificate Process
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Step-by-step: how to apply, timing, documentation, avoiding pitfalls.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

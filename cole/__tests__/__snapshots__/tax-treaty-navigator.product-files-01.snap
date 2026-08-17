@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "tax-treaty-navigator";
+const SLUG = "ttn-01";
+const FALLBACK_LABEL = { name: "Your Treaty Tie-Breaker Analysis", desc: "Which test resolved your dual-residency conflict + the evidence supporting that resolution." };
 const BODY = `<h2>Your Tie-Breaker Outcome</h2><div class="action-box"><h3>Sequential Tests — Article 4(2)</h3><p><strong>Test 1:</strong> Permanent home (ownership not required — continuous availability)</p><p><strong>Test 2:</strong> Centre of vital interests (personal + economic ties)</p><p><strong>Test 3:</strong> Habitual abode (relative time — NOT 183-day rule)</p><p><strong>Test 4:</strong> Nationality (citizen of one country only)</p><p><strong>Test 5:</strong> Mutual agreement (rare)</p></div><p>Source: <a href="https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm">OECD Model Tax Convention Article 4</a></p>`;
 
 export default function TaxTreatyNavigatorFile01() {
@@ -25,6 +28,10 @@ export default function TaxTreatyNavigatorFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TaxTreatyNavigatorFile01() {
             Double Tax Treaty Navigator · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Treaty Tie-Breaker Analysis
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Which test resolved your dual-residency conflict + the evidence supporting that resolution.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

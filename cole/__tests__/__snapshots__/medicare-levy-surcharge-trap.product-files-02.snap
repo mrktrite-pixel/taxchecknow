@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "medicare-levy-surcharge-trap";
+const SLUG = "mls-02";
+const FALLBACK_LABEL = { name: "Cover Timing Strategy", desc: "How to time hospital cover to minimise MLS for the current year." };
 const BODY = `<h2>Hospital Cover Timing</h2><p>MLS is calculated on a daily basis for days without appropriate cover. Getting cover now reduces MLS for the rest of the financial year.</p><div class="action-box"><h3>MLS Pro-Rating Calculation</h3><p>Days without cover / 365 × MLS Income × MLS Rate = MLS for uncovered period</p><p>Example: Get cover on 1 January (182 days remaining)</p><p>MLS reduced by: 183/365 × full-year MLS = approximately 50%</p></div><div class="info-box">Getting cover now still saves MLS for the remainder of this financial year.</div>`;
 
 export default function MedicareLevySurchargeTrapFile02() {
@@ -25,6 +28,10 @@ export default function MedicareLevySurchargeTrapFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MedicareLevySurchargeTrapFile02() {
             Medicare Levy Surcharge Trap Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Cover Timing Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to time hospital cover to minimise MLS for the current year.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

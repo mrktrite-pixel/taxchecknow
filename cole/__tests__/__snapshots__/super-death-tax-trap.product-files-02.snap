@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-death-tax-trap";
+const SLUG = "sdtt-02";
+const FALLBACK_LABEL = { name: "Beneficiary Dependant Assessment", desc: "Who qualifies as a 'death benefits dependant' under ITAA 1997 s302-195 — and who doesn't." };
 const BODY = `<h2>Who is a 'Death Benefits Dependant'?</h2><table><tr><th>Relationship</th><th>Dependant Status</th><th>Tax on Taxable Component</th></tr><tr><td>Spouse (legal or de facto)</td><td>YES</td><td>0%</td></tr><tr><td>Former spouse</td><td>YES</td><td>0%</td></tr><tr><td>Child under 18</td><td>YES</td><td>0%</td></tr><tr><td>Adult child (18+, independent)</td><td>NO</td><td>17%</td></tr><tr><td>Financial dependant (provable)</td><td>YES</td><td>0%</td></tr><tr><td>Interdependency relationship (s302-200)</td><td>YES</td><td>0%</td></tr><tr><td>Grandchildren (if not a dependant)</td><td>NO</td><td>17%</td></tr><tr><td>Parents, siblings (usually)</td><td>NO</td><td>17%</td></tr></table><h3>Evidence Requirements for Financial Dependency</h3><p>The ATO has ruled that financial dependency is established where one person provides a better standard of living to another on a regular and continuing basis. Ad hoc support does not qualify. Formal arrangements (e.g. regular monthly payments, board) may.</p>`;
 
 export default function SuperDeathTaxTrapFile02() {
@@ -25,6 +28,10 @@ export default function SuperDeathTaxTrapFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperDeathTaxTrapFile02() {
             Super Death Tax Trap Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Beneficiary Dependant Assessment
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Who qualifies as a 'death benefits dependant' under ITAA 1997 s302-195 — and who doesn't.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

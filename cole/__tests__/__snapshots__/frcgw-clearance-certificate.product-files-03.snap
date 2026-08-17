@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "frcgw-clearance-certificate";
+const SLUG = "frcgw-03";
+const FALLBACK_LABEL = { name: "What To Send The Purchaser's Side", desc: "Wording for handing over the certificate, or for putting them on notice that one is pending." };
 const BODY = `<h2>What to send the purchaser's side</h2><p>The purchaser (or their conveyancer or solicitor) carries the withholding obligation. Clear written communication is what stops a default-to-withholding decision being made on the day without anyone asking you.</p>{{#if section:pending_notice}}<h3>Your certificate is pending — put them on notice now</h3><div class="action-box"><h3>Pending-notice template</h3><p><strong>To:</strong> [purchaser's conveyancer or solicitor]</p><p><strong>Re:</strong> Settlement of [property address]{{#if has:settlement_date}}, scheduled {{bind:settlement_date}}{{/if}}</p><p><strong>Subject:</strong> Foreign resident capital gains withholding — clearance certificate pending</p><p>We act for / I am the vendor in the above matter. An application for an ATO clearance certificate under TAA 1953 Schedule 1 Subdivision 14-D has been lodged and is currently pending.</p><p>We will forward the certificate as soon as it issues. Please confirm receipt of this notice, and please contact us before settlement if the certificate has not reached you, so that the position can be dealt with rather than defaulted.</p><p>[Your name / your conveyancer]</p></div><p>This does not remove the purchaser's obligation — if no certificate is held at settlement they must still withhold. What it does is make sure the position is known in advance rather than discovered on the day.</p>{{/if}}{{#if section:recovery}}<h3>There is nothing to send about the withholding</h3><p>Your settlement has completed and an amount was withheld, so the transaction is finished. There is no certificate to transmit and no instruction that would change what happened on the day — the templates below would only apply to a settlement still ahead of you.</p><div class="action-box"><h3>What to request instead</h3><p><strong>To:</strong> [purchaser's conveyancer or solicitor]</p><p><strong>Re:</strong> Settlement of [property address]</p><p><strong>Subject:</strong> Foreign resident capital gains withholding — payment confirmation</p><p>An amount was withheld from the vendor's proceeds at settlement and remitted to the ATO under TAA 1953 Schedule 1 Subdivision 14-D. Please provide a copy of the purchaser's payment notification to the ATO, together with confirmation of the amount remitted and the date of payment.</p><p>[Your name / your conveyancer]</p></div><p>Keep that confirmation with your settlement papers. It is the document that evidences the credit when the return for the income year the <strong>contract</strong> was signed is prepared — see File 07.</p>{{/if}}{{#unless section:recovery}}{{#unless section:pending_notice}}<h3>Handing over the certificate</h3><div class="action-box"><h3>Cover-note template</h3><p><strong>To:</strong> [purchaser's conveyancer or solicitor]</p><p><strong>Re:</strong> Settlement of [property address]{{#if has:settlement_date}}, scheduled {{bind:settlement_date}}{{/if}}</p><p><strong>Subject:</strong> ATO clearance certificate — foreign resident capital gains withholding</p><p>Please find attached the ATO clearance certificate for the vendor in the above matter, issued under TAA 1953 Schedule 1 Subdivision 14-D. The vendor name on the certificate matches the vendor name on the title.</p><p>On the basis of this certificate no amount is required to be withheld at settlement. Please confirm receipt by return email.</p><p>[Your name / your conveyancer]</p></div>{{/unless}}{{/unless}}{{#if section:name_match}}<h3>Check the name before you send it</h3><div class="highlight"><p>The most common reason a certificate is queried at settlement is a <strong>name mismatch</strong>. The name on the certificate must match the vendor name on the title exactly.</p><p>Things that catch people out: a middle name present on one and not the other; a maiden or former name on the title; a trustee selling in a trustee capacity; a company name with or without "Pty Ltd"; a deceased estate where the title is in the deceased's name.</p><p>Check it now, against the title, not on settlement morning. If it does not match, apply again with the name as it appears on the title — a fresh certificate is free.</p></div>{{/if}}{{#if section:keep_a_copy}}<h3>Keep your own copy</h3><p>Keep the certificate and the confirmation of receipt with your settlement papers. If the withholding is ever queried later, that pair of documents is the answer.</p>{{/if}}<h3>Confirm, do not assume</h3><p>Ask for a written acknowledgement. "Sent" is not "received", and an email that went to a monitored inbox nobody opened is the failure mode this step exists to prevent.</p>`;
 
 export default function FrcgwClearanceCertificateFile03() {
@@ -25,6 +28,10 @@ export default function FrcgwClearanceCertificateFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FrcgwClearanceCertificateFile03() {
             Foreign Resident CGT Withholding Clearance Certificate · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            What To Send The Purchaser's Side
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Wording for handing over the certificate, or for putting them on notice that one is pending.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -23,7 +23,8 @@
 
 import DocBody from "@/app/_components/DocBody";
 import type { BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation, resolveSpine } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, resolveSpine, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 export interface PackDoc {
   num: string;
@@ -66,6 +67,12 @@ export default function SuccessPack({
   const { order, startHere } = resolveSpine(presentation, mine);
   const total = mine.length;
 
+  // D12-B — names and descriptions follow the terminal, like the bodies already do. Resolved
+  // from the SAME merged flag set the {{#if}} sections branch on, so a label cannot contradict
+  // the body underneath it.
+  const flags = terminalFlags(productId, ctx);
+  const label = (slug: string) => resolveDocLabel(productId, slug, flags, docs[slug]);
+
   return (
     <>
       {/* ── SCREEN: the ordered list ─────────────────────────────────────── */}
@@ -77,7 +84,7 @@ export default function SuccessPack({
         <p className="mb-4 text-sm text-neutral-500">
           Ordered for your situation.{" "}
           {startHere && docs[startHere]
-            ? `Start with File ${docs[startHere].num} — ${docs[startHere].name}.`
+            ? `Start with File ${docs[startHere].num} — ${label(startHere).name}.`
             : ""}{" "}
           Use Save PDF at the top of this page to get your assessment and all{" "}
           {total} document{total === 1 ? "" : "s"} as one file.
@@ -101,9 +108,9 @@ export default function SuccessPack({
                     </span>
                   )}
                   <p className={`text-sm font-semibold ${isStart ? "text-white" : "text-neutral-950"}`}>
-                    File {d.num} of {total} — {d.name}
+                    File {d.num} of {total} — {label(slug).name}
                   </p>
-                  <p className={`text-xs ${isStart ? "text-neutral-400" : "text-neutral-500"}`}>{d.desc}</p>
+                  <p className={`text-xs ${isStart ? "text-neutral-400" : "text-neutral-500"}`}>{label(slug).desc}</p>
                 </div>
                 <a
                   href={`${filesBasePath}/${slug}`}
@@ -137,9 +144,9 @@ export default function SuccessPack({
                 </span>
                 <span>
                   <span className="font-semibold text-neutral-900">
-                    File {docs[slug].num} — {docs[slug].name}
+                    File {docs[slug].num} — {label(slug).name}
                   </span>
-                  <span className="block text-xs text-neutral-500">{docs[slug].desc}</span>
+                  <span className="block text-xs text-neutral-500">{label(slug).desc}</span>
                 </span>
               </li>
             ))}
@@ -162,8 +169,8 @@ export default function SuccessPack({
               <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                 {packName} · File {d.num} of {total}
               </p>
-              <h2 className="mb-1 font-serif text-2xl font-bold text-neutral-950">{d.name}</h2>
-              <p className="mb-4 text-sm text-neutral-500">{d.desc}</p>
+              <h2 className="mb-1 font-serif text-2xl font-bold text-neutral-950">{label(slug).name}</h2>
+              <p className="mb-4 text-sm text-neutral-500">{label(slug).desc}</p>
               <DocBody html={d.content} ctx={ctx} extraFlags={presentation.docFlags} />
             </section>
           );

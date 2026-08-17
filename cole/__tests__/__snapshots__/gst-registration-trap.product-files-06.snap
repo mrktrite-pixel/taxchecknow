@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "gst-registration-trap";
+const SLUG = "gst-06";
+const FALLBACK_LABEL = { name: "Full GST System Setup", desc: "Complete GST registration, BAS lodgement, and compliance framework." };
 const BODY = `<h2>GST System — Setup Checklist</h2><ul class="checklist"><li>Register for GST via ABN or myGov Business portal</li><li>Choose BAS reporting period — quarterly (most common) or monthly (if turnover over $20M)</li><li>Set up accounting software with GST — Xero, MYOB, or QuickBooks</li><li>Configure correct GST codes for each transaction type</li><li>Set up payment reminder for BAS due dates (28 days after each quarter end)</li><li>Establish input tax credit claim process for all business purchases</li></ul>`;
 
 export default function GstRegistrationTrapFile06() {
@@ -25,6 +28,10 @@ export default function GstRegistrationTrapFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function GstRegistrationTrapFile06() {
             GST Registration Trap Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Full GST System Setup
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Complete GST registration, BAS lodgement, and compliance framework.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

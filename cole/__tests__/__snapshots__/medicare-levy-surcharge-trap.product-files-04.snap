@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "medicare-levy-surcharge-trap";
+const SLUG = "mls-04";
+const FALLBACK_LABEL = { name: "Your MLS by Income — 2025/26", desc: "What the surcharge costs at each income level, and how to compare it against cover." };
 const BODY = `<h2>MLS by Income — 2025/26</h2><table><tr><th>Income for MLS purposes</th><th>MLS rate</th><th>Annual MLS</th></tr><tr><td>$101,000 or less</td><td>0%</td><td>$0 — below the threshold</td></tr><tr><td>$110,000</td><td>1%</td><td>$1,100</td></tr><tr><td>$120,000</td><td>1.25%</td><td>$1,500</td></tr><tr><td>$150,000</td><td>1.25%</td><td>$1,875</td></tr><tr><td>$200,000</td><td>1.5%</td><td>$3,000</td></tr></table><p>The MLS applies to your entire income for MLS purposes, not just the amount above the threshold. Compare your figure against current quotes for a basic hospital-only policy — premiums vary by insurer, state and excess, so use live quotes rather than an estimate.</p>`;
 
 export default function MedicareLevySurchargeTrapFile04() {
@@ -25,6 +28,10 @@ export default function MedicareLevySurchargeTrapFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function MedicareLevySurchargeTrapFile04() {
             Medicare Levy Surcharge Trap Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your MLS by Income — 2025/26
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What the surcharge costs at each income level, and how to compare it against cover.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

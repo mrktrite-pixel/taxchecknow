@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SLUG = "beck-05";
+const FALLBACK_LABEL = { name: "Your Adviser Brief — Beckham Application", desc: "Questions for your Spanish gestor / tax adviser before application." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with a Spanish gestor (licensed tax/admin professional) or tax adviser experienced with Beckham applications. Generic EU tax advisers without Spanish specialty often miss structural detail.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Based on my facts, does my move qualify under one of the Beckham categories — and if so, which?</p></div><h3>Question 2</h3><p>Am I clear on the 5-year prior residency test — any past Spanish periods we should review?</p><h3>Question 3</h3><p>What is my Modelo 149 timing, and is the A1 certificate in place (if relevant)?</p><h3>Question 4</h3><p>Do I need an Enisa certification if I am a founder-director with significant ownership?</p><h3>Question 5</h3><p>What does my tax modelling look like under Beckham vs standard IRPF for my expected income?</p>`;
 
 export default function SpainBeckhamFile05() {
@@ -25,6 +28,10 @@ export default function SpainBeckhamFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SpainBeckhamFile05() {
             Spain Beckham Eligibility Wall · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Adviser Brief — Beckham Application
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Questions for your Spanish gestor / tax adviser before application.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

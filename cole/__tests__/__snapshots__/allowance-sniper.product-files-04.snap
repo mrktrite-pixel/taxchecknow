@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "allowance-sniper";
+const SLUG = "as-04";
+const FALLBACK_LABEL = { name: "Bonus Timing Around £125,140", desc: "How to time bonuses and irregular income to stay in the trap band (escapable) rather than crossing into additional rate territory." };
 const BODY = `<h2>Bonus Timing Strategy</h2><p>Above £125,140 the allowance is fully gone and the marginal rate drops from 60% to 45% (additional rate). You no longer face the taper — but you've permanently lost the £12,570 tax-free band.</p><h3>The Key Question</h3><p>Are you better off at £125,000 (in trap, recoverable via pension) or £135,000 (past trap, allowance gone)?</p><h3>Answer: Depends on Your Pension Capacity</h3><ul><li>If you can contribute enough pension to bring ANI to £100,000: STAY IN the trap range and contribute. Full allowance recovered.</li><li>If you cannot contribute to reach £100,000: CROSSING into additional rate may be cheaper because you only pay 45% on the top slice instead of 60%.</li></ul><h3>Practical Levers</h3><ul><li>Defer bonus to next tax year if timing helps</li><li>Request part of bonus as pension contribution</li><li>Take bonus as shares / LTIPs that vest later</li></ul>`;
 
 export default function AllowanceSniperFile04() {
@@ -25,6 +28,10 @@ export default function AllowanceSniperFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AllowanceSniperFile04() {
             60% Tax Trap Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Bonus Timing Around £125,140
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to time bonuses and irregular income to stay in the trap band (escapable) rather than crossing into additional rate territory.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

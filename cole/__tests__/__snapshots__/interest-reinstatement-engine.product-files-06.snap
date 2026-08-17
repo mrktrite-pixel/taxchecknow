@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "interest-reinstatement-engine";
+const SLUG = "ir-06";
+const FALLBACK_LABEL = { name: "Debt Shifting Framework", desc: "Legally move debt onto rental properties to maximise deductible interest." };
 const BODY = `<h2>Debt Shifting Strategy</h2><p>With full deductibility restored, it can be advantageous to ensure rental-purpose debt is clearly allocated to rental properties. This is not about creating new debt — it is about ensuring existing debt is correctly attributed.</p><div class="action-box"><h3>The Core Concept</h3><p>Non-deductible debt: mortgage on your home</p><p>Deductible debt: mortgage on rental property</p><p>Strategy: where possible, ensure the rental loan is higher and the home loan lower</p><p>Method: pay down home loan with savings, while rental loan stays or increases</p></div><div class="warning-box"><strong>The contamination risk:</strong> If you draw on a rental loan for personal use, that portion loses deductibility. Keep rental loan funds strictly for rental purposes.</div>`;
 
 export default function InterestReinstatementEngineFile06() {
@@ -25,6 +28,10 @@ export default function InterestReinstatementEngineFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InterestReinstatementEngineFile06() {
             Property Interest Deductibility Recovery Engine · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Debt Shifting Framework
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Legally move debt onto rental properties to maximise deductible interest.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -14,8 +14,10 @@ import Link from "next/link";
 import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
 import { resolveDisplayFields, humaniseFieldKey } from "@/lib/assessment-fields";
+import { resolveFieldLabel } from "@/lib/terminal-labels";
 import SuccessDeadline from "@/app/_components/SuccessDeadline";
 import SuccessPack, { type PackDoc } from "@/app/_components/SuccessPack";
+import { terminalFlags } from "@/lib/terminal-presentation";
 import docsJson from "../../docs.json";
 
 const PRODUCT_ID = "frcgw-clearance-certificate";
@@ -231,7 +233,7 @@ export default function SuccessAssess() {
                   {displayFields.map((key) => (
                     <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
                       <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {humaniseFieldKey(key)}
+                        {resolveFieldLabel(PRODUCT_ID, key, terminalFlags(PRODUCT_ID, ctx), humaniseFieldKey(key))}
                       </p>
                       <p className="text-sm leading-relaxed text-neutral-900">{String(assessment[key])}</p>
                     </div>

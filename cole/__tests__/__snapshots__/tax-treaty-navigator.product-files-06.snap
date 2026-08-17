@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "tax-treaty-navigator";
+const SLUG = "ttn-06";
+const FALLBACK_LABEL = { name: "Multi-Country Residency Strategy", desc: "Planning sequence for changing treaty residence cleanly." };
 const BODY = `<h2>Changing Treaty Residence — Sequence</h2><ol><li>Identify target residence country</li><li>Establish permanent home in target country (lease or buy — continuous availability)</li><li>Relocate family (if applicable) to target country</li><li>Shift centre of economic ties: employer registration, bank accounts, business management</li><li>Accumulate habitual abode — more time in target than source</li><li>File treaty claim in target country on next return</li><li>File cessation notice / non-residence claim in source country (e.g. UK split-year, AU domicile change)</li><li>Maintain documentary evidence of each step with dates</li></ol><div class="warning-box"><strong>Timing matters:</strong> most treaty tie-breakers are applied year-by-year. Plan moves around tax-year boundaries in BOTH countries for cleanest outcome.</div>`;
 
 export default function TaxTreatyNavigatorFile06() {
@@ -25,6 +28,10 @@ export default function TaxTreatyNavigatorFile06() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TaxTreatyNavigatorFile06() {
             Double Tax Treaty Navigator · File 06 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Country Residency Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Planning sequence for changing treaty residence cleanly.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

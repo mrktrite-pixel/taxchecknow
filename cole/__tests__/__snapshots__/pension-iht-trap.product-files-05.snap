@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "pension-iht-trap";
+const SLUG = "piht-05";
+const FALLBACK_LABEL = { name: "IFA / Estate Planner Brief", desc: "5 questions to ask your financial adviser or estate planner." };
 const BODY = `<div class="info-box">Take to your IFA or estate planner. These force specific quantification rather than vague 'monitoring' responses.</div><h2>Questions to Ask</h2><div class="action-box"><h3>Question 1</h3><p>"Under my specific estate and beneficiary structure, what is my proposed IHT exposure if the October 2024 consultation is enacted as currently drafted?"</p></div><h3>Question 2</h3><p>"Have I used my late spouse's transferable nil-rate band correctly, and is my Residence NRB position confirmed?"</p><h3>Question 3</h3><p>"Which planning option — drawdown, gifting, whole-of-life in trust, or ISA rebalancing — is most effective for my specific situation, and what is the cost?"</p><h3>Question 4</h3><p>"If the proposal is delayed or amended, does my plan still work — or is it only effective under the specific currently-drafted rules?"</p><h3>Question 5</h3><p>"Should I update my beneficiary nominations and expression of wishes before the proposal takes effect, and what is the optimal structure for my family?"</p>`;
 
 export default function PensionIhtTrapFile05() {
@@ -25,6 +28,10 @@ export default function PensionIhtTrapFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function PensionIhtTrapFile05() {
             Pension IHT Trap 2027 Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            IFA / Estate Planner Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">5 questions to ask your financial adviser or estate planner.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

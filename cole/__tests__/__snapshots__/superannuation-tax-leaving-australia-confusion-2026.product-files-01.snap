@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "superannuation-tax-leaving-australia-confusion-2026";
+const SLUG = "dasp-01";
+const FALLBACK_LABEL = { name: "Your DASP Tax Position", desc: "Your withholding rate by visa class and component (taxed vs untaxed element)." };
 const BODY = `<h2>Your DASP Withholding Position</h2><div class='action-box'><h3>Rates by visa class and component</h3><p>Working holiday maker (subclass 417/462): taxed element 65%, untaxed element 65%.</p><p>Other temporary visas (student, skilled, sponsored): taxed element 35%, untaxed element 45%.</p><p>Tax-free component: 0%.</p></div><h3>What this means for you</h3><p>Your DASP is withheld at the time of payment based on your visa class and how your balance splits between taxed and untaxed elements. Confirm which components make up your balance before you claim.</p><p>Source: <a href='https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp'>ATO — Departing Australia Superannuation Payment</a> · Migration Act 1958.</p>`;
 
 export default function SuperannuationTaxLeavingAustraliaConfusion2026File01() {
@@ -25,6 +28,10 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File01() {
             Superannuation Tax When Leaving Australia (DASP) · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your DASP Tax Position
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your withholding rate by visa class and component (taxed vs untaxed element).</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

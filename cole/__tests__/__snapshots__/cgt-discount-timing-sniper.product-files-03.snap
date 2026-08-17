@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-discount-timing-sniper";
+const SLUG = "cgtd-03";
+const FALLBACK_LABEL = { name: "Contract Date Planning Guide", desc: "Understanding which date triggers the CGT event for different asset types." };
 const BODY = `<h2>CGT Event Dates by Asset Type</h2><table><tr><th>Asset</th><th>Acquisition Date</th><th>Disposal Date</th></tr><tr><td>Real property</td><td>Purchase contract date</td><td>Sale contract date</td></tr><tr><td>ASX shares</td><td>Trade date (settlement T+2)</td><td>Trade date (settlement T+2)</td></tr><tr><td>Private company shares</td><td>Contract date or registration</td><td>Contract date</td></tr><tr><td>Off-the-plan property</td><td>Contract date (even years before settlement)</td><td>Sale contract date</td></tr></table>`;
 
 export default function CgtDiscountTimingSniperFile03() {
@@ -25,6 +28,10 @@ export default function CgtDiscountTimingSniperFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtDiscountTimingSniperFile03() {
             CGT Discount Timing Sniper · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Contract Date Planning Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Understanding which date triggers the CGT event for different asset types.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

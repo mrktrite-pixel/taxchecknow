@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "fbt-hidden-exposure";
+const SLUG = "fbt-08";
+const FALLBACK_LABEL = { name: "Annual FBT Compliance Framework", desc: "A year-round system to manage FBT obligations and minimise exposure." };
 const BODY = `<h2>Annual FBT Compliance Calendar</h2><table><tr><th>Month</th><th>Action</th></tr><tr><td>April</td><td>FBT year starts — review benefit arrangements</td></tr><tr><td>May (prior year)</td><td>Lodge FBT return and pay liability</td></tr><tr><td>June</td><td>Mid-year review of car log books and benefit accruals</td></tr><tr><td>October</td><td>Logbook validity check — update if 5 years elapsed</td></tr><tr><td>February-March</td><td>Final FBT year benefit review — quantify all benefits</td></tr><tr><td>March 31</td><td>FBT year ends</td></tr></table>`;
 
 export default function FbtHiddenExposureFile08() {
@@ -25,6 +28,10 @@ export default function FbtHiddenExposureFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FbtHiddenExposureFile08() {
             FBT Hidden Exposure Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Annual FBT Compliance Framework
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">A year-round system to manage FBT obligations and minimise exposure.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

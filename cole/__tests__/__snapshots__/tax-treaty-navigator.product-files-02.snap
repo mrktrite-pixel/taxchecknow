@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "tax-treaty-navigator";
+const SLUG = "ttn-02";
+const FALLBACK_LABEL = { name: "Primary Taxing Country Determination", desc: "The country with primary taxing rights under the treaty + what it taxes + what it does not." };
 const BODY = `<h2>Primary Taxing Country</h2><p>The country determined by the tie-breaker has PRIMARY taxing rights on worldwide income. The other country (secondary) retains source-country taxing rights on income arising there (e.g. rental property, employment physically performed there, business from a permanent establishment).</p><table><tr><th>Income type</th><th>Primary taxing country (residence)</th><th>Source country rights</th></tr><tr><td>Employment (remote)</td><td>Yes</td><td>Generally no</td></tr><tr><td>Employment (physically in source)</td><td>Yes</td><td>Usually yes (with credit)</td></tr><tr><td>Business profits (no PE)</td><td>Yes</td><td>No</td></tr><tr><td>Business profits (PE in source)</td><td>Yes (after PE attribution)</td><td>Yes (PE portion)</td></tr><tr><td>Rental property</td><td>Yes</td><td>Usually yes (with credit)</td></tr><tr><td>Dividends</td><td>Yes</td><td>Reduced withholding</td></tr><tr><td>Interest</td><td>Yes</td><td>Reduced / nil withholding</td></tr></table>`;
 
 export default function TaxTreatyNavigatorFile02() {
@@ -25,6 +28,10 @@ export default function TaxTreatyNavigatorFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TaxTreatyNavigatorFile02() {
             Double Tax Treaty Navigator · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Primary Taxing Country Determination
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The country with primary taxing rights under the treaty + what it taxes + what it does not.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "australia-smsf-residency";
+const SLUG = "smsf-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief — SMSF Residency", desc: "Questions for your SMSF specialist / SMSF auditor before departure." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with an SMSF specialist (SMSF Specialist Association member or equivalent) — not a generic accountant. SMSF residency is a narrow specialty.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Based on my planned absence + trustee structure, are we at risk of breaching the CM&C test?</p></div><h3>Question 2</h3><p>Should we restructure to a corporate trustee, and if so, which director roles need to be AU-resident?</p><h3>Question 3</h3><p>Does the active member test still pass if my contributions cease / I move permanently?</p><h3>Question 4</h3><p>What documentation protocol should we adopt for decisions made during absence?</p><h3>Question 5</h3><p>What are the alternatives — APRA fund roll-over, pension phase, fund wind-up?</p>`;
 
 export default function AustraliaSmsfResidencyFile05() {
@@ -25,6 +28,10 @@ export default function AustraliaSmsfResidencyFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AustraliaSmsfResidencyFile05() {
             Australian SMSF Residency Kill-Switch · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief — SMSF Residency
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Questions for your SMSF specialist / SMSF auditor before departure.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

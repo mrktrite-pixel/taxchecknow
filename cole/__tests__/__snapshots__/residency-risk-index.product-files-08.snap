@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "residency-risk-index";
+const SLUG = "rri-08";
+const FALLBACK_LABEL = { name: "Audit-Ready Residency Documentation", desc: "The documentation pack residents need to maintain — per country, per year." };
 const BODY = `<h2>Per-Country Evidence Pack</h2><ul class="checklist"><li>Passport with visa stamps (all travel)</li><li>Lease or title for permanent home in each year</li><li>Utility bills showing address</li><li>Bank statements with address</li><li>Employment contracts / invoices (economic ties)</li><li>Family ties evidence (spouse, children, dependents)</li><li>Tax returns filed in each country</li><li>Treaty position statements (e.g. UK DT-Individual, US Form 8833)</li><li>Any tax authority correspondence</li><li>Day-count spreadsheet with supporting travel records</li></ul><p>Retain for 7 years minimum. Many residency challenges happen years after the fact.</p>`;
 
 export default function ResidencyRiskIndexFile08() {
@@ -25,6 +28,10 @@ export default function ResidencyRiskIndexFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function ResidencyRiskIndexFile08() {
             Nomad Residency Risk Index · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Audit-Ready Residency Documentation
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The documentation pack residents need to maintain — per country, per year.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

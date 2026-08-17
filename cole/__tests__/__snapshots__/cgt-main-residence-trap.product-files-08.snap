@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "cgt-main-residence-trap";
+const SLUG = "mr-08";
+const FALLBACK_LABEL = { name: "Sale Timing Optimisation Blueprint", desc: "How to time your sale to minimise CGT across income years." };
 const BODY = `<h2>Sale Timing Strategy</h2><p>The timing of the sale contract (not settlement) determines the CGT year. If a large gain is expected, timing the contract to fall in a year of lower income can significantly reduce tax.</p><div class="action-box"><h3>Key Timing Considerations</h3><p>Contract date = CGT event date (not settlement)</p><p>If you have unused capital losses — use them in the same year</p><p>If income is variable — model the gain in a low-income year</p><p>Consider super contributions in the sale year to reduce taxable income</p></div>`;
 
 export default function CgtMainResidenceTrapFile08() {
@@ -25,6 +28,10 @@ export default function CgtMainResidenceTrapFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function CgtMainResidenceTrapFile08() {
             CGT Main Residence Trap Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Sale Timing Optimisation Blueprint
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to time your sale to minimise CGT across income years.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "trust-tax-splitter";
+const SLUG = "tt-04";
+const FALLBACK_LABEL = { name: "Trustee Resolution Template Guide", desc: "What your trustee resolution must include and when it must be signed." };
 const BODY = `<h2>The Trustee Resolution</h2><p>Trust distributions must be formally documented by trustee resolution before 31 March. Verbal or informal arrangements are not sufficient for IRD purposes.</p><div class="action-box"><h3>Minimum Resolution Content</h3><p>Date (must be before 31 March)</p><p>Names of all trustees passing the resolution</p><p>Name of each beneficiary receiving a distribution</p><p>Amount allocated to each beneficiary</p><p>Whether this is income or capital distribution</p><p>Trustees' signatures</p></div><div class="warning-box"><strong>Critical timing:</strong> The resolution must be dated and signed before 31 March. IRD does not accept backdated resolutions. If you miss 31 March, the income is taxed in the trust at 39% for that year.</div>`;
 
 export default function TrustTaxSplitterFile04() {
@@ -25,6 +28,10 @@ export default function TrustTaxSplitterFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TrustTaxSplitterFile04() {
             Trust Income Allocation Decision Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Trustee Resolution Template Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What your trustee resolution must include and when it must be signed.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

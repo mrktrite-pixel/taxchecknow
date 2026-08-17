@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "superannuation-tax-leaving-australia-confusion-2026";
+const SLUG = "dasp-03";
+const FALLBACK_LABEL = { name: "ID & Certification Checklist", desc: "What certified documents your balance requires and how to prepare them before you leave." };
 const BODY = `<h2>Identification &amp; Certification Checklist</h2><div class='action-box'><h3>Where your super balance is $5,000 or more</h3><p>Your fund may require certified copies of your proof-of-identity documents.</p><p>Paper applications may also require a Certification of Immigration Status from Home Affairs.</p></div><ul class='checklist'><li>Certify your identity documents while still in Australia — it is materially easier before you leave.</li><li>Confirm your fund's specific certified-copy requirements.</li><li>For paper claims, request the Certification of Immigration Status early.</li></ul>`;
 
 export default function SuperannuationTaxLeavingAustraliaConfusion2026File03() {
@@ -25,6 +28,10 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File03() {
             Superannuation Tax When Leaving Australia (DASP) · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            ID & Certification Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What certified documents your balance requires and how to prepare them before you leave.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

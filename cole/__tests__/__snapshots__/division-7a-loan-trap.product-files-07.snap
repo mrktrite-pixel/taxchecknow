@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "division-7a-loan-trap";
+const SLUG = "d7a-07";
+const FALLBACK_LABEL = { name: "Multi-Year Repayment Strategy", desc: "Model your loan repayment over the full term." };
 const BODY = `<h2>Multi-Year Repayment Model</h2><p>Planning your Division 7A repayments over the full loan term reduces surprises and helps with cashflow planning.</p><div class="action-box"><h3>Strategy Considerations</h3><p>Pay more than the minimum when cashflow allows — reduces balance faster</p><p>Coordinate repayment timing with dividend or salary payments from the company</p><p>Review the benchmark rate each year — it changes annually</p><p>If the company has franking credits building up, consider a franked dividend strategy to accelerate the paydown</p></div>`;
 
 export default function Division7aLoanTrapFile07() {
@@ -25,6 +28,10 @@ export default function Division7aLoanTrapFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Division7aLoanTrapFile07() {
             Division 7A Loan Trap Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Year Repayment Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Model your loan repayment over the full term.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "frcgw-clearance-certificate";
+const SLUG = "frcgw-01";
+const FALLBACK_LABEL = { name: "Your Withholding Position", desc: "Whether withholding applies to your sale, and how the 15% is worked out." };
 const BODY = `<h2>Your withholding position</h2><div class="action-box"><h3>The three facts</h3><p>1. From 1 January 2025 there is no value threshold — every Australian real property sale is in scope, whatever the price.</p><p>2. If a valid clearance certificate is not given to the purchaser at or before settlement, the purchaser must withhold 15% of the sale price and remit it to the ATO.</p><p>3. A clearance certificate is free, most issue within days, and it stays valid for 12 months. There is no obligation to use one you obtain.</p></div><h3>How the amount is worked out</h3><p>Withholding = sale price x 15%. It is calculated on the <strong>sale price</strong>, not on your profit, and not on the capital gain. That is why it can exceed the tax you actually owe — and why it is credited back to you rather than kept.</p><div class="info-box"><p><strong>Your sale price:</strong> {{bind:sale_price|this check did not ask for your sale price, so we have not put a figure here. Multiply your contract price by 0.15 to get the amount that would be withheld.}}</p></div><h3>Worked examples</h3><p>These are illustrations, not your numbers.</p><table><thead><tr><th>Sale price (example)</th><th>Withheld at 15% (example)</th></tr></thead><tbody><tr><td>$450,000</td><td>$67,500</td></tr><tr><td>$900,000</td><td>$135,000</td></tr><tr><td>$1,200,000</td><td>$180,000</td></tr></tbody></table><p>In each case the amount is remitted to the ATO and credited to the vendor when they lodge the return for the income year the contract was signed.</p>{{#if section:per_vendor}}<h3>You co-own this property — the 15% is per owner</h3><div class="highlight"><p>A clearance certificate covers one <strong>vendor</strong>, not one property. Each owner named on the title applies separately and the applications are processed separately, so they can issue on different days.</p><p>If one co-owner's certificate is missing at settlement, the purchaser withholds 15% of <strong>that owner's share</strong> of the sale price. The other owners are unaffected. On a $600,000 sale held equally by two owners, one missing certificate means 15% of $300,000 — $45,000 — is withheld for that owner alone. Again, an illustration, not your figures.</p><p>Each certificate is free, so there is nothing to gain by waiting until every owner is ready to apply together.</p></div>{{/if}}{{#unless state:settled}}{{#if has:settlement_date}}<h3>Your dates</h3><div class="action-box"><p><strong>Settlement:</strong> {{bind:settlement_date}}</p><p><strong>Lodge by:</strong> {{bind:lodge_by_date}} — 28 days out, which is the outer processing time the ATO asks you to allow. Most certificates issue well inside that.</p></div>{{/if}}{{#unless has:settlement_date}}<h3>Your dates</h3><p>You did not give us a settlement date, so this pack does not state one. Put your settlement date in your calendar and count back 28 days — that is the date to lodge by if you want the full margin the ATO asks you to allow.</p>{{/unless}}{{/unless}}{{#if state:settled}}<h3>Your dates</h3><p>Your settlement has already happened, so there is no lodge-by date left to work towards on this sale. The date that matters now is the end of the income year in which the <strong>contract</strong> was signed — that is the return the withheld amount is claimed in.</p>{{/if}}<p>Source: <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/foreign-resident-capital-gains-withholding">ATO — Foreign resident capital gains withholding</a> · TAA 1953 Sch 1 Subdiv 14-D</p>`;
 
 export default function FrcgwClearanceCertificateFile01() {
@@ -25,6 +28,10 @@ export default function FrcgwClearanceCertificateFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FrcgwClearanceCertificateFile01() {
             Foreign Resident CGT Withholding Clearance Certificate · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Withholding Position
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Whether withholding applies to your sale, and how the 15% is worked out.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

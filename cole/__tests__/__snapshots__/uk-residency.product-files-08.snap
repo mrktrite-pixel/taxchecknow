@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "uk-residency";
+const SLUG = "ukr-08";
+const FALLBACK_LABEL = { name: "Dual Residency and Treaty Analysis", desc: "If UK resident under SRT AND resident in another country under its domestic law — treaty tie-breaker." };
 const BODY = `<h2>Dual Residency Resolution</h2><p>If the SRT makes you UK resident AND another country's domestic law makes you resident there, you are DUAL RESIDENT. Most of the UK's bilateral tax treaties include OECD Model Article 4 tie-breaker rules to resolve this.</p><h2>Article 4 Tie-Breaker (sequential)</h2><ol><li>Permanent home available (where)</li><li>Centre of vital interests (personal + economic ties)</li><li>Habitual abode (relative time)</li><li>Nationality</li><li>Mutual agreement procedure (MAP) between competent authorities</li></ol><h2>Claim Mechanics</h2><ul><li>UK Form DT-Individual — formal treaty claim on UK Self Assessment</li><li>SA109 Residence pages — state treaty residence position</li><li>Retain evidence supporting the Article 4 test that resolves the case</li></ul><p>For the full tie-breaker analysis, see <a href="/nomad/check/tax-treaty-navigator">the Double Tax Treaty Navigator</a>.</p>`;
 
 export default function UkResidencyFile08() {
@@ -25,6 +28,10 @@ export default function UkResidencyFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function UkResidencyFile08() {
             UK Statutory Residence Test Auditor · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Dual Residency and Treaty Analysis
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">If UK resident under SRT AND resident in another country under its domestic law — treaty tie-breaker.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

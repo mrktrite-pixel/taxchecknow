@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bring-forward-window";
+const SLUG = "bfw-04";
+const FALLBACK_LABEL = { name: "Evidence & Records Checklist", desc: "Documentation needed for your SMSF trustee minutes, work test, and ATO audit defence." };
 const BODY = `<h2>Evidence Checklist</h2><ul class="checklist"><li>SMSF trustee minute recording the contribution (if SMSF) — dated before 30 June</li><li>Bank transfer confirmation — timestamped before 11:59pm 30 June 2026</li><li>Super fund acknowledgment of contribution allocation to member account</li><li>Confirmation that no prior bring-forward is in progress (check 2024-25 and 2025-26 records)</li><li>Work test evidence if age 67-74 — 40 hours gainful employment in a 30-day period before contribution</li><li>TSB confirmation at 30 June 2026 — super fund statement or ATO online services</li><li>Notice of intent to claim if any part is a concessional contribution (different form, different rules)</li><li>Division 296 impact assessment if TSB approaching $3M</li></ul>`;
 
 export default function BringForwardWindowFile04() {
@@ -25,6 +28,10 @@ export default function BringForwardWindowFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function BringForwardWindowFile04() {
             Super Contribution Bring-Forward Window Engine · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Evidence & Records Checklist
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Documentation needed for your SMSF trustee minutes, work test, and ATO audit defence.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

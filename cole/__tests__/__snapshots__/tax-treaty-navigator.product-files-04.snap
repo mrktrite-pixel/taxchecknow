@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "tax-treaty-navigator";
+const SLUG = "ttn-04";
+const FALLBACK_LABEL = { name: "Evidence Requirements for Treaty Claim", desc: "What documentation each tie-breaker test requires." };
 const BODY = `<h2>Evidence by Test</h2><table><tr><th>Test</th><th>Primary evidence</th><th>Supporting evidence</th></tr><tr><td>Test 1 — Permanent home</td><td>Lease / title / continuous availability</td><td>Utility bills, furnishings, insurance</td></tr><tr><td>Test 2 — Vital interests</td><td>Family location, employer records</td><td>Bank accounts, social memberships, medical registration</td></tr><tr><td>Test 3 — Habitual abode</td><td>Passport stamps, flight records, day-count log</td><td>Credit card records, phone/data location records</td></tr><tr><td>Test 4 — Nationality</td><td>Passport / citizenship certificate</td><td>Naturalisation date evidence</td></tr><tr><td>Test 5 — Mutual agreement</td><td>Full case file + professional representation</td><td>All prior test evidence plus advocate submissions</td></tr></table><div class="info-box"><strong>Retention:</strong> keep for 7 years minimum from the filing date. Tie-breaker challenges often emerge years after the relevant tax year.</div>`;
 
 export default function TaxTreatyNavigatorFile04() {
@@ -25,6 +28,10 @@ export default function TaxTreatyNavigatorFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TaxTreatyNavigatorFile04() {
             Double Tax Treaty Navigator · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Evidence Requirements for Treaty Claim
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What documentation each tie-breaker test requires.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

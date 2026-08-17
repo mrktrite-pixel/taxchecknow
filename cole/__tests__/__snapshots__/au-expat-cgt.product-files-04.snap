@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "au-expat-cgt";
+const SLUG = "aucgt-04";
+const FALLBACK_LABEL = { name: "12.5% Withholding Clearance Guide", desc: "Foreign Resident Capital Gains Withholding (FRCGW) — how to obtain an ATO clearance certificate." };
 const BODY = `<h2>12.5% Non-Resident CGT Withholding</h2><div class="action-box"><h3>The rule</h3><p>For sales of Australian property with a market value of $750,000 or more, the purchaser must withhold 12.5% of the purchase price and remit to ATO at settlement — unless the vendor provides an ATO clearance certificate.</p></div><h3>Clearance certificate process</h3><ol><li>Apply online via ATO Tax Professional Online Services or Business Portal</li><li>ATO verifies Australian residency status</li><li>Processing time: 2-4 weeks (longer if complex)</li><li>Certificate valid for 12 months</li><li>Provide certificate to purchaser/conveyancer before settlement</li></ol><h3>If foreign resident (no clearance)</h3><ul><li>Purchaser withholds 12.5% automatically at settlement</li><li>Withholding paid to ATO as payment on account of CGT</li><li>Vendor lodges tax return declaring the sale + credit for withholding</li><li>Refund if withholding exceeds final tax; top-up if underpaid</li></ul>`;
 
 export default function AuExpatCgtFile04() {
@@ -25,6 +28,10 @@ export default function AuExpatCgtFile04() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function AuExpatCgtFile04() {
             Australian Expat CGT Trap Auditor · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            12.5% Withholding Clearance Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Foreign Resident Capital Gains Withholding (FRCGW) — how to obtain an ATO clearance certificate.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

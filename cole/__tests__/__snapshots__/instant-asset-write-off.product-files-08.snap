@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "instant-asset-write-off";
+const SLUG = "iawo-08";
+const FALLBACK_LABEL = { name: "Tax Timing Strategy", desc: "How to use asset write-offs to manage tax across income years." };
 const BODY = `<h2>Using Asset Write-Offs for Tax Timing</h2><p>Immediate deductions reduce taxable income in the year of purchase. In a high-income year, bringing forward planned asset purchases to claim the write-off can reduce the current year tax bill.</p><div class="action-box"><h3>High-Income Year Strategy</h3><p>Identify assets planned for next year — can they be purchased this year?</p><p>Calculate the tax saving from writing off this year vs next year</p><p>Compare the cashflow cost of early purchase against the tax timing benefit</p><p>For assets over $20k — model pool depreciation vs delay</p></div>`;
 
 export default function InstantAssetWriteOffFile08() {
@@ -25,6 +28,10 @@ export default function InstantAssetWriteOffFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InstantAssetWriteOffFile08() {
             Instant Asset Write-Off Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Tax Timing Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to use asset write-offs to manage tax across income years.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

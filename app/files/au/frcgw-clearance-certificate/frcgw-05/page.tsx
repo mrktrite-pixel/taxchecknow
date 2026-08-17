@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "frcgw-clearance-certificate";
+const SLUG = "frcgw-05";
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "The questions worth asking, and the ones you can skip." };
 const BODY = `<div class="info-box">Most sellers do not need an accountant for the clearance certificate itself — the form is short, free, and you can lodge it yourself. These are the questions worth asking if you are already speaking to one, or if one of the situations below applies to you.</div>{{#if section:residency_first}}<div class="action-box"><h3>Ask this first</h3><p>"Am I an Australian resident for tax purposes for this sale?"</p><p><strong>Why:</strong> it decides which instrument you lodge — a clearance certificate if you are, a variation notice if you are not. You have told us this is unconfirmed, which makes it the only question that needs answering before anything else can be.</p></div>{{/if}}<h3>Question 1</h3><p>"Will I have capital gains tax to pay on this sale, and roughly how much?"</p><p><strong>Why:</strong> the withholding is 15% of the <em>sale price</em>, while your actual tax is on the <em>gain</em>. Knowing the gap tells you whether the withholding would be a cash-flow issue or roughly what you owe anyway. If the property is your main residence for the whole period you owned it, the answer may be nothing — but you still need the certificate.</p><h3>Question 2</h3><p>"Does the name on my title need anything done before I apply?"</p><p><strong>Why:</strong> trustee capacity, a former name, a deceased estate or a company suffix are the situations where the name on the certificate and the name on the title come apart. An accountant or conveyancer will spot it in a minute; settlement is the wrong place to find out.</p><h3>Question 3</h3><p>"Which income year does this sale fall in for my return?"</p><p><strong>Why:</strong> the capital gains event is the <strong>contract date</strong>, not the settlement date. That also decides which year's return carries any withholding credit. A contract signed in June and settled in August sits in the earlier income year.</p>{{#if section:recovery}}<h3>Also ask — an amount was withheld</h3><p>"An amount was withheld at settlement — when do I get it back and how much?"</p><p><strong>Why:</strong> the amount was remitted to the ATO and is credited to you in the return for the income year the contract was signed. Your accountant can tell you what that return will look like and roughly when the refund lands. See File 07.</p>{{/if}}{{#if section:variation}}<h3>Also ask — foreign resident</h3><p>"Do I have grounds for a variation notice, and at what rate?"</p><p><strong>Why:</strong> a variation can set the rate between 0% and 14.99%, but only on real grounds — no gain, a reduced liability or losses, or a mortgagee taking most of the proceeds. This is the question where a cross-border accountant genuinely earns their fee. See File 08.</p>{{/if}}{{#if section:per_vendor}}<h3>Also worth asking</h3><p>"We are co-owners — is the split on the title what we both think it is?"</p><p><strong>Why:</strong> the withholding on a missing certificate is 15% of <em>that owner's share</em>, so the ownership split decides the amount. Worth confirming before settlement rather than after.</p>{{/if}}`;
 
 export default function FrcgwClearanceCertificateFile05() {
@@ -25,6 +28,10 @@ export default function FrcgwClearanceCertificateFile05() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FrcgwClearanceCertificateFile05() {
             Foreign Resident CGT Withholding Clearance Certificate · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Accountant Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The questions worth asking, and the ones you can skip.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

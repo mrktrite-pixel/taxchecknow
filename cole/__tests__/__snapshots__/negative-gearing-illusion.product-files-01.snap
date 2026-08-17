@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "negative-gearing-illusion";
+const SLUG = "ng-01";
+const FALLBACK_LABEL = { name: "Your Real After-Tax Cashflow Report", desc: "The real dollars in and out — not just the tax saving." };
 const BODY = `<h2>Your Real Negative Gearing Position</h2><div class="action-box"><h3>The Honest Calculation</h3><p>Tax saving = Net rental loss × Marginal rate</p><p>Real after-tax cost = Net rental loss × (1 - Marginal rate)</p><p>Break-even capital growth = Cumulative real cost / (years held × property value)</p></div><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties">ATO — Rental properties</a></p>`;
 
 export default function NegativeGearingIllusionFile01() {
@@ -25,6 +28,10 @@ export default function NegativeGearingIllusionFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function NegativeGearingIllusionFile01() {
             Negative Gearing Illusion Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Real After-Tax Cashflow Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">The real dollars in and out — not just the tax saving.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

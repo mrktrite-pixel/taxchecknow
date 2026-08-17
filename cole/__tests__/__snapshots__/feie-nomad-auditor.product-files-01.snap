@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "feie-nomad-auditor";
+const SLUG = "feie-01";
+const FALLBACK_LABEL = { name: "Your FEIE Qualification Report", desc: "Exact qualification status under the physical presence or bona fide residence test." };
 const BODY = `<h2>Your FEIE Qualification Status</h2><div class="action-box"><h3>The Three Gates</h3><p>Gate 1: Foreign tax home (main place of business abroad)</p><p>Gate 2: Physical presence (330 full days) OR Bona fide residence (established foreign residence, full tax year)</p><p>Gate 3: Form 2555 filed with federal return</p></div><h3>Qualification Matrix</h3><table><tr><th>Tax home</th><th>Test</th><th>Form 2555</th><th>Result</th></tr><tr><td>Foreign</td><td>330 days met</td><td>Filed</td><td>QUALIFIED — exclusion up to $126,500</td></tr><tr><td>Foreign</td><td>Bona fide established</td><td>Filed</td><td>QUALIFIED — exclusion up to $126,500</td></tr><tr><td>Foreign</td><td>Under 330 days</td><td>Filed</td><td>FAIL — exclusion denied</td></tr><tr><td>US-based</td><td>Any</td><td>Filed</td><td>FAIL — no foreign tax home</td></tr><tr><td>Foreign</td><td>Met</td><td>Not filed</td><td>FAIL — election not made</td></tr></table><h3>2026 Key Numbers</h3><ul><li>FEIE exclusion: $126,500</li><li>Housing exclusion base amount: ~$20,240 (adjusted for high-cost locations)</li><li>Physical presence: 330 full days in any 12-month period</li></ul><p>Source: <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion">IRS — FEIE</a> · IRC §911</p>`;
 
 export default function FeieNomadAuditorFile01() {
@@ -25,6 +28,10 @@ export default function FeieNomadAuditorFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function FeieNomadAuditorFile01() {
             FEIE Qualification & Failure Risk Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your FEIE Qualification Report
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Exact qualification status under the physical presence or bona fide residence test.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

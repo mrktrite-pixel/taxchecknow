@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "transfer-balance-cap";
+const SLUG = "tbc-08";
+const FALLBACK_LABEL = { name: "Long-Term TBC Projection Model", desc: "10-year transfer balance account projection with drawdowns, contributions, and indexation events." };
 const BODY = `<h2>10-Year TBA Projection</h2><p>Your transfer balance account is debited by pension drawdowns and credited by new pension commencements and reversionary credits. Over 10 years these add up to meaningful cap room opening up.</p><h2>Credits (Add to TBA)</h2><ul><li>New pension commencement = credit equal to starting balance</li><li>Reversionary pension = credit on reversion date equal to value</li><li>Certain structured settlement contributions</li></ul><h2>Debits (Reduce TBA)</h2><ul><li>Partial commutations — lump sum withdrawals from pension phase</li><li>Structured settlement payments (rare)</li><li>Note: pension DRAWDOWN payments are NOT debits — they're just income</li></ul><h2>Projection Logic</h2><p>Starting TBA at personal cap = $1.6M (for example). Annual partial commutation of $40k to manage growth = TBA reduces by $40k/year. After 5 years: TBA at $1.4M. Cap room reopened: $200k. Can re-commence a new pension of up to $200k (subject to current general cap).</p><h2>Strategic Implications</h2><ul><li>Over 10 years, managed commutations can open up meaningful cap room even if personal cap is frozen</li><li>Spouse equalisation compounds — each year shifts super balance toward the partner with the more valuable cap</li><li>Division 296 overlay — keep TSB under $3M while maximising pension phase is a two-variable optimisation</li></ul>`;
 
 export default function TransferBalanceCapFile08() {
@@ -25,6 +28,10 @@ export default function TransferBalanceCapFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function TransferBalanceCapFile08() {
             Transfer Balance Cap Optimiser · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Long-Term TBC Projection Model
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">10-year transfer balance account projection with drawdowns, contributions, and indexation events.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

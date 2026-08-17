@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-death-tax-trap";
+const SLUG = "sdtt-01";
+const FALLBACK_LABEL = { name: "Your Family's True Inheritance", desc: "Your exact death benefit tax leakage and what each beneficiary receives." };
 const BODY = `<h2>Your Family's True Inheritance</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: Your taxable component — typically 70-90% of balance</p><p>Number 2: Your beneficiary's dependant status — spouse (0%) vs adult kids (17%)</p><p>Number 3: Your TSB trajectory against the $3M Division 296 threshold</p></div><h3>Death Benefit Tax Calculation</h3><p>On adult children receiving your super: Taxable component × 17% (15% tax + 2% Medicare levy)</p><p>Example: $2M balance × 80% taxable × 17% = $272,000 of tax</p><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/in-detail/withdrawing-and-using-your-super/superannuation-benefits-paid-from-a-deceased-estate">ATO — Superannuation death benefits</a> · ITAA 1997 Division 302</p>`;
 
 export default function SuperDeathTaxTrapFile01() {
@@ -25,6 +28,10 @@ export default function SuperDeathTaxTrapFile01() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperDeathTaxTrapFile01() {
             Super Death Tax Trap Engine · File 01 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Your Family's True Inheritance
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Your exact death benefit tax leakage and what each beneficiary receives.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

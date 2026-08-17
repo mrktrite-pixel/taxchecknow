@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "super-to-trust-exit";
+const SLUG = "strexit-08";
+const FALLBACK_LABEL = { name: "Alternative Comparison Matrix — Long Form", desc: "Full quantitative comparison of exit vs stay across 5 alternative strategies at 3 balance levels." };
 const BODY = `<h2>Alternative Matrix — Exit vs 4 In-Super Strategies</h2><p>Annual tax impact comparison across strategies at three TSB levels, assuming 5% earnings rate, mid-bracket beneficiaries, age 62 retired.</p><table><tr><th>Strategy</th><th>$3.5M TSB</th><th>$5M TSB</th><th>$7M TSB</th></tr><tr><td>Wholesale exit to trust</td><td>$595k setup + $65k/yr</td><td>$850k setup + $85k/yr</td><td>$1.19M setup + $119k/yr</td></tr><tr><td>Stay in accumulation, do nothing</td><td>~$26k/yr (Div 296 + super)</td><td>~$43k/yr</td><td>~$68k/yr</td></tr><tr><td>Spouse equalisation (both under $3M)</td><td>~$26k/yr → ~$8k/yr</td><td>~$43k/yr → ~$15k/yr</td><td>Still Div 296 above combined $6M</td></tr><tr><td>Pension phase on TBC portion ($2M)</td><td>~$8k/yr (most in pension)</td><td>~$23k/yr</td><td>~$48k/yr</td></tr><tr><td>Cost-base reset election (AU-13)</td><td>Protects pre-2026 gains — long-term saving</td><td>Protects substantial growth</td><td>Protects major growth</td></tr></table><h2>Headline</h2><p>For pension-eligible members, pension phase transition beats exit in every balance scenario. For non-pension-eligible members, spouse equalisation + cost-base reset election beats exit in most scenarios. Exit is rarely the optimal strategy — it is simply the most salient one because Division 296 publicity has focused on it.</p>`;
 
 export default function SuperToTrustExitFile08() {
@@ -25,6 +28,10 @@ export default function SuperToTrustExitFile08() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SuperToTrustExitFile08() {
             Super-to-Trust Exit Engine · File 08 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Alternative Comparison Matrix — Long Form
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Full quantitative comparison of exit vs stay across 5 alternative strategies at 3 balance levels.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

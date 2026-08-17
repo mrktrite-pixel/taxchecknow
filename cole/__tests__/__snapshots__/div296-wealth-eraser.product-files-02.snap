@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "div296-wealth-eraser";
+const SLUG = "div296-02";
+const FALLBACK_LABEL = { name: "SMSF Cost-Base Reset Decision Guide", desc: "When to elect, when not to, and the all-or-nothing modelling framework." };
 const BODY = `<h2>Cost-Base Reset — Decision Framework</h2><p>The election is available to any SMSF. Decision logic:</p><table><tr><th>Fund Profile</th><th>Recommendation</th></tr><tr><td>All assets in gain, TSB over $3M</td><td>ELECT — unambiguously beneficial</td></tr><tr><td>All assets in gain, TSB under $3M but growing</td><td>ELECT — forward protection, low cost</td></tr><tr><td>Mixed gain/loss, TSB over $3M</td><td>Sell losses first, then elect</td></tr><tr><td>All assets in loss</td><td>DO NOT ELECT — reset locks in lower base</td></tr><tr><td>Single asset fund with minor gain</td><td>Model net benefit — may not justify two-track records</td></tr></table><h3>Key Rule</h3><p>The election applies to every CGT asset held at 30 June 2026, or none. Once made, irrevocable. Lodged via approved form with 2026-27 SMSF annual return.</p>`;
 
 export default function Div296WealthEraserFile02() {
@@ -25,6 +28,10 @@ export default function Div296WealthEraserFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function Div296WealthEraserFile02() {
             Division 296 Wealth Eraser Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            SMSF Cost-Base Reset Decision Guide
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">When to elect, when not to, and the all-or-nothing modelling framework.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

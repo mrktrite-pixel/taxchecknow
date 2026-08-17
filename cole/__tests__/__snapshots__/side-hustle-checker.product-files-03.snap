@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "side-hustle-checker";
+const SLUG = "sh-03";
+const FALLBACK_LABEL = { name: "Tax Rate Verification", desc: "20% vs 40% — what rate actually applies to your side income." };
 const BODY = `<h2>Side Income Tax Rate — 20% or 40%?</h2><p>Side income is ADDED to your employment income. The marginal rate depends on total.</p><h3>The Calculation</h3><p>Total income = Employment income + Side income - Personal Allowance (£12,570)</p><p>If total above £50,270 after allowance = higher rate band = 40% on side income portion</p><p>If total below £50,270 = basic rate band = 20%</p><h3>Mixed Example</h3><p>Teacher on £48,000 salary with £5,000 Etsy income:</p><ul><li>Total gross: £53,000</li><li>After personal allowance (£12,570): £40,430 taxable</li><li>Band breakdown: £37,700 at 20% + £2,730 at 40%</li><li>£2,730 of the Etsy income is taxed at 40%, not 20%</li><li>Most accountants calculate this correctly — but self-assessing taxpayers often assume 20% throughout</li></ul><div class="info-box"><strong>Rule of thumb:</strong> if your employment income is above £45,000, some or all of your side income will be at 40%. Plan accordingly.</div>`;
 
 export default function SideHustleCheckerFile03() {
@@ -25,6 +28,10 @@ export default function SideHustleCheckerFile03() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function SideHustleCheckerFile03() {
             HMRC Side Income Declaration Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Tax Rate Verification
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">20% vs 40% — what rate actually applies to your side income.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

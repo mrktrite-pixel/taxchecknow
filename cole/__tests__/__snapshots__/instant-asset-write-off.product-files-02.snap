@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "instant-asset-write-off";
+const SLUG = "iawo-02";
+const FALLBACK_LABEL = { name: "Purchase Timing Strategy", desc: "How to plan asset purchases to claim the write-off in the current year." };
 const BODY = `<h2>EOFY Asset Purchase Timing</h2><p>The key risk is ordering too late — asset arrives after 30 June and misses the current year write-off.</p><div class="action-box"><h3>Recommended Lead Times</h3><p>Standard equipment: order by 15 May — allow 6 weeks for delivery and installation</p><p>Custom or imported equipment: order by 1 April — allow 12+ weeks</p><p>Software: install by 28 June — allow buffer for setup and testing</p><p>Vehicles: order by 1 May — allow for registration and delivery</p></div>`;
 
 export default function InstantAssetWriteOffFile02() {
@@ -25,6 +28,10 @@ export default function InstantAssetWriteOffFile02() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function InstantAssetWriteOffFile02() {
             Instant Asset Write-Off Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Purchase Timing Strategy
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to plan asset purchases to claim the write-off in the current year.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}

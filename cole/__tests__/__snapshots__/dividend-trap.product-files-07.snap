@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
 import DocStrip from "@/app/_components/DocStrip";
 import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation } from "@/lib/terminal-presentation";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "dividend-trap";
+const SLUG = "dt-07";
+const FALLBACK_LABEL = { name: "Multi-Year Dividend Sequencing", desc: "How to spread dividends across multiple tax years to maximise basic rate band usage." };
 const BODY = `<h2>Multi-Year Dividend Sequencing</h2><p>If your company has significant retained earnings and you want to extract them over time, sequencing across tax years uses multiple years' basic rate bands rather than bunching into one year.</p><h3>The Principle</h3><p>Each tax year you have £37,700 of basic rate band (after personal allowance). Each £ of dividend above that = 33.75% vs 8.75% — a 25 percentage-point difference.</p><h3>Example</h3><p>Director wants to extract £100,000 of retained earnings:</p><table><tr><th>Approach</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Total Tax</th></tr><tr><td>All in one year</td><td>£100k</td><td>£0</td><td>£0</td><td>~£27,000</td></tr><tr><td>Split across 3 years</td><td>£37k</td><td>£37k</td><td>£26k</td><td>~£10,500</td></tr></table><p>Saving from sequencing: ~£16,500 on £100k extraction.</p><h3>Practical Execution</h3><ul><li>Plan extraction schedule 3 years out</li><li>Watch for tax rate changes (budget announcements can alter bands)</li><li>Coordinate with major life events (property purchase, university fees) that might need larger amounts</li><li>Keep cash in company in reserve — earns bank interest for company at minimal corp tax rate</li></ul>`;
 
 export default function DividendTrapFile07() {
@@ -25,6 +28,10 @@ export default function DividendTrapFile07() {
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
   useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,9 +123,9 @@ export default function DividendTrapFile07() {
             Salary + Dividend Tax Trap Engine · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Year Dividend Sequencing
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How to spread dividends across multiple tax years to maximise basic rate band usage.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
