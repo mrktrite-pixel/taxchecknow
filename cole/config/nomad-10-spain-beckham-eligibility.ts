@@ -12,22 +12,6 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
   // which is the correct state until someone rules on it.
   nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
-
-  // ── ENGINE-NATIVE DECLARATION ───────────────────────────────────────────
-  // TRUE as of the PANELBEAT migration (2026-09-11), IN THE SAME COMMIT as the
-  // app-dir mount and the cole/calculators sync. verifyEngineNative() throws in
-  // EITHER direction on disagreement, so the declaration, the mount and the
-  // cole/ copy move together or not at all.
-  //
-  // The live calculator is now the thin EngineCalculator wrapper at
-  // app/nomad/check/spain-beckham-eligibility/SpainBeckhamCalculator.tsx, bound
-  // to engine.json (5 questions / 13 terminals) + figures.json (21 figures),
-  // with tier and severity carried PER-TERMINAL from the operator overlay ruled
-  // 2026-09-11. Commerce is untouched: nomad_67_spain_beckham /
-  // nomad_147_spain_beckham and the assess/plan success paths are byte-identical
-  // to the bespoke this replaces.
-  engineNative: true,
-
   id: "spain-beckham", name: "Spain Beckham Eligibility Wall", site: "taxchecknow", country: "global", market: "Spain", language: "en", currency: "EUR",
   slug: "nomad/check/spain-beckham-eligibility", url: "https://taxchecknow.com/nomad/check/spain-beckham-eligibility", apiRoute: "/api/rules/spain-beckham",
   authority: "Agencia Estatal de Administración Tributaria (AEAT)", authorityUrl: "https://sede.agenciatributaria.gob.es/Sede/procedimientoini/GI24.shtml", legalAnchor: "Ley 35/2006 Art. 93 (IRPF Act) + Ley 28/2022 (Startup Law, effective 1 Jan 2023) — Special Expat Regime (Beckham Law)", legislation: "Article 93 of Ley 35/2006 (Spanish IRPF Act) establishes the Special Expat Regime: qualifying individuals who relocate to Spain for work can elect taxation at a flat rate of 24% on Spanish-source income up to €600,000 (47% above), rather than under Spain's progressive IRPF rates (up to 47%). The regime applies for the tax year of arrival plus five subsequent tax years (maximum six years total). Ley 28/2022 (Startup Law), effective 1 January 2023, expanded qualifying categories to include highly qualified professionals, entrepreneurs in startup/innovation activities, and remote workers holding the Spanish Digital Nomad Visa. Eligibility conditions: (a) relocation to Spain caused by a qualifying work arrangement; (b) not Spanish tax resident in the 5 tax years before arrival; (c) valid social security coverage (Spanish SS, EU/EEA A1 certificate, or bilateral agreement). Application via Modelo 149 within 6 months of Spanish Social Security registration — deadline is absolute.",
