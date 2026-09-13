@@ -49,6 +49,10 @@ export function getSuccessPlanPath(config: ProductConfig, appRoot: string): stri
 }
 
 function sym(config: ProductConfig): string {
+  // EUR first — the ternary's else-branch is "£", so any non-dollar currency became GBP.
+  // Kept structurally identical to app/_components/engine-config.ts currencySymbol(): the two
+  // are mirrors and the comment there says they change together. This is that change.
+  if (config.currency === "EUR") return "€";
   return ["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£";
 }
 
