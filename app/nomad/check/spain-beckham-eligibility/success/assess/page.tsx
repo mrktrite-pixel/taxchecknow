@@ -3,6 +3,7 @@
 // Product: spain-beckham · Tier 1 Success Page
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -57,15 +58,25 @@ export default function SuccessAssess() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
+  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
+  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
+  // (never "0 days", never a negative, never a stale label).
   const daysToDeadline: number | null = (() => {
-    const _end = new Date("2027-06-30T23:59:59.000+02:00").getTime();
-    if (Number.isNaN(_end)) return null;
-    const _d = Math.floor((_end - Date.now()) / 86_400_000);
-    return _d > 0 ? _d : null;
+    const end = new Date("2027-06-30T23:59:59.000+02:00").getTime();
+    if (Number.isNaN(end)) return null;
+    const d = Math.floor((end - Date.now()) / 86_400_000);
+    return d > 0 ? d : null;
   })();
   const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
+
+  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
+  // expired or will not parse, is a real defect — surface it so it is never silent.
+  // Phase 5 replaces this with real alerting.
+  useEffect(() => {
+    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "spain-beckham", deadlineIso: "2027-06-30T23:59:59.000+02:00" });
+  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -104,30 +115,12 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      const move_reason = sessionStorage.getItem("spain-beckham_move_reason") || "employment";
-      const prior_residency = sessionStorage.getItem("spain-beckham_prior_residency") || "no";
-      const ss_coverage = sessionStorage.getItem("spain-beckham_ss_coverage") || "registering_spain";
-      const director_ownership = sessionStorage.getItem("spain-beckham_director_ownership") || "not_applicable";
-      const dnv_status = sessionStorage.getItem("spain-beckham_dnv_status") || "not_applicable";
-      const application_timing = sessionStorage.getItem("spain-beckham_application_timing") || "within_6_months";
-      const eligibility_outcome = sessionStorage.getItem("spain-beckham_eligibility_outcome") || "LIKELY ELIGIBLE";
-      const annual_saving = sessionStorage.getItem("spain-beckham_annual_saving") || "11200";
-      const status = sessionStorage.getItem("spain-beckham_status") || "LIKELY ELIGIBLE — CONFIRM STRUCTURE";
-      const tier = sessionStorage.getItem("spain-beckham_tier") || "67";
-
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-        "move_reason": move_reason,
-        "prior_residency": prior_residency,
-        "ss_coverage": ss_coverage,
-        "director_ownership": director_ownership,
-        "dnv_status": dnv_status,
-        "application_timing": application_timing,
-        "eligibility_outcome": eligibility_outcome,
-        "annual_saving": annual_saving,
-        "status": status,
-        "tier": tier,
-      }).some(v => v && v !== "employment");
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
+      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // (F5 contract). The legacy per-field keys are never written by an engine-native
+      // calculator, so reading them would always fall back to defaults → a generic,
+      // corpus-contradicting assessment.
+      const inputs = buildComposerInputsFromSession("spain-beckham");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -137,19 +130,8 @@ export default function SuccessAssess() {
           market:     "Spain",
           authority:  "Agencia Estatal de Administración Tributaria (AEAT)",
           tier:       1,
-          name,
-          inputs: {
-        "Reason for moving to Spain": move_reason,
-        "Prior Spain residency": prior_residency,
-        "Social security coverage": ss_coverage,
-        "Director ownership stake": director_ownership,
-        "Digital nomad visa status": dnv_status,
-        "Application timing": application_timing,
-        "Eligibility assessment": eligibility_outcome,
-        "Estimated annual saving": annual_saving,
-        "Verdict status": status,
-        "Tier purchased": tier,
-          },
+          name: name === "there" ? "" : name,
+          inputs,
           fields: ["beckhamEligibilityAssessment","employmentStructureAnalysis","priorResidencyStatus","socialSecurityPosition","applicationTimingStatus","estimatedTaxSaving","keyFailureRisks","structureFixRequired","immediateActions"],
         }),
       });
@@ -183,16 +165,6 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const move_reason = sessionStorage.getItem("spain-beckham_move_reason") || "employment";
-    const prior_residency = sessionStorage.getItem("spain-beckham_prior_residency") || "no";
-    const ss_coverage = sessionStorage.getItem("spain-beckham_ss_coverage") || "registering_spain";
-    const director_ownership = sessionStorage.getItem("spain-beckham_director_ownership") || "not_applicable";
-    const dnv_status = sessionStorage.getItem("spain-beckham_dnv_status") || "not_applicable";
-    const application_timing = sessionStorage.getItem("spain-beckham_application_timing") || "within_6_months";
-    const eligibility_outcome = sessionStorage.getItem("spain-beckham_eligibility_outcome") || "LIKELY ELIGIBLE";
-    const annual_saving = sessionStorage.getItem("spain-beckham_annual_saving") || "11200";
-    const status = sessionStorage.getItem("spain-beckham_status") || "LIKELY ELIGIBLE — CONFIRM STRUCTURE";
-    const tier = sessionStorage.getItem("spain-beckham_tier") || "67";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -242,7 +214,7 @@ export default function SuccessAssess() {
   }
 
   const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "Your";
+  const greeting = firstName !== "there" ? `${firstName}` : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -264,10 +236,10 @@ export default function SuccessAssess() {
         {/* ── HERO — confirmation + personal hook ── */}
         <div className="print-section rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-6 py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-700">
-            Payment confirmed · Your Beckham Eligibility Fix Kit · £67
+            Payment confirmed · Your Beckham Eligibility Fix Kit · €67
           </p>
           <h1 className="mt-2 font-serif text-2xl font-bold text-neutral-950">
-            {hi !== "there" ? `${hi}, here is your ` : "Your "}Your Beckham Eligibility Fix Kit
+            {hi !== "there" ? `${hi}, here is your ` : "Your "}Beckham Eligibility Fix Kit
           </h1>
           <p className="mt-1 text-sm text-emerald-800">
             This is your personalised assessment — built around your exact answers, not a generic guide.
@@ -383,7 +355,7 @@ export default function SuccessAssess() {
                     <p className="text-xs text-neutral-500">Absolute deadline for Beckham regime election.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    This week
+                    In 180 days
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
@@ -474,7 +446,7 @@ export default function SuccessAssess() {
               <p className="mb-3 text-sm text-neutral-600">Complete Beckham application system: employment restructuring plan, A1 certificate strategy, Modelo 149 application roadmap, startup certification pathway, and full approval timeline with Spanish gestor coordination.</p>
               <Link href="/nomad/check/spain-beckham-eligibility"
                 className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950 transition">
-                Upgrade — £147 →
+                Upgrade — €147 →
               </Link>
             </div>
 

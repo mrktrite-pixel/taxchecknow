@@ -49,12 +49,19 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
     },
     "frcgw-clearance-certificate": {
           "temporal": {
-                "kind": "unresolvable",
-                "reason": "settlement_date_contingent_not_captured",
-                "detail": "Settlement is fixed by the buyer's contract and differs per customer. The calculator captures only a bucketed proximity answer (daysToSettlement), never a date, so no settlement date can be computed for any customer.",
+                "kind": "deadline",
+                "rule": {
+                      "source": "user_supplied",
+                      "field": "q6_settlement_date",
+                      "offset": {
+                            "days": -28
+                      },
+                      "timezone": "Australia/Sydney",
+                      "shift": "prev_business_day"
+                },
                 "jurisdiction": "AU",
                 "domain": "property_cgt",
-                "label": "Settlement date"
+                "label": "Lodge-by date (28 days before your settlement)"
           },
           "nurture": [
                 {
@@ -89,6 +96,13 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
           ]
     },
     "mtd-scorecard": {
+          "temporal": {
+                "kind": "unresolvable",
+                "reason": "authority_page_stating_the_deadline_not_captured",
+                "jurisdiction": "UK",
+                "domain": "mtd_income_tax",
+                "label": "Quarterly update deadline — not in captured authority"
+          },
           "nurture": [
                 {
                       "track": "standard_v1",

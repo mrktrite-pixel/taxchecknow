@@ -137,7 +137,12 @@ export function altTier(config: EngineConfig | undefined, tier: number): PinnedT
  * as the hardcoded $ regressed the UK ones.
  */
 export function currencySymbol(config: EngineConfig | undefined): string {
-  return ["USD", "NZD", "CAD", "AUD"].includes(config?.currency ?? "AUD") ? "$" : "£";
+  const c = config?.currency ?? "AUD";
+  // EUR is checked BEFORE the dollar list because the ternary below is a two-way split
+  // whose else-branch is "£" — so every non-dollar currency silently rendered as GBP.
+  // Measured on the Spain Beckham product (currency "EUR"): the CTA read "£67".
+  if (c === "EUR") return "€";
+  return ["USD", "NZD", "CAD", "AUD"].includes(c) ? "$" : "£";
 }
 
 export function fmtPrice(n: number, config?: EngineConfig): string {
