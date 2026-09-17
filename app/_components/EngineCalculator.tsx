@@ -625,6 +625,10 @@ export default function EngineCalculator({
   // ── TERMINAL VIEW: verdict panel + two-popup ────────────────────────────────
   if (terminal && tierInfo) {
     const alt = altTier(config, tierInfo.tier);
+    // The POPUP cross-sells relative to the tier IT is showing, which changes the moment
+    // the buyer takes the link (onAlt re-pins popupTier). Deriving it from the panel's
+    // `alt` instead left the link pointing at the tier already open once they switched.
+    const popupAlt = popupTier ? altTier(config, popupTier.tier) : alt;
     const escape = terminal.escape;
     return (
       <div className={ENGINE_CANVAS}>
@@ -643,7 +647,7 @@ export default function EngineCalculator({
           ctaLabel={showCta ? (escape ? escapeCtaLabelFor(config, tierInfo.price) : ctaLabelFor(config, tierInfo.price)) : undefined}
           ctaNote={showCta ? `${fmtPrice(tierInfo.price, config)} · one-time · built around your answers` : undefined}
           onCta={showCta ? () => openPopup(tierInfo) : undefined}
-          secondaryLabel={!escape && showCta ? secondaryTierLabelFor(config, alt.price) : undefined}
+          secondaryLabel={!escape && showCta ? secondaryTierLabelFor(config, tierInfo.tier, alt) : undefined}
           onSecondary={!escape && showCta ? () => openPopup(alt) : undefined}
           bridgeCopy={escape ? undefined : bridgeCopyFor(config)}
           planChecklist={escape ? undefined : planChecklistFor(config)}
@@ -665,8 +669,8 @@ export default function EngineCalculator({
             onGetIt={() => setPopupStage(2)}
             dismissLabel={config?.copy?.dismissLabel ?? "Not now — keep reading"}
             onDismiss={closePopup}
-            altLabel={escape ? undefined : secondaryTierLabelFor(config, alt.price)}
-            onAlt={escape ? undefined : () => setPopupTier(alt)}
+            altLabel={escape ? undefined : secondaryTierLabelFor(config, popupTier.tier, popupAlt)}
+            onAlt={escape ? undefined : () => setPopupTier(popupAlt)}
           />
         )}
         {popupStage === 2 && popupTier && (

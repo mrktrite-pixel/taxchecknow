@@ -33,7 +33,12 @@ export interface EngineCopy {
   resultLabel?: string;       // resolved-dish banner label (NOT "No match")
   bridgeCopy?: string;        // conversion bridge line (resolved)
   planChecklist?: string[];   // "what's in your plan" items (resolved)
-  secondaryTierLabel?: string;// alt-tier link (resolved); "{price}" substituted
+  // ── alt-tier cross-sell. TWO fields because the link has a DIRECTION. ──
+  // A 67 surface points UP to tier 2; a 147 surface points DOWN to tier 1. One
+  // template cannot serve both: reusing the upsell wording with the cheaper
+  // price told a 147 buyer the CHEAPER tier was the fuller product.
+  secondaryTierLabel?: string;      // UPSELL (67 -> 147); "{price}" + "{name}" substituted
+  secondaryTierLabelDown?: string;  // DOWNSELL (147 -> 67); "{price}" + "{name}" substituted
   saveHeading?: string;       // email Save box heading (both)
   saveSubcopy?: string;       // email Save box sub-line (both)
   // ── escape / quasi-escape copy (never "confirmed position") ──
@@ -158,6 +163,11 @@ export function withPrice(template: string, price: number, config?: EngineConfig
   return template.replace(/\{price\}/g, fmtPrice(price, config));
 }
 
+/** Substitute the {name} token in a copy template (the alt tier's product name). */
+export function withTierName(template: string, name: string): string {
+  return template.replace(/\{name\}/g, name);
+}
+
 // ── copy accessors (config value → generic default) ──────────────────────────
 export function ctaLabelFor(config: EngineConfig | undefined, price: number): string {
   return withPrice(config?.copy?.ctaLabel ?? "Get my personalised plan — {price} →", price, config);
@@ -165,8 +175,36 @@ export function ctaLabelFor(config: EngineConfig | undefined, price: number): st
 export function payLabelFor(config: EngineConfig | undefined, price: number): string {
   return withPrice(config?.copy?.payLabel ?? "Pay {price} →", price, config);
 }
-export function secondaryTierLabelFor(config: EngineConfig | undefined, price: number): string {
-  return withPrice(config?.copy?.secondaryTierLabel ?? "Want the complete system instead? — {price}", price, config);
+/**
+ * The alt-tier cross-sell link. DIRECTION-AWARE — this is the whole point.
+ *
+ * THE BUG THIS REPLACES. There was ONE template, `secondaryTierLabel`, authored by
+ * every product as an UPSELL ("Want the full approval system? — {price}") and rendered
+ * with whatever the alt tier's price happened to be. On a tier-147 surface the alt is
+ * tier 67, so the link read "Want the full approval system? — €67": upsell words, cheaper
+ * price, telling the buyer the LESS complete product was the fuller one. Measured live.
+ *
+ * So the caller now passes the tier the surface is actually showing, and the direction
+ * picks the template:
+ *   alt.tier > currentTier  -> UPSELL   -> copy.secondaryTierLabel
+ *   alt.tier < currentTier  -> DOWNSELL -> copy.secondaryTierLabelDown
+ *
+ * Both templates take {price} AND {name}, and `name` is the ALT tier's own product name
+ * from config.tierNames — never a word hardcoded here. The leading possessive is stripped
+ * the same way the gate and success generators strip it, because the names are authored
+ * possessive ("Your Beckham Approval System") and the templates supply their own article.
+ */
+export function secondaryTierLabelFor(
+  config: EngineConfig | undefined,
+  currentTier: number,
+  alt: PinnedTier,
+): string {
+  const upsell = alt.tier > currentTier;
+  const name = tierNameFor(config, alt.tier).replace(/^Your\s+/i, "");
+  const template = upsell
+    ? config?.copy?.secondaryTierLabel ?? "Want the complete {name} instead? — {price}"
+    : config?.copy?.secondaryTierLabelDown ?? "Just the {name} instead? — {price}";
+  return withTierName(withPrice(template, alt.price, config), name);
 }
 export function escapeCtaLabelFor(config: EngineConfig | undefined, price: number): string {
   return withPrice(config?.copy?.escapeCtaLabel ?? "Get my personalised review — {price} →", price, config);
