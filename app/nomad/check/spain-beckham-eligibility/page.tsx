@@ -28,12 +28,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "30 June 2027";
 const DEADLINE_ISO   = "2027-06-30T23:59:59.000+02:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -357,8 +360,13 @@ const countdownStats = [
 
 export default function SpainBeckhamPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "nomad/check/spain-beckham-eligibility", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -593,11 +601,11 @@ export default function SpainBeckhamPage() {
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  £67 · Beckham Eligibility Fix Kit
+                  €67 · Beckham Eligibility Fix Kit
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  £147 · Beckham Approval System
+                  €147 · Beckham Approval System
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>

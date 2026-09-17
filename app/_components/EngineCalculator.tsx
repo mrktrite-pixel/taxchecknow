@@ -659,7 +659,7 @@ export default function EngineCalculator({
             heading={sellTitleFor(config, terminal.titleKey, popupTier.tier)}
             subhead={sellSubheadFor(config)}
             tier={popupTier.tier}
-            price={popupTier.price}
+            priceLabel={fmtPrice(popupTier.price, config)}
             bullets={planChecklistFor(config)}
             getItLabel={getItLabelFor(config, popupTier.price)}
             onGetIt={() => setPopupStage(2)}
@@ -675,7 +675,7 @@ export default function EngineCalculator({
             answers={qual}
             onChange={setQualField}
             tier={popupTier.tier}
-            price={popupTier.price}
+            priceLabel={fmtPrice(popupTier.price, config)}
             heading={config?.copy?.popupHeading ?? "Your personalised plan"}
             subhead={config?.copy?.popupSubhead ?? "A few quick questions, then checkout"}
             payLabel={payLabelFor(config, popupTier.price)}

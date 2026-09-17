@@ -20,7 +20,15 @@ export interface EngineQualPopupProps {
   fields: QualField[];
   answers: Record<string, string>;
   onChange: (key: string, value: string) => void;
-  price: number;
+  /**
+   * ALREADY-FORMATTED price for the chip, e.g. "€147" — never a bare number.
+   * It arrives pre-formatted for the same reason `payLabel` does: this component
+   * is presentational and prop-sources its copy, so the currency symbol is chosen
+   * ONCE by the caller via currencySymbol()/fmtPrice(). The chip used to render the
+   * raw number behind a hardcoded dollar glyph, so on a EUR product it read "147"
+   * prefixed with a dollar sign while the Pay button beneath it correctly read "€147".
+   */
+  priceLabel: string;
   tier: number;
   heading: string;
   subhead: string;
@@ -36,7 +44,7 @@ export default function EngineQualPopup({
   fields,
   answers,
   onChange,
-  price,
+  priceLabel,
   tier,
   heading,
   subhead,
@@ -68,7 +76,7 @@ export default function EngineQualPopup({
             <p className="mt-1 text-sm text-[#64748B]">{subhead}</p>
           </div>
           <div className="shrink-0 rounded-2xl border border-[#E2E8F0] bg-[#F4F6FB] px-3 py-2 text-right">
-            <p className="text-lg font-bold leading-none text-[#0F172A]">${price}</p>
+            <p className="text-lg font-bold leading-none text-[#0F172A]">{priceLabel}</p>
             <p className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-[#64748B]">tier {tier}</p>
           </div>
         </div>
