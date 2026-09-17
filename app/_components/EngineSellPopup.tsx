@@ -18,7 +18,15 @@ export interface EngineSellPopupProps {
   heading: string;
   subhead: string;
   tier: number;
-  price: number;
+  /**
+   * ALREADY-FORMATTED price for the chip, e.g. "€147" — never a bare number.
+   * Pre-formatted for the same reason `getItLabel` is: this component is
+   * presentational and prop-sources its copy, so the currency symbol is chosen
+   * ONCE by the caller via currencySymbol()/fmtPrice(). The chip used to render the
+   * raw number behind a hardcoded dollar glyph, so on a EUR product it showed a dollar
+   * sign directly above a CTA that correctly read "€147".
+   */
+  priceLabel: string;
   bullets: string[];
   getItLabel: string;
   onGetIt: () => void;
@@ -30,7 +38,7 @@ export interface EngineSellPopupProps {
 }
 
 export default function EngineSellPopup({
-  heading, subhead, tier, price, bullets,
+  heading, subhead, tier, priceLabel, bullets,
   getItLabel, onGetIt, dismissLabel, onDismiss, altLabel, onAlt,
 }: EngineSellPopupProps) {
   useEffect(() => {
@@ -48,7 +56,7 @@ export default function EngineSellPopup({
             <p className="mt-1 text-[20px] font-bold leading-snug text-[#0F172A]">{heading}</p>
           </div>
           <div className="shrink-0 rounded-2xl border border-[#E2E8F0] bg-[#F4F6FB] px-3 py-2 text-right">
-            <p className="text-lg font-bold leading-none text-[#0F172A]">${price}</p>
+            <p className="text-lg font-bold leading-none text-[#0F172A]">{priceLabel}</p>
             <p className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-[#64748B]">tier {tier}</p>
           </div>
         </div>

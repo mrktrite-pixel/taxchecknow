@@ -16,6 +16,24 @@ export interface GeoBake {
 }
 
 /**
+ * Currency symbol for the product, driven by config.currency.
+ *
+ * MIRRORS cole/generators/generate-success-pages.ts sym() and
+ * app/_components/engine-config.ts currencySymbol() — all three are deliberate
+ * mirrors of one list, and they change together.
+ *
+ * EUR is checked BEFORE the dollar list because the test below is a two-way split
+ * whose else-branch is "£", so every non-dollar currency silently rendered as GBP.
+ * This block was previously INLINED TWICE in the Product sidebar below, which is how
+ * the Spain Beckham gate page (currency "EUR") shipped "£67" / "£147" while its own
+ * calculator CTA read "€67". Never inline the test again — call this.
+ */
+function sym(config: ProductConfig): string {
+  if (config.currency === "EUR") return "€";
+  return ["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£";
+}
+
+/**
  * GEO lead-claim bullets + provenance (Section 4).
  *
  * Emitted ONLY when the product declares `geoClaims`. Absent — which is every product but
@@ -346,11 +364,11 @@ ${videoSchemaConst}
               <div className="space-y-2">
                 <a href="#calculator"
                   className="block w-full bg-white py-2.5 px-3 text-center text-sm font-bold text-neutral-950 hover:bg-neutral-100 transition">
-                  ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}${config.tier1.price} · ${config.tier1.name.replace(/^Your /, "")}
+                  ${sym(config)}${config.tier1.price} · ${config.tier1.name.replace(/^Your /, "")}
                 </a>
                 <a href="#calculator"
                   className="block w-full border border-white py-2.5 px-3 text-center text-sm font-bold text-white hover:bg-neutral-800 transition">
-                  ${["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£"}${config.tier2.price} · ${config.tier2.name.replace(/^Your /, "")}
+                  ${sym(config)}${config.tier2.price} · ${config.tier2.name.replace(/^Your /, "")}
                 </a>
               </div>
               <p className="mt-3 text-center text-xs text-neutral-500">↑ Use the calculator to get your plan</p>
