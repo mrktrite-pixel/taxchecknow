@@ -370,11 +370,23 @@ export default function SuccessPlan() {
                           {checked[i] && <span className="text-xs font-bold text-white">✓</span>}
                         </button>
                         <div className="flex-1">
-                          <div className="flex items-start justify-between gap-2">
-                            <p className={`font-bold ${checked[i] ? "text-neutral-400 line-through" : "text-neutral-950"}`}>
+                          {/* URGENCY LABEL — do not "tidy" these classes back to a bare
+                              shrink-0 span. action.deadline is model-generated and unbounded
+                              ("within 6 months of Spanish Social Security registration"),
+                              and shrink-0 alone is an instruction NOT to give way, so a long
+                              string pushed straight out of the card (measured on the live
+                              beckham tier-2 checklist). shrink-0 is kept — the label must not
+                              be squeezed to nothing — but it is now bounded by max-w and
+                              allowed to wrap inside itself, and the row may drop it below the
+                              title when the line is too tight. No truncate: this block is a
+                              print-section, and an ellipsis would silently cut the deadline
+                              out of the buyer's PDF. min-w-0 on the title is what lets it
+                              shrink at all (flex items default to min-width:auto). */}
+                          <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
+                            <p className={`min-w-0 flex-1 font-bold ${checked[i] ? "text-neutral-400 line-through" : "text-neutral-950"}`}>
                               {i + 1}. {action.title}
                             </p>
-                            <span className="shrink-0 rounded-lg bg-red-100 px-2 py-0.5 font-mono text-[10px] font-bold text-red-700">
+                            <span className="max-w-full shrink-0 whitespace-normal break-words rounded-lg bg-red-100 px-2 py-0.5 text-right font-mono text-[10px] font-bold text-red-700 sm:max-w-[45%]">
                               {action.deadline}
                             </span>
                           </div>
