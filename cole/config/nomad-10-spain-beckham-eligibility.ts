@@ -7,10 +7,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // declaration. Declaring it restores exactly that — nothing new, nothing
   // inferred from the topic.
   //
-  // NURTURE ONLY. `temporal` is deliberately NOT declared here: that is a gate
-  // decision made per product at its own rebuild, from its own build evidence
-  // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
-  // which is the correct state until someone rules on it.
+  // The temporal lane is declared separately below (it was UNDECLARED until
+  // 2026-09-17; ruling 3.5 puts that decision at the product's own rebuild,
+  // which is where it has now been made).
   nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
 
   // ── ENGINE-NATIVE DECLARATION ───────────────────────────────────────────
@@ -27,6 +26,37 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // nomad_147_spain_beckham and the assess/plan success paths are byte-identical
   // to the bespoke this replaces.
   engineNative: true,
+
+  // ── TEMPORAL DECLARATION (TEMPORAL v1 · Step 6.1) ───────────────────────
+  // A REAL act-by date exists and it is the hardest edge in this product: the
+  // Modelo 149 election must be filed within SIX MONTHS of the buyer's own
+  // Spanish Social Security registration (or, on the DNV route, DNV issuance).
+  // The config's own copy calls it absolute, with no extension and no late
+  // application — miss it and that relocation is permanently outside the
+  // regime.
+  //
+  // It CANNOT BE COMPUTED HERE, which is the definition of unresolvable:
+  //   · the six-month clock starts from a date set PER CUSTOMER by the Spanish
+  //     SS registration (or DNV issuance) event, not by any calendar rule;
+  //   · the engine never captures that date — its five questions ask scope,
+  //     prior residency, work reason, the HQP 40% threshold and active-regime
+  //     topic, and not one of them is a date question;
+  //   · so there is no product-level deadline to resolve for anybody.
+  // Deriving one from an arrival month or a bucketed answer would email a
+  // customer an election deadline they never gave us — exactly the fabrication
+  // this kind exists to prevent.
+  //
+  // NOT to be confused with the 30 June IRPF dates this config carries in
+  // `deadline` and in the tier calendars. Those are the annual Spanish return
+  // date — informational anchors for the year AFTER the election — and they are
+  // not the act-by date for the election itself. They are left untouched here.
+  temporal: {
+    kind:         "unresolvable",
+    reason:       "ss_registration_date_is_per_customer_and_uncaptured",
+    jurisdiction: "ES",
+    domain:       "es_expat_income_tax",
+    label:        "Modelo 149 — six-month window from your Spanish Social Security registration",
+  },
 
   id: "spain-beckham", name: "Spain Beckham Eligibility Wall", site: "taxchecknow", country: "global", market: "Spain", language: "en", currency: "EUR",
   slug: "nomad/check/spain-beckham-eligibility", url: "https://taxchecknow.com/nomad/check/spain-beckham-eligibility", apiRoute: "/api/rules/spain-beckham",

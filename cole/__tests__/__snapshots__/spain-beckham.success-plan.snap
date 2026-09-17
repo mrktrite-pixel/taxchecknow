@@ -79,25 +79,16 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("2027-06-30T23:59:59.000+02:00").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "unresolvable", reason: "ss_registration_date_is_per_customer_and_uncaptured").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
-
-  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
-  // expired or will not parse, is a real defect — surface it so it is never silent.
-  // Phase 5 replaces this with real alerting.
-  useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "spain-beckham", deadlineIso: "2027-06-30T23:59:59.000+02:00" });
-  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -181,7 +172,7 @@ export default function SuccessPlan() {
         fullApprovalTimeline: "Your personalised fullApprovalTimeline is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact AEAT position based on my answers?",
-          "What is the single most important action I should take before 30 June 2027?",
+          "What is the single most important action I should take before Modelo 149 — six-month window from your Spanish Social Security registration?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -217,24 +208,6 @@ export default function SuccessPlan() {
       `DTSTAMP:${now}`,
       "SUMMARY:Modelo 149 — absolute deadline",
       "DESCRIPTION:Submit within 6 months of Spanish SS registration.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:beck-irpf-2027-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270630"}`,
-      `DTEND;VALUE=DATE:${"20270630"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Spanish IRPF return — 30 June 2027",
-      "DESCRIPTION:First return at Beckham rate.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:beck-irpf-2028-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20280630"}`,
-      `DTEND;VALUE=DATE:${"20280630"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Spanish IRPF return — 30 June 2028",
-      "DESCRIPTION:Year 2 of 6-year regime.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -368,7 +341,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 30 June 2027
+                  What to do — in order — before Modelo 149 — six-month window from your Spanish Social Security registration
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (
@@ -469,24 +442,6 @@ export default function SuccessPlan() {
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     In 180 days
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">Spanish IRPF return — 30 June 2027</p>
-                    <p className="text-xs text-neutral-500">First return at Beckham rate.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    30 Jun 2027
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">Spanish IRPF return — 30 June 2028</p>
-                    <p className="text-xs text-neutral-500">Year 2 of 6-year regime.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    30 Jun 2028
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
