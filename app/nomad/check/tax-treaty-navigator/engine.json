@@ -1,0 +1,332 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "A decision menu helping users navigate US income tax treaty situations — covering what treaties are, how to determine which treaty provision applies, how to claim treaty benefits, and how treaty rules interact with domestic tax law — grounded in the IRS United States income tax treaties authority and competitor-identified gaps in practical treaty guidance.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-primary-concern",
+      "text": "What best describes your primary question about US income tax treaties?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I want to understand what US income tax treaties are and how they work in general",
+          "value": "general-explainer",
+          "flags": [
+            "q1-primary-concern:general-explainer"
+          ]
+        },
+        {
+          "label": "I want to know how a treaty affects tax on a specific type of income (e.g. dividends, interest, royalties, employment income)",
+          "value": "income-type-outcome",
+          "flags": [
+            "q1-primary-concern:income-type-outcome"
+          ]
+        },
+        {
+          "label": "I need to claim a reduced withholding rate or exemption on US-source income I am receiving",
+          "value": "claim-withholding",
+          "flags": [
+            "q1-primary-concern:claim-withholding"
+          ]
+        },
+        {
+          "label": "I have a business presence question — whether my foreign business is taxable in the US (or vice versa)",
+          "value": "pe-question",
+          "flags": [
+            "q1-primary-concern:pe-question"
+          ]
+        },
+        {
+          "label": "I am trying to interpret treaty language that seems unclear or that the two countries may read differently",
+          "value": "ambiguous-language",
+          "flags": [
+            "q1-primary-concern:ambiguous-language"
+          ]
+        },
+        {
+          "label": "I want to understand how treaty rules interact with US domestic tax law",
+          "value": "domestic-interaction",
+          "flags": [
+            "q1-primary-concern:domestic-interaction"
+          ]
+        },
+        {
+          "label": "None of these describe my situation",
+          "value": "out-of-scope",
+          "flags": [
+            "q1-primary-concern:out-of-scope"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-withholding-or-docs",
+      "text": "Are you primarily asking about how to claim the reduced rate or exemption with a withholding agent, or about what documentation you need to support the treaty claim?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-primary-concern:claim-withholding"
+        ]
+      },
+      "options": [
+        {
+          "label": "How to claim the reduced rate or exemption — what form to provide and to whom",
+          "value": "how-to-claim",
+          "flags": [
+            "q2-withholding-or-docs:how-to-claim"
+          ]
+        },
+        {
+          "label": "What documentation I need to keep or provide to support my treaty benefit claim",
+          "value": "documentation",
+          "flags": [
+            "q2-withholding-or-docs:documentation"
+          ]
+        },
+        {
+          "label": "Both — my situation involves claiming the benefit and understanding the documentation requirements together",
+          "value": "both-claim-and-docs",
+          "flags": [
+            "q2-withholding-or-docs:both-claim-and-docs"
+          ]
+        },
+        {
+          "label": "I'm not sure which of these applies to me",
+          "value": "unsure",
+          "flags": [
+            "q2-withholding-or-docs:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-pe-or-interaction",
+      "text": "Is your business presence question specifically about whether a permanent establishment (PE) exists, or is it more about how the treaty rule interacts with US domestic tax law obligations?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-primary-concern:pe-question"
+        ]
+      },
+      "options": [
+        {
+          "label": "Whether a permanent establishment exists and how business profits are taxed as a result",
+          "value": "pe-exists",
+          "flags": [
+            "q3-pe-or-interaction:pe-exists"
+          ]
+        },
+        {
+          "label": "How the treaty rule (including any PE determination) interacts with US domestic tax law — for example, which rule takes precedence",
+          "value": "domestic-law-interaction",
+          "flags": [
+            "q3-pe-or-interaction:domestic-law-interaction"
+          ]
+        },
+        {
+          "label": "My situation involves both a PE question and complex interactions with US domestic law that are hard to separate",
+          "value": "pe-plus-domestic-complex",
+          "flags": [
+            "q3-pe-or-interaction:pe-plus-domestic-complex"
+          ]
+        },
+        {
+          "label": "I need professional advice — my situation is too specific or complex for general guidance",
+          "value": "need-professional",
+          "flags": [
+            "q3-pe-or-interaction:need-professional"
+          ]
+        },
+        {
+          "label": "I'm not sure which of these applies",
+          "value": "unsure",
+          "flags": [
+            "q3-pe-or-interaction:unsure"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "what-treaties-are",
+      "when": {
+        "any": [
+          "q1-primary-concern:general-explainer"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What US income tax treaties are and how they work",
+      "result_copy": "US income tax treaties are bilateral agreements between the United States and foreign countries. Under these treaties, residents (not necessarily citizens) of foreign countries are taxed at a reduced rate, or are exempt from US taxes on certain items of income they receive from sources within the United States. These reduced rates and exemptions vary among countries and specific items of income. Under these same treaties, residents or citizens of the United States are taxed at a reduced rate, or are exempt from foreign taxes, on certain items of income they receive from sources within foreign countries. The specific benefits available depend on the treaty between the US and the relevant country and the provisions covering your income type and taxpayer category.",
+      "figure_ids": []
+    },
+    {
+      "id": "treaty-article-outcomes",
+      "when": {
+        "any": [
+          "q1-primary-concern:income-type-outcome"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How treaty articles affect actual tax outcomes for specific income types",
+      "result_copy": "Different treaty articles govern different income types — such as dividends, interest, royalties, capital gains, employment income, and business profits. Each article specifies which country has taxing rights and whether reduced rates or exemptions apply. The specific outcome for your income type depends on the treaty between the US and the relevant country and the article covering that income category. Under US income tax treaties, residents (not necessarily citizens) of foreign countries may be taxed at a reduced rate, or may be exempt from US taxes on certain items of income — and these reduced rates and exemptions vary among countries and specific items of income. Review the applicable treaty text and any IRS technical explanations for the article covering your income type.",
+      "figure_ids": []
+    },
+    {
+      "id": "ambiguous-treaty-language",
+      "when": {
+        "any": [
+          "q1-primary-concern:ambiguous-language"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Interpreting ambiguous treaty language in your specific business situation",
+      "result_copy": "Treaty language is often general and can be interpreted differently by the US and the treaty partner country. To determine how ambiguous language may apply, consider: (1) reading the treaty text and any technical explanations published by the IRS; (2) how each country's tax authority has interpreted the relevant clause; and (3) consulting a qualified international tax professional, as differing interpretations can lead to double taxation or unexpected liability. This menu cannot resolve ambiguous treaty language for specific facts — a professional review is indicated.",
+      "figure_ids": []
+    },
+    {
+      "id": "permanent-establishment",
+      "when": {
+        "any": [
+          "q3-pe-or-interaction:pe-exists"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Permanent establishment and business profits treaty provisions",
+      "result_copy": "Most US income tax treaties include a permanent establishment (PE) article that determines when a foreign business has a sufficient presence in the US (or vice versa) to be taxed on its business profits there. Whether a PE exists depends on factors such as a fixed place of business, an agent with authority to conclude contracts, and the duration of activities. The treaty's business profits article then governs how much of those profits are attributable to and taxable by the host country. The specific determination depends on the treaty between the US and the relevant country and the facts of the business's presence — professional review of those facts is indicated.",
+      "figure_ids": []
+    },
+    {
+      "id": "claiming-withholding-relief",
+      "when": {
+        "any": [
+          "q2-withholding-or-docs:how-to-claim"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Claiming reduced withholding rates or exemptions on US-source income under a treaty",
+      "result_copy": "Foreign persons receiving US-source income subject to withholding may claim treaty-reduced rates or exemptions by providing the withholding agent with the appropriate IRS form (typically Form W-8BEN for individuals or Form W-8BEN-E for entities) certifying their treaty eligibility. The specific reduced rate or exemption available depends on the applicable treaty article and the income type — these reduced rates and exemptions vary among countries and specific items of income. Failure to provide proper documentation may result in withholding at the default statutory rate. Review the treaty article covering your income type and the IRS instructions for the applicable W-8 form.",
+      "figure_ids": []
+    },
+    {
+      "id": "treaty-documentation",
+      "when": {
+        "any": [
+          "q2-withholding-or-docs:documentation"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Documentation requirements to support a US tax treaty claim",
+      "result_copy": "To support a treaty benefit claim, taxpayers generally need to establish: (1) residency in the treaty country (typically via a residency certificate or IRS Form W-8BEN/W-8BEN-E); (2) that the income type is covered by the treaty; and (3) that any limitation-on-benefits or other anti-abuse provisions are satisfied. Specific documentation requirements vary by treaty and income type. Retaining adequate records is essential in the event of an IRS inquiry. The exact requirements depend on the applicable treaty and the income category — review the relevant treaty provisions and IRS guidance for your situation.",
+      "figure_ids": []
+    },
+    {
+      "id": "treaty-domestic-interaction",
+      "when": {
+        "any": [
+          "q1-primary-concern:domestic-interaction",
+          "q3-pe-or-interaction:domestic-law-interaction"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How US income tax treaty rules interact with US domestic tax law",
+      "result_copy": "US income tax treaty rules interact with US domestic tax law in ways that depend on the specific treaty provision and the domestic rule at issue. Under US income tax treaties, residents (not necessarily citizens) of foreign countries may be taxed at a reduced rate, or may be exempt from US taxes on certain items of income they receive from sources within the United States — and residents or citizens of the United States may be taxed at a reduced rate, or may be exempt from foreign taxes, on certain items of income they receive from sources within foreign countries. How a treaty provision overrides, modifies, or coexists with a domestic rule depends on the specific treaty article and the applicable domestic law. Professional review of the interaction in your specific situation is indicated.",
+      "figure_ids": []
+    },
+    {
+      "id": "escape-professional",
+      "when": {
+        "any": [
+          "q3-pe-or-interaction:need-professional"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Your situation requires professional international tax advice",
+      "result_copy": "Based on the complexity or specificity indicated, this situation is likely to benefit from review by a qualified international tax professional. US income tax treaties vary among countries and specific items of income, and the interaction of treaty provisions with domestic law and specific facts can produce outcomes that general guidance cannot reliably address. A tax professional with international treaty experience can assess the applicable treaty, the relevant article, and any limitation-on-benefits or anti-abuse provisions that may apply to your situation.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-primary-concern:out-of-scope"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "A tax treaty may not be what your question turns on",
+      "result_copy": "US income tax treaties allocate taxing rights between the United States and one other country, for a defined list of income types, and only for people and entities that are residents of one of the two countries. A question that does not sit inside that frame — a purely domestic US filing question, an immigration or visa question, a question about a country with no US treaty in force, or a state-level tax question, since states are generally not bound by federal treaties — will not be answered by reading a treaty, and that is worth knowing early rather than after the reading. The useful next step is to identify which body of law your question actually belongs to and take it to someone who works in that area: a US domestic tax preparer, the relevant state revenue authority, or an immigration adviser, as the case may be.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2-withholding-or-docs:unsure",
+          "q3-pe-or-interaction:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your treaty question needs one more detail before it can be answered",
+      "result_copy": "Your answers do not yet identify which treaty question you are actually asking, and the answer changes completely depending on which it is. A treaty analysis needs three things before it can start: the treaty country, because reduced rates and exemptions vary between treaties and no general answer holds across them; the income type, because a separate article governs dividends, interest, royalties, capital gains, employment income and business profits, and they do not agree with one another; and your residence status for treaty purposes, which turns on residence rather than citizenship. Once those three are settled the applicable article is usually identifiable from the treaty text and the IRS technical explanation for it. If they are not settled, an international tax adviser can establish them from your facts faster than a general menu can.",
+      "figure_ids": []
+    },
+    {
+      "id": "high_complexity",
+      "when": {
+        "any": [
+          "q2-withholding-or-docs:both-claim-and-docs",
+          "q3-pe-or-interaction:pe-plus-domestic-complex"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your situation has two moving parts that interact",
+      "result_copy": "You have indicated a situation with more than one live treaty issue at the same time — a benefit claim together with its documentation basis, or a permanent-establishment question together with how the treaty rule meets US domestic law. These do not decompose cleanly: how a benefit is claimed depends on what can be evidenced, and what a permanent-establishment finding means in practice depends on the domestic rule it lands against. Answering either half on its own can produce advice that the other half contradicts, which is why this menu stops here rather than picking one. An international tax professional can hold both parts together, assess the applicable treaty and article, and check any limitation-on-benefits or anti-abuse provision that bears on the combination.",
+      "figure_ids": []
+    }
+  ]
+}
