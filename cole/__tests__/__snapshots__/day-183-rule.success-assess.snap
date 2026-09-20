@@ -106,12 +106,14 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
-      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote,
+      // which are keyed by the ROUTE TAIL (engineSessionKey), NOT by config.id: the two differ
+      // on day-183-rule and spain-beckham, and passing config.id missed every read (DECISION-A).
+      // (<slug-tail>_answers + <slug-tail>_qualification) — via the SAME composer the webhook uses
       // (F5 contract). The legacy per-field keys are never written by an engine-native
       // calculator, so reading them would always fall back to defaults → a generic,
       // corpus-contradicting assessment.
-      const inputs = buildComposerInputsFromSession("day-183-rule");
+      const inputs = buildComposerInputsFromSession("183-day-rule");
 
       const res = await fetch("/api/assess", {
         method: "POST",

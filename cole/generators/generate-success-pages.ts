@@ -26,7 +26,7 @@
 // │ See reports/2026-07-23-frcgw-success-content-migration-scope.txt           │
 // └────────────────────────────────────────────────────────────────────────────┘
 import type { ProductConfig } from "../types/product-config";
-import { verifyEngineNative } from "./verify-engine-native";
+import { verifyEngineNative, engineSessionKey } from "./verify-engine-native";
 
 // Machine-enforced hard rule. buildSuccessPage() THROWS unless the template has been
 // upgraded (R-A2/R-A3) and the operator opts in with COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
@@ -116,12 +116,14 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   //   legacy        → the existing per-field phantom reads, byte-for-byte
   //                   unchanged, because a bespoke calculator does write them.
   const ssReads = engineNative
-    ? `      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
-      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+    ? `      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote,
+      // which are keyed by the ROUTE TAIL (engineSessionKey), NOT by config.id: the two differ
+      // on day-183-rule and spain-beckham, and passing config.id missed every read (DECISION-A).
+      // (<slug-tail>_answers + <slug-tail>_qualification) — via the SAME composer the webhook uses
       // (F5 contract). The legacy per-field keys are never written by an engine-native
       // calculator, so reading them would always fall back to defaults → a generic,
       // corpus-contradicting assessment.
-      const inputs = buildComposerInputsFromSession("${config.id}");`
+      const inputs = buildComposerInputsFromSession("${engineSessionKey(config)}");`
     : promptFields.map(f =>
         `      const ${f.key} = sessionStorage.getItem("${config.id}_${f.key}") || "${f.defaultVal}";`
       ).join("\n");
