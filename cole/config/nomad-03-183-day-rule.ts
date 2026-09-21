@@ -64,8 +64,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // per-taxpayer. The prose names the moment without asserting a date.
   deadline: { isoDate: "", display: "Your income tax return due date", short: "With your return", description: "The U.S. day-count year runs on the calendar year, but the one act-by moment in this test — filing Form 8843 to exclude days — falls on your own income tax return due date, which differs by filer.", urgencyLabel: "PER-FILER", countdownLabel: "" },
   h1: "Does Staying Under 183 Days Make You a U.S. Non-Resident? The IRS Counts Three Years of Days, Not One.",
-  metaTitle: "183-Day Rule and the U.S. Substantial Presence Test — Does Under 183 Days Make You a Non-Resident? | TaxCheckNow",
-  metaDescription: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
+  metaTitle: "183-Day Rule: U.S. Substantial Presence Test Check | TaxCheckNow",
+  metaDescription: "Under 183 days does not make you a U.S. non-resident. The IRS test needs 31 days this year plus 183 weighted days over three years. Free check.",
   canonical: "https://taxchecknow.com/nomad/check/183-day-rule",
   answerHeadline: "The answer — IRS, Substantial Presence Test",
   answerBody: [
