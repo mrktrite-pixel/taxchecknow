@@ -26,7 +26,7 @@
 // │ See reports/2026-07-23-frcgw-success-content-migration-scope.txt           │
 // └────────────────────────────────────────────────────────────────────────────┘
 import type { ProductConfig } from "../types/product-config";
-import { verifyEngineNative } from "./verify-engine-native";
+import { verifyEngineNative, engineSessionKey } from "./verify-engine-native";
 
 // Machine-enforced hard rule. buildSuccessPage() THROWS unless the template has been
 // upgraded (R-A2/R-A3) and the operator opts in with COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
@@ -54,6 +54,44 @@ function sym(config: ProductConfig): string {
   // are mirrors and the comment there says they change together. This is that change.
   if (config.currency === "EUR") return "€";
   return ["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£";
+}
+
+/**
+ * D2 — the SHORT, prose-safe form of config.market.
+ *
+ * config.market is the ASSESSMENT CONTEXT string, and it is deliberately verbose: 183-day's
+ * is "United States (IRS Substantial Presence Test)", narrowed on purpose so /api/assess
+ * answers on one jurisdiction's test rather than across five. That string is correct where it
+ * is POSTED and wrong where it is READ: the heading rendered "Your United States (IRS
+ * Substantial Presence Test) IRS position" and the disclaimer "a qualified United States (IRS
+ * Substantial Presence Test) tax adviser".
+ *
+ * DERIVED, not a new config field and not a lookup table: drop a trailing parenthetical and
+ * trim. Measured across all 48 configs — only 4 carry a parenthetical
+ * ("United States (IRS Substantial Presence Test)" -> "United States", "Global (cross-border)"
+ * and "Global (cross-border departure)" -> "Global"), so for the other 44 this is a no-op and
+ * their prose cannot move. The full string still goes to /api/assess untouched.
+ */
+function marketProse(config: ProductConfig): string {
+  return (config.market ?? "").replace(/\s*\([^)]*\)\s*$/, "").trim() || config.market;
+}
+
+/**
+ * D3 — sources that may appear in CUSTOMER-FACING copy.
+ *
+ * config.sources carries both real authority citations and an internal machine surface:
+ * 31 of 48 configs list { title: "Machine-readable JSON rules", url: "/api/rules/<id>" }.
+ * That is estate plumbing — an answer-engine affordance for the public gate page — and it was
+ * being rendered verbatim into the paid success PDF's footer and into every delivered file
+ * page, where it reads as a broken promise to a buyer who cannot use it.
+ *
+ * Filtered by URL, not by title, so a retitled entry cannot slip through: anything whose href
+ * is site-internal (/api/...) is plumbing. Filtered BEFORE the slice, so a product whose
+ * second source is the JSON route surfaces its next REAL citation instead of losing a slot.
+ * The gate page is deliberately NOT changed — there the link is intentional.
+ */
+function customerSources(config: ProductConfig) {
+  return (config.sources ?? []).filter((s) => !/^\/api\//.test(s.url ?? ""));
 }
 
 function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): string {
@@ -116,12 +154,14 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   //   legacy        → the existing per-field phantom reads, byte-for-byte
   //                   unchanged, because a bespoke calculator does write them.
   const ssReads = engineNative
-    ? `      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
-      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+    ? `      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote,
+      // which are keyed by the ROUTE TAIL (engineSessionKey), NOT by config.id: the two differ
+      // on day-183-rule and spain-beckham, and passing config.id missed every read (DECISION-A).
+      // (<slug-tail>_answers + <slug-tail>_qualification) — via the SAME composer the webhook uses
       // (F5 contract). The legacy per-field keys are never written by an engine-native
       // calculator, so reading them would always fall back to defaults → a generic,
       // corpus-contradicting assessment.
-      const inputs = buildComposerInputsFromSession("${config.id}");`
+      const inputs = buildComposerInputsFromSession("${engineSessionKey(config)}");`
     : promptFields.map(f =>
         `      const ${f.key} = sessionStorage.getItem("${config.id}_${f.key}") || "${f.defaultVal}";`
       ).join("\n");
@@ -387,8 +427,15 @@ ${emittableEvents.length === 0 ? `  // handleCalendar() omitted: no event surviv
     setTimeout(() => setCopied(false), 3000);
   }
 
-  const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? \`\${firstName}\` : "you";
+  // D4 — NORMALISE THE NAME AT RENDER. /api/get-session returns whatever the buyer typed at
+  // checkout; a lowercase "general" rendered "general, here is your ...". Trim, collapse inner
+  // whitespace, and upper-case the first letter only — never the rest, because "McLeod" and
+  // "O'Brien" must survive. A whitespace-only value collapses to "" and falls back to the
+  // unnamed branch, which also closes the residual the beckham HOLD flagged.
+  const displayName = firstName.trim().replace(/\\s+/g, " ").replace(/^./, (c) => c.toUpperCase());
+  const named = displayName !== "" && firstName !== "there";
+  const hi = named ? displayName : "there";
+  const greeting = named ? displayName : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -459,7 +506,7 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your ${config.market} ${config.authority} position
+                Your ${marketProse(config)} ${config.authority} position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
@@ -613,7 +660,7 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
                 Each document is built around your specific ${config.authority} position.
-                Start with File 02 — it has your exact numbers.
+                File 02 is the worksheet that computes your exact numbers.
                 ${isTier2 ? "Files 06–08 are exclusive to this plan." : ""}
               </p>
               <div className="space-y-2">
@@ -646,7 +693,7 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
             <div className="print-section rounded-2xl border-2 border-neutral-950 bg-neutral-950 p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">One thing to do today</p>
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
-                Open File 02 — your exact numbers are in there.
+                Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 ${isTier2 ? "Work through the checklist above." : ""}
                 ${qualitative ? qualitative.cta : `{deadlineLive ? \`\${daysToDeadline} days to ${config.deadline.display}.\` : ""}`}
@@ -698,9 +745,9 @@ ${!isTier2 ? `
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
-            Always consult a qualified ${config.market} tax adviser before making financial decisions.
+            Always consult a qualified ${marketProse(config)} tax adviser before making financial decisions.
             Based on ${config.authority} guidance ${config.lastVerified}.{" "}
-            ${config.sources.slice(0,2).map(s =>
+            ${customerSources(config).slice(0,2).map(s =>
               `<a href="${s.url}" target="_blank" rel="noopener noreferrer" className="underline">${s.title}</a>`
             ).join(" · ")}
           </p>
