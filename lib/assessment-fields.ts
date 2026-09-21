@@ -24,9 +24,18 @@ export const GENERIC_FIELDS: TierFields = {
 // Per-product overrides — each MUST equal that product's success-page `fields` array.
 // medicare-levy-surcharge-trap verified against success/assess (tier1) + success/plan (tier2).
 export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
+  // G (2026-09-21) — REALIGNED TO THE CONFIG. This entry was REGISTERED BUT STALE: the
+  // config's assessment fields moved after it was written, so the webhook stored
+  // surchargeRateTier / estimatedMLSPayable / coverCostEstimate / netSavingFromCover /
+  // confidenceLevel / partnerCoverAnalysis / policyExcessCheck while the pages render
+  // whatCountsInYourMLSIncome / coverQualificationCheck / whatHappensAtLodgement /
+  // householdCoverAnalysis. A partial-body version of the empty-body failure beckham hit.
+  // Lists now COPIED FROM cole/config/au-10-medicare-levy-surcharge-trap.ts
+  // (tier1AssessmentFields, tier2AssessmentFields) — 9 and 9 — which is what the emitted
+  // pages POST. The parity test enforces it from here.
   "medicare-levy-surcharge-trap": {
-    tier1: ["mlsStatus", "incomeForMLSPurposes", "surchargeRateTier", "estimatedMLSPayable", "coverCostEstimate", "netSavingFromCover", "coverTimingStrategy", "thresholdPosition", "strongestRiskTrigger", "confidenceLevel", "firstAction"],
-    tier2: ["mlsStatus", "incomeForMLSPurposes", "surchargeRateTier", "estimatedMLSPayable", "coverCostEstimate", "netSavingFromCover", "coverTimingStrategy", "partnerCoverAnalysis", "familyThresholdPosition", "superContributionOpportunity", "policyExcessCheck", "integratedPlan", "nextYearCalendar", "strongestRiskTrigger", "confidenceLevel"],
+    tier1: ["mlsStatus", "incomeForMLSPurposes", "whatCountsInYourMLSIncome", "coverQualificationCheck", "coverTimingStrategy", "thresholdPosition", "whatHappensAtLodgement", "strongestRiskTrigger", "firstAction"],
+    tier2: ["mlsStatus", "incomeForMLSPurposes", "coverTimingStrategy", "householdCoverAnalysis", "familyThresholdPosition", "superContributionOpportunity", "integratedPlan", "nextYearCalendar", "strongestRiskTrigger"],
   },
   // Machine product — MUST equal config.tier{1,2}AssessmentFields (which feed its success pages).
   "superannuation-tax-leaving-australia-confusion-2026": {
