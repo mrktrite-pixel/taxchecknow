@@ -146,7 +146,7 @@ export default function SuccessAssess() {
         immediateActions: "Your personalised immediateActions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact AEAT position based on my answers?",
-          "What is the single most important action I should take before Modelo 149 — six-month window from your Spanish Social Security registration?",
+          "What is the single most important action I should take before the Modelo 149 six-month deadline?",
           "Are there any planning opportunities specific to my situation?",
         ],
         

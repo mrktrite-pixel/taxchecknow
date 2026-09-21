@@ -172,7 +172,7 @@ export default function SuccessPlan() {
         fullApprovalTimeline: "Your personalised fullApprovalTimeline is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact AEAT position based on my answers?",
-          "What is the single most important action I should take before Modelo 149 — six-month window from your Spanish Social Security registration?",
+          "What is the single most important action I should take before the Modelo 149 six-month deadline?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -341,7 +341,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before Modelo 149 — six-month window from your Spanish Social Security registration
+                  What to do — in order — before the Modelo 149 six-month deadline
                 </h2>
                 <div className="space-y-4">
                   {(assessment.actions as Action[]).map((action, i) => (

@@ -55,7 +55,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     reason:       "ss_registration_date_is_per_customer_and_uncaptured",
     jurisdiction: "ES",
     domain:       "es_expat_income_tax",
-    label:        "Modelo 149 — six-month window from your Spanish Social Security registration",
+    label:        "the Modelo 149 six-month deadline",
   },
 
   id: "spain-beckham", name: "Spain Beckham Eligibility Wall", site: "taxchecknow", country: "global", market: "Spain", language: "en", currency: "EUR",

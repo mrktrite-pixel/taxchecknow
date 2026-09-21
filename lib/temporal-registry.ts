@@ -161,7 +161,7 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "reason": "ss_registration_date_is_per_customer_and_uncaptured",
                 "jurisdiction": "ES",
                 "domain": "es_expat_income_tax",
-                "label": "Modelo 149 — six-month window from your Spanish Social Security registration"
+                "label": "the Modelo 149 six-month deadline"
           },
           "nurture": [
                 {
