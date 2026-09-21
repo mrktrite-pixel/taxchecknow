@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SESSION_KEY = "spain-beckham-eligibility";
 const SLUG = "beck-02";
 const FALLBACK_LABEL = { name: "Qualifying Structure Checklist", desc: "What counts as a qualifying work arrangement — and what does not." };
 const BODY = `<h2>Qualifying Structure Checklist</h2><h3>Qualifying</h3><ul class="checklist"><li>Employment contract with a Spanish entity (standard inbound hire)</li><li>Posted worker — foreign employer sends to Spain under assignment letter + A1</li><li>Director of Spanish company holding under 25% capital (post-Startup Law)</li><li>Director of certified startup regardless of ownership (post-Startup Law)</li><li>Highly qualified professional in startup / innovation activity</li><li>Remote worker with Spanish Digital Nomad Visa (post-Startup Law)</li><li>Entrepreneur conducting innovative economic activity</li></ul><h3>Does NOT qualify (standard conditions)</h3><ul><li>Retirement / pension / investment income only</li><li>Move for family reasons without qualifying role</li><li>Standard autónomo without DNV or qualifying activity</li><li>Director 25%+ in non-startup company</li><li>Spouse/partner of qualifying person (separate application required)</li></ul>`;
@@ -26,7 +27,7 @@ export default function SpainBeckhamFile02() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's

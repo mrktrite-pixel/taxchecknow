@@ -136,12 +136,14 @@ export default function SuccessPlan() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
-      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote,
+      // which are keyed by the ROUTE TAIL (engineSessionKey), NOT by config.id: the two differ
+      // on day-183-rule and spain-beckham, and passing config.id missed every read (DECISION-A).
+      // (<slug-tail>_answers + <slug-tail>_qualification) — via the SAME composer the webhook uses
       // (F5 contract). The legacy per-field keys are never written by an engine-native
       // calculator, so reading them would always fall back to defaults → a generic,
       // corpus-contradicting assessment.
-      const inputs = buildComposerInputsFromSession("spain-beckham");
+      const inputs = buildComposerInputsFromSession("spain-beckham-eligibility");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -266,8 +268,15 @@ export default function SuccessPlan() {
     setTimeout(() => setCopied(false), 3000);
   }
 
-  const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "you";
+  // D4 — NORMALISE THE NAME AT RENDER. /api/get-session returns whatever the buyer typed at
+  // checkout; a lowercase "general" rendered "general, here is your ...". Trim, collapse inner
+  // whitespace, and upper-case the first letter only — never the rest, because "McLeod" and
+  // "O'Brien" must survive. A whitespace-only value collapses to "" and falls back to the
+  // unnamed branch, which also closes the residual the beckham HOLD flagged.
+  const displayName = firstName.trim().replace(/\s+/g, " ").replace(/^./, (c) => c.toUpperCase());
+  const named = displayName !== "" && firstName !== "there";
+  const hi = named ? displayName : "there";
+  const greeting = named ? displayName : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -506,7 +515,7 @@ export default function SuccessPlan() {
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
                 Each document is built around your specific Agencia Estatal de Administración Tributaria (AEAT) position.
-                Start with File 02 — it has your exact numbers.
+                File 02 is the worksheet that computes your exact numbers.
                 Files 06–08 are exclusive to this plan.
               </p>
               <div className="space-y-2">
@@ -539,7 +548,7 @@ export default function SuccessPlan() {
             <div className="print-section rounded-2xl border-2 border-neutral-950 bg-neutral-950 p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">One thing to do today</p>
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
-                Open File 02 — your exact numbers are in there.
+                Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
                 {deadlineLive ? `${daysToDeadline} days to 30 June 2027.` : ""}

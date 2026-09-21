@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SESSION_KEY = "spain-beckham-eligibility";
 const SLUG = "beck-07";
 const FALLBACK_LABEL = { name: "A1 Certificate and Social Security Strategy", desc: "Detailed A1 process for EU/EEA posted workers + alternative SS routes." };
 const BODY = `<h2>A1 Certificate and SS Strategy</h2><h3>A1 certificate (EU/EEA posted workers)</h3><ul><li>Issued by home country social security authority</li><li>Confirms continued coverage under home SS while working in another EU/EEA state</li><li>Application BEFORE posting begins; processing 4-8 weeks typical</li><li>Valid for duration of posting (up to 24 months initial, extendable in some cases)</li></ul><h3>Alternative SS routes</h3><ul><li>Spanish SS registration — standard for new hires; employer handles</li><li>Bilateral SS agreement — between Spain and specific non-EU countries (US, Canada, Australia, Japan, etc.)</li><li>Self-employed (RETA) — for DNV holders and qualifying autónomos</li></ul><h3>SS strategy by profile</h3><ul><li>UK posted worker: A1 from HMRC (post-Brexit bilateral arrangement)</li><li>EU posted worker: A1 from home country SS</li><li>US remote worker via DNV: Spanish RETA registration + totalization agreement</li><li>Australian posted: bilateral agreement; Certificate of Coverage from ATO</li></ul>`;
@@ -26,7 +27,7 @@ export default function SpainBeckhamFile07() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's

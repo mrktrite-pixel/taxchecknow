@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SESSION_KEY = "spain-beckham-eligibility";
 const SLUG = "beck-04";
 const FALLBACK_LABEL = { name: "Modelo 149 Application Timeline", desc: "The 6-month clock: when it starts, what triggers it, how to apply." };
 const BODY = `<h2>Modelo 149 Application Timeline</h2><div class="warning-box"><strong>The 6-month deadline is absolute.</strong> Missing it permanently excludes this relocation from the regime.</div><h3>When the 6-month clock starts</h3><ul><li>Date of Spanish Social Security registration (most common), OR</li><li>Date of Digital Nomad Visa issuance (DNV route)</li></ul><h3>Typical application timeline</h3><ol><li>Month 0: Arrive in Spain / start employment</li><li>Month 0-1: Register with Spanish SS (receive NAF) OR obtain DNV</li><li>Month 1-3: Gather supporting documentation (employment contract, SS registration, prior residency evidence)</li><li>Month 3-5: Prepare Modelo 149 (via gestor or directly)</li><li>Month 5-6: Submit Modelo 149 to AEAT electronically</li><li>Month 6+: AEAT issues acknowledgment (typically 2-4 weeks)</li></ol><h3>Supporting documents</h3><ul><li>Passport / NIE (Spanish tax number)</li><li>Spanish SS registration (NAF) OR A1 certificate OR DNV</li><li>Employment contract / posting letter / founding documents</li><li>Prior residency evidence (foreign tax certs for 5 years)</li><li>Formal election declaration (included in Modelo 149)</li></ul>`;
@@ -26,7 +27,7 @@ export default function SpainBeckhamFile04() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's

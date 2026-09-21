@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SESSION_KEY = "spain-beckham-eligibility";
 const SLUG = "beck-05";
 const FALLBACK_LABEL = { name: "Your Adviser Brief — Beckham Application", desc: "Questions for your Spanish gestor / tax adviser before application." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with a Spanish gestor (licensed tax/admin professional) or tax adviser experienced with Beckham applications. Generic EU tax advisers without Spanish specialty often miss structural detail.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Based on my facts, does my move qualify under one of the Beckham categories — and if so, which?</p></div><h3>Question 2</h3><p>Am I clear on the 5-year prior residency test — any past Spanish periods we should review?</p><h3>Question 3</h3><p>What is my Modelo 149 timing, and is the A1 certificate in place (if relevant)?</p><h3>Question 4</h3><p>Do I need an Enisa certification if I am a founder-director with significant ownership?</p><h3>Question 5</h3><p>What does my tax modelling look like under Beckham vs standard IRPF for my expected income?</p>`;
@@ -26,7 +27,7 @@ export default function SpainBeckhamFile05() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's

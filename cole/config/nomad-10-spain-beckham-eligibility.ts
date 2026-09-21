@@ -36,8 +36,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier2: { price: 147, name: "Your Beckham Approval System", tagline: "Full employment structure optimisation + A1 certificate strategy + Modelo 149 roadmap + startup certification pathway", value: "Complete Beckham application system: employment restructuring plan, A1 certificate strategy, Modelo 149 application roadmap, startup certification pathway, and full approval timeline with Spanish gestor coordination.", cta: "Get My Beckham Approval System — €147 →", productKey: "nomad_147_spain_beckham", envVar: "STRIPE_NOMAD_BECK_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2027-06-30T23:59:59.000+02:00", display: "30 June 2027", short: "30 Jun 2027", description: "Spanish IRPF declaration deadline for 2026 tax year — Beckham regime reflected on first return after application", urgencyLabel: "AEAT IRPF DEADLINE", countdownLabel: "Countdown to 30 June 2027 — Spanish IRPF declaration deadline" },
   h1: "Will Your Move to Spain Qualify for the 24% Beckham Tax Rate? Most Applications Fail Due to Structure — Not Income. Here Is Whether Your Setup Meets the Requirements.",
-  metaTitle: "Spain Beckham Eligibility Wall — 24% Flat Rate Qualification Check | TaxCheckNow",
-  metaDescription: "Spanish Special Expat Regime (Beckham Law) under Ley 35/2006 Art. 93 + Ley 28/2022 Startup Law. 24% flat rate on up to €600,000 Spanish-source income for 6 years. Eligibility: qualifying work arrangement + no prior 5-year Spanish residency + social security coverage + Modelo 149 within 6 months. Confirmed April 2026.",
+  metaTitle: "Beckham Law Eligibility: 24% Spain Tax Rate Check | TaxCheckNow",
+  metaDescription: "Most Beckham Law applications fail on structure, not income. Check whether your Spain move qualifies for the 24% flat rate under Art. 93. Free check.",
   canonical: "https://taxchecknow.com/nomad/check/spain-beckham-eligibility",
   answerHeadline: "The answer — AEAT Beckham regime eligibility, confirmed April 2026",
   answerBody: [
