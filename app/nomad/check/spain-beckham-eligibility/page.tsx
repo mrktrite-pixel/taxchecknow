@@ -10,12 +10,12 @@ import SpainBeckhamCalculator from "./SpainBeckhamCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Spain Beckham Eligibility Wall — 24% Flat Rate Qualification Check | TaxCheckNow",
-  description: "Spanish Special Expat Regime (Beckham Law) under Ley 35/2006 Art. 93 + Ley 28/2022 Startup Law. 24% flat rate on up to €600,000 Spanish-source income for 6 years. Eligibility: qualifying work arrangement + no prior 5-year Spanish residency + social security coverage + Modelo 149 within 6 months. Confirmed April 2026.",
+  title: "Beckham Law Eligibility: 24% Spain Tax Rate Check | TaxCheckNow",
+  description: "Most Beckham Law applications fail on structure, not income. Check whether your Spain move qualifies for the 24% flat rate under Art. 93. Free check.",
   alternates: { canonical: "https://taxchecknow.com/nomad/check/spain-beckham-eligibility" },
   openGraph: {
-    title: "Spain Beckham Eligibility Wall — 24% Flat Rate Qualification Check | TaxCheckNow",
-    description: "Spanish Special Expat Regime (Beckham Law) under Ley 35/2006 Art. 93 + Ley 28/2022 Startup Law. 24% flat rate on up to €600,000 Spanish-source income for 6 years. Eligibility: qualifying work arrangement + no prior 5-year Spanish residency + social security coverage + Modelo 149 within 6 months. Confirmed April 2026.",
+    title: "Beckham Law Eligibility: 24% Spain Tax Rate Check | TaxCheckNow",
+    description: "Most Beckham Law applications fail on structure, not income. Check whether your Spain move qualifies for the 24% flat rate under Art. 93. Free check.",
     url: "https://taxchecknow.com/nomad/check/spain-beckham-eligibility",
     siteName: "TaxCheckNow",
     type: "website",
@@ -383,7 +383,7 @@ export default function SpainBeckhamPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Spain Beckham Eligibility Wall — Rules April 2026",
-    description: "Spanish Special Expat Regime (Beckham Law) under Ley 35/2006 Art. 93 + Ley 28/2022 Startup Law. 24% flat rate on up to €600,000 Spanish-source income for 6 years. Eligibility: qualifying work arrangement + no prior 5-year Spanish residency + social security coverage + Modelo 149 within 6 months. Confirmed April 2026.",
+    description: "Most Beckham Law applications fail on structure, not income. Check whether your Spain move qualifies for the 24% flat rate under Art. 93. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -399,7 +399,7 @@ export default function SpainBeckhamPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Spain Beckham Eligibility Wall",
-    description: "Spanish Special Expat Regime (Beckham Law) under Ley 35/2006 Art. 93 + Ley 28/2022 Startup Law. 24% flat rate on up to €600,000 Spanish-source income for 6 years. Eligibility: qualifying work arrangement + no prior 5-year Spanish residency + social security coverage + Modelo 149 within 6 months. Confirmed April 2026.",
+    description: "Most Beckham Law applications fail on structure, not income. Check whether your Spain move qualifies for the 24% flat rate under Art. 93. Free check.",
     url: "https://taxchecknow.com/nomad/check/spain-beckham-eligibility",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -463,7 +463,7 @@ export default function SpainBeckhamPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nomad/check/spain-beckham-eligibility#calculator",
-    "description": "Spanish Special Expat Regime (Beckham Law) under Ley 35/2006 Art. 93 + Ley 28/2022 Startup Law. 24% flat rate on up to €600,000 Spanish-source income for 6 years. Eligibility: qualifying work arrangement + no prior 5-year Spanish residency + social security coverage + Modelo 149 within 6 months. Confirmed April 2026.",
+    "description": "Most Beckham Law applications fail on structure, not income. Check whether your Spain move qualifies for the 24% flat rate under Art. 93. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",

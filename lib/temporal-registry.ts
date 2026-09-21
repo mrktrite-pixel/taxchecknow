@@ -156,6 +156,13 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
           ]
     },
     "spain-beckham": {
+          "temporal": {
+                "kind": "unresolvable",
+                "reason": "ss_registration_date_is_per_customer_and_uncaptured",
+                "jurisdiction": "ES",
+                "domain": "es_expat_income_tax",
+                "label": "the Modelo 149 six-month deadline"
+          },
           "nurture": [
                 {
                       "track": "standard_v1",

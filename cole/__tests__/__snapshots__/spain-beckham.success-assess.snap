@@ -58,25 +58,16 @@ export default function SuccessAssess() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("2027-06-30T23:59:59.000+02:00").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "unresolvable", reason: "ss_registration_date_is_per_customer_and_uncaptured").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
-
-  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
-  // expired or will not parse, is a real defect — surface it so it is never silent.
-  // Phase 5 replaces this with real alerting.
-  useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "spain-beckham", deadlineIso: "2027-06-30T23:59:59.000+02:00" });
-  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -115,12 +106,14 @@ export default function SuccessAssess() {
 
       // ── STEP 2: Fallback — generate now via /api/assess ──────────────
       // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
-      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote,
+      // which are keyed by the ROUTE TAIL (engineSessionKey), NOT by config.id: the two differ
+      // on day-183-rule and spain-beckham, and passing config.id missed every read (DECISION-A).
+      // (<slug-tail>_answers + <slug-tail>_qualification) — via the SAME composer the webhook uses
       // (F5 contract). The legacy per-field keys are never written by an engine-native
       // calculator, so reading them would always fall back to defaults → a generic,
       // corpus-contradicting assessment.
-      const inputs = buildComposerInputsFromSession("spain-beckham");
+      const inputs = buildComposerInputsFromSession("spain-beckham-eligibility");
 
       const res = await fetch("/api/assess", {
         method: "POST",
@@ -152,8 +145,8 @@ export default function SuccessAssess() {
         structureFixRequired: "Your personalised structureFixRequired is being prepared — please refresh in a moment.",
         immediateActions: "Your personalised immediateActions is being prepared — please refresh in a moment.",
         accountantQuestions: [
-          "What is my exact Agencia Estatal de Administración Tributaria (AEAT) position based on my answers?",
-          "What is the single most important action I should take before 30 June 2027?",
+          "What is my exact AEAT position based on my answers?",
+          "What is the single most important action I should take before the Modelo 149 six-month deadline?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
@@ -182,15 +175,6 @@ export default function SuccessAssess() {
       "DESCRIPTION:Absolute deadline for Beckham regime election.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:beck-irpf-2027-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270630"}`,
-      `DTEND;VALUE=DATE:${"20270630"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:Spanish IRPF return — 30 June 2027 (2026 year)",
-      "DESCRIPTION:First return reflecting Beckham election (if arrived 2026).",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
     const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
@@ -213,8 +197,15 @@ export default function SuccessAssess() {
     setTimeout(() => setCopied(false), 3000);
   }
 
-  const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "you";
+  // D4 — NORMALISE THE NAME AT RENDER. /api/get-session returns whatever the buyer typed at
+  // checkout; a lowercase "general" rendered "general, here is your ...". Trim, collapse inner
+  // whitespace, and upper-case the first letter only — never the rest, because "McLeod" and
+  // "O'Brien" must survive. A whitespace-only value collapses to "" and falls back to the
+  // unnamed branch, which also closes the residual the beckham HOLD flagged.
+  const displayName = firstName.trim().replace(/\s+/g, " ").replace(/^./, (c) => c.toUpperCase());
+  const named = displayName !== "" && firstName !== "there";
+  const hi = named ? displayName : "there";
+  const greeting = named ? displayName : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -257,7 +248,7 @@ export default function SuccessAssess() {
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
             <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against Agencia Estatal de Administración Tributaria (AEAT) rules</p>
+            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against AEAT rules</p>
           </div>
         )}
 
@@ -277,7 +268,7 @@ export default function SuccessAssess() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your Spain Agencia Estatal de Administración Tributaria (AEAT) position
+                Your Spain AEAT position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
@@ -358,15 +349,6 @@ export default function SuccessAssess() {
                     In 180 days
                   </span>
                 </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">Spanish IRPF return — 30 June 2027 (2026 year)</p>
-                    <p className="text-xs text-neutral-500">First return reflecting Beckham election (if arrived 2026).</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    30 Jun 2027
-                  </span>
-                </div>
               </div>
               <button onClick={handleCalendar}
                 className="no-print w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
@@ -383,8 +365,8 @@ export default function SuccessAssess() {
                 Everything you need — in one place
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
-                Each document is built around your specific Agencia Estatal de Administración Tributaria (AEAT) position.
-                Start with File 02 — it has your exact numbers.
+                Each document is built around your specific AEAT position.
+                File 02 is the worksheet that computes your exact numbers.
                 
               </p>
               <div className="space-y-2">
@@ -417,7 +399,7 @@ export default function SuccessAssess() {
             <div className="print-section rounded-2xl border-2 border-neutral-950 bg-neutral-950 p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">One thing to do today</p>
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
-                Open File 02 — your exact numbers are in there.
+                Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 
                 {deadlineLive ? `${daysToDeadline} days to 30 June 2027.` : ""}

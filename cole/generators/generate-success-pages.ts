@@ -72,6 +72,33 @@ function sym(config: ProductConfig): string {
  * and "Global (cross-border departure)" -> "Global"), so for the other 44 this is a no-op and
  * their prose cannot move. The full string still goes to /api/assess untouched.
  */
+/**
+ * A — the SHORT, prose-safe form of config.authority. Same shape as marketProse above,
+ * and the same reasoning: the string is right where it is CITED and wrong where it is READ.
+ *
+ * config.authority is the full legal name of the regulator, which is correct in a citation
+ * ("Based on <full name> guidance April 2026") and in the /api/assess payload, but reads
+ * badly mid-sentence. Beckham rendered:
+ *     "Your Spain Agencia Estatal de Administracion Tributaria (AEAT) position"
+ *
+ * RULE: if the authority ends in a parenthetical ACRONYM, use the acronym; otherwise return
+ * it unchanged. Measured across all 48 configs (2026-09-21): 16 end in an acronym
+ * (CRA x5, IRD x5, ATO x2, HMRC x2, IRS x1, AEAT x1) and 32 do not, so this is a no-op for
+ * two thirds of the estate.
+ *
+ * The acronym pattern deliberately allows NO spaces and NO slashes, which is what keeps
+ * "National tax authorities (CRA / ATO / HMRC / IRD NZ / IRS)" intact — that trailing
+ * parenthesis is a LIST, not an acronym, and collapsing it would destroy the meaning.
+ *
+ * APPLIED IN PROSE SLOTS ONLY. The /api/assess payload and the footer citation keep the
+ * full legal name; see the call sites.
+ */
+function authorityProse(config: ProductConfig): string {
+  const a = (config.authority ?? "").trim();
+  const m = a.match(/[(]([A-Z][A-Za-z0-9.-]{1,12})[)]$/);
+  return m ? m[1] : a;
+}
+
 function marketProse(config: ProductConfig): string {
   return (config.market ?? "").replace(/\s*\([^)]*\)\s*$/, "").trim() || config.market;
 }
@@ -383,7 +410,7 @@ ${inputsObj}
       setAssessment({
         ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: "Your personalised ${f.replace(/_/g," ")} is being prepared — please refresh in a moment.",`).join("\n        ")}
         accountantQuestions: [
-          "What is my exact ${config.authority} position based on my answers?",
+          "What is my exact ${authorityProse(config)} position based on my answers?",
           "What is the single most important action I should take${beforeAnchorQ}?",
           "Are there any planning opportunities specific to my situation?",
         ],
@@ -486,7 +513,7 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
             <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against ${config.authority} rules</p>
+            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against ${authorityProse(config)} rules</p>
           </div>
         )}
 
@@ -506,7 +533,7 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your ${marketProse(config)} ${config.authority} position
+                Your ${marketProse(config)} ${authorityProse(config)} position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
@@ -659,7 +686,7 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
                 Everything you need — in one place
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
-                Each document is built around your specific ${config.authority} position.
+                Each document is built around your specific ${authorityProse(config)} position.
                 File 02 is the worksheet that computes your exact numbers.
                 ${isTier2 ? "Files 06–08 are exclusive to this plan." : ""}
               </p>

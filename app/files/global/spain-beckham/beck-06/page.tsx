@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SESSION_KEY = "spain-beckham-eligibility";
 const SLUG = "beck-06";
 const FALLBACK_LABEL = { name: "Employment Structure Optimisation Plan", desc: "How to restructure your arrangement if current setup does not qualify." };
 const BODY = `<h2>Employment Structure Optimisation</h2><h3>Current structure does NOT qualify — options</h3><ul><li>Convert autónomo to Spanish employment (join a Spanish company as employee)</li><li>Obtain Digital Nomad Visa — shifts to Startup Law remote worker category</li><li>Startup certification via Enisa — unlocks director route for founder-owners</li><li>Restructure company ownership below 25% (if other shareholders acceptable)</li><li>Accept standard IRPF and optimise via pension contributions / regional rates</li></ul><h3>Decision matrix</h3><ul><li>Have foreign employer + long-term Spain intent: DNV route best</li><li>Starting Spanish company: Startup certification or low-ownership structure</li><li>Mid-career professional: Spanish employment contract</li><li>Retiree / passive: not Beckham — explore standard IRPF + regional relief</li></ul><h3>Restructure costs</h3><ul><li>DNV application: ~€200 fees + adviser fees (€1,500-€3,000)</li><li>Enisa startup certification: free but requires time + documentation</li><li>Spanish employment setup: employer-dependent</li><li>Legal restructure: €2,000-€5,000 typical</li></ul>`;
@@ -26,7 +27,7 @@ export default function SpainBeckhamFile06() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's

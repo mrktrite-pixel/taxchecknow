@@ -7,10 +7,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // declaration. Declaring it restores exactly that — nothing new, nothing
   // inferred from the topic.
   //
-  // NURTURE ONLY. `temporal` is deliberately NOT declared here: that is a gate
-  // decision made per product at its own rebuild, from its own build evidence
-  // (ruling 3.5). Absent temporal = UNDECLARED = silent on the deadline lane,
-  // which is the correct state until someone rules on it.
+  // The temporal lane is declared separately below (it was UNDECLARED until
+  // 2026-09-17; ruling 3.5 puts that decision at the product's own rebuild,
+  // which is where it has now been made).
   nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
 
   // ── ENGINE-NATIVE DECLARATION ───────────────────────────────────────────
@@ -28,6 +27,37 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // to the bespoke this replaces.
   engineNative: true,
 
+  // ── TEMPORAL DECLARATION (TEMPORAL v1 · Step 6.1) ───────────────────────
+  // A REAL act-by date exists and it is the hardest edge in this product: the
+  // Modelo 149 election must be filed within SIX MONTHS of the buyer's own
+  // Spanish Social Security registration (or, on the DNV route, DNV issuance).
+  // The config's own copy calls it absolute, with no extension and no late
+  // application — miss it and that relocation is permanently outside the
+  // regime.
+  //
+  // It CANNOT BE COMPUTED HERE, which is the definition of unresolvable:
+  //   · the six-month clock starts from a date set PER CUSTOMER by the Spanish
+  //     SS registration (or DNV issuance) event, not by any calendar rule;
+  //   · the engine never captures that date — its five questions ask scope,
+  //     prior residency, work reason, the HQP 40% threshold and active-regime
+  //     topic, and not one of them is a date question;
+  //   · so there is no product-level deadline to resolve for anybody.
+  // Deriving one from an arrival month or a bucketed answer would email a
+  // customer an election deadline they never gave us — exactly the fabrication
+  // this kind exists to prevent.
+  //
+  // NOT to be confused with the 30 June IRPF dates this config carries in
+  // `deadline` and in the tier calendars. Those are the annual Spanish return
+  // date — informational anchors for the year AFTER the election — and they are
+  // not the act-by date for the election itself. They are left untouched here.
+  temporal: {
+    kind:         "unresolvable",
+    reason:       "ss_registration_date_is_per_customer_and_uncaptured",
+    jurisdiction: "ES",
+    domain:       "es_expat_income_tax",
+    label:        "the Modelo 149 six-month deadline",
+  },
+
   id: "spain-beckham", name: "Spain Beckham Eligibility Wall", site: "taxchecknow", country: "global", market: "Spain", language: "en", currency: "EUR",
   slug: "nomad/check/spain-beckham-eligibility", url: "https://taxchecknow.com/nomad/check/spain-beckham-eligibility", apiRoute: "/api/rules/spain-beckham",
   authority: "Agencia Estatal de Administración Tributaria (AEAT)", authorityUrl: "https://sede.agenciatributaria.gob.es/Sede/procedimientoini/GI24.shtml", legalAnchor: "Ley 35/2006 Art. 93 (IRPF Act) + Ley 28/2022 (Startup Law, effective 1 Jan 2023) — Special Expat Regime (Beckham Law)", legislation: "Article 93 of Ley 35/2006 (Spanish IRPF Act) establishes the Special Expat Regime: qualifying individuals who relocate to Spain for work can elect taxation at a flat rate of 24% on Spanish-source income up to €600,000 (47% above), rather than under Spain's progressive IRPF rates (up to 47%). The regime applies for the tax year of arrival plus five subsequent tax years (maximum six years total). Ley 28/2022 (Startup Law), effective 1 January 2023, expanded qualifying categories to include highly qualified professionals, entrepreneurs in startup/innovation activities, and remote workers holding the Spanish Digital Nomad Visa. Eligibility conditions: (a) relocation to Spain caused by a qualifying work arrangement; (b) not Spanish tax resident in the 5 tax years before arrival; (c) valid social security coverage (Spanish SS, EU/EEA A1 certificate, or bilateral agreement). Application via Modelo 149 within 6 months of Spanish Social Security registration — deadline is absolute.",
@@ -36,8 +66,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier2: { price: 147, name: "Your Beckham Approval System", tagline: "Full employment structure optimisation + A1 certificate strategy + Modelo 149 roadmap + startup certification pathway", value: "Complete Beckham application system: employment restructuring plan, A1 certificate strategy, Modelo 149 application roadmap, startup certification pathway, and full approval timeline with Spanish gestor coordination.", cta: "Get My Beckham Approval System — €147 →", productKey: "nomad_147_spain_beckham", envVar: "STRIPE_NOMAD_BECK_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2027-06-30T23:59:59.000+02:00", display: "30 June 2027", short: "30 Jun 2027", description: "Spanish IRPF declaration deadline for 2026 tax year — Beckham regime reflected on first return after application", urgencyLabel: "AEAT IRPF DEADLINE", countdownLabel: "Countdown to 30 June 2027 — Spanish IRPF declaration deadline" },
   h1: "Will Your Move to Spain Qualify for the 24% Beckham Tax Rate? Most Applications Fail Due to Structure — Not Income. Here Is Whether Your Setup Meets the Requirements.",
-  metaTitle: "Spain Beckham Eligibility Wall — 24% Flat Rate Qualification Check | TaxCheckNow",
-  metaDescription: "Spanish Special Expat Regime (Beckham Law) under Ley 35/2006 Art. 93 + Ley 28/2022 Startup Law. 24% flat rate on up to €600,000 Spanish-source income for 6 years. Eligibility: qualifying work arrangement + no prior 5-year Spanish residency + social security coverage + Modelo 149 within 6 months. Confirmed April 2026.",
+  metaTitle: "Beckham Law Eligibility: 24% Spain Tax Rate Check | TaxCheckNow",
+  metaDescription: "Most Beckham Law applications fail on structure, not income. Check whether your Spain move qualifies for the 24% flat rate under Art. 93. Free check.",
   canonical: "https://taxchecknow.com/nomad/check/spain-beckham-eligibility",
   answerHeadline: "The answer — AEAT Beckham regime eligibility, confirmed April 2026",
   answerBody: [
