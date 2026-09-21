@@ -154,7 +154,7 @@ export default function SuccessAssess() {
         structureFixRequired: "Your personalised structureFixRequired is being prepared — please refresh in a moment.",
         immediateActions: "Your personalised immediateActions is being prepared — please refresh in a moment.",
         accountantQuestions: [
-          "What is my exact Agencia Estatal de Administración Tributaria (AEAT) position based on my answers?",
+          "What is my exact AEAT position based on my answers?",
           "What is the single most important action I should take before 30 June 2027?",
           "Are there any planning opportunities specific to my situation?",
         ],
@@ -266,7 +266,7 @@ export default function SuccessAssess() {
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
             <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against Agencia Estatal de Administración Tributaria (AEAT) rules</p>
+            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against AEAT rules</p>
           </div>
         )}
 
@@ -286,7 +286,7 @@ export default function SuccessAssess() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your Spain Agencia Estatal de Administración Tributaria (AEAT) position
+                Your Spain AEAT position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
@@ -392,7 +392,7 @@ export default function SuccessAssess() {
                 Everything you need — in one place
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
-                Each document is built around your specific Agencia Estatal de Administración Tributaria (AEAT) position.
+                Each document is built around your specific AEAT position.
                 File 02 is the worksheet that computes your exact numbers.
                 
               </p>
