@@ -101,6 +101,31 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["deductionStatus", "expenseClassification", "initialRepairRisk", "overclaims", "missedDeductions", "recordQualityAssessment", "strongestRiskTrigger", "firstAction"],
     tier2: ["deductionStatus", "expenseClassification", "initialRepairRisk", "overclaims", "missedDeductions", "capitalWorksAnalysis", "depreciationOpportunity", "recordQualityAssessment", "evidenceRegister", "multiYearDeductionPlan", "auditRiskRating", "strongestRiskTrigger"],
   },
+  // C9 — spain-beckham-eligibility. The SECOND product to hit the exact failure the C8
+  // block below describes for FRCGW: unregistered, so getAssessmentFields() fell through to
+  // GENERIC_FIELDS on the webhook path while both success pages POST the per-product list.
+  // Measured 2026-09-21 on a live stored row (session cs_test_a1Kuki..., written 2026-09-17):
+  // the row carried status/keyFinding/exposureAmount/mainRiskTrigger/recommendedAction/
+  // confidenceLevel/firstAction, and the assess page renders a hardcoded six of the
+  // per-product keys — none of which were present — so the "What this means for you" body
+  // came out EMPTY while First Action, the accountant questions and the tier-2 checklist
+  // rendered normally (those come from GENERIC_FIELDS + assess-core's own injections).
+  //
+  // KEYED ON THE ROUTE TAIL, NOT config.id. The webhook looks this table up with
+  // DELIVERY_MAP.productId, which for both beckham price keys is
+  // "spain-beckham-eligibility" (route.ts:84-85) — while this product's config id is
+  // "spain-beckham". Keyed on the id, this entry would parse, typecheck and never be read:
+  // the same mismatch class already called out for 183-day-rule above.
+  //
+  // Lists COPIED VERBATIM from the emitted pages' own `fields:` arrays —
+  // success/assess/page.tsx:128 (9 keys) and success/plan/page.tsx:149 (14 keys) — not
+  // authored here, so webhook == client by construction. The parity test in
+  // cole/__tests__/assessment-fields-parity.test.ts now enforces that for every
+  // engine-native product.
+  "spain-beckham-eligibility": {
+    tier1: ["beckhamEligibilityAssessment", "employmentStructureAnalysis", "priorResidencyStatus", "socialSecurityPosition", "applicationTimingStatus", "estimatedTaxSaving", "keyFailureRisks", "structureFixRequired", "immediateActions"],
+    tier2: ["beckhamEligibilityAssessment", "employmentStructureAnalysis", "priorResidencyStatus", "socialSecurityPosition", "applicationTimingStatus", "estimatedTaxSaving", "keyFailureRisks", "structureFixRequired", "immediateActions", "employmentRestructuringPlan", "a1CertificateStrategy", "modelo149ApplicationRoadmap", "startupCertificationPathway", "fullApprovalTimeline"],
+  },
   "frcgw-clearance-certificate": {
     tier1: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "firstAction"],
     tier2: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "preSettlementExecutionPlan", "applicationDetailsChecklist", "buyerSolicitorInstruction", "withholdingContingencyPlan", "accountantImplementationChecklist"],
