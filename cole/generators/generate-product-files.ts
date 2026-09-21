@@ -96,7 +96,13 @@ export function generateProductFile(
     ? `<a href="/files/${config.country}/${config.id}/${nextFile.slug}" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File ${nextFile.num}: ${nextFile.name} →</a>`
     : `<a href="/${config.slug}" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to ${config.name} →</a>`;
 
-  const sourceLinks = config.sources.slice(0, 2).map(s =>
+  // D3 — CUSTOMER-FACING SOURCES ONLY. 31 of 48 configs list
+  // { title: "Machine-readable JSON rules", url: "/api/rules/<id>" } in sources[]. That is an
+  // answer-engine affordance for the public gate page, and it was being rendered verbatim into
+  // the footer of every delivered document. Filtered by URL, not title, so a retitled entry
+  // cannot slip through; filtered BEFORE the slice so a product whose second source is the JSON
+  // route surfaces its next REAL citation rather than losing a slot.
+  const sourceLinks = config.sources.filter((s) => !/^\/api\//.test(s.url ?? "")).slice(0, 2).map(s =>
     `<a href="${s.url}" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">${s.title} ↗</a>`
   ).join("\n            ");
 

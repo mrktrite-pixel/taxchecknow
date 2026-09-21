@@ -169,8 +169,15 @@ export default function SuccessAssess() {
     setTimeout(() => setCopied(false), 3000);
   }
 
-  const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? `${firstName}` : "you";
+  // D4 — NORMALISE THE NAME AT RENDER. /api/get-session returns whatever the buyer typed at
+  // checkout; a lowercase "general" rendered "general, here is your ...". Trim, collapse inner
+  // whitespace, and upper-case the first letter only — never the rest, because "McLeod" and
+  // "O'Brien" must survive. A whitespace-only value collapses to "" and falls back to the
+  // unnamed branch, which also closes the residual the beckham HOLD flagged.
+  const displayName = firstName.trim().replace(/\s+/g, " ").replace(/^./, (c) => c.toUpperCase());
+  const named = displayName !== "" && firstName !== "there";
+  const hi = named ? displayName : "there";
+  const greeting = named ? displayName : "you";
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -233,7 +240,7 @@ export default function SuccessAssess() {
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your United States (IRS Substantial Presence Test) IRS position
+                Your United States IRS position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
@@ -310,7 +317,7 @@ export default function SuccessAssess() {
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
                 Each document is built around your specific IRS position.
-                Start with File 02 — it has your exact numbers.
+                File 02 is the worksheet that computes your exact numbers.
                 
               </p>
               <div className="space-y-2">
@@ -343,7 +350,7 @@ export default function SuccessAssess() {
             <div className="print-section rounded-2xl border-2 border-neutral-950 bg-neutral-950 p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">One thing to do today</p>
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
-                Open File 02 — your exact numbers are in there.
+                Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 
                 {deadlineLive ? `${daysToDeadline} days to Your income tax return due date.` : ""}
@@ -392,9 +399,9 @@ export default function SuccessAssess() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
-            Always consult a qualified United States (IRS Substantial Presence Test) tax adviser before making financial decisions.
+            Always consult a qualified United States tax adviser before making financial decisions.
             Based on IRS guidance August 2026.{" "}
-            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="underline">IRS — Substantial Presence Test (US)</a> · <a href="/api/rules/day-183-rule" target="_blank" rel="noopener noreferrer" className="underline">Machine-readable JSON rules</a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="underline">IRS — Substantial Presence Test (US)</a>
           </p>
         </div>
 
