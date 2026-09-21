@@ -97,6 +97,17 @@ export default function SuccessAssess() {
         if (r.ok) {
           const d = await r.json();
           if (d.assessment) {
+            // D — NAME FALLBACK. The greeting is read from /api/get-session, which returns
+            // "there" whenever the Stripe session carries no customer_details.name (or the
+            // retrieve throws). The stored row already holds the buyer name and
+            // /api/get-assessment already returns it as customerName — the page simply never
+            // looked. Measured on a live 2026-09-17 beckham row that rendered "What this
+            // means for you" while the row itself was not anonymous. Only fills the gap; a
+            // name that DID arrive from get-session always wins, and the value goes through
+            // the same trim/capitalise as any other.
+            if (name === "there" && typeof d.customerName === "string" && d.customerName.trim() !== "") {
+              setFirstName(d.customerName);
+            }
             setAssessment(d.assessment);
             setLoading(false);
             return;
@@ -207,6 +218,34 @@ export default function SuccessAssess() {
   const hi = named ? displayName : "there";
   const greeting = named ? displayName : "you";
 
+  // C — GRACEFUL DEGRADE. NEVER AN EMPTY BODY WHEN A STORED ROW EXISTS.
+  //
+  // The webhook composes the stored row from getAssessmentFields(productId, tier), which
+  // falls through to GENERIC_FIELDS for any product missing from lib/assessment-fields.ts.
+  // This block renders a hardcoded six of THIS product's keys, so against a generic row
+  // every one is absent and the body came out empty — while First Action, the accountant
+  // questions and the tier-2 checklist still rendered, because those keys survive in the
+  // generic set. Measured on a live beckham row, 2026-09-21.
+  //
+  // Registering the product is the real fix (and the parity test now enforces it). This is
+  // the floor underneath it: if none of the product keys resolved but the generic ones did,
+  // show those rather than a heading over blank space. Same card, same label derivation —
+  // "keyFinding" reads as "Key Finding" — so nothing here invents a heading.
+  const PRODUCT_SECTION_KEYS = ["beckhamEligibilityAssessment","employmentStructureAnalysis","priorResidencyStatus","socialSecurityPosition","applicationTimingStatus","estimatedTaxSaving"];
+  const GENERIC_SECTION_KEYS = ["status", "keyFinding", "recommendedAction"];
+  const hasText = (k: string) => typeof assessment?.[k] === "string" && (assessment[k] as string).trim() !== "";
+  const productKeysPresent = PRODUCT_SECTION_KEYS.filter(hasText);
+  const genericKeysPresent = GENERIC_SECTION_KEYS.filter(hasText);
+  const usingGenericRow = productKeysPresent.length === 0 && genericKeysPresent.length > 0;
+  const sectionKeys = productKeysPresent.length > 0 ? productKeysPresent : genericKeysPresent;
+
+  // Phase 5 needs to SEE this. A shape mismatch is silent by construction — the page still
+  // renders, just thinner — so without a signal it is only ever found by a human reading a
+  // delivered PDF, which is how both occurrences were found.
+  useEffect(() => {
+    if (usingGenericRow) console.error("[ASSESS-SHAPE] generic row rendered", { product: "spain-beckham", tier: 1 });
+  }, [usingGenericRow]);
+
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
       <style>{`@media print { .no-print{display:none!important} body{font-size:12px;color:#000} .print-section{page-break-inside:avoid} }`}</style>
@@ -274,7 +313,7 @@ export default function SuccessAssess() {
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(["beckhamEligibilityAssessment","employmentStructureAnalysis","priorResidencyStatus","socialSecurityPosition","applicationTimingStatus","estimatedTaxSaving"] as string[]).map(key => {
+                {(sectionKeys as string[]).map(key => {
                   const val = assessment[key];
                   if (!val || typeof val !== "string") return null;
                   return (
