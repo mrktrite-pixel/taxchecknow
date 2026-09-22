@@ -29,7 +29,7 @@ export default function Page() {
       lastVerified={"September 2026"}
       ruleParagraphs={[
         "The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $101,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.",
-        "For the 2025/26 year, the surcharge thresholds are: $101,001 to $118,000 — 1% surcharge; $118,001 to $158,000 — 1.25% surcharge; over $158,000 — 1.5% surcharge. Families have a higher combined income threshold of $202,000. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable. For the 2026-27 year the thresholds rise to $105,000 (singles) and $210,000 (families), with tiers at $123,000 / $164,000 and $246,000 / $328,000.",
+        "For the 2025/26 year, the surcharge thresholds are: $101,001 to $118,000 — 1% surcharge; $118,001 to $158,000 — 1.25% surcharge; over $158,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable. Families have a higher combined income threshold of $202,000. For the 2026-27 year the thresholds rise to $105,000 (singles) and $210,000 (families), with tiers at $123,000 / $164,000 and $246,000 / $328,000.",
       ]}
       mistakes={[
         "General extras cover avoids the surcharge — wrong. The MLS is only avoided by holding appropriate private hospital cover — not general treatment (extras) cover. A policy covering dental, optical, and physiotherapy does not satisfy the MLS requirement. You need hospital cover specifically.",
