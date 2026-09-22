@@ -3,7 +3,37 @@
 // Product: mtd-scorecard · File 05 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-mtd-scorecard
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "mtd-scorecard";
+const SESSION_KEY = "mtd-scorecard";
+const SLUG = "mtd-05";
+const FALLBACK_LABEL = { name: "How HMRC's Late Submission Points Work", desc: "How the points-based late submission system is structured, and where to check the current figures." };
+const BODY = `<h2>MTD Late Submission — How the Points Work</h2><h3>How points are earned</h3><p>One penalty point for each missed quarterly update, for tax years after 2026 to 2027, and one for a missed tax return. There is no daily charge.</p><div class="highlight"><strong>2026 to 2027:</strong> HMRC states there are no penalties for missing a quarterly update deadline for the 2026 to 2027 tax year.</div><h3>Points System</h3><table><tr><th>Points</th><th>Consequence</th></tr><tr><td>1–3 points</td><td>No financial penalty</td></tr><tr><td>4 points</td><td>£200 penalty</td></tr><tr><td>Each further missed deadline</td><td>£200</td></tr></table><h3>Paying late is separate</h3><table><tr><th>How late</th><th>Penalty</th></tr><tr><td>Up to 15 days</td><td>None</td></tr><tr><td>16 to 30 days</td><td>3% of the tax outstanding at day 15 — not charged in the first year</td></tr><tr><td>31 days or more</td><td>3% of the tax outstanding at day 15, plus 3% of the tax outstanding at day 30, plus 10% a year while unpaid</td></tr></table><div class="info-box"><strong>Check before you act:</strong> these are the figures HMRC publishes on its Making Tax Digital penalties guidance. Confirm them on gov.uk for your own tax year before relying on them.</div>`;
+
 export default function MtdScorecardFile05() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -77,31 +107,26 @@ export default function MtdScorecardFile05() {
               🇬🇧 HMRC · Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 05 of 8
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 PHASE 1: Live since 6 April 2026
-            </span>
-            <a href="/uk/check/mtd-scorecard"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="PHASE 1: Live since 6 April 2026"
+            checkHref="/uk/check/mtd-scorecard"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             MTD Mandation Engine · File 05 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            How HMRC's Late Submission Points Work
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How the points-based late submission system is structured, and where to check the current figures.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +139,7 @@ export default function MtdScorecardFile05() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>MTD Penalty Regime — Full Calculation</h2><h3>Per-Quarter Penalty</h3><p>£200 initial fixed penalty<br>PLUS £10 per day up to 90 days<br>= up to £1,100 per missed quarterly update</p><h3>Annual Maximum</h3><p>£1,100 per quarter × 4 quarters = up to £4,400/year in quarterly penalties alone.</p><h3>Points System</h3><table><tr><th>Points</th><th>Consequence</th></tr><tr><td>1–3 points</td><td>Warning — no financial penalty yet</td></tr><tr><td>4 points</td><td>£200 additional financial penalty</td></tr><tr><td>5+ points</td><td>£200 per additional late update</td></tr></table><h3>Points reset</h3><p>Requires 24 months of full compliance from the point threshold date. In practice, one bad year locks you into the penalty track for two years.</p><div class="warning-box"><strong>Late annual declaration:</strong> Same penalty regime as current self-assessment — £100 immediate, rising to £900+ after 12 months. ON TOP of quarterly penalties.</div>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,8 +226,8 @@ export default function MtdScorecardFile05() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified United Kingdom tax adviser for your personal situation.
-            Based on HMRC guidance April 2026.
+            Always consult a qualified UK tax adviser for your personal situation.
+            Based on HMRC guidance September 2026.
           </p>
         </div>
 

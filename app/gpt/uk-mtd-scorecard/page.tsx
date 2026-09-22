@@ -26,7 +26,7 @@ export default function Page() {
       prompt={"Do I need to comply with Making Tax Digital yet?"}
       countryDescriptor={"UK"}
       authorityShort={"HMRC"}
-      lastVerified={"April 2026"}
+      lastVerified={"September 2026"}
       ruleParagraphs={[
         "Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is mandatory from 6 April 2026 for self-employed individuals and landlords with combined gross income from self-employment and property exceeding £50,000. The threshold drops to £30,000 from April 2027, and £20,000 from April 2028. These thresholds are statutory under Finance Act 2021 — mandate, not choice.",
         "The reporting change is larger than most taxpayers realise. MTD does NOT simply mean filing your annual tax return online. It replaces one annual self-assessment with five submissions per year: four quarterly updates (due 5 August, 5 November, 5 February, 5 May) plus a final annual declaration (still due 31 January). Each quarterly update is a brief digital summary — not a mini tax return — but it IS a mandatory filing with a deadline. Missing any of them triggers HMRC's points-based penalty system.",
@@ -37,7 +37,7 @@ export default function Page() {
       ]}
       aiWrong={"ChatGPT says: MTD just means filing your tax return online"}
       aiReality={"Reality: MTD replaces one annual self-assessment with FIVE submissions per year — four quarterly updates plus one final declaration. The quarterly updates are brief digital summaries but each is a mandatory filing with a deadline and penalty regime."}
-      badges={["HMRC","Finance Act 2021","MTD ITSA","£1,100 per quarter","£4,400/year max","Machine-readable JSON"]}
+      badges={["HMRC","Finance Act 2021","MTD ITSA","£200 at 4 points","No 2026-27 update penalty","Machine-readable JSON"]}
       related={[
         { slug: "uk-side-hustle-checker", title: "HMRC Side Income Declaration Engine" },
         { slug: "uk-dividend-trap", title: "Salary + Dividend Tax Trap Engine" },
