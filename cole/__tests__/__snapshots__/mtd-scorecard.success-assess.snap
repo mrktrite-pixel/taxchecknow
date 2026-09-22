@@ -488,7 +488,7 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United Kingdom tax adviser before making financial decisions.
-            Based on HMRC guidance April 2026.{" "}
+            Based on HMRC guidance September 2026.{" "}
             <a href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Making Tax Digital for Income Tax</a> · <a href="https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview" target="_blank" rel="noopener noreferrer" className="underline">HMRC — MTD ITSA overview and timeline</a>
           </p>
         </div>
