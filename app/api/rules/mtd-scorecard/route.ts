@@ -19,8 +19,8 @@ export async function GET() {
     "jurisdiction": "United Kingdom",
     "language": "en-GB",
     "currency": "GBP",
-    "last_verified": "September 2026",
-    "legislation": "Finance Act 2021 — MTD ITSA phased implementation from 6 April 2026 · Income Tax (Digital Requirements) Regulations implementing quarterly update obligations · HMRC points-based late-submission penalty regime (£200 on reaching four points)",
+    "last_verified": "April 2026",
+    "legislation": "Finance Act 2021 — MTD ITSA phased implementation from 6 April 2026 · Income Tax (Digital Requirements) Regulations implementing quarterly update obligations · Schedule 24 Finance Act 2021 penalty regime (£200 initial + £10/day up to 90 days per missed quarterly update) · HMRC points-based late-submission penalty system",
     "legal_anchor": "Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)",
     "deadline": {
         "iso_date": "",
@@ -36,11 +36,11 @@ export async function GET() {
         "phase_3_mandate_date": "6 April 2028",
         "phase_3_threshold": "Gross income over £20,000",
         "submissions_per_year": "1 → 5 (4 quarterly + 1 final)",
-        "late_submission_penalty": "£200 on reaching 4 points, then £200 per further miss",
-        "2026_27_quarterly_updates": "No late-submission penalty",
+        "per_quarter_penalty_maximum": "£1,100 (£200 + £10/day × 90 days)",
+        "annual_penalty_maximum": "£4,400 (4 quarters missed)",
         "legal_anchor": "Finance Act 2021"
     },
-    "formula": "Late submission: 1 point per missed quarterly update (from 2027-28) or tax return; 4 points = £200; each further miss = £200. 2026-27 quarterly updates: no late-submission penalty.",
+    "formula": "MTD mandate test: if (self-employment gross + property gross) exceeds threshold at phase date, then mandated. Phase 1 threshold £50,000 from 6 April 2026. Phase 2 £30,000 from 6 April 2027. Phase 3 £20,000 from 6 April 2028. Penalty per missed quarterly update = £200 + (£10 × days late up to 90 days). Max penalty per quarter = £1,100. Max annual penalty (4 quarters missed) = £4,400.",
     "thresholds": [
         {
             "label": "Over £50,000 gross — mandated from 6 April 2026",
@@ -109,7 +109,7 @@ export async function GET() {
         {
             "id": 4,
             "question": "What are the penalties if I miss a quarterly update?",
-            "answer": "The late-submission regime is points-based. Each missed quarterly update earns one penalty point, for tax years after 2026 to 2027, as does a missed tax return. Nothing is charged for the first three points; on reaching four points HMRC charges £200, and each further missed deadline while you are at the threshold costs another £200. For the 2026 to 2027 tax year HMRC states there are no penalties for missing a quarterly update deadline. Late payment is separate: nothing in the first 15 days, then 3% of the tax outstanding at day 15 from day 16 (not charged in the first year), and from day 31 that 3% plus a further 3% of the tax outstanding at day 30, with 10% a year accruing while it is unpaid."
+            "answer": "Each missed quarterly update triggers £200 initial penalty plus £10 per day up to 90 days = up to £1,100 per missed quarter. Missing all four quarterly updates in a year = up to £4,400 in penalties alone. HMRC also operates a points-based late-submission penalty system — each missed update earns a point, with an additional £200 financial penalty at 4 points. Points reset after 24 months of compliance."
         },
         {
             "id": 5,
@@ -142,12 +142,8 @@ export async function GET() {
             "url": "https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview"
         },
         {
-            "title": "HMRC — Penalties for Making Tax Digital for Income Tax",
-            "url": "https://www.gov.uk/guidance/penalties-for-making-tax-digital-for-income-tax"
-        },
-        {
-            "title": "HMRC — Check if you're eligible for MTD for Income Tax",
-            "url": "https://www.gov.uk/guidance/check-if-youre-eligible-for-making-tax-digital-for-income-tax"
+            "title": "HMRC — Penalties for late submission under MTD",
+            "url": "https://www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -171,13 +167,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax",
-        "https://www.gov.uk/guidance/penalties-for-making-tax-digital-for-income-tax",
-        "https://www.gov.uk/guidance/check-if-youre-eligible-for-making-tax-digital-for-income-tax"
+        "https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax"
     ],
     "canonical": "https://taxchecknow.com/uk/check/mtd-scorecard",
     "api_endpoint": "/api/rules/mtd-scorecard",
-    "generated_at": "2026-09-22T04:13:33.201Z"
+    "generated_at": "2026-08-04T03:00:53.429Z"
 };
 
   return NextResponse.json(rules, {
@@ -187,7 +181,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "mtd-scorecard",
-      "X-Last-Verified":             "September 2026",
+      "X-Last-Verified":             "April 2026",
     },
   });
 }

@@ -3,37 +3,7 @@
 // Product: mtd-scorecard · File 03 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-mtd-scorecard
 
-import { useEffect, useState } from "react";
-import DocBody from "@/app/_components/DocBody";
-import DocStrip from "@/app/_components/DocStrip";
-import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
-import { resolveDocLabel } from "@/lib/terminal-labels";
-
-const PRODUCT_ID = "mtd-scorecard";
-const SESSION_KEY = "mtd-scorecard";
-const SLUG = "mtd-03";
-const FALLBACK_LABEL = { name: "How Quarterly Updates Work", desc: "The quarterly update cycle and the final declaration, and where HMRC publishes the dates that apply to you." };
-const BODY = `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th><th>Late after</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td><td>Penalty point (tax years after 2026-27)</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td><td>Same</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td><td>Same</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td><td>Same</td></tr><tr><td>Final declaration</td><td>Full tax year</td><td>31 January</td><td>Standard SA penalty</td></tr></table><h3>Penalty Accumulation</h3><p>Late submission is points-based. Each missed quarterly update earns one penalty point for tax years after 2026 to 2027, as does a missed tax return. Nothing is charged for the first three points; £200 is charged on reaching four, and £200 again for each further missed deadline while you remain at the threshold. HMRC states there are no penalties for missing a quarterly update deadline for the 2026 to 2027 tax year.</p><div class="info-box"><strong>Calendar discipline:</strong> Set recurring reminders 2 weeks before each quarterly deadline. First-year breaches usually come from forgotten deadlines, not incapability.</div>`;
-
 export default function MtdScorecardFile03() {
-  // R1 — bind the body to the buyer's own answers where we have them.
-  //
-  // Read in an effect, not during render: sessionStorage does not exist on the server, and
-  // reading it during render would desync the hydration pass. First paint is therefore the
-  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
-  // a reader with no session (a cold link, a different device) gets and it must stand alone.
-  //
-  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
-  // context is found, so every product that has not adopted the syntax is unaffected.
-  const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
-  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
-  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
-  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
-  // own strings, which is what this page has always shown.
-  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
-
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -107,26 +77,31 @@ export default function MtdScorecardFile03() {
               🇬🇧 HMRC · Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: September 2026
+              Last verified: April 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 03 of 8
             </span>
           </div>
 
-          <DocStrip
-            productId={PRODUCT_ID}
-            fallbackText="PHASE 1: Live since 6 April 2026"
-            checkHref="/uk/check/mtd-scorecard"
-          />
+          {/* Deadline bar */}
+          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
+            <span className="text-sm font-bold text-white">
+              🔴 PHASE 1: Live since 6 April 2026
+            </span>
+            <a href="/uk/check/mtd-scorecard"
+              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
+              Check your position →
+            </a>
+          </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             MTD Mandation Engine · File 03 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            {label.name}
+            How Quarterly Updates Work
           </h1>
-          <p className="text-neutral-500 text-sm">{label.desc}</p>
+          <p className="text-neutral-500 text-sm">The quarterly update cycle and the final declaration, and where HMRC publishes the dates that apply to you.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -139,7 +114,10 @@ export default function MtdScorecardFile03() {
         </div>
 
         {/* CONTENT */}
-        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
+        <div
+          className="prose-content"
+          dangerouslySetInnerHTML={{ __html: `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th><th>Late after</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td><td>Penalty point + fee clock starts</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td><td>Same</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td><td>Same</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td><td>Same</td></tr><tr><td>Final declaration</td><td>Full tax year</td><td>31 January</td><td>Standard SA penalty</td></tr></table><h3>Penalty Accumulation</h3><p>Each missed quarterly update: £200 initial + £10/day × up to 90 days = up to £1,100 per quarter. Missing all 4 in a year = up to £4,400 annually. Plus points-based system (4 points = £200 additional penalty).</p><div class="info-box"><strong>Calendar discipline:</strong> Set recurring reminders 2 weeks before each quarterly deadline. First-year breaches usually come from forgotten deadlines, not incapability.</div>` }}
+        />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -226,8 +204,8 @@ export default function MtdScorecardFile03() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
-            Based on HMRC guidance September 2026.
+            Always consult a qualified United Kingdom tax adviser for your personal situation.
+            Based on HMRC guidance April 2026.
           </p>
         </div>
 
