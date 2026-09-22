@@ -67,11 +67,12 @@ export const PRODUCT_CONFIG: ProductConfig = {
   // au-19-frcgw-clearance-certificate.ts:62,73. The prose fields stay so the page can still
   // name the moment that matters; nothing schedules from this block.
   deadline: { isoDate: "", display: "Assessed at your tax return", short: "At lodgement", description: "There is no act-by date for the MLS. Liability accrues for each day you do not hold appropriate private patient hospital cover, and the ATO works out what you owe when it processes your return.", urgencyLabel: "ACCRUES DAILY", countdownLabel: "" },
-  h1: "Medicare Levy Surcharge 2026: Are You Paying Extra Tax Without Private Hospital Cover?", metaTitle: "Medicare Levy Surcharge Australia 2026 — Are You Paying the Surcharge Unnecessarily? | TaxCheckNow", metaDescription: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.", canonical: "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap",
+  h1: "Medicare Levy Surcharge 2026-27: Are You Paying Extra Tax Without Private Hospital Cover?", metaTitle: "Medicare Levy Surcharge 2026-27 Are You Overpaying? | TaxCheckNow", metaDescription: "The Medicare Levy Surcharge adds 1-1.5% on income over $105,000 in 2026-27 if you have no hospital cover. Cover often costs less. Free check.", canonical: "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap",
   answerHeadline: "The answer — ATO confirmed June 2026",
   answerBody: [
     "The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $101,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.",
     "For the 2025/26 year, the surcharge thresholds are: $101,001 to $118,000 — 1% surcharge; $118,001 to $158,000 — 1.25% surcharge; over $158,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable.",
+    "For the 2026-27 year the thresholds rise to $105,000 (singles) and $210,000 (families), with tiers at $123,000 / $164,000 and $246,000 / $328,000.",
     "The key calculation: compare the annual cost of a basic hospital-only private health insurance policy against the MLS payable. For many people earning over $101,000, a basic hospital-only policy costs less than the surcharge — compare current quotes against your own MLS figure before deciding. Once you have appropriate cover, the surcharge does not apply.",
   ],
   answerSource: "Source: ATO — Medicare Levy Surcharge · ITAA 1936 Part VIIB",
@@ -116,6 +117,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { label: "MLS rate tier 1", value: "1% — $101,001 to $118,000" },
     { label: "MLS rate tier 2", value: "1.25% — $118,001 to $158,000" },
     { label: "MLS rate tier 3", value: "1.5% — over $158,000" },
+    { label: "Singles threshold 2026-27", value: "$105,000 — ATO QC49961" },
+    { label: "Family threshold 2026-27", value: "$210,000 combined — ATO QC49961" },
     { label: "Legislative anchor", value: "ITAA 1936 Part VIIB" },
   ],
   workedExamplesH2: "Four MLS scenarios",

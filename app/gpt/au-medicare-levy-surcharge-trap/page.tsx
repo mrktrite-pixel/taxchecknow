@@ -26,18 +26,18 @@ export default function Page() {
       prompt={"Do I need private health insurance to avoid extra tax?"}
       countryDescriptor={"Australian"}
       authorityShort={"ATO"}
-      lastVerified={"April 2026"}
+      lastVerified={"September 2026"}
       ruleParagraphs={[
-        "The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $93,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.",
-        "For the 2025/26 year, the surcharge thresholds are: $93,001 to $108,000 — 1% surcharge; $108,001 to $144,000 — 1.25% surcharge; over $144,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable.",
+        "The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $101,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.",
+        "For the 2025/26 year, the surcharge thresholds are: $101,001 to $118,000 — 1% surcharge; $118,001 to $158,000 — 1.25% surcharge; over $158,000 — 1.5% surcharge. Families have a higher combined income threshold of $202,000. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable. For the 2026-27 year the thresholds rise to $105,000 (singles) and $210,000 (families), with tiers at $123,000 / $164,000 and $246,000 / $328,000.",
       ]}
       mistakes={[
         "General extras cover avoids the surcharge — wrong. The MLS is only avoided by holding appropriate private hospital cover — not general treatment (extras) cover. A policy covering dental, optical, and physiotherapy does not satisfy the MLS requirement. You need hospital cover specifically.",
-        "The surcharge only applies to the income over the threshold — wrong. The MLS applies to your entire taxable income, total reportable fringe benefits, and reportable employer super contributions — not just the amount over the threshold. An income of $100,000 incurs MLS on the full $100,000, not just the $7,000 above $93,000.",
+        "The surcharge only applies to the income over the threshold — wrong. The MLS applies to your entire income for MLS purposes — not just the amount over the threshold. An income of $110,000 incurs MLS on the full $110,000 at 1% ($1,100), not just on the $9,000 above $101,000.",
       ]}
       aiWrong={"ChatGPT says: Having any private health insurance avoids the Medicare Levy Surcharge"}
       aiReality={"Reality: Only appropriate private patient hospital cover avoids the MLS. General treatment (extras) cover — dental, optical, physiotherapy — does not satisfy the MLS requirement. You must have hospital cover specifically. Check your policy type, not just that you have private health insurance."}
-      badges={["ATO","ITAA 1936","MLS","$93k Threshold 2025/26"]}
+      badges={["ATO","ITAA 1936","MLS","$101k Threshold 2025/26"]}
       related={[
         { slug: "au-div296-wealth-eraser", title: "Division 296 Wealth Eraser Engine" },
         { slug: "au-transfer-balance-cap", title: "Transfer Balance Cap Optimiser" },
