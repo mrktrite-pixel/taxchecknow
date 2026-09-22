@@ -10,12 +10,12 @@ import MtdScorecardCalculator from "./MtdScorecardCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Making Tax Digital for Income Tax — Who It Applies To and What You Must Do | TaxCheckNow",
-  description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
+  title: "MTD for Income Tax: Which Part Applies to You? | TaxCheckNow",
+  description: "MTD for Income Tax has been live since 6 April 2026 for sole traders and landlords over £50,000. Find which part applies to you and when. Free check.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/mtd-scorecard" },
   openGraph: {
-    title: "Making Tax Digital for Income Tax — Who It Applies To and What You Must Do | TaxCheckNow",
-    description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
+    title: "MTD for Income Tax: Which Part Applies to You? | TaxCheckNow",
+    description: "MTD for Income Tax has been live since 6 April 2026 for sole traders and landlords over £50,000. Find which part applies to you and when. Free check.",
     url: "https://taxchecknow.com/uk/check/mtd-scorecard",
     siteName: "TaxCheckNow",
     type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "September 2026";
 const DEADLINE_LABEL = "Live since 6 April 2026";
 const DEADLINE_ISO   = "";
 
@@ -66,7 +66,7 @@ const faqs = [
   },
   {
     "question": "What are the penalties if I miss a quarterly update?",
-    "answer": "Each missed quarterly update triggers £200 initial penalty plus £10 per day up to 90 days = up to £1,100 per missed quarter. Missing all four quarterly updates in a year = up to £4,400 in penalties alone. HMRC also operates a points-based late-submission penalty system — each missed update earns a point, with an additional £200 financial penalty at 4 points. Points reset after 24 months of compliance."
+    "answer": "The late-submission regime is points-based. Each missed quarterly update earns one penalty point, for tax years after 2026 to 2027, as does a missed tax return. Nothing is charged for the first three points; on reaching four points HMRC charges £200, and each further missed deadline while you are at the threshold costs another £200. For the 2026 to 2027 tax year HMRC states there are no penalties for missing a quarterly update deadline. Late payment is separate: nothing in the first 15 days, then 3% of the tax outstanding at day 15 from day 16 (not charged in the first year), and from day 31 that 3% plus a further 3% of the tax outstanding at day 30, with 10% a year accruing while it is unpaid."
   },
   {
     "question": "Does MTD change when I pay my tax bill?",
@@ -187,10 +187,10 @@ const comparisonRows = [
     "bestMove": "Reporting changes, not payment"
   },
   {
-    "position": "Per-missed-quarter penalty",
+    "position": "Late-submission penalty",
     "metric1": "N/A (annual only)",
-    "metric2": "Up to £1,100 (£200 + £10/day × 90 days)",
-    "bestMove": "Missing quarters is expensive"
+    "metric2": "£200 at 4 points; none for 2026-27 updates",
+    "bestMove": "Points accumulate — the fourth one is the one that costs"
   }
 ];
 
@@ -252,12 +252,12 @@ const geoFacts = [
     "value": "1 → 5 (4 quarterly + 1 final)"
   },
   {
-    "label": "Per-quarter penalty maximum",
-    "value": "£1,100 (£200 + £10/day × 90 days)"
+    "label": "Late submission penalty",
+    "value": "£200 on reaching 4 points, then £200 per further miss"
   },
   {
-    "label": "Annual penalty maximum",
-    "value": "£4,400 (4 quarters missed)"
+    "label": "2026-27 quarterly updates",
+    "value": "No late-submission penalty"
   },
   {
     "label": "Legal anchor",
@@ -275,12 +275,12 @@ const sidebarNumbers = [
     "value": "1 → 5"
   },
   {
-    "label": "Per-quarter penalty max",
-    "value": "£1,100"
+    "label": "Penalty at 4 points",
+    "value": "£200"
   },
   {
-    "label": "Annual penalty max",
-    "value": "£4,400"
+    "label": "2026-27 update penalties",
+    "value": "None"
   }
 ];
 
@@ -294,8 +294,12 @@ const sources = [
     "url": "https://www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview"
   },
   {
-    "title": "HMRC — Penalties for late submission under MTD",
-    "url": "https://www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late"
+    "title": "HMRC — Penalties for Making Tax Digital for Income Tax",
+    "url": "https://www.gov.uk/guidance/penalties-for-making-tax-digital-for-income-tax"
+  },
+  {
+    "title": "HMRC — Check if you're eligible for MTD for Income Tax",
+    "url": "https://www.gov.uk/guidance/check-if-youre-eligible-for-making-tax-digital-for-income-tax"
   },
   {
     "title": "Machine-readable JSON rules",
@@ -316,16 +320,16 @@ const countdownStats = [
     "red": true
   },
   {
-    "label": "Per-quarter penalty",
-    "value": "Up to £1,100",
-    "sub": "£200 initial + £10/day × up to 90 days",
+    "label": "Penalty at 4 points",
+    "value": "£200",
+    "sub": "and £200 for each further missed deadline",
     "red": true
   },
   {
-    "label": "Max annual penalty",
-    "value": "Up to £4,400",
-    "sub": "If all 4 quarterly updates missed",
-    "red": true
+    "label": "First-year quarterly penalties (2026-27)",
+    "value": "None",
+    "sub": "no late-submission penalty for 2026-27 quarterly updates",
+    "red": false
   }
 ];
 
@@ -355,8 +359,8 @@ export default function MtdScorecardPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "MTD Mandation Engine — Rules April 2026",
-    description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
+    name: "MTD Mandation Engine — Rules September 2026",
+    description: "MTD for Income Tax has been live since 6 April 2026 for sole traders and landlords over £50,000. Find which part applies to you and when. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -372,7 +376,7 @@ export default function MtdScorecardPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "MTD Mandation Engine",
-    description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
+    description: "MTD for Income Tax has been live since 6 April 2026 for sole traders and landlords over £50,000. Find which part applies to you and when. Free check.",
     url: "https://taxchecknow.com/uk/check/mtd-scorecard",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -421,13 +425,13 @@ export default function MtdScorecardPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/mtd-scorecard#calculator",
-    "description": "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
+    "description": "MTD for Income Tax has been live since 6 April 2026 for sole traders and landlords over £50,000. Find which part applies to you and when. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on HMRC guidance April 2026"
+      "Based on HMRC guidance September 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -456,7 +460,7 @@ export default function MtdScorecardPage() {
     "@context": "https://schema.org",
     "@type": "VideoObject",
     name: "Am I mandated under MTD ITSA? The £4,400 trap",
-    description: "Making Tax Digital for Income Tax began on 6 April 2026 for sole traders and landlords above the first income threshold, and phases in further. It replaces one annual return with quarterly updates plus a final declaration. This free guide works out which part of MTD applies to you — thresholds and dates are on gov.uk.",
+    description: "MTD for Income Tax has been live since 6 April 2026 for sole traders and landlords over £50,000. Find which part applies to you and when. Free check.",
     thumbnailUrl: "https://i.ytimg.com/vi/i4O6GBeyMO0/hqdefault.jpg",
     uploadDate: "2026-06-15T11:00:24.109+00:00",
     contentUrl: "https://www.youtube.com/watch?v=i4O6GBeyMO0",
@@ -554,12 +558,12 @@ export default function MtdScorecardPage() {
                   <dd className="font-bold">1 → 5</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Per-quarter penalty max</dt>
-                  <dd className="font-bold">£1,100</dd>
+                  <dt className="text-neutral-600">Penalty at 4 points</dt>
+                  <dd className="font-bold">£200</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Annual penalty max</dt>
-                  <dd className="font-bold">£4,400</dd>
+                  <dt className="text-neutral-600">2026-27 update penalties</dt>
+                  <dd className="font-bold">None</dd>
                 </div>
               </dl>
             </div>
@@ -624,21 +628,21 @@ export default function MtdScorecardPage() {
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Per-quarter penalty
+                Penalty at 4 points
               </p>
               <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Up to £1,100
+                £200
               </p>
-              <p className="text-xs text-neutral-400">£200 initial + £10/day × up to 90 days</p>
+              <p className="text-xs text-neutral-400">and £200 for each further missed deadline</p>
             </div>
-            <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
-              <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
-                Max annual penalty
+            <div className={`rounded-lg border p-4 ${false ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
+              <p className={`mb-2 text-xs uppercase tracking-wide ${false ? "text-red-400" : "text-neutral-400"}`}>
+                First-year quarterly penalties (2026-27)
               </p>
-              <p className={`mb-1 text-2xl font-bold ${true ? "text-red-400" : ""}`}>
-                Up to £4,400
+              <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
+                None
               </p>
-              <p className="text-xs text-neutral-400">If all 4 quarterly updates missed</p>
+              <p className="text-xs text-neutral-400">no late-submission penalty for 2026-27 quarterly updates</p>
             </div>
           </div>
         </div>
@@ -678,7 +682,7 @@ export default function MtdScorecardPage() {
           </p>
           <p className="mb-2 text-neutral-900">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is mandatory from 6 April 2026 for self-employed individuals and landlords with combined gross income from self-employment and property exceeding £50,000. The threshold drops to £30,000 from April 2027, and £20,000 from April 2028. These thresholds are statutory under Finance Act 2021 — mandate, not choice.</p>
           <p className="mb-2 text-neutral-900">The reporting change is larger than most taxpayers realise. MTD does NOT simply mean filing your annual tax return online. It replaces one annual self-assessment with five submissions per year: four quarterly updates (due 5 August, 5 November, 5 February, 5 May) plus a final annual declaration (still due 31 January). Each quarterly update is a brief digital summary — not a mini tax return — but it IS a mandatory filing with a deadline. Missing any of them triggers HMRC's points-based penalty system.</p>
-          <p className="mb-2 text-neutral-900">The penalty regime is where most first-year non-compliance gets expensive: each missed quarterly update carries a £200 initial penalty plus £10 per day up to 90 days = up to £1,100 per missed quarter. Miss all four quarterly updates in a year and you are looking at up to £4,400 in penalties alone, before any late-payment interest on the underlying tax. The two biggest causes of first-year breaches are (1) taxpayers still using spreadsheets or paper records — which do NOT meet MTD requirements — and (2) taxpayers who did not realise quarterly submissions were required at all.</p>
+          <p className="mb-2 text-neutral-900">Late submission is points-based, not a daily charge. You get one penalty point for each missed quarterly update — for tax years after 2026 to 2027 — or for a missed tax return. At four points HMRC charges £200, and every further deadline you miss while at the threshold costs another £200. HMRC states there are no penalties for missing a quarterly update deadline for the 2026 to 2027 tax year. Late payment is charged separately: nothing for the first 15 days; from day 16, 3% of the tax outstanding at day 15, which is not charged in the first year; from day 31, that 3% plus a further 3% of what was outstanding at day 30, and 10% a year while the balance remains unpaid. The two biggest causes of first-year breaches are (1) taxpayers still using spreadsheets or paper records — which do NOT meet MTD requirements — and (2) taxpayers who did not realise quarterly submissions were required at all.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: HMRC — Making Tax Digital for Income Tax · Finance Act 2021 · Confirmed April 2026</p>
         </div>
 
@@ -690,7 +694,7 @@ export default function MtdScorecardPage() {
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ Not on approved software + unaware of quarterly + missed deadlines  ❌  Up to £4,400/year in penalties
+              ❌ Not on approved software + unaware of quarterly + missed deadlines  ❌  Penalty points, then £200 at the fourth
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
               ✔ Approved software + quarterly habit + calendar discipline  ✔  Compliant from day one, no surprises
@@ -736,7 +740,7 @@ export default function MtdScorecardPage() {
             <p>He runs Hartley Precision Engineering out of a unit in Solihull. Twelve employees. Good order book. The business side he knows inside out. The tax side he leaves to his accountant Dave, who he sees every April for about forty minutes.</p>
             <p>The letter said something about Making Tax Digital and quarterly submissions. James assumed it applied to bigger companies. He makes around £280,000 in annual turnover — nowhere near what he thought the threshold would be.</p>
             <p>What James had not thought about was that MTD ITSA is INDIVIDUAL, not company-level. His £18k rental flat in Birmingham plus any consulting invoices outside the company would be his personal MTD threshold — and that number was already creeping toward £50k.</p>
-            <p className="font-semibold text-neutral-900">When he ran the check it pointed him straight at the part he needed: what MTD requires you to keep digitally, and how quarterly updates replace the single annual return. The thresholds that decide WHEN it starts for him are published by HMRC, and that was the next thing he looked up. His current spreadsheet records do not qualify. He had never heard of quarterly submissions. That combination — missed mandate + spreadsheet + no quarterly awareness — is the exact profile that pays £1,100 per missed quarter.</p>
+            <p className="font-semibold text-neutral-900">When he ran the check it pointed him straight at the part he needed: what MTD requires you to keep digitally, and how quarterly updates replace the single annual return. The thresholds that decide WHEN it starts for him are published by HMRC, and that was the next thing he looked up. His current spreadsheet records do not qualify. He had never heard of quarterly submissions. That combination — missed mandate + spreadsheet + no quarterly awareness — is the exact profile that starts collecting penalty points as soon as they begin to count.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
               <p><strong className="text-neutral-950">The bottom line:</strong> James called Dave the next morning with a specific question for the first time: which MTD wave am I in, and what software do we need to migrate to? Dave appreciated the preparation. By the end of the week James had QuickBooks running for the rental income and a calendar reminder for every 5th of the penalty months.</p>
             </div>
@@ -756,18 +760,18 @@ export default function MtdScorecardPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Making Tax Digital for Income Tax — confirmed thresholds and penalty regime 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is a statutory digital reporting regime for self-employed individuals and landlords under Finance Act 2021. Phase 1 commences 6 April 2026 for individuals with combined gross income from self-employment and property exceeding £50,000 per tax year. Phase 2 commences 6 April 2027 for individuals with gross income between £30,000 and £50,000. Phase 3 commences 6 April 2028 for gross income between £20,000 and £30,000. The threshold is based on gross income (before expenses) aggregated across all self-employment and property sources. PAYE employment income and dividends are excluded from the threshold calculation. Under MTD ITSA, mandated taxpayers must use HMRC-approved software for record-keeping and submissions. Spreadsheets alone do not meet MTD requirements unless bridged with approved bridging software. The reporting cadence changes from one annual self-assessment to five submissions per year: four quarterly updates (due 5 August, 5 November, 5 February, 5 May) summarising income and expenses for each quarter, plus a final annual declaration (due 31 January) which is the equivalent of the current self-assessment return. Payment dates remain unchanged (31 January balance payment plus two payments on account). The penalty regime for late or missing quarterly updates is points-based: each missed submission accumulates one point, with a £200 financial penalty triggered at four points. Additional financial penalties apply per quarter at £200 initial plus £10 per day up to a 90-day cap, amounting to up to £1,100 per missed quarterly update. The maximum annual penalty exposure from missing all four quarterly updates is approximately £4,400, before late-payment interest on underlying tax.</p>
+          <p className="mb-4 text-neutral-800">Making Tax Digital for Income Tax Self Assessment (MTD ITSA) is a statutory digital reporting regime for self-employed individuals and landlords under Finance Act 2021. Phase 1 commences 6 April 2026 for individuals with combined gross income from self-employment and property exceeding £50,000 per tax year. Phase 2 commences 6 April 2027 for individuals with gross income between £30,000 and £50,000. Phase 3 commences 6 April 2028 for gross income between £20,000 and £30,000. The threshold is based on gross income (before expenses) aggregated across all self-employment and property sources. PAYE employment income and dividends are excluded from the threshold calculation. Under MTD ITSA, mandated taxpayers must use HMRC-approved software for record-keeping and submissions. Spreadsheets alone do not meet MTD requirements unless bridged with approved bridging software. The reporting cadence changes from one annual self-assessment to five submissions per year: four quarterly updates (due 5 August, 5 November, 5 February, 5 May) summarising income and expenses for each quarter, plus a final annual declaration (due 31 January) which is the equivalent of the current self-assessment return. Payment dates remain unchanged (31 January balance payment plus two payments on account). The late-submission penalty regime is points-based. One penalty point is incurred for each missed quarterly update, for tax years after 2026 to 2027, or for a missed tax return. On reaching four points HMRC charges a £200 penalty, and a further £200 is charged for each subsequent missed deadline while the taxpayer remains at the points threshold. HMRC states that there are no penalties for missing a quarterly update deadline for the 2026 to 2027 tax year. Late payment is penalised separately and by reference to the tax outstanding: no penalty within 15 days of the due date; from day 16 a penalty of 3% of the tax outstanding at day 15, which is not charged in the first year; and from day 31 that 3% plus a further 3% of the tax outstanding at day 30, together with a penalty accruing at 10% a year while the amount remains unpaid.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            MTD mandate test: if (self-employment gross + property gross) exceeds threshold at phase date, then mandated. Phase 1 threshold £50,000 from 6 April 2026. Phase 2 £30,000 from 6 April 2027. Phase 3 £20,000 from 6 April 2028. Penalty per missed quarterly update = £200 + (£10 × days late up to 90 days). Max penalty per quarter = £1,100. Max annual penalty (4 quarters missed) = £4,400.
+            Late submission: 1 point per missed quarterly update (from 2027-28) or tax return; 4 points = £200; each further miss = £200. 2026-27 quarterly updates: no late-submission penalty.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (September 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -809,13 +813,13 @@ export default function MtdScorecardPage() {
                   <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Per-quarter penalty maximum</td>
-                  <td className="p-2">£1,100 (£200 + £10/day × 90 days)</td>
+                  <td className="p-2">Late submission penalty</td>
+                  <td className="p-2">£200 on reaching 4 points, then £200 per further miss</td>
                   <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
-                  <td className="p-2">Annual penalty maximum</td>
-                  <td className="p-2">£4,400 (4 quarters missed)</td>
+                  <td className="p-2">2026-27 quarterly updates</td>
+                  <td className="p-2">No late-submission penalty</td>
                   <td className="p-2 text-neutral-500">Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -959,10 +963,10 @@ export default function MtdScorecardPage() {
                 <td className="p-3 text-xs text-neutral-700">Reporting changes, not payment</td>
               </tr>
               <tr className="border-b border-neutral-200">
-                <td className="p-3 font-bold">Per-missed-quarter penalty</td>
+                <td className="p-3 font-bold">Late-submission penalty</td>
                 <td className="p-3 font-mono text-xs">N/A (annual only)</td>
-                <td className="p-3 text-xs">Up to £1,100 (£200 + £10/day × 90 days)</td>
-                <td className="p-3 text-xs text-neutral-700">Missing quarters is expensive</td>
+                <td className="p-3 text-xs">£200 at 4 points; none for 2026-27 updates</td>
+                <td className="p-3 text-xs text-neutral-700">Points accumulate — the fourth one is the one that costs</td>
               </tr>
             </tbody>
           </table>
@@ -1123,7 +1127,7 @@ export default function MtdScorecardPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            MTD ITSA Phase 1 live from 6 April 2026 for gross income over £50,000 (combined self-employment + property, before expenses). Phase 2 from 6 April 2027 (£30k threshold). Phase 3 from 6 April 2028 (£20k threshold). Mandated taxpayers use HMRC-approved software for 4 quarterly updates + 1 final declaration per year. Penalty regime: £200 initial + £10/day up to 90 days per missed quarter = up to £1,100 per quarter, up to £4,400/year. Under Finance Act 2021.
+            MTD ITSA Phase 1 live from 6 April 2026 for gross income over £50,000 (combined self-employment + property, before expenses). Phase 2 from 6 April 2027 (£30k threshold). Phase 3 from 6 April 2028 (£20k threshold). Mandated taxpayers use HMRC-approved software for 4 quarterly updates + 1 final declaration per year. Late submission is points-based: one point per missed quarterly update (tax years after 2026-27) or missed tax return, £200 on reaching four points and £200 per further miss; no quarterly-update penalty for 2026-27. Late payment is charged separately at 3% from day 16 and again from day 31, plus 10% a year. Under Finance Act 2021.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1137,10 +1141,10 @@ export default function MtdScorecardPage() {
               MTD ITSA
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              £1,100 per quarter
+              £200 at 4 points
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              £4,400/year max
+              No 2026-27 update penalty
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
               Machine-readable JSON
@@ -1158,10 +1162,15 @@ export default function MtdScorecardPage() {
               <p className="font-bold text-neutral-900">HMRC — MTD ITSA overview and timeline ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/making-tax-digital-for-income-tax-self-assessment-overview</p>
             </a>
-            <a href="https://www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/guidance/penalties-for-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">HMRC — Penalties for late submission under MTD ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/penalty-points-and-penalties-if-you-submit-your-vat-return-late</p>
+              <p className="font-bold text-neutral-900">HMRC — Penalties for Making Tax Digital for Income Tax ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/penalties-for-making-tax-digital-for-income-tax</p>
+            </a>
+            <a href="https://www.gov.uk/guidance/check-if-youre-eligible-for-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Check if you're eligible for MTD for Income Tax ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/check-if-youre-eligible-for-making-tax-digital-for-income-tax</p>
             </a>
             <a href="/api/rules/mtd-scorecard" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
@@ -1178,7 +1187,7 @@ export default function MtdScorecardPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from HMRC and GOV.UK guidance for April 2026.
+          built from HMRC and GOV.UK guidance for September 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1201,7 +1210,7 @@ export default function MtdScorecardPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">United Kingdom tax position checks. April 2026.</p>
+            <p className="mt-1">United Kingdom tax position checks. September 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/uk/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
