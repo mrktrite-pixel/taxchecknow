@@ -3,37 +3,7 @@
 // Product: mtd-scorecard · File 02 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts uk-mtd-scorecard
 
-import { useEffect, useState } from "react";
-import DocBody from "@/app/_components/DocBody";
-import DocStrip from "@/app/_components/DocStrip";
-import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
-import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
-import { resolveDocLabel } from "@/lib/terminal-labels";
-
-const PRODUCT_ID = "mtd-scorecard";
-const SESSION_KEY = "mtd-scorecard";
-const SLUG = "mtd-02";
-const FALLBACK_LABEL = { name: "MTD Software and Authorisation", desc: "How compatible software is chosen and authorised, and how bridging software fits." };
-const BODY = `<h2>HMRC-Approved MTD Software — Decision Framework</h2><table><tr><th>Software</th><th>Cost</th><th>Best for</th></tr><tr><td>QuickBooks</td><td>From £10/mo</td><td>Self-employed, small landlords</td></tr><tr><td>Xero</td><td>From £15/mo</td><td>Multi-property, accountant-shared</td></tr><tr><td>FreeAgent</td><td>Free–£19/mo</td><td>Freelancers, contractors</td></tr><tr><td>Sage</td><td>From £12/mo</td><td>Established businesses with payroll</td></tr><tr><td>Bridging software</td><td>£5-15/mo add-on</td><td>Keep existing spreadsheets</td></tr></table><div class="warning-box"><strong>Spreadsheets alone:</strong> Do not qualify under any scenario. Must be bridged with approved bridging software OR replaced.</div><h3>Migration Sequencing</h3><ol><li>6+ months before mandate: choose software, set up chart of accounts</li><li>3+ months before: run parallel with old system for one month</li><li>1 month before: switch fully, cut off old system</li><li>Post-mandate: first quarterly dry-run under your accountant's supervision</li></ol>`;
-
 export default function MtdScorecardFile02() {
-  // R1 — bind the body to the buyer's own answers where we have them.
-  //
-  // Read in an effect, not during render: sessionStorage does not exist on the server, and
-  // reading it during render would desync the hydration pass. First paint is therefore the
-  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
-  // a reader with no session (a cold link, a different device) gets and it must stand alone.
-  //
-  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
-  // context is found, so every product that has not adopted the syntax is unaffected.
-  const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
-  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
-  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
-  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
-  // own strings, which is what this page has always shown.
-  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
-
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -107,26 +77,31 @@ export default function MtdScorecardFile02() {
               🇬🇧 HMRC · Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: September 2026
+              Last verified: April 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 02 of 8
             </span>
           </div>
 
-          <DocStrip
-            productId={PRODUCT_ID}
-            fallbackText="PHASE 1: Live since 6 April 2026"
-            checkHref="/uk/check/mtd-scorecard"
-          />
+          {/* Deadline bar */}
+          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
+            <span className="text-sm font-bold text-white">
+              🔴 PHASE 1: Live since 6 April 2026
+            </span>
+            <a href="/uk/check/mtd-scorecard"
+              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
+              Check your position →
+            </a>
+          </div>
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             MTD Mandation Engine · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            {label.name}
+            MTD Software and Authorisation
           </h1>
-          <p className="text-neutral-500 text-sm">{label.desc}</p>
+          <p className="text-neutral-500 text-sm">How compatible software is chosen and authorised, and how bridging software fits.</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -139,7 +114,10 @@ export default function MtdScorecardFile02() {
         </div>
 
         {/* CONTENT */}
-        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
+        <div
+          className="prose-content"
+          dangerouslySetInnerHTML={{ __html: `<h2>HMRC-Approved MTD Software — Decision Framework</h2><table><tr><th>Software</th><th>Cost</th><th>Best for</th></tr><tr><td>QuickBooks</td><td>From £10/mo</td><td>Self-employed, small landlords</td></tr><tr><td>Xero</td><td>From £15/mo</td><td>Multi-property, accountant-shared</td></tr><tr><td>FreeAgent</td><td>Free–£19/mo</td><td>Freelancers, contractors</td></tr><tr><td>Sage</td><td>From £12/mo</td><td>Established businesses with payroll</td></tr><tr><td>Bridging software</td><td>£5-15/mo add-on</td><td>Keep existing spreadsheets</td></tr></table><div class="warning-box"><strong>Spreadsheets alone:</strong> Do not qualify under any scenario. Must be bridged with approved bridging software OR replaced.</div><h3>Migration Sequencing</h3><ol><li>6+ months before mandate: choose software, set up chart of accounts</li><li>3+ months before: run parallel with old system for one month</li><li>1 month before: switch fully, cut off old system</li><li>Post-mandate: first quarterly dry-run under your accountant's supervision</li></ol>` }}
+        />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -226,8 +204,8 @@ export default function MtdScorecardFile02() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
-            Based on HMRC guidance September 2026.
+            Always consult a qualified United Kingdom tax adviser for your personal situation.
+            Based on HMRC guidance April 2026.
           </p>
         </div>
 
