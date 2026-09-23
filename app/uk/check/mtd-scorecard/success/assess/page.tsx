@@ -216,7 +216,7 @@ export default function SuccessAssess() {
         firstAction: "Your personalised firstAction is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
-          "What is the single most important action I should take before Quarterly update deadline — not in captured authority?",
+          "What is the single most important action I should take before your first quarterly update deadline?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
