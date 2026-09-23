@@ -251,7 +251,7 @@ export default function SuccessPlan() {
         strongestRiskTrigger: "Your personalised strongestRiskTrigger is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact ATO position based on my answers?",
-          "What is the single most important action I should take before 31 October 2026?",
+          "What is the single most important action I should take before 31 October 2026 (a Saturday — lodge by Monday 2 November 2026)?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -372,7 +372,7 @@ export default function SuccessPlan() {
           </p>
           {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 31 October 2026</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 31 October 2026 (a Saturday — lodge by Monday 2 November 2026)</span>
             <span className="font-mono text-sm font-bold text-white">31 Oct 2026</span>
           </div>
           )}
@@ -428,7 +428,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 31 October 2026
+                  What to do — in order — before 31 October 2026 (a Saturday — lodge by Monday 2 November 2026)
                 </h2>
                 <div className="space-y-4">
                   {pack!.actions.map((action, i) => (
@@ -584,7 +584,7 @@ export default function SuccessPlan() {
                 Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                {deadlineLive ? `${daysToDeadline} days to 31 October 2026.` : ""}
+                {deadlineLive ? `${daysToDeadline} days to 31 October 2026 (a Saturday — lodge by Monday 2 November 2026).` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -624,8 +624,8 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australia tax adviser before making financial decisions.
-            Based on ATO guidance July 2026.{" "}
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties" target="_blank" rel="noopener noreferrer" className="underline">ATO — Rental properties</a>
+            Based on ATO guidance September 2026.{" "}
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties" target="_blank" rel="noopener noreferrer" className="underline">ATO — Rental properties</a> · <a href="https://www.ato.gov.au/forms-and-instructions/rental-properties-2025/rental-expenses" target="_blank" rel="noopener noreferrer" className="underline">ATO — Rental expenses (Rental properties 2025)</a>
           </p>
         </div>
 

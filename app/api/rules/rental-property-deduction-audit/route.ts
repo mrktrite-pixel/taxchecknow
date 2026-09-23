@@ -19,17 +19,17 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "September 2026",
     "legislation": "Income Tax Assessment Act 1997 — rental property income and deductions",
     "legal_anchor": "ITAA 1997 — Rental property deductions",
     "deadline": {
         "iso_date": "2026-10-31T23:59:59.000+11:00",
-        "display": "31 October 2026",
+        "display": "31 October 2026 (a Saturday — lodge by Monday 2 November 2026)",
         "description": "Individual tax return due — rental schedule included here",
         "urgency_label": "RETURN DUE"
     },
     "key_facts": {
-        "building_depreciation_rate": "2.5%/yr — post-Sept 1987 construction",
+        "building_depreciation_rate": "2.5%/yr over 40 years — construction after 15 Sep 1987; 4%/yr over 25 years — 18 Jul 1985 to 15 Sep 1987",
         "travel_deduction": "Not deductible — residential since July 2017",
         "initial_repairs": "Capital — not immediately deductible",
         "holiday_home_apportionment": "Days available at market rate / total days",
@@ -117,6 +117,22 @@ export async function GET() {
         {
             "title": "ATO — Rental properties",
             "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties"
+        },
+        {
+            "title": "ATO — Rental expenses (Rental properties 2025)",
+            "url": "https://www.ato.gov.au/forms-and-instructions/rental-properties-2025/rental-expenses"
+        },
+        {
+            "title": "ATO — Work out your capital works deductions",
+            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/property-and-land/residential-rental-properties/rental-expenses/capital-expenses/work-out-your-capital-works-deductions"
+        },
+        {
+            "title": "ATO — Time limits on amendments",
+            "url": "https://www.ato.gov.au/individuals-and-families/your-tax-return/amend-your-tax-return/time-limits-on-amendments"
+        },
+        {
+            "title": "ATO — Preparing your tax return",
+            "url": "https://www.ato.gov.au/individuals-and-families/your-tax-return/before-you-prepare-your-tax-return/preparing-your-tax-return"
         }
     ],
     "products": {
@@ -136,11 +152,15 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties"
+        "https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties",
+        "https://www.ato.gov.au/forms-and-instructions/rental-properties-2025/rental-expenses",
+        "https://www.ato.gov.au/individuals-and-families/investments-and-assets/property-and-land/residential-rental-properties/rental-expenses/capital-expenses/work-out-your-capital-works-deductions",
+        "https://www.ato.gov.au/individuals-and-families/your-tax-return/amend-your-tax-return/time-limits-on-amendments",
+        "https://www.ato.gov.au/individuals-and-families/your-tax-return/before-you-prepare-your-tax-return/preparing-your-tax-return"
     ],
     "canonical": "https://taxchecknow.com/au/check/rental-property-deduction-audit",
     "api_endpoint": "/api/rules/rental-property-deduction-audit",
-    "generated_at": "2026-07-31T04:05:43.779Z"
+    "generated_at": "2026-09-23T07:29:17.786Z"
 };
 
   return NextResponse.json(rules, {
@@ -150,7 +170,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "rental-property-deduction-audit",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "September 2026",
     },
   });
 }

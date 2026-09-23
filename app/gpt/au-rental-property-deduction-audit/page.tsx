@@ -26,14 +26,14 @@ export default function Page() {
       prompt={"Can I claim all my rental property expenses?"}
       countryDescriptor={"Australian"}
       authorityShort={"ATO"}
-      lastVerified={"April 2026"}
+      lastVerified={"September 2026"}
       ruleParagraphs={[
         "Rental property deductions are one of the ATO's highest audit priorities. Each year the ATO reviews hundreds of thousands of rental schedules and identifies billions in over-claimed deductions. The two most common errors: claiming capital improvements as repairs (which is incorrect — capital items must be depreciated), and failing to apportion deductions for periods when the property was not available for rent.",
-        "The most commonly missed legitimate deduction is depreciation. Many landlords do not have a quantity surveyor's depreciation schedule and therefore claim nothing for the building or plant and equipment. On a property built after 1987, building depreciation alone can be worth $5,000-$15,000 per year in additional deductions.",
+        "Capital works and depreciating assets are not deductible in the year you pay for them — they are written off over time. Whether a given item is an immediate repair or a capital work is the distinction this checker draws; quantifying the write-off is a job for your accountant or a quantity surveyor.",
       ]}
       mistakes={[
         "Fixing something before you rent it is deductible — wrong. Initial repairs — work done to fix a defect that existed when you purchased the property — are capital, not immediately deductible. The ATO is explicit: if the defect was there at purchase, the repair is treated as part of your cost base, not a current-year deduction. This is the single most common audit trigger in rental property returns.",
-        "Replacing the whole item is the same as repairing part of it — wrong. Fixing part of a fence is a repair — deductible. Replacing the entire fence is capital works — depreciated over 40 years at 2.5% per year. The ATO draws this line precisely: if you restored a part, it is a repair; if you replaced the whole, it is capital. Misclassification here is where most audit adjustments originate.",
+        "Replacing the whole item is the same as repairing part of it — wrong. Fixing part of a fence is a repair — deductible. Replacing the entire fence is capital works — depreciated at 2.5% per year over 40 years for construction that began after 15 September 1987, or 4% per year over 25 years for construction that began between 18 July 1985 and 15 September 1987. The ATO draws this line precisely: if you restored a part, it is a repair; if you replaced the whole, it is capital. Misclassification here is where most audit adjustments originate.",
       ]}
       aiWrong={"ChatGPT says: You can deduct all expenses for a holiday home as long as you rent it out sometimes"}
       aiReality={"Reality: Deductions for a holiday home must be apportioned. Only the proportion of time the property was genuinely available for rent at market rates is deductible. Personal use periods, periods when the property is not advertised, and periods locked out for the owner's convenience all reduce the deductible proportion."}
