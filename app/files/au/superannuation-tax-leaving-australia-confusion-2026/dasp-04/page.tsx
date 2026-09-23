@@ -3,7 +3,37 @@
 // Product: superannuation-tax-leaving-australia-confusion-2026 · File 04 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts au-superannuation-tax-leaving-australia-confusion-2026
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "superannuation-tax-leaving-australia-confusion-2026";
+const SESSION_KEY = "superannuation-tax-leaving-australia-confusion-2026";
+const SLUG = "dasp-04";
+const FALLBACK_LABEL = { name: "Unclaimed Super Risk Brief", desc: "What happens after 6 months and how to claim back from the ATO if it has already transferred." };
+const BODY = `<h2>Unclaimed Super — the 6-Month Rule</h2><p>Where 6 months or more have passed since you left Australia and your visa ceased, your super fund may transfer your balance to the ATO as unclaimed super money.</p><h3>If it has already transferred</h3><p>You then claim your DASP from the ATO directly rather than from your fund. The DASP withholding rates still apply — working holiday makers face the 65% rate on ATO-held unclaimed money.</p><p>Source: ATO — Departing Australia Superannuation Payment and unclaimed super.</p>`;
+
 export default function SuperannuationTaxLeavingAustraliaConfusion2026File04() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -77,31 +107,26 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File04() {
               🇦🇺 ATO · DASP
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: July 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 04 of 8
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 TIME-SENSITIVE: Unclaimed super transfers to the ATO 6 months after you leave with your visa ceased
-            </span>
-            <a href="/au/check/superannuation-tax-leaving-australia-confusion-2026"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="Unclaimed super transfers to the ATO 6 months after you leave with your visa ceased"
+            checkHref="/au/check/superannuation-tax-leaving-australia-confusion-2026"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Superannuation Tax When Leaving Australia (DASP) · File 04 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Unclaimed Super Risk Brief
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">What happens after 6 months and how to claim back from the ATO if it has already transferred.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +139,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File04() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Unclaimed Super — the 6-Month Rule</h2><p>Where 6 months or more have passed since you left Australia and your visa ceased, your super fund may transfer your balance to the ATO as unclaimed super money.</p><h3>If it has already transferred</h3><p>You then claim your DASP from the ATO directly rather than from your fund. The DASP withholding rates still apply — working holiday makers face the 65% rate on ATO-held unclaimed money.</p><p>Source: ATO — Departing Australia Superannuation Payment and unclaimed super.</p>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,8 +226,8 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File04() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Australia tax adviser for your personal situation.
-            Based on ATO guidance July 2026.
+            Always consult a qualified Australian tax adviser for your personal situation.
+            Based on ATO guidance September 2026.
           </p>
         </div>
 
