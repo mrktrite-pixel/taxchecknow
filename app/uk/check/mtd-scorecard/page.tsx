@@ -459,13 +459,13 @@ export default function MtdScorecardPage() {
   const videoSchema = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
-    name: "Am I mandated under MTD ITSA? The £4,400 trap",
+    name: "Am I mandated under MTD ITSA? Which part applies to you",
     description: "MTD for Income Tax has been live since 6 April 2026 for sole traders and landlords over £50,000. Find which part applies to you and when. Free check.",
     thumbnailUrl: "https://i.ytimg.com/vi/i4O6GBeyMO0/hqdefault.jpg",
     uploadDate: "2026-06-15T11:00:24.109+00:00",
     contentUrl: "https://www.youtube.com/watch?v=i4O6GBeyMO0",
     embedUrl: "https://www.youtube.com/embed/i4O6GBeyMO0",
-    transcript: "Am I mandated under MTD ITSA? Sound like you? You earn over £50,000 gross and you're not sure if this applies. The actual truth is — MTD doesn't just mean filing online. HMRC replaces your one annual return with five submissions a year: four quarterly updates plus one final declaration. Miss a quarter and the penalty hits £1,100. Miss all four and you're up for £4,400. The Phase 1 deadline is 6 April 2026 — that's not far away. Go to taxchecknow.com and check for yourself.",
+    transcript: "Am I mandated under MTD ITSA? Sound like you? You earn over £50,000 gross and you're not sure if this applies. The actual truth is — MTD doesn't just mean filing online. HMRC replaces your one annual return with five submissions a year: four quarterly updates plus one final declaration. From the 2027-28 year, every late quarterly update earns a penalty point. Four points and HMRC charges £200. Phase 1 has been live since 6 April 2026. Go to taxchecknow.com and check for yourself.",
   };
 
   return (
@@ -1200,7 +1200,7 @@ export default function MtdScorecardPage() {
       <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
         <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
         <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=i4O6GBeyMO0" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
-        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"Am I mandated under MTD ITSA? Sound like you? You earn over £50,000 gross and you're not sure if this applies. The actual truth is — MTD doesn't just mean filing online. HMRC replaces your one annual return with five submissions a year: four quarterly updates plus one final declaration. Miss a quarter and the penalty hits £1,100. Miss all four and you're up for £4,400. The Phase 1 deadline is 6 April 2026 — that's not far away. Go to taxchecknow.com and check for yourself."}</div>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"Am I mandated under MTD ITSA? Sound like you? You earn over £50,000 gross and you're not sure if this applies. The actual truth is — MTD doesn't just mean filing online. HMRC replaces your one annual return with five submissions a year: four quarterly updates plus one final declaration. From the 2027-28 year, every late quarterly update earns a penalty point. Four points and HMRC charges £200. Phase 1 has been live since 6 April 2026. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
