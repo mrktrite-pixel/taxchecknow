@@ -243,7 +243,7 @@ export default function SuccessPlan() {
         ongoingComplianceChecklist: "Your personalised ongoingComplianceChecklist is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact HMRC position based on my answers?",
-          "What is the single most important action I should take before Quarterly update deadline — not in captured authority?",
+          "What is the single most important action I should take before your first quarterly update deadline?",
           "Are there any planning opportunities specific to my situation?",
         ],
         actions: [],
@@ -290,15 +290,6 @@ export default function SuccessPlan() {
       `DTSTAMP:${now}`,
       "SUMMARY:MTD — Parallel run with old system",
       "DESCRIPTION:One month of parallel running before cutover.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:mtd-register-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${relativeDate(60)}`,
-      `DTEND;VALUE=DATE:${relativeDate(60)}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:MTD — Register with HMRC",
-      "DESCRIPTION:Register for MTD ITSA via HMRC online services.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -429,7 +420,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before Quarterly update deadline — not in captured authority
+                  What to do — in order — before your first quarterly update deadline
                 </h2>
                 <div className="space-y-4">
                   {pack!.actions.map((action, i) => (
@@ -530,15 +521,6 @@ export default function SuccessPlan() {
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     In 30 days
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">MTD — Register with HMRC</p>
-                    <p className="text-xs text-neutral-500">Register for MTD ITSA via HMRC online services.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    In 60 days
                   </span>
                 </div>
               </div>

@@ -101,7 +101,7 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "reason": "authority_page_stating_the_deadline_not_captured",
                 "jurisdiction": "UK",
                 "domain": "mtd_income_tax",
-                "label": "Quarterly update deadline — not in captured authority"
+                "label": "your first quarterly update deadline"
           },
           "nurture": [
                 {

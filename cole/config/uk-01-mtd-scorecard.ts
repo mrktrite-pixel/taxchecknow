@@ -38,7 +38,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     reason:       "authority_page_stating_the_deadline_not_captured",
     jurisdiction: "UK",
     domain:       "mtd_income_tax",
-    label:        "Quarterly update deadline — not in captured authority",
+    label:        "your first quarterly update deadline",
   },
   id: "mtd-scorecard", name: "MTD Mandation Engine", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
   slug: "uk/check/mtd-scorecard", url: "https://taxchecknow.com/uk/check/mtd-scorecard", apiRoute: "/api/rules/mtd-scorecard",
@@ -221,7 +221,6 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier2Calendar: [
     { uid: "mtd-software", summary: "MTD — Choose approved software", description: "Pick QuickBooks, Xero, FreeAgent, or Sage. Set up chart of accounts.", date: "relative:+7days" },
     { uid: "mtd-parallel", summary: "MTD — Parallel run with old system", description: "One month of parallel running before cutover.", date: "relative:+30days" },
-    { uid: "mtd-register", summary: "MTD — Register with HMRC", description: "Register for MTD ITSA via HMRC online services.", date: "relative:+60days" },
     { uid: "mtd-q1", summary: "MTD — Q1 Quarterly Update Due", description: "First quarterly update — 5 August.", date: "20260805" },
     { uid: "mtd-final", summary: "MTD — Annual Final Declaration", description: "31 January 2027.", date: "20270131" },
   ],
