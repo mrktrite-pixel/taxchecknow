@@ -10,12 +10,12 @@ import SuperannuationTaxLeavingAustraliaConfusion2026Calculator from "./Superann
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Superannuation Tax Leaving Australia 2026 (DASP) — Withholding Rates by Visa | TaxCheckNow",
-  description: "Leaving Australia? Your super can be claimed as a DASP, taxed at 35%/45% for most visas or 65% for working holiday makers. Unclaimed super transfers to the ATO after 6 months. Free check shows your position.",
+  title: "DASP Tax Leaving Australia 2026: 35%, 45% or 65%? | TaxCheckNow",
+  description: "DASP is taxed at 35% or 45% for most visas, 65% for working holiday makers. Unclaimed super goes to the ATO 6 months after you leave. Free check.",
   alternates: { canonical: "https://taxchecknow.com/au/check/superannuation-tax-leaving-australia-confusion-2026" },
   openGraph: {
-    title: "Superannuation Tax Leaving Australia 2026 (DASP) — Withholding Rates by Visa | TaxCheckNow",
-    description: "Leaving Australia? Your super can be claimed as a DASP, taxed at 35%/45% for most visas or 65% for working holiday makers. Unclaimed super transfers to the ATO after 6 months. Free check shows your position.",
+    title: "DASP Tax Leaving Australia 2026: 35%, 45% or 65%? | TaxCheckNow",
+    description: "DASP is taxed at 35% or 45% for most visas, 65% for working holiday makers. Unclaimed super goes to the ATO 6 months after you leave. Free check.",
     url: "https://taxchecknow.com/au/check/superannuation-tax-leaving-australia-confusion-2026",
     siteName: "TaxCheckNow",
     type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "July 2026";
+const LAST_VERIFIED  = "September 2026";
 const DEADLINE_LABEL = "";
 const DEADLINE_ISO   = "";
 
@@ -314,8 +314,8 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Superannuation Tax When Leaving Australia (DASP) — Rules July 2026",
-    description: "Leaving Australia? Your super can be claimed as a DASP, taxed at 35%/45% for most visas or 65% for working holiday makers. Unclaimed super transfers to the ATO after 6 months. Free check shows your position.",
+    name: "Superannuation Tax When Leaving Australia (DASP) — Rules September 2026",
+    description: "DASP is taxed at 35% or 45% for most visas, 65% for working holiday makers. Unclaimed super goes to the ATO 6 months after you leave. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -331,7 +331,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Superannuation Tax When Leaving Australia (DASP)",
-    description: "Leaving Australia? Your super can be claimed as a DASP, taxed at 35%/45% for most visas or 65% for working holiday makers. Unclaimed super transfers to the ATO after 6 months. Free check shows your position.",
+    description: "DASP is taxed at 35% or 45% for most visas, 65% for working holiday makers. Unclaimed super goes to the ATO 6 months after you leave. Free check.",
     url: "https://taxchecknow.com/au/check/superannuation-tax-leaving-australia-confusion-2026",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -380,13 +380,13 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/superannuation-tax-leaving-australia-confusion-2026#calculator",
-    "description": "Leaving Australia? Your super can be claimed as a DASP, taxed at 35%/45% for most visas or 65% for working holiday makers. Unclaimed super transfers to the ATO after 6 months. Free check shows your position.",
+    "description": "DASP is taxed at 35% or 45% for most visas, 65% for working holiday makers. Unclaimed super goes to the ATO 6 months after you leave. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance July 2026"
+      "Based on ATO guidance September 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -620,7 +620,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — ATO confirmed July 2026
+            The answer — ATO confirmed September 2026
           </p>
           <p className="mb-2 text-neutral-900">When leaving Australia as a temporary resident, you may generally claim your superannuation as a Departing Australia Superannuation Payment (DASP), with tax withheld at the time of payment — 35% on the taxed element and 45% on the untaxed element for most visa holders, or 65% on both elements for working holiday maker visa holders — and if you do not apply, your super fund may transfer your balance to the ATO as unclaimed money once 6 months or more has passed since you left Australia and your visa has ceased, depending on circumstances.</p>
           <p className="mb-2 text-neutral-900">Departing Australia Superannuation Payment (DASP) matters are generally governed under the Migration Act 1958, as indicated by the Australian Taxation Office's guidance on temporary residents and superannuation. Depending on circumstances, the applicable rules and requirements may vary, and this source is indicated as the primary authority on this topic.</p>
@@ -687,7 +687,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (July 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (September 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1045,7 +1045,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for July 2026.
+          built from ATO and GOV.UK guidance for September 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1059,7 +1059,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026Page() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. July 2026.</p>
+            <p className="mt-1">Australia tax position checks. September 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

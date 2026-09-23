@@ -549,7 +549,7 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australia tax adviser before making financial decisions.
-            Based on ATO guidance July 2026.{" "}
+            Based on ATO guidance September 2026.{" "}
             <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp" target="_blank" rel="noopener noreferrer" className="underline">ATO — Departing Australia Superannuation Payment (DASP)</a>
           </p>
         </div>
