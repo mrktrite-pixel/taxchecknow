@@ -2,14 +2,15 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "digital-link-auditor", name: "MTD Digital Link Compliance Engine", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
   slug: "uk/check/digital-link-auditor", url: "https://taxchecknow.com/uk/check/digital-link-auditor", apiRoute: "/api/rules/digital-link-auditor",
+  seoPrimaryQuery: "mtd digital link audit 2026 find",
   authority: "HMRC", authorityUrl: "https://www.gov.uk/government/organisations/hm-revenue-customs", legalAnchor: "Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) — digital link requirement for MTD ITSA", legislation: "Income Tax (Digital Requirements) Regulations 2021 (SI 2021/1076) · MTD ITSA commencement 6 April 2026 under Finance Act 2021 · HMRC VAT Notice 700/22 (MTD VAT digital link precedent) · Schedule 24 Finance Act 2021 penalty regime for MTD non-compliance · Income Tax Act 2007 record-keeping obligations",
   lastVerified: "April 2026",
   tier1: { price: 67, name: "Your Digital Link Audit Pack", tagline: "Find the break in your MTD chain before HMRC does", value: "Your exact chain break point identified by step, the HMRC rule being broken, penalty exposure calculation, and 5 accountant questions specific to your break — built around your current record-keeping and submission process.", cta: "Get My Digital Link Audit — £67 →", productKey: "uk_67_digital_link_auditor", envVar: "STRIPE_UK_DLA_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Digital Link Fix Plan", tagline: "Migrate to a compliant chain before mandation — step-by-step playbook", value: "Full fix plan: bridging software selection for your setup, migration sequencing (records → transfer → submission), process documentation, accountant coordination brief, and post-fix verification checklist.", cta: "Get My Digital Link Fix Plan — £147 →", productKey: "uk_147_digital_link_auditor", envVar: "STRIPE_UK_DLA_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2026-04-06T00:00:00.000+01:00", display: "6 April 2026", short: "6 Apr 2026", description: "6 April 2026 — MTD ITSA Phase 1 mandate date. Digital link requirement becomes a live compliance condition for taxpayers with gross income over £50,000.", urgencyLabel: "MANDATE ACTIVE — CHAIN MUST BE LINKED", countdownLabel: "Countdown to MTD ITSA Phase 1 — 6 April 2026" },
-  h1: "MTD Requires a Complete Digital Audit Trail — Not Just Digital Filing. Here Is Where Your Process Breaks the Rules.",
-  metaTitle: "MTD Digital Link Audit 2026: Find Your Chain Break | TaxCheckNow",
-  metaDescription: "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
+  h1: "MTD Digital Link Audit: Find Your Chain Break",
+  metaTitle: "MTD Digital Link Audit 2026: Find Chain Breaks | TaxCheckNow",
+  metaDescription: "Manual copy-paste breaks your MTD chain. From 6 April 2026 you must meet SI 2021/1076. Find every gap in 2 minutes. Free check.",
   canonical: "https://taxchecknow.com/uk/check/digital-link-auditor",
   answerHeadline: "Digital link is absolute — one manual step anywhere breaks the whole chain",
   answerBody: [

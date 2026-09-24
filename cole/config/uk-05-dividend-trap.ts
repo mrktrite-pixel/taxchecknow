@@ -2,14 +2,15 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "dividend-trap", name: "Salary + Dividend Tax Trap Engine", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
   slug: "uk/check/dividend-trap", url: "https://taxchecknow.com/uk/check/dividend-trap", apiRoute: "/api/rules/dividend-trap",
+  seoPrimaryQuery: "uk dividend tax 2026 stacking bands",
   authority: "HMRC", authorityUrl: "https://www.gov.uk/government/organisations/hm-revenue-customs", legalAnchor: "Income Tax Act 2007 — dividend tax rates; ITTOIA 2005 — dividend income taxation", legislation: "Income Tax Act 2007 sections 8-9 (dividend tax rates — 8.75% basic, 33.75% higher, 39.35% additional) · Income Tax (Trading and Other Income) Act 2005 (ITTOIA 2005) sections 383-385 · Finance Act 2024 — dividend allowance reduced to £500 from £1,000 · Dividend allowance history: £5,000 (2017-18) → £2,000 (2018-22) → £1,000 (2023-24) → £500 (2024-25 onwards) · Income bands: personal allowance £12,570, higher rate threshold £50,270, additional rate threshold £125,140",
   lastVerified: "April 2026",
   tier1: { price: 67, name: "Your Dividend Audit Pack", tagline: "Your exact dividend tax by band — and the restructure that saves it", value: "Your exact dividend tax by band (basic / higher / additional), optimal salary/dividend split for your situation, restructure options ranked, and 5 accountant questions — built for your salary + dividend + other income stack.", cta: "Get My Dividend Audit — £67 →", productKey: "uk_67_dividend_trap", envVar: "STRIPE_UK_DIV_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Dividend Restructure Plan", tagline: "Multi-year salary/dividend sequencing + spousal splitting + pension strategy", value: "Full restructure plan: multi-year dividend sequencing, spousal dividend splitting analysis, pension contribution modelling, retained earnings vs distribution trade-off, spouse/family company share planning, and accountant coordination brief.", cta: "Get My Dividend Restructure Plan — £147 →", productKey: "uk_147_dividend_trap", envVar: "STRIPE_UK_DIV_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2027-04-05T23:59:59.000+01:00", display: "5 April 2027", short: "5 Apr 2027", description: "5 April 2027 — UK tax year end. Dividend timing and salary/dividend split must be finalised before year-end to apply in 2026-27.", urgencyLabel: "YEAR END — TIMING LEVER CLOSES", countdownLabel: "Countdown to 5 April 2027 UK tax year end" },
-  h1: "UK Company Directors: Your Dividends Are Taxed on Top of Your Salary — Not Separately. Here Is Exactly What That Costs You.",
-  metaTitle: "UK Dividend Tax 2026: Stacking, Bands, and the 33.75% Higher Rate | TaxCheckNow",
-  metaDescription: "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
+  h1: "UK Dividend Tax 2026: How Stacking Bands Work",
+  metaTitle: "UK Dividend Tax 2026: Bands, Stacking & Rates | TaxCheckNow",
+  metaDescription: "UK dividends stack on top of salary — the £500 allowance is all you get before 8.75%, 33.75%, or 39.35% applies. Model it correctly. Free check.",
   canonical: "https://taxchecknow.com/uk/check/dividend-trap",
   answerHeadline: "Dividends stack — and the £500 allowance is one-tenth of what it was in 2017",
   answerBody: [

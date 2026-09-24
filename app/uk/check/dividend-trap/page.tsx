@@ -10,12 +10,12 @@ import DividendTrapCalculator from "./DividendTrapCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "UK Dividend Tax 2026: Stacking, Bands, and the 33.75% Higher Rate | TaxCheckNow",
-  description: "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
+  title: "UK Dividend Tax 2026: Bands, Stacking & Rates | TaxCheckNow",
+  description: "UK dividends stack on top of salary — the £500 allowance is all you get before 8.75%, 33.75%, or 39.35% applies. Model it correctly. Free check.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/dividend-trap" },
   openGraph: {
-    title: "UK Dividend Tax 2026: Stacking, Bands, and the 33.75% Higher Rate | TaxCheckNow",
-    description: "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
+    title: "UK Dividend Tax 2026: Bands, Stacking & Rates | TaxCheckNow",
+    description: "UK dividends stack on top of salary — the £500 allowance is all you get before 8.75%, 33.75%, or 39.35% applies. Model it correctly. Free check.",
     url: "https://taxchecknow.com/uk/check/dividend-trap",
     siteName: "TaxCheckNow",
     type: "website",
@@ -28,12 +28,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "5 April 2027";
 const DEADLINE_ISO   = "2027-04-05T23:59:59.000+01:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -321,8 +324,13 @@ const countdownStats = [
 
 export default function DividendTrapPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "uk/check/dividend-trap", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -339,7 +347,7 @@ export default function DividendTrapPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Salary + Dividend Tax Trap Engine — Rules April 2026",
-    description: "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
+    description: "UK dividends stack on top of salary — the £500 allowance is all you get before 8.75%, 33.75%, or 39.35% applies. Model it correctly. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -355,7 +363,7 @@ export default function DividendTrapPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Salary + Dividend Tax Trap Engine",
-    description: "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
+    description: "UK dividends stack on top of salary — the £500 allowance is all you get before 8.75%, 33.75%, or 39.35% applies. Model it correctly. Free check.",
     url: "https://taxchecknow.com/uk/check/dividend-trap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -404,7 +412,7 @@ export default function DividendTrapPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/dividend-trap#calculator",
-    "description": "Dividends stack on top of salary for UK tax. The first £500 is allowance-free — everything above is taxed at 8.75%, 33.75%, or 39.35% depending on total income. Most directors do not model this correctly. Run your exact dividend tax audit in 2 minutes.",
+    "description": "UK dividends stack on top of salary — the £500 allowance is all you get before 8.75%, 33.75%, or 39.35% applies. Model it correctly. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -435,6 +443,18 @@ export default function DividendTrapPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "How are dividends taxed in the UK? £500 trap explained",
+    description: "UK dividends stack on top of salary — the £500 allowance is all you get before 8.75%, 33.75%, or 39.35% applies. Model it correctly. Free check.",
+    thumbnailUrl: "https://i.ytimg.com/vi/CW6faLy2JDo/hqdefault.jpg",
+    uploadDate: "2026-06-15T01:00:43.687+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=CW6faLy2JDo",
+    embedUrl: "https://www.youtube.com/embed/CW6faLy2JDo",
+    transcript: "How are dividends taxed in the UK? Sound like you? The actual truth is — the allowance dropped to £500. Not £5,000. HMRC cut it hard. Your dividends stack on top of your salary. Push past £50,270 total income and the excess hits 33.75%. Go higher than £125,140 and it's 39.35% — plus you lose your personal allowance. Get the split wrong before 5 April and you pay more than you should. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -444,6 +464,7 @@ export default function DividendTrapPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -489,7 +510,7 @@ export default function DividendTrapPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          UK Company Directors: Your Dividends Are Taxed on Top of Your Salary — Not Separately. Here Is Exactly What That Costs You.
+          UK Dividend Tax 2026: How Stacking Bands Work
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -1149,6 +1170,15 @@ export default function DividendTrapPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=CW6faLy2JDo" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"How are dividends taxed in the UK? Sound like you? The actual truth is — the allowance dropped to £500. Not £5,000. HMRC cut it hard. Your dividends stack on top of your salary. Push past £50,270 total income and the excess hits 33.75%. Go higher than £125,140 and it's 39.35% — plus you lose your personal allowance. Get the split wrong before 5 April and you pay more than you should. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}

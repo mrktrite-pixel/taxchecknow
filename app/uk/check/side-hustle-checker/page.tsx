@@ -10,12 +10,12 @@ import SideHustleCheckerCalculator from "./SideHustleCheckerCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "HMRC Side Income DAC7 2026: What You Owe and When | TaxCheckNow",
-  description: "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
+  title: "HMRC Side Income Data: DAC7 2024 & What You Owe | TaxCheckNow",
+  description: "Since 1 January 2024, platforms like eBay, Etsy and Airbnb report seller income to HMRC. Over £1,000 earned? Act now. Free check.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/side-hustle-checker" },
   openGraph: {
-    title: "HMRC Side Income DAC7 2026: What You Owe and When | TaxCheckNow",
-    description: "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
+    title: "HMRC Side Income Data: DAC7 2024 & What You Owe | TaxCheckNow",
+    description: "Since 1 January 2024, platforms like eBay, Etsy and Airbnb report seller income to HMRC. Over £1,000 earned? Act now. Free check.",
     url: "https://taxchecknow.com/uk/check/side-hustle-checker",
     siteName: "TaxCheckNow",
     type: "website",
@@ -28,12 +28,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "5 October 2026";
 const DEADLINE_ISO   = "2026-10-05T23:59:59.000+01:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -326,8 +329,13 @@ const countdownStats = [
 
 export default function SideHustleCheckerPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "uk/check/side-hustle-checker", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -344,7 +352,7 @@ export default function SideHustleCheckerPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "HMRC Side Income Declaration Engine — Rules April 2026",
-    description: "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
+    description: "Since 1 January 2024, platforms like eBay, Etsy and Airbnb report seller income to HMRC. Over £1,000 earned? Act now. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -360,7 +368,7 @@ export default function SideHustleCheckerPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "HMRC Side Income Declaration Engine",
-    description: "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
+    description: "Since 1 January 2024, platforms like eBay, Etsy and Airbnb report seller income to HMRC. Over £1,000 earned? Act now. Free check.",
     url: "https://taxchecknow.com/uk/check/side-hustle-checker",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -409,7 +417,7 @@ export default function SideHustleCheckerPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/side-hustle-checker#calculator",
-    "description": "eBay, Etsy, Vinted, Airbnb, Amazon, Fiverr have reported seller income to HMRC since January 2024 under DAC7. If you earned over £1,000 and haven't declared, HMRC has the data. Check your exact declaration position in 2 minutes.",
+    "description": "Since 1 January 2024, platforms like eBay, Etsy and Airbnb report seller income to HMRC. Over £1,000 earned? Act now. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -440,6 +448,18 @@ export default function SideHustleCheckerPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What is the £1,000 trading allowance?",
+    description: "Since 1 January 2024, platforms like eBay, Etsy and Airbnb report seller income to HMRC. Over £1,000 earned? Act now. Free check.",
+    thumbnailUrl: "https://i.ytimg.com/vi/dpdSYFXCuq0/hqdefault.jpg",
+    uploadDate: "2026-06-25T01:00:21.437+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=dpdSYFXCuq0",
+    embedUrl: "https://www.youtube.com/embed/dpdSYFXCuq0",
+    transcript: "£1,000 — that's the trading allowance. And here's the cited question: \"What is the £1,000 trading allowance? \" Sound like you think selling old stuff doesn't count as trading? The actual truth is HMRC doesn't care how you describe it. If you buy items to resell, sell regularly, or sell with profit intent, HMRC calls it trading — full stop. That's true on eBay, Vinted, Etsy, anywhere. Earn over £1,000 gross and you must register by 5 October. Go to taxchecknow.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -449,6 +469,7 @@ export default function SideHustleCheckerPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -494,7 +515,7 @@ export default function SideHustleCheckerPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          HMRC Already Has Your Side Income Data — eBay, Etsy, Airbnb and Vinted Have Been Reporting Since 2024. Here Is What You Owe.
+          HMRC Already Has Your Side Income Data — Act Now
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -1157,6 +1178,15 @@ export default function SideHustleCheckerPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=dpdSYFXCuq0" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"£1,000 — that's the trading allowance. And here's the cited question: \"What is the £1,000 trading allowance? \" Sound like you think selling old stuff doesn't count as trading? The actual truth is HMRC doesn't care how you describe it. If you buy items to resell, sell regularly, or sell with profit intent, HMRC calls it trading — full stop. That's true on eBay, Vinted, Etsy, anywhere. Earn over £1,000 gross and you must register by 5 October. Go to taxchecknow."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
