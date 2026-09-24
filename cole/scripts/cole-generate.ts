@@ -29,6 +29,7 @@ import { generateRulesRoute,    getRulesRoutePath,
          corpusWriteDecision                          } from "../generators/generate-rules-route";
 import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
 import type { ProductConfig } from "../types/product-config";
+import { assertSeo, SeoGateError } from "../validators/seo-gate";
 import { createClient } from "@supabase/supabase-js";
 import type { GeoBake } from "../generators/generate-gate-page";
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
@@ -145,6 +146,30 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     console.error(`   ❌ Config error: ${err}`);
     process.exit(1);
+  }
+
+  // ── SEO GATE ────────────────────────────────────────────────────────────
+  // Placed HERE deliberately: after the config is loaded, before ANY mode
+  // dispatches, so it covers the full run and every surgical mode alike
+  // (--gate-only, --files-only, --success-only, --evidence-only, --pages-only).
+  // A product whose title is 93 characters should not be able to emit a file
+  // page either.
+  //
+  // It throws rather than collecting into `errors`, because a collected error
+  // still lets the emit finish — and the whole point is that the bad copy
+  // never reaches a page. The fix is always a CONFIG edit, so nothing is
+  // trapped: edit metaTitle/metaDescription/h1, re-run, pass.
+  try {
+    assertSeo(config.id, config);
+    console.log(`   ✅ SEO gate passed`);
+  } catch (err) {
+    if (err instanceof SeoGateError) {
+      console.error(`
+   ❌ ${err.message}
+`);
+      process.exit(1);
+    }
+    throw err;
   }
 
   // ── UPDATE/MIGRATION EMIT (--success-only) ────────────────────────────────

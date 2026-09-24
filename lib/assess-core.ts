@@ -293,7 +293,17 @@ Apply this test to every entry before you emit it.`;
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-opus-4-5",
+      // Pinned to the DATED id, which is the form the deprecations table uses
+      // (claude-opus-4-5-20251101, Active, retirement "not sooner than
+      // 2026-11-24"). The bare "claude-opus-4-5" alias resolved fine but named
+      // no specific snapshot, so a silent alias repoint would have moved the
+      // model under the paid assessment without a diff.
+      //
+      // DEFAULT DELIBERATELY UNCHANGED. Moving to opus-4-8 or opus-5 is a
+      // quality change to the one call customers pay for, and it gets its own
+      // sandbox A/B rather than riding along with an infrastructure commit.
+      // The env var exists so that A/B needs no deploy.
+      model: process.env.ASSESS_MODEL ?? "claude-opus-4-5-20251101",
       max_tokens: isTier2 ? 2500 : 1500,
       messages: [{ role: "user", content: prompt }],
     }),
