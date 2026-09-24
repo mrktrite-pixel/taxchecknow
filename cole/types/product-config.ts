@@ -219,6 +219,20 @@ export interface ProductConfig {
   metaDescription: string;
   canonical: string;
 
+  /**
+   * The search query this page's copy was written against, recorded by Bee S
+   * when it selects one from evidence. OPTIONAL and inert: nothing in COLE
+   * reads it, no generator emits it, and its absence means only that no query
+   * has been chosen yet. Bee S reads it back on a later run as the declared
+   * query instead of re-deriving one, which is what makes a choice auditable
+   * in the config rather than only in the seo_research table.
+   *
+   * A length repair never writes it — there the copy was compressed, not
+   * targeted, and recording current wording as a keyword would launder the one
+   * into the other.
+   */
+  seoPrimaryQuery?: string;
+
   answerHeadline: string;
   answerBody: string[];
   answerSource: string;
