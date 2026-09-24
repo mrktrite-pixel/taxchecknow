@@ -17,11 +17,19 @@
 //                           description is a real defect, not a safe default.
 //   h1              <= 70   Not a ranking limit; a readability one. au-16's h1
 //                           is 106 characters and reads as two sentences.
-//   title/h1 overlap        The first three words of metaTitle must all appear
-//                           in the h1. A SERP promise the page does not open by
-//                           keeping is the cheapest bounce there is. Compared
-//                           case-insensitively, ignoring punctuation, so
-//                           "MTD for Income Tax:" matches "MTD for Income Tax".
+//   title/h1 overlap        ADVISORY ONLY — warns, never blocks. The first three
+//                           words of metaTitle should appear in the h1, because
+//                           a SERP promise the page does not open by keeping is
+//                           the cheapest bounce there is. It is not a blocker
+//                           because it cannot tell an acronym from a mismatch:
+//                           it fired on 32 of 48 configs and failed uk-01 ALONE
+//                           on "MTD" vs "Making Tax Digital", which is the same
+//                           thing spelled out. See the note at its check.
+//
+// BYPASS: COLE_SEO_GATE_BYPASS=1 downgrades the blocking rules to a loud log —
+// violations still printed in full. It exists because this gate stops a product
+// being regenerated for ANY reason until its copy is fixed, and an urgent figure
+// correction should not be hostage to a title length.
 //
 // DELIBERATELY NOT ENFORCED: keyword presence, density, or anything needing a
 // SERP corpus. Nothing in this estate researches keywords (see the Phase-4
@@ -41,7 +49,12 @@ export interface SeoIssue {
   rule:  string;
   actual: string;
   value: string;
+  /** false = advisory only; the gate warns and continues. */
+  blocking: boolean;
 }
+
+/** The overlap rule is advisory — see the note on its check below. */
+export const isBlocking = (i: SeoIssue): boolean => i.blocking;
 
 /** Words for the overlap test: lowercase, punctuation stripped, empties dropped. */
 function words(s: string): string[] {
@@ -71,6 +84,7 @@ export function checkSeo(config: SeoFields): SeoIssue[] {
       rule: `<= ${SEO_LIMITS.metaTitleMax} chars`,
       actual: `${title.length} chars`,
       value: title,
+      blocking: true,
     });
   }
   if (desc.length < SEO_LIMITS.metaDescriptionMin || desc.length > SEO_LIMITS.metaDescriptionMax) {
@@ -79,6 +93,7 @@ export function checkSeo(config: SeoFields): SeoIssue[] {
       rule: `${SEO_LIMITS.metaDescriptionMin}-${SEO_LIMITS.metaDescriptionMax} chars`,
       actual: `${desc.length} chars`,
       value: desc,
+      blocking: true,
     });
   }
   if (h1.length > SEO_LIMITS.h1Max) {
@@ -87,6 +102,7 @@ export function checkSeo(config: SeoFields): SeoIssue[] {
       rule: `<= ${SEO_LIMITS.h1Max} chars`,
       actual: `${h1.length} chars`,
       value: h1,
+      blocking: true,
     });
   }
 
@@ -102,6 +118,14 @@ export function checkSeo(config: SeoFields): SeoIssue[] {
         rule: `first ${SEO_LIMITS.titleWordsChecked} words of metaTitle must appear in h1`,
         actual: `missing from h1: ${missing.join(", ")}`,
         value: `title="${title}" h1="${h1}"`,
+        // ADVISORY, NOT BLOCKING — and the reason is measured. The rule fired on
+        // 32 of 48 configs, and uk-01-mtd-scorecard failed on it ALONE with
+        // title "MTD for Income Tax…" against h1 "Making Tax Digital for Income
+        // Tax…". The acronym and its expansion are the same words and a
+        // set-membership test cannot see that. A rule that blocks correct copy
+        // is worse than no rule, so this warns until it can tell an acronym from
+        // a mismatch.
+        blocking: false,
       });
     }
   }
@@ -125,8 +149,30 @@ export class SeoGateError extends Error {
   }
 }
 
-/** Throw unless the config passes every rule. */
+/**
+ * Throw on BLOCKING issues; warn on advisory ones.
+ *
+ * COLE_SEO_GATE_BYPASS=1 downgrades the throw to a loud log — the violations are
+ * still printed in full, so a bypassed build is noisy rather than silent. It
+ * exists because the gate blocks regeneration of a product for ANY reason until
+ * its copy is fixed, and an urgent figure correction should not be hostage to a
+ * title length.
+ */
 export function assertSeo(productId: string, config: SeoFields): void {
-  const issues = checkSeo(config);
-  if (issues.length > 0) throw new SeoGateError(productId, issues);
+  const issues   = checkSeo(config);
+  const blocking = issues.filter(isBlocking);
+  const advisory = issues.filter((i) => !isBlocking(i));
+
+  for (const a of advisory) {
+    console.warn(`   ⚠️  SEO WARN ${productId}: ${a.field} — ${a.rule}, ${a.actual}`);
+  }
+  if (blocking.length === 0) return;
+
+  const err = new SeoGateError(productId, blocking);
+  if (process.env.COLE_SEO_GATE_BYPASS === "1") {
+    console.warn(`   ⚠️  SEO GATE BYPASSED (COLE_SEO_GATE_BYPASS=1) — emitting anyway.`);
+    console.warn(`   ${err.message}`);
+    return;
+  }
+  throw err;
 }

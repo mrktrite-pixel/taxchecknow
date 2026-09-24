@@ -89,6 +89,61 @@ async function fetchGeoBake(config: ProductConfig): Promise<GeoBake> {
   }
 }
 
+
+// ── MONITOR-URL SYNC (single product) ────────────────────────────────────────
+// Runs after a SUCCESSFUL emit, so a product's declared authority URLs reach
+// products.monitor_urls the moment its config is regenerated — which is the
+// moment they can have changed.
+//
+// WHY IT LIVES HERE. The column is what soverella's Bee H sweeps for authority
+// drift, and until now nothing wrote it: a URL added to a config enrolled
+// nothing for monitoring. soverella has an estate-wide sync script; this is the
+// single-product counterpart, at the point of change.
+//
+// MATCHED BY SLUG, which is the live URL and therefore the one key neither side
+// is free to invent. Filename stems disagree (au-16's stem carries a "16-" its
+// product row does not); slugs do not.
+//
+// FAIL-SOFT AND NON-FATAL. No service key ⇒ skip silently (a local run without
+// credentials is normal). A failed write logs and never changes the exit code:
+// the pages are already on disk and correct, and failing a good build over a
+// bookkeeping write would be the wrong trade.
+async function syncMonitorUrlsForProduct(config: ProductConfig): Promise<void> {
+  const urls = config.monitorUrls ?? [];
+  if (!SUPABASE_URL || !SUPABASE_KEY) return;
+  if (!config.slug || urls.length === 0) return;
+  try {
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const { data: row } = await sb
+      .from("products")
+      .select("product_id, monitor_urls")
+      .eq("site", "taxchecknow")
+      .eq("slug", config.slug)
+      .maybeSingle();
+    if (!row) {
+      console.log(`   ⓘ  monitor_urls: no product row for slug "${config.slug}" — nothing written`);
+      return;
+    }
+    const cur = Array.isArray((row as { monitor_urls?: string[] }).monitor_urls)
+      ? ((row as { monitor_urls: string[] }).monitor_urls)
+      : [];
+    const same = cur.length === urls.length && cur.every((v, i) => v === urls[i]);
+    if (same) {
+      console.log(`   ✅ monitor_urls already in sync (${urls.length} url(s))`);
+      return;
+    }
+    const { error } = await sb
+      .from("products")
+      .update({ monitor_urls: urls })
+      .eq("site", "taxchecknow")
+      .eq("slug", config.slug);
+    if (error) console.warn(`   ⚠️  monitor_urls write failed (non-fatal): ${error.message}`);
+    else console.log(`   ✅ monitor_urls synced: ${cur.length} → ${urls.length} url(s) on ${(row as {product_id:string}).product_id}`);
+  } catch (err) {
+    console.warn(`   ⚠️  monitor_urls sync skipped (non-fatal): ${err instanceof Error ? err.message : String(err)}`);
+  }
+}
+
 // ── PASCAL HELPER (mirrors generate-calculator.ts) ────────────────────────────
 function toPascal(str: string): string {
   return str.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("");
@@ -196,6 +251,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     console.log(`\n${"─".repeat(60)}`);
     console.log(ok ? `\n✅ Temporal evidence recorded: ${productId}` : `\n⚠️  Completed with ${errors.length} error(s):`);
     errors.forEach(e => console.log(`   • ${e}`));
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }
@@ -217,6 +273,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
       ? `\n✅ Success pages regenerated: ${productId} (${filesGenerated.length} files)`
       : `\n⚠️  Success-only completed with ${errors.length} error(s):`);
     errors.forEach(e => console.log(`   • ${e}`));
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }
@@ -235,6 +292,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     console.log(`\n${"─".repeat(60)}`);
     console.log(ok ? `\n✅ Gate page regenerated: ${productId}` : `\n⚠️  Gate-only completed with ${errors.length} error(s):`);
     errors.forEach(e => console.log(`   • ${e}`));
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }
@@ -316,6 +374,7 @@ ${"─".repeat(60)}`);
       console.log(`   The product is part-regenerated. Re-run after fixing, or revert with git.`);
     }
     reportInvalidatedSnapshots(config);
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }
@@ -327,6 +386,7 @@ ${"─".repeat(60)}`);
     console.log(`\n${"─".repeat(60)}`);
     console.log(ok ? `\n✅ Product files regenerated: ${productId}` : `\n⚠️  Files-only completed with ${errors.length} error(s):`);
     errors.forEach(e => console.log(`   • ${e}`));
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }

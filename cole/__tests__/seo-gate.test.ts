@@ -69,14 +69,18 @@ test("seo-gate: the rules themselves", (t) => {
     }).length, 0,
     "overlap compares case-insensitively and ignores punctuation",
   );
-  t.assert.ok(
-    checkSeo({
-      metaTitle: "Rental Property Deductions 2026 | TaxCheckNow",
-      metaDescription: okDesc,
-      h1: "Something Entirely Different",
-    }).some((i) => i.field === "titleH1Overlap"),
-    "a title whose first words are absent from the h1 must fail",
-  );
+  const overlap = checkSeo({
+    metaTitle: "Rental Property Deductions 2026 | TaxCheckNow",
+    metaDescription: okDesc,
+    h1: "Something Entirely Different",
+  }).filter((i) => i.field === "titleH1Overlap");
+  t.assert.strictEqual(overlap.length, 1, "a title whose first words are absent from the h1 must be reported");
+  t.assert.strictEqual(overlap[0].blocking, false, "...but ADVISORY — it cannot tell an acronym from a mismatch");
+
+  // Every length rule, by contrast, blocks.
+  for (const i of checkSeo({ metaTitle: "x".repeat(66), metaDescription: "y".repeat(300), h1: "z".repeat(99) })) {
+    if (i.field !== "titleH1Overlap") t.assert.strictEqual(i.blocking, true, `${i.field} must block`);
+  }
 
   t.assert.strictEqual(SEO_LIMITS.metaTitleMax, 65);
 });
@@ -88,7 +92,11 @@ test("seo-gate CENSUS: every config passes the gate", (t) => {
 
   const problems: string[] = [];
   for (const { file, config } of configs) {
-    const issues = checkSeo(config as { metaTitle?: string; metaDescription?: string; h1?: string });
+    // The census counts only what actually STOPS an emit. Advisory issues are
+    // reported by the generator at build time and must not make this test red,
+    // or "green" stops meaning "every product can be emitted".
+    const issues = checkSeo(config as { metaTitle?: string; metaDescription?: string; h1?: string })
+      .filter((i) => i.blocking);
     if (issues.length === 0) continue;
     problems.push(
       `${file}\n` +
