@@ -457,7 +457,7 @@ export default function SideHustleCheckerPage() {
     uploadDate: "2026-06-25T01:00:21.437+00:00",
     contentUrl: "https://www.youtube.com/watch?v=dpdSYFXCuq0",
     embedUrl: "https://www.youtube.com/embed/dpdSYFXCuq0",
-    transcript: "£1,000 — that's the trading allowance. And here's the cited question: \"What is the £1,000 trading allowance? \" Sound like you think selling old stuff doesn't count as trading? The actual truth is HMRC doesn't care how you describe it. If you buy items to resell, sell regularly, or sell with profit intent, HMRC calls it trading — full stop. That's true on eBay, Vinted, Etsy, anywhere. Earn over £1,000 gross and you must register by 5 October. Go to taxchecknow.",
+    transcript: "£1,000 — that's the trading allowance. And here's the cited question: \"What is the £1,000 trading allowance?\" Sound like you think selling old stuff doesn't count as trading? The actual truth is HMRC doesn't care how you describe it. If you buy items to resell, sell regularly, or sell with profit intent, HMRC calls it trading — full stop. That's true on eBay, Vinted, Etsy, anywhere. Earn over £1,000 gross and you must register by 5 October. Go to taxchecknow.com and check for yourself.",
   };
 
   return (
@@ -1186,7 +1186,7 @@ export default function SideHustleCheckerPage() {
       <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
         <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
         <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=dpdSYFXCuq0" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
-        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"£1,000 — that's the trading allowance. And here's the cited question: \"What is the £1,000 trading allowance? \" Sound like you think selling old stuff doesn't count as trading? The actual truth is HMRC doesn't care how you describe it. If you buy items to resell, sell regularly, or sell with profit intent, HMRC calls it trading — full stop. That's true on eBay, Vinted, Etsy, anywhere. Earn over £1,000 gross and you must register by 5 October. Go to taxchecknow."}</div>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"£1,000 — that's the trading allowance. And here's the cited question: \"What is the £1,000 trading allowance?\" Sound like you think selling old stuff doesn't count as trading? The actual truth is HMRC doesn't care how you describe it. If you buy items to resell, sell regularly, or sell with profit intent, HMRC calls it trading — full stop. That's true on eBay, Vinted, Etsy, anywhere. Earn over £1,000 gross and you must register by 5 October. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
