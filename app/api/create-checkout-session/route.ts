@@ -67,6 +67,16 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // OPERATOR-MANUAL §N4.3 so a preview buy falls back to STRIPE_AU_TEST_<tier> instead of
   // resolving the LIVE price under the test key. PRODUCTION IS UNCHANGED: these are the SAME
   // env vars the includes()-chain uk block already returns (STRIPE_UK_MTD_67/147).
+  // NOMAD-08 us-expat-tax (engine-native, F29) - registered per OPERATOR-MANUAL N4.3 so a preview
+  // buy falls back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: these are the SAME env vars the includes()-chain nomad us_expat_tax
+  // block below already returns (STRIPE_NOMAD_USET_67/147, route.ts:188-190 pre-edit). The registry
+  // value must stay the PRODUCTION var: getPriceId substitutes STRIPE_AU_TEST_<tier> itself when
+  // isPreview(), so mapping the value to the test var would hand production the sandbox price.
+  // Keys read off the wrapper's own emitter, UsExpatTaxCalculator.tsx:126
+  // (`nomad_${c.tier}_us_expat_tax`), not inferred from the slug.
+  nomad_67_us_expat_tax:  "STRIPE_NOMAD_USET_67",
+  nomad_147_us_expat_tax: "STRIPE_NOMAD_USET_147",
   uk_67_mtd_scorecard:  "STRIPE_UK_MTD_67",
   uk_147_mtd_scorecard: "STRIPE_UK_MTD_147",
 };
