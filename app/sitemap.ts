@@ -119,6 +119,30 @@ const QUESTION_SLUGS = [
   "does-the-15-withholding-apply-to-the-sale-price-or-the-capital-gain",
 ];
 
+// ── RULING GA-3.3 — PER-PRODUCT lastmod ─────────────────────────────────────────────────
+//
+// Every entry in this file used to carry `lastModified: now` — a single generation-time
+// timestamp. That is not wrong so much as EMPTY: it told crawlers every one of ~60 URLs changed
+// at the same instant on every build, which is the same as telling them nothing, and it left
+// the publish gate's "bump lastmod on update" with nothing to bump.
+//
+// A product's real last-modified date is when its CONFIG last changed — the config is what the
+// page is generated from. So the dates are stamped at BUILD time from git and read from a
+// generated map here, because app/sitemap.ts runs in the Next runtime where there is no git and
+// no cole/ directory.
+//
+// FAIL-SOFT, and this matters more than the feature: a product with no entry in the map falls
+// back to `now`, which is exactly today's behaviour. A missing or stale map degrades the sitemap
+// to what it already was and can never drop a URL.
+import PRODUCT_LASTMOD from "./sitemap-lastmod.json";
+
+function lastmodFor(route: string, fallback: Date): Date {
+  const iso = (PRODUCT_LASTMOD as Record<string, string>)[route];
+  if (!iso) return fallback;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? fallback : d;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://www.taxchecknow.com";
   const now = new Date();
@@ -160,7 +184,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // 46 product calculator gates
     ...PRODUCT_PATHS.map(p => ({
       url:              `${base}${p}`,
-      lastModified:      now,
+      // GA-3.3: the product's own config-change date, falling back to `now` when unmapped.
+      lastModified:      lastmodFor(p, now),
       changeFrequency:   "weekly" as const,
       priority:          0.9,
     })),

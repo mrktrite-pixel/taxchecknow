@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/sync-cole-lib.mjs",
+    "prebuild": "node scripts/sync-cole-lib.mjs && node scripts/build-sitemap-lastmod.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
