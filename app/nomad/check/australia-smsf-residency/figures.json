@@ -1,0 +1,16 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Maximum period central management and control may be temporarily outside Australia",
+    "value": "2",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_1",
+    "label": "Minimum active member Australian resident asset threshold",
+    "value": "50%",
+    "unit": null,
+    "fact_role": "threshold"
+  }
+]
