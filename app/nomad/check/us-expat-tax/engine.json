@@ -135,9 +135,9 @@
           "q2-extension-type:civilian-overseas"
         ]
       },
-      "tier": 147,
-      "severity": "amber",
-      "criticality": "critical",
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
       "escape": false,
       "title_key": "product",
       "heading": "I'm living abroad — do I get extra time to file?",
@@ -151,9 +151,9 @@
           "q2-extension-type:need-more-time"
         ]
       },
-      "tier": 67,
-      "severity": "green",
-      "criticality": "standard",
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
       "escape": false,
       "title_key": "product",
       "heading": "I need more time beyond the automatic overseas extension — how do I get it?",
@@ -169,9 +169,9 @@
           "q2-extension-type:military-overseas"
         ]
       },
-      "tier": 147,
-      "severity": "amber",
-      "criticality": "critical",
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
       "escape": false,
       "title_key": "product",
       "heading": "I'm in the military on duty outside the U.S. — does the automatic extension apply to me?",

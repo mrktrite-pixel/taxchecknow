@@ -1,24 +1,23 @@
 {
   "_doc": "OPERATOR presentation overlay (us-expat-tax engine-native emit — ruled 2026-09-25). The emitter merges the machine engine (content+routing) with this overlay → engine.json (terminals schema). Bee-D never sets tier/severity. Dishes take heading from the menu label + result_copy from the grounded result_state unless overridden. Escapes REQUIRE heading+result_copy here; tier=67 FORCED on escapes.",
-  "_ruling": "Tiers, severities and criticalities are ACCEPTED EXACTLY AS DRAFTED by scripts/draft-presentation-overlay.ts (ruling A, 2026-09-25) — no row was re-tiered by hand. The drafter derived each from the terminal's own grounded result_state: 147 where the text carries money at stake, a live deadline or an adverse determination; 67 for an explainer. Escape heading/result_copy were REPLACED by hand, because the drafter writes deliberately generic escape copy and tags it for specialisation — the versions below name this product's actual subject.",
-  "_note_on_two_rows": "overseas-auto-extension and military-overseas-extension drafted 147 on the interest-accrual sentence ('interest still accrues on any tax owed from the original due date'), while additional-extension-form-4868 — the only terminal that asks the reader to file something — drafted 67. That reads inverted. Accepted unchanged under ruling A and flagged in the HOLD rather than quietly adjusted.",
+  "_ruling": "RULING B, 2026-09-25. The drafted tiers were INVERTED and are corrected here. additional-extension-form-4868 is the only terminal that asks the reader to file an instrument (Form 4868) before a date, so it carries the live obligation: 147/amber/critical. overseas-auto-extension and military-overseas-extension describe an extension granted AUTOMATICALLY with nothing to lodge - the interest-accrual sentence the drafter matched on is a note, not money conditionally at stake - so both are 67/green/standard. Escape heading/result_copy remain the hand-authored versions from ruling A.",
   "states": {
     "overseas-auto-extension": {
-      "tier": 147,
-      "severity": "amber",
-      "criticality": "critical",
-      "title_key": "product"
-    },
-    "additional-extension-form-4868": {
       "tier": 67,
       "severity": "green",
       "criticality": "standard",
       "title_key": "product"
     },
-    "military-overseas-extension": {
+    "additional-extension-form-4868": {
       "tier": 147,
       "severity": "amber",
       "criticality": "critical",
+      "title_key": "product"
+    },
+    "military-overseas-extension": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
       "title_key": "product"
     },
     "feie-vs-ftc-strategy": {
@@ -65,5 +64,6 @@
       "heading": "Your answers do not settle your filing position yet",
       "result_copy": "One detail needed to reach a conclusion is still unconfirmed — most often whether you were physically abroad on the regular due date, whether your foreign accounts crossed a reporting threshold, or whether you severed ties with your last US state. Each of those changes the answer, so naming a position now would mean guessing, and on a US filing obligation a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand on extensions, FEIE or FTC, FBAR and FATCA, and state tax."
     }
-  }
+  },
+  "_supersedes": "Ruling A (2026-09-25) accepted the drafter's tiers unchanged and recorded the inversion in _note_on_two_rows. Ruling B corrects it. The drafter itself is fixed under F11 so it will not repeat the misread."
 }
