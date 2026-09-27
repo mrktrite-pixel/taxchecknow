@@ -67,6 +67,21 @@ const WRITE = process.argv.includes("--write");
  * all of them is a content decision on a delivered document.
  */
 const RERENDER = process.argv.includes("--rerender");
+/**
+ * --force: regenerate a row that ALREADY carries product keys.
+ *
+ * The allGeneric guard exists so a normal run cannot overwrite a row that has already been
+ * healed — re-running the model rewrites every field, and doing that by accident to a delivered
+ * document is the failure the guard prevents. STEP8-REHEAL is the deliberate case: both rows carry
+ * first-person text ("...I cannot calculate a specific savings figure for you") produced when the
+ * inputs were not reaching the prompt and nothing forbade the voice. Both causes are now fixed, so
+ * a regeneration is a repair rather than a reroll.
+ *
+ * WHAT --force DOES NOT RELAX: the two-id allow-list, the cs_test_ prefix check, and the
+ * requirement that a decision_sessions row exists to rebuild the buyer's inputs from. A live
+ * session id still cannot be passed to this script at all.
+ */
+const FORCE = process.argv.includes("--force");
 
 function db() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -83,7 +98,13 @@ const GENERIC = new Set([
 ]);
 
 async function main(): Promise<void> {
-  console.log(`\nheal-us-expat-tax-rows — ${WRITE ? "WRITE" : "DRY RUN (pass --write to apply)"}\n`);
+  console.log(`\nheal-us-expat-tax-rows — ${WRITE ? "WRITE" : "DRY RUN (pass --write to apply)"}${FORCE ? " --force" : ""}${RERENDER ? " --rerender" : ""}`);
+  // THE CORPUS ORIGIN DECIDES WHAT THE MODEL IS GROUNDED ON, and lib/assess-core.ts defaults it to
+  // https://taxchecknow.com — production, i.e. main. On 2026-09-27 production's us-expat-tax corpus
+  // still served the stale $126,500 FEIE limit seven times and $132,900 not once, because the
+  // correction is on this branch and not yet merged. Regenerating against it would have written the
+  // stale figure into two fresh packs, so the origin is printed on every run rather than assumed.
+  console.log(`   corpus origin   : ${process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com (DEFAULT — production/main)"}\n`);
   const sb = db();
   let healed = 0;
 
@@ -147,9 +168,12 @@ async function main(): Promise<void> {
       continue;
     }
 
-    if (!allGeneric) {
-      console.log(`${label}: SKIPPED — already carries product keys (${existing.join(", ")})`);
+    if (!allGeneric && !FORCE) {
+      console.log(`${label}: SKIPPED — already carries product keys (${existing.join(", ")}). --force to regenerate anyway.`);
       continue;
+    }
+    if (!allGeneric && FORCE) {
+      console.log(`${label}: FORCED — row already carries product keys, regenerating anyway (${existing.length} keys)`);
     }
 
     if (!purchase.decision_session_id) { console.error(`${label}: no decision_session_id — cannot rebuild the buyer's inputs`); continue; }
