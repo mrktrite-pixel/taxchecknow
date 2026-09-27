@@ -3,7 +3,37 @@
 // Product: us-expat-tax · File 02 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts global-us-expat-tax
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "us-expat-tax";
+const SESSION_KEY = "us-expat-tax";
+const SLUG = "uset-02";
+const FALLBACK_LABEL = { name: "Optimal Strategy Determination", desc: "Recommended approach for your country, income type, and income level — with reasoning." };
+const BODY = `<h2>Optimal Strategy — Decision Rules</h2><h3>High-tax country (foreign rate over US rate)</h3><ul><li>FTC typically better — excess foreign tax creates valuable carryforward</li><li>Examples: UK, Germany, France, Nordic countries, often Australia and Canada for higher earners</li><li>FEIE wastes credits on income up to $132,900</li></ul><h3>Low-tax or zero-tax country</h3><ul><li>FEIE typically better — exclusion eliminates US tax on earned income up to limit</li><li>Examples: UAE, Saudi Arabia, Singapore (at lower incomes), Hong Kong</li><li>FTC provides no meaningful credit when foreign tax is low/zero</li></ul><h3>Moderate-tax country, high income</h3><ul><li>Hybrid typically better — FEIE shelters up to $132,900, FTC handles above-limit + passive</li><li>Careful allocation between Form 2555 and Form 1116 required</li></ul>`;
+
 export default function UsExpatTaxFile02() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -74,34 +104,30 @@ export default function UsExpatTaxFile02() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🇬🇧 Internal Revenue Service (IRS) · IRC §911 Foreign Earned Income Exclusion + IRC §901 Foreign Tax Credit — FEIE vs FTC optimisation
+              🏳️ Internal Revenue Service (IRS) · IRC §911 Foreign Earned Income Exclusion + IRC §901 Foreign Tax Credit — FEIE vs FTC optimisation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 02 of 8
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 IRS EXPAT DEADLINE: 15 June 2027
-            </span>
-            <a href="/nomad/check/us-expat-tax"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackUrgencyLabel={"IRS EXPAT DEADLINE"}
+            fallbackText=""
+            checkHref="/nomad/check/us-expat-tax"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             US Citizen Abroad Optimizer · File 02 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Optimal Strategy Determination
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">Recommended approach for your country, income type, and income level — with reasoning.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +140,7 @@ export default function UsExpatTaxFile02() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>Optimal Strategy — Decision Rules</h2><h3>High-tax country (foreign rate over US rate)</h3><ul><li>FTC typically better — excess foreign tax creates valuable carryforward</li><li>Examples: UK, Germany, France, Nordic countries, often Australia and Canada for higher earners</li><li>FEIE wastes credits on income up to $126,500</li></ul><h3>Low-tax or zero-tax country</h3><ul><li>FEIE typically better — exclusion eliminates US tax on earned income up to limit</li><li>Examples: UAE, Saudi Arabia, Singapore (at lower incomes), Hong Kong</li><li>FTC provides no meaningful credit when foreign tax is low/zero</li></ul><h3>Moderate-tax country, high income</h3><ul><li>Hybrid typically better — FEIE shelters up to $126,500, FTC handles above-limit + passive</li><li>Careful allocation between Form 2555 and Form 1116 required</li></ul>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,8 +227,8 @@ export default function UsExpatTaxFile02() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified UK tax adviser for your personal situation.
-            Based on Internal Revenue Service (IRS) guidance April 2026.
+            Always consult a qualified United States tax adviser for your personal situation.
+            Based on Internal Revenue Service (IRS) guidance September 2026.
           </p>
         </div>
 
@@ -224,8 +247,8 @@ export default function UsExpatTaxFile02() {
             <a href="/nomad/check/us-expat-tax" className="hover:text-neutral-900 transition">
               ← Back to US Citizen Abroad Optimizer
             </a>
-            <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Foreign Earned Income Exclusion ↗</a>
-            <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-tax-credit" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Foreign Tax Credit ↗</a>
+            <a href="https://www.irs.gov/individuals/international-taxpayers/us-citizens-and-resident-aliens-abroad" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — U.S. citizens and resident aliens abroad (automatic 2-month extension) ↗</a>
+            <a href="https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS IR-2025-103 / Rev. Proc. 2025-32 — tax year 2026 inflation adjustments (FEIE $132,900) ↗</a>
           </div>
         </div>
       </footer>

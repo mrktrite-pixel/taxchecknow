@@ -27,6 +27,9 @@
 // └────────────────────────────────────────────────────────────────────────────┘
 import type { ProductConfig } from "../types/product-config";
 import { verifyEngineNative, engineSessionKey } from "./verify-engine-native";
+// The ONE predicate that decides rule-vs-stored, shared with the gate and files generators so
+// three surfaces cannot disagree about which mode a product is in.
+import { resolvesFromRule } from "./generate-gate-page";
 
 // Machine-enforced hard rule. buildSuccessPage() THROWS unless the template has been
 // upgraded (R-A2/R-A3) and the operator opts in with COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
@@ -232,6 +235,62 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // actually declared it has no date — never as a way to dodge a real deadline.
   const qualitative = deadlineDeclaredAbsent ? config.deadline?.qualitative : undefined;
 
+  // STEP7-JUNE15 — DOES THIS PRODUCT'S DATE COME FROM ITS RULE?
+  //
+  // Same predicate the gate and files generators use, so the three surfaces cannot disagree about
+  // which mode a product is in. True only for a fixed rule WITH an empty deadline.isoDate, which is
+  // why every other product's page is emitted byte-identically to before.
+  const RULE_PATH = resolvesFromRule(config);
+  // The names the emitted page uses. On the rule path they are page-local consts filled at render;
+  // otherwise they stay the baked strings they have always been.
+  const DISPLAY_EXPR = RULE_PATH ? "{DEADLINE_DISPLAY}" : config.deadline.display;
+  const SHORT_EXPR   = RULE_PATH ? "{DEADLINE_SHORT}"   : config.deadline.short;
+  // The alert text, composed here: a `${...}` inside a nested plain string in the page template is
+  // never interpolated, and the first version of this line emitted the literal characters
+  // ${config.deadline.isoDate} into the generated page.
+  const TEMPORAL_ALERT_WHAT = RULE_PATH ? "fixed rule did not resolve" : "expired deadline suppressed";
+  // STEP8 — "Due today" at the strip and the closing line.
+  const STRIP_COUNTDOWN = RULE_PATH
+    ? '{DEADLINE_PHRASE} {daysToDeadline === 0 ? "\u2014" : "to"} {DEADLINE_DISPLAY}'
+    : `{daysToDeadline} days to ${config.deadline.display}`;
+  const CTA_COUNTDOWN = RULE_PATH
+    ? '{deadlineLive ? `${DEADLINE_PHRASE}${daysToDeadline === 0 ? " \u2014 " : " to "}${DEADLINE_DISPLAY}.` : ""}'
+    : "{deadlineLive ? `${daysToDeadline} days to " + config.deadline.display + ".` : \"\"}";
+  const TEMPORAL_ALERT_EXTRA = RULE_PATH ? "" : `, deadlineIso: ${JSON.stringify(config.deadline.isoDate)}`;
+
+  // STEP7-JUNE15 — the emitted countdown preamble. Built here rather than inline because the page
+  // template is a template literal and this block contains its own; three levels of nesting is how
+  // a generated file gets silently truncated.
+  const COUNTDOWN_BLOCK = RULE_PATH
+    ? [
+        `  // The date is this product's RULE, resolved on every render by lib/temporal-display.ts —`,
+        `  // the same arithmetic lib/temporal-resolver.ts gives the email scheduler, so the`,
+        `  // countdown on this page and the reminder in the inbox cannot drift apart.`,
+        `  //`,
+        `  // No date is stored anywhere in this file. The version that stored one showed a stale`,
+        `  // label and logged an expired-deadline error on every load once it passed.`,
+        `  const _deadline = resolvedDeadlineFor(${JSON.stringify(config.site)}, ${JSON.stringify(config.id)});`,
+        `  const daysToDeadline: number | null = _deadline ? _deadline.daysAway : null;`,
+        `  const DEADLINE_DISPLAY = _deadline?.display ?? "";`,
+        `  const DEADLINE_SHORT   = _deadline?.short ?? "";`,
+    `  // "0 days" is not a sentence anyone says; the due date gets its own words. Only a resolved`,
+    `  // rule can land on today — the stored-date path returned null for anything not in the future.`,
+    `  const DEADLINE_PHRASE = daysToDeadline === 0 ? "Due today" : \`\${daysToDeadline} days\`;`,
+      ].join("\n")
+    : [
+        `  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed`,
+        `  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely`,
+        `  // (never "0 days", never a negative, never a stale label).`,
+        `  const daysToDeadline: number | null = (() => {`,
+        `    const end = new Date(${JSON.stringify(config.deadline.isoDate)}).getTime();`,
+        `    if (Number.isNaN(end)) return null;`,
+        `    const d = Math.floor((end - Date.now()) / 86_400_000);`,
+        `    return d > 0 ? d : null;`,
+        `  })();`,
+      ].join("\n")
+  ;
+
+
   // What fills the "…before X" slot in prose (the action-checklist heading and the
   // fallback accountant question).
   //
@@ -245,11 +304,20 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // The declaration already carries the right string: `temporal.label`, documented
   // as "Human label used in customer-facing copy" — a name for the anchor, never a
   // date. Absent label on a dateless product ⇒ drop the clause rather than invent one.
-  const beforeAnchor = deadlineDeclaredAbsent
-    ? (config.temporal?.label ? ` — before ${config.temporal.label}` : "")
+  //
+  // STEP7-JUNE15 adds the third case. A rule-declared product has an EMPTY display, so the old
+  // branch would have emitted " — before " with nothing after it, in a heading and in the prompt
+  // sent to the model. It also must not embed a resolved DATE here: both slots render outside the
+  // deadlineLive gate and one of them is prompt text, where a date frozen at generate time is
+  // exactly how "before 15 June 2027" would still be asked of the model in 2028. `temporal.label`
+  // is the anchor's NAME — documented as "Human label used in customer-facing copy" — and it does
+  // not rot.
+  const anchorName = config.temporal?.label ?? "";
+  const beforeAnchor = deadlineDeclaredAbsent || RULE_PATH
+    ? (anchorName ? ` — before ${anchorName}` : "")
     : ` — before ${config.deadline.display}`;
-  const beforeAnchorQ = deadlineDeclaredAbsent
-    ? (config.temporal?.label ? ` before ${config.temporal.label}` : " now")
+  const beforeAnchorQ = deadlineDeclaredAbsent || RULE_PATH
+    ? (anchorName ? ` before ${anchorName}` : " now")
     : ` before ${config.deadline.display}`;
   const temporalReason =
     config.temporal && "reason" in config.temporal ? String(config.temporal.reason ?? "") : "";
@@ -290,7 +358,7 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { renderPack, hasFrozenPack, type RenderedPack } from "@/lib/render-pack";
-import { getAssessmentFields } from "@/lib/assessment-fields";${engineNative ? `\nimport { buildComposerInputsFromSession } from "@/lib/composer-inputs";` : ""}
+import { getAssessmentFields } from "@/lib/assessment-fields";${engineNative ? `\nimport { buildComposerInputsFromSession } from "@/lib/composer-inputs";` : ""}${RULE_PATH ? `\nimport { resolvedDeadlineFor } from "@/lib/temporal-display";` : ""}
 
 const FILES = ${JSON.stringify(visibleFiles.map(f => ({
     num: f.num, slug: f.slug, name: f.name, desc: f.desc, tier: f.tier,
@@ -320,6 +388,9 @@ export default function Success${isTier2 ? "Plan" : "Assess"}() {
   const frozePosted = useRef(false);
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState("");
+  // How long we have been waiting for the webhook's row, so the holding copy can say so rather
+  // than spinning silently for a minute and a half.
+  const [waitedMs,   setWaitedMs]   = useState(0);
   const [copied,     setCopied]     = useState(false);
 ${emittableEvents.length === 0 ? "" : `  const [calDone,    setCalDone]    = useState(false);`}
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
@@ -337,15 +408,7 @@ ${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPO
   const daysToDeadline: number | null = null;
   const deadlineLive = false;
 
-  useEffect(() => { init(); }, []);` : `  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("${config.deadline.isoDate}").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
+  useEffect(() => { init(); }, []);` : `${COUNTDOWN_BLOCK}
   const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
@@ -354,7 +417,7 @@ ${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPO
   // expired or will not parse, is a real defect — surface it so it is never silent.
   // Phase 5 replaces this with real alerting.
   useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "${config.id}", deadlineIso: "${config.deadline.isoDate}" });
+    if (!deadlineLive) console.error("[TEMPORAL] ${TEMPORAL_ALERT_WHAT} on success page", { product: "${config.id}"${TEMPORAL_ALERT_EXTRA} });
   }, []);`}
 
   async function init() {
@@ -368,140 +431,130 @@ ${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPO
         if (d.firstName) { name = d.firstName; setFirstName(d.firstName); }
       } catch { /* non-fatal */ }
     }
-    await generateAssessment(name);
+    await loadAssessment(name);
   }
 
-  async function generateAssessment(name: string) {
+  /**
+   * Load the buyer's pack. IT IS NEVER GENERATED HERE.
+   *
+   * F41 RULING. This function used to end in a client POST /api/assess whenever the stored row was
+   * not there yet, and that fallback was the problem, not the safety net:
+   *
+   *   - it produced a SECOND, different pack for the same purchase. The webhook writes one and
+   *     emails it; the browser generated another from whatever was in sessionStorage. Two documents,
+   *     one sale, and the buyer saw whichever raced first.
+   *   - on an engine-native product the inputs it sent were the per-field sessionStorage keys that
+   *     nothing writes, so it fell back to hardcoded defaults and produced a confident,
+   *     personalised-LOOKING assessment built from numbers the customer never supplied.
+   *   - it spent the buyer's money twice: a second model call per refresh, uncapped.
+   *
+   * So the page WAITS instead. The webhook is the only writer; this polls for up to 90 seconds and,
+   * if the row still is not there, says so plainly and points at the email — which is a real
+   * delivery channel, already sent by the same webhook, and does not require the buyer to sit on
+   * this tab. Nothing is invented on the client.
+   */
+  async function loadAssessment(name: string) {
     setLoading(true);
     setError("");
     const params    = new URLSearchParams(window.location.search);
     const sessionId = params.get("session_id");
 
+    // No session id means we cannot identify the purchase at all — there is nothing to poll for,
+    // and polling 30 times to say so would just be a slower version of the same answer.
+    if (!sessionId) { showHolding(name, "nosession"); return; }
+
+    const WINDOW_MS = 90_000;   // the F41 ruling's ceiling
+    const EVERY_MS  = 3_000;
+    const startedAt = Date.now();
+
     try {
-      // ── STEP 1: Try fetching pre-generated assessment from Supabase ──
-      // Generated by webhook at purchase time — instant load, no API call
-      if (sessionId) {
+      for (;;) {
         const r = await fetch(\`/api/get-assessment?session_id=\${sessionId}\`);
         if (r.ok) {
           const d = await r.json();
-          if (d.assessment) {
-            // D — NAME FALLBACK. The greeting is read from /api/get-session, which returns
-            // "there" whenever the Stripe session carries no customer_details.name (or the
-            // retrieve throws). The stored row already holds the buyer name and
-            // /api/get-assessment already returns it as customerName — the page simply never
-            // looked. Measured on a live 2026-09-17 beckham row that rendered "What this
-            // means for you" while the row itself was not anonymous. Only fills the gap; a
-            // name that DID arrive from get-session always wins, and the value goes through
-            // the same trim/capitalise as any other.
-            if (name === "there" && typeof d.customerName === "string" && d.customerName.trim() !== "") {
-              setFirstName(d.customerName);
-            }
-            setAssessment(d.assessment);
-            // FREEZE: adopt the stored document verbatim when it exists.
-            if (hasFrozenPack(d.assessment)) {
-              setPack((d.assessment as Record<string, unknown>).rendered as RenderedPack);
-            } else {
-              // HEAL ON VIEW — a row written before the freeze. Render it exactly as the
-              // writer would have, show that, and post it so the SECOND view reads a frozen
-              // copy. Keyed on the row's OWN product id (the identity the webhook stored it
-              // under) so a heal can never re-key a row; the constant is only a fallback.
-              const healId = typeof d.productId === "string" && d.productId ? d.productId : PRODUCT_REGISTRY_ID;
-              const healed = renderPack(d.assessment as Record<string, unknown>, {
-                productId:    healId,
-                tier:         TIER,
-                customerName: typeof d.customerName === "string" ? d.customerName : name,
-                fieldList:    getAssessmentFields(healId, TIER),
-              });
-              setPack(healed);
-              if (sessionId && !frozePosted.current) {
-                frozePosted.current = true;
-                fetch("/api/freeze-pack", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ session_id: sessionId, rendered: healed }),
-                }).catch(() => { /* non-fatal: the buyer already has their pack on screen */ });
-              }
-            }
-            setLoading(false);
-            return;
-          }
+          if (d.assessment) { adoptStored(d, name); return; }
         }
+        // Stop BEFORE a sleep that would take us past the window, so 90s is a ceiling on the wait
+        // and not on the last attempt's start.
+        if (Date.now() - startedAt + EVERY_MS >= WINDOW_MS) break;
+        setWaitedMs(Date.now() - startedAt);
+        await new Promise((res) => setTimeout(res, EVERY_MS));
       }
-
-      // ── STEP 2: Fallback — generate now via /api/assess ──────────────
-      // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-${ssReads}
-${engineNative ? "" : `
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-${promptFields.map(f => `        "${f.key}": ${f.key},`).join("\n")}
-      }).some(v => v && v !== "${promptFields[0]?.defaultVal || ""}");
-`}
-      const res = await fetch("/api/assess", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product_id: "${config.id}",
-          market:     "${config.market}",
-          authority:  "${config.authority}",
-          tier:       ${isTier2 ? 2 : 1},
-          name: name === "there" ? "" : name,
-${engineNative ? "          inputs," : `          inputs: {
-${inputsObj}
-          },`}
-          fields: ${JSON.stringify(assessFields)},
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok || data.error) throw new Error(data.error || "Assessment failed");
-      setAssessment(data.assessment);
-      // FREEZE, fallback path. /api/assess is a pure wrapper and has never written to the
-      // database, so a fallback-generated pack previously had NO persistence at all — the
-      // buyer re-derived it on every visit. Render it once, show that, and post it through
-      // the same write-once route the heal path uses.
-      {
-        const composed = renderPack(data.assessment as Record<string, unknown>, {
-          productId:    PRODUCT_REGISTRY_ID,
-          tier:         TIER,
-          customerName: name === "there" ? "" : name,
-          fieldList:    getAssessmentFields(PRODUCT_REGISTRY_ID, TIER),
-        });
-        setPack(composed);
-        if (sessionId && !frozePosted.current) {
-          frozePosted.current = true;
-          fetch("/api/freeze-pack", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ session_id: sessionId, rendered: composed }),
-          }).catch(() => { /* non-fatal */ });
-        }
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to generate assessment");
-      // Graceful fallback — page still shows files and calendar
-      const placeholder = {
-        ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: "Your personalised ${f.replace(/_/g," ")} is being prepared — please refresh in a moment.",`).join("\n        ")}
-        accountantQuestions: [
-          "What is my exact ${authorityProse(config)} position based on my answers?",
-          "What is the single most important action I should take${beforeAnchorQ}?",
-          "Are there any planning opportunities specific to my situation?",
-        ],
-        ${isTier2 ? 'actions: [],' : ''}
-      } as unknown as Assessment;
-      setAssessment(placeholder);
-      // FREEZE — the reader is pack-only, so the graceful fallback must produce a PACK too,
-      // or an /api/assess failure would render an empty body instead of the holding copy.
-      // NOT posted to /api/freeze-pack: this is placeholder text, and freezing it would
-      // permanently store "is being prepared" as the buyer's document.
-      setPack(renderPack(placeholder as Record<string, unknown>, {
-        productId:    PRODUCT_REGISTRY_ID,
-        tier:         TIER,
-        customerName: name === "there" ? "" : name,
-        fieldList:    getAssessmentFields(PRODUCT_REGISTRY_ID, TIER),
-      }));
+      showHolding(name, "timeout");
+    } catch {
+      // A network failure is not evidence that the pack does not exist, so the copy is the same:
+      // it is in the email either way.
+      showHolding(name, "timeout");
     } finally {
       setLoading(false);
     }
+  }
+
+  /** Adopt the stored row: the frozen pack verbatim when there is one, else heal it on view. */
+  function adoptStored(d: { assessment?: unknown; customerName?: unknown; productId?: unknown }, name: string) {
+    // D — NAME FALLBACK. The greeting comes from /api/get-session, which returns "there" whenever
+    // the Stripe session carries no customer_details.name. The stored row already holds the buyer
+    // name and /api/get-assessment already returns it — the page simply never looked. A name that
+    // DID arrive from get-session always wins.
+    if (name === "there" && typeof d.customerName === "string" && d.customerName.trim() !== "") {
+      setFirstName(d.customerName);
+    }
+    setAssessment(d.assessment as Assessment);
+    // FREEZE: adopt the stored document verbatim when it exists.
+    if (hasFrozenPack(d.assessment)) {
+      setPack((d.assessment as Record<string, unknown>).rendered as RenderedPack);
+    } else {
+      // HEAL ON VIEW — a row written before the freeze. Render it exactly as the writer would have,
+      // show that, and post it so the SECOND view reads a frozen copy. Keyed on the row's OWN
+      // product id (the identity the webhook stored it under) so a heal can never re-key a row.
+      const healId = typeof d.productId === "string" && d.productId ? d.productId : PRODUCT_REGISTRY_ID;
+      const healed = renderPack(d.assessment as Record<string, unknown>, {
+        productId:    healId,
+        tier:         TIER,
+        customerName: typeof d.customerName === "string" ? d.customerName : name,
+        fieldList:    getAssessmentFields(healId, TIER),
+      });
+      setPack(healed);
+      const sessionId = new URLSearchParams(window.location.search).get("session_id");
+      if (sessionId && !frozePosted.current) {
+        frozePosted.current = true;
+        fetch("/api/freeze-pack", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: sessionId, rendered: healed }),
+        }).catch(() => { /* non-fatal: the buyer already has their pack on screen */ });
+      }
+    }
+    setLoading(false);
+  }
+
+  /**
+   * The pack is not here yet. Say that, and do not fake one.
+   *
+   * The holding text is rendered through renderPack so the page below still has its shape — files,
+   * calendar, the accountant questions — instead of an empty column. It is NEVER posted to
+   * /api/freeze-pack: freezing "is being prepared" would store that as the buyer's document
+   * forever, which is the one outcome worse than waiting.
+   */
+  function showHolding(name: string, why: "timeout" | "nosession") {
+    setError(why);
+    const placeholder = {
+      ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: "Your personalised ${f.replace(/_/g," ")} is on its way by email.",`).join("\n      ")}
+      accountantQuestions: [
+        "What is my exact ${authorityProse(config)} position based on my answers?",
+        "What is the single most important action I should take${beforeAnchorQ}?",
+        "Are there any planning opportunities specific to my situation?",
+      ],
+      ${isTier2 ? 'actions: [],' : ''}
+    } as unknown as Assessment;
+    setAssessment(placeholder);
+    setPack(renderPack(placeholder as Record<string, unknown>, {
+      productId:    PRODUCT_REGISTRY_ID,
+      tier:         TIER,
+      customerName: name === "there" ? "" : name,
+      fieldList:    getAssessmentFields(PRODUCT_REGISTRY_ID, TIER),
+    }));
+    setLoading(false);
   }
 
 ${emittableEvents.length === 0 ? `  // handleCalendar() omitted: no event survived the R-A3 date gate, so there is no
@@ -595,8 +648,8 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
             <span className="font-mono text-sm font-bold text-white">${qualitative.badge}</span>
           </div>` : `          {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to ${config.deadline.display}</span>
-            <span className="font-mono text-sm font-bold text-white">${config.deadline.short}</span>
+            <span className="text-sm font-bold text-white">🔴 ${STRIP_COUNTDOWN}</span>
+            <span className="font-mono text-sm font-bold text-white">${SHORT_EXPR}</span>
           </div>
           )}`}
         </div>
@@ -605,17 +658,32 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
         {loading && (
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
-            <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against ${authorityProse(config)} rules</p>
+            <p className="text-sm font-semibold text-neutral-700">Preparing your pack…</p>
+            <p className="mt-1 text-xs text-neutral-400">
+              {waitedMs < 12_000
+                ? "Your assessment is being written against ${authorityProse(config)} rules."
+                : \`Still working — \${Math.round(waitedMs / 1000)}s. This page updates itself; you do not need to refresh.\`}
+            </p>
           </div>
         )}
 
-        {/* ── ERROR ── */}
+        {/* ── STILL BEING WRITTEN (F41) ──
+            Not an error, and not worded as one. The pack is generated and emailed by the webhook,
+            so a page that got here has simply arrived first — the buyer has not lost anything and
+            there is nothing for them to fix. The old copy said "Assessment generation issue" about
+            a purchase that had completed perfectly. */}
         {error && !loading && (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            ⚠ Assessment generation issue — showing your files and calendar below.
-            <button onClick={() => generateAssessment(firstName)}
-              className="no-print ml-2 underline font-semibold">Try again →</button>
+          <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+            <p className="font-semibold">Your pack is still being written.</p>
+            <p className="mt-1">
+              {error === "nosession"
+                ? "This page was opened without its purchase link, so we cannot match it to your order. Your pack is in the email we sent to the address you paid with — open it from the link in there."
+                : "It is taking longer than usual. We have emailed it to the address you paid with, so you do not need to wait here — and your files and calendar are ready below."}
+            </p>
+            {error === "timeout" ? (
+              <button onClick={() => loadAssessment(firstName)}
+                className="no-print mt-2 underline font-semibold">Check again →</button>
+            ) : null}
           </div>
         )}
 
@@ -812,7 +880,7 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
                 Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 ${isTier2 ? "Work through the checklist above." : ""}
-                ${qualitative ? qualitative.cta : `{deadlineLive ? \`\${daysToDeadline} days to ${config.deadline.display}.\` : ""}`}
+                ${qualitative ? qualitative.cta : CTA_COUNTDOWN}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}

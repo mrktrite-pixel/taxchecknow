@@ -30,6 +30,7 @@ import { generateRulesRoute,    getRulesRoutePath,
 import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
 import type { ProductConfig } from "../types/product-config";
 import { assertSeo, SeoGateError } from "../validators/seo-gate";
+import { assertNoFirstPerson, FirstPersonGateError } from "../validators/first-person-gate";
 import { createClient } from "@supabase/supabase-js";
 import type { GeoBake } from "../generators/generate-gate-page";
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
@@ -219,6 +220,24 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     console.log(`   ✅ SEO gate passed`);
   } catch (err) {
     if (err instanceof SeoGateError) {
+      console.error(`
+   ❌ ${err.message}
+`);
+      process.exit(1);
+    }
+    throw err;
+  }
+
+  // F45 — FIRST-PERSON GATE. Same shape and same position as the SEO gate: before any mode
+  // dispatches, so a voice regression cannot reach a page or a pack. It scans only the two
+  // surfaces that reach the model — the prompt builder and THIS product's corpus route — because
+  // failing a build on another product's corpus would block an author who was never asked to fix
+  // it. Three sold packs already carry "I cannot calculate..." in the buyer's document.
+  try {
+    assertNoFirstPerson(path.dirname(APP_ROOT), config.id);
+    console.log(`   ✅ First-person gate passed`);
+  } catch (err) {
+    if (err instanceof FirstPersonGateError) {
       console.error(`
    ❌ ${err.message}
 `);
