@@ -135,6 +135,25 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["beckhamEligibilityAssessment", "employmentStructureAnalysis", "priorResidencyStatus", "socialSecurityPosition", "applicationTimingStatus", "estimatedTaxSaving", "keyFailureRisks", "structureFixRequired", "immediateActions"],
     tier2: ["beckhamEligibilityAssessment", "employmentStructureAnalysis", "priorResidencyStatus", "socialSecurityPosition", "applicationTimingStatus", "estimatedTaxSaving", "keyFailureRisks", "structureFixRequired", "immediateActions", "employmentRestructuringPlan", "a1CertificateStrategy", "modelo149ApplicationRoadmap", "startupCertificationPathway", "fullApprovalTimeline"],
   },
+  // F42 (2026-09-27) — us-expat-tax was UNREGISTERED, so the webhook stored GENERIC_FIELDS
+  // (status, keyFinding, exposureAmount, mainRiskTrigger, recommendedAction, confidenceLevel,
+  // firstAction) while both success pages POST these keys and render them. MEASURED on the two
+  // stored rows 1762dbd5… / 460dd75b…: every key in them is generic, and not one of the nine
+  // below is present — so the stored pack rendered blank where the page looks for content.
+  //
+  // The lists are COPIED VERBATIM from the emitted pages' own `fields` arrays —
+  // success/assess/page.tsx:156 (9 keys) and success/plan/page.tsx:177 (14 keys) — which are in
+  // turn generated from the config's tier1AssessmentFields / tier2AssessmentFields. Authoring
+  // them here independently is how the FRCGW and beckham mismatches happened; copying is the
+  // only way webhook == client holds by construction.
+  //
+  // Registry key is the DELIVERY_MAP productId ("us-expat-tax" for both price keys, webhook
+  // route.ts:81-82), NOT the config id — the two differ on other products and the webhook keys
+  // on the former.
+  "us-expat-tax": {
+    tier1: ["currentStrategyAnalysis", "feieEligibility", "ftcCalculation", "optimalStrategyRecommendation", "annualTaxSaving", "passiveIncomeStrategy", "filingObligations", "fbarFatcaRequirements", "immediateActions"],
+    tier2: ["currentStrategyAnalysis", "feieEligibility", "ftcCalculation", "optimalStrategyRecommendation", "annualTaxSaving", "passiveIncomeStrategy", "filingObligations", "fbarFatcaRequirements", "immediateActions", "hybridStrategyPlan", "multiYearCreditOptimisation", "incomeClassificationStrategy", "crossBorderStructuringOptions", "auditDefenceDocumentation"],
+  },
   "frcgw-clearance-certificate": {
     tier1: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "firstAction"],
     tier2: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "preSettlementExecutionPlan", "applicationDetailsChecklist", "buyerSolicitorInstruction", "withholdingContingencyPlan", "accountantImplementationChecklist"],
