@@ -61,10 +61,133 @@ ${claims.bullets.map(b => `            <li>${esc(b)}</li>`).join("\n")}
 `;
 }
 
+// ── DEADLINE SOURCE: A RULE, OR A STORED STRING (STEP7-JUNE15) ────────────────────────────────
+//
+// Two emitted variants, chosen per product. They are built as separate functions rather than
+// inlined into the page template because the page template is itself a template literal and the
+// emitted code contains backticks — nesting a third level is how you silently truncate a file.
+
+/**
+ * Does this product's date come from its RULE rather than from a stored string?
+ *
+ * TRUE only when BOTH are so:
+ *   - `temporal` declares a product-level fixed rule (source "fixed"), and
+ *   - `deadline.isoDate` is empty: the author has deliberately removed the stored date.
+ *
+ * BOTH CONDITIONS, DELIBERATELY. Requiring the empty isoDate is what holds the blast radius at
+ * zero: every product that still carries a stored date emits byte-identically to before and moves
+ * onto this path only when someone edits its config on purpose. au-09 declares the same kind of
+ * rule and keeps its stored 2026-10-31 — switching it silently would have moved its countdown to
+ * the 2 November business-day shift without anyone deciding that.
+ *
+ * A user_supplied/user_derived rule is NOT this: there is no customer standing in front of a page
+ * render either, so those keep the existing per-customer handling.
+ */
+export function resolvesFromRule(config: ProductConfig): boolean {
+  const t = config.temporal;
+  if (!t) return false;
+  if (t.kind !== "deadline" && t.kind !== "effective_from") return false;
+  if ((t.rule as { source?: string }).source !== "fixed") return false;
+  return !(config.deadline?.isoDate ?? "").trim();
+}
+
+/** The module-level deadline block: the rule variant holds no date at all. */
+function deadlineModuleBlock(config: ProductConfig): string {
+  const lastVerified = `const LAST_VERIFIED  = "${config.lastVerified}";`;
+  if (!resolvesFromRule(config)) {
+    return [
+      lastVerified,
+      `const DEADLINE_LABEL = "${config.deadline.display}";`,
+      `const DEADLINE_ISO   = "${config.deadline.isoDate}";`,
+      ``,
+      `// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there`,
+      `// is no attestable future deadline (absent, unparseable, or already passed). A null result`,
+      `// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.`,
+      `function daysToDeadline(): number | null {`,
+      `  if (!DEADLINE_ISO) return null;`,
+      `  const end = new Date(DEADLINE_ISO).getTime();`,
+      `  if (Number.isNaN(end)) return null;`,
+      `  const days = Math.ceil((end - Date.now()) / 86_400_000);`,
+      `  return days > 0 ? days : null;`,
+      `}`,
+      ``,
+      `function progressPct(): number {`,
+      `  if (!DEADLINE_ISO) return 50;`,
+      `  const start = new Date("2026-04-06T00:00:00Z").getTime();`,
+      `  const end   = new Date(DEADLINE_ISO).getTime();`,
+      `  const now   = Date.now();`,
+      `  const total = end - start;`,
+      `  const elapsed = Math.max(0, Math.min(total, now - start));`,
+      `  return Math.round((elapsed / total) * 100);`,
+      `}`,
+    ].join("\n");
+  }
+  return [
+    lastVerified,
+    ``,
+    `// ── DEADLINE: RESOLVED AT RENDER, NOT BAKED (STEP7-JUNE15) ──────────────────`,
+    `// This page holds NO date. ${config.id} declares a recurrence rule, and the rule is resolved`,
+    `// on every render by lib/temporal-display.ts — the same arithmetic lib/temporal-resolver.ts`,
+    `// gives the email scheduler, so the countdown and the reminder cannot drift apart.`,
+    `//`,
+    `// What used to be here was a stored instant: correct until it passed, then confidently wrong,`,
+    `// with the page logging an expired-deadline error on every load until someone regenerated it.`,
+    `//`,
+    `// Resolved INSIDE the component, never at module scope: a module-level const is evaluated once`,
+    `// per server process, which would freeze the day-count for the lifetime of that process.`,
+    `function progressFromDaysAway(daysAway: number): number {`,
+    `  // Progress through the recurrence period that ENDS on the resolved date, so the bar refills`,
+    `  // the day after the deadline rolls. The stored-date version measured from a hardcoded`,
+    `  // 6 April 2026, which was meaningless for any product not on the UK tax year.`,
+    `  const PERIOD = 365;`,
+    `  return Math.round(((PERIOD - Math.min(PERIOD, daysAway)) / PERIOD) * 100);`,
+    `}`,
+  ].join("\n");
+}
+
+/** The in-component preamble that defines countdown / progress / deadlineLive / DEADLINE_LABEL. */
+function deadlineRenderBlock(config: ProductConfig): string {
+  if (!resolvesFromRule(config)) {
+    return [
+      `  const countdown = daysToDeadline();`,
+      `  const progress  = progressPct();`,
+      `  const deadlineLive = countdown !== null;`,
+      `  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never`,
+      `  // render a stale countdown. Phase 5 replaces this console signal with real alerting.`,
+      `  if (!deadlineLive && DEADLINE_ISO) {`,
+      `    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "${config.slug}", deadlineIso: DEADLINE_ISO });`,
+      `  }`,
+    ].join("\n");
+  }
+  return [
+    `  // One resolve per render. Null means the declaration stopped resolving, and for a fixed rule`,
+    `  // that is a real defect (a bad timezone, a missing registry entry) — logged, never absorbed.`,
+    `  const _deadline = resolvedDeadlineFor("${config.site}", "${config.id}");`,
+    `  const countdown = _deadline ? _deadline.daysAway : null;`,
+    `  const progress  = _deadline ? progressFromDaysAway(_deadline.daysAway) : 50;`,
+    `  const deadlineLive = countdown !== null;`,
+    `  const DEADLINE_LABEL = _deadline?.display ?? "";`,
+    `  if (!deadlineLive) {`,
+    `    console.error("[TEMPORAL] fixed rule did not resolve on gate page", { product: "${config.slug}" });`,
+    `  }`,
+  ].join("\n");
+}
+
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 
 export function generateGatePage(config: ProductConfig, geo?: GeoBake): string {
   const calculatorName = toPascal(config.id) + "Calculator";
+  // STEP7-JUNE15 — see resolvesFromRule(). False for every product that still stores a date, and
+  // the emitted page is then byte-identical to what it was before this change.
+  const RULE_PATH = resolvesFromRule(config);
+  const DEADLINE_MODULE_BLOCK = deadlineModuleBlock(config);
+  const DEADLINE_RENDER_BLOCK = deadlineRenderBlock(config);
+  const TEMPORAL_IMPORT = RULE_PATH
+    ? `\nimport { resolvedDeadlineFor } from "@/lib/temporal-display";`
+    : "";
+  const DAYS_UNTIL_SUFFIX = RULE_PATH
+    ? " until {DEADLINE_LABEL}"
+    : (config.deadline?.display?.trim() ? ` until ${config.deadline.display}` : "");
 
   // ── GEO conditionals (server-rendered, crawler-visible; no fabricated fields) ──
   const _g = geo ?? {};
@@ -97,7 +220,7 @@ export function generateGatePage(config: ProductConfig, geo?: GeoBake): string {
 import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
-import ${calculatorName} from "./${calculatorName}";
+import ${calculatorName} from "./${calculatorName}";${TEMPORAL_IMPORT}
 
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
@@ -116,30 +239,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "${config.lastVerified}";
-const DEADLINE_LABEL = "${config.deadline.display}";
-const DEADLINE_ISO   = "${config.deadline.isoDate}";
-
-// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
-// is no attestable future deadline (absent, unparseable, or already passed). A null result
-// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
-function daysToDeadline(): number | null {
-  if (!DEADLINE_ISO) return null;
-  const end = new Date(DEADLINE_ISO).getTime();
-  if (Number.isNaN(end)) return null;
-  const days = Math.ceil((end - Date.now()) / 86_400_000);
-  return days > 0 ? days : null;
-}
-
-function progressPct(): number {
-  if (!DEADLINE_ISO) return 50;
-  const start = new Date("2026-04-06T00:00:00Z").getTime();
-  const end   = new Date(DEADLINE_ISO).getTime();
-  const now   = Date.now();
-  const total = end - start;
-  const elapsed = Math.max(0, Math.min(total, now - start));
-  return Math.round((elapsed / total) * 100);
-}
+${DEADLINE_MODULE_BLOCK}
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
@@ -166,14 +266,7 @@ const countdownStats = ${JSON.stringify(config.countdownStats, null, 2)};
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 
 export default function ${calculatorName.replace("Calculator", "")}Page() {
-  const countdown = daysToDeadline();
-  const progress  = progressPct();
-  const deadlineLive = countdown !== null;
-  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
-  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
-  if (!deadlineLive && DEADLINE_ISO) {
-    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "${config.slug}", deadlineIso: DEADLINE_ISO });
-  }
+${DEADLINE_RENDER_BLOCK}
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -389,7 +482,7 @@ ${videoSchemaConst}
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days${config.deadline?.display?.trim() ? ` until ${config.deadline.display}` : ""}</span>
+            <span className="text-lg text-neutral-300">days${DAYS_UNTIL_SUFFIX}</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: \`\${progress}%\` }} />

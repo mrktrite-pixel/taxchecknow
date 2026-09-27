@@ -348,7 +348,19 @@ export interface ProductConfig {
   // ─── LAW BAR ───────────────────────────────────────────────────────────
   lawBarSummary: string;
   lawBarBadges: string[];
-  sources: Array<{ title: string; url: string }>;
+  /**
+   * The authorities behind the page. `title` + `url` are what render.
+   *
+   * `quote` and `fetched` are OPTIONAL and inert to every generator — nothing renders them and
+   * no existing config has to be backfilled. They exist so a fact taken from a page can carry the
+   * SENTENCE it was taken from and the day it was read, in the config, next to the fact. A figure
+   * or a date whose provenance is only in a commit message is one refactor away from being
+   * unverifiable: the FEIE amount sat two years stale on live pages precisely because the source
+   * link was present and the sentence was not.
+   *
+   * `fetched` is YYYY-MM-DD, the day the quote was read in session. Never back-dated.
+   */
+  sources: Array<{ title: string; url: string; quote?: string; fetched?: string }>;
 
   // ─── FILES ─────────────────────────────────────────────────────────────
   files: Array<ProductFile>;

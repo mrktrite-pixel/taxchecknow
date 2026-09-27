@@ -27,6 +27,9 @@
 // └────────────────────────────────────────────────────────────────────────────┘
 import type { ProductConfig } from "../types/product-config";
 import { verifyEngineNative, engineSessionKey } from "./verify-engine-native";
+// The ONE predicate that decides rule-vs-stored, shared with the gate and files generators so
+// three surfaces cannot disagree about which mode a product is in.
+import { resolvesFromRule } from "./generate-gate-page";
 
 // Machine-enforced hard rule. buildSuccessPage() THROWS unless the template has been
 // upgraded (R-A2/R-A3) and the operator opts in with COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
@@ -232,6 +235,52 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // actually declared it has no date — never as a way to dodge a real deadline.
   const qualitative = deadlineDeclaredAbsent ? config.deadline?.qualitative : undefined;
 
+  // STEP7-JUNE15 — DOES THIS PRODUCT'S DATE COME FROM ITS RULE?
+  //
+  // Same predicate the gate and files generators use, so the three surfaces cannot disagree about
+  // which mode a product is in. True only for a fixed rule WITH an empty deadline.isoDate, which is
+  // why every other product's page is emitted byte-identically to before.
+  const RULE_PATH = resolvesFromRule(config);
+  // The names the emitted page uses. On the rule path they are page-local consts filled at render;
+  // otherwise they stay the baked strings they have always been.
+  const DISPLAY_EXPR = RULE_PATH ? "{DEADLINE_DISPLAY}" : config.deadline.display;
+  const SHORT_EXPR   = RULE_PATH ? "{DEADLINE_SHORT}"   : config.deadline.short;
+  // The alert text, composed here: a `${...}` inside a nested plain string in the page template is
+  // never interpolated, and the first version of this line emitted the literal characters
+  // ${config.deadline.isoDate} into the generated page.
+  const TEMPORAL_ALERT_WHAT = RULE_PATH ? "fixed rule did not resolve" : "expired deadline suppressed";
+  const TEMPORAL_ALERT_EXTRA = RULE_PATH ? "" : `, deadlineIso: ${JSON.stringify(config.deadline.isoDate)}`;
+
+  // STEP7-JUNE15 — the emitted countdown preamble. Built here rather than inline because the page
+  // template is a template literal and this block contains its own; three levels of nesting is how
+  // a generated file gets silently truncated.
+  const COUNTDOWN_BLOCK = RULE_PATH
+    ? [
+        `  // The date is this product's RULE, resolved on every render by lib/temporal-display.ts —`,
+        `  // the same arithmetic lib/temporal-resolver.ts gives the email scheduler, so the`,
+        `  // countdown on this page and the reminder in the inbox cannot drift apart.`,
+        `  //`,
+        `  // No date is stored anywhere in this file. The version that stored one showed a stale`,
+        `  // label and logged an expired-deadline error on every load once it passed.`,
+        `  const _deadline = resolvedDeadlineFor(${JSON.stringify(config.site)}, ${JSON.stringify(config.id)});`,
+        `  const daysToDeadline: number | null = _deadline ? _deadline.daysAway : null;`,
+        `  const DEADLINE_DISPLAY = _deadline?.display ?? "";`,
+        `  const DEADLINE_SHORT   = _deadline?.short ?? "";`,
+      ].join("\n")
+    : [
+        `  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed`,
+        `  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely`,
+        `  // (never "0 days", never a negative, never a stale label).`,
+        `  const daysToDeadline: number | null = (() => {`,
+        `    const end = new Date(${JSON.stringify(config.deadline.isoDate)}).getTime();`,
+        `    if (Number.isNaN(end)) return null;`,
+        `    const d = Math.floor((end - Date.now()) / 86_400_000);`,
+        `    return d > 0 ? d : null;`,
+        `  })();`,
+      ].join("\n")
+  ;
+
+
   // What fills the "…before X" slot in prose (the action-checklist heading and the
   // fallback accountant question).
   //
@@ -245,11 +294,20 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // The declaration already carries the right string: `temporal.label`, documented
   // as "Human label used in customer-facing copy" — a name for the anchor, never a
   // date. Absent label on a dateless product ⇒ drop the clause rather than invent one.
-  const beforeAnchor = deadlineDeclaredAbsent
-    ? (config.temporal?.label ? ` — before ${config.temporal.label}` : "")
+  //
+  // STEP7-JUNE15 adds the third case. A rule-declared product has an EMPTY display, so the old
+  // branch would have emitted " — before " with nothing after it, in a heading and in the prompt
+  // sent to the model. It also must not embed a resolved DATE here: both slots render outside the
+  // deadlineLive gate and one of them is prompt text, where a date frozen at generate time is
+  // exactly how "before 15 June 2027" would still be asked of the model in 2028. `temporal.label`
+  // is the anchor's NAME — documented as "Human label used in customer-facing copy" — and it does
+  // not rot.
+  const anchorName = config.temporal?.label ?? "";
+  const beforeAnchor = deadlineDeclaredAbsent || RULE_PATH
+    ? (anchorName ? ` — before ${anchorName}` : "")
     : ` — before ${config.deadline.display}`;
-  const beforeAnchorQ = deadlineDeclaredAbsent
-    ? (config.temporal?.label ? ` before ${config.temporal.label}` : " now")
+  const beforeAnchorQ = deadlineDeclaredAbsent || RULE_PATH
+    ? (anchorName ? ` before ${anchorName}` : " now")
     : ` before ${config.deadline.display}`;
   const temporalReason =
     config.temporal && "reason" in config.temporal ? String(config.temporal.reason ?? "") : "";
@@ -290,7 +348,7 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { renderPack, hasFrozenPack, type RenderedPack } from "@/lib/render-pack";
-import { getAssessmentFields } from "@/lib/assessment-fields";${engineNative ? `\nimport { buildComposerInputsFromSession } from "@/lib/composer-inputs";` : ""}
+import { getAssessmentFields } from "@/lib/assessment-fields";${engineNative ? `\nimport { buildComposerInputsFromSession } from "@/lib/composer-inputs";` : ""}${RULE_PATH ? `\nimport { resolvedDeadlineFor } from "@/lib/temporal-display";` : ""}
 
 const FILES = ${JSON.stringify(visibleFiles.map(f => ({
     num: f.num, slug: f.slug, name: f.name, desc: f.desc, tier: f.tier,
@@ -337,15 +395,7 @@ ${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPO
   const daysToDeadline: number | null = null;
   const deadlineLive = false;
 
-  useEffect(() => { init(); }, []);` : `  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("${config.deadline.isoDate}").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
+  useEffect(() => { init(); }, []);` : `${COUNTDOWN_BLOCK}
   const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
@@ -354,7 +404,7 @@ ${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPO
   // expired or will not parse, is a real defect — surface it so it is never silent.
   // Phase 5 replaces this with real alerting.
   useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "${config.id}", deadlineIso: "${config.deadline.isoDate}" });
+    if (!deadlineLive) console.error("[TEMPORAL] ${TEMPORAL_ALERT_WHAT} on success page", { product: "${config.id}"${TEMPORAL_ALERT_EXTRA} });
   }, []);`}
 
   async function init() {
@@ -595,8 +645,8 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
             <span className="font-mono text-sm font-bold text-white">${qualitative.badge}</span>
           </div>` : `          {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to ${config.deadline.display}</span>
-            <span className="font-mono text-sm font-bold text-white">${config.deadline.short}</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to ${DISPLAY_EXPR}</span>
+            <span className="font-mono text-sm font-bold text-white">${SHORT_EXPR}</span>
           </div>
           )}`}
         </div>
@@ -812,7 +862,7 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
                 Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 ${isTier2 ? "Work through the checklist above." : ""}
-                ${qualitative ? qualitative.cta : `{deadlineLive ? \`\${daysToDeadline} days to ${config.deadline.display}.\` : ""}`}
+                ${qualitative ? qualitative.cta : `{deadlineLive ? \`\${daysToDeadline} days to ${RULE_PATH ? "\${DEADLINE_DISPLAY}" : config.deadline.display}.\` : ""}`}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}

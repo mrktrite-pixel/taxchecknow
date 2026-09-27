@@ -15,7 +15,52 @@ export const PRODUCT_CONFIG: ProductConfig = {
   engineNative: true,
   tier1: { price: 67, name: "Your US Expat Tax Strategy Report", tagline: "FEIE or FTC — which method gives you the lower total tax bill in your country?", value: "Your personalised FEIE vs FTC comparison, optimal strategy recommendation, estimated annual saving, and US filing obligations checklist.", cta: "Get My US Expat Tax Report — $67 →", productKey: "nomad_67_us_expat_tax", envVar: "STRIPE_NOMAD_USET_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Global Tax Optimization System", tagline: "Full FEIE + FTC + hybrid strategy + multi-year credit optimisation + FBAR/FATCA compliance", value: "Complete US expat tax strategy: hybrid FEIE/FTC optimisation, multi-year FTC carryforward planning, income classification strategy, cross-border structuring, and audit-ready documentation.", cta: "Get My Global Tax Optimization System — $147 →", productKey: "nomad_147_us_expat_tax", envVar: "STRIPE_NOMAD_USET_147", successPath: "plan", fileCount: 8 },
-  deadline: { isoDate: "2027-06-15T23:59:59.000-04:00", display: "15 June 2027", short: "15 Jun 2027", description: "Automatic 2-month filing extension for US citizens abroad (2026 tax year return)", urgencyLabel: "IRS EXPAT DEADLINE", countdownLabel: "Countdown to 15 June 2027 — automatic expat extension deadline" },
+  // ─── DEADLINE: NO STORED DATE (STEP7-JUNE15) ──────────────────────────────
+  // isoDate, display and short are EMPTY ON PURPOSE. This product's date is a recurrence rule
+  // (`temporal` below), and every surface now resolves it at render through
+  // lib/temporal-display.ts — the same arithmetic the email scheduler uses, so the page and the
+  // reminder cannot disagree. What was here before was "2027-06-15T23:59:59.000-04:00", correct
+  // until 15 June 2027 and confidently wrong every day after it.
+  //
+  // The labels that REMAIN carry no date, so there is no string left to go stale: the year used to
+  // be written into display, short, countdownLabel and description, in four places, by hand.
+  deadline: { isoDate: "", display: "", short: "", description: "Automatic 2-month filing extension for US citizens abroad", urgencyLabel: "IRS EXPAT DEADLINE", countdownLabel: "Countdown to the automatic expat extension deadline" },
+
+  // ─── TEMPORAL DECLARATION (STEP7-JUNE15) ──────────────────────────────────
+  // Declared from the IRS sentence quoted in `sources` above, and from nothing else:
+  //
+  //   "the regular due date of your return is April 15, and the automatic extended due date would
+  //    be June 15. If the due date falls on a Saturday, Sunday, or legal holiday, the due date is
+  //    delayed until the next business day."
+  //
+  //   month 6 / day 15   ← "would be June 15", stated with no year
+  //   next_business_day  ← the weekend/holiday sentence, from the same paragraph
+  //   annual             ← it is the filing deadline for each tax year
+  //
+  // TIMEZONE America/New_York: the IRS treats the due date as a US calendar day, and the resolver
+  // computes a calendar date rather than an instant. A filer in Singapore gets the same date, which
+  // is the correct reading of a federal filing deadline.
+  //
+  // The shift is load-bearing and not decoration: 15 June 2030 is a Saturday, so the rule resolves
+  // to Monday 17 June 2030, and 2031 to Monday 16 June. A stored date could never have done that.
+  temporal: {
+    kind: "deadline",
+    rule: {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      6,
+      day:        15,
+      timezone:   "America/New_York",
+      shift:      "next_business_day",
+    },
+    jurisdiction: "US",
+    domain:       "income_tax",
+    // Reads correctly in the two prose slots the success template fills from it —
+    // "What to do, in order, before the automatic 2-month expat extension" — and carries NO year,
+    // so it is the one string about this deadline that can never go stale. The DATE itself is
+    // resolved at render; this is the anchor's name, which is what temporal.label is documented as.
+    label:        "the automatic 2-month expat extension",
+  },
   h1: "FEIE vs Foreign Tax Credit: US Citizen Abroad Guide 2026",
   metaTitle: "FEIE vs Foreign Tax Credit for US Expats 2026 | TaxCheckNow",
   metaDescription: "Abroad in 2026? FEIE excludes $132,900 of earned income; FTC credits foreign tax paid. High-tax country: FTC wins. Free check.",
@@ -54,7 +99,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tierAlgorithm: { description: "Wrong-method cost detected + significant passive income + high income -> tier2. Simple single-method optimal confirmation -> tier1.", tier2Conditions: ["hasPassiveIncome === 'significant'", "annualIncome === 'over_200k'", "incomeType === 'mixed'", "currentMethod === 'feie' && foreignTaxRate === 'over_35'"], tier2Flags: [] },
   calculatorRuleBox: { label: "The rule — FEIE vs FTC (IRC §911 + §901)", body: "FEIE (IRC §911): exclude up to $132,900 (2026) of foreign earned income from US taxable income. Requires physical presence test (330 days) or bona fide residence test. Election via Form 2555. Covers earned income only — not passive. Excluded income cannot generate FTC. FTC (IRC §901): dollar-for-dollar credit against US tax for foreign income taxes paid. Covers all income types. Limited by US tax on foreign-source income (IRC §904). Unused credits carry back 1 year, forward 10 years. Form 1116. Strategy: high-tax country = FTC typically better (preserves credits); low/zero-tax country = FEIE typically better (no credits to lose); hybrid for income above exclusion limit + passive. FBAR (FinCEN 114) and FATCA (Form 8938) filing obligations apply independently of FEIE/FTC choice." },
   calculatorClarification: { label: "⚠️ key clarification — FEIE and FTC cannot both apply to same income", body: "FEIE and FTC are mutually exclusive at the income level. If $100,000 of earned income is excluded under FEIE, the foreign taxes paid on that $100,000 cannot generate an FTC. They are permanently lost. A hybrid strategy is possible — FEIE on earned income up to $132,900, FTC on earned income above that limit AND on all passive income — but the same dollar cannot be sheltered twice. Form 2555 and Form 1116 filed together must allocate income correctly." },
-  countdownLabel: "Countdown to 15 June 2027 — automatic expat extension deadline",
+  // Date-free for the same reason deadline.countdownLabel is (STEP7-JUNE15): no generator reads
+  // this top-level field today, and a year written here is a year that goes stale unnoticed.
+  countdownLabel: "Countdown to the automatic expat extension deadline",
   countdownStats: [
     { label: "FEIE limit 2026",                       value: "$132,900",                   sub: "indexed annually; applies to earned income only" },
     { label: "FTC carryforward",                        value: "10 years forward",             sub: "plus 1 year back; preserves excess credits" },
@@ -135,6 +182,14 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "US Citizen Abroad Optimizer — IRC §911 (Foreign Earned Income Exclusion, $132,900 for 2026) + IRC §901 (Foreign Tax Credit) + IRC §904 (FTC limitation) + §911(c) (housing exclusion) + §6038D (FATCA) + 31 USC §5314 (FBAR). US citizens and residents taxed on worldwide income regardless of foreign residency. FEIE covers earned income only; FTC covers all income types. FEIE excluded income cannot generate FTC — mutually exclusive per dollar. High-tax country (foreign rate over US rate): FTC typically optimal (excess creates carryforward). Low/zero-tax country: FEIE typically optimal (FTC provides no credits). Hybrid FEIE + FTC possible for income above exclusion + passive. Form 2555 (FEIE), Form 1116 (FTC), FinCEN 114 (FBAR, $10k aggregate threshold), Form 8938 (FATCA, higher thresholds abroad).",
   lawBarBadges: ["IRS", "IRC §911 FEIE", "IRC §901 Foreign Tax Credit", "$132,900 Exclusion 2026", "High-Tax: FTC Better", "Low-Tax: FEIE Better"],
   sources: [
+    // STEP7-JUNE15 — the authority for this product's temporal declaration. Fetched in session on
+    // 27 September 2026; the page's own "Page Last Reviewed or Updated" line read 09-Jul-2026.
+    // THE QUOTE IS THE DECLARATION'S PROVENANCE: the rule below is month 6 / day 15 with a
+    // next-business-day shift, and all three of those facts are in this one sentence. Note what it
+    // does NOT contain: a year. That is why the declaration is a recurrence and not a date.
+    { title: "IRS — U.S. citizens and resident aliens abroad (automatic 2-month extension)",           url: "https://www.irs.gov/individuals/international-taxpayers/us-citizens-and-resident-aliens-abroad",
+      fetched: "2026-09-27",
+      quote: "If you are a U.S. citizen or resident alien residing overseas or are in the military on duty outside the U.S., on the regular due date of your return, you are allowed an automatic 2-month extension to file your return without requesting an extension. If you use a calendar year, the regular due date of your return is April 15, and the automatic extended due date would be June 15. If the due date falls on a Saturday, Sunday, or legal holiday, the due date is delayed until the next business day." },
     { title: "IRS IR-2025-103 / Rev. Proc. 2025-32 — tax year 2026 inflation adjustments (FEIE $132,900)",  url: "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill" },
     { title: "IRS — Foreign Earned Income Exclusion",                                                            url: "https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" },
     { title: "IRS — Foreign Tax Credit",                                                                           url: "https://www.irs.gov/individuals/international-taxpayers/foreign-tax-credit" },

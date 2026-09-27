@@ -49,3 +49,8 @@ taxchecknowtree
 # Runtime scratch data files
 scripts/*.json
 scripts/_*.json
+
+# Root-level repo zips: build/transfer artifacts, never source. Root-anchored on purpose —
+# app/au/check/frcgw-clearance-certificate.zip IS tracked and must stay visible.
+/app.zip
+/cole.zip

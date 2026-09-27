@@ -3,6 +3,7 @@
 // Product: us-expat-tax · Tier 1 Success Page
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { resolvedDeadlineFor } from "@/lib/temporal-display";
 
 const FILES = [
   {
@@ -57,13 +58,18 @@ export default function SuccessAssess() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  const daysToDeadline: number | null = (() => {
-    const _end = new Date("2027-06-15T23:59:59.000-04:00").getTime();
-    if (Number.isNaN(_end)) return null;
-    const _d = Math.floor((_end - Date.now()) / 86_400_000);
-    return _d > 0 ? _d : null;
-  })();
+  // STEP7-JUNE15 — the date is this product's RULE, resolved on every render by
+  // lib/temporal-display.ts: the same arithmetic lib/temporal-resolver.ts gives the email
+  // scheduler, so this countdown and the reminder in the inbox cannot drift apart.
+  //
+  // What was here was new Date("2027-06-15T23:59:59.000-04:00") — correct until that instant
+  // passed, then a stale label plus an expired-deadline console.error on every single load.
+  const _deadline = resolvedDeadlineFor("taxchecknow", "us-expat-tax");
+  const daysToDeadline: number | null = _deadline ? _deadline.daysAway : null;
+  const DEADLINE_DISPLAY = _deadline?.display ?? "";
+  const DEADLINE_SHORT   = _deadline?.short ?? "";
   const deadlineLive = daysToDeadline !== null;
+  if (!deadlineLive) console.error("[TEMPORAL] fixed rule did not resolve on success page", { product: "us-expat-tax" });
 
   useEffect(() => { init(); }, []);
 
@@ -174,7 +180,7 @@ export default function SuccessAssess() {
         immediateActions: "Your personalised immediateActions is being prepared — please refresh in a moment.",
         accountantQuestions: [
           "What is my exact Internal Revenue Service (IRS) position based on my answers?",
-          "What is the single most important action I should take before 15 June 2027?",
+          "What is the single most important action I should take before the automatic 2-month expat extension?",
           "Are there any planning opportunities specific to my situation?",
         ],
         
@@ -287,8 +293,8 @@ export default function SuccessAssess() {
           </p>
           {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 15 June 2027</span>
-            <span className="font-mono text-sm font-bold text-white">15 Jun 2027</span>
+            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to {DEADLINE_DISPLAY}</span>
+            <span className="font-mono text-sm font-bold text-white">{DEADLINE_SHORT}</span>
           </div>
           )}
         </div>
@@ -470,7 +476,7 @@ export default function SuccessAssess() {
                 Open File 02 — your exact numbers are in there.
                 Forward File 05 to your accountant.
                 
-                {deadlineLive ? `${daysToDeadline} days to 15 June 2027.` : ""}
+                {deadlineLive ? `${daysToDeadline} days to ${DEADLINE_DISPLAY}.` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}

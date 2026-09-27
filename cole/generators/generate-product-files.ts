@@ -5,6 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { ProductConfig, ProductFile } from "../types/product-config";
+import { resolvesFromRule } from "./generate-gate-page";
 import { engineSessionKey } from "./verify-engine-native";
 
 // Jurisdiction flag from config.country — NEVER hardcode a flag (was leaking 🇬🇧 on AU).
@@ -27,6 +28,23 @@ function countryFlag(country: string): string {
  * dateless product still has something true and time-critical to say.
  */
 function deadlineBar(config: ProductConfig): string {
+  // STEP7-JUNE15 — A RULE-DECLARED PRODUCT HAS NO STRING TO BAKE.
+  // Its `deadline.display` is empty by design, which the fail-closed branch below would read as
+  // "nothing truthful to say" and suppress the bar on all eight paid documents. It is the opposite:
+  // the date is knowable on every render, just not at generate time. DocStrip resolves it.
+  if (resolvesFromRule(config)) {
+    const urgency = (config.deadline?.urgencyLabel ?? "").trim();
+    if (urgency) {
+      return [
+        `          <DocStrip`,
+        `            productId={PRODUCT_ID}`,
+        `            fallbackUrgencyLabel={${JSON.stringify(urgency)}}`,
+        `            fallbackText=""`,
+        `            checkHref="/${config.slug}"`,
+        `          />`,
+      ].join("\n");
+    }
+  }
   const q = config.deadline?.qualitative;
   // The FALLBACK line only — shown when there is no session to read a terminal from.
   // Prefer the qualitative headline: it is a whole sentence, whereas `display` is a short

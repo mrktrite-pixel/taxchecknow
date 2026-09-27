@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 8
+// Declared products: 9
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -195,6 +195,22 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                       "anchor": "lead"
                 }
           ]
+    },
+    "us-expat-tax": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 6,
+                      "day": 15,
+                      "timezone": "America/New_York",
+                      "shift": "next_business_day"
+                },
+                "jurisdiction": "US",
+                "domain": "income_tax",
+                "label": "the automatic 2-month expat extension"
+          }
     },
   },
 };

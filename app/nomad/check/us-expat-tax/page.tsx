@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
 import UsExpatTaxCalculator from "./UsExpatTaxCalculator";
+import { resolvedDeadlineFor } from "@/lib/temporal-display";
 
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
@@ -25,28 +26,23 @@ export const metadata: Metadata = {
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "September 2026";
-const DEADLINE_LABEL = "15 June 2027";
-const DEADLINE_ISO   = "2027-06-15T23:59:59.000-04:00";
 
-// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
-// is no attestable future deadline (absent, unparseable, or already passed). A null result
-// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
-function daysToDeadline(): number | null {
-  if (!DEADLINE_ISO) return null;
-  const end = new Date(DEADLINE_ISO).getTime();
-  if (Number.isNaN(end)) return null;
-  const days = Math.ceil((end - Date.now()) / 86_400_000);
-  return days > 0 ? days : null;
-}
-
-function progressPct(): number {
-  if (!DEADLINE_ISO) return 50;
-  const start = new Date("2026-04-06T00:00:00Z").getTime();
-  const end   = new Date(DEADLINE_ISO).getTime();
-  const now   = Date.now();
-  const total = end - start;
-  const elapsed = Math.max(0, Math.min(total, now - start));
-  return Math.round((elapsed / total) * 100);
+// ── DEADLINE: RESOLVED AT RENDER, NOT BAKED (STEP7-JUNE15) ──────────────────
+// This page holds NO date. us-expat-tax declares a recurrence rule, and the rule is resolved
+// on every render by lib/temporal-display.ts — the same arithmetic lib/temporal-resolver.ts
+// gives the email scheduler, so the countdown and the reminder cannot drift apart.
+//
+// What used to be here was a stored instant: correct until it passed, then confidently wrong,
+// with the page logging an expired-deadline error on every load until someone regenerated it.
+//
+// Resolved INSIDE the component, never at module scope: a module-level const is evaluated once
+// per server process, which would freeze the day-count for the lifetime of that process.
+function progressFromDaysAway(daysAway: number): number {
+  // Progress through the recurrence period that ENDS on the resolved date, so the bar refills
+  // the day after the deadline rolls. The stored-date version measured from a hardcoded
+  // 6 April 2026, which was meaningless for any product not on the UK tax year.
+  const PERIOD = 365;
+  return Math.round(((PERIOD - Math.min(PERIOD, daysAway)) / PERIOD) * 100);
 }
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
@@ -295,6 +291,12 @@ const sidebarNumbers = [
 
 const sources = [
   {
+    "title": "IRS — U.S. citizens and resident aliens abroad (automatic 2-month extension)",
+    "url": "https://www.irs.gov/individuals/international-taxpayers/us-citizens-and-resident-aliens-abroad",
+    "fetched": "2026-09-27",
+    "quote": "If you are a U.S. citizen or resident alien residing overseas or are in the military on duty outside the U.S., on the regular due date of your return, you are allowed an automatic 2-month extension to file your return without requesting an extension. If you use a calendar year, the regular due date of your return is April 15, and the automatic extended due date would be June 15. If the due date falls on a Saturday, Sunday, or legal holiday, the due date is delayed until the next business day."
+  },
+  {
     "title": "IRS IR-2025-103 / Rev. Proc. 2025-32 — tax year 2026 inflation adjustments (FEIE $132,900)",
     "url": "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill"
   },
@@ -362,13 +364,15 @@ const countdownStats = [
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 
 export default function UsExpatTaxPage() {
-  const countdown = daysToDeadline();
-  const progress  = progressPct();
+  // One resolve per render. Null means the declaration stopped resolving, and for a fixed rule
+  // that is a real defect (a bad timezone, a missing registry entry) — logged, never absorbed.
+  const _deadline = resolvedDeadlineFor("taxchecknow", "us-expat-tax");
+  const countdown = _deadline ? _deadline.daysAway : null;
+  const progress  = _deadline ? progressFromDaysAway(_deadline.daysAway) : 50;
   const deadlineLive = countdown !== null;
-  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
-  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
-  if (!deadlineLive && DEADLINE_ISO) {
-    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "nomad/check/us-expat-tax", deadlineIso: DEADLINE_ISO });
+  const DEADLINE_LABEL = _deadline?.display ?? "";
+  if (!deadlineLive) {
+    console.error("[TEMPORAL] fixed rule did not resolve on gate page", { product: "nomad/check/us-expat-tax" });
   }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
@@ -553,7 +557,7 @@ export default function UsExpatTaxPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.irs.gov/individuals/international-taxpayers/us-citizens-and-resident-aliens-abroad" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
             🇬🇧 Internal Revenue Service (IRS) Verified · IRC §911 Foreign Earned Income Exclusion + IRC §901 Foreign Tax Credit — FEIE vs FTC optimisation ↗
           </a>
@@ -638,11 +642,11 @@ export default function UsExpatTaxPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 15 June 2027 — automatic expat extension deadline
+            Countdown to the automatic expat extension deadline
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 15 June 2027</span>
+            <span className="text-lg text-neutral-300">days until {DEADLINE_LABEL}</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -880,9 +884,9 @@ export default function UsExpatTaxPage() {
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.irs.gov/individuals/international-taxpayers/us-citizens-and-resident-aliens-abroad" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              IRS IR-2025-103 / Rev. Proc. 2025-32 — tax year 2026 inflation adjustments (FEIE $132,900)
+              IRS — U.S. citizens and resident aliens abroad (automatic 2-month extension)
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/us-expat-tax" className="font-mono text-blue-700 hover:underline">
@@ -1196,6 +1200,11 @@ export default function UsExpatTaxPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
+            <a href="https://www.irs.gov/individuals/international-taxpayers/us-citizens-and-resident-aliens-abroad" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS — U.S. citizens and resident aliens abroad (automatic 2-month extension) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/individuals/international-taxpayers/us-citizens-and-resident-aliens-abroad</p>
+            </a>
             <a href="https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">IRS IR-2025-103 / Rev. Proc. 2025-32 — tax year 2026 inflation adjustments (FEIE $132,900) ↗</p>
