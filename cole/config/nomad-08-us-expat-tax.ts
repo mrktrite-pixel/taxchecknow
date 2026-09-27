@@ -61,6 +61,18 @@ export const PRODUCT_CONFIG: ProductConfig = {
     // resolved at render; this is the anchor's name, which is what temporal.label is documented as.
     label:        "the automatic 2-month expat extension",
   },
+
+  // ─── NURTURE DECLARATION (STEP8) ──────────────────────────────────────────
+  // standard_v1 from the lead save, at 3/7/14 days. This is the cadence every other declared
+  // product already runs — us-expat-tax was the ONE declared product with no lane at all, which
+  // meant a lead that saved a result here was never followed up while eight other products'
+  // leads were. Declaring it changes nothing about what a track contains; it stops this product
+  // being silently excluded from it.
+  //
+  // INDEPENDENT of `temporal` by design: the deadline lane emails about 15 June, this lane emails
+  // about the decision the lead just started. Anchored to the lead save, so it needs no date from
+  // the customer and can never imply one.
+  nurture: [{ track: "standard_v1", milestones: [3, 7, 14], anchor: "lead" }],
   h1: "FEIE vs Foreign Tax Credit: US Citizen Abroad Guide 2026",
   metaTitle: "FEIE vs Foreign Tax Credit for US Expats 2026 | TaxCheckNow",
   metaDescription: "Abroad in 2026? FEIE excludes $132,900 of earned income; FTC credits foreign tax paid. High-tax country: FTC wins. Free check.",

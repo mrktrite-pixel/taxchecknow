@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   },
 };
 
+
+// STEP8: the day-count is only as fresh as the last render, so re-render daily.
+export const revalidate = 86400;
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "September 2026";
@@ -371,6 +375,11 @@ export default function UsExpatTaxPage() {
   const progress  = _deadline ? progressFromDaysAway(_deadline.daysAway) : 50;
   const deadlineLive = countdown !== null;
   const DEADLINE_LABEL = _deadline?.display ?? "";
+  // "0 days" is not a sentence anyone says. The stored-date path could never reach zero (it
+  // returned null for anything not strictly in the future, so the banner vanished on the due
+  // date — the worst possible day to hide it). A resolved rule CAN land on today, so today has
+  // its own words.
+  const DEADLINE_PHRASE = countdown === 0 ? "Due today" : `${countdown} days`;
   if (!deadlineLive) {
     console.error("[TEMPORAL] fixed rule did not resolve on gate page", { product: "nomad/check/us-expat-tax" });
   }
@@ -533,7 +542,7 @@ export default function UsExpatTaxPage() {
           <div className="flex items-center gap-4 text-sm">
             {deadlineLive && (
             <span className="hidden items-center gap-1 text-neutral-600 md:flex">
-              <span className="font-bold text-red-600">{countdown}</span> days to {DEADLINE_LABEL}
+              <span className="font-bold text-red-600">{DEADLINE_PHRASE}</span> {countdown === 0 ? "—" : "to"} {DEADLINE_LABEL}
             </span>
             )}
             <Link href="/global" className="text-neutral-600 hover:text-neutral-900">
@@ -546,7 +555,7 @@ export default function UsExpatTaxPage() {
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · IRS EXPAT DEADLINE
+        🔴 {DEADLINE_PHRASE} · {DEADLINE_LABEL} · IRS EXPAT DEADLINE
       </div>
       )}
 
@@ -645,8 +654,8 @@ export default function UsExpatTaxPage() {
             Countdown to the automatic expat extension deadline
           </p>
           <div className="mb-4 flex items-baseline gap-4">
-            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until {DEADLINE_LABEL}</span>
+            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown === 0 ? "Today" : countdown}</span>
+            <span className="text-lg text-neutral-300">{countdown === 0 ? DEADLINE_LABEL : `days until ${DEADLINE_LABEL}`}</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />

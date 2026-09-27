@@ -167,6 +167,11 @@ function deadlineRenderBlock(config: ProductConfig): string {
     `  const progress  = _deadline ? progressFromDaysAway(_deadline.daysAway) : 50;`,
     `  const deadlineLive = countdown !== null;`,
     `  const DEADLINE_LABEL = _deadline?.display ?? "";`,
+    `  // "0 days" is not a sentence anyone says. The stored-date path could never reach zero (it`,
+    `  // returned null for anything not strictly in the future, so the banner vanished on the due`,
+    `  // date — the worst possible day to hide it). A resolved rule CAN land on today, so today has`,
+    `  // its own words.`,
+    `  const DEADLINE_PHRASE = countdown === 0 ? "Due today" : \`\${countdown} days\`;`,
     `  if (!deadlineLive) {`,
     `    console.error("[TEMPORAL] fixed rule did not resolve on gate page", { product: "${config.slug}" });`,
     `  }`,
@@ -184,6 +189,25 @@ export function generateGatePage(config: ProductConfig, geo?: GeoBake): string {
   const DEADLINE_RENDER_BLOCK = deadlineRenderBlock(config);
   const TEMPORAL_IMPORT = RULE_PATH
     ? `\nimport { resolvedDeadlineFor } from "@/lib/temporal-display";`
+    : "";
+  // STEP8 — "Due today" instead of "0 days", at all three countdown sites. Only the rule path can
+  // reach zero, so the stored-date emissions are the strings they always were.
+  const NAV_COUNTDOWN = RULE_PATH
+    ? '<span className="font-bold text-red-600">{DEADLINE_PHRASE}</span> {countdown === 0 ? "\u2014" : "to"} {DEADLINE_LABEL}'
+    : '<span className="font-bold text-red-600">{countdown}</span> days to {DEADLINE_LABEL}';
+  const MOBILE_COUNTDOWN = RULE_PATH ? "{DEADLINE_PHRASE}" : "{countdown} days";
+  const BIG_COUNTDOWN = RULE_PATH ? '{countdown === 0 ? "Today" : countdown}' : "{countdown}";
+  // The unit line carries the date when the number cell has stopped being a number.
+  const BIG_COUNTDOWN_UNIT = RULE_PATH
+    ? '{countdown === 0 ? DEADLINE_LABEL : `days until ${DEADLINE_LABEL}`}'
+    : `days${config.deadline?.display?.trim() ? ` until ${config.deadline.display}` : ""}`;
+  // STEP8 — REVALIDATE. A countdown on a statically prerendered page is frozen at build: the DATE
+  // self-corrects from the rule on any deploy, but the day-count only moves when something
+  // rebuilds. 86400 makes the page re-render daily, which is the resolution a day-count needs and
+  // no finer. Emitted on the rule path only — 47 products still store a date and changing their
+  // caching was not asked for, though every one of them has the same frozen day-count.
+  const REVALIDATE_EXPORT = RULE_PATH
+    ? "\n// STEP8: the day-count is only as fresh as the last render, so re-render daily.\nexport const revalidate = 86400;\n"
     : "";
   const DAYS_UNTIL_SUFFIX = RULE_PATH
     ? " until {DEADLINE_LABEL}"
@@ -237,6 +261,7 @@ export const metadata: Metadata = {
   },
 };
 
+${REVALIDATE_EXPORT}
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 ${DEADLINE_MODULE_BLOCK}
@@ -381,7 +406,7 @@ ${videoSchemaConst}
           <div className="flex items-center gap-4 text-sm">
             {deadlineLive && (
             <span className="hidden items-center gap-1 text-neutral-600 md:flex">
-              <span className="font-bold text-red-600">{countdown}</span> days to {DEADLINE_LABEL}
+              ${NAV_COUNTDOWN}
             </span>
             )}
             <Link href="/${config.country}" className="text-neutral-600 hover:text-neutral-900">
@@ -394,7 +419,7 @@ ${videoSchemaConst}
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · ${config.deadline.urgencyLabel}
+        🔴 ${MOBILE_COUNTDOWN} · {DEADLINE_LABEL} · ${config.deadline.urgencyLabel}
       </div>
       )}
 
@@ -481,8 +506,8 @@ ${videoSchemaConst}
             ${config.deadline.countdownLabel}
           </p>
           <div className="mb-4 flex items-baseline gap-4">
-            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days${DAYS_UNTIL_SUFFIX}</span>
+            <span className="text-5xl font-bold tabular-nums md:text-6xl">${BIG_COUNTDOWN}</span>
+            <span className="text-lg text-neutral-300">${BIG_COUNTDOWN_UNIT}</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: \`\${progress}%\` }} />

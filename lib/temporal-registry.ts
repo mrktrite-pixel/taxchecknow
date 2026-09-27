@@ -210,7 +210,18 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "jurisdiction": "US",
                 "domain": "income_tax",
                 "label": "the automatic 2-month expat extension"
-          }
+          },
+          "nurture": [
+                {
+                      "track": "standard_v1",
+                      "milestones": [
+                            3,
+                            7,
+                            14
+                      ],
+                      "anchor": "lead"
+                }
+          ]
     },
   },
 };

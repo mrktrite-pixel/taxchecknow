@@ -66,19 +66,51 @@ export const GENERIC_FALLBACK_KEYS = ["status", "keyFinding", "recommendedAction
 export const MAX_SECTIONS = 6;
 
 /**
- * Heading for a key — "keyFinding" → "Key Finding".
+ * Acronyms that must survive the title-caser, upper-cased in full.
+ *
+ * F44. The caser splits camelCase and upper-cases each word's first letter, which turns
+ * `feieEligibility` into "Feie Eligibility" and `fbarFatcaRequirements` into "Fbar Fatca
+ * Requirements". Those are the headings BUYERS OF THIS PRODUCT SEE — two of the six sections on
+ * every us-expat-tax pack sold so far — and they read as a misspelling of the statutory terms the
+ * body text itself spells correctly two lines below.
+ *
+ * DECLARED, NOT DETECTED. A rule like "upper-case any word of four letters or fewer" would shout
+ * "PLAN", "TAX" and "YEAR" across every pack. There is no way to tell an acronym from a short word
+ * without knowing the domain, so the domain is written down here.
+ *
+ * Ordered longest-first so FATCA is matched before FAT- prefixes cannot bite; the match is
+ * whole-word anyway, and the test pins it.
+ */
+export const PACK_HEADING_ACRONYMS: readonly string[] = [
+  "FATCA", "FBAR", "FEIE", "HMRC", "SMSF", "ATO", "CGT", "FTC", "IRS",
+];
+
+/**
+ * Heading for a key — "keyFinding" → "Key Finding", "feieEligibility" → "FEIE Eligibility".
  *
  * NOT lib/assessment-fields.humaniseFieldKey(), and the difference is deliberate: that one
  * lower-cases the rest of the string ("Key finding"), which is right for the hand-authored
  * FRCGW pages that already use it and wrong here, because this must reproduce what the
  * generator-emitted pages have always shown. Freezing a pack must not restyle it.
+ *
+ * THE ACRONYM PASS IS THE ONE EXCEPTION to that rule, and it is a correction rather than a
+ * restyle: "Feie" was never a word anyone intended to publish. Stored packs keep their old
+ * headings until re-rendered, so a pack frozen before this change still reads as it did —
+ * see the heal path in the success template.
  */
 export function packHeading(key: string): string {
-  return key
+  const spaced = key
     .replace(/([A-Z])/g, " $1")
     .replace(/_/g, " ")
     .trim()
     .replace(/^./, (c) => c.toUpperCase());
+  // Whole words only, case-insensitive: the caser has already normalised them to Feie / Ftc, and a
+  // key authored as `FEIEeligibility` splits to "F E I Eeligibility", which this correctly leaves
+  // alone rather than half-fixing.
+  return spaced
+    .split(" ")
+    .map((word) => PACK_HEADING_ACRONYMS.find((a) => a.toLowerCase() === word.toLowerCase()) ?? word)
+    .join(" ");
 }
 
 const text = (v: unknown): string | null =>

@@ -50,6 +50,23 @@ const PRODUCT_ID = "us-expat-tax";
 const MARKET = "United States";
 const AUTHORITY = "Internal Revenue Service (IRS)";
 const WRITE = process.argv.includes("--write");
+/**
+ * --rerender: rebuild `rendered` from the field values ALREADY IN THE ROW. No model call.
+ *
+ * STEP8. F44 changed what packHeading() produces — `feieEligibility` now renders as
+ * "FEIE Eligibility" instead of "Feie Eligibility" — and a frozen pack stores its headings, so the
+ * two rows sold before that change would have kept showing the misspelling forever while every new
+ * pack showed it correctly. Two truths for one product, which is the thing freezing exists to stop.
+ *
+ * DELIBERATELY NOT A REGENERATION. The heal path re-runs the model and replaces every field; this
+ * touches only the presentation layer, so no sentence a buyer has already read changes. It is also
+ * free and deterministic, which a model call is neither.
+ *
+ * It therefore does NOT fix the first-person text in `annualTaxSaving` / `ftcCalculation` — that
+ * lives in the field VALUES. See the report: this script cannot rewrite one field, and rewriting
+ * all of them is a content decision on a delivered document.
+ */
+const RERENDER = process.argv.includes("--rerender");
 
 function db() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -93,6 +110,43 @@ async function main(): Promise<void> {
     const existing = Object.keys(row.assessment_json)
       .filter((k) => k !== "_meta" && k !== "rendered" && typeof row.assessment_json[k] === "string");
     const allGeneric = existing.length > 0 && existing.every((k) => GENERIC.has(k));
+
+    // ── --rerender: presentation only ─────────────────────────────────────────────────────────
+    if (RERENDER) {
+      const fields = getAssessmentFields(PRODUCT_ID, purchase.tier);
+      const name = row.customer_name ?? "this taxpayer";
+      const before = ((row.assessment_json.rendered ?? {}) as { sections?: Array<{ heading?: string }> }).sections ?? [];
+      const rendered = renderPack(row.assessment_json, {
+        productId: PRODUCT_ID, tier: purchase.tier, customerName: name, fieldList: fields,
+      });
+      const beforeHeads = before.map((x) => String(x.heading));
+      const afterHeads = rendered.sections.map((x) => x.heading);
+      const changed = JSON.stringify(beforeHeads) !== JSON.stringify(afterHeads);
+      console.log(`${label}: purchase ${purchase.id}`);
+      console.log(`   headings before : ${beforeHeads.join(" | ")}`);
+      console.log(`   headings after  : ${afterHeads.join(" | ")}`);
+      console.log(`   ${changed ? "CHANGED" : "identical — nothing to write"}`);
+      // THE TEXT MUST BE UNTOUCHED. A re-render that altered a sentence would be a content edit
+      // wearing a presentation edit's name, so it is asserted rather than assumed.
+      const beforeText = before.map((x) => String((x as { text?: string }).text ?? ""));
+      const afterText = rendered.sections.map((x) => x.text);
+      if (beforeText.length === afterText.length && beforeText.some((t, i) => t !== afterText[i])) {
+        console.error(`   REFUSED — a section's TEXT changed, which --rerender must never do`);
+        process.exitCode = 4;
+        continue;
+      }
+      if (changed && WRITE) {
+        const assessment_json = { ...row.assessment_json, rendered };
+        const up = await sb.from("assessments").update({ assessment_json }).eq("stripe_session_id", sessionId);
+        if (up.error) { console.error(`   update FAILED: ${up.error.message}`); process.exitCode = 1; continue; }
+        console.log(`   ✅ rendered rewritten (headings only)`);
+        healed++;
+      } else if (changed) {
+        console.log(`   (dry run — pass --write to apply)`);
+      }
+      continue;
+    }
+
     if (!allGeneric) {
       console.log(`${label}: SKIPPED — already carries product keys (${existing.join(", ")})`);
       continue;
