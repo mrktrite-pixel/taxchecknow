@@ -10,12 +10,12 @@ import UsExpatTaxCalculator from "./UsExpatTaxCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "US Citizen Abroad Optimizer — FEIE vs FTC Comparison + Optimal Strategy | TaxCheckNow",
-  description: "US expats: FEIE excludes $126,500 (2026) of earned income; FTC credits foreign tax paid. High-tax country: FTC typically better. Low-tax: FEIE. Passive income: FTC only. Form 2555 (FEIE) / Form 1116 (FTC) / FBAR / FATCA. IRC §911 + §901.",
+  title: "FEIE vs Foreign Tax Credit for US Expats 2026 | TaxCheckNow",
+  description: "Abroad in 2026? FEIE excludes $132,900 of earned income; FTC credits foreign tax paid. High-tax country: FTC wins. Free check.",
   alternates: { canonical: "https://taxchecknow.com/nomad/check/us-expat-tax" },
   openGraph: {
-    title: "US Citizen Abroad Optimizer — FEIE vs FTC Comparison + Optimal Strategy | TaxCheckNow",
-    description: "US expats: FEIE excludes $126,500 (2026) of earned income; FTC credits foreign tax paid. High-tax country: FTC typically better. Low-tax: FEIE. Passive income: FTC only. Form 2555 (FEIE) / Form 1116 (FTC) / FBAR / FATCA. IRC §911 + §901.",
+    title: "FEIE vs Foreign Tax Credit for US Expats 2026 | TaxCheckNow",
+    description: "Abroad in 2026? FEIE excludes $132,900 of earned income; FTC credits foreign tax paid. High-tax country: FTC wins. Free check.",
     url: "https://taxchecknow.com/nomad/check/us-expat-tax",
     siteName: "TaxCheckNow",
     type: "website",
@@ -24,16 +24,19 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "September 2026";
 const DEADLINE_LABEL = "15 June 2027";
 const DEADLINE_ISO   = "2027-06-15T23:59:59.000-04:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -51,7 +54,7 @@ function progressPct(): number {
 const faqs = [
   {
     "question": "When is FEIE better than FTC?",
-    "answer": "FEIE is typically better in low-tax or zero-tax countries (UAE, Saudi Arabia, some Caribbean jurisdictions, and low-tax Asian centres like Singapore and Hong Kong where effective rates are under US rates). In these environments, FTC provides little or no credit because foreign tax is low or zero — so FEIE's outright exclusion of up to $126,500 produces a much lower total US tax bill. FEIE can also be preferable for lower-income expats (under $80k) even in moderate-tax countries if FTC paperwork burden outweighs the benefit."
+    "answer": "FEIE is typically better in low-tax or zero-tax countries (UAE, Saudi Arabia, some Caribbean jurisdictions, and low-tax Asian centres like Singapore and Hong Kong where effective rates are under US rates). In these environments, FTC provides little or no credit because foreign tax is low or zero — so FEIE's outright exclusion of up to $132,900 produces a much lower total US tax bill. FEIE can also be preferable for lower-income expats (under $80k) even in moderate-tax countries if FTC paperwork burden outweighs the benefit."
   },
   {
     "question": "When is FTC better than FEIE?",
@@ -59,7 +62,7 @@ const faqs = [
   },
   {
     "question": "Can I use both FEIE and FTC in the same year?",
-    "answer": "Yes — but not on the same dollar of income. A hybrid approach is common: FEIE on earned income up to the $126,500 exclusion limit, plus FTC on earned income above that limit AND on all passive income. Form 2555 handles the FEIE portion; Form 1116 handles the FTC portion; careful income allocation between the two is required. Most US expat tax software supports this automatically."
+    "answer": "Yes — but not on the same dollar of income. A hybrid approach is common: FEIE on earned income up to the $132,900 exclusion limit, plus FTC on earned income above that limit AND on all passive income. Form 2555 handles the FEIE portion; Form 1116 handles the FTC portion; careful income allocation between the two is required. Most US expat tax software supports this automatically."
   },
   {
     "question": "What is the physical presence test for FEIE?",
@@ -199,7 +202,7 @@ const toolsRows = [
   },
   {
     "tool": "Hybrid FEIE + FTC strategy",
-    "effect": "FEIE on earned up to $126,500 + FTC on income above limit and all passive",
+    "effect": "FEIE on earned up to $132,900 + FTC on income above limit and all passive",
     "note": "Requires careful income allocation on Forms 2555 + 1116; easy to misapply"
   },
   {
@@ -231,7 +234,7 @@ const geoFacts = [
   },
   {
     "label": "FEIE limit 2026",
-    "value": "$126,500 (indexed annually)"
+    "value": "$132,900 (indexed annually)"
   },
   {
     "label": "FEIE qualification",
@@ -274,7 +277,7 @@ const geoFacts = [
 const sidebarNumbers = [
   {
     "label": "FEIE limit 2026",
-    "value": "$126,500"
+    "value": "$132,900"
   },
   {
     "label": "FTC carryforward",
@@ -291,6 +294,10 @@ const sidebarNumbers = [
 ];
 
 const sources = [
+  {
+    "title": "IRS IR-2025-103 / Rev. Proc. 2025-32 — tax year 2026 inflation adjustments (FEIE $132,900)",
+    "url": "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill"
+  },
   {
     "title": "IRS — Foreign Earned Income Exclusion",
     "url": "https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion"
@@ -332,7 +339,7 @@ const sources = [
 const countdownStats = [
   {
     "label": "FEIE limit 2026",
-    "value": "$126,500",
+    "value": "$132,900",
     "sub": "indexed annually; applies to earned income only"
   },
   {
@@ -356,8 +363,13 @@ const countdownStats = [
 
 export default function UsExpatTaxPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "nomad/check/us-expat-tax", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -373,8 +385,8 @@ export default function UsExpatTaxPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "US Citizen Abroad Optimizer — Rules April 2026",
-    description: "US expats: FEIE excludes $126,500 (2026) of earned income; FTC credits foreign tax paid. High-tax country: FTC typically better. Low-tax: FEIE. Passive income: FTC only. Form 2555 (FEIE) / Form 1116 (FTC) / FBAR / FATCA. IRC §911 + §901.",
+    name: "US Citizen Abroad Optimizer — Rules September 2026",
+    description: "Abroad in 2026? FEIE excludes $132,900 of earned income; FTC credits foreign tax paid. High-tax country: FTC wins. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -390,7 +402,7 @@ export default function UsExpatTaxPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "US Citizen Abroad Optimizer",
-    description: "US expats: FEIE excludes $126,500 (2026) of earned income; FTC credits foreign tax paid. High-tax country: FTC typically better. Low-tax: FEIE. Passive income: FTC only. Form 2555 (FEIE) / Form 1116 (FTC) / FBAR / FATCA. IRC §911 + §901.",
+    description: "Abroad in 2026? FEIE excludes $132,900 of earned income; FTC credits foreign tax paid. High-tax country: FTC wins. Free check.",
     url: "https://taxchecknow.com/nomad/check/us-expat-tax",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -454,13 +466,13 @@ export default function UsExpatTaxPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nomad/check/us-expat-tax#calculator",
-    "description": "US expats: FEIE excludes $126,500 (2026) of earned income; FTC credits foreign tax paid. High-tax country: FTC typically better. Low-tax: FEIE. Passive income: FTC only. Form 2555 (FEIE) / Form 1116 (FTC) / FBAR / FATCA. IRC §911 + §901.",
+    "description": "Abroad in 2026? FEIE excludes $132,900 of earned income; FTC credits foreign tax paid. High-tax country: FTC wins. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on Internal Revenue Service (IRS) guidance April 2026"
+      "Based on Internal Revenue Service (IRS) guidance September 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -485,6 +497,18 @@ export default function UsExpatTaxPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "When is FEIE better than FTC? FEIE vs FTC Explained",
+    description: "Abroad in 2026? FEIE excludes $132,900 of earned income; FTC credits foreign tax paid. High-tax country: FTC wins. Free check.",
+    thumbnailUrl: "https://i.ytimg.com/vi/OtzL63jgQhc/hqdefault.jpg",
+    uploadDate: "2026-06-23T00:05:24.624+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=OtzL63jgQhc",
+    embedUrl: "https://www.youtube.com/embed/OtzL63jgQhc",
+    transcript: "When is FEIE better than FTC? Sound like a question you've been Googling? Here's the actual truth: it depends entirely on what your host country charges you. In a zero-tax country like the UAE, FEIE wins — you exclude up to $126,500 and owe almost nothing in the US. But FEIE and FTC do the same thing? Wrong. FEIE cuts your taxable income. FTC cuts your tax bill directly. They work differently — and you cannot stack both on the same dollar. Get this wrong and you waste credits you can never recover. The 15 June deadline is close. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -494,6 +518,7 @@ export default function UsExpatTaxPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -528,7 +553,7 @@ export default function UsExpatTaxPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
             🇬🇧 Internal Revenue Service (IRS) Verified · IRC §911 Foreign Earned Income Exclusion + IRC §901 Foreign Tax Credit — FEIE vs FTC optimisation ↗
           </a>
@@ -539,12 +564,12 @@ export default function UsExpatTaxPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          FEIE or Foreign Tax Credit — US Expats Using the Wrong Strategy Pay Thousands Extra Every Year. Here Is Which Method Gives You the Lower Tax Bill.
+          FEIE vs Foreign Tax Credit: US Citizen Abroad Guide 2026
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          The United States taxes citizens and permanent residents on worldwide income regardless of where they live. Two mechanisms reduce the double taxation burden: the Foreign Earned Income Exclusion under IRC §911, which excludes up to $126,500 (2026) of foreign earned income from US taxable income, and the Foreign Tax Credit under IRC §901, which credits US tax liability dollar-for-dollar for foreign income taxes paid. These are not substitutes — they operate differently, apply to different income types, and produce very different tax outcomes depending on the foreign country's tax rate.
+          The United States taxes citizens and permanent residents on worldwide income regardless of where they live. Two mechanisms reduce the double taxation burden: the Foreign Earned Income Exclusion under IRC §911, which excludes up to $132,900 (2026) of foreign earned income from US taxable income, and the Foreign Tax Credit under IRC §901, which credits US tax liability dollar-for-dollar for foreign income taxes paid. These are not substitutes — they operate differently, apply to different income types, and produce very different tax outcomes depending on the foreign country's tax rate.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -567,7 +592,7 @@ export default function UsExpatTaxPage() {
                 
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">FEIE limit 2026</dt>
-                  <dd className="font-bold">$126,500</dd>
+                  <dd className="font-bold">$132,900</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">FTC carryforward</dt>
@@ -629,7 +654,7 @@ export default function UsExpatTaxPage() {
                 FEIE limit 2026
               </p>
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
-                $126,500
+                $132,900
               </p>
               <p className="text-xs text-neutral-400">indexed annually; applies to earned income only</p>
             </div>
@@ -675,7 +700,7 @@ export default function UsExpatTaxPage() {
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <p className="mb-1 text-xs text-neutral-800">✓ FEIE excludes up to $126,500 earned income (2026) — covers earned only</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ FEIE excludes up to $132,900 earned income (2026) — covers earned only</p>
               <p className="mb-1 text-xs text-neutral-800">✓ FTC credits US tax dollar-for-dollar for foreign tax paid — covers all income</p>
               <p className="mb-1 text-xs text-neutral-800">✓ FEIE excluded income cannot generate FTC — mutually exclusive per dollar</p>
               <p className="mb-1 text-xs text-neutral-800">✓ High-tax country: FTC typically optimal (excess carries 10 years)</p>
@@ -698,9 +723,9 @@ export default function UsExpatTaxPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The answer — IRS FEIE vs FTC strategy, confirmed April 2026
           </p>
-          <p className="mb-2 text-neutral-900">The United States taxes citizens and permanent residents on worldwide income regardless of where they live. Two mechanisms reduce the double taxation burden: the Foreign Earned Income Exclusion under IRC §911, which excludes up to $126,500 (2026) of foreign earned income from US taxable income, and the Foreign Tax Credit under IRC §901, which credits US tax liability dollar-for-dollar for foreign income taxes paid. These are not substitutes — they operate differently, apply to different income types, and produce very different tax outcomes depending on the foreign country's tax rate.</p>
-          <p className="mb-2 text-neutral-900">The most expensive mistake in US expat tax is using FEIE in a high-tax country. When income is excluded under FEIE, the foreign taxes paid on that excluded income cannot be credited against US tax — they are permanently wasted. A US citizen in the UK paying 40% UK tax on $126,500 of income and using FEIE to exclude it from US tax has permanently lost the ability to credit that $50,000 of UK tax. Using FTC instead would have produced the same or lower total tax bill while preserving $29,000+ in carryforward credits for future years.</p>
-          <p className="mb-2 text-neutral-900">The opposite mistake applies in zero-tax or low-tax countries. In the UAE, Singapore, or other jurisdictions where little or no income tax is levied, the FTC provides no credits — there is no foreign tax to credit. FTC in a zero-tax environment means full US tax on worldwide income. FEIE eliminates US tax on up to $126,500 of earned income with no need for foreign tax to have been paid. In these environments, FEIE is typically significantly better — sometimes saving $20,000 to $30,000 per year in US federal tax.</p>
+          <p className="mb-2 text-neutral-900">The United States taxes citizens and permanent residents on worldwide income regardless of where they live. Two mechanisms reduce the double taxation burden: the Foreign Earned Income Exclusion under IRC §911, which excludes up to $132,900 (2026) of foreign earned income from US taxable income, and the Foreign Tax Credit under IRC §901, which credits US tax liability dollar-for-dollar for foreign income taxes paid. These are not substitutes — they operate differently, apply to different income types, and produce very different tax outcomes depending on the foreign country's tax rate.</p>
+          <p className="mb-2 text-neutral-900">The most expensive mistake in US expat tax is using FEIE in a high-tax country. When income is excluded under FEIE, the foreign taxes paid on that excluded income cannot be credited against US tax — they are permanently wasted. A US citizen in the UK paying 40% UK tax on $132,900 of income and using FEIE to exclude it from US tax has permanently lost the ability to credit that $50,000 of UK tax. Using FTC instead would have produced the same or lower total tax bill while preserving $29,000+ in carryforward credits for future years.</p>
+          <p className="mb-2 text-neutral-900">The opposite mistake applies in zero-tax or low-tax countries. In the UAE, Singapore, or other jurisdictions where little or no income tax is levied, the FTC provides no credits — there is no foreign tax to credit. FTC in a zero-tax environment means full US tax on worldwide income. FEIE eliminates US tax on up to $132,900 of earned income with no need for foreign tax to have been paid. In these environments, FEIE is typically significantly better — sometimes saving $20,000 to $30,000 per year in US federal tax.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: IRC §911 (FEIE) · IRC §901 (FTC) · IRC §904 (FTC limitation) · IRS Publication 54 (US Citizens Abroad) · FinCEN FBAR rules · Confirmed April 2026</p>
         </div>
 
@@ -712,7 +737,7 @@ export default function UsExpatTaxPage() {
           </p>
           <div className="space-y-2 font-mono text-sm">
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-900">
-              ❌ US citizen in UK  →  uses FEIE by default  →  excludes $126,500  →  loses $50,000 of UK tax credits permanently  →  pays unnecessary US tax on income above exclusion  ❌
+              ❌ US citizen in UK  →  uses FEIE by default  →  excludes $132,900  →  loses $50,000 of UK tax credits permanently  →  pays unnecessary US tax on income above exclusion  ❌
             </div>
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
               ✔ US citizen in UK  →  model both methods  →  FTC eliminates US liability  →  $29,000 carryforward credits generated  →  optimal total tax  ✔
@@ -755,7 +780,7 @@ export default function UsExpatTaxPage() {
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
             <p className="text-base font-medium text-neutral-900">David's US tax bill should have been $0. Seven years of using the wrong strategy had cost him $77,000.</p>
-            <p>David moved from San Francisco to London in 2019 for a promotion to run his company's European engineering org. The move came with a pay rise to $180,000 (paid partly in GBP after the first year). His San Diego CPA — who'd done his taxes for a decade — set up FEIE on Form 2555 the first year and continued it annually. Exclude $126,500, pay US tax on the remainder (~$11k-$14k depending on the year), claim FBAR, move on.</p>
+            <p>David moved from San Francisco to London in 2019 for a promotion to run his company's European engineering org. The move came with a pay rise to $180,000 (paid partly in GBP after the first year). His San Diego CPA — who'd done his taxes for a decade — set up FEIE on Form 2555 the first year and continued it annually. Exclude $132,900, pay US tax on the remainder (~$11k-$14k depending on the year), claim FBAR, move on.</p>
             <p>Total US tax paid 2019-2025 (seven years): approximately $80,000. Total UK tax paid same period: approximately $480,000. David assumed the US tax was the residual after FEIE — unavoidable cost of being a US citizen abroad.</p>
             <p>At a charity dinner in Islington in February 2026, David mentioned the US tax bill to another US expat at the table — a banker whose accountant had told him to use FTC from day one. 'David, in the UK, FEIE is almost always wrong. Your UK tax is way higher than your US tax on the same income — FTC would wipe out the US bill AND bank credits. You're paying for no reason.' David pulled out a pad and started doing the math.</p>
             <p className="font-semibold text-neutral-900">The math was brutal. At his 2024 income of $180k: FEIE outcome = excludes $126.5k, US tax on remaining $53.5k (at ~22% marginal) ≈ $11,770 — while $50,600 of the $72,000 UK tax paid was on the excluded income and NOT creditable. Total 2024 tax: ~$83,770. FTC outcome = US tax on full $180k at ~22% effective ≈ $39,600 — but UK tax paid $72,000 credits against it, eliminating US liability with $32,400 excess credits carrying forward. Total 2024 tax: ~$72,000 (UK only). Saving for 2024: $11,770. Seven years at similar savings: ~$77,000 over-paid. PLUS: zero accumulated FTC carryforward credits (which could now be used against any US-source income if he returned to US). David was furious — his CPA had never modelled it.</p>
@@ -778,18 +803,18 @@ export default function UsExpatTaxPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             US expat tax — confirmed April 2026
           </h2>
-          <p className="mb-4 text-neutral-800">United States citizens and permanent residents are subject to US federal income tax on worldwide income under the Internal Revenue Code, regardless of foreign residency. Two primary mechanisms reduce double taxation for US persons living abroad. The Foreign Earned Income Exclusion (FEIE) under IRC §911 allows qualifying individuals to exclude up to $126,500 (2026, indexed) of foreign earned income — compensation for personal services performed outside the US — from US taxable income. Qualification requires meeting the physical presence test (330 full days in foreign countries in any 12-month period) or the bona fide residence test, and election is made on Form 2555. The Foreign Tax Credit (FTC) under IRC §901 provides a dollar-for-dollar credit against US tax for foreign income taxes paid, claimed on Form 1116. The FTC is limited to the US tax on foreign-source income under IRC §904 and applies to all income types including passive income — unlike FEIE which covers only earned income. The two mechanisms cannot be applied to the same income simultaneously. In high-tax jurisdictions, FTC typically produces lower total tax because foreign taxes fully offset US liability and excess credits carry forward 10 years. In low-tax or zero-tax jurisdictions, FEIE typically produces lower total tax because FTC provides no credits to offset US liability. US persons abroad must also file FBAR (FinCEN 114) for foreign accounts exceeding $10,000 aggregate and may have FATCA (Form 8938) obligations if specified foreign financial assets exceed threshold amounts.</p>
+          <p className="mb-4 text-neutral-800">United States citizens and permanent residents are subject to US federal income tax on worldwide income under the Internal Revenue Code, regardless of foreign residency. Two primary mechanisms reduce double taxation for US persons living abroad. The Foreign Earned Income Exclusion (FEIE) under IRC §911 allows qualifying individuals to exclude up to $132,900 (2026, indexed) of foreign earned income — compensation for personal services performed outside the US — from US taxable income. Qualification requires meeting the physical presence test (330 full days in foreign countries in any 12-month period) or the bona fide residence test, and election is made on Form 2555. The Foreign Tax Credit (FTC) under IRC §901 provides a dollar-for-dollar credit against US tax for foreign income taxes paid, claimed on Form 1116. The FTC is limited to the US tax on foreign-source income under IRC §904 and applies to all income types including passive income — unlike FEIE which covers only earned income. The two mechanisms cannot be applied to the same income simultaneously. In high-tax jurisdictions, FTC typically produces lower total tax because foreign taxes fully offset US liability and excess credits carry forward 10 years. In low-tax or zero-tax jurisdictions, FEIE typically produces lower total tax because FTC provides no credits to offset US liability. US persons abroad must also file FBAR (FinCEN 114) for foreign accounts exceeding $10,000 aggregate and may have FATCA (Form 8938) obligations if specified foreign financial assets exceed threshold amounts.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            FEIE outcome: US tax = max(0, Income - $126,500) × US marginal rate; foreign taxes on excluded income = wasted (no credit). FTC outcome: US tax = Income × US rate - Foreign tax paid (capped at US tax on foreign income). Hybrid: FEIE on earned up to $126,500 + FTC on earned above $126,500 and all passive. Optimal: if foreign rate &gt;= US rate, FTC typically better. If foreign rate &lt; US rate or zero, FEIE typically better. Example: UK 40% on $150k earned: FEIE total tax = $62,800 (US $2,800 + UK $60,000); FTC total tax = $60,000 (UK $60,000 + US $0, $29k credits carried forward). UAE 0% on $150k: FEIE total = $2,800 (US); FTC total = $31,000 (US).
+            FEIE outcome: US tax = max(0, Income - $132,900) × US marginal rate; foreign taxes on excluded income = wasted (no credit). FTC outcome: US tax = Income × US rate - Foreign tax paid (capped at US tax on foreign income). Hybrid: FEIE on earned up to $132,900 + FTC on earned above $132,900 and all passive. Optimal: if foreign rate &gt;= US rate, FTC typically better. If foreign rate &lt; US rate or zero, FEIE typically better. Example: UK 40% on $150k earned: FEIE total tax = $62,800 (US $2,800 + UK $60,000); FTC total tax = $60,000 (UK $60,000 + US $0, $29k credits carried forward). UAE 0% on $150k: FEIE total = $2,800 (US); FTC total = $31,000 (US).
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (September 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -802,7 +827,7 @@ export default function UsExpatTaxPage() {
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">FEIE limit 2026</td>
-                  <td className="p-2">$126,500 (indexed annually)</td>
+                  <td className="p-2">$132,900 (indexed annually)</td>
                   <td className="p-2 text-neutral-500">IRC §911 Foreign Earned Income Exclusion + IRC §901 Foreign Tax Credit — FEIE vs FTC optimisation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -855,9 +880,9 @@ export default function UsExpatTaxPage() {
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              IRS — Foreign Earned Income Exclusion
+              IRS IR-2025-103 / Rev. Proc. 2025-32 — tax year 2026 inflation adjustments (FEIE $132,900)
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/us-expat-tax" className="font-mono text-blue-700 hover:underline">
@@ -1015,7 +1040,7 @@ export default function UsExpatTaxPage() {
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Hybrid FEIE + FTC strategy</td>
-                <td className="p-3 text-xs">FEIE on earned up to $126,500 + FTC on income above limit and all passive</td>
+                <td className="p-3 text-xs">FEIE on earned up to $132,900 + FTC on income above limit and all passive</td>
                 <td className="p-3 text-xs text-neutral-700">Requires careful income allocation on Forms 2555 + 1116; easy to misapply</td>
               </tr>
               <tr className="border-b border-neutral-200">
@@ -1146,7 +1171,7 @@ export default function UsExpatTaxPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            US Citizen Abroad Optimizer — IRC §911 (Foreign Earned Income Exclusion, $126,500 for 2026) + IRC §901 (Foreign Tax Credit) + IRC §904 (FTC limitation) + §911(c) (housing exclusion) + §6038D (FATCA) + 31 USC §5314 (FBAR). US citizens and residents taxed on worldwide income regardless of foreign residency. FEIE covers earned income only; FTC covers all income types. FEIE excluded income cannot generate FTC — mutually exclusive per dollar. High-tax country (foreign rate over US rate): FTC typically optimal (excess creates carryforward). Low/zero-tax country: FEIE typically optimal (FTC provides no credits). Hybrid FEIE + FTC possible for income above exclusion + passive. Form 2555 (FEIE), Form 1116 (FTC), FinCEN 114 (FBAR, $10k aggregate threshold), Form 8938 (FATCA, higher thresholds abroad).
+            US Citizen Abroad Optimizer — IRC §911 (Foreign Earned Income Exclusion, $132,900 for 2026) + IRC §901 (Foreign Tax Credit) + IRC §904 (FTC limitation) + §911(c) (housing exclusion) + §6038D (FATCA) + 31 USC §5314 (FBAR). US citizens and residents taxed on worldwide income regardless of foreign residency. FEIE covers earned income only; FTC covers all income types. FEIE excluded income cannot generate FTC — mutually exclusive per dollar. High-tax country (foreign rate over US rate): FTC typically optimal (excess creates carryforward). Low/zero-tax country: FEIE typically optimal (FTC provides no credits). Hybrid FEIE + FTC possible for income above exclusion + passive. Form 2555 (FEIE), Form 1116 (FTC), FinCEN 114 (FBAR, $10k aggregate threshold), Form 8938 (FATCA, higher thresholds abroad).
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1160,7 +1185,7 @@ export default function UsExpatTaxPage() {
               IRC §901 Foreign Tax Credit
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
-              $126,500 Exclusion 2026
+              $132,900 Exclusion 2026
             </span>
             <span className="inline-block rounded bg-neutral-900 px-3 py-1 text-xs font-bold tracking-wide text-white">
               High-Tax: FTC Better
@@ -1171,6 +1196,11 @@ export default function UsExpatTaxPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
+            <a href="https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">IRS IR-2025-103 / Rev. Proc. 2025-32 — tax year 2026 inflation adjustments (FEIE $132,900) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill</p>
+            </a>
             <a href="https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">IRS — Foreign Earned Income Exclusion ↗</p>
@@ -1226,11 +1256,20 @@ export default function UsExpatTaxPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from Internal Revenue Service (IRS) and GOV.UK guidance for April 2026.
+          built from Internal Revenue Service (IRS) and GOV.UK guidance for September 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=OtzL63jgQhc" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"When is FEIE better than FTC? Sound like a question you've been Googling? Here's the actual truth: it depends entirely on what your host country charges you. In a zero-tax country like the UAE, FEIE wins — you exclude up to $126,500 and owe almost nothing in the US. But FEIE and FTC do the same thing? Wrong. FEIE cuts your taxable income. FTC cuts your tax bill directly. They work differently — and you cannot stack both on the same dollar. Get this wrong and you waste credits you can never recover. The 15 June deadline is close. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -1240,7 +1279,7 @@ export default function UsExpatTaxPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">United States tax position checks. April 2026.</p>
+            <p className="mt-1">United States tax position checks. September 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/global/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
