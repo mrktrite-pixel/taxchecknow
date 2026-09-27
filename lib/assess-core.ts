@@ -66,6 +66,105 @@ const RULES_SLUG: Record<string, string> = {
   "spain-beckham-eligibility": "spain-beckham",
 };
 
+/**
+ * WHERE THE GROUNDING CORPUS COMES FROM.  (F57)
+ *
+ * ═══════════════════════════════════════════════════════════════════════════════════════════
+ * THE BUG THIS EXISTS TO CLOSE
+ *
+ * This used to be one line: `process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com"`. On a
+ * branch preview that resolves to PRODUCTION, so a preview generated paid content grounded on
+ * main's corpus — not on the corpus in the branch being tested.
+ *
+ * Measured on 2026-09-27, mid-dispatch: production's us-expat-tax corpus served the stale FEIE
+ * limit $126,500 seven times and the correct $132,900 not once, because the correction sat on an
+ * unmerged branch. A re-generation against the default origin wrote the stale figure into a fresh
+ * pack and every local check passed, because every local check was reading the branch while the
+ * MODEL was reading production. Nothing in the logs said which corpus had been used.
+ *
+ * That is the whole class of failure: a preview that tests the branch's pages against
+ * production's facts is not testing the branch.
+ *
+ * ── THE ORDER, AND WHY ─────────────────────────────────────────────────────────────────────
+ *
+ *   VERCEL_ENV=preview  ->  this deployment's OWN origin
+ *        VERCEL_URL first: it is the immutable per-deployment hostname, so the corpus it serves
+ *        is by definition the corpus in the commit being tested. VERCEL_BRANCH_URL (the moving
+ *        branch alias) is the fallback — right branch, but whichever deployment is newest, which
+ *        during a redeploy is not necessarily this one.
+ *   anything else       ->  NEXT_PUBLIC_SITE_URL, else production.
+ *        Unchanged. On production those are the same thing, and a local run keeps pointing
+ *        wherever the operator aimed it.
+ *
+ * ── DEPLOYMENT PROTECTION IS THE CATCH, AND IT IS HANDLED, NOT IGNORED ─────────────────────
+ *
+ * A preview sits behind Vercel Authentication, so a self-fetch 401s unless it carries the
+ * automation bypass. Vercel injects VERCEL_AUTOMATION_BYPASS_SECRET into the deployment when
+ * Protection Bypass for Automation is enabled, and bypassHeaders() sends it.
+ *
+ * WHEN IT IS ABSENT WE STILL DO NOT FALL BACK TO PRODUCTION. The fail-closed ruling is about
+ * exactly this: an ungrounded-or-wrongly-grounded paid assessment must not be produced, and
+ * quietly substituting production's corpus is the wrongly-grounded case wearing a success
+ * response. The generation fails with an error that names the origin it could not read, and
+ * ship-check's step-4 pre-flight is the thing that tells the operator BEFORE a test buy.
+ * ═══════════════════════════════════════════════════════════════════════════════════════════
+ */
+export interface CorpusOrigin {
+  /** Scheme + host, no trailing slash. */
+  origin: string;
+  /** Which env var decided it — printed in the log line so a wrong corpus is visible. */
+  source: string;
+  /** True when this is the deployment's own origin, i.e. behind Deployment Protection. */
+  isSelf: boolean;
+}
+
+const PRODUCTION_ORIGIN = "https://taxchecknow.com";
+
+/** Normalise a Vercel *_URL value, which arrives as a bare host with no scheme. */
+function asOrigin(hostOrUrl: string): string {
+  const trimmed = hostOrUrl.trim().replace(/\/+$/, "");
+  return /^https?:\/\//.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
+export function resolveCorpusOrigin(env: Record<string, string | undefined> = process.env): CorpusOrigin {
+  if (env.VERCEL_ENV === "preview") {
+    const self = env.VERCEL_URL?.trim() || env.VERCEL_BRANCH_URL?.trim();
+    if (self) {
+      return {
+        origin: asOrigin(self),
+        source: env.VERCEL_URL?.trim() ? "VERCEL_URL (this deployment)" : "VERCEL_BRANCH_URL (branch alias)",
+        isSelf: true,
+      };
+    }
+    // preview with neither set should be impossible; say so rather than silently using production.
+    console.warn("[assess-core] VERCEL_ENV=preview but neither VERCEL_URL nor VERCEL_BRANCH_URL is set — falling back to the public origin, which serves MAIN's corpus");
+  }
+  const pub = env.NEXT_PUBLIC_SITE_URL?.trim();
+  return {
+    origin: pub ? asOrigin(pub) : PRODUCTION_ORIGIN,
+    source: pub ? "NEXT_PUBLIC_SITE_URL" : "default (production)",
+    isSelf: false,
+  };
+}
+
+/**
+ * The automation-bypass header, when the secret is in the environment.
+ *
+ * Only sent for a self-origin fetch: a bypass secret is per project, and posting it at the public
+ * origin would be a credential sent somewhere it does not belong.
+ */
+export function corpusFetchHeaders(target: CorpusOrigin, env: Record<string, string | undefined> = process.env): Record<string, string> {
+  const headers: Record<string, string> = { accept: "application/json" };
+  const secret = env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
+  if (target.isSelf && secret) {
+    headers["x-vercel-protection-bypass"] = secret;
+    // Ask Vercel to set the bypass cookie too: the fetch may be redirected internally, and the
+    // header alone is not carried across a redirect hop.
+    headers["x-vercel-set-bypass-cookie"] = "samesitenone";
+  }
+  return headers;
+}
+
 export async function generateAssessment(input: AssessInput): Promise<AssessResult> {
   const { inputs, product_id, market, authority, tier, name, fields, deadline, factRules } = input;
 
@@ -116,21 +215,30 @@ export async function generateAssessment(input: AssessInput): Promise<AssessResu
   // ── CORPUS GROUNDING — FAIL CLOSED (ruling 2026-07-23) ────────────────────
   // Paid content: if the corpus is unreachable/malformed we DO NOT fall back to an ungrounded
   // prompt. Return an error so the caller stores NOTHING and the page shows a retry/support state.
-  // Corpus is env-independent force-static public JSON → fetch from the PUBLIC origin (a preview's
-  // own origin sits behind Deployment Protection and would 401).
-  const corpusOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com";
+  // WHICH corpus is resolveCorpusOrigin()'s job — see its header for why a preview must read its
+  // own and not production's.
+  const corpusTarget = resolveCorpusOrigin();
   const corpusSlug = RULES_SLUG[product_id] ?? product_id;
-  const corpusUrl = `${corpusOrigin}/api/rules/${corpusSlug}`;
+  const corpusUrl = `${corpusTarget.origin}/api/rules/${corpusSlug}`;
+  // LOGGED ON EVERY GENERATION, not only on failure. The stale-figure incident was invisible
+  // precisely because a SUCCESSFUL generation said nothing about where its facts came from.
+  console.log(`[assess-core] corpus origin: ${corpusTarget.origin} (${corpusTarget.source}) → ${corpusUrl}`);
   let rules: Record<string, unknown> | null = null;
   try {
-    const cr = await fetch(corpusUrl, { headers: { accept: "application/json" } });
+    const cr = await fetch(corpusUrl, { headers: corpusFetchHeaders(corpusTarget) });
     if (!cr.ok) {
-      console.error(`[assess-core] FAIL-CLOSED: corpus fetch ${product_id} → ${cr.status} (${corpusUrl})`);
-      return { ok: false, status: 424, error: "corpus_unreachable", detail: `rules route returned ${cr.status}`, product_id };
+      // A self-origin 401/403 is Deployment Protection, which has a specific fix — say which one
+      // it is rather than making someone infer it from a bare status code.
+      const protectionLikely = corpusTarget.isSelf && (cr.status === 401 || cr.status === 403);
+      const detail = protectionLikely
+        ? `${corpusUrl} returned ${cr.status} — the preview is behind Deployment Protection and VERCEL_AUTOMATION_BYPASS_SECRET ${process.env.VERCEL_AUTOMATION_BYPASS_SECRET ? "was sent but rejected" : "is not set in this deployment"}. Enable Protection Bypass for Automation, or the branch's own corpus cannot be read.`
+        : `rules route returned ${cr.status} (${corpusUrl})`;
+      console.error(`[assess-core] FAIL-CLOSED: corpus fetch ${product_id} → ${cr.status} (${corpusUrl}, ${corpusTarget.source})`);
+      return { ok: false, status: 424, error: "corpus_unreachable", detail, product_id };
     }
     rules = await cr.json();
   } catch (e) {
-    console.error(`[assess-core] FAIL-CLOSED: corpus fetch threw for ${product_id} (${corpusUrl})`, e);
+    console.error(`[assess-core] FAIL-CLOSED: corpus fetch threw for ${product_id} (${corpusUrl}, ${corpusTarget.source})`, e);
     return { ok: false, status: 424, error: "corpus_unreachable", detail: e instanceof Error ? e.message : "fetch failed", product_id };
   }
   if (!rules || typeof rules !== "object" || (!rules.legislation && !rules.key_facts)) {
