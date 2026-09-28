@@ -216,7 +216,16 @@ async function generateAndStoreAssessment(
     // FAIL-CLOSED: on any generator failure (corpus unreachable/malformed = status 424, etc.) we
     // do NOT store an ungrounded assessment. result.ok===true GUARANTEES grounded===true. The
     // success page then shows a retry/support state instead of confidently-wrong law. (Ruling.)
-    if (!result.ok) { console.error(`[webhook] assess ${result.status} (${result.error}) for ${stripeSessionId} — NOT stored (fail-closed)`); return; }
+    if (!result.ok) {
+      // PRINT THE DETAIL, NOT JUST THE CODE. assess-core composes a sentence naming the cause and the
+      // fix (e.g. Deployment Protection blocking the corpus self-fetch); logging only "corpus_unreachable"
+      // threw that away, and diagnosing one failed buy then took a dig through Vercel function logs.
+      console.error(
+        `[webhook] assess ${result.status} (${result.error}) for ${stripeSessionId} — NOT stored (fail-closed)` +
+        (result.detail ? `\n  reason: ${result.detail}` : ""),
+      );
+      return;
+    }
     const { assessment, corpus_source, corpus_verified } = result;
 
     await (supabase as any).from("assessments").upsert({

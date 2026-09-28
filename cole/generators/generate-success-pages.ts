@@ -104,6 +104,27 @@ function authorityProse(config: ProductConfig): string {
 }
 
 /**
+ * F92 — the shape of an assessment field key, found in a sentence meant for a buyer.
+ *
+ * camelCase (`cmcTestOutcome`, `keyFinding`) and snake_case (`tax_exposure`) are both key shapes and
+ * neither belongs in prose. Deliberately NOT a dictionary check against assessFields: the defect is
+ * an identifier reaching buyer copy, whatever it happens to be called, and a list would go stale the
+ * next time a product declares a key nobody added to it.
+ *
+ * PROSE ONLY. Run over emitted .tsx this would fire on every variable name in the file; it gates the
+ * strings this generator composes, exactly as the F75 check does and for the same measured reason.
+ */
+export function rawIdentifiers(text: string): string[] {
+  const out: string[] = [];
+  // camelCase: a lower run, then an upper, then a lower — so "ATO" and "CM&C" are not identifiers,
+  // and neither is a normal sentence, which puts a space before any capital.
+  for (const m of text.matchAll(/\b[a-z]{2,}[A-Z][a-z]\w*/g)) out.push(m[0]);
+  // snake_case: an underscore between two word characters. A sentence has no underscores in it.
+  for (const m of text.matchAll(/\b[a-z]{2,}(?:_[a-z0-9]+)+\b/gi)) out.push(m[0]);
+  return [...new Set(out)];
+}
+
+/**
  * F75 — "Your <jurisdiction> <authority> position", without saying the jurisdiction twice.
  *
  * MEASURED on the delivered australia-smsf-residency pages:
@@ -119,7 +140,7 @@ function authorityProse(config: ProductConfig): string {
  * that helper existed (2026-09-21) and never regenerated. The third has no acronym to lift, so
  * authorityProse is a no-op on it and the join is what has to be right.
  */
-function positionPhrase(config: ProductConfig): string {
+export function positionPhrase(config: ProductConfig): string {
   return joinJurisdictionAuthority(marketProse(config), authorityProse(config));
 }
 
@@ -213,6 +234,24 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
     ["pack name", packName],
     ["tier tagline", tierConfig.tagline ?? ""],
   ];
+  // AND THE SAME GATE FOR RAW FIELD KEYS. The doubled-word check would never have caught
+  // "Your personalised cmcTestOutcome is on its way by email." because nothing repeats; it is a
+  // different defect with the same cause — an identifier reaching a sentence a buyer reads. Both
+  // failures shipped, so both refuse.
+  for (const [where, text] of composedProse) {
+    const keys = rawIdentifiers(text);
+    if (keys.length > 0) {
+      throw new Error(
+        `[COLE F92] "${config.id}" ${tier}: the ${where} contains a raw field key — ` +
+        keys.map((k) => `"${k}"`).join(", ") + ".\n" +
+        `    text: ${text}\n` +
+        `    Interpolating an assessment key into prose is how "Your personalised cmcTestOutcome` +
+        ` is on its way by email" reached a paying buyer. Use packHeading() for a heading, or write` +
+        ` a sentence that does not name the field; generating nothing.`,
+      );
+    }
+  }
+
   for (const [where, text] of composedProse) {
     const doubled = findDoubledWords(text);
     if (doubled.length > 0) {
@@ -645,10 +684,24 @@ ${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPO
    * /api/freeze-pack: freezing "is being prepared" would store that as the buyer's document
    * forever, which is the one outcome worse than waiting.
    */
+  const HOLDING_BODY =
+    "This section is still being written. Your full pack will arrive by email shortly — " +
+    "nothing here has been saved as your document yet.";
+
   function showHolding(name: string, why: "timeout" | "nosession") {
     setError(why);
     const placeholder = {
-      ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: "Your personalised ${f.replace(/_/g," ")} is on its way by email.",`).join("\n      ")}
+      // ONE SENTENCE, THE SAME IN EVERY SECTION, and it names no field.
+      //
+      // MEASURED on the live tier-147 holding page, 2026-09-28 — the body read "…personalised
+      // cmcTestOutcome is on its way by email", with the field KEY interpolated. Fine while keys were
+      // snake_case (the .replace(/_/g," ") handled those), and raw camelCase the moment the engine
+      // products arrived. A buyer who has paid $147 reads an internal identifier.
+      //
+      // The fix is not to humanise the key. renderPack already prints the heading directly above
+      // this line, so naming the section again was redundant even when it read correctly. Not
+      // interpolating a key at all is what makes the defect unreachable rather than merely fixed.
+      ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: HOLDING_BODY,`).join("\n      ")}
       accountantQuestions: [
         "What is my exact ${authorityProse(config)} position based on my answers?",
         "What is the single most important action I should take${beforeAnchorQ}?",
