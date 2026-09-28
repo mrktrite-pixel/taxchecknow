@@ -9,8 +9,9 @@
 // Engine shape at generation time: 4q/9t.
 // Tier + severity live PER-TERMINAL in engine.json (the operator's presentation overlay).
 //
-// COMMERCE IS UNCHANGED: the productKey and success paths are the live product's, so checkout
-// still resolves through the same create-checkout-session block and the same Stripe env vars.
+// COMMERCE: the productKey is the CONFIG'S DECLARED pair (F71 — this comment used to say
+// "unchanged" while the generated key had in fact changed and broke every buy), so checkout
+// resolves through the same create-checkout-session block and the same Stripe env vars.
 //
 // ⚠REVIEW 1 field(s) need authoring: escape body — copy it from presentation.json's escape result_copy
 
@@ -59,7 +60,13 @@ const ENGINE_CONFIG: EngineConfig = {
 };
 
 async function handleCheckout(c: EngineCheckout): Promise<boolean> {
-  const productKey = `nomad_${c.tier}_australia_smsf_residency`;
+  // F71 — THE CONFIG'S DECLARED KEYS, verbatim. The mount step synthesised
+  // `nomad_${c.tier}_australia_smsf_residency` from the slug tail, and getPriceId knows nothing
+  // about that key: its block is key.includes("au_smsf") -> STRIPE_NOMAD_SMSF_<tier>. So every buy
+  // returned 500 "Missing Stripe price ID" (preview taxchecknow-git-feat-australia-s-c0fafa…,
+  // 2026-09-28 09:37:16 and 09:37:58 UTC). The legacy calculator this replaced sent exactly these
+  // two, from cole/config/nomad-09-au-smsf-residency.ts tier1/tier2.productKey.
+  const productKey = c.tier === 147 ? "nomad_147_au_smsf" : "nomad_67_au_smsf";
   const origin = window.location.origin;
   const successPath = c.tier === 147 ? "plan" : "assess";
   try {
