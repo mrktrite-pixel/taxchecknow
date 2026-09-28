@@ -321,6 +321,10 @@ const sources = [
     "url": "https://www.legislation.gov.au/C2004A04633/latest/text"
   },
   {
+    "title": "ATO Ruling SMSFR 2010/2 — the meaning of 'legal personal representative' and an attorney as trustee/director under SIS Act s 17A",
+    "url": "https://www.ato.gov.au/law/view/document?DocID=SFR/SMSFR20102/NAT/ATO/00001"
+  },
+  {
     "title": "ITAA 1997 s 295-95 (complying fund taxation)",
     "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   },
@@ -1226,6 +1230,11 @@ export default function AustraliaSmsfResidencyPage() {
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">SIS Act 1993 s 17A — basic conditions for an SMSF: trustees, directors and members ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A04633/latest/text</p>
+            </a>
+            <a href="https://www.ato.gov.au/law/view/document?DocID=SFR/SMSFR20102/NAT/ATO/00001" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO Ruling SMSFR 2010/2 — the meaning of 'legal personal representative' and an attorney as trustee/director under SIS Act s 17A ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/law/view/document?DocID=SFR/SMSFR20102/NAT/ATO/00001</p>
             </a>
             <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">

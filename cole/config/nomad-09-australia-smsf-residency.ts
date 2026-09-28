@@ -229,6 +229,11 @@ export const PRODUCT_CONFIG: ProductConfig = {
     // (see the F83 remedy).
     { title: "ITAA 1997 s 295-95(2) — definition of 'Australian superannuation fund' (the three residency conditions)", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "SIS Act 1993 s 17A — basic conditions for an SMSF: trustees, directors and members",                       url: "https://www.legislation.gov.au/C2004A04633/latest/text" },
+    // ADDED BECAUSE THE F88 GATE CAUGHT ME: the F83 rewrite cites SMSFR 2010/2 as the ruling behind
+    // the s 17A(3)(b)(ii) attorney route, and I had not put it in `sources`. A citation with no
+    // verified-against line is precisely what that gate exists to refuse, and its first real finding
+    // was my own.
+    { title: "ATO Ruling SMSFR 2010/2 — the meaning of 'legal personal representative' and an attorney as trustee/director under SIS Act s 17A", url: "https://www.ato.gov.au/law/view/document?DocID=SFR/SMSFR20102/NAT/ATO/00001" },
     { title: "ITAA 1997 s 295-95 (complying fund taxation)",                                                                url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "ITAA 1997 s 295-320 (non-complying fund taxation)",                                                            url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "ATO Ruling TR 2008/9 — Meaning of 'Australian superannuation fund'",                                             url: "https://www.ato.gov.au/law/view/document?DocID=TXR/TR20089/NAT/ATO/00001" },

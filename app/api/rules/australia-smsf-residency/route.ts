@@ -182,6 +182,10 @@ export async function GET() {
             "url": "https://www.legislation.gov.au/C2004A04633/latest/text"
         },
         {
+            "title": "ATO Ruling SMSFR 2010/2 — the meaning of 'legal personal representative' and an attorney as trustee/director under SIS Act s 17A",
+            "url": "https://www.ato.gov.au/law/view/document?DocID=SFR/SMSFR20102/NAT/ATO/00001"
+        },
+        {
             "title": "ITAA 1997 s 295-95 (complying fund taxation)",
             "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         },
@@ -219,7 +223,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     "api_endpoint": "/api/rules/australia-smsf-residency",
-    "generated_at": "2026-09-28T11:47:31.295Z"
+    "generated_at": "2026-09-28T12:01:01.864Z"
 };
 
   return NextResponse.json(rules, {
