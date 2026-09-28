@@ -16,7 +16,12 @@ const CFG = path.join("cole", "config");
 
 function gitDate(file) {
   try {
-    const iso = execFileSync("git", ["log", "-1", "--format=%cI", "--", file],
+    // --follow, because a RENAMED config otherwise loses its whole history and gets the rename
+    // date as its "last modified". MEASURED: renaming nomad-09-au-smsf-residency.ts to
+    // nomad-09-australia-smsf-residency.ts dropped that product OUT of the map entirely on the
+    // build before the rename was committed (git log had nothing for the new path), and would have
+    // given it the rename date afterwards. --follow crosses the rename.
+    const iso = execFileSync("git", ["log", "-1", "--follow", "--format=%cI", "--", file],
       { encoding: "utf-8", stdio: ["ignore", "pipe", "ignore"] }).trim();
     return iso || null;
   } catch { return null; }
