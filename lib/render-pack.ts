@@ -81,6 +81,29 @@ export const MAX_SECTIONS = 6;
  * Ordered longest-first so FATCA is matched before FAT- prefixes cannot bite; the match is
  * whole-word anyway, and the test pins it.
  */
+/**
+ * Multi-word or punctuated terms whose PUBLISHED form is not the upper-case of the token.
+ *
+ * The acronym pass below is a whole-word upper-case swap, which cannot reach either of these:
+ *
+ *   cmcTestOutcome             -> "Cmc Test Outcome"              wanted: "CM&C Test Outcome"
+ *   taxExposureIfNonComplying  -> "Tax Exposure If Non Complying"  wanted: "… Non-Complying"
+ *
+ * MEASURED on australia-smsf-residency before its two rows were healed: those are two of the six
+ * headings a buyer sees, and the body text under each one spells the term correctly — "central
+ * management and control (CM&C)" and "non-complying" — so the heading reads as a typo introduced
+ * by the machine. Identical in kind to "Feie Eligibility", which is what PACK_HEADING_ACRONYMS was
+ * created for; only the shape of the correction differs.
+ *
+ * DECLARED, NOT DETECTED, for the same reason as the acronyms: no rule can tell "Non Complying"
+ * from "Non Resident" from "Not Payable" without knowing the domain. Applied longest-first so a
+ * two-word term is matched before either of its halves.
+ */
+export const PACK_HEADING_TERMS: ReadonlyArray<readonly [string, string]> = [
+  ["non complying", "Non-Complying"],
+  ["cmc", "CM&C"],
+];
+
 export const PACK_HEADING_ACRONYMS: readonly string[] = [
   "FATCA", "FBAR", "FEIE", "HMRC", "SMSF", "ATO", "CGT", "FTC", "IRS",
 ];
@@ -107,7 +130,14 @@ export function packHeading(key: string): string {
   // Whole words only, case-insensitive: the caser has already normalised them to Feie / Ftc, and a
   // key authored as `FEIEeligibility` splits to "F E I Eeligibility", which this correctly leaves
   // alone rather than half-fixing.
-  return spaced
+  // The declared terms first: they can span a word boundary, so they must run before the
+  // single-word acronym swap gets a chance to rewrite half of one.
+  let out = spaced;
+  for (const [term, published] of PACK_HEADING_TERMS) {
+    // Whole words only, anchored on boundaries, so "Cmc" matches and "Cmcx" does not.
+    out = out.replace(new RegExp(`\\b${term.replace(/ /g, "\\s+")}\\b`, "gi"), published);
+  }
+  return out
     .split(" ")
     .map((word) => PACK_HEADING_ACRONYMS.find((a) => a.toLowerCase() === word.toLowerCase()) ?? word)
     .join(" ");

@@ -4,6 +4,20 @@ export const PRODUCT_CONFIG: ProductConfig = {
   slug: "nomad/check/australia-smsf-residency", url: "https://taxchecknow.com/nomad/check/australia-smsf-residency", apiRoute: "/api/rules/australia-smsf-residency",
   authority: "Australian Taxation Office (ATO)", authorityUrl: "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements", legalAnchor: "SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation", legislation: "Superannuation Industry (Supervision) Act 1993 section 10(1) defines 'Australian superannuation fund' via three tests: (1) established in Australia or any asset of the fund located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; (3) active member test — at least 50% of the market value of the fund's assets attributable to active members who are Australian residents, OR fund has no active members. Failure on any test = fund ceases to be Australian superannuation fund = loses complying status. Non-complying fund consequences under ITAA 1997 s 295-320: fund's 'low tax component' (approximately the entire market value less undeducted contributions) included in assessable income for the year of change at 45% top marginal rate, plus ongoing income taxed at 45% rather than 15% concessional rate.",
   lastVerified: "April 2026",
+  // F43 — DECLARED, AND VERIFIED AT GENERATE TIME.
+  //
+  // This product was mounted on EngineCalculator on 2026-09-25 (app/nomad/check/
+  // australia-smsf-residency/AustraliaSmsfResidencyCalculator.tsx:18 imports it, and engine.json
+  // sits beside it) but the config never said so. Two consequences, both silent:
+  //
+  //   1. cole/__tests__/assessment-fields-parity.test.ts filters on engineNative === true, so
+  //      this product was INVISIBLE to the registry census — the one machine that exists to
+  //      catch an unregistered product was not looking at it.
+  //   2. generate-success-pages emits the LEGACY per-field sessionStorage reads for an
+  //      undeclared product, so the /api/assess fallback would read keys EngineCalculator never
+  //      writes. That is the drift verify-engine-native.ts:156 exists to refuse — and it refuses
+  //      in BOTH directions, which is why this line and the mount have to agree.
+  engineNative: true,
   tier1: { price: 67, name: "SMSF Residency Fix Kit", tagline: "Will leaving Australia trigger a 45% tax on your super fund? Here is the residency test and the fix.", value: "Your personalised SMSF residency status, central management and control risk assessment, trustee positioning checklist, and compliance fix pathway.", cta: "Get My SMSF Residency Fix Kit — $67 →", productKey: "nomad_67_au_smsf", envVar: "STRIPE_NOMAD_SMSF_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "SMSF Residency Shield System", tagline: "Full corporate trustee structure + global control strategy + audit-proof compliance documentation", value: "Complete SMSF residency protection: corporate trustee restructure guidance, global decision-making framework, documentation protocols, CM&C audit defence pack, and multi-year transition plan.", cta: "Get My SMSF Residency Shield — $147 →", productKey: "nomad_147_au_smsf", envVar: "STRIPE_NOMAD_SMSF_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2026-10-31T23:59:59.000+10:00", display: "31 October 2026", short: "31 Oct 2026", description: "SMSF annual return deadline — fund residency status assessed annually at 30 June", urgencyLabel: "SMSF ANNUAL RETURN", countdownLabel: "Countdown to 31 October 2026 — SMSF annual return deadline" },
@@ -144,17 +158,28 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { num: "07", slug: "smsf-07", name: "Global Control Strategy — Decision-Making Framework",                     desc: "The decision-making framework for long-term overseas members with AU-controlled SMSF.", tier: 2, content: `<h2>Global Control Strategy</h2><h3>Decision layers</h3><ul><li>Strategic (must be AU-based): annual strategy review, material asset allocation changes, trustee board decisions</li><li>Operational (can be remote): routine rebalancing, contribution processing, distribution processing</li><li>Execution (broker/adviser): buy/sell execution within pre-approved parameters</li></ul><h3>AU-based decision cadence</h3><ul><li>Annual: full strategy review with AU director in AU</li><li>Quarterly: investment committee meeting (AU director chair)</li><li>Ad-hoc: material decisions escalated to AU director</li></ul><h3>Communication + minutes</h3><ul><li>AU director maintains minute book</li><li>Member (overseas) receives minutes for review — does not make binding decisions</li><li>Investment proposals documented as recommendations to AU director</li><li>AU director signs resolutions; documented AU location</li></ul>` },
     { num: "08", slug: "smsf-08", name: "Audit-Proof CM&C Documentation Framework",                                   desc: "Documentation framework that survives ATO/SMSF auditor review of CM&C during any overseas period.", tier: 2, content: `<h2>Audit-Proof Documentation</h2><h3>Core documentation set (retain 10 years)</h3><ul class="checklist"><li>Trustee register (individuals / corporate directors) with appointment dates</li><li>Minutes book with all trustee resolutions — dated, signed, location noted</li><li>Investment strategy document (SIS reg s 4.09) with annual review minutes</li><li>Investment committee minutes (if used)</li><li>Correspondence showing AU-based decision process</li><li>Bank signatories + evidence of AU-resident signatory involvement in transfers</li><li>ATO correspondence + annual return evidence</li></ul><h3>ATO audit triggers</h3><ul><li>Return address or contact details change to overseas</li><li>Significant asset movement to overseas</li><li>Pattern of transfers to overseas members during claimed "complying" period</li><li>Data matching between ATO + Border Force travel records</li></ul><h3>Response readiness</h3><ul><li>Maintain CM&C evidence file in real time — not reconstructed after enquiry</li><li>Annual SMSF auditor review should confirm CM&C position</li><li>Have SMSF specialist on standby for formal CM&C opinion if needed</li></ul>` },
   ],
+  // F76 — THE RECURRING DATES ARE RULES, NOT STORED DATES.
+  //
+  // MEASURED in the delivered pack on 2026-09-28: "SMSF residency snapshot — 30 June 2026",
+  // three months in the past, sitting in a buyer's key dates. All three of these deadlines
+  // RECUR every year — the 30 June residency test, the 31 October self-lodger date, the 15 May
+  // agent date — so a stored year was always going to be wrong within twelve months, and the
+  // generator's past-date filter would then have removed them entirely.
+  //
+  // annual:MM-DD resolves to the next occurrence when the buyer clicks (annualDate() in the
+  // emitted page), and the summaries carry NO year, so nothing here can contradict the .ics.
+  // The two relative:+90days events were already resolved and are unchanged.
   calendarTitle: "SMSF compliance + residency deadlines",
   tier1Calendar: [
-    { uid: "smsf-jun",   summary: "SMSF residency snapshot — 30 June",                     description: "Annual residency tests assessed at 30 June for each financial year.",  date: "20260630" },
-    { uid: "smsf-return", summary: "SMSF annual return — 31 October 2026",                    description: "Self-lodger deadline for 2025/26 SMSF return.",                          date: "20261031" },
-    { uid: "smsf-may",    summary: "SMSF annual return — 15 May 2027 (tax agent)",              description: "Agent-lodgment extended deadline.",                                       date: "20270515" },
+    { uid: "smsf-jun",   summary: "SMSF residency snapshot — 30 June",                     description: "Annual residency tests assessed at 30 June for each financial year.",  date: "annual:06-30" },
+    { uid: "smsf-return", summary: "SMSF annual return — 31 October",                         description: "Self-lodger deadline for the SMSF annual return.",                       date: "annual:10-31" },
+    { uid: "smsf-may",    summary: "SMSF annual return — 15 May (tax agent)",                   description: "Agent-lodgment extended deadline.",                                       date: "annual:05-15" },
   ],
   tier2Calendar: [
     { uid: "smsf-review",   summary: "SMSF residency — 90-day structural review",                description: "Review CM&C position + trustee structure + active member test.", date: "relative:+90days" },
-    { uid: "smsf-jun",        summary: "SMSF residency snapshot — 30 June 2026",                    description: "Annual residency test assessed.",                                   date: "20260630" },
-    { uid: "smsf-return",     summary: "SMSF annual return — 31 October 2026",                       description: "Self-lodger deadline.",                                             date: "20261031" },
-    { uid: "smsf-may",         summary: "SMSF annual return — 15 May 2027 (tax agent)",                description: "Agent-lodgment deadline.",                                           date: "20270515" },
+    { uid: "smsf-jun",        summary: "SMSF residency snapshot — 30 June",                         description: "Annual residency test assessed.",                                   date: "annual:06-30" },
+    { uid: "smsf-return",     summary: "SMSF annual return — 31 October",                            description: "Self-lodger deadline.",                                             date: "annual:10-31" },
+    { uid: "smsf-may",         summary: "SMSF annual return — 15 May (tax agent)",                     description: "Agent-lodgment deadline.",                                           date: "annual:05-15" },
     { uid: "smsf-quarterly",    summary: "SMSF investment committee — quarterly review",                description: "AU director chair decision cadence (per Global Control Strategy).",   date: "relative:+90days" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },

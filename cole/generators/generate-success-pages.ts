@@ -30,6 +30,7 @@ import { verifyEngineNative, engineSessionKey } from "./verify-engine-native";
 // The ONE predicate that decides rule-vs-stored, shared with the gate and files generators so
 // three surfaces cannot disagree about which mode a product is in.
 import { resolvesFromRule } from "./generate-gate-page";
+import { findDoubledWords, joinJurisdictionAuthority } from "../validators/doubled-word";
 
 // Machine-enforced hard rule. buildSuccessPage() THROWS unless the template has been
 // upgraded (R-A2/R-A3) and the operator opts in with COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
@@ -100,6 +101,26 @@ function authorityProse(config: ProductConfig): string {
   const a = (config.authority ?? "").trim();
   const m = a.match(/[(]([A-Z][A-Za-z0-9.-]{1,12})[)]$/);
   return m ? m[1] : a;
+}
+
+/**
+ * F75 — "Your <jurisdiction> <authority> position", without saying the jurisdiction twice.
+ *
+ * MEASURED on the delivered australia-smsf-residency pages:
+ *     Your Australia Australian Taxation Office (ATO) position
+ * The two halves are separate config fields, so the template could not know that `authority`
+ * already contained `market`. Across the estate's 47 configs the same fault has three shapes:
+ *     Australia     + Australian Taxation Office (ATO)                  stem repeat
+ *     Canada        + Canada Revenue Agency (CRA)                       exact repeat
+ *     United States + State Revenue Authorities / US Supreme Court      plural/singular stem
+ *
+ * authorityProse() already resolves the first two to "ATO"/"CRA" by lifting the parenthesised
+ * acronym — which is why 15 of the 16 affected pages only LOOK broken: they were emitted before
+ * that helper existed (2026-09-21) and never regenerated. The third has no acronym to lift, so
+ * authorityProse is a no-op on it and the join is what has to be right.
+ */
+function positionPhrase(config: ProductConfig): string {
+  return joinJurisdictionAuthority(marketProse(config), authorityProse(config));
 }
 
 function marketProse(config: ProductConfig): string {
@@ -175,6 +196,35 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // Declared in the config, VERIFIED against the app dir here. Throws on any
   // disagreement rather than guessing — both wrong answers are silent at runtime.
   const engineNative = verifyEngineNative(config);
+
+  // ── F75 GATE — THE COMPOSED PROSE, NOT THE FILE ────────────────────────────────────────────
+  //
+  // Run over the emitted .tsx this check is worthless: measured across 96 emitted success pages it
+  // reports 973 hits, of which 966 are CODE — `border border` in a Tailwind class, `const url =
+  // URL`, `new Date(Date.now())`, `ctx ctx`. So it gates the STRINGS THIS FUNCTION COMPOSES, which
+  // is where the defect is made, and lib/render-pack + the dashboard's step-5 check gate the
+  // delivered prose. Same function, three surfaces, no false positives on any of them.
+  //
+  // A REFUSAL rather than a warning: the whole point is that this shipped to a buyer once already,
+  // in a heading, and nobody saw it for three days.
+  const composedProse: Array<[string, string]> = [
+    ["position heading", `Your ${positionPhrase(config)} position`],
+    ["hero h1", `here is your ${packNounPhrase}`],
+    ["pack name", packName],
+    ["tier tagline", tierConfig.tagline ?? ""],
+  ];
+  for (const [where, text] of composedProse) {
+    const doubled = findDoubledWords(text);
+    if (doubled.length > 0) {
+      throw new Error(
+        `[COLE F75] "${config.id}" ${tier}: the ${where} repeats a word — ` +
+        doubled.map((d) => `"${d.pair}" (${d.kind})`).join(", ") + ".\n" +
+        `    text: ${text}\n` +
+        `    A doubled word in a heading is the one defect a buyer reads before anything else. ` +
+        `Fix the config field or the join; generating nothing.`,
+      );
+    }
+  }
 
   // STEP 2 fallback inputs. STEP 1 (the stored-first fetch) is untouched by this
   // branch: it is correct, and it is the path every real purchase takes.
@@ -324,6 +374,20 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   const droppedEvents: string[] = [];
   const emittableEvents = calEvents.filter(evt => {
     if (evt.date.startsWith("relative:")) return true;
+    // F76 — AN ANNUAL RULE CANNOT BE STALE, SO IT IS NEVER DROPPED.
+    //
+    // MEASURED on the delivered australia-smsf-residency pack, 2026-09-28:
+    //     "SMSF residency snapshot — 30 June 2026"      date: "20260630"
+    // The 30 June residency test is ANNUAL — it happened in 2026 and it happens again in 2027 —
+    // but it was stored as one calendar date, so it went stale on 1 July and the buyer read a
+    // key date that had already passed. The filter below would then DROP it on the next
+    // regeneration, which trades a wrong date for a missing one: the event is real and recurring,
+    // and neither answer is the truth.
+    //
+    // `annual:MM-DD` is the rule form. It resolves AT RENDER (see annualDate() in the emitted
+    // page, beside relativeDate()), not at generate time, so the page cannot go stale between
+    // deployments either — the same reason the gate page's countdown moved to a rule.
+    if (evt.date.startsWith("annual:")) return true;
     if (!claimsADate)            { droppedEvents.push(`${evt.uid} (${evt.date}: product declares no resolvable date)`); return false; }
     if (evt.date < todayCompact) { droppedEvents.push(`${evt.uid} (${evt.date}: in the past)`); return false; }
     return true;
@@ -339,6 +403,8 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   const icsEvents = emittableEvents.map(evt => {
     const dateCode = evt.date.startsWith("relative:")
       ? buildRelativeDate(evt.date)
+      : evt.date.startsWith("annual:")
+      ? buildAnnualDate(evt.date)
       : `"${evt.date}"`;
     return `
       "BEGIN:VEVENT",
@@ -563,6 +629,21 @@ ${emittableEvents.length === 0 ? `  // handleCalendar() omitted: no event surviv
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
+    // F76 — the next occurrence of a recurring calendar date, resolved when the buyer clicks.
+    // Same arithmetic as lib/temporal-resolver's annual rule: this year if the day has not
+    // passed, otherwise next year. Never a stored year, so it cannot go stale.
+    //
+    // Written with concatenation, not template literals, ON PURPOSE: this body is emitted from
+    // inside a template literal, where a backtick closes the outer template and a dollar-brace
+    // interpolates at generate time instead of at render.
+    function annualDate(month: number, day: number): string {
+      const now = new Date();
+      const pad = (n: number): string => String(n).padStart(2, "0");
+      const mmdd = pad(month) + pad(day);
+      const today = now.toISOString().split("T")[0].replace(/-/g, "");
+      const thisYear = String(now.getUTCFullYear()) + mmdd;
+      return thisYear >= today ? thisYear : String(now.getUTCFullYear() + 1) + mmdd;
+    }
     const ics = [
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
@@ -694,7 +775,7 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your ${marketProse(config)} ${authorityProse(config)} position
+                Your ${positionPhrase(config)} position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
@@ -1042,6 +1123,28 @@ function relativeDateLabel(relativeStr: string): string {
   if (d <= 7)  return "This week";
   if (d <= 14) return "In 2 weeks";
   return `In ${d} days`;
+}
+
+/**
+ * `annual:MM-DD` -> the emitted call that resolves it at render.
+ *
+ * REFUSES rather than degrading: a malformed rule that fell back to the literal string would put
+ * "annual:06-30" into a DTSTART, which every calendar app would silently ignore.
+ */
+function buildAnnualDate(annualStr: string): string {
+  const m = annualStr.match(/^annual:(\d{2})-(\d{2})$/);
+  if (!m) {
+    throw new Error(
+      `[COLE F76] calendar date "${annualStr}" is not a valid annual rule. ` +
+      `Expected annual:MM-DD (e.g. annual:06-30). Generating nothing.`,
+    );
+  }
+  const month = Number(m[1]);
+  const day = Number(m[2]);
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    throw new Error(`[COLE F76] annual rule "${annualStr}" is not a real month/day. Generating nothing.`);
+  }
+  return `annualDate(${month}, ${day})`;
 }
 
 function buildRelativeDate(relativeStr: string): string {
