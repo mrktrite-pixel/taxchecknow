@@ -154,6 +154,29 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["currentStrategyAnalysis", "feieEligibility", "ftcCalculation", "optimalStrategyRecommendation", "annualTaxSaving", "passiveIncomeStrategy", "filingObligations", "fbarFatcaRequirements", "immediateActions"],
     tier2: ["currentStrategyAnalysis", "feieEligibility", "ftcCalculation", "optimalStrategyRecommendation", "annualTaxSaving", "passiveIncomeStrategy", "filingObligations", "fbarFatcaRequirements", "immediateActions", "hybridStrategyPlan", "multiYearCreditOptimisation", "incomeClassificationStrategy", "crossBorderStructuringOptions", "auditDefenceDocumentation"],
   },
+  // F42 — REGISTERED after a measured blank delivery. MEASURED on the two step-4 test rows,
+  // 2026-09-28: PRODUCT_ASSESSMENT_FIELDS["australia-smsf-residency"] was ABSENT, so the webhook
+  // stored GENERIC_FIELDS —
+  //     tier 67  (cs_test_a1Nq2M…): status, keyFinding, firstAction, exposureAmount,
+  //                                 confidenceLevel, mainRiskTrigger, recommendedAction
+  //     tier 147 (cs_test_a14Pk9…): the tier-2 generic ten, plus actions
+  // while both success pages POST and render the eight/thirteen keys below. Overlap: ZERO. The
+  // buyer's position block rendered EMPTY while First Action and the accountant questions
+  // appeared, so the page looked half-built rather than broken — the fourth product to hit this
+  // after FRCGW, spain-beckham and us-expat-tax.
+  //
+  // KEYED ON THE DELIVERY_MAP productId, which the webhook looks this table up with. For this
+  // product it is "australia-smsf-residency" (webhook route.ts:83-84, both price keys) and it
+  // happens to equal config.id — unlike 183-day-rule and beckham, where keying on config.id
+  // would have produced an entry that parses, typechecks and is never read.
+  //
+  // LISTS COPIED FROM cole/config/nomad-09-australia-smsf-residency.ts (tier1/tier2AssessmentFields)
+  // asserted element-for-element against the `fields:` arrays the two emitted pages POST — 8 and
+  // 13, identical on all three sides. Not authored here, so webhook == client by construction.
+  "australia-smsf-residency": {
+    tier1: ["cmcTestOutcome", "activeMemberTestOutcome", "establishmentTestOutcome", "trusteeStructureReview", "temporaryAbsenceEligibility", "taxExposureIfNonComplying", "complianceFixPathway", "immediateActions"],
+    tier2: ["cmcTestOutcome", "activeMemberTestOutcome", "establishmentTestOutcome", "trusteeStructureReview", "temporaryAbsenceEligibility", "taxExposureIfNonComplying", "complianceFixPathway", "immediateActions", "corporateTrusteeRestructurePlan", "globalDecisionFramework", "documentationProtocol", "auditDefenceFramework", "multiYearTransitionPlan"],
+  },
   "frcgw-clearance-certificate": {
     tier1: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "firstAction"],
     tier2: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "preSettlementExecutionPlan", "applicationDetailsChecklist", "buyerSolicitorInstruction", "withholdingContingencyPlan", "accountantImplementationChecklist"],

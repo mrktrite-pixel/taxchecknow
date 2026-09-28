@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 9
+// Declared products: 10
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -27,6 +27,23 @@ export interface ProductDeclarations {
 
 export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclarations>> = {
   "taxchecknow": {
+    "australia-smsf-residency": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 2,
+                      "day": 28,
+                      "timezone": "Australia/Sydney",
+                      "shift": "next_business_day"
+                },
+                "jurisdiction": "AU",
+                "domain": "super",
+                "label": "SMSF annual return due (self-lodged)",
+                "basis": "ATO, Lodge SMSF annual returns, fetched 2026-09-28: \"You should lodge and pay all other SARs by 28 February unless we ask you to lodge on a different date.\" 31 October applies only to newly registered funds and funds with overdue prior-year returns; where a tax agent lodges, the agent provides the date."
+          }
+    },
     "day-183-rule": {
           "temporal": {
                 "kind": "unresolvable",

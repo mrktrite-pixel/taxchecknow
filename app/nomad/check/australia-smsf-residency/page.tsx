@@ -6,44 +6,47 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
 import AustraliaSmsfResidencyCalculator from "./AustraliaSmsfResidencyCalculator";
+import { resolvedDeadlineFor } from "@/lib/temporal-display";
 
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Australian SMSF Residency Kill-Switch — Central Management and Control Test + 45% Non-Complying Tax | TaxCheckNow",
-  description: "Self-Managed Super Fund residency: fund must be established in Australia + central management and control ordinarily in Australia + 50%+ active member balances from Australian residents (SIS Act s 10). Failure = non-complying = 45% tax on fund value. Confirmed April 2026.",
+  title: "SMSF Residency Central Management Control Test | TaxCheckNow",
+  description: "SMSF residency: CM&C + active member 50%+ AU test. Fail = 45% on low tax component in year of change + ongoing. Free check.",
   alternates: { canonical: "https://taxchecknow.com/nomad/check/australia-smsf-residency" },
   openGraph: {
-    title: "Australian SMSF Residency Kill-Switch — Central Management and Control Test + 45% Non-Complying Tax | TaxCheckNow",
-    description: "Self-Managed Super Fund residency: fund must be established in Australia + central management and control ordinarily in Australia + 50%+ active member balances from Australian residents (SIS Act s 10). Failure = non-complying = 45% tax on fund value. Confirmed April 2026.",
+    title: "SMSF Residency Central Management Control Test | TaxCheckNow",
+    description: "SMSF residency: CM&C + active member 50%+ AU test. Fail = 45% on low tax component in year of change + ongoing. Free check.",
     url: "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
+// STEP8: the day-count is only as fresh as the last render, so re-render daily.
+export const revalidate = 86400;
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "31 October 2026";
-const DEADLINE_ISO   = "2026-10-31T23:59:59.000+10:00";
+const LAST_VERIFIED  = "September 2026";
 
-function daysToDeadline(): number | null {
-  if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
-}
-
-function progressPct(): number {
-  if (!DEADLINE_ISO) return 50;
-  const start = new Date("2026-04-06T00:00:00Z").getTime();
-  const end   = new Date(DEADLINE_ISO).getTime();
-  const now   = Date.now();
-  const total = end - start;
-  const elapsed = Math.max(0, Math.min(total, now - start));
-  return Math.round((elapsed / total) * 100);
+// ── DEADLINE: RESOLVED AT RENDER, NOT BAKED (STEP7-JUNE15) ──────────────────
+// This page holds NO date. australia-smsf-residency declares a recurrence rule, and the rule is resolved
+// on every render by lib/temporal-display.ts — the same arithmetic lib/temporal-resolver.ts
+// gives the email scheduler, so the countdown and the reminder cannot drift apart.
+//
+// What used to be here was a stored instant: correct until it passed, then confidently wrong,
+// with the page logging an expired-deadline error on every load until someone regenerated it.
+//
+// Resolved INSIDE the component, never at module scope: a module-level const is evaluated once
+// per server process, which would freeze the day-count for the lifetime of that process.
+function progressFromDaysAway(daysAway: number): number {
+  // Progress through the recurrence period that ENDS on the resolved date, so the bar refills
+  // the day after the deadline rolls. The stored-date version measured from a hardcoded
+  // 6 April 2026, which was meaningless for any product not on the UK tax year.
+  const PERIOD = 365;
+  return Math.round(((PERIOD - Math.min(PERIOD, daysAway)) / PERIOD) * 100);
 }
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
@@ -71,7 +74,7 @@ const faqs = [
   },
   {
     "question": "What is the active member test?",
-    "answer": "A fund passes the active member test if at least 50% of the total market value of the fund's assets attributable to active members is held by active members who are Australian residents — OR if the fund has no active members. 'Active member' means a member for whom contributions are being made or who is otherwise receiving employer/personal contributions. If all active members move overseas permanently and contributions cease, the fund may have no active members (pension phase members are typically not active) — which can actually eliminate this test."
+    "answer": "A fund passes the active member test if Australian-resident active members hold at least 50% of EITHER the total market value of the fund's assets attributable to super interests, OR the sum of the amounts that would be payable to active members if they decided to leave the fund — OR if the fund has no active members at all. The ATO states both limbs; either one satisfied is enough. 'Active member' means a member for whom contributions are being made or who is otherwise receiving employer/personal contributions. If all active members move overseas permanently and contributions cease, the fund may have no active members (pension phase members are typically not active) — which can actually eliminate this test."
   },
   {
     "question": "Can my SMSF be remediated after becoming non-complying?",
@@ -251,7 +254,7 @@ const geoFacts = [
   },
   {
     "label": "Active member test threshold",
-    "value": "50%+ of market value of fund assets held by AU resident active members"
+    "value": "AU-resident active members hold 50%+ of assets attributable to super interests, OR of amounts payable on leaving"
   },
   {
     "label": "Complying tax rate",
@@ -288,16 +291,20 @@ const sidebarNumbers = [
 
 const sources = [
   {
-    "title": "ATO — SMSF residency requirements",
-    "url": "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements"
+    "title": "ATO — Check your SMSF is an Australian super fund (residency conditions; what to do if members go overseas)",
+    "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund"
   },
   {
-    "title": "ATO — SMSF residency rules when members go overseas",
-    "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-residency-rules-when-members-go-overseas"
+    "title": "ATO — Lodge SMSF annual returns (due dates)",
+    "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/lodge-smsf-annual-returns"
   },
   {
-    "title": "ATO — Complying and non-complying super funds",
-    "url": "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/complying-and-non-complying-super-funds"
+    "title": "ATO — How SMSFs are taxed (15% complying / 45% non-complying)",
+    "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/how-smsfs-are-taxed"
+  },
+  {
+    "title": "ITAA 1997 s 295-320 — amounts included in a non-complying fund's assessable income",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   },
   {
     "title": "Superannuation Industry (Supervision) Act 1993 s 10(1)",
@@ -341,16 +348,28 @@ const countdownStats = [
   {
     "label": "Active member test",
     "value": "50%+ AU resident",
-    "sub": "by market value of fund's active member balances"
+    "sub": "of assets attributable to super interests, OR of amounts payable if active members left"
   }
 ];
 
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 
 export default function AustraliaSmsfResidencyPage() {
-  const countdown = daysToDeadline();
+  // One resolve per render. Null means the declaration stopped resolving, and for a fixed rule
+  // that is a real defect (a bad timezone, a missing registry entry) — logged, never absorbed.
+  const _deadline = resolvedDeadlineFor("taxchecknow", "australia-smsf-residency");
+  const countdown = _deadline ? _deadline.daysAway : null;
+  const progress  = _deadline ? progressFromDaysAway(_deadline.daysAway) : 50;
   const deadlineLive = countdown !== null;
-  const progress  = progressPct();
+  const DEADLINE_LABEL = _deadline?.display ?? "";
+  // "0 days" is not a sentence anyone says. The stored-date path could never reach zero (it
+  // returned null for anything not strictly in the future, so the banner vanished on the due
+  // date — the worst possible day to hide it). A resolved rule CAN land on today, so today has
+  // its own words.
+  const DEADLINE_PHRASE = countdown === 0 ? "Due today" : `${countdown} days`;
+  if (!deadlineLive) {
+    console.error("[TEMPORAL] fixed rule did not resolve on gate page", { product: "nomad/check/australia-smsf-residency" });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -366,8 +385,8 @@ export default function AustraliaSmsfResidencyPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Australian SMSF Residency Kill-Switch — Rules April 2026",
-    description: "Self-Managed Super Fund residency: fund must be established in Australia + central management and control ordinarily in Australia + 50%+ active member balances from Australian residents (SIS Act s 10). Failure = non-complying = 45% tax on fund value. Confirmed April 2026.",
+    name: "Australian SMSF Residency Kill-Switch — Rules September 2026",
+    description: "SMSF residency: CM&C + active member 50%+ AU test. Fail = 45% on low tax component in year of change + ongoing. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -383,7 +402,7 @@ export default function AustraliaSmsfResidencyPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Australian SMSF Residency Kill-Switch",
-    description: "Self-Managed Super Fund residency: fund must be established in Australia + central management and control ordinarily in Australia + 50%+ active member balances from Australian residents (SIS Act s 10). Failure = non-complying = 45% tax on fund value. Confirmed April 2026.",
+    description: "SMSF residency: CM&C + active member 50%+ AU test. Fail = 45% on low tax component in year of change + ongoing. Free check.",
     url: "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -447,13 +466,13 @@ export default function AustraliaSmsfResidencyPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nomad/check/australia-smsf-residency#calculator",
-    "description": "Self-Managed Super Fund residency: fund must be established in Australia + central management and control ordinarily in Australia + 50%+ active member balances from Australian residents (SIS Act s 10). Failure = non-complying = 45% tax on fund value. Confirmed April 2026.",
+    "description": "SMSF residency: CM&C + active member 50%+ AU test. Fail = 45% on low tax component in year of change + ongoing. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on Australian Taxation Office (ATO) guidance April 2026"
+      "Based on Australian Taxation Office (ATO) guidance September 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -497,7 +516,7 @@ export default function AustraliaSmsfResidencyPage() {
           <div className="flex items-center gap-4 text-sm">
             {deadlineLive && (
             <span className="hidden items-center gap-1 text-neutral-600 md:flex">
-              <span className="font-bold text-red-600">{countdown}</span> days to {DEADLINE_LABEL}
+              <span className="font-bold text-red-600">{DEADLINE_PHRASE}</span> {countdown === 0 ? "—" : "to"} {DEADLINE_LABEL}
             </span>
             )}
             <Link href="/global" className="text-neutral-600 hover:text-neutral-900">
@@ -510,7 +529,7 @@ export default function AustraliaSmsfResidencyPage() {
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · SMSF ANNUAL RETURN
+        🔴 {DEADLINE_PHRASE} · {DEADLINE_LABEL} · SMSF ANNUAL RETURN
       </div>
       )}
 
@@ -521,7 +540,7 @@ export default function AustraliaSmsfResidencyPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
             🇬🇧 Australian Taxation Office (ATO) Verified · SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation ↗
           </a>
@@ -532,12 +551,12 @@ export default function AustraliaSmsfResidencyPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Will Leaving Australia Trigger a 45% Tax on Your Super Fund? If Your SMSF Fails Residency, It Can Become Non-Complying — and Lose Concessional Treatment Immediately.
+          SMSF Residency: Central Management and Control Test Explained
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          A self-managed super fund (SMSF) must meet the three residency tests in section 10(1) of the Superannuation Industry (Supervision) Act 1993 to remain an 'Australian superannuation fund' and retain complying status. The tests are: (1) established in Australia or assets located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; and (3) active member balance test — at least 50% of the fund's asset value attributable to active members who are Australian residents (or no active members). Failure on any test causes the fund to cease being an Australian superannuation fund — and the moment the fund is no longer an Australian superannuation fund, it becomes non-complying for tax purposes.
+          A self-managed super fund (SMSF) must meet the three residency tests in section 10(1) of the Superannuation Industry (Supervision) Act 1993 to remain an 'Australian superannuation fund' and retain complying status. The tests are: (1) established in Australia or assets located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; and (3) active member test — Australian-resident active members hold at least 50% of EITHER the market value of fund assets attributable to super interests OR the amounts that would be payable to active members if they left the fund (or the fund has no active members). Failure on any test causes the fund to cease being an Australian superannuation fund — and the moment the fund is no longer an Australian superannuation fund, it becomes non-complying for tax purposes.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -606,11 +625,11 @@ export default function AustraliaSmsfResidencyPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 31 October 2026 — SMSF annual return deadline
+            
           </p>
           <div className="mb-4 flex items-baseline gap-4">
-            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 31 October 2026</span>
+            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown === 0 ? "Today" : countdown}</span>
+            <span className="text-lg text-neutral-300">{countdown === 0 ? DEADLINE_LABEL : `days until ${DEADLINE_LABEL}`}</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -651,7 +670,7 @@ export default function AustraliaSmsfResidencyPage() {
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 50%+ AU resident
               </p>
-              <p className="text-xs text-neutral-400">by market value of fund's active member balances</p>
+              <p className="text-xs text-neutral-400">of assets attributable to super interests, OR of amounts payable if active members left</p>
             </div>
           </div>
         </div>
@@ -683,18 +702,18 @@ export default function AustraliaSmsfResidencyPage() {
               <p className="mb-1 text-xs text-neutral-800">✗ NOT a paper-only corporate trustee fix — substance required</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: SIS Act 1993 s 10(1) · ITAA 1997 s 295-95 + s 295-320 · ATO SMSF residency guidance · Confirmed April 2026</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: SIS Act 1993 s 10(1) · ITAA 1997 s 295-95 + s 295-320 · ATO: Check your SMSF is an Australian super fund + How SMSFs are taxed · Confirmed September 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — ATO SMSF residency rule, confirmed April 2026
+            The answer — ATO SMSF residency rule, confirmed September 2026
           </p>
-          <p className="mb-2 text-neutral-900">A self-managed super fund (SMSF) must meet the three residency tests in section 10(1) of the Superannuation Industry (Supervision) Act 1993 to remain an 'Australian superannuation fund' and retain complying status. The tests are: (1) established in Australia or assets located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; and (3) active member balance test — at least 50% of the fund's asset value attributable to active members who are Australian residents (or no active members). Failure on any test causes the fund to cease being an Australian superannuation fund — and the moment the fund is no longer an Australian superannuation fund, it becomes non-complying for tax purposes.</p>
+          <p className="mb-2 text-neutral-900">A self-managed super fund (SMSF) must meet the three residency tests in section 10(1) of the Superannuation Industry (Supervision) Act 1993 to remain an 'Australian superannuation fund' and retain complying status. The tests are: (1) established in Australia or assets located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; and (3) active member test — Australian-resident active members hold at least 50% of EITHER the market value of fund assets attributable to super interests OR the amounts that would be payable to active members if they left the fund (or the fund has no active members). Failure on any test causes the fund to cease being an Australian superannuation fund — and the moment the fund is no longer an Australian superannuation fund, it becomes non-complying for tax purposes.</p>
           <p className="mb-2 text-neutral-900">The central management and control test is the test that most commonly bites when trustees move overseas. 'Central management and control' means where the strategic and high-level decisions of the fund are made — investment policy, strategy reviews, trustee meetings, significant asset decisions. If all trustees are physically overseas and making these decisions from overseas, CM&C is overseas. A temporary absence is acceptable — the ATO generally accepts CM&C as 'ordinarily' in Australia during an absence of up to 2 years, provided the absence is temporary in nature and there is a genuine intention to resume Australian CM&C. Longer absences, or absences without a clear Australian return plan, put the fund at breach risk.</p>
-          <p className="mb-2 text-neutral-900">The consequences of becoming non-complying are severe. Under ITAA 1997 section 295-320, when a fund becomes non-complying, the 'low tax component' of the fund (effectively the market value of fund assets less any amounts for which the fund has received undeducted contributions) is included in assessable income for the year the fund becomes non-complying, and taxed at the 45% top marginal rate. On a $1,000,000 SMSF, this can produce a tax liability approaching $450,000 in a single year. Ongoing earnings are then taxed at 45% rather than the 15% concessional rate. Remediation to compliant status requires ATO approval and is not guaranteed.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: SIS Act 1993 s 10(1) · ITAA 1997 s 295-95 · ITAA 1997 s 295-320 · ATO SMSF residency requirements guidance · Confirmed April 2026</p>
+          <p className="mb-2 text-neutral-900">The consequences of becoming non-complying are severe. Under ITAA 1997 section 295-320, when a fund becomes non-complying, the 'low tax component' of the fund (effectively the market value of fund assets less any amounts for which the fund has received undeducted contributions) is included in assessable income for the year the fund becomes non-complying, and taxed at the 45% top marginal rate. On a $1,000,000 SMSF, this can produce a tax liability approaching $450,000 in a single year. Ongoing earnings are then taxed at 45% rather than the 15% concessional rate. Remediation to compliant status requires the ATO's approval, which it can refuse.</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: SIS Act 1993 s 10(1) · ITAA 1997 s 295-95 · ITAA 1997 s 295-320 · ATO: Check your SMSF is an Australian super fund + How SMSFs are taxed · Confirmed September 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -769,9 +788,9 @@ export default function AustraliaSmsfResidencyPage() {
             AI extraction block — Australian SMSF residency kill-switch
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            AU SMSF residency — confirmed April 2026
+            AU SMSF residency — confirmed September 2026
           </h2>
-          <p className="mb-4 text-neutral-800">An Australian self-managed super fund (SMSF) must meet the three residency tests in section 10(1) of the Superannuation Industry (Supervision) Act 1993 to remain an 'Australian superannuation fund' and retain complying status under the Income Tax Assessment Act 1997 section 295-95. The tests are: (1) establishment test — the fund was established in Australia OR at least one fund asset is located in Australia; (2) central management and control (CM&C) test — the CM&C of the fund is ordinarily in Australia at all times; (3) active member test — at least 50% of the total market value of the fund's assets attributable to active members is held by active members who are Australian residents, or the fund has no active members. Failure on any test means the fund is not an Australian superannuation fund and becomes non-complying for the tax year. Under ITAA 1997 section 295-320, a fund that becomes non-complying includes its 'low tax component' — approximately the total market value of fund assets less any non-deductible contributions — in assessable income in the year of change, taxed at the top marginal rate of 45%. Ongoing earnings are also taxed at 45% rather than the concessional 15% rate that applies to complying funds. The ATO accepts that CM&C remains 'ordinarily' in Australia during a genuine temporary absence, typically interpreted as up to 2 years with a definite intention to return. Longer or permanent absences, particularly with all trustees physically overseas making fund decisions from overseas, create breach risk. A corporate trustee with Australian-resident directors who genuinely exercise control is a common structural safeguard.</p>
+          <p className="mb-4 text-neutral-800">An Australian self-managed super fund (SMSF) must meet the three residency tests in section 10(1) of the Superannuation Industry (Supervision) Act 1993 to remain an 'Australian superannuation fund' and retain complying status under the Income Tax Assessment Act 1997 section 295-95. The tests are: (1) establishment test — the fund was established in Australia OR at least one fund asset is located in Australia; (2) central management and control (CM&C) test — the CM&C of the fund is ordinarily in Australia at all times; (3) active member test — Australian-resident active members hold at least 50% of EITHER the total market value of the fund's assets attributable to super interests, OR the sum of the amounts that would be payable to active members if they left the fund, or the fund has no active members. Failure on any test means the fund is not an Australian superannuation fund and becomes non-complying for the tax year. Under ITAA 1997 section 295-320, a fund that becomes non-complying includes its 'low tax component' — approximately the total market value of fund assets less any non-deductible contributions — in assessable income in the year of change, taxed at the top marginal rate of 45%. Ongoing earnings are also taxed at 45% rather than the concessional 15% rate that applies to complying funds. The ATO accepts that CM&C remains 'ordinarily' in Australia during a genuine temporary absence, typically interpreted as up to 2 years with a definite intention to return. Longer or permanent absences, particularly with all trustees physically overseas making fund decisions from overseas, create breach risk. A corporate trustee with Australian-resident directors who genuinely exercise control is a common structural safeguard.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
@@ -782,7 +801,7 @@ export default function AustraliaSmsfResidencyPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (September 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -820,7 +839,7 @@ export default function AustraliaSmsfResidencyPage() {
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Active member test threshold</td>
-                  <td className="p-2">50%+ of market value of fund assets held by AU resident active members</td>
+                  <td className="p-2">AU-resident active members hold 50%+ of assets attributable to super interests, OR of amounts payable on leaving</td>
                   <td className="p-2 text-neutral-500">SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -843,9 +862,9 @@ export default function AustraliaSmsfResidencyPage() {
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              ATO — SMSF residency requirements
+              ATO — Check your SMSF is an Australian super fund (residency conditions; what to do if members go overseas)
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/australia-smsf-residency" className="font-mono text-blue-700 hover:underline">
@@ -1158,20 +1177,25 @@ export default function AustraliaSmsfResidencyPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">ATO — SMSF residency requirements ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements</p>
+              <p className="font-bold text-neutral-900">ATO — Check your SMSF is an Australian super fund (residency conditions; what to do if members go overseas) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund</p>
             </a>
-            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-residency-rules-when-members-go-overseas" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/lodge-smsf-annual-returns" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">ATO — SMSF residency rules when members go overseas ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-residency-rules-when-members-go-overseas</p>
+              <p className="font-bold text-neutral-900">ATO — Lodge SMSF annual returns (due dates) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/lodge-smsf-annual-returns</p>
             </a>
-            <a href="https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/complying-and-non-complying-super-funds" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/how-smsfs-are-taxed" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">ATO — Complying and non-complying super funds ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/complying-and-non-complying-super-funds</p>
+              <p className="font-bold text-neutral-900">ATO — How SMSFs are taxed (15% complying / 45% non-complying) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/how-smsfs-are-taxed</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s 295-320 — amounts included in a non-complying fund's assessable income ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
             </a>
             <a href="https://www.legislation.gov.au/C2004A04633/latest/text" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
@@ -1208,7 +1232,7 @@ export default function AustraliaSmsfResidencyPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from Australian Taxation Office (ATO) and GOV.UK guidance for April 2026.
+          built from Australian Taxation Office (ATO) and GOV.UK guidance for September 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1222,7 +1246,7 @@ export default function AustraliaSmsfResidencyPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. September 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/global/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

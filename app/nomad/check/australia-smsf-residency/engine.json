@@ -1,0 +1,316 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "An SMSF qualifies as an Australian superannuation fund — and retains access to tax concessions — only if it continuously meets all 3 residency conditions under Income Tax Assessment Act 1997 subsection 295-95(2): (1) established or has assets in Australia, (2) central management and control (CMC) ordinarily in Australia (with a temporary absence allowance of up to 2 years), and (3) active members who are Australian residents hold at least 50% of fund assets or exit entitlements. Failure triggers non-complying fund status. Competitors leave significant gaps around CMC documentation, remediation steps, and the practical impact of temporary overseas absences.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_topic",
+      "text": "What is your main question about your SMSF's residency status?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I want to understand all 3 residency conditions an SMSF must meet",
+          "value": "all_conditions",
+          "flags": [
+            "q1_topic:all_conditions"
+          ]
+        },
+        {
+          "label": "A trustee or member is going overseas — will the fund still pass the central management and control (CMC) test?",
+          "value": "cmc_overseas",
+          "flags": [
+            "q1_topic:cmc_overseas"
+          ]
+        },
+        {
+          "label": "A member has become a non-resident and wants to keep making or receiving contributions",
+          "value": "nonresident_contributions",
+          "flags": [
+            "q1_topic:nonresident_contributions"
+          ]
+        },
+        {
+          "label": "I'm not sure whether my SMSF still meets the residency conditions",
+          "value": "unsure_residency",
+          "flags": [
+            "q1_topic:unsure_residency"
+          ]
+        },
+        {
+          "label": "None of these describe my situation",
+          "value": "out_of_scope",
+          "flags": [
+            "q1_topic:out_of_scope"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_cmc_duration",
+      "text": "Is the central management and control (CMC) of the fund moving outside Australia temporarily or permanently?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_topic:cmc_overseas"
+        ]
+      },
+      "options": [
+        {
+          "label": "Temporarily — the trustee or member will return and CMC will come back to Australia within 2 years",
+          "value": "temporary_within_2yr",
+          "flags": [
+            "q2_cmc_duration:temporary_within_2yr"
+          ]
+        },
+        {
+          "label": "Temporarily — but I'm not sure whether it will be within 2 years",
+          "value": "temporary_unsure_duration",
+          "flags": [
+            "q2_cmc_duration:temporary_unsure_duration"
+          ]
+        },
+        {
+          "label": "Permanently — CMC will not return to Australia",
+          "value": "permanent",
+          "flags": [
+            "q2_cmc_duration:permanent"
+          ]
+        },
+        {
+          "label": "I'm not sure whether the absence is temporary or permanent",
+          "value": "unsure_temp_perm",
+          "flags": [
+            "q2_cmc_duration:unsure_temp_perm"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_active_member",
+      "text": "What aspect of the active member condition do you need help with?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_topic:nonresident_contributions"
+        ]
+      },
+      "options": [
+        {
+          "label": "I want to understand how the 50% active member asset threshold works",
+          "value": "threshold_explainer",
+          "flags": [
+            "q3_active_member:threshold_explainer"
+          ]
+        },
+        {
+          "label": "A member is now a non-resident and wants to know how to handle contributions",
+          "value": "nonresident_contrib_action",
+          "flags": [
+            "q3_active_member:nonresident_contrib_action"
+          ]
+        },
+        {
+          "label": "I'm not sure which aspect applies to my situation",
+          "value": "unsure_active_member",
+          "flags": [
+            "q3_active_member:unsure_active_member"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4_cmc_doc",
+      "text": "Do you need guidance on how to document your CMC arrangements while the trustee is overseas, or do you just need to know whether the fund still meets the CMC condition?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2_cmc_duration:temporary_within_2yr"
+        ]
+      },
+      "options": [
+        {
+          "label": "I just need to know whether the fund still meets the CMC condition during the temporary absence",
+          "value": "cmc_pass_confirm",
+          "flags": [
+            "q4_cmc_doc:cmc_pass_confirm"
+          ]
+        },
+        {
+          "label": "I need guidance on how to document and evidence CMC compliance while overseas",
+          "value": "cmc_documentation",
+          "flags": [
+            "q4_cmc_doc:cmc_documentation"
+          ]
+        },
+        {
+          "label": "I'm not sure what I need",
+          "value": "unsure_cmc_need",
+          "flags": [
+            "q4_cmc_doc:unsure_cmc_need"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "three-conditions-explainer",
+      "when": {
+        "any": [
+          "q1_topic:all_conditions"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What are the 3 residency conditions an SMSF must meet?",
+      "result_copy": "An SMSF must meet all 3 residency conditions at all times during the financial year to be an Australian superannuation fund: (1) the fund was established in Australia or has assets held in Australia; (2) central management and control is ordinarily in Australia; and (3) either the fund has no active members, or active members who are Australian residents hold at least 50% of either the total market value of the fund's assets attributable to super interests, or the sum of the amounts that would be payable to active members if they decided to leave the fund. All three conditions must be satisfied simultaneously. Review of your fund's specific circumstances against each condition is recommended.",
+      "figure_ids": [
+        "fig_1"
+      ]
+    },
+    {
+      "id": "temporary-overseas-cmc",
+      "when": {
+        "any": [
+          "q4_cmc_doc:cmc_pass_confirm"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "A trustee is going overseas temporarily (up to 2 years) — does CMC still pass?",
+      "result_copy": "Where central management and control is temporarily outside Australia, the fund may still meet the CMC residency condition. The authority states: 'your fund will still meet this requirement even if its central management and control is temporarily outside Australia for up to 2 years.' Provided the absence does not exceed 2 years and CMC is not permanently relocated, the fund does not automatically fail the CMC condition during that period. Review of the specific facts and circumstances of the absence is recommended to confirm this applies.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "cmc-documentation-guidance",
+      "when": {
+        "any": [
+          "q4_cmc_doc:cmc_documentation"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How do I document CMC compliance while a trustee is overseas?",
+      "result_copy": "CMC covers strategic decisions such as formulating the investment strategy, reviewing investment performance, managing reserves, and determining how assets are used for member benefits. Where a trustee is overseas, how those decisions are made and evidenced is relevant to demonstrating the CMC condition is met. The authority does not prescribe a single documentation approach; the appropriate method depends on the fund's specific circumstances. Consulting TR 2008/9 and seeking professional advice is indicated for certainty on documentation arrangements.",
+      "figure_ids": []
+    },
+    {
+      "id": "permanent-cmc-breach",
+      "when": {
+        "any": [
+          "q2_cmc_duration:permanent"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "CMC has moved permanently outside Australia — what happens?",
+      "result_copy": "Where central management and control is permanently outside Australia, the fund will not meet the CMC residency condition. If the SMSF fails the residency test, the fund becomes non-complying. The ATO guidance indicates the trustee should roll over funds to a regulated Australian super fund and wind up the SMSF to avoid non-complying status. Review of the fund's specific circumstances and professional advice are strongly indicated before taking action.",
+      "figure_ids": []
+    },
+    {
+      "id": "active-member-nonresident-contributions",
+      "when": {
+        "any": [
+          "q3_active_member:nonresident_contrib_action"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "A member has become a non-resident and wants to keep contributing — what should they do?",
+      "result_copy": "Where a member becomes a non-resident but wishes to make or receive contributions, the ATO guidance indicates they should make contributions outside the SMSF — for example through a retail or industry super fund — and then roll over those contributions to their SMSF when they return as an Australian resident. This approach is indicated to help preserve the active member condition, which requires that active members who are Australian residents hold at least 50% of either the total market value of the fund's assets attributable to super interests, or the sum of the amounts that would be payable to active members if they decided to leave the fund. Professional advice on the specific fund circumstances is recommended.",
+      "figure_ids": [
+        "fig_1"
+      ]
+    },
+    {
+      "id": "active-member-threshold-explainer",
+      "when": {
+        "any": [
+          "q3_active_member:threshold_explainer"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the active member asset threshold and how does it work?",
+      "result_copy": "The active member condition requires that either the fund has no active members, or active members who are Australian residents hold at least 50% of either: the total market value of the fund's assets attributable to super interests, or the sum of the amounts that would be payable to active members if they decided to leave the fund. This threshold is relevant when some members are non-residents, as non-resident active members' interests count toward the fund total but not toward the Australian resident side of the 50% calculation. How the threshold applies depends on the fund's specific member and asset profile.",
+      "figure_ids": [
+        "fig_1"
+      ]
+    },
+    {
+      "id": "not-sure-residency-status",
+      "when": {
+        "any": [
+          "q1_topic:unsure_residency"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure if my SMSF still meets the residency conditions — how do I find out?",
+      "result_copy": "To assess whether an SMSF meets the residency conditions, each of the 3 conditions must be reviewed against the fund's current circumstances: (1) whether the fund was established in Australia or holds assets there; (2) whether central management and control is ordinarily in Australia (noting it may be temporarily outside Australia for up to 2 years); and (3) whether active members who are Australian residents hold at least 50% of either the total market value of the fund's assets attributable to super interests, or the sum of the amounts that would be payable to active members if they decided to leave the fund. If any condition is uncertain, professional advice and reference to TR 2008/9 are indicated before drawing a conclusion.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1_topic:out_of_scope"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2_cmc_duration:temporary_unsure_duration",
+          "q2_cmc_duration:unsure_temp_perm",
+          "q3_active_member:unsure_active_member",
+          "q4_cmc_doc:unsure_cmc_need"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

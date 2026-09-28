@@ -63,6 +63,14 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   nomad_147_183_day_rule: "STRIPE_NOMAD_183_147",
   nomad_67_spain_beckham:  "STRIPE_NOMAD_BECK_67",
   nomad_147_spain_beckham: "STRIPE_NOMAD_BECK_147",
+  // NOMAD-09 au-smsf-residency (engine-native) — registered so a PREVIEW buy resolves
+  // STRIPE_AU_TEST_<tier> instead of the LIVE price under the test secret key. PRODUCTION IS
+  // UNCHANGED: these are the SAME vars the includes("au_smsf") chain block below already returns.
+  // F71: the keys are the CONFIG'S DECLARED pair (tier1/tier2.productKey), not derived from the
+  // slug — the mount step's derived nomad_147_australia_smsf_residency matched nothing here and
+  // 500'd every buy on the branch preview.
+  nomad_67_au_smsf:  "STRIPE_NOMAD_SMSF_67",
+  nomad_147_au_smsf: "STRIPE_NOMAD_SMSF_147",
   // UK-01 mtd-scorecard (engine-native, PANELBEAT migration) — registered per
   // OPERATOR-MANUAL §N4.3 so a preview buy falls back to STRIPE_AU_TEST_<tier> instead of
   // resolving the LIVE price under the test key. PRODUCTION IS UNCHANGED: these are the SAME
