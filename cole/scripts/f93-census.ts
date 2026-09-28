@@ -1,6 +1,6 @@
-// cole/scripts/f92-census.ts — does the F92 gate fire on anything already shipped?
+// cole/scripts/f93-census.ts — does the F93 gate fire on anything already shipped?
 //
-// Run: npx ts-node --project cole/tsconfig.json cole/scripts/f92-census.ts
+// Run: npx ts-node --project cole/tsconfig.json cole/scripts/f93-census.ts
 //
 // A NEW REFUSAL IS ONLY SAFE ONCE YOU KNOW WHAT IT REFUSES. The doubled-word gate was added the
 // same way and reported 973 hits on the emitted .tsx, of which 966 were code — so it was moved to
@@ -64,7 +64,7 @@ for (const file of files) {
       const doubled = findDoubledWords(text);
       if (keys.length > 0) {
         hits++;
-        console.log(`F92  ${file} ${tier} ${where}: ${keys.join(", ")}`);
+        console.log(`F93  ${file} ${tier} ${where}: ${keys.join(", ")}`);
         console.log(`       ${text}`);
       }
       if (doubled.length > 0) {
@@ -81,5 +81,5 @@ if (unreadable.length) {
   for (const u of unreadable) console.log(`  ${u}`);
 }
 console.log(hits === 0
-  ? "F92: 0 hits across every config, both tiers — the gate blocks nothing that already ships."
-  : `F92: ${hits} hits — fix these before the gate can be turned on.`);
+  ? "F93: 0 hits across every config, both tiers — the gate blocks nothing that already ships."
+  : `F93: ${hits} hits — fix these before the gate can be turned on.`);

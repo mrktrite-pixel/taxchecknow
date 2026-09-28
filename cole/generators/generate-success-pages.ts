@@ -104,7 +104,7 @@ function authorityProse(config: ProductConfig): string {
 }
 
 /**
- * F92 — the shape of an assessment field key, found in a sentence meant for a buyer.
+ * F93 — the shape of an assessment field key, found in a sentence meant for a buyer.
  *
  * camelCase (`cmcTestOutcome`, `keyFinding`) and snake_case (`tax_exposure`) are both key shapes and
  * neither belongs in prose. Deliberately NOT a dictionary check against assessFields: the defect is
@@ -242,7 +242,7 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
     const keys = rawIdentifiers(text);
     if (keys.length > 0) {
       throw new Error(
-        `[COLE F92] "${config.id}" ${tier}: the ${where} contains a raw field key — ` +
+        `[COLE F93] "${config.id}" ${tier}: the ${where} contains a raw field key — ` +
         keys.map((k) => `"${k}"`).join(", ") + ".\n" +
         `    text: ${text}\n` +
         `    Interpolating an assessment key into prose is how "Your personalised cmcTestOutcome` +
