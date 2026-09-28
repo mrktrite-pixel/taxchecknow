@@ -163,17 +163,43 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     let configPath = path.join(CONFIG_DIR, `${productId}.ts`);
     if (!fs.existsSync(configPath)) {
       const allConfigs = fs.readdirSync(CONFIG_DIR).filter(f => f.endsWith(".ts"));
-      // Resolve by filename prefix (au-19), OR by the slug TAIL (config files are
-      // "<country>-<NN>-<slug>.ts", so the basename ends with the slug). The tail form lets the
-      // update-emit mechanics pass the storefront slug tail (e.g. frcgw-clearance-certificate).
       const base = (f: string) => f.replace(/\.ts$/, "");
+      // ── F79 — RESOLVE BY WHAT THE CONFIG SAYS IT IS, NOT ONLY BY ITS FILENAME ──────────────
+      //
+      // The three filename rules below (exact, prefix, "-<tail>" suffix) cover 47 of 48 products
+      // by coincidence: config files are named "<country>-<NN>-<slug>", so the basename usually
+      // ends with the slug tail that every caller passes. MEASURED failure, australia-smsf-residency:
+      //
+      //   slug tail   "australia-smsf-residency"
+      //   filename    "nomad-09-au-smsf-residency.ts"   -> no prefix match, no "-<tail>" match
+      //   result      ❌ Config error: Config not found — and ship-check therefore reported
+      //               regenerated=NO, so step 5 could never reach DONE for that product.
+      //
+      // The filename is a convention. `id` and `slug` are DECLARATIONS, and they are what the rest
+      // of the estate keys on: products.slug, the DELIVERY_MAP productId, the registry, the route.
+      // So they are consulted too — read from the file, not inferred from its name. This costs one
+      // pass over ~48 small files and only happens when the filename rules have already missed.
+      //
+      // Ordered filename-first so nothing that resolves today resolves differently tomorrow.
+      const declares = (f: string): { id: string; slugTail: string } => {
+        const src = fs.readFileSync(path.join(CONFIG_DIR, f), "utf-8");
+        const id = /\bid:\s*"([^"]+)"/.exec(src)?.[1] ?? "";
+        const slug = /\bslug:\s*"([^"]+)"/.exec(src)?.[1] ?? "";
+        return { id, slugTail: slug.replace(/\/+$/, "").split("/").pop() ?? "" };
+      };
       const match      = allConfigs.find(f => f.startsWith(productId))
-                      ?? allConfigs.find(f => base(f).endsWith(`-${productId}`) || base(f) === productId);
+                      ?? allConfigs.find(f => base(f).endsWith(`-${productId}`) || base(f) === productId)
+                      ?? allConfigs.find(f => { const d = declares(f); return d.id === productId || d.slugTail === productId; });
       if (match) {
         configPath = path.join(CONFIG_DIR, match);
         console.log(`   → Resolved to: ${match}`);
       } else {
-        throw new Error(`Config not found: ${configPath}\n   Available: ${allConfigs.join(", ")}`);
+        throw new Error(
+          `Config not found: ${configPath}\n` +
+          `   Tried, in order: the exact filename, a filename PREFIX, a "-${productId}" filename SUFFIX, ` +
+          `and every config's declared id and slug tail.\n` +
+          `   Available: ${allConfigs.join(", ")}`,
+        );
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-var-requires

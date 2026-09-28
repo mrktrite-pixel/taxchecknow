@@ -170,7 +170,7 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
   // happens to equal config.id — unlike 183-day-rule and beckham, where keying on config.id
   // would have produced an entry that parses, typechecks and is never read.
   //
-  // LISTS COPIED FROM cole/config/nomad-09-au-smsf-residency.ts (tier1/tier2AssessmentFields) and
+  // LISTS COPIED FROM cole/config/nomad-09-australia-smsf-residency.ts (tier1/tier2AssessmentFields)
   // asserted element-for-element against the `fields:` arrays the two emitted pages POST — 8 and
   // 13, identical on all three sides. Not authored here, so webhook == client by construction.
   "australia-smsf-residency": {

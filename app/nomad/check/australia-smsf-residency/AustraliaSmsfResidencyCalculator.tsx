@@ -65,7 +65,7 @@ async function handleCheckout(c: EngineCheckout): Promise<boolean> {
   // about that key: its block is key.includes("au_smsf") -> STRIPE_NOMAD_SMSF_<tier>. So every buy
   // returned 500 "Missing Stripe price ID" (preview taxchecknow-git-feat-australia-s-c0fafa…,
   // 2026-09-28 09:37:16 and 09:37:58 UTC). The legacy calculator this replaced sent exactly these
-  // two, from cole/config/nomad-09-au-smsf-residency.ts tier1/tier2.productKey.
+  // two, from cole/config/nomad-09-australia-smsf-residency.ts tier1/tier2.productKey.
   const productKey = c.tier === 147 ? "nomad_147_au_smsf" : "nomad_67_au_smsf";
   const origin = window.location.origin;
   const successPath = c.tier === 147 ? "plan" : "assess";

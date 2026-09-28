@@ -2,7 +2,8 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "australia-smsf-residency", name: "Australian SMSF Residency Kill-Switch", site: "taxchecknow", country: "global", market: "Australia", language: "en", currency: "AUD",
   slug: "nomad/check/australia-smsf-residency", url: "https://taxchecknow.com/nomad/check/australia-smsf-residency", apiRoute: "/api/rules/australia-smsf-residency",
-  authority: "Australian Taxation Office (ATO)", authorityUrl: "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements", legalAnchor: "SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation", legislation: "Superannuation Industry (Supervision) Act 1993 section 10(1) defines 'Australian superannuation fund' via three tests: (1) established in Australia or any asset of the fund located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; (3) active member test — at least 50% of the market value of the fund's assets attributable to active members who are Australian residents, OR fund has no active members. Failure on any test = fund ceases to be Australian superannuation fund = loses complying status. Non-complying fund consequences under ITAA 1997 s 295-320: fund's 'low tax component' (approximately the entire market value less undeducted contributions) included in assessable income for the year of change at 45% top marginal rate, plus ongoing income taxed at 45% rather than 15% concessional rate.",
+  seoPrimaryQuery: "australian smsf residency kill switch central",
+  authority: "Australian Taxation Office (ATO)", authorityUrl: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund", legalAnchor: "SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation", legislation: "Superannuation Industry (Supervision) Act 1993 section 10(1) defines 'Australian superannuation fund' via three tests: (1) established in Australia or any asset of the fund located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; (3) active member test — at least 50% of the market value of the fund's assets attributable to active members who are Australian residents, OR fund has no active members. Failure on any test = fund ceases to be Australian superannuation fund = loses complying status. Non-complying fund consequences under ITAA 1997 s 295-320: fund's 'low tax component' (approximately the entire market value less undeducted contributions) included in assessable income for the year of change at 45% top marginal rate, plus ongoing income taxed at 45% rather than 15% concessional rate.",
   lastVerified: "April 2026",
   // F43 — DECLARED, AND VERIFIED AT GENERATE TIME.
   //
@@ -20,16 +21,68 @@ export const PRODUCT_CONFIG: ProductConfig = {
   engineNative: true,
   tier1: { price: 67, name: "SMSF Residency Fix Kit", tagline: "Will leaving Australia trigger a 45% tax on your super fund? Here is the residency test and the fix.", value: "Your personalised SMSF residency status, central management and control risk assessment, trustee positioning checklist, and compliance fix pathway.", cta: "Get My SMSF Residency Fix Kit — $67 →", productKey: "nomad_67_au_smsf", envVar: "STRIPE_NOMAD_SMSF_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "SMSF Residency Shield System", tagline: "Full corporate trustee structure + global control strategy + audit-proof compliance documentation", value: "Complete SMSF residency protection: corporate trustee restructure guidance, global decision-making framework, documentation protocols, CM&C audit defence pack, and multi-year transition plan.", cta: "Get My SMSF Residency Shield — $147 →", productKey: "nomad_147_au_smsf", envVar: "STRIPE_NOMAD_SMSF_147", successPath: "plan", fileCount: 8 },
-  deadline: { isoDate: "2026-10-31T23:59:59.000+10:00", display: "31 October 2026", short: "31 Oct 2026", description: "SMSF annual return deadline — fund residency status assessed annually at 30 June", urgencyLabel: "SMSF ANNUAL RETURN", countdownLabel: "Countdown to 31 October 2026 — SMSF annual return deadline" },
-  h1: "Will Leaving Australia Trigger a 45% Tax on Your Super Fund? If Your SMSF Fails Residency, It Can Become Non-Complying — and Lose Concessional Treatment Immediately.",
-  metaTitle: "Australian SMSF Residency Kill-Switch — Central Management and Control Test + 45% Non-Complying Tax | TaxCheckNow",
-  metaDescription: "Self-Managed Super Fund residency: fund must be established in Australia + central management and control ordinarily in Australia + 50%+ active member balances from Australian residents (SIS Act s 10). Failure = non-complying = 45% tax on fund value. Confirmed April 2026.",
+  // ── TEMPORAL v1 DECLARATION ───────────────────────────────────────────────────────────────
+  //
+  // THE DEADLINE IS A RULE, AND THE STORED INSTANT IS GONE. What used to sit below was
+  //     isoDate: "2026-10-31T23:59:59.000+10:00"
+  // which is correct until 31 October 2026 and then confidently wrong, with every surface
+  // reprinting it and the gate page logging an expired-deadline error on each load until somebody
+  // regenerated the product. The same shape had already gone stale on this product's key dates
+  // (F76, "SMSF residency snapshot — 30 June 2026", three months past in a delivered pack).
+  //
+  // ── THE DATE IS 28 FEBRUARY, NOT 31 OCTOBER, AND THAT DEPARTS FROM THE RULING ─────────────
+  //
+  // The ruling said "annual month 10 day 31 … source ATO SMSF annual return self-lodger". Fetched
+  // the ATO's own lodgment page on 2026-09-28 before encoding it, and it says something else,
+  // verbatim:
+  //
+  //   "Lodging the SAR yourself — Newly registered funds and those with overdue SARs for prior
+  //    years (excluding deferrals), need to: lodge their SAR by 31 October, pay any owing amount
+  //    by 1 December. You should lodge and pay all other SARs by 28 FEBRUARY unless we ask you to
+  //    lodge on a different date."
+  //
+  // So 31 October is the NARROW case — a newly registered fund, or one with overdue prior-year
+  // returns — and 28 February is the date for every other self-lodger. The page also says "When a
+  // tax agent lodges your SAR … they'll provide the due date", so the 15 May figure this product
+  // used to print is not an ATO-published date at all.
+  //
+  // 28 February is therefore what is declared: it is the date that is right for the buyer this
+  // product is written for, and it is the only one of the three the ATO states unconditionally.
+  // Declaring 31 October would have shipped a deadline eight months early to most buyers — the
+  // same class of defect as F76's past date, in the opposite direction.
+  //
+  // Australia/Sydney because the due date is a national ATO date and the resolver treats the zone
+  // as the one the CALENDAR date is expressed in. next_business_day per the ruling.
+  temporal: {
+    kind: "deadline",
+    rule: {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      2,
+      day:        28,
+      timezone:   "Australia/Sydney",
+      shift:      "next_business_day",
+    },
+    jurisdiction: "AU",
+    domain:       "super",
+    label:        "SMSF annual return due (self-lodged)",
+    basis:        "ATO, Lodge SMSF annual returns, fetched 2026-09-28: \"You should lodge and pay all other SARs by 28 February unless we ask you to lodge on a different date.\" 31 October applies only to newly registered funds and funds with overdue prior-year returns; where a tax agent lodges, the agent provides the date.",
+  },
+  // THE DATE-BEARING STRINGS ARE DELIBERATELY EMPTY, which is what puts this product on the rule
+  // path (generate-gate-page.resolvesFromRule requires a fixed rule AND an empty isoDate). Every
+  // surface then asks lib/temporal-display for the label instead of reprinting one baked in April.
+  // urgencyLabel and description survive because neither names a date: the product still has
+  // something true and time-critical to say before a date is resolved.
+  deadline: { isoDate: "", display: "", short: "", description: "SMSF annual return due date — the residency conditions must be met at all times during the financial year", urgencyLabel: "SMSF ANNUAL RETURN", countdownLabel: "" },
+  h1: "SMSF Residency: Central Management and Control Test Explained",
+  metaTitle: "SMSF Residency Central Management Control Test | TaxCheckNow",
+  metaDescription: "SMSF residency: CM&C + active member 50%+ AU test. Fail = 45% on low tax component in year of change + ongoing. Free check.",
   canonical: "https://taxchecknow.com/nomad/check/australia-smsf-residency",
   answerHeadline: "The answer — ATO SMSF residency rule, confirmed April 2026",
   answerBody: [
     "A self-managed super fund (SMSF) must meet the three residency tests in section 10(1) of the Superannuation Industry (Supervision) Act 1993 to remain an 'Australian superannuation fund' and retain complying status. The tests are: (1) established in Australia or assets located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; and (3) active member balance test — at least 50% of the fund's asset value attributable to active members who are Australian residents (or no active members). Failure on any test causes the fund to cease being an Australian superannuation fund — and the moment the fund is no longer an Australian superannuation fund, it becomes non-complying for tax purposes.",
     "The central management and control test is the test that most commonly bites when trustees move overseas. 'Central management and control' means where the strategic and high-level decisions of the fund are made — investment policy, strategy reviews, trustee meetings, significant asset decisions. If all trustees are physically overseas and making these decisions from overseas, CM&C is overseas. A temporary absence is acceptable — the ATO generally accepts CM&C as 'ordinarily' in Australia during an absence of up to 2 years, provided the absence is temporary in nature and there is a genuine intention to resume Australian CM&C. Longer absences, or absences without a clear Australian return plan, put the fund at breach risk.",
-    "The consequences of becoming non-complying are severe. Under ITAA 1997 section 295-320, when a fund becomes non-complying, the 'low tax component' of the fund (effectively the market value of fund assets less any amounts for which the fund has received undeducted contributions) is included in assessable income for the year the fund becomes non-complying, and taxed at the 45% top marginal rate. On a $1,000,000 SMSF, this can produce a tax liability approaching $450,000 in a single year. Ongoing earnings are then taxed at 45% rather than the 15% concessional rate. Remediation to compliant status requires ATO approval and is not guaranteed.",
+    "The consequences of becoming non-complying are severe. Under ITAA 1997 section 295-320, when a fund becomes non-complying, the 'low tax component' of the fund (effectively the market value of fund assets less any amounts for which the fund has received undeducted contributions) is included in assessable income for the year the fund becomes non-complying, and taxed at the 45% top marginal rate. On a $1,000,000 SMSF, this can produce a tax liability approaching $450,000 in a single year. Ongoing earnings are then taxed at 45% rather than the 15% concessional rate. Remediation to compliant status requires the ATO's approval, which it can refuse.",
   ],
   answerSource: "Source: SIS Act 1993 s 10(1) · ITAA 1997 s 295-95 · ITAA 1997 s 295-320 · ATO SMSF residency requirements guidance · Confirmed April 2026",
   mistakesHeadline: "Common AI errors on this topic",
@@ -59,7 +112,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tierAlgorithm: { description: "Clear breach risk or corporate restructure needed + substantial fund value -> tier2. Simple compliance confirmation or low-stakes fix -> tier1.", tier2Conditions: ["trusteeLocation === 'all_overseas'", "decisionLocation === 'mostly_overseas' || decisionLocation === 'always_overseas'", "absenceIntent === 'long_over_5yr' || absenceIntent === 'permanent'", "fundValue === 'over_2m' || fundValue === '1m_to_2m'", "corporateTrustee === 'no' && daysOutside === 'over_365'"], tier2Flags: [] },
   calculatorRuleBox: { label: "The rule — AU SMSF residency (SIS Act s 10(1) + ITAA 1997 s 295-320)", body: "To be an Australian superannuation fund (= complying for tax): (1) fund established in Australia OR any asset located in Australia; (2) central management and control (CM&C) ordinarily in Australia — the location where strategic and high-level decisions are made; (3) active member test — 50%+ of market value of fund assets attributable to active members who are Australian residents, or fund has no active members. Temporary absence (up to ~2 years with return intent) can preserve CM&C 'ordinarily in Australia'. Failure = non-complying = ITAA 1997 s 295-320 applies = 'low tax component' (approximately full fund value less undeducted contributions) included in assessable income at 45% top rate in year of change + ongoing earnings taxed at 45% rather than 15%. Remediation requires ATO notice + approval — not automatic." },
   calculatorClarification: { label: "⚠️ key clarification — CM&C is where DECISIONS are made, not where members live", body: "The central management and control test focuses on where the strategic decisions of the fund are actually made. A fund member can live overseas while the fund's CM&C remains in Australia — if the decisions are made by Australian-based trustees or directors (of a corporate trustee). Common safeguard: use a corporate trustee with at least one Australian-resident director who is genuinely involved in fund decisions. Common trap: individual trustee who moves overseas and continues to make decisions from abroad — CM&C follows the decision-maker." },
-  countdownLabel: "Countdown to 31 October 2026 — SMSF annual return deadline",
+  // Year-free for the same reason as the calendar summaries (F76): the countdown label is composed
+  // with the RESOLVED date at render, so naming a year here could only contradict it.
+  countdownLabel: "Countdown to the SMSF annual return deadline",
   countdownStats: [
     { label: "Non-complying tax rate",                 value: "45% (top marginal)",    sub: "on 'low tax component' in year of change + ongoing earnings", red: true },
     { label: "Concessional rate (complying)",             value: "15% on earnings",          sub: "lost immediately if fund becomes non-complying" },
@@ -139,9 +194,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "Australian SMSF Residency Kill-Switch — SIS Act 1993 s 10(1) defines 'Australian superannuation fund' via three tests: (1) establishment in Australia or assets in Australia; (2) central management and control (CM&C) ordinarily in Australia; (3) active member test — 50%+ of active member balances from AU residents (or no active members). Failure on any test = non-complying fund under ITAA 1997 s 295-320: 'low tax component' (approximately full fund value less undeducted contributions) taxed at 45% in year of change PLUS ongoing earnings taxed at 45% (vs complying 15%). ATO accepts temporary absence up to ~2 years with return intent. Corporate trustee with AU-resident director who genuinely exercises control is standard structural safeguard. Remediation via ATO approval — not automatic.",
   lawBarBadges: ["ATO", "SIS Act s 10(1)", "ITAA 1997 s 295-320", "45% Non-Complying Tax", "Central Management and Control", "2-Year Temporary Absence"],
   sources: [
-    { title: "ATO — SMSF residency requirements",                                                                url: "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements" },
-    { title: "ATO — SMSF residency rules when members go overseas",                                                 url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-residency-rules-when-members-go-overseas" },
-    { title: "ATO — Complying and non-complying super funds",                                                          url: "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/complying-and-non-complying-super-funds" },
+    { title: "ATO — SMSF residency requirements",                                                                url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" },
+    { title: "ATO — Check your SMSF is an Australian super fund (includes: what to do if members go overseas)",                                                 url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" },
+    { title: "ITAA 1997 s 295-320 — amounts included in a non-complying fund's assessable income",                                                          url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "Superannuation Industry (Supervision) Act 1993 s 10(1)",                                                   url: "https://www.legislation.gov.au/C2004A04633/latest/text" },
     { title: "ITAA 1997 s 295-95 (complying fund taxation)",                                                                url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "ITAA 1997 s 295-320 (non-complying fund taxation)",                                                            url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
@@ -149,7 +204,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { title: "Machine-readable JSON rules",                                                                                     url: "/api/rules/australia-smsf-residency" },
   ],
   files: [
-    { num: "01", slug: "smsf-01", name: "Your SMSF Residency Status Assessment",                  desc: "Your fund's specific residency position across all three SIS Act tests.", tier: 1, content: `<h2>Your SMSF Residency Status</h2><div class="action-box"><h3>Three tests — all must pass</h3><p>Establishment: fund set up in Australia OR at least one asset located in Australia</p><p>CM&C: strategic decisions made in Australia (or temporary absence up to ~2 years)</p><p>Active member: 50%+ of active member balances held by AU residents (or no active members)</p></div><p>Source: <a href="https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements">ATO SMSF Residency Requirements</a></p>` },
+    { num: "01", slug: "smsf-01", name: "Your SMSF Residency Status Assessment",                  desc: "Your fund's specific residency position across all three SIS Act tests.", tier: 1, content: `<h2>Your SMSF Residency Status</h2><div class="action-box"><h3>Three tests — all must pass</h3><p>Establishment: fund set up in Australia OR at least one asset located in Australia</p><p>CM&C: strategic decisions made in Australia (or temporary absence up to ~2 years)</p><p>Active member: 50%+ of active member balances held by AU residents (or no active members)</p></div><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund">ATO SMSF Residency Requirements</a></p>` },
     { num: "02", slug: "smsf-02", name: "Central Management and Control Test — Applied to You",       desc: "How CM&C is assessed in practice, and the specific risk factors in your setup.", tier: 1, content: `<h2>CM&C Test — Applied</h2><h3>What counts as CM&C activity</h3><ul><li>Investment policy decisions</li><li>Strategic asset allocation</li><li>Material asset purchases/sales</li><li>Trustee resolutions and minutes</li><li>Investment strategy reviews</li></ul><h3>What does NOT count (and should not be relied on)</h3><ul><li>Accountant administrative tasks (contribution recording, returns)</li><li>Broker execution of pre-approved trades</li><li>Routine rebalancing within pre-set parameters</li></ul><h3>Evidence for AU CM&C</h3><ul><li>Trustee minutes recording AU location of decisions</li><li>Diary entries / calendar showing AU-based meetings</li><li>Travel records of trustees/directors at meeting times</li></ul>` },
     { num: "03", slug: "smsf-03", name: "Trustee Positioning Strategy",                                  desc: "How to position trustees and directors to maintain CM&C in Australia while members are overseas.", tier: 1, content: `<h2>Trustee Positioning</h2><h3>Option 1 — Corporate trustee + AU-resident director</h3><ul><li>Appoint trusted AU-resident as corporate trustee director</li><li>Director must genuinely exercise control — chair investment committee / make binding decisions</li><li>Documented minutes showing AU director decision-making</li></ul><h3>Option 2 — Retain AU-resident individual trustee</h3><ul><li>Only effective if AU-resident trustee is the 'real' decision-maker, not a nominee</li><li>Requires active participation, not passive signature</li></ul><h3>Option 3 — Short-term absence positioning</h3><ul><li>Document definite return plan (under 2 years)</li><li>Continue making decisions from AU during visits</li><li>Appoint accountant/adviser to execute pre-approved strategy</li></ul>` },
     { num: "04", slug: "smsf-04", name: "Temporary Absence Documentation Protocol",                        desc: "How to establish and document a genuine temporary absence under the ATO's 2-year guidance.", tier: 1, content: `<h2>Temporary Absence Documentation</h2><div class="info-box"><strong>ATO position:</strong> CM&C remains 'ordinarily' in Australia during genuine temporary absence. Typically up to ~2 years with return intent.</div><h3>Required documentation</h3><ul class="checklist"><li>Statement of intention to return (dated, signed, retained)</li><li>Visa or work arrangement showing defined end date</li><li>AU housing retained (rented out but retained)</li><li>AU bank accounts, investments, ongoing AU ties</li><li>Family members remaining in AU (if applicable)</li><li>Return ticket evidence</li></ul><h3>What undermines temporary absence</h3><ul><li>Selling AU primary home</li><li>Closing AU bank accounts / super contributions cessation</li><li>Vague or open-ended absence</li><li>Acquiring permanent residency / citizenship overseas</li></ul>` },
@@ -172,14 +227,14 @@ export const PRODUCT_CONFIG: ProductConfig = {
   calendarTitle: "SMSF compliance + residency deadlines",
   tier1Calendar: [
     { uid: "smsf-jun",   summary: "SMSF residency snapshot — 30 June",                     description: "Annual residency tests assessed at 30 June for each financial year.",  date: "annual:06-30" },
-    { uid: "smsf-return", summary: "SMSF annual return — 31 October",                         description: "Self-lodger deadline for the SMSF annual return.",                       date: "annual:10-31" },
-    { uid: "smsf-may",    summary: "SMSF annual return — 15 May (tax agent)",                   description: "Agent-lodgment extended deadline.",                                       date: "annual:05-15" },
+    { uid: "smsf-return", summary: "SMSF annual return — 28 February (self-lodged)",           description: "ATO: lodge and pay all other SARs by 28 February. 31 October applies only to newly registered funds or funds with overdue prior-year returns.", date: "annual:02-28" },
+    { uid: "smsf-may",    summary: "SMSF annual return — 31 October (new or overdue funds)",    description: "ATO: newly registered funds, and funds with overdue prior-year returns, lodge by 31 October and pay by 1 December. Where a tax agent lodges, the agent provides your date.", date: "annual:10-31" },
   ],
   tier2Calendar: [
     { uid: "smsf-review",   summary: "SMSF residency — 90-day structural review",                description: "Review CM&C position + trustee structure + active member test.", date: "relative:+90days" },
     { uid: "smsf-jun",        summary: "SMSF residency snapshot — 30 June",                         description: "Annual residency test assessed.",                                   date: "annual:06-30" },
-    { uid: "smsf-return",     summary: "SMSF annual return — 31 October",                            description: "Self-lodger deadline.",                                             date: "annual:10-31" },
-    { uid: "smsf-may",         summary: "SMSF annual return — 15 May (tax agent)",                     description: "Agent-lodgment deadline.",                                           date: "annual:05-15" },
+    { uid: "smsf-return",     summary: "SMSF annual return — 28 February (self-lodged)",             description: "ATO: lodge and pay all other SARs by 28 February.",                  date: "annual:02-28" },
+    { uid: "smsf-may",         summary: "SMSF annual return — 31 October (new or overdue funds)",       description: "ATO: newly registered or overdue funds lodge by 31 October, pay by 1 December.", date: "annual:10-31" },
     { uid: "smsf-quarterly",    summary: "SMSF investment committee — quarterly review",                description: "AU director chair decision cadence (per Global Control Strategy).",   date: "relative:+90days" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },

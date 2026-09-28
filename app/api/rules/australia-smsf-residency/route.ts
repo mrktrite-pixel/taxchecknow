@@ -15,7 +15,7 @@ export async function GET() {
     "title": "Australian SMSF Residency Kill-Switch",
     "site": "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     "authority": "Australian Taxation Office (ATO)",
-    "authority_url": "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements",
+    "authority_url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund",
     "jurisdiction": "Australia",
     "language": "en",
     "currency": "AUD",
@@ -23,10 +23,19 @@ export async function GET() {
     "legislation": "Superannuation Industry (Supervision) Act 1993 section 10(1) defines 'Australian superannuation fund' via three tests: (1) established in Australia or any asset of the fund located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; (3) active member test — at least 50% of the market value of the fund's assets attributable to active members who are Australian residents, OR fund has no active members. Failure on any test = fund ceases to be Australian superannuation fund = loses complying status. Non-complying fund consequences under ITAA 1997 s 295-320: fund's 'low tax component' (approximately the entire market value less undeducted contributions) included in assessable income for the year of change at 45% top marginal rate, plus ongoing income taxed at 45% rather than 15% concessional rate.",
     "legal_anchor": "SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation",
     "deadline": {
-        "iso_date": "2026-10-31T23:59:59.000+10:00",
-        "display": "31 October 2026",
-        "description": "SMSF annual return deadline — fund residency status assessed annually at 30 June",
-        "urgency_label": "SMSF ANNUAL RETURN"
+        "iso_date": "",
+        "display": "",
+        "description": "SMSF annual return due date — the residency conditions must be met at all times during the financial year",
+        "urgency_label": "SMSF ANNUAL RETURN",
+        "recurrence": {
+            "kind": "annual",
+            "month": 2,
+            "day": 28,
+            "timezone": "Australia/Sydney",
+            "shift": "next_business_day",
+            "label": "SMSF annual return due (self-lodged)",
+            "basis": "ATO, Lodge SMSF annual returns, fetched 2026-09-28: \"You should lodge and pay all other SARs by 28 February unless we ask you to lodge on a different date.\" 31 October applies only to newly registered funds and funds with overdue prior-year returns; where a tax agent lodges, the agent provides the date."
+        }
     },
     "key_facts": {
         "legal_anchor_residency": "SIS Act 1993 s 10(1) — 'Australian superannuation fund' definition",
@@ -150,15 +159,15 @@ export async function GET() {
     "sources": [
         {
             "title": "ATO — SMSF residency requirements",
-            "url": "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements"
+            "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund"
         },
         {
-            "title": "ATO — SMSF residency rules when members go overseas",
-            "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-residency-rules-when-members-go-overseas"
+            "title": "ATO — Check your SMSF is an Australian super fund (includes: what to do if members go overseas)",
+            "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund"
         },
         {
-            "title": "ATO — Complying and non-complying super funds",
-            "url": "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/complying-and-non-complying-super-funds"
+            "title": "ITAA 1997 s 295-320 — amounts included in a non-complying fund's assessable income",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         },
         {
             "title": "Superannuation Industry (Supervision) Act 1993 s 10(1)",
@@ -198,11 +207,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements"
+        "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund"
     ],
     "canonical": "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     "api_endpoint": "/api/rules/australia-smsf-residency",
-    "generated_at": "2026-04-23T11:26:19.471Z"
+    "generated_at": "2026-09-28T06:58:27.239Z"
 };
 
   return NextResponse.json(rules, {
