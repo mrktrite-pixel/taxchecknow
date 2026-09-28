@@ -5,7 +5,7 @@
 // Output path: app/[country]/check/[id]/page.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { ProductConfig } from "../types/product-config";
+import type { ProductConfig } from "../types/product-config";
 import { jurisdictionFlag } from "./jurisdiction-flag";
 
 // GEO bake — transcript + published-video facts fetched at generate time (both optional).
