@@ -46,6 +46,40 @@ const FILES = [
   }
 ];
 
+// ── F76 — RECURRING CALENDAR DATES, RESOLVED AT RENDER ──────────────────────────────────────
+//
+// Module scope, not inside handleCalendar, because TWO surfaces need them: the .ics the buyer
+// downloads AND the visible date pill in the key-dates panel. The pill used to be a literal baked
+// at generate time, which is how "annual:02-28" came to be printed at a buyer.
+//
+// Same arithmetic as lib/temporal-resolver's annual rule: this year if the day has not passed,
+// otherwise next year; then, when the rule says so, forward to the next weekday. Concatenation
+// rather than template literals — this is emitted from inside one.
+function annualDate(month: number, day: number, shift: boolean): string {
+  const now = new Date();
+  const pad = (n: number): string => String(n).padStart(2, "0");
+  const today = now.toISOString().split("T")[0].replace(/-/g, "");
+  let year = now.getUTCFullYear();
+  if (String(year) + pad(month) + pad(day) < today) year += 1;
+  let d = new Date(Date.UTC(year, month - 1, day));
+  if (shift) {
+    // 0 = Sunday, 6 = Saturday. Public holidays are not modelled here and are not claimed to be.
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6) d = new Date(d.getTime() + 86400000);
+  }
+  return String(d.getUTCFullYear()) + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate());
+}
+
+/** The same date as a human label: "28 February 2027". */
+function annualLabel(month: number, day: number, shift: boolean): string {
+  const iso = annualDate(month, day, shift);
+  const y = Number(iso.slice(0, 4));
+  const m = Number(iso.slice(4, 6));
+  const dd = Number(iso.slice(6, 8));
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "UTC", day: "numeric", month: "long", year: "numeric",
+  }).format(new Date(Date.UTC(y, m - 1, dd)));
+}
+
 interface Action { title: string; deadline: string; steps: string[]; }
 // FREEZE — the identity the ASSESSMENTS TABLE is keyed by, i.e. the webhook's
 // DELIVERY_MAP productId, which is the route tail (and what lib/assessment-fields.ts is
@@ -250,21 +284,6 @@ export default function SuccessAssess() {
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
-    // F76 — the next occurrence of a recurring calendar date, resolved when the buyer clicks.
-    // Same arithmetic as lib/temporal-resolver's annual rule: this year if the day has not
-    // passed, otherwise next year. Never a stored year, so it cannot go stale.
-    //
-    // Written with concatenation, not template literals, ON PURPOSE: this body is emitted from
-    // inside a template literal, where a backtick closes the outer template and a dollar-brace
-    // interpolates at generate time instead of at render.
-    function annualDate(month: number, day: number): string {
-      const now = new Date();
-      const pad = (n: number): string => String(n).padStart(2, "0");
-      const mmdd = pad(month) + pad(day);
-      const today = now.toISOString().split("T")[0].replace(/-/g, "");
-      const thisYear = String(now.getUTCFullYear()) + mmdd;
-      return thisYear >= today ? thisYear : String(now.getUTCFullYear() + 1) + mmdd;
-    }
     const ics = [
       "BEGIN:VCALENDAR","VERSION:2.0",
       "PRODID:-//TaxCheckNow//COLE//EN",
@@ -272,29 +291,29 @@ export default function SuccessAssess() {
       `X-WR-CALNAME:Australian SMSF Residency Kill-Switch — Deadlines`,
       "BEGIN:VEVENT",
       `UID:smsf-jun-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${annualDate(6, 30)}`,
-      `DTEND;VALUE=DATE:${annualDate(6, 30)}`,
+      `DTSTART;VALUE=DATE:${annualDate(6, 30, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(6, 30, false)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:SMSF residency snapshot — 30 June",
-      "DESCRIPTION:Annual residency tests assessed at 30 June for each financial year.",
+      "SUMMARY:SMSF residency — year-end check (30 June)",
+      "DESCRIPTION:The three conditions must be met AT ALL TIMES during the financial year\\, not only at year end. Use this date to confirm they held for the whole year.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
       `UID:smsf-return-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${annualDate(2, 28)}`,
-      `DTEND;VALUE=DATE:${annualDate(2, 28)}`,
+      `DTSTART;VALUE=DATE:${annualDate(2, 28, true)}`,
+      `DTEND;VALUE=DATE:${annualDate(2, 28, true)}`,
       `DTSTAMP:${now}`,
       "SUMMARY:SMSF annual return — 28 February (self-lodged)",
-      "DESCRIPTION:ATO: lodge and pay all other SARs by 28 February. 31 October applies only to newly registered funds or funds with overdue prior-year returns.",
+      "DESCRIPTION:ATO: lodge and pay all other SARs by 28 February.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
-      `UID:smsf-may-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${annualDate(10, 31)}`,
-      `DTEND;VALUE=DATE:${annualDate(10, 31)}`,
+      `UID:smsf-oct-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(10, 31, true)}`,
+      `DTEND;VALUE=DATE:${annualDate(10, 31, true)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:SMSF annual return — 31 October (new or overdue funds)",
-      "DESCRIPTION:ATO: newly registered funds\\, and funds with overdue prior-year returns\\, lodge by 31 October and pay by 1 December. Where a tax agent lodges\\, the agent provides your date.",
+      "SUMMARY:SMSF annual return — 31 October (NEWLY REGISTERED / OVERDUE FUNDS ONLY)",
+      "DESCRIPTION:This date is NOT the general one. It applies only to newly registered funds and funds with overdue prior-year returns\\, which lodge by 31 October and pay by 1 December.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -485,29 +504,38 @@ export default function SuccessAssess() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">SMSF residency snapshot — 30 June</p>
-                    <p className="text-xs text-neutral-500">Annual residency tests assessed at 30 June for each financial year.</p>
+                    <p className="text-sm font-semibold text-neutral-900">SMSF residency — year-end check (30 June)</p>
+                    <p className="text-xs text-neutral-500">The three conditions must be met AT ALL TIMES during the financial year, not only at year end. Use this date to confirm they held for the whole year.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    annual:06-30
+                    {annualLabel(6, 30, false)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold text-neutral-900">SMSF annual return — 28 February (self-lodged)</p>
-                    <p className="text-xs text-neutral-500">ATO: lodge and pay all other SARs by 28 February. 31 October applies only to newly registered funds or funds with overdue prior-year returns.</p>
+                    <p className="text-xs text-neutral-500">ATO: lodge and pay all other SARs by 28 February.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    annual:02-28
+                    {annualLabel(2, 28, true)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">SMSF annual return — 31 October (new or overdue funds)</p>
-                    <p className="text-xs text-neutral-500">ATO: newly registered funds, and funds with overdue prior-year returns, lodge by 31 October and pay by 1 December. Where a tax agent lodges, the agent provides your date.</p>
+                    <p className="text-sm font-semibold text-neutral-900">SMSF annual return — 31 October (NEWLY REGISTERED / OVERDUE FUNDS ONLY)</p>
+                    <p className="text-xs text-neutral-500">This date is NOT the general one. It applies only to newly registered funds and funds with overdue prior-year returns, which lodge by 31 October and pay by 1 December.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    annual:10-31
+                    {annualLabel(10, 31, true)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Tax agent lodging — your agent sets the date</p>
+                    <p className="text-xs text-neutral-500">The ATO does not publish a single agent date. Your registered tax agent gives you your lodgment and payment date under the tax agent lodgment program.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    your agent sets this
                   </span>
                 </div>
               </div>
@@ -613,8 +641,8 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australia tax adviser before making financial decisions.
-            Based on Australian Taxation Office (ATO) guidance April 2026.{" "}
-            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer" className="underline">ATO — SMSF residency requirements</a> · <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer" className="underline">ATO — Check your SMSF is an Australian super fund (includes: what to do if members go overseas)</a>
+            Based on Australian Taxation Office (ATO) guidance September 2026.{" "}
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer" className="underline">ATO — Check your SMSF is an Australian super fund (residency conditions; what to do if members go overseas)</a> · <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/lodge-smsf-annual-returns" target="_blank" rel="noopener noreferrer" className="underline">ATO — Lodge SMSF annual returns (due dates)</a>
           </p>
         </div>
 

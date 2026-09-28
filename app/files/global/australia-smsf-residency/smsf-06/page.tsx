@@ -108,7 +108,7 @@ export default function AustraliaSmsfResidencyFile06() {
               🏳️ Australian Taxation Office (ATO) · SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 06 of 8
@@ -229,7 +229,7 @@ export default function AustraliaSmsfResidencyFile06() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australia tax adviser for your personal situation.
-            Based on Australian Taxation Office (ATO) guidance April 2026.
+            Based on Australian Taxation Office (ATO) guidance September 2026.
           </p>
         </div>
 
@@ -248,8 +248,8 @@ export default function AustraliaSmsfResidencyFile06() {
             <a href="/nomad/check/australia-smsf-residency" className="hover:text-neutral-900 transition">
               ← Back to Australian SMSF Residency Kill-Switch
             </a>
-            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — SMSF residency requirements ↗</a>
-            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Check your SMSF is an Australian super fund (includes: what to do if members go overseas) ↗</a>
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Check your SMSF is an Australian super fund (residency conditions; what to do if members go overseas) ↗</a>
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/lodge-smsf-annual-returns" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Lodge SMSF annual returns (due dates) ↗</a>
           </div>
         </div>
       </footer>

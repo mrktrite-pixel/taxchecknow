@@ -388,6 +388,15 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
     // page, beside relativeDate()), not at generate time, so the page cannot go stale between
     // deployments either — the same reason the gate page's countdown moved to a rule.
     if (evt.date.startsWith("annual:")) return true;
+    // `none` — A DATE THAT IS REAL BUT NOT OURS TO STATE.
+    //
+    // The tax-agent lodgment date is set by the agent, and the ATO says so in as many words: "If
+    // your SAR is lodged through a tax agent, they'll provide the due date for lodgment and
+    // payment." This product used to print "15 May" for it, which is not an ATO-published date.
+    // Deleting the row loses a true and useful fact; inventing a date is worse. So the row shows in
+    // the KEY DATES panel with "your agent sets this" where a date would be, and is excluded from
+    // the .ics below — a VEVENT has no meaning without a DTSTART.
+    if (evt.date === "none") return true;
     if (!claimsADate)            { droppedEvents.push(`${evt.uid} (${evt.date}: product declares no resolvable date)`); return false; }
     if (evt.date < todayCompact) { droppedEvents.push(`${evt.uid} (${evt.date}: in the past)`); return false; }
     return true;
@@ -399,8 +408,8 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
     );
   }
 
-  // .ics events
-  const icsEvents = emittableEvents.map(evt => {
+  // .ics events — dateless advisories are shown on the page but cannot be calendar entries.
+  const icsEvents = emittableEvents.filter(evt => evt.date !== "none").map(evt => {
     const dateCode = evt.date.startsWith("relative:")
       ? buildRelativeDate(evt.date)
       : evt.date.startsWith("annual:")
@@ -429,6 +438,40 @@ import { getAssessmentFields } from "@/lib/assessment-fields";${engineNative ? `
 const FILES = ${JSON.stringify(visibleFiles.map(f => ({
     num: f.num, slug: f.slug, name: f.name, desc: f.desc, tier: f.tier,
   })), null, 2)};
+
+// ── F76 — RECURRING CALENDAR DATES, RESOLVED AT RENDER ──────────────────────────────────────
+//
+// Module scope, not inside handleCalendar, because TWO surfaces need them: the .ics the buyer
+// downloads AND the visible date pill in the key-dates panel. The pill used to be a literal baked
+// at generate time, which is how "annual:02-28" came to be printed at a buyer.
+//
+// Same arithmetic as lib/temporal-resolver's annual rule: this year if the day has not passed,
+// otherwise next year; then, when the rule says so, forward to the next weekday. Concatenation
+// rather than template literals — this is emitted from inside one.
+function annualDate(month: number, day: number, shift: boolean): string {
+  const now = new Date();
+  const pad = (n: number): string => String(n).padStart(2, "0");
+  const today = now.toISOString().split("T")[0].replace(/-/g, "");
+  let year = now.getUTCFullYear();
+  if (String(year) + pad(month) + pad(day) < today) year += 1;
+  let d = new Date(Date.UTC(year, month - 1, day));
+  if (shift) {
+    // 0 = Sunday, 6 = Saturday. Public holidays are not modelled here and are not claimed to be.
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6) d = new Date(d.getTime() + 86400000);
+  }
+  return String(d.getUTCFullYear()) + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate());
+}
+
+/** The same date as a human label: "28 February 2027". */
+function annualLabel(month: number, day: number, shift: boolean): string {
+  const iso = annualDate(month, day, shift);
+  const y = Number(iso.slice(0, 4));
+  const m = Number(iso.slice(4, 6));
+  const dd = Number(iso.slice(6, 8));
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "UTC", day: "numeric", month: "long", year: "numeric",
+  }).format(new Date(Date.UTC(y, m - 1, dd)));
+}
 
 interface Action { title: string; deadline: string; steps: string[]; }
 // FREEZE — the identity the ASSESSMENTS TABLE is keyed by, i.e. the webhook's
@@ -628,21 +671,6 @@ ${emittableEvents.length === 0 ? `  // handleCalendar() omitted: no event surviv
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";${calReads ? `\n${calReads}` : ""}
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
-    }
-    // F76 — the next occurrence of a recurring calendar date, resolved when the buyer clicks.
-    // Same arithmetic as lib/temporal-resolver's annual rule: this year if the day has not
-    // passed, otherwise next year. Never a stored year, so it cannot go stale.
-    //
-    // Written with concatenation, not template literals, ON PURPOSE: this body is emitted from
-    // inside a template literal, where a backtick closes the outer template and a dollar-brace
-    // interpolates at generate time instead of at render.
-    function annualDate(month: number, day: number): string {
-      const now = new Date();
-      const pad = (n: number): string => String(n).padStart(2, "0");
-      const mmdd = pad(month) + pad(day);
-      const today = now.toISOString().split("T")[0].replace(/-/g, "");
-      const thisYear = String(now.getUTCFullYear()) + mmdd;
-      return thisYear >= today ? thisYear : String(now.getUTCFullYear() + 1) + mmdd;
     }
     const ics = [
       "BEGIN:VCALENDAR","VERSION:2.0",
@@ -905,7 +933,18 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
                     <p className="text-xs text-neutral-500">${evt.description}</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    ${evt.date.startsWith("relative:") ? relativeDateLabel(evt.date) : formatDateDisplay(evt.date)}
+                    ${evt.date.startsWith("relative:")
+                      ? relativeDateLabel(evt.date)
+                      : evt.date.startsWith("annual:")
+                      // F76 FOLLOW-UP — MEASURED IN THE DELIVERED PAGE: this pill read
+                      // "annual:02-28". formatDateDisplay returns its input unchanged when the
+                      // string is not 8 digits, so the rule string went straight to the buyer while
+                      // the .ics beside it carried the correct resolved date. The pill has to
+                      // resolve at RENDER like everything else, so it emits a call rather than text.
+                      ? `{annualLabel(${parseAnnual(evt.date).month}, ${parseAnnual(evt.date).day}, ${parseAnnual(evt.date).shift})}`
+                      : evt.date === "none"
+                      ? "your agent sets this"
+                      : formatDateDisplay(evt.date)}
                   </span>
                 </div>`).join("")}
               </div>
@@ -1131,12 +1170,13 @@ function relativeDateLabel(relativeStr: string): string {
  * REFUSES rather than degrading: a malformed rule that fell back to the literal string would put
  * "annual:06-30" into a DTSTART, which every calendar app would silently ignore.
  */
-function buildAnnualDate(annualStr: string): string {
-  const m = annualStr.match(/^annual:(\d{2})-(\d{2})$/);
+/** month, day and whether a weekend lands on the next business day. */
+function parseAnnual(annualStr: string): { month: number; day: number; shift: boolean } {
+  const m = annualStr.match(/^annual:(\d{2})-(\d{2})(?::(next_business_day))?$/);
   if (!m) {
     throw new Error(
       `[COLE F76] calendar date "${annualStr}" is not a valid annual rule. ` +
-      `Expected annual:MM-DD (e.g. annual:06-30). Generating nothing.`,
+      `Expected annual:MM-DD or annual:MM-DD:next_business_day. Generating nothing.`,
     );
   }
   const month = Number(m[1]);
@@ -1144,7 +1184,21 @@ function buildAnnualDate(annualStr: string): string {
   if (month < 1 || month > 12 || day < 1 || day > 31) {
     throw new Error(`[COLE F76] annual rule "${annualStr}" is not a real month/day. Generating nothing.`);
   }
-  return `annualDate(${month}, ${day})`;
+  return { month, day, shift: m[3] === "next_business_day" };
+}
+
+/**
+ * `annual:MM-DD[:next_business_day]` -> the emitted call that resolves it at render.
+ *
+ * The shift is per-entry because not every annual date is a lodgment obligation: 31 October and
+ * 28 February move to the next business day, and the 30 June residency point does not move at all.
+ * Without it the .ics disagreed with the countdown on this very page — the declared deadline
+ * resolves through lib/temporal-resolver, which DOES shift, so a weekend 28 February produced
+ * "1 March" in the banner and "28 February" in the calendar.
+ */
+function buildAnnualDate(annualStr: string): string {
+  const { month, day, shift } = parseAnnual(annualStr);
+  return `annualDate(${month}, ${day}, ${shift})`;
 }
 
 function buildRelativeDate(relativeStr: string): string {
@@ -1153,7 +1207,20 @@ function buildRelativeDate(relativeStr: string): string {
   return `relativeDate(${match[1]})`;
 }
 
+/**
+ * A compact YYYYMMDD as a human label.
+ *
+ * REFUSES a rule string rather than returning it. Returning the input was how "annual:02-28"
+ * reached a buyer's key-dates panel: every caller assumed this function formatted, and for eight
+ * digits it does, so nothing ever noticed the pass-through branch.
+ */
 function formatDateDisplay(dateStr: string): string {
+  if (/^(annual|relative):/.test(dateStr)) {
+    throw new Error(
+      `[COLE F76] formatDateDisplay was handed the rule string "${dateStr}". A rule must be ` +
+      `resolved at render (annualLabel / relativeDateLabel), never formatted here. Generating nothing.`,
+    );
+  }
   if (dateStr.length !== 8) return dateStr;
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const year  = dateStr.slice(0,4);
