@@ -13,7 +13,7 @@ const FILES = [
     "num": "01",
     "slug": "smsf-01",
     "name": "Your SMSF Residency Status Assessment",
-    "desc": "Your fund's specific residency position across all three SIS Act tests.",
+    "desc": "Your fund's specific residency position across the three ITAA 1997 s 295-95(2) conditions.",
     "tier": 1
   },
   {
@@ -251,17 +251,31 @@ export default function SuccessAssess() {
    * /api/freeze-pack: freezing "is being prepared" would store that as the buyer's document
    * forever, which is the one outcome worse than waiting.
    */
+  const HOLDING_BODY =
+    "This section is still being written. Your full pack will arrive by email shortly — " +
+    "nothing here has been saved as your document yet.";
+
   function showHolding(name: string, why: "timeout" | "nosession") {
     setError(why);
     const placeholder = {
-      cmcTestOutcome: "Your personalised cmcTestOutcome is on its way by email.",
-      activeMemberTestOutcome: "Your personalised activeMemberTestOutcome is on its way by email.",
-      establishmentTestOutcome: "Your personalised establishmentTestOutcome is on its way by email.",
-      trusteeStructureReview: "Your personalised trusteeStructureReview is on its way by email.",
-      temporaryAbsenceEligibility: "Your personalised temporaryAbsenceEligibility is on its way by email.",
-      taxExposureIfNonComplying: "Your personalised taxExposureIfNonComplying is on its way by email.",
-      complianceFixPathway: "Your personalised complianceFixPathway is on its way by email.",
-      immediateActions: "Your personalised immediateActions is on its way by email.",
+      // ONE SENTENCE, THE SAME IN EVERY SECTION, and it names no field.
+      //
+      // MEASURED on the live tier-147 holding page, 2026-09-28 — the body read "…personalised
+      // cmcTestOutcome is on its way by email", with the field KEY interpolated. Fine while keys were
+      // snake_case (the .replace(/_/g," ") handled those), and raw camelCase the moment the engine
+      // products arrived. A buyer who has paid $147 reads an internal identifier.
+      //
+      // The fix is not to humanise the key. renderPack already prints the heading directly above
+      // this line, so naming the section again was redundant even when it read correctly. Not
+      // interpolating a key at all is what makes the defect unreachable rather than merely fixed.
+      cmcTestOutcome: HOLDING_BODY,
+      activeMemberTestOutcome: HOLDING_BODY,
+      establishmentTestOutcome: HOLDING_BODY,
+      trusteeStructureReview: HOLDING_BODY,
+      temporaryAbsenceEligibility: HOLDING_BODY,
+      taxExposureIfNonComplying: HOLDING_BODY,
+      complianceFixPathway: HOLDING_BODY,
+      immediateActions: HOLDING_BODY,
       accountantQuestions: [
         "What is my exact ATO position based on my answers?",
         "What is the single most important action I should take before SMSF annual return due (self-lodged)?",

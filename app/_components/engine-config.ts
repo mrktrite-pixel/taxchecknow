@@ -247,6 +247,38 @@ export function saveSubcopyFor(config: EngineConfig | undefined): string {
 export function tierNameFor(config: EngineConfig | undefined, tier: number): string {
   return config?.tierNames?.[String(tier)] ?? `Personalised plan (tier ${tier})`;
 }
+
+/**
+ * The heading on the qualifying popup — the last thing a buyer reads before they pay.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════════════════════
+ * F86 — THE $147 MODAL WAS SELLING THE $67 PRODUCT BY NAME.
+ *
+ * `copy.popupHeading` is ONE string for both tiers, and the modal knows the tier
+ * (EngineCalculator passes tier={popupTier.tier} right beside the heading). Measured across the
+ * nine products that set it, EIGHT write a tier-neutral position heading — "Your FRCGW clearance
+ * position", "Your Medicare levy surcharge position" — and exactly ONE wrote a PRODUCT NAME:
+ *
+ *   australia-smsf-residency   popupHeading "SMSF Residency Fix Kit"
+ *                              tierNames    67  "SMSF Residency Fix Kit"
+ *                                           147 "SMSF Residency Shield System"
+ *
+ * So a buyer clicking through at $147 read the $67 product's name on the checkout modal, on a live
+ * page. Screenshot, 28 September.
+ *
+ * THE RULE, and it needs no config change anywhere: if the shared heading is LITERALLY one tier's
+ * product name, it is a tier-specific string in a tier-agnostic slot, so it follows the tier.
+ * Otherwise it is used exactly as written. Measured: a no-op for the other eight products, because
+ * none of their headings matches any of their tier names.
+ * ═══════════════════════════════════════════════════════════════════════════════════════════
+ */
+export function popupHeadingFor(config: EngineConfig | undefined, tier: number): string {
+  const heading = config?.copy?.popupHeading;
+  if (!heading) return "Your personalised plan";
+  const names = Object.values(config?.tierNames ?? {});
+  if (names.includes(heading)) return tierNameFor(config, tier);
+  return heading;
+}
 /** Escape $67 product title — a "Review Guide", never a "Decision Pack" (ruling 4). */
 export function reviewGuideTitleFor(config: EngineConfig | undefined): string {
   return config?.copy?.reviewGuideTitle ?? "Review Guide";

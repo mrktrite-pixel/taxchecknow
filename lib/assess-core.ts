@@ -153,6 +153,50 @@ export function resolveCorpusOrigin(env: Record<string, string | undefined> = pr
  * Only sent for a self-origin fetch: a bypass secret is per project, and posting it at the public
  * origin would be a credential sent somewhere it does not belong.
  */
+/**
+ * The sentence to print when a SELF-ORIGIN corpus fetch fails the way a protected deployment fails.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════════════════════
+ * MEASURED on the preview, 2026-09-28T13:33:48Z, on a real tier-147 buy:
+ *
+ *   [assess-core] corpus origin: https://taxchecknow-g8bmjesu8-….vercel.app (VERCEL_URL (this deployment))
+ *   [assess-core] FAIL-CLOSED: corpus fetch threw … [TypeError: fetch failed]
+ *     [cause]: Error: redirect count exceeded
+ *   [webhook] assess 424 (corpus_unreachable) for cs_test_a1o6qf6… — NOT stored (fail-closed)
+ *
+ * The buyer got the holding page and an email; no pack was ever stored. Fail-closed is CORRECT — a
+ * pack grounded on the wrong corpus is worse than a late one — but the 424 said only "fetch failed",
+ * and finding out why took a dig through Vercel function logs.
+ *
+ * A redirect loop on a self-origin fetch has exactly one cause: the deployment is behind Vercel
+ * Authentication, the request is being sent to vercel.com/sso-api to log in, and that redirects
+ * again. It is the same protection wall as a 401, reached by a different route, so it gets the same
+ * sentence — which names the fix instead of describing the symptom.
+ * ═══════════════════════════════════════════════════════════════════════════════════════════
+ */
+export function protectionDetail(corpusUrl: string, env: Record<string, string | undefined> = process.env): string {
+  const secret = env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
+  return (
+    `${corpusUrl} could not be read from the deployment itself: the request was redirected to ` +
+    `Vercel's login (a redirect loop), which is what Deployment Protection does to an unauthenticated ` +
+    `request. VERCEL_AUTOMATION_BYPASS_SECRET ${secret ? "IS set and was sent, so it was rejected — regenerate it" : "is NOT set in this deployment, which is what Vercel populates when Protection Bypass for Automation is enabled"}. ` +
+    `Until that is on, a protected preview cannot ground on its own corpus and every paid assessment ` +
+    `on it fails closed.`
+  );
+}
+
+/** Does this failure look like Deployment Protection rather than a broken route? */
+export function looksLikeProtectionLoop(err: unknown): boolean {
+  const parts: string[] = [];
+  let e: unknown = err;
+  for (let i = 0; i < 4 && e; i++) {
+    if (e instanceof Error) { parts.push(e.message); e = (e as { cause?: unknown }).cause; }
+    else { parts.push(String(e)); break; }
+  }
+  const text = parts.join(" | ");
+  return /redirect count exceeded|too many redirects|sso-api|vercel\.com\/sso/i.test(text);
+}
+
 export function corpusFetchHeaders(target: CorpusOrigin, env: Record<string, string | undefined> = process.env): Record<string, string> {
   const headers: Record<string, string> = { accept: "application/json" };
   const secret = env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
@@ -225,21 +269,42 @@ export async function generateAssessment(input: AssessInput): Promise<AssessResu
   console.log(`[assess-core] corpus origin: ${corpusTarget.origin} (${corpusTarget.source}) → ${corpusUrl}`);
   let rules: Record<string, unknown> | null = null;
   try {
-    const cr = await fetch(corpusUrl, { headers: corpusFetchHeaders(corpusTarget) });
+    // redirect: "manual" on a SELF fetch. Following the redirect is what produced "redirect count
+    // exceeded": Vercel sends an unauthenticated request to its login, which redirects again. Manual
+    // turns that into ONE 3xx response, which lands in the branch below that already knows how to
+    // explain protection — instead of an opaque throw.
+    const cr = await fetch(corpusUrl, {
+      headers: corpusFetchHeaders(corpusTarget),
+      ...(corpusTarget.isSelf ? { redirect: "manual" as const } : {}),
+    });
     if (!cr.ok) {
       // A self-origin 401/403 is Deployment Protection, which has a specific fix — say which one
       // it is rather than making someone infer it from a bare status code.
-      const protectionLikely = corpusTarget.isSelf && (cr.status === 401 || cr.status === 403);
+      // 3xx counts too now that redirects are manual: a self-origin redirect goes to vercel.com/sso-api.
+      const protectionLikely = corpusTarget.isSelf
+        && (cr.status === 401 || cr.status === 403 || (cr.status >= 300 && cr.status < 400));
       const detail = protectionLikely
-        ? `${corpusUrl} returned ${cr.status} — the preview is behind Deployment Protection and VERCEL_AUTOMATION_BYPASS_SECRET ${process.env.VERCEL_AUTOMATION_BYPASS_SECRET ? "was sent but rejected" : "is not set in this deployment"}. Enable Protection Bypass for Automation, or the branch's own corpus cannot be read.`
+        ? protectionDetail(corpusUrl)
         : `rules route returned ${cr.status} (${corpusUrl})`;
       console.error(`[assess-core] FAIL-CLOSED: corpus fetch ${product_id} → ${cr.status} (${corpusUrl}, ${corpusTarget.source})`);
-      return { ok: false, status: 424, error: "corpus_unreachable", detail, product_id };
+      return { ok: false, status: 424, error: protectionLikely ? "corpus_protected" : "corpus_unreachable", detail, product_id };
     }
     rules = await cr.json();
   } catch (e) {
-    console.error(`[assess-core] FAIL-CLOSED: corpus fetch threw for ${product_id} (${corpusUrl}, ${corpusTarget.source})`, e);
-    return { ok: false, status: 424, error: "corpus_unreachable", detail: e instanceof Error ? e.message : "fetch failed", product_id };
+    // A SELF-ORIGIN REDIRECT LOOP IS DEPLOYMENT PROTECTION, not a broken route. Say which, because
+    // "fetch failed" sent someone to the Vercel logs to find out (see protectionDetail).
+    const protection = corpusTarget.isSelf && looksLikeProtectionLoop(e);
+    const detail = protection ? protectionDetail(corpusUrl) : (e instanceof Error ? e.message : "fetch failed");
+    console.error(
+      `[assess-core] FAIL-CLOSED: corpus fetch threw for ${product_id} (${corpusUrl}, ${corpusTarget.source})` +
+      (protection ? " — DEPLOYMENT PROTECTION: the deployment cannot read its own corpus" : ""),
+      e,
+    );
+    return {
+      ok: false, status: 424,
+      error: protection ? "corpus_protected" : "corpus_unreachable",
+      detail, product_id,
+    };
   }
   if (!rules || typeof rules !== "object" || (!rules.legislation && !rules.key_facts)) {
     console.error(`[assess-core] FAIL-CLOSED: corpus for ${product_id} is malformed / missing legislation+key_facts`);

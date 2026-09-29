@@ -43,16 +43,20 @@
 // row look right and read differently. (The us-expat heal script does hardcode it; noted there.)
 //
 // ── THE CORPUS ──
-// generateAssessment fetches the product's corpus over HTTP, defaulting to production. VERIFIED
-// before writing, not assumed: app/api/rules/australia-smsf-residency/route.ts is BYTE-IDENTICAL on
-// this branch and on origin/main (blob d7dfc420e6376eb4cf9e122d6a14197b6844313e), and production
-// serves last_verified "April 2026", which is what the config declares. So production's corpus IS
-// this branch's corpus for this product — unlike us-expat-tax, where regenerating against
-// production would have written a two-year-stale FEIE limit. The origin is printed on every run.
+// generateAssessment fetches the product's corpus over HTTP, defaulting to PRODUCTION — and since
+// 2026-09-28 this branch's corpus is NOT production's. Production serves the pre-correction text
+// (SIS Act s 10(1) for the residency conditions, one limb of the active member test, the
+// 30-June-snapshot framing). Grounding a heal there would write exactly the errors this branch
+// exists to remove, which is F57 in a new costume.
+//
+// So the heal must be pointed at THIS branch: build it, serve it, and set NEXT_PUBLIC_SITE_URL to
+// that origin. The run prints the origin AND the commit (F90), and the commit is what goes on the
+// row — a localhost URL is not provenance anybody can look up.
 // ═════════════════════════════════════════════════════════════════════════════════════════════
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { execFileSync } from "node:child_process";
 import { createClient } from "@supabase/supabase-js";
 import { generateAssessment } from "@/lib/assess-core";
 import { renderPack } from "@/lib/render-pack";
@@ -93,6 +97,26 @@ function deliveryIdentity(priceKey: string): { market: string; authority: string
   return { market: field("market"), authority: field("authority"), productId: field("productId") };
 }
 
+/**
+ * The storefront commit the corpus was built from: "<branch>@<sha>".
+ *
+ * A local origin says nothing about WHAT it served. This does — and it says when the tree had
+ * uncommitted changes, because a heal grounded on an uncommitted corpus is reproducible only by
+ * whoever had that working tree.
+ */
+function corpusRef(): string {
+  const git = (args: string[]): string => {
+    try {
+      return execFileSync("git", args, { encoding: "utf-8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    } catch { return ""; }
+  };
+  const sha = git(["rev-parse", "HEAD"]);
+  if (!sha) return "unknown (not a git checkout)";
+  const branch = git(["rev-parse", "--abbrev-ref", "HEAD"]) || "detached";
+  const dirty = git(["status", "--porcelain", "--untracked-files=no"]);
+  return `${branch}@${sha.slice(0, 12)}${dirty ? " (uncommitted changes present)" : ""}`;
+}
+
 function db() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -118,7 +142,8 @@ async function main(): Promise<void> {
   }
   console.log(`   product         : ${PRODUCT_ID}`);
   console.log(`   webhook identity: market="${identity.market}" authority="${identity.authority}"  (read from DELIVERY_MAP, not retyped)`);
-  console.log(`   corpus origin   : ${process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com (DEFAULT — production/main)"}\n`);
+  console.log(`   corpus origin   : ${process.env.NEXT_PUBLIC_SITE_URL || "https://taxchecknow.com (DEFAULT — production/main)"}`);
+  console.log(`   corpus ref      : ${corpusRef()}   (recorded on every row this run writes)\n`);
 
   const sb = db();
   let healed = 0;
@@ -219,7 +244,18 @@ async function main(): Promise<void> {
     });
     const assessment_json = {
       ...result.assessment,
-      _meta: { grounded: true, corpus_source: result.corpus_source, corpus_verified: result.corpus_verified },
+      // F90 — RECORD WHAT WAS GROUNDED ON, NOT WHERE IT HAPPENED TO BE FETCHED FROM.
+      //
+      // The previous heal ran against a locally-served build of this branch, so both rows recorded
+      // corpus_source "http://localhost:3117/api/rules/…". That is honest about the transport and
+      // useless as provenance: nobody can look up what localhost was serving. The COMMIT identifies
+      // the corpus, so it is recorded beside the URL.
+      _meta: {
+        grounded: true,
+        corpus_source: result.corpus_source,
+        corpus_verified: result.corpus_verified,
+        corpus_ref: corpusRef(),
+      },
       rendered,
     };
 
