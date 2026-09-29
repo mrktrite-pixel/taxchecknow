@@ -223,7 +223,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     "api_endpoint": "/api/rules/australia-smsf-residency",
-    "generated_at": "2026-09-28T14:42:22.285Z"
+    "generated_at": "2026-09-29T01:46:38.773Z"
 };
 
   return NextResponse.json(rules, {

@@ -13,7 +13,7 @@ const FILES = [
     "num": "01",
     "slug": "smsf-01",
     "name": "Your SMSF Residency Status Assessment",
-    "desc": "Your fund's specific residency position across all three SIS Act tests.",
+    "desc": "Your fund's specific residency position across the three ITAA 1997 s 295-95(2) conditions.",
     "tier": 1
   },
   {
