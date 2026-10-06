@@ -64,8 +64,14 @@ import { getAssessmentFields } from "@/lib/assessment-fields";
 import { buildComposerInputs } from "@/lib/composer-inputs";
 
 const ALLOWED: ReadonlyArray<{ tier: number; sessionId: string }> = [
+  // The two step-4 rows: PAID, DELIVERED, and stored against GENERIC_FIELDS. They need healing.
   { tier: 67, sessionId: "cs_test_a1Nq2Mr8I3FeS47gSU2dqFSzVK4gSSuTL5P770am7u88rA4MyOpPMwM5Sg" },
   { tier: 147, sessionId: "cs_test_a14Pk9q0Y9atz4weHkcEGzM9x4fMFGwRQgvLh7uOx9u7tlnMSKUnHayeXc" },
+  // The two 2026-09-28 buys: PAID, EMAILED, and NEVER STORED AT ALL — the webhook's /api/assess
+  // failed closed because the deployment could not read its own corpus. These have no assessments
+  // row to heal, so they take the CREATE path below.
+  { tier: 147, sessionId: "cs_test_a1o6qf6NXxTgy2JSNcLAChl3ncyE2986URec3QKuMrtskKw8VzzHerfMDl" },
+  { tier: 67, sessionId: "cs_test_a10D8achmQSPzmmlqFLFhjBlGRWpL05KGBcmQ6WdBrIZEuD1RRMiUgiQaV" },
 ];
 
 const PRODUCT_ID = "australia-smsf-residency";
@@ -157,16 +163,50 @@ async function main(): Promise<void> {
     }
 
     const pr = await sb.from("purchases")
-      .select("id, decision_session_id, product_key, tier")
+      .select("id, decision_session_id, product_key, tier, customer_email, metadata")
       .eq("stripe_session_id", sessionId).maybeSingle();
     if (pr.error || !pr.data) { console.error(`${label}: no purchase row (${pr.error?.message ?? "not found"})`); continue; }
-    const purchase = pr.data as { id: string; decision_session_id: string | null; product_key: string; tier: number };
+    const purchase = pr.data as {
+      id: string; decision_session_id: string | null; product_key: string; tier: number;
+      customer_email: string | null; metadata: Record<string, unknown> | null;
+    };
+    // The webhook preserves the buyer name in purchases.metadata.customer_name, because the table
+    // has no customer_name column. On the create path that is the only place to get it.
+    const purchaseEmail = purchase.customer_email ?? null;
+    const purchaseName = typeof purchase.metadata?.customer_name === "string"
+      ? (purchase.metadata.customer_name as string) : null;
 
     const ar = await sb.from("assessments")
       .select("id, customer_name, customer_email, assessment_json")
       .eq("stripe_session_id", sessionId).maybeSingle();
-    if (ar.error || !ar.data) { console.error(`${label}: no assessment row (${ar.error?.message ?? "not found"})`); continue; }
-    const row = ar.data as { id: string; customer_name: string | null; assessment_json: Record<string, unknown> };
+    // ── A MISSING ROW IS A DELIVERY THAT NEVER HAPPENED, NOT A BAD INPUT ──────────────────
+    //
+    // This script only ever UPDATEd, and skipped a session with no assessments row. That was right
+    // while every allow-listed session had a row with the wrong KEYS. It is wrong for the two
+    // 2026-09-28 buys, which have no row at all: the purchase landed, the email went out saying a
+    // pack was coming, and /api/assess failed closed, so there is nothing to update.
+    //
+    // A QUERY FAILURE IS STILL A SKIP. "the table would not answer" and "the row is not there" are
+    // different facts and only the second is a create.
+    if (ar.error) { console.error(`${label}: assessments query failed — ${ar.error.message}`); process.exitCode = 1; continue; }
+    const creating = !ar.data;
+    if (creating && RERENDER) {
+      // --rerender re-renders a stored pack's presentation without a model call. There is no
+      // stored pack here, so there is nothing to re-render and nothing to invent.
+      console.error(`${label}: no assessment row — --rerender cannot create one. Re-run without --rerender to generate it.`);
+      process.exitCode = 1; continue;
+    }
+    if (creating) {
+      console.log(`${label}: NO assessments row — this session paid and was never delivered. CREATE path.`);
+    }
+    // On the create path the customer name comes from the PURCHASE row's metadata, which is where
+    // the webhook preserves it (purchases has no customer_name column — including one made the
+    // whole insert throw, which is recorded in the webhook).
+    const row = (ar.data ?? {
+      id: "(none — to be created)",
+      customer_name: purchaseName,
+      assessment_json: {} as Record<string, unknown>,
+    }) as { id: string; customer_name: string | null; assessment_json: Record<string, unknown> };
 
     const existing = Object.keys(row.assessment_json)
       .filter((k) => k !== "_meta" && k !== "rendered" && typeof row.assessment_json[k] === "string");
@@ -208,11 +248,15 @@ async function main(): Promise<void> {
       continue;
     }
 
-    if (!allGeneric && !FORCE) {
+    // GUARD 3 PROTECTS A STORED DOCUMENT FROM BEING SILENTLY REWRITTEN. A create has no stored
+    // document, so --force would be asking permission to overwrite something that is not there —
+    // and with `existing` empty, allGeneric is false, so without this the create path would always
+    // refuse. The guard still applies in full to every row that does exist.
+    if (!creating && !allGeneric && !FORCE) {
       console.log(`${label}: SKIPPED — already carries product keys (${existing.join(", ")}). --force to regenerate anyway.`);
       continue;
     }
-    if (!allGeneric && FORCE) {
+    if (!creating && !allGeneric && FORCE) {
       console.log(`${label}: FORCED — row already carries product keys, regenerating anyway (${existing.length} keys)`);
     }
 
@@ -266,7 +310,27 @@ async function main(): Promise<void> {
       console.log(`       ${String(i + 1).padStart(2)}. ${s.heading}`);
     }
 
-    if (!WRITE) { console.log(`   DRY RUN — not written\n`); continue; }
+    if (!WRITE) { console.log(`   DRY RUN — ${creating ? "nothing created" : "not written"}\n`); continue; }
+
+    // UPSERT ON THE CREATE PATH, with the columns the webhook writes (route.ts:231) and no others.
+    // Retyping a different column set here is how a created row ends up looking almost like a
+    // bought one — the same reason market/authority are parsed out of DELIVERY_MAP above.
+    if (creating) {
+      const ins = await sb.from("assessments").upsert({
+        stripe_session_id:   sessionId,
+        decision_session_id: purchase.decision_session_id,
+        product_id:          PRODUCT_ID,
+        product_key:         purchase.product_key,
+        tier:                purchase.tier,
+        customer_email:      purchaseEmail,
+        customer_name:       row.customer_name,
+        assessment_json,
+      }, { onConflict: "stripe_session_id" });
+      if (ins.error) { console.error(`   CREATE FAILED: ${ins.error.message}`); process.exitCode = 1; continue; }
+      console.log(`   CREATED\n`);
+      healed += 1;
+      continue;
+    }
     const up = await sb.from("assessments").update({ assessment_json }).eq("stripe_session_id", sessionId);
     if (up.error) { console.error(`   WRITE FAILED: ${up.error.message}`); process.exitCode = 1; continue; }
     console.log(`   WRITTEN\n`);

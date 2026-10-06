@@ -174,6 +174,22 @@ export function resolveCorpusOrigin(env: Record<string, string | undefined> = pr
  * sentence — which names the fix instead of describing the symptom.
  * ═══════════════════════════════════════════════════════════════════════════════════════════
  */
+/**
+ * Is this response Vercel Deployment Protection answering, rather than the app?
+ *
+ * MEASURED 2026-10-06: a LOCAL run pointed at the branch preview (NEXT_PUBLIC_SITE_URL, so
+ * isSelf=false) got "FAIL-CLOSED: corpus fetch australia-smsf-residency -> 401" and the generic
+ * detail "rules route returned 401". The 401 body was Vercel's own protection page. The diagnosis
+ * existed and only fired for a self-origin fetch, so the re-delivery path — which is deliberately
+ * NOT self-origin — could not see it.
+ *
+ * The signature is in the body and the status, so it does not depend on who asked.
+ */
+export function protectedResponse(status: number, body: string): boolean {
+  if (status !== 401 && status !== 403) return false;
+  return /vercel_auth_enabled|password_enabled|Protected by Vercel|sso-api|vercel_auth_callback/i.test(body);
+}
+
 export function protectionDetail(corpusUrl: string, env: Record<string, string | undefined> = process.env): string {
   const secret = env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
   return (
@@ -278,16 +294,34 @@ export async function generateAssessment(input: AssessInput): Promise<AssessResu
       ...(corpusTarget.isSelf ? { redirect: "manual" as const } : {}),
     });
     if (!cr.ok) {
+      // READ THE BODY BEFORE DECIDING. A 401 from a protected preview and a 401 from the route
+      // itself are different facts, and only the body separates them.
+      const errBody = await cr.text().catch(() => "");
       // A self-origin 401/403 is Deployment Protection, which has a specific fix — say which one
       // it is rather than making someone infer it from a bare status code.
       // 3xx counts too now that redirects are manual: a self-origin redirect goes to vercel.com/sso-api.
       const protectionLikely = corpusTarget.isSelf
         && (cr.status === 401 || cr.status === 403 || (cr.status >= 300 && cr.status < 400));
+      // A NON-SELF FETCH CAN ALSO HIT THE WALL, and it gets a different remedy: no bypass secret
+      // was sent, and that was correct rather than an oversight — corpusFetchHeaders will not post
+      // a per-project secret at an origin it was told to use. Saying "the secret was rejected"
+      // here would send someone to regenerate a working secret.
+      const protectedElsewhere = !corpusTarget.isSelf && protectedResponse(cr.status, errBody);
       const detail = protectionLikely
         ? protectionDetail(corpusUrl)
-        : `rules route returned ${cr.status} (${corpusUrl})`;
-      console.error(`[assess-core] FAIL-CLOSED: corpus fetch ${product_id} → ${cr.status} (${corpusUrl}, ${corpusTarget.source})`);
-      return { ok: false, status: 424, error: protectionLikely ? "corpus_protected" : "corpus_unreachable", detail, product_id };
+        : protectedElsewhere
+          ? `${corpusUrl} is behind Vercel Deployment Protection (HTTP ${cr.status}). This fetch was ` +
+            `aimed at a CONFIGURED origin, not at this deployment, so no bypass secret was sent — ` +
+            `that is deliberate: a per-project secret is never posted at an origin we were told to ` +
+            `use. To ground against this preview, either enable Protection Bypass for Automation on ` +
+            `the project and run from inside it, or serve the branch locally and point ` +
+            `NEXT_PUBLIC_SITE_URL at that build.`
+          : `rules route returned ${cr.status} (${corpusUrl})`;
+      console.error(
+        `[assess-core] FAIL-CLOSED: corpus fetch ${product_id} → ${cr.status} (${corpusUrl}, ${corpusTarget.source})` +
+        ((protectionLikely || protectedElsewhere) ? " — DEPLOYMENT PROTECTION" : ""),
+      );
+      return { ok: false, status: 424, error: (protectionLikely || protectedElsewhere) ? "corpus_protected" : "corpus_unreachable", detail, product_id };
     }
     rules = await cr.json();
   } catch (e) {
