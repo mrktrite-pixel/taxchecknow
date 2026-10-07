@@ -195,7 +195,18 @@ export function protectionDetail(corpusUrl: string, env: Record<string, string |
   return (
     `${corpusUrl} could not be read from the deployment itself: the request was redirected to ` +
     `Vercel's login (a redirect loop), which is what Deployment Protection does to an unauthenticated ` +
-    `request. VERCEL_AUTOMATION_BYPASS_SECRET ${secret ? "IS set and was sent, so it was rejected — regenerate it" : "is NOT set in this deployment, which is what Vercel populates when Protection Bypass for Automation is enabled"}. ` +
+    // "SET BUT REJECTED" ALMOST ALWAYS MEANS A STALE BAKED VALUE, NOT A BAD SECRET.
+    //
+    // This sentence used to end "— regenerate it", and that advice misdirected the fix TWICE on
+    // 2026-10-07. A deployment's env is fixed at build time, so correcting the project variable
+    // does nothing for a deployment already running; what it needs is a REDEPLOY. And regenerating
+    // is actively harmful here: the same secret is embedded in the Stripe webhook endpoint's
+    // ?x-vercel-protection-bypass= query token, so regenerating silently breaks INBOUND delivery
+    // too — which is exactly what happened, costing two round-trips with no events arriving at all.
+    //
+    // The ordering below is the cheap-and-likely-first rule: redeploy, verify, and only then
+    // consider regenerating — with the Stripe URL updated in the same move.
+    `request. VERCEL_AUTOMATION_BYPASS_SECRET ${secret ? "IS set and was sent, and Vercel rejected it — which usually means THIS DEPLOYMENT WAS BUILT BEFORE the variable was corrected, because a deployment's env is baked at build time. REDEPLOY and retry first. Only if a fresh deployment still fails is the secret itself wrong, and if you regenerate it you must also update the Stripe webhook endpoint URL's ?x-vercel-protection-bypass= token, which carries the same value" : "is NOT set in this deployment, which is what Vercel populates when Protection Bypass for Automation is enabled"}. ` +
     `Until that is on, a protected preview cannot ground on its own corpus and every paid assessment ` +
     `on it fails closed.`
   );
