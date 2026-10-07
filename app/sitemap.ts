@@ -143,6 +143,41 @@ function lastmodFor(route: string, fallback: Date): Date {
   return Number.isNaN(d.getTime()) ? fallback : d;
 }
 
+// ── BLOG ENGINE P1 — the /blog block ────────────────────────────────────────────────────
+//
+// THE PATHS ARE DERIVED, NOT HAND-LISTED. Every other array in this file is maintained by
+// hand and each one carries a comment telling you to mirror a directory — which works while
+// a class holds 37 pages that change on a release. The blog is different in kind: the ramp
+// in the spec is 3/wk rising to 6-7/wk, so a hand-maintained BLOG_SLUGS array would be
+// stale within days and the staleness would be INVISIBLE (a missing sitemap entry looks
+// exactly like a page that was never written).
+//
+// So the source is app/blog-lastmod.json, which scripts/generate-blog-pages.ts rewrites in
+// the same run that emits the pages. One writer, one truth: a post cannot be published
+// without appearing here, and a path cannot appear here without a page having been emitted.
+//
+// FAIL-SOFT, like the product map above: an empty or absent map yields NO blog URLs, which
+// is exactly correct before the first post is published. It can never invent a URL, and it
+// can never drop a non-blog URL.
+import BLOG_LASTMOD from "./blog-lastmod.json";
+
+const BLOG_PATHS: string[] = Object.keys(BLOG_LASTMOD as Record<string, string>)
+  .filter((p) => /^\/blog\/[^/]+\/[^/]+$/.test(p))
+  .sort();
+
+/** The cluster hubs, derived from the posts that exist. No post, no hub. */
+const BLOG_CLUSTER_PATHS: string[] = Array.from(
+  new Set(BLOG_PATHS.map((p) => p.split("/").slice(0, 3).join("/"))),
+).sort();
+
+/** Same fail-soft read as lastmodFor, against the blog map. */
+function blogLastmodFor(route: string, fallback: Date): Date {
+  const iso = (BLOG_LASTMOD as Record<string, string>)[route];
+  if (!iso) return fallback;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? fallback : d;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://www.taxchecknow.com";
   const now = new Date();
@@ -188,6 +223,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified:      lastmodFor(p, now),
       changeFrequency:   "weekly" as const,
       priority:          0.9,
+    })),
+
+    // ── BLOG (derived from app/blog-lastmod.json — see the note above) ──
+    // The hub and the cluster hubs are emitted only when posts exist, so they are listed
+    // only when posts exist. The whole block collapses to nothing on an empty map.
+    ...(BLOG_PATHS.length > 0
+      ? [{ url: `${base}/blog`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 }]
+      : []),
+    ...BLOG_CLUSTER_PATHS.map(p => ({
+      url:              `${base}${p}`,
+      lastModified:      now,
+      changeFrequency:   "weekly" as const,
+      priority:          0.7,
+    })),
+    ...BLOG_PATHS.map(p => ({
+      url:              `${base}${p}`,
+      // The post's own updated_at, stamped by the generator. Falls back to `now`.
+      lastModified:      blogLastmodFor(p, now),
+      changeFrequency:   "monthly" as const,
+      priority:          0.7,
     })),
   ];
 }
