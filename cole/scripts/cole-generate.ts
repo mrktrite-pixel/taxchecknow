@@ -29,7 +29,7 @@ import { generateRulesRoute,    getRulesRoutePath,
          corpusWriteDecision                          } from "../generators/generate-rules-route";
 import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
 import type { ProductConfig } from "../types/product-config";
-import { assertSeo, SeoGateError } from "../validators/seo-gate";
+import { assertSeo, SeoGateError, warnIfCorpusStale } from "../validators/seo-gate";
 import { assertNoFirstPerson, FirstPersonGateError } from "../validators/first-person-gate";
 import { createClient } from "@supabase/supabase-js";
 import type { GeoBake } from "../generators/generate-gate-page";
@@ -244,6 +244,9 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
   try {
     assertSeo(config.id, config);
     console.log(`   ✅ SEO gate passed`);
+    // F95 — WARNS, never refuses here. A refusal would block 42 of 48 products, including the
+    // regenerations that fix unrelated defects. soverella ship-check step 6 is where it blocks.
+    warnIfCorpusStale(config.id, (config as { lastVerified?: string }).lastVerified);
   } catch (err) {
     if (err instanceof SeoGateError) {
       console.error(`
@@ -434,6 +437,38 @@ ${"─".repeat(60)}`);
     if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
+  }
+
+  // ── R-A2: A FULL RUN ON AN ENGINE-NATIVE PRODUCT REFUSES BEFORE IT WRITES ──────────────
+  //
+  // THE REFUSAL ALREADY EXISTED AND IT WAS IN THE WRONG PLACE. It lives inside buildSuccessPage()
+  // (STEP 4), and STEP 3 copies cole/calculators/<Name>.tsx over the app directory. So the order
+  // was: overwrite the EngineCalculator wrapper with the stale hand-built calculator, THEN refuse
+  // on the ground that no file in the app directory imports EngineCalculator — which had been true
+  // until one step earlier.
+  //
+  // MEASURED 2026-09-28T14:06Z on australia-smsf-residency: a full run replaced the 89-line
+  // wrapper with the 987-line hand-built calculator (+898/-89) and then aborted. Recovered with
+  // `git checkout --`, which is the only reason it was recoverable. The usage text already said
+  // "REFUSED for an engineNative product — it would overwrite the EngineCalculator wrapper";
+  // this is what makes that sentence true.
+  //
+  // A GUARD THAT FIRES AFTER THE DESTRUCTIVE STEP IS NOT A GUARD — the same lesson d863db6 taught
+  // and the --pages-only header above already records, where a refusal was collected into errors[]
+  // and the run carried on to destroy a hand-authored corpus.
+  if (config.engineNative === true) {
+    const bar = "=".repeat(70);
+    console.error("\n" + bar);
+    console.error("🛑 REFUSED — R-A2: full run on an engine-native product");
+    console.error(bar);
+    console.error(
+      `\nproduct "${config.id}" declares engineNative: true. A full run's STEP 3 copies\n` +
+      `cole/calculators/${toPascal(config.id)}Calculator.tsx over the app directory, which would\n` +
+      `replace the EngineCalculator wrapper with the pre-migration calculator.\n\n` +
+      `NOTHING HAS BEEN WRITTEN. Use the per-surface mode, which never touches the calculator:\n\n` +
+      `  npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts ${productId} --pages-only\n`,
+    );
+    process.exit(3);
   }
 
   // ── STEP 2: Generate gate page ────────────────────────────────────────────

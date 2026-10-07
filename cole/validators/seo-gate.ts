@@ -176,3 +176,67 @@ export function assertSeo(productId: string, config: SeoFields): void {
   }
   throw err;
 }
+
+// ═════════════════════════════════════════════════════════════════════════════════════════════
+// F95 — CORPUS FRESHNESS. WARNS HERE; BLOCKS IN soverella's ship-check (step 6).
+//
+// The ruling is "stale = older than 90 days", replacing "=== the current month", which turned every
+// product red on the 1st and taught re-stamping instead of re-reading.
+//
+// ── WHY THIS WARNS AND DOES NOT THROW, measured before deciding ──
+//
+// Census of all 48 configs on 2026-10-07, at 90 days:
+//     FRESH  6      STALE 42
+//     40x "April 2026" (189d) · 5x "September 2026" (36d) · 1x "August 2026" (67d)
+//     1x "2026-06-05" (wrong format, unparseable) · 1x "" (absent)
+//
+// A throw here runs on EVERY generate, so it would refuse 42 of 48 products — including refusing
+// the regenerations that fix unrelated defects. A gate nobody can satisfy is a gate that gets
+// bypassed, and the 42 need an authority re-read each, which is legal work and not a code change.
+//
+// So the per-product SHIP gate blocks (soverella/scripts/ship-check.ts step 6, which is where a
+// product's copy is signed off) and this prints a warning loud enough to read. Flipping this to a
+// throw is one line, once the 42 are re-verified.
+//
+// The parsing rules are deliberately identical to soverella/lib/ship/last-verified.ts — the first
+// of the named month (never understate age), a future label is NOT fresh, and an unparseable or
+// absent label is NOT fresh rather than silently passing.
+// ═════════════════════════════════════════════════════════════════════════════════════════════
+
+export const MAX_VERIFIED_AGE_DAYS = 90;
+
+const VERIFIED_MONTHS = [
+  "january", "february", "march", "april", "may", "june",
+  "july", "august", "september", "october", "november", "december",
+];
+
+/** Days since the first of the named month, or null when the label cannot be read. */
+export function verifiedAgeDays(label: string | null | undefined, now: Date = new Date()): number | null {
+  if (!label) return null;
+  const m = /^\s*([A-Za-z]+)\s+(\d{4})\s*$/.exec(label);
+  if (!m) return null;
+  const idx = VERIFIED_MONTHS.indexOf(m[1].toLowerCase());
+  if (idx < 0) return null;
+  const year = Number(m[2]);
+  if (!Number.isFinite(year) || year < 2000 || year > 2100) return null;
+  return Math.floor((now.getTime() - Date.UTC(year, idx, 1)) / 86_400_000);
+}
+
+/** Print the freshness verdict. Returns true when fresh, so a caller can choose to escalate. */
+export function warnIfCorpusStale(productId: string, lastVerified: string | null | undefined, now: Date = new Date()): boolean {
+  const age = verifiedAgeDays(lastVerified, now);
+  if (age !== null && age >= 0 && age <= MAX_VERIFIED_AGE_DAYS) {
+    console.log(`   ✅ corpus freshness: lastVerified ${lastVerified} · ${age} days old`);
+    return true;
+  }
+  const why = age === null
+    ? `lastVerified ${lastVerified ? `"${lastVerified}" is not a "<Month> <Year>" label` : "is absent"}`
+    : age < 0
+      ? `lastVerified "${lastVerified}" is ${-age} days IN THE FUTURE`
+      : `lastVerified "${lastVerified}" is ${age} days old`;
+  console.log(`   ⚠  F95 corpus freshness: ${why} (stale after ${MAX_VERIFIED_AGE_DAYS} days)`);
+  console.log(`      "${productId}" will NOT pass step 6 until the authority is re-read and the field re-stamped.`);
+  console.log(`      This is a warning, not a refusal: 42 of 48 configs are stale today, and refusing`);
+  console.log(`      here would block regenerating them for reasons unrelated to what is being fixed.`);
+  return false;
+}

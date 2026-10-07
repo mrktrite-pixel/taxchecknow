@@ -8,10 +8,13 @@ import { execFileSync } from "node:child_process";
 import type { ProductConfig, ProductFile } from "../types/product-config";
 import { resolvesFromRule } from "./generate-gate-page";
 import { engineSessionKey } from "./verify-engine-native";
+import { jurisdictionFlag } from "./jurisdiction-flag";
 
-// Jurisdiction flag from config.country — NEVER hardcode a flag (was leaking 🇬🇧 on AU).
-function countryFlag(country: string): string {
-  return ({ au: "🇦🇺", uk: "🇬🇧", us: "🇺🇸", nz: "🇳🇿", ca: "🇨🇦" } as Record<string, string>)[country?.toLowerCase()] ?? "🏳️";
+// Jurisdiction flag — NEVER hardcode one (this file's own comment used to read "was leaking 🇬🇧 on
+// AU"). It was a SECOND copy of the rule, keyed on "ca" while the Canadian configs say "can", so
+// Canadian file pages showed 🏳️ while Canadian gate pages showed 🇬🇧. One module now answers both.
+function countryFlag(country: string, market?: string): string {
+  return jurisdictionFlag(country, market);
 }
 
 /**
@@ -275,7 +278,7 @@ export default function ${toPascal(config.id)}File${file.num}() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              ${countryFlag(config.country)} ${config.authority} · ${config.legalAnchor}
+              ${countryFlag(config.country, config.market)} ${config.authority} · ${config.legalAnchor}
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: ${config.lastVerified}
