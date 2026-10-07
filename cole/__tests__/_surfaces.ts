@@ -130,6 +130,27 @@ export function snapshotPath(productId: string, surfaceKey: string): string {
 /** Store the generated page VERBATIM so the .snap is the .tsx a reviewer reads. */
 export const verbatim = [(v: unknown) => String(v)];
 
+/**
+ * F96 — the same, with the generator provenance stamp removed before comparison.
+ *
+ * generate-product-files emits "// Generator: <short sha>" into every delivered document. That is
+ * useful provenance in the file and ruinous in a snapshot: the stamp is the CURRENT COMMIT, so a
+ * snapshot that stores it is invalidated by the next commit that touches a generator. Accepting
+ * them would buy one green run and then fail again.
+ *
+ * MEASURED 2026-10-06/07, `npm run test:snap` over the whole estate:
+ *     pass 156   fail 471
+ * and the entire diff of a failing case was one added line. 472 of the 480 stored snapshots predate
+ * the stamp and carry no such line; the 8 that do are the ones accepted by hand last week.
+ *
+ * STRIPPED, NOT PLACEHOLDERED. Stripping makes the 472 match with nothing accepted at all — which
+ * is the proof that the stamp was the only difference, rather than a claim that it was. A
+ * placeholder would have required re-accepting all 480, and a bulk acceptance is exactly where a
+ * real content change rides along unseen.
+ */
+export const verbatimNoStamp = [(v: unknown) =>
+  String(v).replace(/^\/\/ Generator: [0-9a-f]{7,40}\r?\n/m, "")];
+
 export interface Expectation {
   productId: string;
   surface: string;

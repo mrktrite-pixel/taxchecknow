@@ -1,3 +1,29 @@
+/* ==========================================================================================
+ * ARCHIVED — DO NOT RESTORE, DO NOT COPY FROM. NOT SERVED.
+ *
+ * This is the PRE-MIGRATION calculator, kept by 860f3cf when the product moved to the generic
+ * EngineCalculator wrapper. RULED 2026-10-07: keep it as history, with this header.
+ *
+ * WHY IT IS DANGEROUS TO READ. Its legal content is WRONG and was corrected on the branch that
+ * replaced it:
+ *
+ *   · it cites SIS Act s 10(1) for the three residency conditions — THIRTEEN times, including
+ *     "SIS Act s 10(1)(c), this alone causes the fund to fail the 'Australian superannuation
+ *     fund' test". The conditions are ITAA 1997 s 295-95(2) (TR 2008/9). SIS Act s 17A is the
+ *     trustee/director provision and nothing else. (F81)
+ *   · it frames residency as assessed at a "30 June snapshot"; the conditions must be met at
+ *     ALL TIMES during the financial year. (F76/F81)
+ *   · it states one limb of the active member test. The ATO states two, either sufficient.
+ *   · its law bar reads "April 2026", which is 189 days stale under F95.
+ *
+ * IT IS INERT, AND THAT WAS VERIFIED RATHER THAN ASSUMED: nothing in app/, lib/ or cole/ imports
+ * it, and ".bak" is not a route extension, so Next does not serve it. The live calculator is
+ * AustraliaSmsfResidencyCalculator.tsx, an EngineCalculator wrapper.
+ *
+ * A RENAME IS ALL IT WOULD TAKE to put every one of those errors back in front of a buyer, and a
+ * grep for the wrong statute lands here. Hence this header rather than silence.
+ * ========================================================================================== */
+
 "use client";
 
 /**

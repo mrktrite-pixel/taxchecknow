@@ -29,7 +29,7 @@ import { generateRulesRoute,    getRulesRoutePath,
          corpusWriteDecision                          } from "../generators/generate-rules-route";
 import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
 import type { ProductConfig } from "../types/product-config";
-import { assertSeo, SeoGateError } from "../validators/seo-gate";
+import { assertSeo, SeoGateError, warnIfCorpusStale } from "../validators/seo-gate";
 import { assertNoFirstPerson, FirstPersonGateError } from "../validators/first-person-gate";
 import { createClient } from "@supabase/supabase-js";
 import type { GeoBake } from "../generators/generate-gate-page";
@@ -244,6 +244,9 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
   try {
     assertSeo(config.id, config);
     console.log(`   ✅ SEO gate passed`);
+    // F95 — WARNS, never refuses here. A refusal would block 42 of 48 products, including the
+    // regenerations that fix unrelated defects. soverella ship-check step 6 is where it blocks.
+    warnIfCorpusStale(config.id, (config as { lastVerified?: string }).lastVerified);
   } catch (err) {
     if (err instanceof SeoGateError) {
       console.error(`
