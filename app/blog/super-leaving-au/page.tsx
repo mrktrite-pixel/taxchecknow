@@ -24,9 +24,25 @@ export default function Page() {
       </section>
       <section className="bg-white px-6 py-12 sm:py-14">
         <div className="mx-auto max-w-3xl">
+          <Link
+            href={"https://www.taxchecknow.com/au/check/superannuation-tax-leaving-australia-confusion-2026?utm_source=blog&utm_medium=internal&utm_campaign=blog-engine-p1"}
+            className="group mb-10 block rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-5 transition hover:border-neutral-400"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">The check behind these notes</p>
+            <p className="mt-2 font-serif text-xl font-bold text-neutral-950">{"Superannuation Tax When Leaving Australia (DASP)"}</p>
+            <p className="mt-1 text-[15px] text-neutral-600">Free, no sign-up. Answer the gates and see which outcome applies to you.</p>
+            <p className="mt-3 text-sm font-bold text-neutral-950 group-hover:underline">Run the free check →</p>
+          </Link>
           <ul className="space-y-8">
             <li>
               <Link href={"/blog/super-leaving-au/what-happens-to-my-super-when-i-lose-permanent"} className="group block">
+                <p className="mb-1.5 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+                  <span className="inline-flex items-center gap-1"><span aria-hidden>{"🇦🇺"}</span>{"Australia"}</span>
+                  <span aria-hidden className="text-neutral-300">·</span>
+                  <span>{"Super Leaving AU"}</span>
+                  <span aria-hidden className="text-neutral-300">·</span>
+                  <span>{"Verified 21 April 2026"}</span>
+                </p>
                 <p className="font-serif text-xl font-bold text-neutral-950 group-hover:underline">{"What happens to my super when I lose permanent resident status and leave Australia?"}</p>
                 <p className="mt-1 text-[15px] text-neutral-600">{"When leaving Australia as a temporary resident, you may generally claim a Departing Australia Superannuation Payment (DASP) if you accumulated super"}</p>
               </Link>
