@@ -30,6 +30,29 @@ export function lit(s: string): string {
   return JSON.stringify(s);
 }
 
+/**
+ * The only link schemes a published post may carry.
+ *
+ * WHY AN ALLOW-LIST AND NOT A javascript: DENY-LIST. A markdown link's target
+ * becomes an href in a static page, so `[text](javascript:…)` would emit a live
+ * script link, and so would `data:text/html,…` or a `vbscript:` variant. A
+ * deny-list has to anticipate every scheme; an allow-list has to anticipate the
+ * two we use. The composer only ever emits absolute http(s) citation URLs and
+ * the resolved calculator URL, so nothing legitimate is lost.
+ *
+ * A relative path is also accepted, because the sibling-post and hub links the
+ * generator writes are root-relative — but ONLY single-slash-prefixed ones, so
+ * "//evil.com" (a protocol-relative URL, which a browser resolves as absolute)
+ * is refused.
+ */
+const SAFE_SCHEME = /^https?:\/\//i;
+export function isSafeHref(href: string): boolean {
+  const h = href.trim();
+  if (SAFE_SCHEME.test(h)) return true;
+  if (h.startsWith("/") && !h.startsWith("//")) return true;
+  return false;
+}
+
 /** Inline markdown -> JSX children source. Supports **bold**, [text](url), `code`. */
 export function inlineToJsx(text: string): string {
   const parts: string[] = [];
@@ -41,6 +64,16 @@ export function inlineToJsx(text: string): string {
     if (m.index > last) parts.push(`{${lit(text.slice(last, m.index))}}`);
     if (m[1] !== undefined) {
       const href = m[2];
+      // THROWS on an unsafe scheme rather than dropping the link or emitting it.
+      // Dropping would silently remove a citation from a page whose whole claim is
+      // that its figures are sourced; emitting would ship a script link. Neither is
+      // acceptable, so the generator stops and names the post.
+      if (!isSafeHref(href)) {
+        throw new Error(
+          `blog-md-to-jsx: refusing to emit a link with an unsafe target: ${JSON.stringify(href.slice(0, 120))}. ` +
+          `Only absolute http(s) URLs and root-relative paths may appear in a published post.`,
+        );
+      }
       // An external link opens in place; it is a citation, and a new tab for a
       // source the reader is being asked to check is friction, not a courtesy.
       parts.push(`<a href={${lit(href)}} className="underline decoration-neutral-400 underline-offset-2 hover:text-neutral-950">{${lit(m[1])}}</a>`);

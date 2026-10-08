@@ -114,6 +114,11 @@ function safeJsonLd(obj: unknown): string {
     .replace(/&/g, "\\u0026");
 }
 
+/** Repo-relative, forward-slashed, for logs. blogPath() returns absolute paths. */
+function rel(file: string): string {
+  return path.relative(process.cwd(), file).split(path.sep).join("/");
+}
+
 function clusterLabel(cluster: string): string {
   return cluster.split("-").map((w) => (w.length <= 3 ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1))).join(" ");
 }
@@ -122,12 +127,66 @@ function postPath(cluster: string, slug: string): string {
   return `/blog/${cluster}/${slug}`;
 }
 
+/**
+ * Is `u` genuinely a URL on this storefront?
+ *
+ * startsWith(ORIGIN) IS NOT THAT TEST, and the difference is an open redirect:
+ * "https://www.taxchecknow.com.evil.example/au/check/x" passes startsWith and is
+ * a different host. The CTA becomes a link on a published tax page, so a crafted
+ * value would be a phishing link wearing our own copy. Parsing and comparing the
+ * HOST is the only check that means what it says.
+ */
+function isOwnOrigin(u: string): boolean {
+  try {
+    const parsed = new URL(u);
+    return parsed.protocol === "https:" && parsed.host === new URL(ORIGIN).host;
+  } catch {
+    return false;
+  }
+}
+
 /** gate_result.cta_url, or a body link to this storefront's own /check/ path. */
 function ctaUrlFor(row: PostRow): string | null {
   const gr = row.gate_result as { cta_url?: unknown } | null;
-  if (gr && typeof gr.cta_url === "string" && gr.cta_url.startsWith(ORIGIN)) return gr.cta_url;
-  const fromBody = linksOf(row.body_md).find((u) => u.startsWith(ORIGIN) && u.includes("/check/"));
+  if (gr && typeof gr.cta_url === "string" && isOwnOrigin(gr.cta_url) && new URL(gr.cta_url).pathname.includes("/check/")) {
+    return gr.cta_url;
+  }
+  const fromBody = linksOf(row.body_md).find((u) => isOwnOrigin(u) && new URL(u).pathname.includes("/check/"));
   return fromBody ?? null;
+}
+
+/**
+ * A cluster or slug segment that is safe to use as a DIRECTORY NAME.
+ *
+ * The generator builds paths out of database values. blog_posts rows are shared
+ * state: the bee writes them, the operator edits status, and nothing structurally
+ * prevents a slug of "../../../app/api" from being stored. path.join would then
+ * resolve OUTSIDE app/blog and this script would overwrite real source files.
+ * The bee's own slug derivation strips everything but letters, digits and
+ * hyphens, so this refuses nothing it produces — it simply declines to trust a
+ * value it did not create.
+ */
+const SAFE_SEGMENT = /^[a-z0-9][a-z0-9-]{0,99}$/;
+function segmentFault(cluster: string, slug: string): string | null {
+  if (!SAFE_SEGMENT.test(cluster)) return `cluster ${JSON.stringify(cluster)} is not a safe path segment (lowercase letters, digits and hyphens only)`;
+  if (!SAFE_SEGMENT.test(slug)) return `slug ${JSON.stringify(slug)} is not a safe path segment (lowercase letters, digits and hyphens only)`;
+  return null;
+}
+
+/**
+ * Resolve a path under app/blog and PROVE it stayed there.
+ *
+ * The segment check above should make this unreachable. It is here anyway because
+ * "should" is not a guarantee, and the cost of being wrong is this script writing
+ * over app/api or app/layout.tsx.
+ */
+function blogPath(...segments: string[]): string {
+  const root = path.resolve("app", "blog");
+  const full = path.resolve(root, ...segments);
+  if (full !== root && !full.startsWith(root + path.sep)) {
+    throw new Error(`generate-blog-pages: refusing to write outside app/blog — resolved ${full}`);
+  }
+  return full;
 }
 
 function citationsOf(row: PostRow): Citation[] {
@@ -431,8 +490,12 @@ async function main(): Promise<void> {
   const skipped: Array<{ row: PostRow; reason: string }> = [];
   const emittable: PostRow[] = [];
   for (const r of all) {
+    // The path check runs FIRST. A row whose cluster or slug is not a safe
+    // directory name is refused before anything is resolved from it.
+    const fault = segmentFault(r.cluster, r.slug);
+    if (fault) { skipped.push({ row: r, reason: `unsafe path segment — ${fault}` }); continue; }
     const cta = ctaUrlFor(r);
-    if (!cta) { skipped.push({ row: r, reason: "no calculator URL in gate_result.cta_url and none in the body — refusing to publish a post with no CTA rather than invent one" }); continue; }
+    if (!cta) { skipped.push({ row: r, reason: "no calculator URL on this origin in gate_result.cta_url and none in the body — refusing to publish a post with no CTA rather than invent one" }); continue; }
     if (!r.body_md.trim()) { skipped.push({ row: r, reason: "body_md is empty (a recorded refusal row, not a post)" }); continue; }
     emittable.push(r);
   }
@@ -453,17 +516,17 @@ async function main(): Promise<void> {
   for (const [cluster, rows] of byCluster) {
     for (const r of rows) {
       const cta = ctaUrlFor(r) as string;
-      const file = path.join("app", "blog", cluster, r.slug, "page.tsx");
+      const file = blogPath(cluster, r.slug, "page.tsx");
       const res = writeIfChanged(file, buildPostPage(r, rows, cta));
       (res === "written" ? emitted : unchanged).push(file);
       lastmod[postPath(cluster, r.slug)] = new Date(r.updated_at).toISOString();
     }
-    const hubFile = path.join("app", "blog", cluster, "page.tsx");
+    const hubFile = blogPath(cluster, "page.tsx");
     const res = writeIfChanged(hubFile, buildClusterHub(cluster, rows));
     (res === "written" ? emitted : unchanged).push(hubFile);
   }
 
-  const blogHub = path.join("app", "blog", "page.tsx");
+  const blogHub = blogPath("page.tsx");
   const hubRes = writeIfChanged(blogHub, buildBlogHub(byCluster));
   (hubRes === "written" ? emitted : unchanged).push(blogHub);
 
@@ -473,10 +536,10 @@ async function main(): Promise<void> {
   }
 
   console.log(`\nEMITTED ${emitted.length} file(s):`);
-  for (const f of emitted) console.log(`  + ${f.split(path.sep).join("/")}`);
+  for (const f of emitted) console.log(`  + ${rel(f)}`);
   if (unchanged.length) {
     console.log(`unchanged ${unchanged.length} file(s):`);
-    for (const f of unchanged) console.log(`  = ${f.split(path.sep).join("/")}`);
+    for (const f of unchanged) console.log(`  = ${rel(f)}`);
   }
   console.log(`\n${LASTMOD_FILE.split(path.sep).join("/")}: ${Object.keys(lastmod).length} entr(y|ies)`);
   for (const [k, v] of Object.entries(lastmod)) console.log(`  ${k}  ${v}`);
