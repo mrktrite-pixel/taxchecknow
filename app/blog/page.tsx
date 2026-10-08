@@ -28,25 +28,49 @@ export default function Page() {
           </p>
         </div>
       </section>
-      <section className="bg-white px-6 py-12 sm:py-14">
-        <div className="mx-auto max-w-3xl space-y-12">
-          <section>
-            <h2 className="font-serif text-2xl font-bold text-neutral-950">
-              <Link href={"/blog/super-leaving-au"} className="hover:underline">{"Super Leaving AU"}</Link>
+      <section id="blog-index" className="scroll-mt-24 bg-neutral-50 px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-5xl">
+          <header className="mb-8 text-center">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">{"1 research note"}</h2>
+            <p className="mt-2 text-sm text-neutral-600">Grouped by jurisdiction · static HTML · every link crawlable</p>
+          </header>
+
+          {/* Filter pills — anchor links, exactly as app/page.tsx does it. No client JS. */}
+          <div className="mb-10 overflow-x-auto">
+            <ul className="flex min-w-max items-center gap-2">
+            <li><a href="#blog-index" className="inline-flex items-center gap-1.5 rounded-full bg-neutral-950 px-4 py-1.5 text-xs font-bold text-white whitespace-nowrap">All</a></li>
+            <li><a href={"#blog-au"} className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-4 py-1.5 text-xs font-semibold text-neutral-600 transition hover:border-neutral-400 hover:text-neutral-950 whitespace-nowrap"><span aria-hidden>{"🇦🇺"}</span>{"Australia"}</a></li>
+            </ul>
+          </div>
+
+          <div className="space-y-12">
+          <div id={"blog-au"} className="scroll-mt-24">
+            <h2 className="mb-4 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">
+              <span aria-hidden className="mr-1.5">{"🇦🇺"}</span>{"Australia — 1 note"}
             </h2>
-            <ul className="mt-4 space-y-5">
+            <ul className="grid gap-4 sm:grid-cols-2">
               <li>
-                <Link href={"/blog/super-leaving-au/what-happens-to-my-super-when-i-lose-permanent"} className="group block">
-                  <p className="font-serif text-lg font-bold text-neutral-950 group-hover:underline">{"What happens to my super when I lose permanent resident status and leave Australia?"}</p>
-                  <p className="mt-1 text-[15px] text-neutral-600">{"When leaving Australia as a temporary resident, you may generally claim a Departing Australia Superannuation Payment (DASP) if you accumulated super"}</p>
+                <Link href={"/blog/super-leaving-au/what-happens-to-my-super-when-i-lose-permanent"} className="group block rounded-xl border border-neutral-200 bg-white p-5 transition hover:border-neutral-400">
+                  <p className="mb-2 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5"><span aria-hidden>{"🇦🇺"}</span>{"Australia"}</span>
+                    <span>{"Super Leaving AU"}</span>
+                    <span aria-hidden className="text-neutral-300">·</span>
+                    <span>{"Verified 21 April 2026"}</span>
+                  </p>
+                  <p className="font-serif text-lg font-bold leading-snug text-neutral-950 group-hover:underline">{"What happens to my super when I lose permanent resident status and leave Australia?"}</p>
+                  <p className="mt-1.5 text-[15px] leading-relaxed text-neutral-600">{"When leaving Australia as a temporary resident, you may generally claim a Departing Australia Superannuation Payment (DASP) if you accumulated super"}</p>
                 </Link>
               </li>
             </ul>
-          </section>
+            <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-500">
+              <Link href={"/blog/super-leaving-au"} className="hover:text-neutral-950 hover:underline">{"All Super Leaving AU →"}</Link>
+            </p>
+          </div>
+          </div>
         </div>
       </section>
       <footer className="border-t border-neutral-200 bg-white px-6 py-10">
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="mx-auto max-w-5xl text-center">
           <p className="font-mono text-xs uppercase tracking-widest text-neutral-500">TaxCheckNow</p>
           <p className="mt-2 text-xs text-neutral-500">
             Information is general in nature and not financial advice. Always consult a qualified adviser before acting.

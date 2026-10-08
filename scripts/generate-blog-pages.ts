@@ -4,7 +4,9 @@
 //
 //   npx ts-node --project cole/tsconfig.json scripts/generate-blog-pages.ts
 //     --dry-run   emit nothing, write nothing; print exactly what would happen
-//     --ping      submit the emitted URLs to IndexNow. DEFAULT OFF.
+//     --ping      submit THIS RUN's newly published URLs to IndexNow. DEFAULT OFF.
+//     --ping-published --since YYYY-MM-DD | --urls <comma list>
+//                 submit already-published URLs. REFUSES without a bound — see B2.
 //
 // WHY STATIC DIRECTORIES AND NOT /blog/[cluster]/[slug]. RULED. This storefront
 // has essentially no dynamic content routes — every product, gpt, story and
@@ -69,8 +71,25 @@ function loadEnv(): void {
 loadEnv();
 
 const argv = process.argv.slice(2);
+const flag = (name: string): string | null => {
+  const i = argv.indexOf(name);
+  return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : null;
+};
 const DRY = argv.includes("--dry-run");
 const PING = argv.includes("--ping");
+/* ── B2 — THE CAPPED PING ─────────────────────────────────────────────────
+   --ping submits only what THIS RUN published, which is correct and also means
+   it submits nothing when there is nothing new. The gap that leaves is a post
+   published before the key existed, with no way to submit it.
+   --ping-published fills that gap, and it is DELIBERATELY NOT USABBLE BARE.
+   An unbounded "resubmit everything published" is one keystroke away from
+   firing the entire corpus at IndexNow on every regeneration — irrevocable,
+   rate-limited, and indistinguishable from spam at scale. So it REFUSES
+   without a bound: either --since YYYY-MM-DD (published on or after) or
+   --urls <comma list> (exactly these, and they must be published). */
+const PING_PUBLISHED = argv.includes("--ping-published");
+const PING_SINCE = flag("--since");
+const PING_URLS = flag("--urls");
 const SITE = "taxchecknow";
 const ORIGIN = "https://www.taxchecknow.com";
 const BYLINE = "TaxCheckNow Research Team";
@@ -93,6 +112,9 @@ interface PostRow {
   gate_result: unknown;
   created_at: string;
   updated_at: string;
+  /** B1 — joined from v_live_catalogue, never derived from product_key. */
+  country?: string;
+  product_name?: string;
 }
 
 interface Citation { title?: string; url?: string; is_primary?: boolean }
@@ -117,6 +139,53 @@ function safeJsonLd(obj: unknown): string {
 /** Repo-relative, forward-slashed, for logs. blogPath() returns absolute paths. */
 function rel(file: string): string {
   return path.relative(process.cwd(), file).split(path.sep).join("/");
+}
+
+/* ── B1 — COUNTRY CHROME, TAKEN FROM THE HOMEPAGE ─────────────────────────
+   app/page.tsx is the reference for a directory surface on this storefront, and
+   two things about it are load-bearing rather than cosmetic:
+
+   1. ITS FILTER PILLS ARE ANCHOR LINKS, NOT A JS TOGGLE. INDEX_PILLS renders
+      <a href="#all-checks-au"> against sections carrying scroll-mt-24, and
+      app/page.tsx has no "use client". So the whole 46-check directory is static
+      HTML that a crawler reads in one pass. A client toggle would hide every
+      filtered section behind JS on a page whose entire purpose is to be
+      crawlable, so the blog hub follows the anchor pattern exactly.
+   2. Its emoji + label pairs are the estate's country vocabulary. Reused
+      verbatim below, including 🌍 for nomad, so /blog and / agree.
+
+   Countries are read from v_live_catalogue, never derived from the product_key.
+   MEASURED: the catalogue uses au | can | nomad | nz | uk | us. */
+const COUNTRY_CHROME: Record<string, { label: string; emoji: string }> = {
+  au:    { label: "Australia",   emoji: "🇦🇺" },
+  uk:    { label: "UK",          emoji: "🇬🇧" },
+  us:    { label: "US",          emoji: "🇺🇸" },
+  nz:    { label: "New Zealand", emoji: "🇳🇿" },
+  can:   { label: "Canada",      emoji: "🇨🇦" },
+  nomad: { label: "Nomad",       emoji: "🌍" },
+};
+/** Homepage pill order. Anything unknown sorts last, alphabetically. */
+const COUNTRY_ORDER = ["au", "uk", "us", "nz", "can", "nomad"];
+
+function countryChrome(code: string): { label: string; emoji: string } {
+  return COUNTRY_CHROME[code] ?? { label: code.toUpperCase(), emoji: "" };
+}
+
+/**
+ * The verification date, read OUT of the post body.
+ *
+ * blog_posts.verification_date is deliberately null — the corpus carries the date
+ * as display text ("21 April 2026") and parsing a localised date into a DATE
+ * column was left for a ruling. The stamp line in the body is therefore the only
+ * place the date exists, so the card reads it from there rather than inventing a
+ * second source. No stamp, no date on the card — never a guess from published_at,
+ * which is when WE published, not when the figures were checked.
+ */
+function verificationDateOf(bodyMd: string): string | null {
+  const stamp = stampOf(bodyMd);
+  if (!stamp) return null;
+  const m = /\bon\s+(\d{1,2}\s+\p{L}+\s+\d{4})\s*\.?$/u.exec(stamp.trim());
+  return m ? m[1] : null;
 }
 
 function clusterLabel(cluster: string): string {
@@ -329,13 +398,43 @@ ${stamp ? `          <p className="mt-2 text-xs text-neutral-500">{${lit(stamp)}
 function buildClusterHub(cluster: string, rows: PostRow[]): string {
   const url = `${ORIGIN}/blog/${cluster}`;
   const label = clusterLabel(cluster);
-  const items = rows.map((r) =>
-    `            <li>
+  const items = rows.map((r) => {
+    const vdate = verificationDateOf(r.body_md);
+    const cc = r.country ? countryChrome(r.country) : null;
+    return `            <li>
               <Link href={${lit(postPath(r.cluster, r.slug))}} className="group block">
+                <p className="mb-1.5 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+${cc ? `                  <span className="inline-flex items-center gap-1"><span aria-hidden>{${lit(cc.emoji)}}</span>{${lit(cc.label)}}</span>\n                  <span aria-hidden className="text-neutral-300">·</span>\n` : ""}                  <span>{${lit(label)}}</span>
+${vdate ? `                  <span aria-hidden className="text-neutral-300">·</span>\n                  <span>{${lit(`Verified ${vdate}`)}}</span>\n` : ""}                </p>
                 <p className="font-serif text-xl font-bold text-neutral-950 group-hover:underline">{${lit(r.title)}}</p>
                 <p className="mt-1 text-[15px] text-neutral-600">{${lit((r.meta_description ?? "").slice(0, 200))}}</p>
               </Link>
-            </li>`).join("\n");
+            </li>`;
+  }).join("\n");
+
+  /* ── B1 — THE CALCULATOR RAIL, ABOVE THE POSTS ────────────────────────────
+     Every post in a cluster answers a question about ONE product, so the
+     cluster hub's most useful element is that product's own check. It sits ABOVE
+     the list because a reader who already knows their question wants the tool,
+     not three more articles.
+     THE URL IS THE ONE THE POST CARRIES — gate_result.cta_url, resolved by the
+     bee from products.slug. The rail is omitted entirely when no post in the
+     cluster has one, rather than linking a guessed path. */
+  const railRow = rows.find((r) => !!ctaUrlFor(r));
+  const railUrl = railRow ? (ctaUrlFor(railRow) as string) : null;
+  const railName = railRow?.product_name ?? null;
+  const rail = railUrl
+    ? `
+          <Link
+            href={${lit(railUrl)}}
+            className="group mb-10 block rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-5 transition hover:border-neutral-400"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">The check behind these notes</p>
+            <p className="mt-2 font-serif text-xl font-bold text-neutral-950">{${lit(railName ?? label)}}</p>
+            <p className="mt-1 text-[15px] text-neutral-600">Free, no sign-up. Answer the gates and see which outcome applies to you.</p>
+            <p className="mt-3 text-sm font-bold text-neutral-950 group-hover:underline">Run the free check →</p>
+          </Link>`
+    : "";
 
   return `// AUTO-GENERATED by scripts/generate-blog-pages.ts — do not edit by hand.
 // Cluster hub: ${cluster} (${rows.length} post(s))
@@ -362,7 +461,7 @@ export default function Page() {
         </div>
       </section>
       <section className="bg-white px-6 py-12 sm:py-14">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-3xl">${rail}
           <ul className="space-y-8">
 ${items}
           </ul>
@@ -382,23 +481,72 @@ ${items}
 `;
 }
 
+/** One post card: country badge, cluster label, title, verification date. */
+function postCard(r: PostRow, indent: string): string {
+  const vdate = verificationDateOf(r.body_md);
+  const cc = r.country ? countryChrome(r.country) : null;
+  const i = indent;
+  return `${i}<li>
+${i}  <Link href={${lit(postPath(r.cluster, r.slug))}} className="group block rounded-xl border border-neutral-200 bg-white p-5 transition hover:border-neutral-400">
+${i}    <p className="mb-2 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+${cc ? `${i}      <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5"><span aria-hidden>{${lit(cc.emoji)}}</span>{${lit(cc.label)}}</span>\n` : ""}${i}      <span>{${lit(clusterLabel(r.cluster))}}</span>
+${vdate ? `${i}      <span aria-hidden className="text-neutral-300">·</span>\n${i}      <span>{${lit(`Verified ${vdate}`)}}</span>\n` : ""}${i}    </p>
+${i}    <p className="font-serif text-lg font-bold leading-snug text-neutral-950 group-hover:underline">{${lit(r.title)}}</p>
+${i}    <p className="mt-1.5 text-[15px] leading-relaxed text-neutral-600">{${lit((r.meta_description ?? "").slice(0, 180))}}</p>
+${i}  </Link>
+${i}</li>`;
+}
+
 function buildBlogHub(byCluster: Map<string, PostRow[]>): string {
   const url = `${ORIGIN}/blog`;
-  const total = [...byCluster.values()].reduce((n, r) => n + r.length, 0);
-  const sections = [...byCluster.entries()].map(([cluster, rows]) =>
-    `          <section>
-            <h2 className="font-serif text-2xl font-bold text-neutral-950">
-              <Link href={${lit(`/blog/${cluster}`)}} className="hover:underline">{${lit(clusterLabel(cluster))}}</Link>
+  const posts = [...byCluster.values()].flat();
+  const total = posts.length;
+
+  /* ── B1 — GROUPED BY COUNTRY, FILTERED BY ANCHORS ─────────────────────────
+     Follows app/page.tsx's INDEX_PILLS exactly: the pills are <a href="#id">
+     against sections carrying scroll-mt-24, and the page stays a server
+     component. Nothing is hidden behind JS, so every post is in the HTML a
+     crawler reads on the first pass — which is the whole point of a blog whose
+     value is being cited.
+     ONLY COUNTRIES PRESENT GET A PILL. A chip for an empty country would be a
+     link to nothing. */
+  const byCountry = new Map<string, PostRow[]>();
+  for (const r of posts) {
+    const k = r.country ?? "other";
+    const arr = byCountry.get(k) ?? [];
+    arr.push(r);
+    byCountry.set(k, arr);
+  }
+  const countries = [...byCountry.keys()].sort((a, b) => {
+    const ia = COUNTRY_ORDER.indexOf(a), ib = COUNTRY_ORDER.indexOf(b);
+    if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    return a.localeCompare(b);
+  });
+
+  const pills = [
+    `            <li><a href="#blog-index" className="inline-flex items-center gap-1.5 rounded-full bg-neutral-950 px-4 py-1.5 text-xs font-bold text-white whitespace-nowrap">All</a></li>`,
+    ...countries.map((c) => {
+      const cc = c === "other" ? { label: "Other", emoji: "" } : countryChrome(c);
+      return `            <li><a href={${lit(`#blog-${c}`)}} className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-4 py-1.5 text-xs font-semibold text-neutral-600 transition hover:border-neutral-400 hover:text-neutral-950 whitespace-nowrap">${cc.emoji ? `<span aria-hidden>{${lit(cc.emoji)}}</span>` : ""}{${lit(cc.label)}}</a></li>`;
+    }),
+  ].join("\n");
+
+  const sections = countries.map((c) => {
+    const rows = byCountry.get(c) ?? [];
+    const cc = c === "other" ? { label: "Other", emoji: "" } : countryChrome(c);
+    const clustersHere = [...new Set(rows.map((r) => r.cluster))];
+    return `          <div id={${lit(`blog-${c}`)}} className="scroll-mt-24">
+            <h2 className="mb-4 font-mono text-xs font-bold uppercase tracking-widest text-neutral-500">
+              ${cc.emoji ? `<span aria-hidden className="mr-1.5">{${lit(cc.emoji)}}</span>` : ""}{${lit(`${cc.label} — ${rows.length} note${rows.length === 1 ? "" : "s"}`)}}
             </h2>
-            <ul className="mt-4 space-y-5">
-${rows.map((r) => `              <li>
-                <Link href={${lit(postPath(r.cluster, r.slug))}} className="group block">
-                  <p className="font-serif text-lg font-bold text-neutral-950 group-hover:underline">{${lit(r.title)}}</p>
-                  <p className="mt-1 text-[15px] text-neutral-600">{${lit((r.meta_description ?? "").slice(0, 180))}}</p>
-                </Link>
-              </li>`).join("\n")}
+            <ul className="grid gap-4 sm:grid-cols-2">
+${rows.map((r) => postCard(r, "              ")).join("\n")}
             </ul>
-          </section>`).join("\n");
+            <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-500">
+${clustersHere.map((cl) => `              <Link href={${lit(`/blog/${cl}`)}} className="hover:text-neutral-950 hover:underline">{${lit(`All ${clusterLabel(cl)} →`)}}</Link>`).join("\n")}
+            </p>
+          </div>`;
+  }).join("\n");
 
   return `// AUTO-GENERATED by scripts/generate-blog-pages.ts — do not edit by hand.
 // Blog hub: ${byCluster.size} cluster(s), ${total} post(s)
@@ -430,13 +578,27 @@ export default function Page() {
           </p>
         </div>
       </section>
-      <section className="bg-white px-6 py-12 sm:py-14">
-        <div className="mx-auto max-w-3xl space-y-12">
+      <section id="blog-index" className="scroll-mt-24 bg-neutral-50 px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-5xl">
+          <header className="mb-8 text-center">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950">{${lit(`${total} research note${total === 1 ? "" : "s"}`)}}</h2>
+            <p className="mt-2 text-sm text-neutral-600">Grouped by jurisdiction · static HTML · every link crawlable</p>
+          </header>
+
+          {/* Filter pills — anchor links, exactly as app/page.tsx does it. No client JS. */}
+          <div className="mb-10 overflow-x-auto">
+            <ul className="flex min-w-max items-center gap-2">
+${pills}
+            </ul>
+          </div>
+
+          <div className="space-y-12">
 ${sections}
+          </div>
         </div>
       </section>
       <footer className="border-t border-neutral-200 bg-white px-6 py-10">
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="mx-auto max-w-5xl text-center">
           <p className="font-mono text-xs uppercase tracking-widest text-neutral-500">TaxCheckNow</p>
           <p className="mt-2 text-xs text-neutral-500">
             Information is general in nature and not financial advice. Always consult a qualified adviser before acting.
@@ -464,7 +626,7 @@ async function main(): Promise<void> {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
   if (!url || !key) throw new Error("Supabase env missing (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)");
 
-  console.log(`\nBLOG PAGE GENERATOR${DRY ? "   [DRY RUN — nothing written]" : ""}${PING ? "   [--ping ON]" : "   [ping off]"}`);
+  console.log(`\nBLOG PAGE GENERATOR${DRY ? "   [DRY RUN — nothing written]" : ""}${PING ? "   [--ping ON]" : PING_PUBLISHED ? "   [--ping-published]" : "   [ping off]"}`);
   console.log(`env files read: ${ENV_FILES_READ.join(", ") || "(none)"}`);
 
   const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
@@ -478,6 +640,38 @@ async function main(): Promise<void> {
   if (error) throw new Error(`blog_posts read failed: ${error.message}`);
 
   const all = (data ?? []) as PostRow[];
+
+  /* ── B1 — JOIN THE CATALOGUE FOR country AND name ──────────────────────────
+     blog_posts has no country column, and deriving one from the product_key
+     prefix would be the guess-from-the-key habit that put a 404 calculator link
+     on seven live posts. v_live_catalogue is the same source the bee enrolled
+     from, so the hub's country badges cannot disagree with the roster.
+     FAIL-SOFT: an unreadable catalogue leaves country undefined, the post lands
+     in the "Other" section, and the page still builds. A missing badge is a
+     cosmetic loss; a wrong badge is a factual claim about jurisdiction. */
+  if (all.length > 0) {
+    const keys = [...new Set(all.map((r) => r.product_key))];
+    const { data: cat, error: cErr } = await sb
+      .from("v_live_catalogue")
+      .select("product_id, country, name")
+      .eq("site", SITE)
+      .in("product_id", keys);
+    if (cErr) {
+      console.log(`  ⓘ  v_live_catalogue unreadable (${cErr.message}) — country badges and calculator names will be omitted`);
+    } else {
+      const byKey = new Map(((cat ?? []) as Array<{ product_id: string; country: string | null; name: string | null }>)
+        .map((c) => [c.product_id, c]));
+      let missing = 0;
+      for (const r of all) {
+        const c = byKey.get(r.product_key);
+        if (!c) { missing++; continue; }
+        r.country = (c.country ?? "").toLowerCase() || undefined;
+        r.product_name = c.name ?? undefined;
+      }
+      console.log(`catalogue join: ${byKey.size} of ${keys.length} product(s) resolved${missing ? ` · ${missing} post(s) have no catalogue row (badge omitted)` : ""}`);
+    }
+  }
+
   const newlyApproved = all.filter((r) => r.status === "approved");
   console.log(`rows: ${all.length} emittable (${newlyApproved.length} approved -> will publish, ${all.length - newlyApproved.length} already published)`);
   if (all.length === 0) {
@@ -573,17 +767,69 @@ async function main(): Promise<void> {
   /* ── INDEXNOW — opt-in only. ─────────────────────────────────────────────
      Default OFF so a routine regeneration cannot fire an irrevocable submission
      at search engines. */
-  if (!PING) {
-    console.log(`\nindexnow: not pinged (--ping is off by default; pass --ping to submit)`);
+  if (!PING && !PING_PUBLISHED) {
+    console.log(`\nindexnow: not pinged (no --ping / --ping-published; both are off by default)`);
     return;
   }
-  const urls = toPublish.map((r) => `${ORIGIN}${postPath(r.cluster, r.slug)}`);
+
+  // THE BOUND IS CHECKED BEFORE ANYTHING IS SELECTED, so a bare
+  // --ping-published cannot even compute a URL list, let alone send one.
+  let urls: string[];
+  if (PING_PUBLISHED) {
+    if (!PING_SINCE && !PING_URLS) {
+      console.log(`\nindexnow: REFUSED — --ping-published requires a bound.`);
+      console.log(`  Pass ONE of:`);
+      console.log(`    --since YYYY-MM-DD      submit posts published on or after that date`);
+      console.log(`    --urls <comma list>     submit exactly these published URLs`);
+      console.log(`  WHY: unbounded, this flag resubmits every published post on every run.`);
+      console.log(`  An IndexNow submission cannot be recalled, so the bound is mandatory rather than advisory.`);
+      process.exitCode = 1;
+      return;
+    }
+    if (PING_SINCE && !/^\d{4}-\d{2}-\d{2}$/.test(PING_SINCE)) {
+      console.log(`\nindexnow: REFUSED — --since must be YYYY-MM-DD, got ${JSON.stringify(PING_SINCE)}`);
+      process.exitCode = 1;
+      return;
+    }
+    // Published rows only. An approved-but-unpublished post has no live URL, and
+    // submitting one would point a crawler at a 404.
+    const livePosts = emittable.filter((r) => r.status === "published" || toPublish.includes(r));
+    const liveUrls = new Map(livePosts.map((r) => [`${ORIGIN}${postPath(r.cluster, r.slug)}`, r]));
+
+    if (PING_URLS) {
+      const asked = PING_URLS.split(",").map((u) => u.trim()).filter(Boolean);
+      const unknown = asked.filter((u) => !liveUrls.has(u));
+      if (unknown.length > 0) {
+        console.log(`\nindexnow: REFUSED — ${unknown.length} of ${asked.length} URL(s) are not published posts of this site:`);
+        for (const u of unknown.slice(0, 5)) console.log(`    ${u}`);
+        console.log(`  Only a URL this generator has published may be submitted; otherwise the ping is a claim we cannot back.`);
+        process.exitCode = 1;
+        return;
+      }
+      urls = asked;
+      console.log(`\nindexnow: --urls bound — ${urls.length} URL(s), all verified as published posts`);
+    } else {
+      const since = `${PING_SINCE}T00:00:00.000Z`;
+      urls = [...liveUrls.entries()]
+        .filter(([, r]) => (r.published_at ?? r.updated_at) >= since)
+        .map(([u]) => u);
+      console.log(`\nindexnow: --since ${PING_SINCE} bound — ${urls.length} of ${liveUrls.size} published post(s) qualify`);
+    }
+  } else {
+    urls = toPublish.map((r) => `${ORIGIN}${postPath(r.cluster, r.slug)}`);
+  }
+
+  if (urls.length === 0) {
+    console.log(`indexnow: nothing to submit under that bound — no ping sent`);
+    return;
+  }
   if (DRY) {
-    console.log(`\nindexnow: would submit ${urls.length} URL(s) (dry run — not sent)`);
+    console.log(`indexnow: would submit ${urls.length} URL(s) (dry run — not sent):`);
+    for (const u of urls) console.log(`    ${u}`);
     return;
   }
   const res = await pingIndexNow(urls);
-  console.log(`\nindexnow: ${res.accepted ? "ACCEPTED" : "NOT ACCEPTED"} — ${res.detail}`);
+  console.log(`indexnow: ${res.accepted ? "ACCEPTED" : "NOT ACCEPTED"} — ${res.detail}`);
   if (res.keyLocation) console.log(`indexnow: keyLocation ${res.keyLocation}`);
 }
 
