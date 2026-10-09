@@ -81,6 +81,13 @@ export default function Page() {
               </Link>
             </p>
           </div>
+
+          <div className="!mt-8">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">More in {"Super Leaving AU"}</p>
+            <ul className="mt-3 list-disc space-y-2 pl-6 text-[16px]">
+            <li><Link href={"/blog/super-leaving-au/can-i-access-my-super-as-a-permanent-resident"} className="underline decoration-neutral-400 underline-offset-2 hover:text-neutral-950">{"Can I access my super as a permanent resident who is no longer a permanent resident?"}</Link></li>
+            </ul>
+          </div>
         </div>
       </article>
 
