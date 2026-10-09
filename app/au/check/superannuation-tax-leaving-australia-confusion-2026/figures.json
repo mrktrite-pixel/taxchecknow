@@ -8,7 +8,7 @@
   },
   {
     "id": "fig_1",
-    "label": "DASP payment deadline",
+    "label": "DASP payment timeframe — generally paid within 28 days of a completed application being received",
     "value": "28",
     "unit": "days",
     "fact_role": "duration"
@@ -50,7 +50,7 @@
   },
   {
     "id": "fig_7",
-    "label": "Super value threshold — certified ID / Immigration Status certificate required",
+    "label": "Super value threshold — certified ID copies required at $5,000 or more",
     "value": "$5,000",
     "unit": null,
     "fact_role": "threshold"
