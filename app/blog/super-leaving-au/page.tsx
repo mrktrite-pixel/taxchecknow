@@ -44,7 +44,7 @@ export default function Page() {
                   <span>{"Verified 21 April 2026"}</span>
                 </p>
                 <p className="font-serif text-xl font-bold text-neutral-950 group-hover:underline">{"What happens to my super when I lose permanent resident status and leave Australia?"}</p>
-                <p className="mt-1 text-[15px] text-neutral-600">{"When leaving Australia as a temporary resident, you may generally claim a Departing Australia Superannuation Payment (DASP) if you accumulated super"}</p>
+                <p className="mt-1 text-[15px] text-neutral-600">{"The ATO states that, generally, you can claim a DASP if all the following apply: “you accumulated superannuation while working in Australia on a"}</p>
               </Link>
             </li>
           </ul>
