@@ -4,9 +4,32 @@
 //
 //   npx ts-node --project cole/tsconfig.json scripts/generate-blog-pages.ts
 //     --dry-run   emit nothing, write nothing; print exactly what would happen
+//     --no-publish  EMIT THE FILES AND FLIP NOTHING. See below.
 //     --ping      submit THIS RUN's newly published URLs to IndexNow. DEFAULT OFF.
 //     --ping-published --since YYYY-MM-DD | --urls <comma list>
 //                 submit already-published URLs. REFUSES without a bound — see B2.
+//
+// ── --no-publish, AND THE ORDERING PROBLEM IT EXISTS FOR. RULED 2026-10-12. ──
+//
+// This script does two jobs in one run: it writes the page files, and it flips
+// the rows it emitted from 'approved' to 'published'. That is right when a human
+// runs it and then merges the result straight away, which is how every blog post
+// to date was published.
+//
+// It is WRONG for the automated rail. There, the order is: generate → commit to a
+// branch → open a PR → probe the Vercel preview → email the operator → THE
+// OPERATOR MERGES → probe production → only then is the post published. Between
+// the PR opening and that merge, a row flipped here would read 'published' with a
+// published_url pointing at a page that is not live. That is the same row/page
+// disagreement the estate already ruled on from the other direction (a 'rejected'
+// row carrying a live URL), and it would make the Distribution Queen's "latest
+// published" and the retired-post probe both read a page nobody has been served.
+//
+// So --no-publish emits the files and flips nothing. The soverella side then owns
+// the flip, through ONE shared function, after the production probe passes.
+//
+// DEFAULT BEHAVIOUR IS UNCHANGED. Without the flag this script does exactly what
+// it did before, including the flip. Nothing that runs today runs differently.
 //
 // WHY STATIC DIRECTORIES AND NOT /blog/[cluster]/[slug]. RULED. This storefront
 // has essentially no dynamic content routes — every product, gpt, story and
@@ -76,6 +99,8 @@ const flag = (name: string): string | null => {
   return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : null;
 };
 const DRY = argv.includes("--dry-run");
+/** --no-publish — emit the files, flip NOTHING. See the header for why. */
+const NO_PUBLISH = argv.includes("--no-publish");
 const PING = argv.includes("--ping");
 /* ── B2 — THE CAPPED PING ─────────────────────────────────────────────────
    --ping submits only what THIS RUN published, which is correct and also means
@@ -626,7 +651,7 @@ async function main(): Promise<void> {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
   if (!url || !key) throw new Error("Supabase env missing (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)");
 
-  console.log(`\nBLOG PAGE GENERATOR${DRY ? "   [DRY RUN — nothing written]" : ""}${PING ? "   [--ping ON]" : PING_PUBLISHED ? "   [--ping-published]" : "   [ping off]"}`);
+  console.log(`\nBLOG PAGE GENERATOR${DRY ? "   [DRY RUN — nothing written]" : ""}${NO_PUBLISH ? "   [--no-publish — files only, NO row is flipped]" : ""}${PING ? "   [--ping ON]" : PING_PUBLISHED ? "   [--ping-published]" : "   [ping off]"}`);
   console.log(`env files read: ${ENV_FILES_READ.join(", ") || "(none)"}`);
 
   const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
@@ -749,19 +774,46 @@ async function main(): Promise<void> {
   const toPublish = emittable.filter((r) => r.status === "approved");
   if (toPublish.length === 0) {
     console.log(`\nno rows to flip (every emittable row was already 'published')`);
+  } else if (NO_PUBLISH) {
+    /* --no-publish. The files are written; the rows stay 'approved' for whoever
+       owns the flip downstream. Named here rather than silent, because "the pages
+       exist but nothing says they are published" must be a report, not a guess. */
+    console.log(`\n--no-publish: ${toPublish.length} row(s) stay 'approved' and NOTHING was flipped.`);
+    for (const r of toPublish) console.log(`  ${r.id} -> ${ORIGIN}${postPath(r.cluster, r.slug)}  (page written, row untouched)`);
   } else if (DRY) {
     console.log(`\nwould flip ${toPublish.length} row(s) to 'published' (dry run — not done)`);
     for (const r of toPublish) console.log(`  ${r.id} -> ${ORIGIN}${postPath(r.cluster, r.slug)}`);
   } else {
+    /* THE FLIP IS COMPARE-AND-SWAPPED AND ROW-COUNTED. RULED 2026-10-12.
+     *
+     * It used to be .update({...}).eq("id", r.id) with no status predicate and no
+     * check on what came back. Two consequences, both silent:
+     *   · a row an operator had REJECTED or retired between this run's SELECT and
+     *     this write would have been flipped straight back to 'published';
+     *   · a write that matched NOTHING logged a success line, because an update
+     *     matching zero rows is not an error in postgrest.
+     * So: CAS on the status this run actually read, and count the rows returned.
+     * Zero rows is REPORTED, never reported as success. */
     const now = new Date().toISOString();
+    let flipped = 0;
+    const raced: string[] = [];
     for (const r of toPublish) {
       const publishedUrl = `${ORIGIN}${postPath(r.cluster, r.slug)}`;
-      const { error: uErr } = await sb.from("blog_posts")
+      const { data: upd, error: uErr } = await sb.from("blog_posts")
         .update({ status: "published", published_at: now, published_url: publishedUrl, updated_at: now })
-        .eq("id", r.id);
-      if (uErr) console.log(`  ⓘ  ${r.id} NOT flipped: ${uErr.message}`);
-      else console.log(`\npublished ${r.id} -> ${publishedUrl}`);
+        .eq("id", r.id)
+        .eq("status", "approved")          // CAS on the status this run read
+        .select("id");
+      if (uErr) { console.log(`  ⓘ  ${r.id} NOT flipped: ${uErr.message}`); continue; }
+      if ((upd ?? []).length === 0) {
+        raced.push(r.id);
+        console.log(`  ⚠  ${r.id} NOT flipped: no row matched id + status='approved'. Someone moved it since this run's read (rejected, retired, or already published). ITS PAGE IS WRITTEN. Read the row before acting.`);
+        continue;
+      }
+      flipped++;
+      console.log(`\npublished ${r.id} -> ${publishedUrl}`);
     }
+    console.log(`\nflipped ${flipped} of ${toPublish.length} row(s) to 'published'${raced.length > 0 ? `; ${raced.length} did not match and are listed above` : ""}`);
   }
 
   /* ── INDEXNOW — opt-in only. ─────────────────────────────────────────────
