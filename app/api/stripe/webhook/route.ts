@@ -7,6 +7,7 @@ import { getAssessmentFields } from "@/lib/assessment-fields";
 import { renderPack } from "@/lib/render-pack";
 import { buildComposerInputs } from "@/lib/composer-inputs";
 import { generateAssessment } from "@/lib/assess-core";
+import { dispositionFor, dispositionLine } from "@/lib/webhook-disposition";
 // TEMPORAL v1 Step 6.2 — the SCHEDULER's date now comes from the resolver over
 // the generated declaration registry. lookupDeadline() against the
 // hand-authored lib/product-deadlines.ts is RETIRED here and must not come
@@ -216,7 +217,16 @@ async function generateAndStoreAssessment(
     // FAIL-CLOSED: on any generator failure (corpus unreachable/malformed = status 424, etc.) we
     // do NOT store an ungrounded assessment. result.ok===true GUARANTEES grounded===true. The
     // success page then shows a retry/support state instead of confidently-wrong law. (Ruling.)
-    if (!result.ok) { console.error(`[webhook] assess ${result.status} (${result.error}) for ${stripeSessionId} — NOT stored (fail-closed)`); return; }
+    if (!result.ok) {
+      // PRINT THE DETAIL, NOT JUST THE CODE. assess-core composes a sentence naming the cause and the
+      // fix (e.g. Deployment Protection blocking the corpus self-fetch); logging only "corpus_unreachable"
+      // threw that away, and diagnosing one failed buy then took a dig through Vercel function logs.
+      console.error(
+        `[webhook] assess ${result.status} (${result.error}) for ${stripeSessionId} — NOT stored (fail-closed)` +
+        (result.detail ? `\n  reason: ${result.detail}` : ""),
+      );
+      return;
+    }
     const { assessment, corpus_source, corpus_verified } = result;
 
     await (supabase as any).from("assessments").upsert({
@@ -484,19 +494,51 @@ export async function POST(req: Request) {
   const delivery = DELIVERY_MAP[productKey];
   const supabase = getSupabase();
 
-  // IDEMPOTENCY (2026-07-25): a live webhook can fire repeatedly (Stripe retries / endpoint
-  // re-points) — the FRCGW live session (cs_live_a1IwsaHbvx…) landed 5 purchase rows over ~4h.
-  // If this session was ALREADY processed (a purchase exists), do NOTHING more: no duplicate
-  // purchase, no duplicate DELIVERY EMAIL, no duplicate assessment. We return BEFORE the email
-  // send below, so a re-fire cannot re-deliver. The UNIQUE constraint on
-  // purchases.stripe_session_id (migration) is the concurrent-race backstop; this pre-check
-  // handles the common sequential retry.
+  // IDEMPOTENCY (2026-07-25, narrowed by F99 on 2026-10-07).
+  //
+  // A live webhook can fire repeatedly (Stripe retries / endpoint re-points) — the FRCGW live
+  // session (cs_live_a1IwsaHbvx…) landed 5 purchase rows over ~4h. Purchases, delivery emails and
+  // reminders must never double-fire, and they still cannot.
+  //
+  // BUT "A PURCHASE EXISTS" IS NOT "THE PACK WAS DELIVERED". Four paid sessions have a purchase
+  // row, a delivered email and NO assessment, because the deployment could not read its own corpus
+  // and /api/assess failed closed. Under the old check every one was permanently un-redeliverable:
+  // a resend logged "already processed" and stored nothing. See lib/webhook-disposition.ts for the
+  // rule and the four session ids.
   {
-    const { data: existing } = await supabase
+    const { data: existingPurchase } = await supabase
       .from("purchases").select("id").eq("stripe_session_id", session.id).maybeSingle();
-    if (existing) {
-      console.log("[webhook] duplicate — session already processed, skipping:", session.id);
-      return NextResponse.json({ received: true, duplicate: true });
+    const existingAssessment = await supabase
+      .from("assessments").select("id").eq("stripe_session_id", session.id).maybeSingle();
+
+    const disposition = dispositionFor({
+      purchaseExists: Boolean(existingPurchase),
+      assessmentExists: Boolean(existingAssessment.data),
+      // A FAILED LOOKUP IS NOT AN ABSENT ROW. Treated as already-processed, and said out loud:
+      // doing nothing is recoverable; spending a model call on a guess is not.
+      assessmentQueryFailed: Boolean(existingAssessment.error),
+      canRegenerate: Boolean(delivery && decisionSid && customerEmail),
+    });
+    if (existingAssessment.error) {
+      console.error(
+        `[webhook] assessments lookup FAILED for ${session.id} — ${existingAssessment.error.message}` +
+        ` — treating as already-processed rather than regenerating on a guess`,
+      );
+    }
+    if (disposition !== "full") console.log(dispositionLine(disposition, session.id));
+
+    if (disposition === "duplicate" || disposition === "cannot_repair") {
+      return NextResponse.json({ received: true, duplicate: true, disposition });
+    }
+    if (disposition === "repair") {
+      // THE ASSESSMENT STEP AND NOTHING ELSE. Same after() deferral the first-time path uses, so
+      // the lambda stays alive until the store completes — no purchase upsert, no queueReminders,
+      // no queueNurtureOnPurchase, and no sendDeliveryEmail: the buyer already has that email.
+      after(() => generateAndStoreAssessment(
+        supabase, session.id, decisionSid, productKey,
+        tier, delivery!, customerEmail, customerName,
+      ));
+      return NextResponse.json({ received: true, repaired: true, disposition });
     }
   }
 

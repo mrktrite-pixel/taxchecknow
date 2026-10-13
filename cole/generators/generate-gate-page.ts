@@ -6,6 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { ProductConfig } from "../types/product-config";
+import { jurisdictionFlag } from "./jurisdiction-flag";
 
 // GEO bake — transcript + published-video facts fetched at generate time (both optional).
 // Drives a server-rendered transcript <section> + a VideoObject JSON-LD block, each emitted
@@ -432,7 +433,7 @@ ${videoSchemaConst}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="${config.sources[0]?.url}" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            ${ config.country === "au" ? "🇦🇺" : config.country === "us" ? "🇺🇸" : config.country === "nz" ? "🇳🇿" : config.country === "ca" ? "🇨🇦" : "🇬🇧" } ${config.authority} Verified · ${config.legalAnchor} ↗
+            ${jurisdictionFlag(config.country, config.market)} ${config.authority} Verified · ${config.legalAnchor} ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · ${config.language}
@@ -902,9 +903,9 @@ ${videoSchemaConst}
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ${config.authority} and GOV.UK guidance for ${config.lastVerified}.
+          built from ${config.authority} guidance for ${config.lastVerified}.
           It is not tax, legal or financial advice. Tax rules can change — always verify
-          current rates at GOV.UK and consider consulting a qualified tax adviser for your
+          current rates with ${config.authority} and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
       </section>

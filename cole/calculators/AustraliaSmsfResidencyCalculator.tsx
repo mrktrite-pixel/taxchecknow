@@ -4,7 +4,7 @@
  * NOMAD-09 — Australian SMSF Residency Kill-Switch
  * Pattern: Classification + CashflowModel -> compliant / at risk / breach with tax quantum
  *
- * Legal anchor: SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320
+ * Legal anchor: ITAA 1997 s 295-95(2) + s 295-320 + SIS Act 1993 s 17A
  *
  * DETERMINATION ORDER:
  *   1. Active member test failure -> BREACH (active member is binary)
@@ -162,7 +162,7 @@ function calcSmsf(answers: AnswerMap): SmsfResult {
 
   // LAYER 1 — active member test binary failure
   if (activeMemberTest === "no_majority_overseas") {
-    reasoningChain.push({ layer: "Layer 1 — Active member test (SIS Act s 10(1)(c))", outcome: "Majority of active member balances held by non-AU residents — active member test FAILED. Fund becomes non-complying regardless of CM&C position.", resolved: true });
+    reasoningChain.push({ layer: "Layer 1 — Active member test (ITAA 1997 s 295-95(2)(c))", outcome: "Majority of active member balances held by non-AU residents — active member test FAILED. Fund becomes non-complying regardless of CM&C position.", resolved: true });
     status = "BREACH_ACTIVE_MEMBER_FAIL";
     statusLabel = "BREACH — ACTIVE MEMBER TEST FAILED";
   } else if (activeMemberTest === "no_active_members") {
@@ -173,7 +173,7 @@ function calcSmsf(answers: AnswerMap): SmsfResult {
 
   // LAYER 2 — CM&C clearly overseas (breach zone)
   if (status === null && (trusteeLocation === "all_overseas" || trusteeLocation === "corporate_overseas") && (decisionLocation === "mostly_overseas" || decisionLocation === "always_overseas") && (absenceIntent === "long_over_5yr" || absenceIntent === "permanent" || daysOutside === "over_2yr")) {
-    reasoningChain.push({ layer: "Layer 2 — CM&C test (SIS Act s 10(1)(b))", outcome: `All trustees overseas + strategic decisions made overseas + long-term/permanent absence — CM&C is NOT ordinarily in Australia. Breach risk high. Temporary absence rule does not apply (not temporary).`, resolved: true });
+    reasoningChain.push({ layer: "Layer 2 — CM&C test (ITAA 1997 s 295-95(2)(b))", outcome: `All trustees overseas + strategic decisions made overseas + long-term/permanent absence — CM&C is NOT ordinarily in Australia. Breach risk high. Temporary absence rule does not apply (not temporary).`, resolved: true });
     status = "BREACH_RISK_CMC_OVERSEAS";
     statusLabel = "BREACH RISK — CM&C OVERSEAS";
   }
@@ -256,7 +256,7 @@ function calcVerdict(answers: AnswerMap): VerdictResult {
     if (result.status === "COMPLIANT_TEMPORARY_ABSENCE") return `Your SMSF is compliant — CM&C preserved through temporary absence rule or corporate trustee shield. The ATO accepts CM&C as 'ordinarily' in Australia during genuine temporary absences up to approximately 2 years. Documentation of the absence timeline + return intent is essential.`;
     if (result.status === "AT_RISK_CMC_AMBIGUOUS") return `Your SMSF is at risk — CM&C score ${result.cmcScore}/100 is in the ambiguous zone. Mixed trustee locations and/or decision locations create real breach risk. If the fund becomes non-complying, tax exposure on your ${FUND_LABEL[result.fundValue]} fund is approximately ${aud(result.taxIfNonComplying)} in the year of change PLUS ~${aud(result.ongoingAnnualTax)} per year additional ongoing. Structural fix (corporate trustee + AU-resident director) strongly recommended before the position hardens.`;
     if (result.status === "BREACH_RISK_CMC_OVERSEAS") return `Your SMSF is at high breach risk — central management and control is effectively overseas. Under ITAA 1997 s 295-320, if the fund becomes non-complying, the 'low tax component' (approximately ${aud(result.fundValueMidpoint * 0.9)}) is included in assessable income at 45% in the year of change — about ${aud(result.taxIfNonComplying)} tax. Ongoing earnings then taxed at 45% (vs 15% complying). Immediate structural action required: corporate trustee with AU-resident director, or alternatives (APRA roll-over / fund wind-up).`;
-    if (result.status === "BREACH_ACTIVE_MEMBER_FAIL") return `Your SMSF has an active member test failure — majority of active member balances are held by non-AU residents. Under SIS Act s 10(1)(c), this alone causes the fund to fail the 'Australian superannuation fund' definition and become non-complying. CM&C position is secondary — the active member test is a hard gate. Tax exposure approximately ${aud(result.taxIfNonComplying)} plus ongoing 45% earnings tax.`;
+    if (result.status === "BREACH_ACTIVE_MEMBER_FAIL") return `Your SMSF has an active member test failure — majority of active member balances are held by non-AU residents. Under ITAA 1997 s 295-95(2)(c), this alone causes the fund to fail the 'Australian superannuation fund' definition and become non-complying. CM&C position is secondary — the active member test is a hard gate. Tax exposure approximately ${aud(result.taxIfNonComplying)} plus ongoing 45% earnings tax.`;
     return `Your SMSF residency position requires specialist review — inputs do not map cleanly to the three SIS Act tests. Engage an SMSF specialist before making any further decisions.`;
   })();
 
@@ -290,7 +290,7 @@ function calcVerdict(answers: AnswerMap): VerdictResult {
     consequences.push(`ATO detection: annual return + data matching with Border Force travel records + address change notifications. CM&C breach is detectable in audit.`);
     consequences.push(`Remediation after breach: requires ATO approval + evidence of rectified CM&C. Not automatic; 45% year-of-breach tax not refundable even if re-complying status granted later.`);
   } else if (result.status === "BREACH_ACTIVE_MEMBER_FAIL") {
-    consequences.push(`🔒 Active member test fail — majority of active member balances held by non-AU residents. Under SIS Act s 10(1)(c), this alone breaches 'Australian superannuation fund' definition.`);
+    consequences.push(`🔒 Active member test fail — majority of active member balances held by non-AU residents. Under ITAA 1997 s 295-95(2)(c), this alone breaches 'Australian superannuation fund' definition.`);
     consequences.push(`This is binary — unlike CM&C which has nuance around 'ordinarily', the active member test is a simple 50% threshold.`);
     consequences.push(`Fix options: (1) cease contributions from non-AU resident members (become not-active); (2) increase AU-resident member balance ratio; (3) move members to pension phase (pension members are typically not 'active'); (4) restructure fund / roll to APRA fund.`);
     consequences.push(`If fund has 'no active members' the test is inapplicable — pension-phase-only funds avoid this issue.`);
@@ -423,7 +423,7 @@ const QUESTIONS: Q[] = [
   {
     id: "active_member_test", step: 6, type: "button_group",
     label: "Majority of active member balances — held by Australian residents?",
-    subLabel: "Active member test (SIS Act s 10(1)(c)): 50%+ of market value attributable to active members must be from AU residents, OR fund has no active members.",
+    subLabel: "Active member test (ITAA 1997 s 295-95(2)(c)): 50%+ of market value attributable to active members must be from AU residents, OR fund has no active members.",
     options: [
       { label: "Yes — 50%+ AU resident active members",       value: "yes_over_50",           subLabel: "Test passed" },
       { label: "No — majority non-resident active members",     value: "no_majority_overseas",  subLabel: "Test FAILED — breach" },
@@ -462,7 +462,7 @@ function VerdictBlock({ verdict, onCheckout, loading }: {
 
       {/* SMSF logic chain */}
       <div className="mb-4 rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-xs">
-        <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">SMSF residency tests — SIS Act s 10(1) + ITAA 1997 s 295-320</p>
+        <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">SMSF residency tests — ITAA 1997 s 295-95(2) + ITAA 1997 s 295-320</p>
         <div className="space-y-1.5">
           {result.reasoningChain.map((r, i) => (
             <div key={i} className={`flex items-start gap-2 rounded px-2 py-1 ${r.resolved ? (result.isBreach ? "bg-red-100" : result.isAtRisk ? "bg-amber-100" : "bg-emerald-100") : "bg-white"}`}>
@@ -812,7 +812,7 @@ export default function AustraliaSmsfResidencyCalculator() {
                   <p className="mt-1 font-serif text-xl font-bold text-white">
                     {popupTier === 67 ? "Your SMSF Residency Fix Kit" : "Your SMSF Residency Shield System"}
                   </p>
-                  <p className="mt-1 text-sm text-neutral-300">SIS Act s 10(1) · ITAA 1997 s 295-320 · ATO · April 2026</p>
+                  <p className="mt-1 text-sm text-neutral-300">ITAA 1997 s 295-95(2) · ITAA 1997 s 295-320 · ATO · April 2026</p>
                 </div>
                 <button onClick={() => { setShowPopup(false); setShowQ(false); }}
                   className="rounded-lg bg-white/10 px-2 py-1 font-mono text-xs text-neutral-300 hover:bg-white/20 transition">✕ close</button>
@@ -884,7 +884,7 @@ export default function AustraliaSmsfResidencyCalculator() {
               </button>
             </div>
             <div className="px-6 pb-5 pt-2">
-              <p className="text-center text-[10px] text-neutral-400">Secure checkout via Stripe · TaxCheckNow.com · ATO SMSF residency (SIS Act s 10(1))</p>
+              <p className="text-center text-[10px] text-neutral-400">Secure checkout via Stripe · TaxCheckNow.com · ATO SMSF residency (ITAA 1997 s 295-95(2))</p>
             </div>
           </div>
         </div>

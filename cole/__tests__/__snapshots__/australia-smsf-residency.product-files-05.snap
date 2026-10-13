@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "australia-smsf-residency";
+const SESSION_KEY = "australia-smsf-residency";
 const SLUG = "smsf-05";
 const FALLBACK_LABEL = { name: "Your Accountant Brief — SMSF Residency", desc: "Questions for your SMSF specialist / SMSF auditor before departure." };
 const BODY = `<div class="info-box"><strong>Use this brief</strong> with an SMSF specialist (SMSF Specialist Association member or equivalent) — not a generic accountant. SMSF residency is a narrow specialty.</div><h2>Questions</h2><div class="action-box"><h3>Question 1</h3><p>Based on my planned absence + trustee structure, are we at risk of breaching the CM&C test?</p></div><h3>Question 2</h3><p>Should we restructure to a corporate trustee, and if so, which director roles need to be AU-resident?</p><h3>Question 3</h3><p>Does the active member test still pass if my contributions cease / I move permanently?</p><h3>Question 4</h3><p>What documentation protocol should we adopt for decisions made during absence?</p><h3>Question 5</h3><p>What are the alternatives — APRA fund roll-over, pension phase, fund wind-up?</p>`;
@@ -26,7 +27,7 @@ export default function AustraliaSmsfResidencyFile05() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -103,10 +104,10 @@ export default function AustraliaSmsfResidencyFile05() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              🏳️ Australian Taxation Office (ATO) · SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation
+              🇦🇺 Australian Taxation Office (ATO) · ITAA 1997 s 295-95(2) + s 295-320 + SIS Act 1993 s 17A — SMSF residency (Australian superannuation fund), non-complying fund taxation, and the trustee/director conditions
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 05 of 8
@@ -115,7 +116,8 @@ export default function AustraliaSmsfResidencyFile05() {
 
           <DocStrip
             productId={PRODUCT_ID}
-            fallbackText="SMSF ANNUAL RETURN: 31 October 2026"
+            fallbackUrgencyLabel={"SMSF ANNUAL RETURN"}
+            fallbackText=""
             checkHref="/nomad/check/australia-smsf-residency"
           />
 
@@ -226,7 +228,7 @@ export default function AustraliaSmsfResidencyFile05() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australia tax adviser for your personal situation.
-            Based on Australian Taxation Office (ATO) guidance April 2026.
+            Based on Australian Taxation Office (ATO) guidance September 2026.
           </p>
         </div>
 
@@ -245,8 +247,8 @@ export default function AustraliaSmsfResidencyFile05() {
             <a href="/nomad/check/australia-smsf-residency" className="hover:text-neutral-900 transition">
               ← Back to Australian SMSF Residency Kill-Switch
             </a>
-            <a href="https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — SMSF residency requirements ↗</a>
-            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-residency-rules-when-members-go-overseas" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — SMSF residency rules when members go overseas ↗</a>
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Check your SMSF is an Australian super fund (residency conditions; what to do if members go overseas) ↗</a>
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/lodge-smsf-annual-returns" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Lodge SMSF annual returns (due dates) ↗</a>
           </div>
         </div>
       </footer>
