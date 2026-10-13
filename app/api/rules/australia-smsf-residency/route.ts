@@ -20,8 +20,8 @@ export async function GET() {
     "language": "en",
     "currency": "AUD",
     "last_verified": "September 2026",
-    "legislation": "Superannuation Industry (Supervision) Act 1993 section 10(1) defines 'Australian superannuation fund' via three tests: (1) established in Australia or any asset of the fund located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; (3) active member test — at least 50% of the market value of the fund's assets attributable to active members who are Australian residents, OR fund has no active members. Failure on any test = fund ceases to be Australian superannuation fund = loses complying status. Non-complying fund consequences under ITAA 1997 s 295-320: fund's 'low tax component' (approximately the entire market value less undeducted contributions) included in assessable income for the year of change at 45% top marginal rate, plus ongoing income taxed at 45% rather than 15% concessional rate.",
-    "legal_anchor": "SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation",
+    "legislation": "Income Tax Assessment Act 1997 subsection 295-95(2) defines 'Australian superannuation fund' via three conditions: (1) established in Australia or any asset of the fund located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; (3) active member test — at least 50% of the market value of the fund's assets attributable to active members who are Australian residents, OR fund has no active members. Failure on any test = fund ceases to be Australian superannuation fund = loses complying status. Non-complying fund consequences under ITAA 1997 s 295-320: fund's 'low tax component' (approximately the entire market value less undeducted contributions) included in assessable income for the year of change at 45% top marginal rate, plus ongoing income taxed at 45% rather than 15% concessional rate.",
+    "legal_anchor": "ITAA 1997 s 295-95(2) + s 295-320 + SIS Act 1993 s 17A — SMSF residency (Australian superannuation fund), non-complying fund taxation, and the trustee/director conditions",
     "deadline": {
         "iso_date": "",
         "display": "",
@@ -38,7 +38,7 @@ export async function GET() {
         }
     },
     "key_facts": {
-        "legal_anchor_residency": "SIS Act 1993 s 10(1) — 'Australian superannuation fund' definition",
+        "legal_anchor_residency": "ITAA 1997 s 295-95(2) — 'Australian superannuation fund' definition (TR 2008/9)",
         "legal_anchor_non_complying_tax": "ITAA 1997 s 295-320 (low tax component in assessable income)",
         "legal_anchor_complying_concession": "ITAA 1997 s 295-95 (complying fund rate 15%)",
         "tests_to_satisfy": "Establishment + CM&C + Active member (50%+ AU)",
@@ -47,7 +47,7 @@ export async function GET() {
         "active_member_test_threshold": "AU-resident active members hold 50%+ of assets attributable to super interests, OR of amounts payable on leaving",
         "complying_tax_rate": "15% on earnings (0% in pension phase up to TBC)",
         "non_complying_tax_rate": "45% on low tax component in year of change + 45% on ongoing earnings",
-        "remediation_path": "Notice to ATO + application for complying status restoration; not automatic"
+        "remediation_path": "Roll benefits over to an APRA-regulated fund and wind up the SMSF before the fund becomes non-complying (ATO); alternatively appoint a professional trustee (small APRA fund). The Commissioner's discretion to treat the fund as complying is not a planning route."
     },
     "formula": "Non-complying fund tax (year of change) = 'Low tax component' × 45% ≈ (Fund market value − undeducted contributions) × 45%. Example: $1,000,000 fund with $100,000 undeducted contributions → low tax component ≈ $900,000 → tax = $405,000 in year of change. Ongoing earnings then taxed at 45% (vs complying 15%). Complying SMSF concession: earnings × 15% (accumulation phase) or 0% (pension phase up to transfer balance cap). Non-complying = effectively fund destruction.",
     "thresholds": [
@@ -81,7 +81,7 @@ export async function GET() {
         {
             "error_id": 1,
             "ai_says": "ChatGPT says: Living overseas does not affect my SMSF",
-            "correct": "Reality: Wrong. Living overseas directly affects the central management and control test under SIS Act s 10(1). If all trustees are physically overseas and making strategic fund decisions from overseas, CM&C is overseas. A temporary absence (typically accepted as under 2 years with genuine return intent) may not cause a breach, but a permanent or long-term relocation without Australian CM&C substitutes does. The fund's residency status depends on where the fund is controlled from, not where the members live."
+            "correct": "Reality: Wrong. Living overseas directly affects the central management and control condition under ITAA 1997 s 295-95(2). If all trustees are physically overseas and making strategic fund decisions from overseas, CM&C is overseas. A temporary absence (typically accepted as under 2 years with genuine return intent) may not cause a breach, but a permanent or long-term relocation without Australian CM&C substitutes does. The fund's residency status depends on where the fund is controlled from, not where the members live."
         },
         {
             "error_id": 2,
@@ -96,14 +96,14 @@ export async function GET() {
         {
             "error_id": 4,
             "ai_says": "ChatGPT says: Using a corporate trustee solves the residency problem",
-            "correct": "Reality: Only partially. A corporate trustee is often helpful because directors can be appointed, including Australian-resident directors, to maintain CM&C in Australia even when fund members move overseas. But corporate trusteeship alone does not fix the problem — the directors of the corporate trustee must actually exercise control in Australia, and the active member test still applies to member balances. A corporate trustee is part of the solution, not a standalone fix."
+            "correct": "Reality: Only partially. A corporate trustee helps only within SIS Act 1993 s 17A, which requires every member to be a director and every director to be a member — so you cannot add an Australian resident who is not a member. Where a member stays in Australia, that member is the anchor; where every member leaves, the lawful route is an enduring power of attorney with the attorney holding the seat under s 17A(3)(b)(ii) (SMSFR 2010/2). But corporate trusteeship alone does not fix the problem — the directors of the corporate trustee must actually exercise control in Australia, and the active member test still applies to member balances. A corporate trustee is part of the solution, not a standalone fix."
         }
     ],
     "faq": [
         {
             "id": 1,
             "question": "What are the three SMSF residency tests?",
-            "answer": "Under SIS Act s 10(1), a fund is an 'Australian superannuation fund' if: (1) it was established in Australia OR at least one asset of the fund is located in Australia; (2) the central management and control (CM&C) of the fund is ordinarily in Australia at all times; (3) either the fund has no active members, or at least 50% of the total market value of the fund's assets attributable to active members is held by active members who are Australian residents. All three tests must be passed."
+            "answer": "Under ITAA 1997 s 295-95(2), a fund is an 'Australian superannuation fund' if: (1) it was established in Australia OR at least one asset of the fund is located in Australia — the deed need not be signed in Australia; establishment turns on where the initial contribution was paid and accepted by the trustee; (2) the central management and control (CM&C) of the fund is ordinarily in Australia at all times; (3) either the fund has no active members, or at least 50% of the total market value of the fund's assets attributable to active members is held by active members who are Australian residents. All three tests must be passed."
         },
         {
             "id": 2,
@@ -133,7 +133,7 @@ export async function GET() {
         {
             "id": 7,
             "question": "Can my SMSF be remediated after becoming non-complying?",
-            "answer": "Only with ATO approval and only in limited circumstances. The fund must apply for re-complying status once the underlying breach is rectified (e.g. return of CM&C to Australia). The ATO has discretion to restore complying status but is not required to. The year of non-compliance already produces the 45% tax on the low tax component — that tax is not refunded even if the fund is later re-complying. Prevention is vastly preferable to remediation."
+            "answer": "Act BEFORE it becomes non-complying: the ATO's own answer is to roll the benefits over to an APRA-regulated fund and wind the SMSF up, or to appoint a professional trustee so the fund becomes a small APRA-regulated fund. Once the fund HAS become non-complying, the Commissioner has a discretion to treat it as complying, but that is a discretion and not a planning route — it may simply not be exercised. And the year of non-compliance has already produced the 45% tax on the low tax component, which is not refunded even if complying status is later restored. Prevention is vastly preferable to remediation."
         },
         {
             "id": 8,
@@ -174,8 +174,16 @@ export async function GET() {
             "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         },
         {
-            "title": "Superannuation Industry (Supervision) Act 1993 s 10(1)",
+            "title": "ITAA 1997 s 295-95(2) — definition of 'Australian superannuation fund' (the three residency conditions)",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "SIS Act 1993 s 17A — basic conditions for an SMSF: trustees, directors and members",
             "url": "https://www.legislation.gov.au/C2004A04633/latest/text"
+        },
+        {
+            "title": "ATO Ruling SMSFR 2010/2 — the meaning of 'legal personal representative' and an attorney as trustee/director under SIS Act s 17A",
+            "url": "https://www.ato.gov.au/law/view/document?DocID=SFR/SMSFR20102/NAT/ATO/00001"
         },
         {
             "title": "ITAA 1997 s 295-95 (complying fund taxation)",
@@ -215,7 +223,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     "api_endpoint": "/api/rules/australia-smsf-residency",
-    "generated_at": "2026-09-28T07:40:02.447Z"
+    "generated_at": "2026-10-13T09:45:07.109Z"
 };
 
   return NextResponse.json(rules, {

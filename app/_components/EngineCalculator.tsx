@@ -43,6 +43,7 @@ import {
   saveHeadingFor,
   saveSubcopyFor,
   secondaryTierLabelFor,
+  popupHeadingFor,
   sellSubheadFor,
   sellTitleFor,
   type EngineConfig,
@@ -265,6 +266,10 @@ export default function EngineCalculator({
   // question counts only if it can still be shown: its `none` flags aren't already set,
   // and its `all`/`any` flags are still ACHIEVABLE (present, or emittable by some
   // still-unanswered question). So M narrows as gates are ruled out (PR/unsure → fewer).
+  // F87 — the largest step total shown so far in this session. A ref, not state: it only ever
+  // feeds the label that is already being rendered, so it must not trigger a render of its own.
+  const stepTotalRef = useRef(0);
+
   const remainingDepth = useMemo(() => {
     const achievable = new Set(flags);
     for (const q of questions) {
@@ -549,7 +554,19 @@ export default function EngineCalculator({
   // ── QUESTION VIEW ──────────────────────────────────────────────────────────
   if (currentQ) {
     const n = trail.length + 1;
-    const m = Math.max(remainingDepth, n);
+    // ── F87 — THE TOTAL MUST NOT COUNT DOWN ──────────────────────────────────────────────────
+    //
+    // MEASURED: "Step 1 of 4" then "Step 2 of 3". remainingDepth is an ESTIMATE that narrows as
+    // answers rule gates out, which is correct arithmetic and wrong to show: a buyer who reads
+    // "of 4" and then "of 3" has been told the tool changed its mind, and the progress bar jumps
+    // backwards with it. stepTotal is a high-water mark, so the total only ever grows.
+    //
+    // THE TRADE-OFF, stated rather than hidden: the walk can now finish before the total is
+    // reached — "Step 3 of 4" and then the result. Ending early reads as a shorter form than
+    // promised; a shrinking total reads as a bug.
+    const stepTotal = stepTotalRef.current;
+    const m = Math.max(stepTotal, remainingDepth, n);
+    stepTotalRef.current = m;
     const prevValue = answers[currentQ.id];
     return (
       <div className={ENGINE_CANVAS}>
@@ -680,7 +697,9 @@ export default function EngineCalculator({
             onChange={setQualField}
             tier={popupTier.tier}
             priceLabel={fmtPrice(popupTier.price, config)}
-            heading={config?.copy?.popupHeading ?? "Your personalised plan"}
+            // F86 — the modal knows the tier, so the heading follows it when the heading IS a
+            // tier name. At $147 this read "SMSF Residency Fix Kit" on a live page.
+            heading={popupHeadingFor(config, popupTier.tier)}
             subhead={config?.copy?.popupSubhead ?? "A few quick questions, then checkout"}
             payLabel={payLabelFor(config, popupTier.price)}
             dismissLabel={config?.copy?.dismissLabel ?? "Not now — keep reading"}
