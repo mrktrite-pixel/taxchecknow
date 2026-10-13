@@ -1,0 +1,16 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Automatic extension for overseas filers",
+    "value": "2",
+    "unit": "month",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_1",
+    "label": "Form for additional extension request",
+    "value": "4868",
+    "unit": null,
+    "fact_role": "other"
+  }
+]

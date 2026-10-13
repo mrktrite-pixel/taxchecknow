@@ -219,6 +219,20 @@ export interface ProductConfig {
   metaDescription: string;
   canonical: string;
 
+  /**
+   * The search query this page's copy was written against, recorded by Bee S
+   * when it selects one from evidence. OPTIONAL and inert: nothing in COLE
+   * reads it, no generator emits it, and its absence means only that no query
+   * has been chosen yet. Bee S reads it back on a later run as the declared
+   * query instead of re-deriving one, which is what makes a choice auditable
+   * in the config rather than only in the seo_research table.
+   *
+   * A length repair never writes it — there the copy was compressed, not
+   * targeted, and recording current wording as a keyword would launder the one
+   * into the other.
+   */
+  seoPrimaryQuery?: string;
+
   answerHeadline: string;
   answerBody: string[];
   answerSource: string;
@@ -334,7 +348,19 @@ export interface ProductConfig {
   // ─── LAW BAR ───────────────────────────────────────────────────────────
   lawBarSummary: string;
   lawBarBadges: string[];
-  sources: Array<{ title: string; url: string }>;
+  /**
+   * The authorities behind the page. `title` + `url` are what render.
+   *
+   * `quote` and `fetched` are OPTIONAL and inert to every generator — nothing renders them and
+   * no existing config has to be backfilled. They exist so a fact taken from a page can carry the
+   * SENTENCE it was taken from and the day it was read, in the config, next to the fact. A figure
+   * or a date whose provenance is only in a commit message is one refactor away from being
+   * unverifiable: the FEIE amount sat two years stale on live pages precisely because the source
+   * link was present and the sentence was not.
+   *
+   * `fetched` is YYYY-MM-DD, the day the quote was read in session. Never back-dated.
+   */
+  sources: Array<{ title: string; url: string; quote?: string; fetched?: string }>;
 
   // ─── FILES ─────────────────────────────────────────────────────────────
   files: Array<ProductFile>;

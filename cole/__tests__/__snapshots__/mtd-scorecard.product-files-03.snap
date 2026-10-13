@@ -11,9 +11,10 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "mtd-scorecard";
+const SESSION_KEY = "mtd-scorecard";
 const SLUG = "mtd-03";
 const FALLBACK_LABEL = { name: "How Quarterly Updates Work", desc: "The quarterly update cycle and the final declaration, and where HMRC publishes the dates that apply to you." };
-const BODY = `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th><th>Late after</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td><td>Penalty point + fee clock starts</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td><td>Same</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td><td>Same</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td><td>Same</td></tr><tr><td>Final declaration</td><td>Full tax year</td><td>31 January</td><td>Standard SA penalty</td></tr></table><h3>Penalty Accumulation</h3><p>Each missed quarterly update: £200 initial + £10/day × up to 90 days = up to £1,100 per quarter. Missing all 4 in a year = up to £4,400 annually. Plus points-based system (4 points = £200 additional penalty).</p><div class="info-box"><strong>Calendar discipline:</strong> Set recurring reminders 2 weeks before each quarterly deadline. First-year breaches usually come from forgotten deadlines, not incapability.</div>`;
+const BODY = `<h2>Your MTD Submission Calendar</h2><table><tr><th>Quarter</th><th>Period</th><th>Due Date</th><th>Late after</th></tr><tr><td>Q1</td><td>6 April – 5 July</td><td>5 August</td><td>Penalty point (tax years after 2026-27)</td></tr><tr><td>Q2</td><td>6 July – 5 October</td><td>5 November</td><td>Same</td></tr><tr><td>Q3</td><td>6 October – 5 January</td><td>5 February</td><td>Same</td></tr><tr><td>Q4</td><td>6 January – 5 April</td><td>5 May</td><td>Same</td></tr><tr><td>Final declaration</td><td>Full tax year</td><td>31 January</td><td>Standard SA penalty</td></tr></table><h3>Penalty Accumulation</h3><p>Late submission is points-based. Each missed quarterly update earns one penalty point for tax years after 2026 to 2027, as does a missed tax return. Nothing is charged for the first three points; £200 is charged on reaching four, and £200 again for each further missed deadline while you remain at the threshold. HMRC states there are no penalties for missing a quarterly update deadline for the 2026 to 2027 tax year.</p><div class="info-box"><strong>Calendar discipline:</strong> Set recurring reminders 2 weeks before each quarterly deadline. First-year breaches usually come from forgotten deadlines, not incapability.</div>`;
 
 export default function MtdScorecardFile03() {
   // R1 — bind the body to the buyer's own answers where we have them.
@@ -26,7 +27,7 @@ export default function MtdScorecardFile03() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -106,7 +107,7 @@ export default function MtdScorecardFile03() {
               🇬🇧 HMRC · Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 03 of 8
@@ -226,7 +227,7 @@ export default function MtdScorecardFile03() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on HMRC guidance April 2026.
+            Based on HMRC guidance September 2026.
           </p>
         </div>
 

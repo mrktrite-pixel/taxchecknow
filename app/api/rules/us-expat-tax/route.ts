@@ -20,7 +20,7 @@ export async function GET() {
     "language": "en",
     "currency": "USD",
     "last_verified": "April 2026",
-    "legislation": "Internal Revenue Code §911 (Foreign Earned Income Exclusion — up to $126,500 for 2026 of foreign earned income), §911(c) (housing exclusion/deduction), §901 (Foreign Tax Credit — dollar-for-dollar credit for foreign income taxes paid), §904 (FTC limitation), §6013(g)(h) (joint filing elections), §6038D (FATCA — Form 8938), plus Bank Secrecy Act 31 USC §5314 / 31 CFR §1010.350 (FBAR — FinCEN 114). US citizens and residents are taxed on worldwide income regardless of foreign residency. FEIE and FTC are the two primary mechanisms to reduce double taxation — they cannot apply to the same income and produce very different outcomes depending on foreign country tax rates.",
+    "legislation": "Internal Revenue Code §911 (Foreign Earned Income Exclusion — up to $132,900 for 2026 of foreign earned income), §911(c) (housing exclusion/deduction), §901 (Foreign Tax Credit — dollar-for-dollar credit for foreign income taxes paid), §904 (FTC limitation), §6013(g)(h) (joint filing elections), §6038D (FATCA — Form 8938), plus Bank Secrecy Act 31 USC §5314 / 31 CFR §1010.350 (FBAR — FinCEN 114). US citizens and residents are taxed on worldwide income regardless of foreign residency. FEIE and FTC are the two primary mechanisms to reduce double taxation — they cannot apply to the same income and produce very different outcomes depending on foreign country tax rates.",
     "legal_anchor": "IRC §911 Foreign Earned Income Exclusion + IRC §901 Foreign Tax Credit — FEIE vs FTC optimisation",
     "deadline": {
         "iso_date": "2027-06-15T23:59:59.000-04:00",
@@ -30,7 +30,7 @@ export async function GET() {
     },
     "key_facts": {
         "feie_legal_anchor": "IRC §911 — Foreign Earned Income Exclusion",
-        "feie_limit_2026": "$126,500 (indexed annually)",
+        "feie_limit_2026": "$132,900 (indexed annually)",
         "feie_qualification": "Physical presence (330 days) OR bona fide residence",
         "feie_form": "Form 2555 (filed with Form 1040)",
         "ftc_legal_anchor": "IRC §901 — Foreign Tax Credit",
@@ -41,7 +41,7 @@ export async function GET() {
         "fatca_threshold_us_resident": "$50,000 single / $100,000 joint (higher abroad) — Form 8938",
         "expat_filing_automatic_extension": "15 June (2 months past 15 April)"
     },
-    "formula": "FEIE outcome: US tax = max(0, Income - $126,500) × US marginal rate; foreign taxes on excluded income = wasted (no credit). FTC outcome: US tax = Income × US rate - Foreign tax paid (capped at US tax on foreign income). Hybrid: FEIE on earned up to $126,500 + FTC on earned above $126,500 and all passive. Optimal: if foreign rate >= US rate, FTC typically better. If foreign rate < US rate or zero, FEIE typically better. Example: UK 40% on $150k earned: FEIE total tax = $62,800 (US $2,800 + UK $60,000); FTC total tax = $60,000 (UK $60,000 + US $0, $29k credits carried forward). UAE 0% on $150k: FEIE total = $2,800 (US); FTC total = $31,000 (US).",
+    "formula": "FEIE outcome: US tax = max(0, Income - $132,900) × US marginal rate; foreign taxes on excluded income = wasted (no credit). FTC outcome: US tax = Income × US rate - Foreign tax paid (capped at US tax on foreign income). Hybrid: FEIE on earned up to $132,900 + FTC on earned above $132,900 and all passive. Optimal: if foreign rate >= US rate, FTC typically better. If foreign rate < US rate or zero, FEIE typically better. Example: UK 40% on $150k earned: FEIE total tax = $62,800 (US $2,800 + UK $60,000); FTC total tax = $60,000 (UK $60,000 + US $0, $29k credits carried forward). UAE 0% on $150k: FEIE total = $2,800 (US); FTC total = $31,000 (US).",
     "thresholds": [
         {
             "label": "FTC optimal — high-tax country (foreign rate over US rate)",
@@ -95,7 +95,7 @@ export async function GET() {
         {
             "id": 1,
             "question": "When is FEIE better than FTC?",
-            "answer": "FEIE is typically better in low-tax or zero-tax countries (UAE, Saudi Arabia, some Caribbean jurisdictions, and low-tax Asian centres like Singapore and Hong Kong where effective rates are under US rates). In these environments, FTC provides little or no credit because foreign tax is low or zero — so FEIE's outright exclusion of up to $126,500 produces a much lower total US tax bill. FEIE can also be preferable for lower-income expats (under $80k) even in moderate-tax countries if FTC paperwork burden outweighs the benefit."
+            "answer": "FEIE is typically better in low-tax or zero-tax countries (UAE, Saudi Arabia, some Caribbean jurisdictions, and low-tax Asian centres like Singapore and Hong Kong where effective rates are under US rates). In these environments, FTC provides little or no credit because foreign tax is low or zero — so FEIE's outright exclusion of up to $132,900 produces a much lower total US tax bill. FEIE can also be preferable for lower-income expats (under $80k) even in moderate-tax countries if FTC paperwork burden outweighs the benefit."
         },
         {
             "id": 2,
@@ -105,7 +105,7 @@ export async function GET() {
         {
             "id": 3,
             "question": "Can I use both FEIE and FTC in the same year?",
-            "answer": "Yes — but not on the same dollar of income. A hybrid approach is common: FEIE on earned income up to the $126,500 exclusion limit, plus FTC on earned income above that limit AND on all passive income. Form 2555 handles the FEIE portion; Form 1116 handles the FTC portion; careful income allocation between the two is required. Most US expat tax software supports this automatically."
+            "answer": "Yes — but not on the same dollar of income. A hybrid approach is common: FEIE on earned income up to the $132,900 exclusion limit, plus FTC on earned income above that limit AND on all passive income. Form 2555 handles the FEIE portion; Form 1116 handles the FTC portion; careful income allocation between the two is required. Most US expat tax software supports this automatically."
         },
         {
             "id": 4,

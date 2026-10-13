@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "spain-beckham";
+const SESSION_KEY = "spain-beckham-eligibility";
 const SLUG = "beck-03";
 const FALLBACK_LABEL = { name: "Prior Residency History Check", desc: "How to establish clean 5-year prior residency and document it." };
 const BODY = `<h2>Prior Residency History Check</h2><h3>Spanish residency tests (ITAA equivalent)</h3><ul><li>183+ days in Spain in a calendar year</li><li>Centre of economic interests in Spain (main/only source of income)</li><li>Spouse + minor children habitually in Spain (presumption)</li></ul><h3>Red flags in the last 5 years</h3><ul class="checklist"><li>Any Spanish IRPF return filed</li><li>Spanish tax residency certificate previously issued</li><li>Lived in Spain 183+ days in any year</li><li>Primary family home in Spain for any period</li><li>Extended sabbatical in Spain</li></ul><h3>Documentation to retain</h3><ul><li>Prior country tax residency certificates (5 years)</li><li>Passport stamps + entry/exit records</li><li>Rental / housing records showing non-Spanish residence</li><li>Employment records showing non-Spanish work</li></ul>`;
@@ -26,7 +27,7 @@ export default function SpainBeckhamFile03() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's

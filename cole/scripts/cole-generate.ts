@@ -29,6 +29,8 @@ import { generateRulesRoute,    getRulesRoutePath,
          corpusWriteDecision                          } from "../generators/generate-rules-route";
 import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
 import type { ProductConfig } from "../types/product-config";
+import { assertSeo, SeoGateError } from "../validators/seo-gate";
+import { assertNoFirstPerson, FirstPersonGateError } from "../validators/first-person-gate";
 import { createClient } from "@supabase/supabase-js";
 import type { GeoBake } from "../generators/generate-gate-page";
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
@@ -88,6 +90,61 @@ async function fetchGeoBake(config: ProductConfig): Promise<GeoBake> {
   }
 }
 
+
+// ── MONITOR-URL SYNC (single product) ────────────────────────────────────────
+// Runs after a SUCCESSFUL emit, so a product's declared authority URLs reach
+// products.monitor_urls the moment its config is regenerated — which is the
+// moment they can have changed.
+//
+// WHY IT LIVES HERE. The column is what soverella's Bee H sweeps for authority
+// drift, and until now nothing wrote it: a URL added to a config enrolled
+// nothing for monitoring. soverella has an estate-wide sync script; this is the
+// single-product counterpart, at the point of change.
+//
+// MATCHED BY SLUG, which is the live URL and therefore the one key neither side
+// is free to invent. Filename stems disagree (au-16's stem carries a "16-" its
+// product row does not); slugs do not.
+//
+// FAIL-SOFT AND NON-FATAL. No service key ⇒ skip silently (a local run without
+// credentials is normal). A failed write logs and never changes the exit code:
+// the pages are already on disk and correct, and failing a good build over a
+// bookkeeping write would be the wrong trade.
+async function syncMonitorUrlsForProduct(config: ProductConfig): Promise<void> {
+  const urls = config.monitorUrls ?? [];
+  if (!SUPABASE_URL || !SUPABASE_KEY) return;
+  if (!config.slug || urls.length === 0) return;
+  try {
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const { data: row } = await sb
+      .from("products")
+      .select("product_id, monitor_urls")
+      .eq("site", "taxchecknow")
+      .eq("slug", config.slug)
+      .maybeSingle();
+    if (!row) {
+      console.log(`   ⓘ  monitor_urls: no product row for slug "${config.slug}" — nothing written`);
+      return;
+    }
+    const cur = Array.isArray((row as { monitor_urls?: string[] }).monitor_urls)
+      ? ((row as { monitor_urls: string[] }).monitor_urls)
+      : [];
+    const same = cur.length === urls.length && cur.every((v, i) => v === urls[i]);
+    if (same) {
+      console.log(`   ✅ monitor_urls already in sync (${urls.length} url(s))`);
+      return;
+    }
+    const { error } = await sb
+      .from("products")
+      .update({ monitor_urls: urls })
+      .eq("site", "taxchecknow")
+      .eq("slug", config.slug);
+    if (error) console.warn(`   ⚠️  monitor_urls write failed (non-fatal): ${error.message}`);
+    else console.log(`   ✅ monitor_urls synced: ${cur.length} → ${urls.length} url(s) on ${(row as {product_id:string}).product_id}`);
+  } catch (err) {
+    console.warn(`   ⚠️  monitor_urls sync skipped (non-fatal): ${err instanceof Error ? err.message : String(err)}`);
+  }
+}
+
 // ── PASCAL HELPER (mirrors generate-calculator.ts) ────────────────────────────
 function toPascal(str: string): string {
   return str.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("");
@@ -106,17 +163,43 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     let configPath = path.join(CONFIG_DIR, `${productId}.ts`);
     if (!fs.existsSync(configPath)) {
       const allConfigs = fs.readdirSync(CONFIG_DIR).filter(f => f.endsWith(".ts"));
-      // Resolve by filename prefix (au-19), OR by the slug TAIL (config files are
-      // "<country>-<NN>-<slug>.ts", so the basename ends with the slug). The tail form lets the
-      // update-emit mechanics pass the storefront slug tail (e.g. frcgw-clearance-certificate).
       const base = (f: string) => f.replace(/\.ts$/, "");
+      // ── F79 — RESOLVE BY WHAT THE CONFIG SAYS IT IS, NOT ONLY BY ITS FILENAME ──────────────
+      //
+      // The three filename rules below (exact, prefix, "-<tail>" suffix) cover 47 of 48 products
+      // by coincidence: config files are named "<country>-<NN>-<slug>", so the basename usually
+      // ends with the slug tail that every caller passes. MEASURED failure, australia-smsf-residency:
+      //
+      //   slug tail   "australia-smsf-residency"
+      //   filename    "nomad-09-au-smsf-residency.ts"   -> no prefix match, no "-<tail>" match
+      //   result      ❌ Config error: Config not found — and ship-check therefore reported
+      //               regenerated=NO, so step 5 could never reach DONE for that product.
+      //
+      // The filename is a convention. `id` and `slug` are DECLARATIONS, and they are what the rest
+      // of the estate keys on: products.slug, the DELIVERY_MAP productId, the registry, the route.
+      // So they are consulted too — read from the file, not inferred from its name. This costs one
+      // pass over ~48 small files and only happens when the filename rules have already missed.
+      //
+      // Ordered filename-first so nothing that resolves today resolves differently tomorrow.
+      const declares = (f: string): { id: string; slugTail: string } => {
+        const src = fs.readFileSync(path.join(CONFIG_DIR, f), "utf-8");
+        const id = /\bid:\s*"([^"]+)"/.exec(src)?.[1] ?? "";
+        const slug = /\bslug:\s*"([^"]+)"/.exec(src)?.[1] ?? "";
+        return { id, slugTail: slug.replace(/\/+$/, "").split("/").pop() ?? "" };
+      };
       const match      = allConfigs.find(f => f.startsWith(productId))
-                      ?? allConfigs.find(f => base(f).endsWith(`-${productId}`) || base(f) === productId);
+                      ?? allConfigs.find(f => base(f).endsWith(`-${productId}`) || base(f) === productId)
+                      ?? allConfigs.find(f => { const d = declares(f); return d.id === productId || d.slugTail === productId; });
       if (match) {
         configPath = path.join(CONFIG_DIR, match);
         console.log(`   → Resolved to: ${match}`);
       } else {
-        throw new Error(`Config not found: ${configPath}\n   Available: ${allConfigs.join(", ")}`);
+        throw new Error(
+          `Config not found: ${configPath}\n` +
+          `   Tried, in order: the exact filename, a filename PREFIX, a "-${productId}" filename SUFFIX, ` +
+          `and every config's declared id and slug tail.\n` +
+          `   Available: ${allConfigs.join(", ")}`,
+        );
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -147,6 +230,48 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     process.exit(1);
   }
 
+  // ── SEO GATE ────────────────────────────────────────────────────────────
+  // Placed HERE deliberately: after the config is loaded, before ANY mode
+  // dispatches, so it covers the full run and every surgical mode alike
+  // (--gate-only, --files-only, --success-only, --evidence-only, --pages-only).
+  // A product whose title is 93 characters should not be able to emit a file
+  // page either.
+  //
+  // It throws rather than collecting into `errors`, because a collected error
+  // still lets the emit finish — and the whole point is that the bad copy
+  // never reaches a page. The fix is always a CONFIG edit, so nothing is
+  // trapped: edit metaTitle/metaDescription/h1, re-run, pass.
+  try {
+    assertSeo(config.id, config);
+    console.log(`   ✅ SEO gate passed`);
+  } catch (err) {
+    if (err instanceof SeoGateError) {
+      console.error(`
+   ❌ ${err.message}
+`);
+      process.exit(1);
+    }
+    throw err;
+  }
+
+  // F45 — FIRST-PERSON GATE. Same shape and same position as the SEO gate: before any mode
+  // dispatches, so a voice regression cannot reach a page or a pack. It scans only the two
+  // surfaces that reach the model — the prompt builder and THIS product's corpus route — because
+  // failing a build on another product's corpus would block an author who was never asked to fix
+  // it. Three sold packs already carry "I cannot calculate..." in the buyer's document.
+  try {
+    assertNoFirstPerson(path.dirname(APP_ROOT), config.id);
+    console.log(`   ✅ First-person gate passed`);
+  } catch (err) {
+    if (err instanceof FirstPersonGateError) {
+      console.error(`
+   ❌ ${err.message}
+`);
+      process.exit(1);
+    }
+    throw err;
+  }
+
   // ── UPDATE/MIGRATION EMIT (--success-only) ────────────────────────────────
   // DOCTRINE: an update is a full new build that retains the URL — the emit delivers the
   // calculator AND regenerated success pages, never a partial transplant. emit-engine.ts writes
@@ -171,6 +296,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     console.log(`\n${"─".repeat(60)}`);
     console.log(ok ? `\n✅ Temporal evidence recorded: ${productId}` : `\n⚠️  Completed with ${errors.length} error(s):`);
     errors.forEach(e => console.log(`   • ${e}`));
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }
@@ -192,6 +318,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
       ? `\n✅ Success pages regenerated: ${productId} (${filesGenerated.length} files)`
       : `\n⚠️  Success-only completed with ${errors.length} error(s):`);
     errors.forEach(e => console.log(`   • ${e}`));
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }
@@ -210,6 +337,7 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
     console.log(`\n${"─".repeat(60)}`);
     console.log(ok ? `\n✅ Gate page regenerated: ${productId}` : `\n⚠️  Gate-only completed with ${errors.length} error(s):`);
     errors.forEach(e => console.log(`   • ${e}`));
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }
@@ -291,6 +419,7 @@ ${"─".repeat(60)}`);
       console.log(`   The product is part-regenerated. Re-run after fixing, or revert with git.`);
     }
     reportInvalidatedSnapshots(config);
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }
@@ -302,6 +431,7 @@ ${"─".repeat(60)}`);
     console.log(`\n${"─".repeat(60)}`);
     console.log(ok ? `\n✅ Product files regenerated: ${productId}` : `\n⚠️  Files-only completed with ${errors.length} error(s):`);
     errors.forEach(e => console.log(`   • ${e}`));
+    if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
     return;
   }

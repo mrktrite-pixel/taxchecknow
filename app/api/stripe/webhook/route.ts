@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { sendDeliveryEmail } from "@/lib/cole-email";
 import { getMarketContext } from "@/lib/email-context";
 import { getAssessmentFields } from "@/lib/assessment-fields";
+import { renderPack } from "@/lib/render-pack";
 import { buildComposerInputs } from "@/lib/composer-inputs";
 import { generateAssessment } from "@/lib/assess-core";
 // TEMPORAL v1 Step 6.2 — the SCHEDULER's date now comes from the resolver over
@@ -228,7 +229,22 @@ async function generateAndStoreAssessment(
       customer_name:       customerName,
       // Stamp groundedness INTO the stored JSON so it is auditable in SQL without a schema
       // change: `assessment_json->'_meta'->>'grounded'`, `->>'corpus_source'`.
-      assessment_json:     { ...assessment, _meta: { grounded: true, corpus_source, corpus_verified } },
+      // FREEZE (2026-09-21): the delivered pack is STORED, not re-derived on every page
+      // load. `rendered` is the canonical document — sections, headings and text already
+      // resolved by lib/render-pack.ts against the same field list this row was generated
+      // with. The raw keys stay exactly as they were for audit and for the heal path; this
+      // only ADDS. A later change to a field list or a template can no longer alter a pack
+      // somebody already bought.
+      assessment_json:     {
+        ...assessment,
+        _meta: { grounded: true, corpus_source, corpus_verified },
+        rendered: renderPack(assessment as Record<string, unknown>, {
+          productId:    delivery.productId,
+          tier,
+          customerName: customerName,
+          fieldList:    getAssessmentFields(delivery.productId, tier),
+        }),
+      },
       created_at:          new Date().toISOString(),
     }, { onConflict: "stripe_session_id" });
 

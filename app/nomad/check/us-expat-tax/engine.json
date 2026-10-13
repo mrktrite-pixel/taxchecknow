@@ -1,0 +1,295 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "U.S. citizens and resident aliens living abroad face distinct filing obligations, extension rules, and tax-reduction strategies (FEIE, FTC, FBAR). This menu organizes the real situations these taxpayers encounter, grounded in IRS authority and verified market gaps.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-primary-topic",
+      "text": "What is the main thing you need help with today?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I need to know if I get extra time to file because I'm living or stationed abroad",
+          "value": "extension",
+          "flags": [
+            "q1-primary-topic:extension"
+          ]
+        },
+        {
+          "label": "I want to understand the Foreign Earned Income Exclusion (FEIE) or Foreign Tax Credit (FTC)",
+          "value": "feie-ftc",
+          "flags": [
+            "q1-primary-topic:feie-ftc"
+          ]
+        },
+        {
+          "label": "I need to know about reporting foreign bank accounts or assets (FBAR / FATCA)",
+          "value": "fbar-fatca",
+          "flags": [
+            "q1-primary-topic:fbar-fatca"
+          ]
+        },
+        {
+          "label": "I want to know about common tax mistakes expats make",
+          "value": "mistakes",
+          "flags": [
+            "q1-primary-topic:mistakes"
+          ]
+        },
+        {
+          "label": "I'm not sure whether I still owe state taxes while living abroad",
+          "value": "state-tax",
+          "flags": [
+            "q1-primary-topic:state-tax"
+          ]
+        },
+        {
+          "label": "None of these match what I need",
+          "value": "none",
+          "flags": [
+            "q1-primary-topic:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-extension-type",
+      "text": "Which of the following best describes your situation regarding filing abroad?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-primary-topic:extension"
+        ]
+      },
+      "options": [
+        {
+          "label": "I am a U.S. citizen or resident alien living outside the U.S. and want to know if I automatically get more time to file",
+          "value": "civilian-overseas",
+          "flags": [
+            "q2-extension-type:civilian-overseas"
+          ]
+        },
+        {
+          "label": "I am a member of the U.S. military on duty outside the U.S. and want to know if the extension applies to me",
+          "value": "military-overseas",
+          "flags": [
+            "q2-extension-type:military-overseas"
+          ]
+        },
+        {
+          "label": "I have already used or will use the automatic overseas extension and still need more time beyond that",
+          "value": "need-more-time",
+          "flags": [
+            "q2-extension-type:need-more-time"
+          ]
+        },
+        {
+          "label": "I'm not sure which of these applies to me",
+          "value": "unsure",
+          "flags": [
+            "q2-extension-type:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-feie-ftc-angle",
+      "text": "What aspect of the Foreign Earned Income Exclusion or Foreign Tax Credit are you most focused on?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-primary-topic:feie-ftc"
+        ]
+      },
+      "options": [
+        {
+          "label": "I want to understand which option — FEIE, FTC, or a combination — is better for my situation",
+          "value": "strategy",
+          "flags": [
+            "q3-feie-ftc-angle:strategy"
+          ]
+        },
+        {
+          "label": "I want to understand how the FEIE is calculated and how it interacts with other rules (e.g., FTC, FBAR/FATCA)",
+          "value": "mechanics",
+          "flags": [
+            "q3-feie-ftc-angle:mechanics"
+          ]
+        },
+        {
+          "label": "I'm not sure what I need — I just know I earned income abroad",
+          "value": "unsure",
+          "flags": [
+            "q3-feie-ftc-angle:unsure"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "overseas-auto-extension",
+      "when": {
+        "any": [
+          "q2-extension-type:civilian-overseas"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm living abroad — do I get extra time to file?",
+      "result_copy": "U.S. citizens and resident aliens who are overseas on the regular due date of their return are indicated to qualify for an automatic 2-month extension to file their return without requesting an extension. No form is required to claim this automatic extension. Note: interest still accrues on any tax owed from the original due date. This is an indicated result based on your answers — review with a qualified tax professional to confirm your specific circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "additional-extension-form-4868",
+      "when": {
+        "any": [
+          "q2-extension-type:need-more-time"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I need more time beyond the automatic overseas extension — how do I get it?",
+      "result_copy": "If you are unable to file by the automatic 2-month extension date, a further extension to October 15 can be requested by filing Form 4868, Application for Automatic Extension of Time To File U.S. Individual Income Tax Return, before the automatic 2-month extension date. This is an indicated path — confirm timing and eligibility with a qualified tax professional.",
+      "figure_ids": [
+        "fig_1"
+      ]
+    },
+    {
+      "id": "military-overseas-extension",
+      "when": {
+        "any": [
+          "q2-extension-type:military-overseas"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm in the military on duty outside the U.S. — does the automatic extension apply to me?",
+      "result_copy": "Members of the military on duty outside the U.S. on the regular due date of their return are indicated to qualify for the same automatic 2-month extension available to overseas filers. No form is required to claim this automatic extension. This is an indicated result — review with a qualified tax professional to confirm your specific circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "feie-vs-ftc-strategy",
+      "when": {
+        "any": [
+          "q3-feie-ftc-angle:strategy"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Which is better for me — the Foreign Earned Income Exclusion or the Foreign Tax Credit?",
+      "result_copy": "Expats may be eligible for the Foreign Earned Income Exclusion (FEIE) and/or the Foreign Tax Credit (FTC) to reduce U.S. tax on income earned abroad. Whether FEIE, FTC, or a hybrid approach is more beneficial depends on your income type, country of residence, tax treaty status, and filing situation. This dish explains how to evaluate which approach may apply — a definitive answer requires review of your individual facts by a qualified tax professional.",
+      "figure_ids": []
+    },
+    {
+      "id": "feie-calculation-explainer",
+      "when": {
+        "any": [
+          "q3-feie-ftc-angle:mechanics"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How does the Foreign Earned Income Exclusion actually work and interact with other tax rules?",
+      "result_copy": "The FEIE allows qualifying U.S. citizens and resident aliens abroad to exclude foreign earned income from U.S. taxable income. What qualifies as foreign earned income, how the exclusion is calculated, and how it interacts with provisions such as the Foreign Tax Credit and FBAR/FATCA obligations depend on individual income, country, and filing status. This dish explains the mechanics — it does not assert a specific outcome for your situation.",
+      "figure_ids": []
+    },
+    {
+      "id": "fbar-fatca-obligations",
+      "when": {
+        "any": [
+          "q1-primary-topic:fbar-fatca"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Do I need to report my foreign bank accounts or assets (FBAR / FATCA)?",
+      "result_copy": "U.S. citizens and resident aliens abroad may have FBAR and FATCA reporting obligations for foreign financial accounts and assets. Whether these obligations apply depends on account balances, asset values, and filing status. This dish explains how to determine whether a reporting requirement exists and what the consequences may be — it does not assert a definitive outcome for your specific situation.",
+      "figure_ids": []
+    },
+    {
+      "id": "expat-common-mistakes-by-income-type",
+      "when": {
+        "any": [
+          "q1-primary-topic:mistakes"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What are the most common tax mistakes expats make — and do they apply to my situation?",
+      "result_copy": "Common expat tax errors vary by income type (e.g., self-employed vs. W-2, rental income, crypto/virtual currency gains) and country of residence. This dish explains the most frequent pitfalls by income category and guides you on how to determine whether any apply to your situation — it does not assert a definitive outcome for your specific circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "state-tax-obligations-expats",
+      "when": {
+        "any": [
+          "q1-primary-topic:state-tax"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Do I still owe state taxes while living abroad?",
+      "result_copy": "Federal IRS compliance is only part of the picture for U.S. expats — state tax obligations may also apply depending on your state of last domicile, ties to that state, and state-specific rules. This dish explains how to assess whether state tax obligations remain relevant to your situation — it does not assert a definitive outcome, as rules vary significantly by state.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-primary-topic:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check covers US expat filing — yours may sit outside it",
+      "result_copy": "This check answers four things for US citizens and resident aliens living abroad: the filing extensions you get automatically and how to extend further, whether the Foreign Earned Income Exclusion or the Foreign Tax Credit fits your income, when foreign accounts trigger FBAR or FATCA reporting, and whether a US state still has a claim on you. Your answers do not place you in any of those. That is not a verdict that nothing applies to you — it means this check is the wrong instrument for the question you are asking. If you are a US person abroad with an unresolved filing question, a short personalised review establishes which rules actually govern it.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2-extension-type:unsure",
+          "q3-feie-ftc-angle:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle your filing position yet",
+      "result_copy": "One detail needed to reach a conclusion is still unconfirmed — most often whether you were physically abroad on the regular due date, whether your foreign accounts crossed a reporting threshold, or whether you severed ties with your last US state. Each of those changes the answer, so naming a position now would mean guessing, and on a US filing obligation a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand on extensions, FEIE or FTC, FBAR and FATCA, and state tax.",
+      "figure_ids": []
+    }
+  ]
+}

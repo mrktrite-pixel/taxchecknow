@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "mtd-scorecard";
+const SESSION_KEY = "mtd-scorecard";
 const SLUG = "mtd-02";
 const FALLBACK_LABEL = { name: "MTD Software and Authorisation", desc: "How compatible software is chosen and authorised, and how bridging software fits." };
 const BODY = `<h2>HMRC-Approved MTD Software — Decision Framework</h2><table><tr><th>Software</th><th>Cost</th><th>Best for</th></tr><tr><td>QuickBooks</td><td>From £10/mo</td><td>Self-employed, small landlords</td></tr><tr><td>Xero</td><td>From £15/mo</td><td>Multi-property, accountant-shared</td></tr><tr><td>FreeAgent</td><td>Free–£19/mo</td><td>Freelancers, contractors</td></tr><tr><td>Sage</td><td>From £12/mo</td><td>Established businesses with payroll</td></tr><tr><td>Bridging software</td><td>£5-15/mo add-on</td><td>Keep existing spreadsheets</td></tr></table><div class="warning-box"><strong>Spreadsheets alone:</strong> Do not qualify under any scenario. Must be bridged with approved bridging software OR replaced.</div><h3>Migration Sequencing</h3><ol><li>6+ months before mandate: choose software, set up chart of accounts</li><li>3+ months before: run parallel with old system for one month</li><li>1 month before: switch fully, cut off old system</li><li>Post-mandate: first quarterly dry-run under your accountant's supervision</li></ol>`;
@@ -26,7 +27,7 @@ export default function MtdScorecardFile02() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -106,7 +107,7 @@ export default function MtdScorecardFile02() {
               🇬🇧 HMRC · Finance Act 2021 — Making Tax Digital for Income Tax Self Assessment (MTD ITSA)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 02 of 8
@@ -226,7 +227,7 @@ export default function MtdScorecardFile02() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified UK tax adviser for your personal situation.
-            Based on HMRC guidance April 2026.
+            Based on HMRC guidance September 2026.
           </p>
         </div>
 

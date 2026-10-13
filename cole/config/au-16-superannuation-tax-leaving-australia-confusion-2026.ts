@@ -93,7 +93,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   "authorityUrl": "https://www.ato.gov.au",
   "legalAnchor": "DASP",
   "legislation": "Migration Act 1958",
-  "lastVerified": "July 2026",
+  "lastVerified": "September 2026",
   "tier1": {
     "price": 67,
     "name": "DASP & Departure Super Plan",
@@ -168,10 +168,10 @@ export const PRODUCT_CONFIG: ProductConfig = {
     }
   },
   "h1": "Superannuation Tax When Leaving Australia (DASP) 2026: How Much Is Withheld — and What If You Never Claim?",
-  "metaTitle": "Superannuation Tax Leaving Australia 2026 (DASP) — Withholding Rates by Visa | TaxCheckNow",
-  "metaDescription": "Leaving Australia? Your super can be claimed as a DASP, taxed at 35%/45% for most visas or 65% for working holiday makers. Unclaimed super transfers to the ATO after 6 months. Free check shows your position.",
+  "metaTitle": "DASP Tax Leaving Australia 2026: 35%, 45% or 65%? | TaxCheckNow",
+  "metaDescription": "DASP is taxed at 35% or 45% for most visas, 65% for working holiday makers. Unclaimed super goes to the ATO 6 months after you leave. Free check.",
   "canonical": "https://taxchecknow.com/au/check/superannuation-tax-leaving-australia-confusion-2026",
-  "answerHeadline": "The answer — ATO confirmed July 2026",
+  "answerHeadline": "The answer — ATO confirmed September 2026",
   "answerBody": [
     "When leaving Australia as a temporary resident, you may generally claim your superannuation as a Departing Australia Superannuation Payment (DASP), with tax withheld at the time of payment — 35% on the taxed element and 45% on the untaxed element for most visa holders, or 65% on both elements for working holiday maker visa holders — and if you do not apply, your super fund may transfer your balance to the ATO as unclaimed money once 6 months or more has passed since you left Australia and your visa has ceased, depending on circumstances.",
     "Departing Australia Superannuation Payment (DASP) matters are generally governed under the Migration Act 1958, as indicated by the Australian Taxation Office's guidance on temporary residents and superannuation. Depending on circumstances, the applicable rules and requirements may vary, and this source is indicated as the primary authority on this topic."

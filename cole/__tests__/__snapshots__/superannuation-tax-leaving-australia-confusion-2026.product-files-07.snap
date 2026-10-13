@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "superannuation-tax-leaving-australia-confusion-2026";
+const SESSION_KEY = "superannuation-tax-leaving-australia-confusion-2026";
 const SLUG = "dasp-07";
 const FALLBACK_LABEL = { name: "Residency & Departure Interaction", desc: "How ceasing residency interacts with your super and other departure obligations." };
 const BODY = `<h2>Residency &amp; Departure Interaction</h2><p>DASP eligibility requires that you held a temporary visa (excluding subclasses 405 and 410), your visa has ceased, and you have left Australia. Permanent residents and Australian citizens are not eligible.</p><ul class='checklist'><li>Confirm your visa has actually ceased, not merely lapsed in practice.</li><li>Both departure and visa cessation need to have occurred before a DASP claim.</li><li>Losing permanent-resident status while overseas changes your position — check eligibility carefully.</li></ul>`;
@@ -26,7 +27,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File07() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -106,7 +107,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File07() {
               🇦🇺 ATO · DASP
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: July 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 07 of 8
@@ -226,7 +227,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File07() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance July 2026.
+            Based on ATO guidance September 2026.
           </p>
         </div>
 

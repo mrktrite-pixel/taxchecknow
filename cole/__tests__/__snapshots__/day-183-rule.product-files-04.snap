@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "day-183-rule";
+const SESSION_KEY = "183-day-rule";
 const SLUG = "d183-04";
 const FALLBACK_LABEL = { name: "Form 8843 Filing Brief", desc: "What Form 8843 supports, when it is due, and what late filing costs you." };
 const BODY = `<h2>Form 8843</h2><table><tr><th>Question</th><th>Answer</th></tr><tr><td>What does it support?</td><td>Excluding days as an exempt individual (student, teacher, trainee), and excluding days you could not leave because of a medical condition that arose while you were in the U.S.</td></tr><tr><td>When is it due?</td><td>By the due date for filing your income tax return.</td></tr><tr><td>What if I do not have to file a return?</td><td>Send Form 8843 on its own, to the address given in the instructions for Form 8843, by that same date.</td></tr><tr><td>What if it is filed late?</td><td>The IRS position is that you cannot exclude those days — they go back into the count, which can move you from nonresident to resident on the same travel history.</td></tr><tr><td>Is there any relief?</td><td>A reasonable-cause let-out exists where you can show, by clear and convincing evidence, that you took reasonable actions to become aware of the requirement and to comply with it.</td></tr></table><div class="warning-box"><strong>Your own due date.</strong> The return due date is not the same for every filer — it differs for U.S.-resident filers, filers abroad, and anyone on extension. Establish yours rather than assuming a date.</div>`;
@@ -26,7 +27,7 @@ export default function Day183RuleFile04() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -246,7 +247,6 @@ export default function Day183RuleFile04() {
               ← Back to 183-Day Rule Reality Check
             </a>
             <a href="https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">IRS — Substantial Presence Test (US) ↗</a>
-            <a href="/api/rules/day-183-rule" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">Machine-readable JSON rules ↗</a>
           </div>
         </div>
       </footer>

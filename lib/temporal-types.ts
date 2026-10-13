@@ -50,6 +50,15 @@ export interface TemporalContext {
   domain: string;
   /** Human label used in customer-facing copy. */
   label?: string;
+  /**
+   * WHERE THE RULE COMES FROM, in one line an auditor can follow.
+   *
+   * A declaration without provenance is an assertion. Every other kind already carries one —
+   * `none` and `unresolvable` both REQUIRE a `reason`, precisely so "nobody said" can be told apart
+   * from "we checked and there is none" — while a deadline, the kind that actually reaches a
+   * customer, carried nothing. Optional so no existing declaration breaks; write it for new ones.
+   */
+  basis?: string;
 }
 
 /** A fixed recurrence rule. NOTE: no date field exists here, by design. */

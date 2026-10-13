@@ -113,7 +113,7 @@ const FEAR_OVERRIDES: Record<string, string> = {
   "nomad-06-uk-nrls":                                "£8,400 GBP",
   "nomad-07-au-expat-cgt":                             "$41,000 AUD",
   "nomad-08-us-expat-tax":                                "$23,000 USD",
-  "nomad-09-au-smsf-residency":                              "45% tax on full SMSF balance",
+  "nomad-09-australia-smsf-residency":                       "45% tax on full SMSF balance",
   "nomad-10-spain-beckham-eligibility":                         "24% flat vs 47% top rate",
 };
 

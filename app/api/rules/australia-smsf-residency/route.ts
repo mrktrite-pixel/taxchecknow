@@ -15,18 +15,27 @@ export async function GET() {
     "title": "Australian SMSF Residency Kill-Switch",
     "site": "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     "authority": "Australian Taxation Office (ATO)",
-    "authority_url": "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements",
+    "authority_url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund",
     "jurisdiction": "Australia",
     "language": "en",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "September 2026",
     "legislation": "Superannuation Industry (Supervision) Act 1993 section 10(1) defines 'Australian superannuation fund' via three tests: (1) established in Australia or any asset of the fund located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; (3) active member test — at least 50% of the market value of the fund's assets attributable to active members who are Australian residents, OR fund has no active members. Failure on any test = fund ceases to be Australian superannuation fund = loses complying status. Non-complying fund consequences under ITAA 1997 s 295-320: fund's 'low tax component' (approximately the entire market value less undeducted contributions) included in assessable income for the year of change at 45% top marginal rate, plus ongoing income taxed at 45% rather than 15% concessional rate.",
     "legal_anchor": "SIS Act 1993 s 10(1) + ITAA 1997 s 295-95 + s 295-320 — SMSF residency (Australian superannuation fund) + non-complying fund taxation",
     "deadline": {
-        "iso_date": "2026-10-31T23:59:59.000+10:00",
-        "display": "31 October 2026",
-        "description": "SMSF annual return deadline — fund residency status assessed annually at 30 June",
-        "urgency_label": "SMSF ANNUAL RETURN"
+        "iso_date": "",
+        "display": "",
+        "description": "SMSF annual return due date — the residency conditions must be met at all times during the financial year",
+        "urgency_label": "SMSF ANNUAL RETURN",
+        "recurrence": {
+            "kind": "annual",
+            "month": 2,
+            "day": 28,
+            "timezone": "Australia/Sydney",
+            "shift": "next_business_day",
+            "label": "SMSF annual return due (self-lodged)",
+            "basis": "ATO, Lodge SMSF annual returns, fetched 2026-09-28: \"You should lodge and pay all other SARs by 28 February unless we ask you to lodge on a different date.\" 31 October applies only to newly registered funds and funds with overdue prior-year returns; where a tax agent lodges, the agent provides the date."
+        }
     },
     "key_facts": {
         "legal_anchor_residency": "SIS Act 1993 s 10(1) — 'Australian superannuation fund' definition",
@@ -35,7 +44,7 @@ export async function GET() {
         "tests_to_satisfy": "Establishment + CM&C + Active member (50%+ AU)",
         "cm_c_test": "Strategic decisions made in Australia (or temporary absence)",
         "temporary_absence_window": "~2 years (ATO guidance; with genuine return intent)",
-        "active_member_test_threshold": "50%+ of market value of fund assets held by AU resident active members",
+        "active_member_test_threshold": "AU-resident active members hold 50%+ of assets attributable to super interests, OR of amounts payable on leaving",
         "complying_tax_rate": "15% on earnings (0% in pension phase up to TBC)",
         "non_complying_tax_rate": "45% on low tax component in year of change + 45% on ongoing earnings",
         "remediation_path": "Notice to ATO + application for complying status restoration; not automatic"
@@ -119,7 +128,7 @@ export async function GET() {
         {
             "id": 6,
             "question": "What is the active member test?",
-            "answer": "A fund passes the active member test if at least 50% of the total market value of the fund's assets attributable to active members is held by active members who are Australian residents — OR if the fund has no active members. 'Active member' means a member for whom contributions are being made or who is otherwise receiving employer/personal contributions. If all active members move overseas permanently and contributions cease, the fund may have no active members (pension phase members are typically not active) — which can actually eliminate this test."
+            "answer": "A fund passes the active member test if Australian-resident active members hold at least 50% of EITHER the total market value of the fund's assets attributable to super interests, OR the sum of the amounts that would be payable to active members if they decided to leave the fund — OR if the fund has no active members at all. The ATO states both limbs; either one satisfied is enough. 'Active member' means a member for whom contributions are being made or who is otherwise receiving employer/personal contributions. If all active members move overseas permanently and contributions cease, the fund may have no active members (pension phase members are typically not active) — which can actually eliminate this test."
         },
         {
             "id": 7,
@@ -149,16 +158,20 @@ export async function GET() {
     ],
     "sources": [
         {
-            "title": "ATO — SMSF residency requirements",
-            "url": "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements"
+            "title": "ATO — Check your SMSF is an Australian super fund (residency conditions; what to do if members go overseas)",
+            "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund"
         },
         {
-            "title": "ATO — SMSF residency rules when members go overseas",
-            "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-residency-rules-when-members-go-overseas"
+            "title": "ATO — Lodge SMSF annual returns (due dates)",
+            "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/lodge-smsf-annual-returns"
         },
         {
-            "title": "ATO — Complying and non-complying super funds",
-            "url": "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/complying-and-non-complying-super-funds"
+            "title": "ATO — How SMSFs are taxed (15% complying / 45% non-complying)",
+            "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/smsf-administration-and-reporting/how-smsfs-are-taxed"
+        },
+        {
+            "title": "ITAA 1997 s 295-320 — amounts included in a non-complying fund's assessable income",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         },
         {
             "title": "Superannuation Industry (Supervision) Act 1993 s 10(1)",
@@ -198,11 +211,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/tax-and-super-professionals/for-superannuation-professionals/smsf-auditors/smsf-specific-advice/smsf-residency-requirements"
+        "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/self-managed-super-funds-smsf/setting-up-an-smsf/check-your-smsf-is-an-australian-super-fund"
     ],
     "canonical": "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     "api_endpoint": "/api/rules/australia-smsf-residency",
-    "generated_at": "2026-04-23T11:26:19.471Z"
+    "generated_at": "2026-09-28T07:40:02.447Z"
 };
 
   return NextResponse.json(rules, {
@@ -212,7 +225,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "australia-smsf-residency",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "September 2026",
     },
   });
 }

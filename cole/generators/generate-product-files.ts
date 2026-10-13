@@ -4,7 +4,10 @@
 // Output path: app/files/[country]/[id]/[slug]/page.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { execFileSync } from "node:child_process";
 import type { ProductConfig, ProductFile } from "../types/product-config";
+import { resolvesFromRule } from "./generate-gate-page";
+import { engineSessionKey } from "./verify-engine-native";
 
 // Jurisdiction flag from config.country — NEVER hardcode a flag (was leaking 🇬🇧 on AU).
 function countryFlag(country: string): string {
@@ -26,6 +29,23 @@ function countryFlag(country: string): string {
  * dateless product still has something true and time-critical to say.
  */
 function deadlineBar(config: ProductConfig): string {
+  // STEP7-JUNE15 — A RULE-DECLARED PRODUCT HAS NO STRING TO BAKE.
+  // Its `deadline.display` is empty by design, which the fail-closed branch below would read as
+  // "nothing truthful to say" and suppress the bar on all eight paid documents. It is the opposite:
+  // the date is knowable on every render, just not at generate time. DocStrip resolves it.
+  if (resolvesFromRule(config)) {
+    const urgency = (config.deadline?.urgencyLabel ?? "").trim();
+    if (urgency) {
+      return [
+        `          <DocStrip`,
+        `            productId={PRODUCT_ID}`,
+        `            fallbackUrgencyLabel={${JSON.stringify(urgency)}}`,
+        `            fallbackText=""`,
+        `            checkHref="/${config.slug}"`,
+        `          />`,
+      ].join("\n");
+    }
+  }
   const q = config.deadline?.qualitative;
   // The FALLBACK line only — shown when there is no session to read a terminal from.
   // Prefer the qualitative headline: it is a whole sentence, whereas `display` is a short
@@ -50,6 +70,30 @@ function deadlineBar(config: ProductConfig): string {
 }
 
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
+
+/**
+ * The commit that last touched the GENERATORS, stamped into every file this emits.
+ *
+ * WHY: the publish gate has always asked whether the eight files were "regenerated from the CURRENT
+ * generator", and nothing in the output could answer it. A file carried no record of which
+ * generator wrote it, so the only way to tell a current file from a stale one was to regenerate and
+ * diff — which is exactly the work the question was trying to avoid. Now the answer is in the file.
+ *
+ * Scoped to cole/generators + cole/scripts, not HEAD: a copy edit in a config does not make every
+ * delivered file stale, and stamping HEAD would have said it did.
+ *
+ * FAIL-SOFT: no git, no repo, or a shallow checkout -> "unknown". A missing stamp must never stop
+ * a product being generated.
+ */
+function generatorStamp(): string {
+  try {
+    return execFileSync("git", ["log", "-1", "--format=%h", "--", "cole/generators", "cole/scripts"],
+      { encoding: "utf-8", stdio: ["ignore", "pipe", "ignore"] }).trim() || "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+const GENERATOR_STAMP = generatorStamp();
 
 export function generateProductFile(
   config: ProductConfig,
@@ -95,14 +139,41 @@ export function generateProductFile(
     ? `<a href="/files/${config.country}/${config.id}/${nextFile.slug}" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">File ${nextFile.num}: ${nextFile.name} →</a>`
     : `<a href="/${config.slug}" className="font-semibold text-neutral-700 hover:text-neutral-950 transition">Back to ${config.name} →</a>`;
 
-  const sourceLinks = config.sources.slice(0, 2).map(s =>
+  // D3 — CUSTOMER-FACING SOURCES ONLY. 31 of 48 configs list
+  // { title: "Machine-readable JSON rules", url: "/api/rules/<id>" } in sources[]. That is an
+  // answer-engine affordance for the public gate page, and it was being rendered verbatim into
+  // the footer of every delivered document. Filtered by URL, not title, so a retitled entry
+  // cannot slip through; filtered BEFORE the slice so a product whose second source is the JSON
+  // route surfaces its next REAL citation rather than losing a slot.
+  const sourceLinks = config.sources.filter((s) => !/^\/api\//.test(s.url ?? "")).slice(0, 2).map(s =>
     `<a href="${s.url}" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">${s.title} ↗</a>`
   ).join("\n            ");
+
+  // ── DECISION-A: WHICH KEY DOES THIS PRODUCT'S SESSION LIVE UNDER? ────────
+  // ENGINE-NATIVE ONLY. EngineCalculator writes its blobs under the ROUTE TAIL
+  // (EngineCalculator.tsx:411 config.productSlug -> each wrapper's SLUG), NOT under
+  // config.id; the two differ on day-183-rule and spain-beckham, and passing config.id
+  // made buyerContextFromSession miss every read, so {{bind}} and the terminal-driven
+  // labels silently rendered their static fallback.
+  //
+  // A LEGACY product keeps PRODUCT_ID, byte-for-byte as before. Not caution for its own
+  // sake: no bespoke calculator writes the blob keys buyerContextFromSession reads
+  // (_raw/_answers/_qualification/_terminal/_tier/_flags) — verified across every
+  // non-EngineCalculator calculator in app/ — so its context is empty either way, and
+  // re-keying 6 legacy products would churn their pages for no behavioural gain. One of
+  // them (residency-risk-index, slug "nomad") would also acquire the meaningless key
+  // "nomad". Declaration is enough here precisely because BOTH wrong answers are inert.
+  const sessionKeyDecl = config.engineNative === true
+    ? `
+const SESSION_KEY = ${JSON.stringify(engineSessionKey(config))};`
+    : "";
+  const sessionKeyRef = config.engineNative === true ? "SESSION_KEY" : "PRODUCT_ID";
 
   return `"use client";
 // AUTO-GENERATED BY COLE — do not edit manually
 // Product: ${config.id} · File ${file.num} of ${config.files.length}
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts ${config.country}-${config.id}
+// Generator: ${GENERATOR_STAMP}
 
 import { useEffect, useState } from "react";
 import DocBody from "@/app/_components/DocBody";
@@ -111,7 +182,7 @@ import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context"
 import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
-const PRODUCT_ID = ${JSON.stringify(config.id)};
+const PRODUCT_ID = ${JSON.stringify(config.id)};${sessionKeyDecl}
 const SLUG = ${JSON.stringify(file.slug)};
 const FALLBACK_LABEL = { name: ${JSON.stringify(file.name)}, desc: ${JSON.stringify(file.desc)} };
 const BODY = \`${escapeContent(file.content)}\`;
@@ -127,7 +198,7 @@ export default function ${toPascal(config.id)}File${file.num}() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(${sessionKeyRef})); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's

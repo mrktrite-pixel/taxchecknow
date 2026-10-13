@@ -88,6 +88,42 @@ export function inspectEngineNative(config: ProductConfig): EngineNativeVerdict 
  * legacy product yields an empty inputs object. Neither throws, neither logs,
  * and both look fine on the page.
  */
+/**
+ * THE SESSIONSTORAGE KEY an engine-native calculator actually writes under.
+ *
+ * MEASURED, never assumed. app/_components/EngineCalculator.tsx:411 does
+ *   const slug = config.productSlug;
+ * and writes `${slug}_answers`, `_terminal`, `_status`, `_tier`, `_confidence`, `_raw`,
+ * `_flags` (:413-424) and `${config.productSlug}_qualification` (:489). Every wrapper binds
+ * `productSlug: SLUG`, and every wrapper's SLUG is its ROUTE TAIL.
+ *
+ * Verified across all seven engine-native products (2026-09-20):
+ *   slug tail === wrapper SLUG   7 / 7
+ *   config.id === wrapper SLUG   5 / 7   (day-183-rule and spain-beckham diverge)
+ *
+ * DECISION-A, THE DEFECT THIS CLOSES. The generators passed config.id as the session key.
+ * On the two products where it differs from the route tail, every read missed: the R-A2
+ * client fallback built an EMPTY inputs object, and the file pages' {{bind}} / terminal-label
+ * personalisation resolved ctx = null and rendered the static fallback. Silent in both cases —
+ * no error, no empty page, just an un-personalised one.
+ *
+ * THIS IS NOT config.id, AND MUST NOT BE CONFLATED WITH IT. config.id stays the PRODUCT/DB
+ * identity: the /api/assess `product_id`, and the terminal-presentation / doc-label registry
+ * keys. Two identities, two constants — collapsing them is what caused the defect.
+ */
+export function engineSessionKey(config: ProductConfig): string {
+  const tail = (config.slug ?? "").split("/").filter(Boolean).pop() ?? "";
+  if (!tail) {
+    throw new GuardRefusal(
+      "R-A2 session key",
+      `Cannot derive the sessionStorage key for "${config.id}": config.slug is empty, so the ` +
+      `route tail is unknown. Emitting a guessed key would reproduce exactly the silent miss ` +
+      `this function exists to remove. Generating nothing.`,
+    );
+  }
+  return tail;
+}
+
 export function verifyEngineNative(config: ProductConfig): boolean {
   const v = inspectEngineNative(config);
   const where = `product "${config.id}" (${v.appDir})`;
@@ -107,7 +143,7 @@ export function verifyEngineNative(config: ProductConfig): boolean {
       "R-A2 verify",
       `${where} DECLARES engineNative: true, but no file directly in its app directory ` +
       `imports "${ENGINE_IMPORT}". Inspected: ${v.inspected.join(", ") || "(no .tsx files)"}. ` +
-      `Emitting buildComposerInputsFromSession() here would read <id>_answers, which this ` +
+      `Emitting buildComposerInputsFromSession() here would read <slug-tail>_answers, which this ` +
       `calculator never writes → an EMPTY inputs object on the /api/assess fallback. ` +
       `Either the calculator was not migrated, or the declaration is wrong. Generating nothing.`
     );
@@ -118,7 +154,7 @@ export function verifyEngineNative(config: ProductConfig): boolean {
       "R-A2 verify",
       `${where} mounts EngineCalculator (in ${v.mountedBy}) but does NOT declare ` +
       `engineNative: true. This is the drift R-A2 exists to catch: the template would emit the ` +
-      `legacy phantom sessionStorage reads for a calculator that writes <id>_answers, so every ` +
+      `legacy phantom sessionStorage reads for a calculator that writes <slug-tail>_answers, so every ` +
       `read would miss and the customer's assessment would be built from the template's hardcoded ` +
       `defaults. Add "engineNative: true" to the config. Generating nothing.`
     );

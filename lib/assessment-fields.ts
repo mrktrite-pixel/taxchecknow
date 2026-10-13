@@ -24,9 +24,18 @@ export const GENERIC_FIELDS: TierFields = {
 // Per-product overrides — each MUST equal that product's success-page `fields` array.
 // medicare-levy-surcharge-trap verified against success/assess (tier1) + success/plan (tier2).
 export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
+  // G (2026-09-21) — REALIGNED TO THE CONFIG. This entry was REGISTERED BUT STALE: the
+  // config's assessment fields moved after it was written, so the webhook stored
+  // surchargeRateTier / estimatedMLSPayable / coverCostEstimate / netSavingFromCover /
+  // confidenceLevel / partnerCoverAnalysis / policyExcessCheck while the pages render
+  // whatCountsInYourMLSIncome / coverQualificationCheck / whatHappensAtLodgement /
+  // householdCoverAnalysis. A partial-body version of the empty-body failure beckham hit.
+  // Lists now COPIED FROM cole/config/au-10-medicare-levy-surcharge-trap.ts
+  // (tier1AssessmentFields, tier2AssessmentFields) — 9 and 9 — which is what the emitted
+  // pages POST. The parity test enforces it from here.
   "medicare-levy-surcharge-trap": {
-    tier1: ["mlsStatus", "incomeForMLSPurposes", "surchargeRateTier", "estimatedMLSPayable", "coverCostEstimate", "netSavingFromCover", "coverTimingStrategy", "thresholdPosition", "strongestRiskTrigger", "confidenceLevel", "firstAction"],
-    tier2: ["mlsStatus", "incomeForMLSPurposes", "surchargeRateTier", "estimatedMLSPayable", "coverCostEstimate", "netSavingFromCover", "coverTimingStrategy", "partnerCoverAnalysis", "familyThresholdPosition", "superContributionOpportunity", "policyExcessCheck", "integratedPlan", "nextYearCalendar", "strongestRiskTrigger", "confidenceLevel"],
+    tier1: ["mlsStatus", "incomeForMLSPurposes", "whatCountsInYourMLSIncome", "coverQualificationCheck", "coverTimingStrategy", "thresholdPosition", "whatHappensAtLodgement", "strongestRiskTrigger", "firstAction"],
+    tier2: ["mlsStatus", "incomeForMLSPurposes", "coverTimingStrategy", "householdCoverAnalysis", "familyThresholdPosition", "superContributionOpportunity", "integratedPlan", "nextYearCalendar", "strongestRiskTrigger"],
   },
   // Machine product — MUST equal config.tier{1,2}AssessmentFields (which feed its success pages).
   "superannuation-tax-leaving-australia-confusion-2026": {
@@ -100,6 +109,73 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
   "rental-property-deduction-audit": {
     tier1: ["deductionStatus", "expenseClassification", "initialRepairRisk", "overclaims", "missedDeductions", "recordQualityAssessment", "strongestRiskTrigger", "firstAction"],
     tier2: ["deductionStatus", "expenseClassification", "initialRepairRisk", "overclaims", "missedDeductions", "capitalWorksAnalysis", "depreciationOpportunity", "recordQualityAssessment", "evidenceRegister", "multiYearDeductionPlan", "auditRiskRating", "strongestRiskTrigger"],
+  },
+  // C9 — spain-beckham-eligibility. The SECOND product to hit the exact failure the C8
+  // block below describes for FRCGW: unregistered, so getAssessmentFields() fell through to
+  // GENERIC_FIELDS on the webhook path while both success pages POST the per-product list.
+  // Measured 2026-09-21 on a live stored row (session cs_test_a1Kuki..., written 2026-09-17):
+  // the row carried status/keyFinding/exposureAmount/mainRiskTrigger/recommendedAction/
+  // confidenceLevel/firstAction, and the assess page renders a hardcoded six of the
+  // per-product keys — none of which were present — so the "What this means for you" body
+  // came out EMPTY while First Action, the accountant questions and the tier-2 checklist
+  // rendered normally (those come from GENERIC_FIELDS + assess-core's own injections).
+  //
+  // KEYED ON THE ROUTE TAIL, NOT config.id. The webhook looks this table up with
+  // DELIVERY_MAP.productId, which for both beckham price keys is
+  // "spain-beckham-eligibility" (route.ts:84-85) — while this product's config id is
+  // "spain-beckham". Keyed on the id, this entry would parse, typecheck and never be read:
+  // the same mismatch class already called out for 183-day-rule above.
+  //
+  // Lists COPIED VERBATIM from the emitted pages' own `fields:` arrays —
+  // success/assess/page.tsx:128 (9 keys) and success/plan/page.tsx:149 (14 keys) — not
+  // authored here, so webhook == client by construction. The parity test in
+  // cole/__tests__/assessment-fields-parity.test.ts now enforces that for every
+  // engine-native product.
+  "spain-beckham-eligibility": {
+    tier1: ["beckhamEligibilityAssessment", "employmentStructureAnalysis", "priorResidencyStatus", "socialSecurityPosition", "applicationTimingStatus", "estimatedTaxSaving", "keyFailureRisks", "structureFixRequired", "immediateActions"],
+    tier2: ["beckhamEligibilityAssessment", "employmentStructureAnalysis", "priorResidencyStatus", "socialSecurityPosition", "applicationTimingStatus", "estimatedTaxSaving", "keyFailureRisks", "structureFixRequired", "immediateActions", "employmentRestructuringPlan", "a1CertificateStrategy", "modelo149ApplicationRoadmap", "startupCertificationPathway", "fullApprovalTimeline"],
+  },
+  // F42 (2026-09-27) — us-expat-tax was UNREGISTERED, so the webhook stored GENERIC_FIELDS
+  // (status, keyFinding, exposureAmount, mainRiskTrigger, recommendedAction, confidenceLevel,
+  // firstAction) while both success pages POST these keys and render them. MEASURED on the two
+  // stored rows 1762dbd5… / 460dd75b…: every key in them is generic, and not one of the nine
+  // below is present — so the stored pack rendered blank where the page looks for content.
+  //
+  // The lists are COPIED VERBATIM from the emitted pages' own `fields` arrays —
+  // success/assess/page.tsx:156 (9 keys) and success/plan/page.tsx:177 (14 keys) — which are in
+  // turn generated from the config's tier1AssessmentFields / tier2AssessmentFields. Authoring
+  // them here independently is how the FRCGW and beckham mismatches happened; copying is the
+  // only way webhook == client holds by construction.
+  //
+  // Registry key is the DELIVERY_MAP productId ("us-expat-tax" for both price keys, webhook
+  // route.ts:81-82), NOT the config id — the two differ on other products and the webhook keys
+  // on the former.
+  "us-expat-tax": {
+    tier1: ["currentStrategyAnalysis", "feieEligibility", "ftcCalculation", "optimalStrategyRecommendation", "annualTaxSaving", "passiveIncomeStrategy", "filingObligations", "fbarFatcaRequirements", "immediateActions"],
+    tier2: ["currentStrategyAnalysis", "feieEligibility", "ftcCalculation", "optimalStrategyRecommendation", "annualTaxSaving", "passiveIncomeStrategy", "filingObligations", "fbarFatcaRequirements", "immediateActions", "hybridStrategyPlan", "multiYearCreditOptimisation", "incomeClassificationStrategy", "crossBorderStructuringOptions", "auditDefenceDocumentation"],
+  },
+  // F42 — REGISTERED after a measured blank delivery. MEASURED on the two step-4 test rows,
+  // 2026-09-28: PRODUCT_ASSESSMENT_FIELDS["australia-smsf-residency"] was ABSENT, so the webhook
+  // stored GENERIC_FIELDS —
+  //     tier 67  (cs_test_a1Nq2M…): status, keyFinding, firstAction, exposureAmount,
+  //                                 confidenceLevel, mainRiskTrigger, recommendedAction
+  //     tier 147 (cs_test_a14Pk9…): the tier-2 generic ten, plus actions
+  // while both success pages POST and render the eight/thirteen keys below. Overlap: ZERO. The
+  // buyer's position block rendered EMPTY while First Action and the accountant questions
+  // appeared, so the page looked half-built rather than broken — the fourth product to hit this
+  // after FRCGW, spain-beckham and us-expat-tax.
+  //
+  // KEYED ON THE DELIVERY_MAP productId, which the webhook looks this table up with. For this
+  // product it is "australia-smsf-residency" (webhook route.ts:83-84, both price keys) and it
+  // happens to equal config.id — unlike 183-day-rule and beckham, where keying on config.id
+  // would have produced an entry that parses, typechecks and is never read.
+  //
+  // LISTS COPIED FROM cole/config/nomad-09-australia-smsf-residency.ts (tier1/tier2AssessmentFields)
+  // asserted element-for-element against the `fields:` arrays the two emitted pages POST — 8 and
+  // 13, identical on all three sides. Not authored here, so webhook == client by construction.
+  "australia-smsf-residency": {
+    tier1: ["cmcTestOutcome", "activeMemberTestOutcome", "establishmentTestOutcome", "trusteeStructureReview", "temporaryAbsenceEligibility", "taxExposureIfNonComplying", "complianceFixPathway", "immediateActions"],
+    tier2: ["cmcTestOutcome", "activeMemberTestOutcome", "establishmentTestOutcome", "trusteeStructureReview", "temporaryAbsenceEligibility", "taxExposureIfNonComplying", "complianceFixPathway", "immediateActions", "corporateTrusteeRestructurePlan", "globalDecisionFramework", "documentationProtocol", "auditDefenceFramework", "multiYearTransitionPlan"],
   },
   "frcgw-clearance-certificate": {
     tier1: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "firstAction"],

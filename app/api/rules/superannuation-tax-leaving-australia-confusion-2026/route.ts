@@ -21,7 +21,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "July 2026",
+    "last_verified": "September 2026",
     "legislation": "Migration Act 1958 · ATO guidance on temporary residents and superannuation (Departing Australia Superannuation Payment). DASP withholding on the taxable component: taxed element 35% and untaxed element 45% for ordinary temporary visa holders; 65% on BOTH elements for working holiday maker (subclass 417/462) visa holders; tax-free component 0%. Unclaimed super transfers to the ATO once 6 months or more have passed since departure with the visa ceased — the 65% rate still applies to working holiday makers on ATO-held unclaimed money.",
     "legal_anchor": "Migration Act 1958 — Departing Australia Superannuation Payment (DASP), ATO temporary-residents-and-superannuation guidance",
     "key_facts": {
@@ -35,8 +35,7 @@ export async function GET() {
         "dasp_payment_window": "within 28 days of a complete application",
         "dasp_payment_summary_window": "within 14 days of payment",
         "certified_id_threshold": "balance of $5,000 or more may require certified proof of identity / Certification of Immigration Status",
-        "eligibility": "held a temporary visa (excluding subclass 405 and 410), visa has ceased, and departed Australia; permanent residents and Australian citizens are NOT eligible",
-        "return_deadline_context": "individual tax return due 31 October 2026 (self-lodgers)"
+        "eligibility": "held a temporary visa (excluding subclass 405 and 410), visa has ceased, and departed Australia; permanent residents and Australian citizens are NOT eligible"
     },
     "formula": "DASP withheld at payment = taxable component (taxed element × rate) + (untaxed element × rate). Ordinary temporary visa: taxed element 35%, untaxed element 45%. Working holiday maker (417/462): 65% on both elements. Tax-free component: 0%.",
     "common_ai_errors": [
@@ -110,7 +109,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "superannuation-tax-leaving-australia-confusion-2026",
-      "X-Last-Verified":             "July 2026",
+      "X-Last-Verified":             "September 2026",
     },
   });
 }

@@ -3,7 +3,37 @@
 // Product: rental-property-deduction-audit · File 07 of 8
 // Regenerate: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts au-rental-property-deduction-audit
 
+import { useEffect, useState } from "react";
+import DocBody from "@/app/_components/DocBody";
+import DocStrip from "@/app/_components/DocStrip";
+import { buyerContextFromSession, type BuyerContext } from "@/lib/buyer-context";
+import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentation";
+import { resolveDocLabel } from "@/lib/terminal-labels";
+
+const PRODUCT_ID = "rental-property-deduction-audit";
+const SESSION_KEY = "rental-property-deduction-audit";
+const SLUG = "rda-07";
+const FALLBACK_LABEL = { name: "Multi-Year Write-Off Plan", desc: "How capital items already in service are written off over the years ahead." };
+const BODY = `<h2>3-Year Deduction Maximisation Plan</h2><div class="action-box"><h3>Year 1 Actions</h3><p>Obtain quantity surveyor reports on all properties</p><p>Reclassify any incorrectly claimed capital items</p><p>Set up monthly expense tracker</p></div><div class="action-box"><h3>Year 2 Actions</h3><p>Annual depreciation schedule review — update for new assets</p><p>Rent review — market rate assessment</p><p>Loan purpose audit — confirm all interest deductible</p></div><div class="action-box"><h3>Year 3 Actions</h3><p>Full portfolio review — cashflow vs tax position for each property</p><p>Consider whether any property should be sold or restructured</p></div>`;
+
 export default function RentalPropertyDeductionAuditFile07() {
+  // R1 — bind the body to the buyer's own answers where we have them.
+  //
+  // Read in an effect, not during render: sessionStorage does not exist on the server, and
+  // reading it during render would desync the hydration pass. First paint is therefore the
+  // UNBOUND document — which is the correct thing to show anyway, because it is exactly what
+  // a reader with no session (a cold link, a different device) gets and it must stand alone.
+  //
+  // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
+  // context is found, so every product that has not adopted the syntax is unaffected.
+  const [ctx, setCtx] = useState<BuyerContext | null>(null);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
+  const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
+  // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
+  // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
+  // own strings, which is what this page has always shown.
+  const label = resolveDocLabel(PRODUCT_ID, SLUG, terminalFlags(PRODUCT_ID, ctx), FALLBACK_LABEL);
+
   return (
     <div className="min-h-screen bg-white">
       <style>{`
@@ -77,31 +107,26 @@ export default function RentalPropertyDeductionAuditFile07() {
               🇦🇺 ATO · ITAA 1997 — Rental property deductions
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: July 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 07 of 8
             </span>
           </div>
 
-          {/* Deadline bar */}
-          <div className="mb-4 flex items-center justify-between rounded-lg bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">
-              🔴 RETURN DUE: 31 October 2026
-            </span>
-            <a href="/au/check/rental-property-deduction-audit"
-              className="no-print text-xs font-semibold text-red-200 hover:text-white transition">
-              Check your position →
-            </a>
-          </div>
+          <DocStrip
+            productId={PRODUCT_ID}
+            fallbackText="RETURN DUE: 31 October 2026 (a Saturday — lodge by Monday 2 November 2026)"
+            checkHref="/au/check/rental-property-deduction-audit"
+          />
 
           <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
             Rental Property Deduction Audit · File 07 of 8
           </p>
           <h1 className="font-serif text-3xl font-bold text-neutral-950 mb-2">
-            Multi-Year Write-Off Plan
+            {label.name}
           </h1>
-          <p className="text-neutral-500 text-sm">How capital items already in service are written off over the years ahead.</p>
+          <p className="text-neutral-500 text-sm">{label.desc}</p>
         </div>
 
         {/* PRINT BUTTON */}
@@ -114,10 +139,7 @@ export default function RentalPropertyDeductionAuditFile07() {
         </div>
 
         {/* CONTENT */}
-        <div
-          className="prose-content"
-          dangerouslySetInnerHTML={{ __html: `<h2>3-Year Deduction Maximisation Plan</h2><div class="action-box"><h3>Year 1 Actions</h3><p>Obtain quantity surveyor reports on all properties</p><p>Reclassify any incorrectly claimed capital items</p><p>Set up monthly expense tracker</p></div><div class="action-box"><h3>Year 2 Actions</h3><p>Annual depreciation schedule review — update for new assets</p><p>Rent review — market rate assessment</p><p>Loan purpose audit — confirm all interest deductible</p></div><div class="action-box"><h3>Year 3 Actions</h3><p>Full portfolio review — cashflow vs tax position for each property</p><p>Consider whether any property should be sold or restructured</p></div>` }}
-        />
+        <DocBody html={BODY} ctx={ctx} extraFlags={docFlags} />
 
         {/* FILE NAVIGATION */}
         <div className="no-print mt-12 border-t border-neutral-200 pt-6">
@@ -204,8 +226,8 @@ export default function RentalPropertyDeductionAuditFile07() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Australia tax adviser for your personal situation.
-            Based on ATO guidance July 2026.
+            Always consult a qualified Australian tax adviser for your personal situation.
+            Based on ATO guidance September 2026.
           </p>
         </div>
 
@@ -225,6 +247,7 @@ export default function RentalPropertyDeductionAuditFile07() {
               ← Back to Rental Property Deduction Audit
             </a>
             <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Rental properties ↗</a>
+            <a href="https://www.ato.gov.au/forms-and-instructions/rental-properties-2025/rental-expenses" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Rental expenses (Rental properties 2025) ↗</a>
           </div>
         </div>
       </footer>

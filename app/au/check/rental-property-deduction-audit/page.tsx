@@ -10,12 +10,12 @@ import RentalPropertyDeductionAuditCalculator from "./RentalPropertyDeductionAud
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Rental Property Deduction Checker Australia 2026 — Which Class Is Your Expense? | TaxCheckNow",
-  description: "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
+  title: "Rental Property Deductions 2026: Is It Deductible? | TaxCheckNow",
+  description: "The ATO audits rental schedules every year. Repairs vs capital works, no-ABN contractors at 47% withholding, and unavailable periods. Free check.",
   alternates: { canonical: "https://taxchecknow.com/au/check/rental-property-deduction-audit" },
   openGraph: {
-    title: "Rental Property Deduction Checker Australia 2026 — Which Class Is Your Expense? | TaxCheckNow",
-    description: "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
+    title: "Rental Property Deductions 2026: Is It Deductible? | TaxCheckNow",
+    description: "The ATO audits rental schedules every year. Repairs vs capital works, no-ABN contractors at 47% withholding, and unavailable periods. Free check.",
     url: "https://taxchecknow.com/au/check/rental-property-deduction-audit",
     siteName: "TaxCheckNow",
     type: "website",
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "July 2026";
-const DEADLINE_LABEL = "31 October 2026";
+const LAST_VERIFIED  = "September 2026";
+const DEADLINE_LABEL = "31 October 2026 (a Saturday — lodge by Monday 2 November 2026)";
 const DEADLINE_ISO   = "2026-10-31T23:59:59.000+11:00";
 
 // TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
@@ -127,9 +127,9 @@ const workedExamples = [
   },
   {
     "name": "No QS report",
-    "setup": "Claiming $0 depreciation on 2005 build",
+    "setup": "Claiming $0 deductions on a 2005 build",
     "income": "$0",
-    "status": "MISSED $8,500/yr in deductions"
+    "status": "CAPITAL WORKS at 2.5%/yr IS claimable (e.g. $8,500/yr); second-hand plant is not (Div 40)"
   },
   {
     "name": "Initial repair",
@@ -170,7 +170,7 @@ const toolsRows = [
   {
     "tool": "Quantity surveyor report",
     "effect": "Identifies all depreciable items — building and plant",
-    "note": "$500-$800 cost vs $5k-$15k annual deduction"
+    "note": "Illustrative: $500-$800 cost vs $5k-$15k annual deduction"
   },
   {
     "tool": "Correct expense classification",
@@ -192,7 +192,7 @@ const toolsRows = [
 const geoFacts = [
   {
     "label": "Building depreciation rate",
-    "value": "2.5%/yr — post-Sept 1987 construction"
+    "value": "2.5%/yr over 40 years — construction after 15 Sep 1987; 4%/yr over 25 years — 18 Jul 1985 to 15 Sep 1987"
   },
   {
     "label": "Travel deduction",
@@ -223,15 +223,15 @@ const sidebarNumbers = [
   },
   {
     "label": "QS report cost",
-    "value": "$500-$800"
+    "value": "e.g. $500-$800"
   },
   {
     "label": "Travel deduction",
     "value": "Abolished 2017"
   },
   {
-    "label": "Audit window",
-    "value": "4 years"
+    "label": "Amendment window",
+    "value": "2 years — individuals"
   }
 ];
 
@@ -239,6 +239,22 @@ const sources = [
   {
     "title": "ATO — Rental properties",
     "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties"
+  },
+  {
+    "title": "ATO — Rental expenses (Rental properties 2025)",
+    "url": "https://www.ato.gov.au/forms-and-instructions/rental-properties-2025/rental-expenses"
+  },
+  {
+    "title": "ATO — Work out your capital works deductions",
+    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/property-and-land/residential-rental-properties/rental-expenses/capital-expenses/work-out-your-capital-works-deductions"
+  },
+  {
+    "title": "ATO — Time limits on amendments",
+    "url": "https://www.ato.gov.au/individuals-and-families/your-tax-return/amend-your-tax-return/time-limits-on-amendments"
+  },
+  {
+    "title": "ATO — Preparing your tax return",
+    "url": "https://www.ato.gov.au/individuals-and-families/your-tax-return/before-you-prepare-your-tax-return/preparing-your-tax-return"
   }
 ];
 
@@ -294,8 +310,8 @@ export default function RentalPropertyDeductionAuditPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Rental Property Deduction Audit — Rules July 2026",
-    description: "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
+    name: "Rental Property Deduction Audit — Rules September 2026",
+    description: "The ATO audits rental schedules every year. Repairs vs capital works, no-ABN contractors at 47% withholding, and unavailable periods. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -311,7 +327,7 @@ export default function RentalPropertyDeductionAuditPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Rental Property Deduction Audit",
-    description: "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
+    description: "The ATO audits rental schedules every year. Repairs vs capital works, no-ABN contractors at 47% withholding, and unavailable periods. Free check.",
     url: "https://taxchecknow.com/au/check/rental-property-deduction-audit",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -360,13 +376,13 @@ export default function RentalPropertyDeductionAuditPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/rental-property-deduction-audit#calculator",
-    "description": "The ATO audits thousands of rental property schedules each year. The most common errors are treating capital improvements as repairs, claiming for periods the property was not genuinely available, and paying a no-ABN contractor without withholding. Free checker names the deduction class your expense falls into.",
+    "description": "The ATO audits rental schedules every year. Repairs vs capital works, no-ABN contractors at 47% withholding, and unavailable periods. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance July 2026"
+      "Based on ATO guidance September 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -477,15 +493,15 @@ export default function RentalPropertyDeductionAuditPage() {
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">QS report cost</dt>
-                  <dd className="font-bold">$500-$800</dd>
+                  <dd className="font-bold">e.g. $500-$800</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-neutral-600">Travel deduction</dt>
                   <dd className="font-bold">Abolished 2017</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-neutral-600">Audit window</dt>
-                  <dd className="font-bold">4 years</dd>
+                  <dt className="text-neutral-600">Amendment window</dt>
+                  <dd className="font-bold">2 years — individuals</dd>
                 </div>
               </dl>
             </div>
@@ -519,11 +535,11 @@ export default function RentalPropertyDeductionAuditPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 31 October 2026 — tax return due
+            Countdown to 31 October 2026 (a Saturday — lodge by Monday 2 November 2026) — tax return due
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 31 October 2026</span>
+            <span className="text-lg text-neutral-300">days until 31 October 2026 (a Saturday — lodge by Monday 2 November 2026)</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -582,9 +598,9 @@ export default function RentalPropertyDeductionAuditPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <p className="mb-1 text-xs text-neutral-800">✓ Repair (part only, during rental) → IMMEDIATE deduction</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Capital works (Div 43, built-in) → 2.5% over 40 years</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Capital works (Div 43, built-in) → 2.5% over 40 years (after 15 Sep 1987); 4% over 25 years (18 Jul 1985 – 15 Sep 1987)</p>
               <p className="mb-1 text-xs text-neutral-800">✓ Plant & equipment new (Div 40) → effective life schedule</p>
-              <p className="mb-1 text-xs text-neutral-800">✓ Borrowing costs → 5 years or loan term</p>
+              <p className="mb-1 text-xs text-neutral-800">✓ Borrowing costs → 5 years or loan term (immediately deductible if $100 or less)</p>
               <p className="mb-1 text-xs text-neutral-800">✓ Interest, rates, insurance, management → IMMEDIATE</p>
             </div>
             
@@ -602,7 +618,7 @@ export default function RentalPropertyDeductionAuditPage() {
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — ATO confirmed April 2026
+            The answer — ATO confirmed September 2026
           </p>
           <p className="mb-2 text-neutral-900">Rental property deductions are one of the ATO's highest audit priorities. Each year the ATO reviews hundreds of thousands of rental schedules and identifies billions in over-claimed deductions. The two most common errors: claiming capital improvements as repairs (which is incorrect — capital items must be depreciated), and failing to apportion deductions for periods when the property was not available for rent.</p>
           <p className="mb-2 text-neutral-900">Capital works and depreciating assets are not deductible in the year you pay for them — they are written off over time. Whether a given item is an immediate repair or a capital work is the distinction this checker draws; quantifying the write-off is a job for your accountant or a quantity surveyor.</p>
@@ -634,7 +650,7 @@ export default function RentalPropertyDeductionAuditPage() {
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
             <li>✗ Fixing something before you rent it is deductible — wrong. Initial repairs — work done to fix a defect that existed when you purchased the property — are capital, not immediately deductible. The ATO is explicit: if the defect was there at purchase, the repair is treated as part of your cost base, not a current-year deduction. This is the single most common audit trigger in rental property returns.</li>
-            <li>✗ Replacing the whole item is the same as repairing part of it — wrong. Fixing part of a fence is a repair — deductible. Replacing the entire fence is capital works — depreciated over 40 years at 2.5% per year. The ATO draws this line precisely: if you restored a part, it is a repair; if you replaced the whole, it is capital. Misclassification here is where most audit adjustments originate.</li>
+            <li>✗ Replacing the whole item is the same as repairing part of it — wrong. Fixing part of a fence is a repair — deductible. Replacing the entire fence is capital works — depreciated at 2.5% per year over 40 years for construction that began after 15 September 1987, or 4% per year over 25 years for construction that began between 18 July 1985 and 15 September 1987. The ATO draws this line precisely: if you restored a part, it is a repair; if you replaced the whole, it is capital. Misclassification here is where most audit adjustments originate.</li>
             <li>✗ I can depreciate the existing assets in my investment property — wrong. Since 9 May 2017, second-hand depreciating assets in residential investment properties are no longer deductible under Division 40. If you purchased an existing property with carpet, curtains, or appliances already installed, you cannot claim depreciation on those items. Only new assets installed after purchase qualify. This rule catches thousands of investors who rely on outdated depreciation schedules.</li>
             <li>✗ My property must be deductible — I own it as an investment — wrong. Deductions only apply when the property is genuinely available for rent at market rates. A holiday property blocked out for personal use, a property sitting vacant without being advertised, or a property rented below market value to a family member can all lose some or all deductions. Genuine availability is an ATO compliance priority.</li>
           </ul>
@@ -696,7 +712,7 @@ export default function RentalPropertyDeductionAuditPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (July 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (September 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -704,7 +720,7 @@ export default function RentalPropertyDeductionAuditPage() {
                 
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Building depreciation rate</td>
-                  <td className="p-2">2.5%/yr — post-Sept 1987 construction</td>
+                  <td className="p-2">2.5%/yr over 40 years — construction after 15 Sep 1987; 4%/yr over 25 years — 18 Jul 1985 to 15 Sep 1987</td>
                   <td className="p-2 text-neutral-500">ITAA 1997 — Rental property deductions</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -793,11 +809,11 @@ export default function RentalPropertyDeductionAuditPage() {
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">No QS report</td>
-                <td className="p-3 text-neutral-700">Claiming $0 depreciation on 2005 build</td>
+                <td className="p-3 text-neutral-700">Claiming $0 deductions on a 2005 build</td>
                 <td className="p-3 font-mono">$0</td>
                 <td className="p-3">
                   <span className="inline-block px-2 py-0.5 text-xs font-bold tracking-wide bg-neutral-100">
-                    MISSED $8,500/yr in deductions
+                    CAPITAL WORKS at 2.5%/yr IS claimable (e.g. $8,500/yr); second-hand plant is not (Div 40)
                   </span>
                 </td>
               </tr>
@@ -891,7 +907,7 @@ export default function RentalPropertyDeductionAuditPage() {
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Quantity surveyor report</td>
                 <td className="p-3 text-xs">Identifies all depreciable items — building and plant</td>
-                <td className="p-3 text-xs text-neutral-700">$500-$800 cost vs $5k-$15k annual deduction</td>
+                <td className="p-3 text-xs text-neutral-700">Illustrative: $500-$800 cost vs $5k-$15k annual deduction</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Correct expense classification</td>
@@ -1035,10 +1051,30 @@ export default function RentalPropertyDeductionAuditPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Rental properties ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/residential-rental-properties</p>
+            </a>
+            <a href="https://www.ato.gov.au/forms-and-instructions/rental-properties-2025/rental-expenses" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Rental expenses (Rental properties 2025) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/forms-and-instructions/rental-properties-2025/rental-expenses</p>
+            </a>
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/property-and-land/residential-rental-properties/rental-expenses/capital-expenses/work-out-your-capital-works-deductions" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Work out your capital works deductions ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/property-and-land/residential-rental-properties/rental-expenses/capital-expenses/work-out-your-capital-works-deductions</p>
+            </a>
+            <a href="https://www.ato.gov.au/individuals-and-families/your-tax-return/amend-your-tax-return/time-limits-on-amendments" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Time limits on amendments ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/your-tax-return/amend-your-tax-return/time-limits-on-amendments</p>
+            </a>
+            <a href="https://www.ato.gov.au/individuals-and-families/your-tax-return/before-you-prepare-your-tax-return/preparing-your-tax-return" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Preparing your tax return ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/your-tax-return/before-you-prepare-your-tax-return/preparing-your-tax-return</p>
             </a>
           </div>
         </div>
@@ -1050,7 +1086,7 @@ export default function RentalPropertyDeductionAuditPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for July 2026.
+          built from ATO and GOV.UK guidance for September 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1072,7 +1108,7 @@ export default function RentalPropertyDeductionAuditPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. July 2026.</p>
+            <p className="mt-1">Australia tax position checks. September 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

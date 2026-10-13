@@ -26,7 +26,11 @@
 // │ See reports/2026-07-23-frcgw-success-content-migration-scope.txt           │
 // └────────────────────────────────────────────────────────────────────────────┘
 import type { ProductConfig } from "../types/product-config";
-import { verifyEngineNative } from "./verify-engine-native";
+import { verifyEngineNative, engineSessionKey } from "./verify-engine-native";
+// The ONE predicate that decides rule-vs-stored, shared with the gate and files generators so
+// three surfaces cannot disagree about which mode a product is in.
+import { resolvesFromRule } from "./generate-gate-page";
+import { findDoubledWords, joinJurisdictionAuthority } from "../validators/doubled-word";
 
 // Machine-enforced hard rule. buildSuccessPage() THROWS unless the template has been
 // upgraded (R-A2/R-A3) and the operator opts in with COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
@@ -54,6 +58,91 @@ function sym(config: ProductConfig): string {
   // are mirrors and the comment there says they change together. This is that change.
   if (config.currency === "EUR") return "€";
   return ["USD","NZD","CAD","AUD"].includes(config.currency) ? "$" : "£";
+}
+
+/**
+ * D2 — the SHORT, prose-safe form of config.market.
+ *
+ * config.market is the ASSESSMENT CONTEXT string, and it is deliberately verbose: 183-day's
+ * is "United States (IRS Substantial Presence Test)", narrowed on purpose so /api/assess
+ * answers on one jurisdiction's test rather than across five. That string is correct where it
+ * is POSTED and wrong where it is READ: the heading rendered "Your United States (IRS
+ * Substantial Presence Test) IRS position" and the disclaimer "a qualified United States (IRS
+ * Substantial Presence Test) tax adviser".
+ *
+ * DERIVED, not a new config field and not a lookup table: drop a trailing parenthetical and
+ * trim. Measured across all 48 configs — only 4 carry a parenthetical
+ * ("United States (IRS Substantial Presence Test)" -> "United States", "Global (cross-border)"
+ * and "Global (cross-border departure)" -> "Global"), so for the other 44 this is a no-op and
+ * their prose cannot move. The full string still goes to /api/assess untouched.
+ */
+/**
+ * A — the SHORT, prose-safe form of config.authority. Same shape as marketProse above,
+ * and the same reasoning: the string is right where it is CITED and wrong where it is READ.
+ *
+ * config.authority is the full legal name of the regulator, which is correct in a citation
+ * ("Based on <full name> guidance April 2026") and in the /api/assess payload, but reads
+ * badly mid-sentence. Beckham rendered:
+ *     "Your Spain Agencia Estatal de Administracion Tributaria (AEAT) position"
+ *
+ * RULE: if the authority ends in a parenthetical ACRONYM, use the acronym; otherwise return
+ * it unchanged. Measured across all 48 configs (2026-09-21): 16 end in an acronym
+ * (CRA x5, IRD x5, ATO x2, HMRC x2, IRS x1, AEAT x1) and 32 do not, so this is a no-op for
+ * two thirds of the estate.
+ *
+ * The acronym pattern deliberately allows NO spaces and NO slashes, which is what keeps
+ * "National tax authorities (CRA / ATO / HMRC / IRD NZ / IRS)" intact — that trailing
+ * parenthesis is a LIST, not an acronym, and collapsing it would destroy the meaning.
+ *
+ * APPLIED IN PROSE SLOTS ONLY. The /api/assess payload and the footer citation keep the
+ * full legal name; see the call sites.
+ */
+function authorityProse(config: ProductConfig): string {
+  const a = (config.authority ?? "").trim();
+  const m = a.match(/[(]([A-Z][A-Za-z0-9.-]{1,12})[)]$/);
+  return m ? m[1] : a;
+}
+
+/**
+ * F75 — "Your <jurisdiction> <authority> position", without saying the jurisdiction twice.
+ *
+ * MEASURED on the delivered australia-smsf-residency pages:
+ *     Your Australia Australian Taxation Office (ATO) position
+ * The two halves are separate config fields, so the template could not know that `authority`
+ * already contained `market`. Across the estate's 47 configs the same fault has three shapes:
+ *     Australia     + Australian Taxation Office (ATO)                  stem repeat
+ *     Canada        + Canada Revenue Agency (CRA)                       exact repeat
+ *     United States + State Revenue Authorities / US Supreme Court      plural/singular stem
+ *
+ * authorityProse() already resolves the first two to "ATO"/"CRA" by lifting the parenthesised
+ * acronym — which is why 15 of the 16 affected pages only LOOK broken: they were emitted before
+ * that helper existed (2026-09-21) and never regenerated. The third has no acronym to lift, so
+ * authorityProse is a no-op on it and the join is what has to be right.
+ */
+function positionPhrase(config: ProductConfig): string {
+  return joinJurisdictionAuthority(marketProse(config), authorityProse(config));
+}
+
+function marketProse(config: ProductConfig): string {
+  return (config.market ?? "").replace(/\s*\([^)]*\)\s*$/, "").trim() || config.market;
+}
+
+/**
+ * D3 — sources that may appear in CUSTOMER-FACING copy.
+ *
+ * config.sources carries both real authority citations and an internal machine surface:
+ * 31 of 48 configs list { title: "Machine-readable JSON rules", url: "/api/rules/<id>" }.
+ * That is estate plumbing — an answer-engine affordance for the public gate page — and it was
+ * being rendered verbatim into the paid success PDF's footer and into every delivered file
+ * page, where it reads as a broken promise to a buyer who cannot use it.
+ *
+ * Filtered by URL, not by title, so a retitled entry cannot slip through: anything whose href
+ * is site-internal (/api/...) is plumbing. Filtered BEFORE the slice, so a product whose
+ * second source is the JSON route surfaces its next REAL citation instead of losing a slot.
+ * The gate page is deliberately NOT changed — there the link is intentional.
+ */
+function customerSources(config: ProductConfig) {
+  return (config.sources ?? []).filter((s) => !/^\/api\//.test(s.url ?? ""));
 }
 
 function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): string {
@@ -108,6 +197,35 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // disagreement rather than guessing — both wrong answers are silent at runtime.
   const engineNative = verifyEngineNative(config);
 
+  // ── F75 GATE — THE COMPOSED PROSE, NOT THE FILE ────────────────────────────────────────────
+  //
+  // Run over the emitted .tsx this check is worthless: measured across 96 emitted success pages it
+  // reports 973 hits, of which 966 are CODE — `border border` in a Tailwind class, `const url =
+  // URL`, `new Date(Date.now())`, `ctx ctx`. So it gates the STRINGS THIS FUNCTION COMPOSES, which
+  // is where the defect is made, and lib/render-pack + the dashboard's step-5 check gate the
+  // delivered prose. Same function, three surfaces, no false positives on any of them.
+  //
+  // A REFUSAL rather than a warning: the whole point is that this shipped to a buyer once already,
+  // in a heading, and nobody saw it for three days.
+  const composedProse: Array<[string, string]> = [
+    ["position heading", `Your ${positionPhrase(config)} position`],
+    ["hero h1", `here is your ${packNounPhrase}`],
+    ["pack name", packName],
+    ["tier tagline", tierConfig.tagline ?? ""],
+  ];
+  for (const [where, text] of composedProse) {
+    const doubled = findDoubledWords(text);
+    if (doubled.length > 0) {
+      throw new Error(
+        `[COLE F75] "${config.id}" ${tier}: the ${where} repeats a word — ` +
+        doubled.map((d) => `"${d.pair}" (${d.kind})`).join(", ") + ".\n" +
+        `    text: ${text}\n` +
+        `    A doubled word in a heading is the one defect a buyer reads before anything else. ` +
+        `Fix the config field or the join; generating nothing.`,
+      );
+    }
+  }
+
   // STEP 2 fallback inputs. STEP 1 (the stored-first fetch) is untouched by this
   // branch: it is correct, and it is the path every real purchase takes.
   //
@@ -116,12 +234,14 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   //   legacy        → the existing per-field phantom reads, byte-for-byte
   //                   unchanged, because a bespoke calculator does write them.
   const ssReads = engineNative
-    ? `      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote
-      // (<slug>_answers + <slug>_qualification) — via the SAME composer the webhook uses
+    ? `      // Bind to the user's REAL engine answers — the keys EngineCalculator actually wrote,
+      // which are keyed by the ROUTE TAIL (engineSessionKey), NOT by config.id: the two differ
+      // on day-183-rule and spain-beckham, and passing config.id missed every read (DECISION-A).
+      // (<slug-tail>_answers + <slug-tail>_qualification) — via the SAME composer the webhook uses
       // (F5 contract). The legacy per-field keys are never written by an engine-native
       // calculator, so reading them would always fall back to defaults → a generic,
       // corpus-contradicting assessment.
-      const inputs = buildComposerInputsFromSession("${config.id}");`
+      const inputs = buildComposerInputsFromSession("${engineSessionKey(config)}");`
     : promptFields.map(f =>
         `      const ${f.key} = sessionStorage.getItem("${config.id}_${f.key}") || "${f.defaultVal}";`
       ).join("\n");
@@ -165,6 +285,62 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // actually declared it has no date — never as a way to dodge a real deadline.
   const qualitative = deadlineDeclaredAbsent ? config.deadline?.qualitative : undefined;
 
+  // STEP7-JUNE15 — DOES THIS PRODUCT'S DATE COME FROM ITS RULE?
+  //
+  // Same predicate the gate and files generators use, so the three surfaces cannot disagree about
+  // which mode a product is in. True only for a fixed rule WITH an empty deadline.isoDate, which is
+  // why every other product's page is emitted byte-identically to before.
+  const RULE_PATH = resolvesFromRule(config);
+  // The names the emitted page uses. On the rule path they are page-local consts filled at render;
+  // otherwise they stay the baked strings they have always been.
+  const DISPLAY_EXPR = RULE_PATH ? "{DEADLINE_DISPLAY}" : config.deadline.display;
+  const SHORT_EXPR   = RULE_PATH ? "{DEADLINE_SHORT}"   : config.deadline.short;
+  // The alert text, composed here: a `${...}` inside a nested plain string in the page template is
+  // never interpolated, and the first version of this line emitted the literal characters
+  // ${config.deadline.isoDate} into the generated page.
+  const TEMPORAL_ALERT_WHAT = RULE_PATH ? "fixed rule did not resolve" : "expired deadline suppressed";
+  // STEP8 — "Due today" at the strip and the closing line.
+  const STRIP_COUNTDOWN = RULE_PATH
+    ? '{DEADLINE_PHRASE} {daysToDeadline === 0 ? "\u2014" : "to"} {DEADLINE_DISPLAY}'
+    : `{daysToDeadline} days to ${config.deadline.display}`;
+  const CTA_COUNTDOWN = RULE_PATH
+    ? '{deadlineLive ? `${DEADLINE_PHRASE}${daysToDeadline === 0 ? " \u2014 " : " to "}${DEADLINE_DISPLAY}.` : ""}'
+    : "{deadlineLive ? `${daysToDeadline} days to " + config.deadline.display + ".` : \"\"}";
+  const TEMPORAL_ALERT_EXTRA = RULE_PATH ? "" : `, deadlineIso: ${JSON.stringify(config.deadline.isoDate)}`;
+
+  // STEP7-JUNE15 — the emitted countdown preamble. Built here rather than inline because the page
+  // template is a template literal and this block contains its own; three levels of nesting is how
+  // a generated file gets silently truncated.
+  const COUNTDOWN_BLOCK = RULE_PATH
+    ? [
+        `  // The date is this product's RULE, resolved on every render by lib/temporal-display.ts —`,
+        `  // the same arithmetic lib/temporal-resolver.ts gives the email scheduler, so the`,
+        `  // countdown on this page and the reminder in the inbox cannot drift apart.`,
+        `  //`,
+        `  // No date is stored anywhere in this file. The version that stored one showed a stale`,
+        `  // label and logged an expired-deadline error on every load once it passed.`,
+        `  const _deadline = resolvedDeadlineFor(${JSON.stringify(config.site)}, ${JSON.stringify(config.id)});`,
+        `  const daysToDeadline: number | null = _deadline ? _deadline.daysAway : null;`,
+        `  const DEADLINE_DISPLAY = _deadline?.display ?? "";`,
+        `  const DEADLINE_SHORT   = _deadline?.short ?? "";`,
+    `  // "0 days" is not a sentence anyone says; the due date gets its own words. Only a resolved`,
+    `  // rule can land on today — the stored-date path returned null for anything not in the future.`,
+    `  const DEADLINE_PHRASE = daysToDeadline === 0 ? "Due today" : \`\${daysToDeadline} days\`;`,
+      ].join("\n")
+    : [
+        `  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed`,
+        `  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely`,
+        `  // (never "0 days", never a negative, never a stale label).`,
+        `  const daysToDeadline: number | null = (() => {`,
+        `    const end = new Date(${JSON.stringify(config.deadline.isoDate)}).getTime();`,
+        `    if (Number.isNaN(end)) return null;`,
+        `    const d = Math.floor((end - Date.now()) / 86_400_000);`,
+        `    return d > 0 ? d : null;`,
+        `  })();`,
+      ].join("\n")
+  ;
+
+
   // What fills the "…before X" slot in prose (the action-checklist heading and the
   // fallback accountant question).
   //
@@ -178,17 +354,49 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   // The declaration already carries the right string: `temporal.label`, documented
   // as "Human label used in customer-facing copy" — a name for the anchor, never a
   // date. Absent label on a dateless product ⇒ drop the clause rather than invent one.
-  const beforeAnchor = deadlineDeclaredAbsent
-    ? (config.temporal?.label ? ` — before ${config.temporal.label}` : "")
+  //
+  // STEP7-JUNE15 adds the third case. A rule-declared product has an EMPTY display, so the old
+  // branch would have emitted " — before " with nothing after it, in a heading and in the prompt
+  // sent to the model. It also must not embed a resolved DATE here: both slots render outside the
+  // deadlineLive gate and one of them is prompt text, where a date frozen at generate time is
+  // exactly how "before 15 June 2027" would still be asked of the model in 2028. `temporal.label`
+  // is the anchor's NAME — documented as "Human label used in customer-facing copy" — and it does
+  // not rot.
+  const anchorName = config.temporal?.label ?? "";
+  const beforeAnchor = deadlineDeclaredAbsent || RULE_PATH
+    ? (anchorName ? ` — before ${anchorName}` : "")
     : ` — before ${config.deadline.display}`;
-  const beforeAnchorQ = deadlineDeclaredAbsent
-    ? (config.temporal?.label ? ` before ${config.temporal.label}` : " now")
+  const beforeAnchorQ = deadlineDeclaredAbsent || RULE_PATH
+    ? (anchorName ? ` before ${anchorName}` : " now")
     : ` before ${config.deadline.display}`;
   const temporalReason =
     config.temporal && "reason" in config.temporal ? String(config.temporal.reason ?? "") : "";
   const droppedEvents: string[] = [];
   const emittableEvents = calEvents.filter(evt => {
     if (evt.date.startsWith("relative:")) return true;
+    // F76 — AN ANNUAL RULE CANNOT BE STALE, SO IT IS NEVER DROPPED.
+    //
+    // MEASURED on the delivered australia-smsf-residency pack, 2026-09-28:
+    //     "SMSF residency snapshot — 30 June 2026"      date: "20260630"
+    // The 30 June residency test is ANNUAL — it happened in 2026 and it happens again in 2027 —
+    // but it was stored as one calendar date, so it went stale on 1 July and the buyer read a
+    // key date that had already passed. The filter below would then DROP it on the next
+    // regeneration, which trades a wrong date for a missing one: the event is real and recurring,
+    // and neither answer is the truth.
+    //
+    // `annual:MM-DD` is the rule form. It resolves AT RENDER (see annualDate() in the emitted
+    // page, beside relativeDate()), not at generate time, so the page cannot go stale between
+    // deployments either — the same reason the gate page's countdown moved to a rule.
+    if (evt.date.startsWith("annual:")) return true;
+    // `none` — A DATE THAT IS REAL BUT NOT OURS TO STATE.
+    //
+    // The tax-agent lodgment date is set by the agent, and the ATO says so in as many words: "If
+    // your SAR is lodged through a tax agent, they'll provide the due date for lodgment and
+    // payment." This product used to print "15 May" for it, which is not an ATO-published date.
+    // Deleting the row loses a true and useful fact; inventing a date is worse. So the row shows in
+    // the KEY DATES panel with "your agent sets this" where a date would be, and is excluded from
+    // the .ics below — a VEVENT has no meaning without a DTSTART.
+    if (evt.date === "none") return true;
     if (!claimsADate)            { droppedEvents.push(`${evt.uid} (${evt.date}: product declares no resolvable date)`); return false; }
     if (evt.date < todayCompact) { droppedEvents.push(`${evt.uid} (${evt.date}: in the past)`); return false; }
     return true;
@@ -200,10 +408,12 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
     );
   }
 
-  // .ics events
-  const icsEvents = emittableEvents.map(evt => {
+  // .ics events — dateless advisories are shown on the page but cannot be calendar entries.
+  const icsEvents = emittableEvents.filter(evt => evt.date !== "none").map(evt => {
     const dateCode = evt.date.startsWith("relative:")
       ? buildRelativeDate(evt.date)
+      : evt.date.startsWith("annual:")
+      ? buildAnnualDate(evt.date)
       : `"${evt.date}"`;
     return `
       "BEGIN:VEVENT",
@@ -220,14 +430,57 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   return `"use client";
 // AUTO-GENERATED BY COLE — do not edit manually
 // Product: ${config.id} · ${isTier2 ? "Tier 2" : "Tier 1"} Success Page
-import { useEffect, useState } from "react";
-import Link from "next/link";${engineNative ? `\nimport { buildComposerInputsFromSession } from "@/lib/composer-inputs";` : ""}
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { renderPack, hasFrozenPack, type RenderedPack } from "@/lib/render-pack";
+import { getAssessmentFields } from "@/lib/assessment-fields";${engineNative ? `\nimport { buildComposerInputsFromSession } from "@/lib/composer-inputs";` : ""}${RULE_PATH ? `\nimport { resolvedDeadlineFor } from "@/lib/temporal-display";` : ""}
 
 const FILES = ${JSON.stringify(visibleFiles.map(f => ({
     num: f.num, slug: f.slug, name: f.name, desc: f.desc, tier: f.tier,
   })), null, 2)};
 
+// ── F76 — RECURRING CALENDAR DATES, RESOLVED AT RENDER ──────────────────────────────────────
+//
+// Module scope, not inside handleCalendar, because TWO surfaces need them: the .ics the buyer
+// downloads AND the visible date pill in the key-dates panel. The pill used to be a literal baked
+// at generate time, which is how "annual:02-28" came to be printed at a buyer.
+//
+// Same arithmetic as lib/temporal-resolver's annual rule: this year if the day has not passed,
+// otherwise next year; then, when the rule says so, forward to the next weekday. Concatenation
+// rather than template literals — this is emitted from inside one.
+function annualDate(month: number, day: number, shift: boolean): string {
+  const now = new Date();
+  const pad = (n: number): string => String(n).padStart(2, "0");
+  const today = now.toISOString().split("T")[0].replace(/-/g, "");
+  let year = now.getUTCFullYear();
+  if (String(year) + pad(month) + pad(day) < today) year += 1;
+  let d = new Date(Date.UTC(year, month - 1, day));
+  if (shift) {
+    // 0 = Sunday, 6 = Saturday. Public holidays are not modelled here and are not claimed to be.
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6) d = new Date(d.getTime() + 86400000);
+  }
+  return String(d.getUTCFullYear()) + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate());
+}
+
+/** The same date as a human label: "28 February 2027". */
+function annualLabel(month: number, day: number, shift: boolean): string {
+  const iso = annualDate(month, day, shift);
+  const y = Number(iso.slice(0, 4));
+  const m = Number(iso.slice(4, 6));
+  const dd = Number(iso.slice(6, 8));
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "UTC", day: "numeric", month: "long", year: "numeric",
+  }).format(new Date(Date.UTC(y, m - 1, dd)));
+}
+
 interface Action { title: string; deadline: string; steps: string[]; }
+// FREEZE — the identity the ASSESSMENTS TABLE is keyed by, i.e. the webhook's
+// DELIVERY_MAP productId, which is the route tail (and what lib/assessment-fields.ts is
+// keyed on). NOT config.id: the two differ on day-183-rule and spain-beckham. Used only as
+// a fallback — the heal path prefers the product id the stored row itself carries.
+const PRODUCT_REGISTRY_ID = ${JSON.stringify(engineSessionKey(config))};
+const TIER = ${isTier2 ? 147 : 67};
+
 type Assessment = Record<string, unknown> & {
   accountantQuestions?: string[];
   actions?: Action[];
@@ -236,8 +489,17 @@ type Assessment = Record<string, unknown> & {
 export default function Success${isTier2 ? "Plan" : "Assess"}() {
   const [firstName,  setFirstName]  = useState("there");
   const [assessment, setAssessment] = useState<Assessment | null>(null);
+  // FREEZE — the PACK is what this page renders. Either the stored row already carries it
+  // (bought after the freeze landed) or we heal it on view from the raw keys, below.
+  const [pack, setPack] = useState<RenderedPack | null>(null);
+  // One freeze POST per mount. Without this the heal would re-post on every effect re-run
+  // and the route would answer "already frozen" forever — correct, but a request per view.
+  const frozePosted = useRef(false);
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState("");
+  // How long we have been waiting for the webhook's row, so the holding copy can say so rather
+  // than spinning silently for a minute and a half.
+  const [waitedMs,   setWaitedMs]   = useState(0);
   const [copied,     setCopied]     = useState(false);
 ${emittableEvents.length === 0 ? "" : `  const [calDone,    setCalDone]    = useState(false);`}
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
@@ -255,15 +517,7 @@ ${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPO
   const daysToDeadline: number | null = null;
   const deadlineLive = false;
 
-  useEffect(() => { init(); }, []);` : `  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("${config.deadline.isoDate}").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
+  useEffect(() => { init(); }, []);` : `${COUNTDOWN_BLOCK}
   const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
@@ -272,7 +526,7 @@ ${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPO
   // expired or will not parse, is a real defect — surface it so it is never silent.
   // Phase 5 replaces this with real alerting.
   useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "${config.id}", deadlineIso: "${config.deadline.isoDate}" });
+    if (!deadlineLive) console.error("[TEMPORAL] ${TEMPORAL_ALERT_WHAT} on success page", { product: "${config.id}"${TEMPORAL_ALERT_EXTRA} });
   }, []);`}
 
   async function init() {
@@ -286,72 +540,130 @@ ${deadlineDeclaredAbsent ? `${declaresOnlyAPerCustomerDate(config) ? `  // TEMPO
         if (d.firstName) { name = d.firstName; setFirstName(d.firstName); }
       } catch { /* non-fatal */ }
     }
-    await generateAssessment(name);
+    await loadAssessment(name);
   }
 
-  async function generateAssessment(name: string) {
+  /**
+   * Load the buyer's pack. IT IS NEVER GENERATED HERE.
+   *
+   * F41 RULING. This function used to end in a client POST /api/assess whenever the stored row was
+   * not there yet, and that fallback was the problem, not the safety net:
+   *
+   *   - it produced a SECOND, different pack for the same purchase. The webhook writes one and
+   *     emails it; the browser generated another from whatever was in sessionStorage. Two documents,
+   *     one sale, and the buyer saw whichever raced first.
+   *   - on an engine-native product the inputs it sent were the per-field sessionStorage keys that
+   *     nothing writes, so it fell back to hardcoded defaults and produced a confident,
+   *     personalised-LOOKING assessment built from numbers the customer never supplied.
+   *   - it spent the buyer's money twice: a second model call per refresh, uncapped.
+   *
+   * So the page WAITS instead. The webhook is the only writer; this polls for up to 90 seconds and,
+   * if the row still is not there, says so plainly and points at the email — which is a real
+   * delivery channel, already sent by the same webhook, and does not require the buyer to sit on
+   * this tab. Nothing is invented on the client.
+   */
+  async function loadAssessment(name: string) {
     setLoading(true);
     setError("");
     const params    = new URLSearchParams(window.location.search);
     const sessionId = params.get("session_id");
 
+    // No session id means we cannot identify the purchase at all — there is nothing to poll for,
+    // and polling 30 times to say so would just be a slower version of the same answer.
+    if (!sessionId) { showHolding(name, "nosession"); return; }
+
+    const WINDOW_MS = 90_000;   // the F41 ruling's ceiling
+    const EVERY_MS  = 3_000;
+    const startedAt = Date.now();
+
     try {
-      // ── STEP 1: Try fetching pre-generated assessment from Supabase ──
-      // Generated by webhook at purchase time — instant load, no API call
-      if (sessionId) {
+      for (;;) {
         const r = await fetch(\`/api/get-assessment?session_id=\${sessionId}\`);
         if (r.ok) {
           const d = await r.json();
-          if (d.assessment) {
-            setAssessment(d.assessment);
-            setLoading(false);
-            return;
-          }
+          if (d.assessment) { adoptStored(d, name); return; }
         }
+        // Stop BEFORE a sleep that would take us past the window, so 90s is a ceiling on the wait
+        // and not on the last attempt's start.
+        if (Date.now() - startedAt + EVERY_MS >= WINDOW_MS) break;
+        setWaitedMs(Date.now() - startedAt);
+        await new Promise((res) => setTimeout(res, EVERY_MS));
       }
-
-      // ── STEP 2: Fallback — generate now via /api/assess ──────────────
-      // Runs if webhook hasn't stored assessment yet (e.g. timing, retry)
-${ssReads}
-${engineNative ? "" : `
-      // Check if we have any real inputs — sessionStorage may be empty after Stripe redirect
-      const hasInputs = Object.values({
-${promptFields.map(f => `        "${f.key}": ${f.key},`).join("\n")}
-      }).some(v => v && v !== "${promptFields[0]?.defaultVal || ""}");
-`}
-      const res = await fetch("/api/assess", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product_id: "${config.id}",
-          market:     "${config.market}",
-          authority:  "${config.authority}",
-          tier:       ${isTier2 ? 2 : 1},
-          name: name === "there" ? "" : name,
-${engineNative ? "          inputs," : `          inputs: {
-${inputsObj}
-          },`}
-          fields: ${JSON.stringify(assessFields)},
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok || data.error) throw new Error(data.error || "Assessment failed");
-      setAssessment(data.assessment);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to generate assessment");
-      // Graceful fallback — page still shows files and calendar
-      setAssessment({
-        ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: "Your personalised ${f.replace(/_/g," ")} is being prepared — please refresh in a moment.",`).join("\n        ")}
-        accountantQuestions: [
-          "What is my exact ${config.authority} position based on my answers?",
-          "What is the single most important action I should take${beforeAnchorQ}?",
-          "Are there any planning opportunities specific to my situation?",
-        ],
-        ${isTier2 ? 'actions: [],' : ''}
-      } as unknown as Assessment);
+      showHolding(name, "timeout");
+    } catch {
+      // A network failure is not evidence that the pack does not exist, so the copy is the same:
+      // it is in the email either way.
+      showHolding(name, "timeout");
     } finally {
       setLoading(false);
     }
+  }
+
+  /** Adopt the stored row: the frozen pack verbatim when there is one, else heal it on view. */
+  function adoptStored(d: { assessment?: unknown; customerName?: unknown; productId?: unknown }, name: string) {
+    // D — NAME FALLBACK. The greeting comes from /api/get-session, which returns "there" whenever
+    // the Stripe session carries no customer_details.name. The stored row already holds the buyer
+    // name and /api/get-assessment already returns it — the page simply never looked. A name that
+    // DID arrive from get-session always wins.
+    if (name === "there" && typeof d.customerName === "string" && d.customerName.trim() !== "") {
+      setFirstName(d.customerName);
+    }
+    setAssessment(d.assessment as Assessment);
+    // FREEZE: adopt the stored document verbatim when it exists.
+    if (hasFrozenPack(d.assessment)) {
+      setPack((d.assessment as Record<string, unknown>).rendered as RenderedPack);
+    } else {
+      // HEAL ON VIEW — a row written before the freeze. Render it exactly as the writer would have,
+      // show that, and post it so the SECOND view reads a frozen copy. Keyed on the row's OWN
+      // product id (the identity the webhook stored it under) so a heal can never re-key a row.
+      const healId = typeof d.productId === "string" && d.productId ? d.productId : PRODUCT_REGISTRY_ID;
+      const healed = renderPack(d.assessment as Record<string, unknown>, {
+        productId:    healId,
+        tier:         TIER,
+        customerName: typeof d.customerName === "string" ? d.customerName : name,
+        fieldList:    getAssessmentFields(healId, TIER),
+      });
+      setPack(healed);
+      const sessionId = new URLSearchParams(window.location.search).get("session_id");
+      if (sessionId && !frozePosted.current) {
+        frozePosted.current = true;
+        fetch("/api/freeze-pack", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: sessionId, rendered: healed }),
+        }).catch(() => { /* non-fatal: the buyer already has their pack on screen */ });
+      }
+    }
+    setLoading(false);
+  }
+
+  /**
+   * The pack is not here yet. Say that, and do not fake one.
+   *
+   * The holding text is rendered through renderPack so the page below still has its shape — files,
+   * calendar, the accountant questions — instead of an empty column. It is NEVER posted to
+   * /api/freeze-pack: freezing "is being prepared" would store that as the buyer's document
+   * forever, which is the one outcome worse than waiting.
+   */
+  function showHolding(name: string, why: "timeout" | "nosession") {
+    setError(why);
+    const placeholder = {
+      ${assessFields.filter(f => f !== "accountantQuestions" && f !== "actions" && f !== "weekPlan").map(f => `${f}: "Your personalised ${f.replace(/_/g," ")} is on its way by email.",`).join("\n      ")}
+      accountantQuestions: [
+        "What is my exact ${authorityProse(config)} position based on my answers?",
+        "What is the single most important action I should take${beforeAnchorQ}?",
+        "Are there any planning opportunities specific to my situation?",
+      ],
+      ${isTier2 ? 'actions: [],' : ''}
+    } as unknown as Assessment;
+    setAssessment(placeholder);
+    setPack(renderPack(placeholder as Record<string, unknown>, {
+      productId:    PRODUCT_REGISTRY_ID,
+      tier:         TIER,
+      customerName: name === "there" ? "" : name,
+      fieldList:    getAssessmentFields(PRODUCT_REGISTRY_ID, TIER),
+    }));
+    setLoading(false);
   }
 
 ${emittableEvents.length === 0 ? `  // handleCalendar() omitted: no event survived the R-A3 date gate, so there is no
@@ -377,8 +689,8 @@ ${emittableEvents.length === 0 ? `  // handleCalendar() omitted: no event surviv
   }`}
 
   async function handleCopy() {
-    if (!assessment?.accountantQuestions?.length) return;
-    const text = (assessment.accountantQuestions as string[])
+    if (!pack?.accountantQuestions.length) return;
+    const text = pack.accountantQuestions
       .map((q,i) => \`\${i+1}. "\${q}"\`).join("\\n");
     await navigator.clipboard.writeText(
       \`${packName} — questions for my accountant:\\n\\n\${text}\\n\\nTaxCheckNow · taxchecknow.com\`
@@ -387,8 +699,25 @@ ${emittableEvents.length === 0 ? `  // handleCalendar() omitted: no event surviv
     setTimeout(() => setCopied(false), 3000);
   }
 
-  const hi = firstName !== "there" ? firstName : "there";
-  const greeting = firstName !== "there" ? \`\${firstName}\` : "you";
+  // D4 — NORMALISE THE NAME AT RENDER. /api/get-session returns whatever the buyer typed at
+  // checkout; a lowercase "general" rendered "general, here is your ...". Trim, collapse inner
+  // whitespace, and upper-case the first letter only — never the rest, because "McLeod" and
+  // "O'Brien" must survive. A whitespace-only value collapses to "" and falls back to the
+  // unnamed branch, which also closes the residual the beckham HOLD flagged.
+  // FREEZE — the pack carries the name it was rendered with, so a frozen pack greets the
+  // buyer identically forever. get-session / get-assessment stay the fallbacks for a row
+  // that was rendered before a name was known.
+  const rawName = (pack?.name ?? "").trim() !== "" ? (pack as RenderedPack).name : firstName;
+  const displayName = rawName.trim().replace(/\\s+/g, " ").replace(/^./, (c) => c.toUpperCase());
+  const named = displayName !== "" && rawName !== "there";
+  const hi = named ? displayName : "there";
+  const greeting = named ? displayName : "you";
+
+  // FREEZE — the reader no longer derives anything. The per-product key array and the
+  // generic degrade moved INTO lib/render-pack.ts, which runs at write time (webhook) or,
+  // for a pre-freeze row, once in the heal path above. A page that re-derives is a page
+  // that can disagree with its writer; this one cannot.
+  const sections = pack?.sections ?? [];
 
   return (
     <div className="min-h-screen bg-neutral-50 print:bg-white">
@@ -428,8 +757,8 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
             <span className="font-mono text-sm font-bold text-white">${qualitative.badge}</span>
           </div>` : `          {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to ${config.deadline.display}</span>
-            <span className="font-mono text-sm font-bold text-white">${config.deadline.short}</span>
+            <span className="text-sm font-bold text-white">🔴 ${STRIP_COUNTDOWN}</span>
+            <span className="font-mono text-sm font-bold text-white">${SHORT_EXPR}</span>
           </div>
           )}`}
         </div>
@@ -438,17 +767,32 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
         {loading && (
           <div className="rounded-2xl border border-neutral-200 bg-white p-10 text-center">
             <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-neutral-950 border-t-transparent" />
-            <p className="text-sm font-semibold text-neutral-700">Building your personalised assessment…</p>
-            <p className="mt-1 text-xs text-neutral-400">Analysing your answers against ${config.authority} rules</p>
+            <p className="text-sm font-semibold text-neutral-700">Preparing your pack…</p>
+            <p className="mt-1 text-xs text-neutral-400">
+              {waitedMs < 12_000
+                ? "Your assessment is being written against ${authorityProse(config)} rules."
+                : \`Still working — \${Math.round(waitedMs / 1000)}s. This page updates itself; you do not need to refresh.\`}
+            </p>
           </div>
         )}
 
-        {/* ── ERROR ── */}
+        {/* ── STILL BEING WRITTEN (F41) ──
+            Not an error, and not worded as one. The pack is generated and emailed by the webhook,
+            so a page that got here has simply arrived first — the buyer has not lost anything and
+            there is nothing for them to fix. The old copy said "Assessment generation issue" about
+            a purchase that had completed perfectly. */}
         {error && !loading && (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            ⚠ Assessment generation issue — showing your files and calendar below.
-            <button onClick={() => generateAssessment(firstName)}
-              className="no-print ml-2 underline font-semibold">Try again →</button>
+          <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+            <p className="font-semibold">Your pack is still being written.</p>
+            <p className="mt-1">
+              {error === "nosession"
+                ? "This page was opened without its purchase link, so we cannot match it to your order. Your pack is in the email we sent to the address you paid with — open it from the link in there."
+                : "It is taking longer than usual. We have emailed it to the address you paid with, so you do not need to wait here — and your files and calendar are ready below."}
+            </p>
+            {error === "timeout" ? (
+              <button onClick={() => loadAssessment(firstName)}
+                className="no-print mt-2 underline font-semibold">Check again →</button>
+            ) : null}
           </div>
         )}
 
@@ -459,30 +803,26 @@ ${qualitative ? `          {/* No date resolves for this product (temporal kind 
             {/* YOUR POSITION — key verdict fields */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Your ${config.market} ${config.authority} position
+                Your ${positionPhrase(config)} position
               </p>
               <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
                 What this means for {greeting}
               </h2>
               <div className="space-y-3">
-                {(${JSON.stringify(assessFields.slice(0,6))} as string[]).map(key => {
-                  const val = assessment[key];
-                  if (!val || typeof val !== "string") return null;
-                  return (
-                    <div key={key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
-                      <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                        {key.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim().replace(/^./,c=>c.toUpperCase())}
-                      </p>
-                      <p className="text-sm leading-relaxed text-neutral-900">{val}</p>
-                    </div>
-                  );
-                })}
+                {sections.map((sec) => (
+                  <div key={sec.key} className="rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-4">
+                    <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                      {sec.heading}
+                    </p>
+                    <p className="text-sm leading-relaxed text-neutral-900">{sec.text}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
 ${isTier2 ? `
             {/* ACTIONS CHECKLIST — tier 2 */}
-            {Array.isArray(assessment.actions) && assessment.actions.length > 0 && (
+            {(pack?.actions.length ?? 0) > 0 && (
               <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
                 <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                   Your action checklist
@@ -491,7 +831,7 @@ ${isTier2 ? `
                   What to do — in order${beforeAnchor}
                 </h2>
                 <div className="space-y-4">
-                  {(assessment.actions as Action[]).map((action, i) => (
+                  {pack!.actions.map((action, i) => (
                     <div key={i} className={\`rounded-xl border p-5 transition \${checked[i] ? "border-emerald-200 bg-emerald-50" : "border-neutral-200 bg-neutral-50"}\`}>
                       <div className="flex items-start gap-3 mb-3">
                         <button onClick={() => setChecked(p => ({ ...p, [i]: !p[i] }))}
@@ -535,19 +875,19 @@ ${isTier2 ? `
               </div>
             )}` : `
             {/* FIRST ACTION — tier 1 */}
-            {assessment.firstAction && (
+            {pack?.firstAction && (
               <div className="print-section rounded-2xl border-2 border-neutral-950 bg-neutral-950 p-6">
                 <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
                   Your first action
                 </p>
                 <p className="text-lg font-bold leading-relaxed text-white">
-                  {String(assessment.firstAction)}
+                  {pack.firstAction}
                 </p>
               </div>
             )}`}
 
             {/* ACCOUNTANT QUESTIONS */}
-            {Array.isArray(assessment.accountantQuestions) && assessment.accountantQuestions.length > 0 && (
+            {(pack?.accountantQuestions.length ?? 0) > 0 && (
               <div className="print-section rounded-2xl border border-blue-100 bg-blue-50 p-6">
                 <div className="mb-3 flex items-start justify-between gap-4">
                   <div>
@@ -564,7 +904,7 @@ ${isTier2 ? `
                   </button>
                 </div>
                 <div className="space-y-2">
-                  {(assessment.accountantQuestions as string[]).map((q, i) => (
+                  {pack!.accountantQuestions.map((q, i) => (
                     <div key={i} className="flex items-start gap-3 rounded-xl border border-blue-100 bg-white px-4 py-3">
                       <span className="mt-0.5 shrink-0 font-mono text-xs font-bold text-blue-600">{i+1}</span>
                       <p className="text-sm leading-relaxed text-blue-900">"{q}"</p>
@@ -593,7 +933,18 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
                     <p className="text-xs text-neutral-500">${evt.description}</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    ${evt.date.startsWith("relative:") ? relativeDateLabel(evt.date) : formatDateDisplay(evt.date)}
+                    ${evt.date.startsWith("relative:")
+                      ? relativeDateLabel(evt.date)
+                      : evt.date.startsWith("annual:")
+                      // F76 FOLLOW-UP — MEASURED IN THE DELIVERED PAGE: this pill read
+                      // "annual:02-28". formatDateDisplay returns its input unchanged when the
+                      // string is not 8 digits, so the rule string went straight to the buyer while
+                      // the .ics beside it carried the correct resolved date. The pill has to
+                      // resolve at RENDER like everything else, so it emits a call rather than text.
+                      ? `{annualLabel(${parseAnnual(evt.date).month}, ${parseAnnual(evt.date).day}, ${parseAnnual(evt.date).shift})}`
+                      : evt.date === "none"
+                      ? "your agent sets this"
+                      : formatDateDisplay(evt.date)}
                   </span>
                 </div>`).join("")}
               </div>
@@ -612,8 +963,8 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
                 Everything you need — in one place
               </h2>
               <p className="mb-4 text-sm text-neutral-500">
-                Each document is built around your specific ${config.authority} position.
-                Start with File 02 — it has your exact numbers.
+                Each document is built around your specific ${authorityProse(config)} position.
+                File 02 is the worksheet that computes your exact numbers.
                 ${isTier2 ? "Files 06–08 are exclusive to this plan." : ""}
               </p>
               <div className="space-y-2">
@@ -646,10 +997,10 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
             <div className="print-section rounded-2xl border-2 border-neutral-950 bg-neutral-950 p-6">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">One thing to do today</p>
               <p className="mb-4 text-lg font-bold leading-relaxed text-white">
-                Open File 02 — your exact numbers are in there.
+                Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 ${isTier2 ? "Work through the checklist above." : ""}
-                ${qualitative ? qualitative.cta : `{deadlineLive ? \`\${daysToDeadline} days to ${config.deadline.display}.\` : ""}`}
+                ${qualitative ? qualitative.cta : CTA_COUNTDOWN}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
@@ -698,9 +1049,9 @@ ${!isTier2 ? `
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
-            Always consult a qualified ${config.market} tax adviser before making financial decisions.
+            Always consult a qualified ${marketProse(config)} tax adviser before making financial decisions.
             Based on ${config.authority} guidance ${config.lastVerified}.{" "}
-            ${config.sources.slice(0,2).map(s =>
+            ${customerSources(config).slice(0,2).map(s =>
               `<a href="${s.url}" target="_blank" rel="noopener noreferrer" className="underline">${s.title}</a>`
             ).join(" · ")}
           </p>
@@ -813,13 +1164,63 @@ function relativeDateLabel(relativeStr: string): string {
   return `In ${d} days`;
 }
 
+/**
+ * `annual:MM-DD` -> the emitted call that resolves it at render.
+ *
+ * REFUSES rather than degrading: a malformed rule that fell back to the literal string would put
+ * "annual:06-30" into a DTSTART, which every calendar app would silently ignore.
+ */
+/** month, day and whether a weekend lands on the next business day. */
+function parseAnnual(annualStr: string): { month: number; day: number; shift: boolean } {
+  const m = annualStr.match(/^annual:(\d{2})-(\d{2})(?::(next_business_day))?$/);
+  if (!m) {
+    throw new Error(
+      `[COLE F76] calendar date "${annualStr}" is not a valid annual rule. ` +
+      `Expected annual:MM-DD or annual:MM-DD:next_business_day. Generating nothing.`,
+    );
+  }
+  const month = Number(m[1]);
+  const day = Number(m[2]);
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    throw new Error(`[COLE F76] annual rule "${annualStr}" is not a real month/day. Generating nothing.`);
+  }
+  return { month, day, shift: m[3] === "next_business_day" };
+}
+
+/**
+ * `annual:MM-DD[:next_business_day]` -> the emitted call that resolves it at render.
+ *
+ * The shift is per-entry because not every annual date is a lodgment obligation: 31 October and
+ * 28 February move to the next business day, and the 30 June residency point does not move at all.
+ * Without it the .ics disagreed with the countdown on this very page — the declared deadline
+ * resolves through lib/temporal-resolver, which DOES shift, so a weekend 28 February produced
+ * "1 March" in the banner and "28 February" in the calendar.
+ */
+function buildAnnualDate(annualStr: string): string {
+  const { month, day, shift } = parseAnnual(annualStr);
+  return `annualDate(${month}, ${day}, ${shift})`;
+}
+
 function buildRelativeDate(relativeStr: string): string {
   const match = relativeStr.match(/\+(\d+)days/);
   if (!match) return `"${relativeStr}"`;
   return `relativeDate(${match[1]})`;
 }
 
+/**
+ * A compact YYYYMMDD as a human label.
+ *
+ * REFUSES a rule string rather than returning it. Returning the input was how "annual:02-28"
+ * reached a buyer's key-dates panel: every caller assumed this function formatted, and for eight
+ * digits it does, so nothing ever noticed the pass-through branch.
+ */
 function formatDateDisplay(dateStr: string): string {
+  if (/^(annual|relative):/.test(dateStr)) {
+    throw new Error(
+      `[COLE F76] formatDateDisplay was handed the rule string "${dateStr}". A rule must be ` +
+      `resolved at render (annualLabel / relativeDateLabel), never formatted here. Generating nothing.`,
+    );
+  }
   if (dateStr.length !== 8) return dateStr;
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const year  = dateStr.slice(0,4);

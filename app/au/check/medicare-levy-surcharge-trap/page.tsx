@@ -10,12 +10,12 @@ import MedicareLevySurchargeTrapCalculator from "./MedicareLevySurchargeTrapCalc
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Medicare Levy Surcharge Australia 2026 — Are You Paying the Surcharge Unnecessarily? | TaxCheckNow",
-  description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+  title: "Medicare Levy Surcharge 2026-27 Are You Overpaying? | TaxCheckNow",
+  description: "The Medicare Levy Surcharge adds 1-1.5% on income over $105,000 in 2026-27 if you have no hospital cover. Cover often costs less. Free check.",
   alternates: { canonical: "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap" },
   openGraph: {
-    title: "Medicare Levy Surcharge Australia 2026 — Are You Paying the Surcharge Unnecessarily? | TaxCheckNow",
-    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+    title: "Medicare Levy Surcharge 2026-27 Are You Overpaying? | TaxCheckNow",
+    description: "The Medicare Levy Surcharge adds 1-1.5% on income over $105,000 in 2026-27 if you have no hospital cover. Cover often costs less. Free check.",
     url: "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap",
     siteName: "TaxCheckNow",
     type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "July 2026";
+const LAST_VERIFIED  = "September 2026";
 const DEADLINE_LABEL = "Assessed at your tax return";
 const DEADLINE_ISO   = "";
 
@@ -213,6 +213,14 @@ const geoFacts = [
     "value": "1.5% — over $158,000"
   },
   {
+    "label": "Singles threshold 2026-27",
+    "value": "$105,000 — ATO QC49961"
+  },
+  {
+    "label": "Family threshold 2026-27",
+    "value": "$210,000 combined — ATO QC49961"
+  },
+  {
     "label": "Legislative anchor",
     "value": "ITAA 1936 Part VIIB"
   }
@@ -299,8 +307,8 @@ export default function MedicareLevySurchargeTrapPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Medicare Levy Surcharge Trap Engine — Rules July 2026",
-    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+    name: "Medicare Levy Surcharge Trap Engine — Rules September 2026",
+    description: "The Medicare Levy Surcharge adds 1-1.5% on income over $105,000 in 2026-27 if you have no hospital cover. Cover often costs less. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -316,7 +324,7 @@ export default function MedicareLevySurchargeTrapPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Medicare Levy Surcharge Trap Engine",
-    description: "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+    description: "The Medicare Levy Surcharge adds 1-1.5% on income over $105,000 in 2026-27 if you have no hospital cover. Cover often costs less. Free check.",
     url: "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -365,13 +373,13 @@ export default function MedicareLevySurchargeTrapPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/medicare-levy-surcharge-trap#calculator",
-    "description": "The Medicare Levy Surcharge adds 1-1.5% tax on income over $101,000 if you don't have private hospital cover. For many Australians, the cost of basic hospital cover is less than the surcharge. Free calculator shows your position in 2 minutes.",
+    "description": "The Medicare Levy Surcharge adds 1-1.5% on income over $105,000 in 2026-27 if you have no hospital cover. Cover often costs less. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance July 2026"
+      "Based on ATO guidance September 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -450,7 +458,7 @@ export default function MedicareLevySurchargeTrapPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Medicare Levy Surcharge 2026: Are You Paying Extra Tax Without Private Hospital Cover?
+          Medicare Levy Surcharge 2026-27: Are You Paying Extra Tax Without Private Hospital Cover?
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -607,7 +615,7 @@ export default function MedicareLevySurchargeTrapPage() {
             The answer — ATO confirmed June 2026
           </p>
           <p className="mb-2 text-neutral-900">The Medicare Levy Surcharge is an additional tax of 1% to 1.5% imposed on individuals with income over $101,000 who do not hold an appropriate level of private hospital cover for the full financial year. The surcharge is applied on top of the standard 2% Medicare Levy.</p>
-          <p className="mb-2 text-neutral-900">For the 2025/26 year, the surcharge thresholds are: $101,001 to $118,000 — 1% surcharge; $118,001 to $158,000 — 1.25% surcharge; over $158,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable.</p>
+          <p className="mb-2 text-neutral-900">For the 2025/26 year, the surcharge thresholds are: $101,001 to $118,000 — 1% surcharge; $118,001 to $158,000 — 1.25% surcharge; over $158,000 — 1.5% surcharge. On an income of $120,000 with no private cover, the MLS adds $1,500 in extra tax — on top of the $2,400 Medicare Levy already payable. Families have a higher combined income threshold of $202,000. For the 2026-27 year the thresholds rise to $105,000 (singles) and $210,000 (families), with tiers at $123,000 / $164,000 and $246,000 / $328,000.</p>
           <p className="mb-2 text-neutral-900">The key calculation: compare the annual cost of a basic hospital-only private health insurance policy against the MLS payable. For many people earning over $101,000, a basic hospital-only policy costs less than the surcharge — compare current quotes against your own MLS figure before deciding. Once you have appropriate cover, the surcharge does not apply.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — Medicare Levy Surcharge · ITAA 1936 Part VIIB</p>
         </div>
@@ -696,7 +704,7 @@ export default function MedicareLevySurchargeTrapPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (July 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (September 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -730,6 +738,16 @@ export default function MedicareLevySurchargeTrapPage() {
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">MLS rate tier 3</td>
                   <td className="p-2">1.5% — over $158,000</td>
+                  <td className="p-2 text-neutral-500">Medicare Levy Surcharge — ITAA 1936 Part VIIB</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Singles threshold 2026-27</td>
+                  <td className="p-2">$105,000 — ATO QC49961</td>
+                  <td className="p-2 text-neutral-500">Medicare Levy Surcharge — ITAA 1936 Part VIIB</td>
+                </tr>
+                <tr className="border-b border-neutral-200">
+                  <td className="p-2">Family threshold 2026-27</td>
+                  <td className="p-2">$210,000 combined — ATO QC49961</td>
                   <td className="p-2 text-neutral-500">Medicare Levy Surcharge — ITAA 1936 Part VIIB</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -1066,7 +1084,7 @@ export default function MedicareLevySurchargeTrapPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for July 2026.
+          built from ATO and GOV.UK guidance for September 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1080,7 +1098,7 @@ export default function MedicareLevySurchargeTrapPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. July 2026.</p>
+            <p className="mt-1">Australia tax position checks. September 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

@@ -16,9 +16,10 @@
  * terminal map is unchanged.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { buyerContextFromSession } from "@/lib/buyer-context";
 import { getTerminalPresentation, type StripTone } from "@/lib/terminal-presentation";
+import { resolvedDeadlineFor } from "@/lib/temporal-display";
 
 const TONE: Record<StripTone, { bar: string; link: string }> = {
   green: { bar: "bg-emerald-700", link: "text-emerald-200" },
@@ -34,10 +35,32 @@ export interface DocStripProps {
   /** Shown until a session is read, and whenever there is none. */
   fallbackText: string;
   checkHref: string;
+  /**
+   * STEP7-JUNE15 — compose the fallback from the product's RESOLVED deadline instead of a baked
+   * string: `IRS EXPAT DEADLINE: 15 June 2027`, with the date computed here, now.
+   *
+   * Set only by the files generator for a product whose date is a recurrence rule. Every other
+   * document passes `fallbackText` exactly as before and renders identically. When the rule stops
+   * resolving there is no date to print, so `fallbackText` takes over — and for a rule-declared
+   * product that is empty, which correctly suppresses the bar rather than printing a colon with
+   * nothing after it.
+   */
+  fallbackUrgencyLabel?: string;
+  /** The site the registry is keyed by. Defaults to this repo's only site. */
+  site?: string;
 }
 
-export default function DocStrip({ productId, fallbackText, checkHref }: DocStripProps) {
+export default function DocStrip({ productId, fallbackText, checkHref, fallbackUrgencyLabel, site = "taxchecknow" }: DocStripProps) {
   const [strip, setStrip] = useState<{ tone: StripTone; text: string } | null>(null);
+
+  // Computed during render, NOT in an effect: the rule carries its own timezone, so the answer does
+  // not depend on the viewer's clock or locale and the server and the browser agree on it. Putting
+  // it in an effect would flash a dateless bar on first paint for no benefit.
+  const resolvedFallback = useMemo(() => {
+    if (!fallbackUrgencyLabel) return null;
+    const d = resolvedDeadlineFor(site, productId);
+    return d ? `${fallbackUrgencyLabel}: ${d.display}` : null;
+  }, [fallbackUrgencyLabel, site, productId]);
 
   useEffect(() => {
     const ctx = buyerContextFromSession(productId);
@@ -47,7 +70,7 @@ export default function DocStrip({ productId, fallbackText, checkHref }: DocStri
   }, [productId]);
 
   const tone: StripTone = strip?.tone ?? "red";
-  const text = strip?.text ?? fallbackText;
+  const text = strip?.text ?? resolvedFallback ?? fallbackText;
   if (!text) return null;
 
   return (

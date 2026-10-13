@@ -10,12 +10,12 @@ import AllowanceSniperCalculator from "./AllowanceSniperCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "UK 60% Tax Trap 2026: Exact Exposure and Pension Escape | TaxCheckNow",
-  description: "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
+  title: "UK 60% Tax Trap 2026: Exposure and Pension Fix | TaxCheckNow",
+  description: "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/allowance-sniper" },
   openGraph: {
-    title: "UK 60% Tax Trap 2026: Exact Exposure and Pension Escape | TaxCheckNow",
-    description: "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
+    title: "UK 60% Tax Trap 2026: Exposure and Pension Fix | TaxCheckNow",
+    description: "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
     url: "https://taxchecknow.com/uk/check/allowance-sniper",
     siteName: "TaxCheckNow",
     type: "website",
@@ -28,12 +28,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "5 April 2027";
 const DEADLINE_ISO   = "2027-04-05T23:59:59.000+01:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -321,8 +324,13 @@ const countdownStats = [
 
 export default function AllowanceSniperPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "uk/check/allowance-sniper", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -339,7 +347,7 @@ export default function AllowanceSniperPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "60% Tax Trap Engine — Rules April 2026",
-    description: "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
+    description: "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -355,7 +363,7 @@ export default function AllowanceSniperPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "60% Tax Trap Engine",
-    description: "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
+    description: "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
     url: "https://taxchecknow.com/uk/check/allowance-sniper",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -404,7 +412,7 @@ export default function AllowanceSniperPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/allowance-sniper#calculator",
-    "description": "UK earners between £100,000 and £125,140 face a 60% effective marginal tax rate because the personal allowance is withdrawn at £1 for every £2 earned. A pension contribution can restore it entirely. Run your exact trap audit in 2 minutes.",
+    "description": "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -435,6 +443,18 @@ export default function AllowanceSniperPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What is the UK 60% tax trap? The truth HMRC won't simplify",
+    description: "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
+    thumbnailUrl: "https://i.ytimg.com/vi/PZbAbPHCZHY/hqdefault.jpg",
+    uploadDate: "2026-06-13T11:00:12.318+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=PZbAbPHCZHY",
+    embedUrl: "https://www.youtube.com/embed/PZbAbPHCZHY",
+    transcript: "What is the UK 60% tax trap? Sound like your situation? Here's the actual truth. Between £100,000 and £125,140, HMRC withdraws £1 of your personal allowance for every £2 you earn. That means 40% income tax plus a 20% allowance cost — 60% effective marginal rate. ChatGPT says UK tax rates are 20%, 40%, and 45% — there is no 60% rate. That's wrong. The 60% is real arithmetic, confirmed by HMRC. Get it wrong and you hand over 60p of every extra pound earned in that band. Pension contributions can pull your income below £100,000 and restore your full £12,570 allowance — but only before 5 April. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -444,6 +464,7 @@ export default function AllowanceSniperPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -489,7 +510,7 @@ export default function AllowanceSniperPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          UK Earners Between £100,000 and £125,140 Face a 60% Tax Rate — Here Is Exactly What It Is Costing You
+          UK 60% Tax Trap 2026: Exact Exposure and How to Escape
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -1146,6 +1167,15 @@ export default function AllowanceSniperPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=PZbAbPHCZHY" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"What is the UK 60% tax trap? Sound like your situation? Here's the actual truth. Between £100,000 and £125,140, HMRC withdraws £1 of your personal allowance for every £2 you earn. That means 40% income tax plus a 20% allowance cost — 60% effective marginal rate. ChatGPT says UK tax rates are 20%, 40%, and 45% — there is no 60% rate. That's wrong. The 60% is real arithmetic, confirmed by HMRC. Get it wrong and you hand over 60p of every extra pound earned in that band. Pension contributions can pull your income below £100,000 and restore your full £12,570 allowance — but only before 5 April. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}

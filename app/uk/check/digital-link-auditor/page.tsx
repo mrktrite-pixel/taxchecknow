@@ -10,12 +10,12 @@ import DigitalLinkAuditorCalculator from "./DigitalLinkAuditorCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "MTD Digital Link Audit 2026: Find Your Chain Break | TaxCheckNow",
-  description: "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
+  title: "MTD Digital Link Audit 2026: Find Chain Breaks | TaxCheckNow",
+  description: "Manual copy-paste breaks your MTD chain. From 6 April 2026 you must meet SI 2021/1076. Find every gap in 2 minutes. Free check.",
   alternates: { canonical: "https://taxchecknow.com/uk/check/digital-link-auditor" },
   openGraph: {
-    title: "MTD Digital Link Audit 2026: Find Your Chain Break | TaxCheckNow",
-    description: "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
+    title: "MTD Digital Link Audit 2026: Find Chain Breaks | TaxCheckNow",
+    description: "Manual copy-paste breaks your MTD chain. From 6 April 2026 you must meet SI 2021/1076. Find every gap in 2 minutes. Free check.",
     url: "https://taxchecknow.com/uk/check/digital-link-auditor",
     siteName: "TaxCheckNow",
     type: "website",
@@ -28,12 +28,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "6 April 2026";
 const DEADLINE_ISO   = "2026-04-06T00:00:00.000+01:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -333,8 +336,13 @@ const countdownStats = [
 
 export default function DigitalLinkAuditorPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "uk/check/digital-link-auditor", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -351,7 +359,7 @@ export default function DigitalLinkAuditorPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "MTD Digital Link Compliance Engine — Rules April 2026",
-    description: "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
+    description: "Manual copy-paste breaks your MTD chain. From 6 April 2026 you must meet SI 2021/1076. Find every gap in 2 minutes. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -367,7 +375,7 @@ export default function DigitalLinkAuditorPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "MTD Digital Link Compliance Engine",
-    description: "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
+    description: "Manual copy-paste breaks your MTD chain. From 6 April 2026 you must meet SI 2021/1076. Find every gap in 2 minutes. Free check.",
     url: "https://taxchecknow.com/uk/check/digital-link-auditor",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -416,7 +424,7 @@ export default function DigitalLinkAuditorPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/uk/check/digital-link-auditor#calculator",
-    "description": "Under MTD, data must flow digitally from first record to final submission — any manual copy/paste breaks the chain and makes your submission non-compliant. Audit your MTD process in 2 minutes against HMRC SI 2021/1076.",
+    "description": "Manual copy-paste breaks your MTD chain. From 6 April 2026 you must meet SI 2021/1076. Find every gap in 2 minutes. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -447,6 +455,18 @@ export default function DigitalLinkAuditorPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What is a digital link under MTD? (£4,400 risk)",
+    description: "Manual copy-paste breaks your MTD chain. From 6 April 2026 you must meet SI 2021/1076. Find every gap in 2 minutes. Free check.",
+    thumbnailUrl: "https://i.ytimg.com/vi/owKfzIO9uzw/hqdefault.jpg",
+    uploadDate: "2026-06-18T01:00:47.622+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=owKfzIO9uzw",
+    embedUrl: "https://www.youtube.com/embed/owKfzIO9uzw",
+    transcript: "\"What is a digital link under MTD?\" Sound like your question? The actual truth is: it means every step from your first record to final submission must be automated — no manual copy-paste, anywhere. HMRC says one manual step breaks the whole chain, even if you submit through approved software. Get it wrong and each rejected quarter costs up to £1,100 — up to £4,400 a year. Income over £50,000 is mandated from 6 April 2026. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -456,6 +476,7 @@ export default function DigitalLinkAuditorPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -501,7 +522,7 @@ export default function DigitalLinkAuditorPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          MTD Requires a Complete Digital Audit Trail — Not Just Digital Filing. Here Is Where Your Process Breaks the Rules.
+          MTD Digital Link Audit: Find Your Chain Break
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -1170,6 +1191,15 @@ export default function DigitalLinkAuditorPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=owKfzIO9uzw" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"\"What is a digital link under MTD?\" Sound like your question? The actual truth is: it means every step from your first record to final submission must be automated — no manual copy-paste, anywhere. HMRC says one manual step breaks the whole chain, even if you submit through approved software. Get it wrong and each rejected quarter costs up to £1,100 — up to £4,400 a year. Income over £50,000 is mandated from 6 April 2026. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}

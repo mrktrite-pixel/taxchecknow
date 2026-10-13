@@ -11,6 +11,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "superannuation-tax-leaving-australia-confusion-2026";
+const SESSION_KEY = "superannuation-tax-leaving-australia-confusion-2026";
 const SLUG = "dasp-01";
 const FALLBACK_LABEL = { name: "Your DASP Tax Position", desc: "Your withholding rate by visa class and component (taxed vs untaxed element)." };
 const BODY = `<h2>Your DASP Withholding Position</h2><div class='action-box'><h3>Rates by visa class and component</h3><p>Working holiday maker (subclass 417/462): taxed element 65%, untaxed element 65%.</p><p>Other temporary visas (student, skilled, sponsored): taxed element 35%, untaxed element 45%.</p><p>Tax-free component: 0%.</p></div><h3>What this means for you</h3><p>Your DASP is withheld at the time of payment based on your visa class and how your balance splits between taxed and untaxed elements. Confirm which components make up your balance before you claim.</p><p>Source: <a href='https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/temporary-residents-and-superannuation/departing-australia-superannuation-payment-dasp'>ATO — Departing Australia Superannuation Payment</a> · Migration Act 1958.</p>`;
@@ -26,7 +27,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File01() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -106,7 +107,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File01() {
               🇦🇺 ATO · DASP
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: July 2026
+              Last verified: September 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 01 of 8
@@ -226,7 +227,7 @@ export default function SuperannuationTaxLeavingAustraliaConfusion2026File01() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance July 2026.
+            Based on ATO guidance September 2026.
           </p>
         </div>
 

@@ -63,10 +63,28 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   nomad_147_183_day_rule: "STRIPE_NOMAD_183_147",
   nomad_67_spain_beckham:  "STRIPE_NOMAD_BECK_67",
   nomad_147_spain_beckham: "STRIPE_NOMAD_BECK_147",
+  // NOMAD-09 au-smsf-residency (engine-native) — registered so a PREVIEW buy resolves
+  // STRIPE_AU_TEST_<tier> instead of the LIVE price under the test secret key. PRODUCTION IS
+  // UNCHANGED: these are the SAME vars the includes("au_smsf") chain block below already returns.
+  // F71: the keys are the CONFIG'S DECLARED pair (tier1/tier2.productKey), not derived from the
+  // slug — the mount step's derived nomad_147_australia_smsf_residency matched nothing here and
+  // 500'd every buy on the branch preview.
+  nomad_67_au_smsf:  "STRIPE_NOMAD_SMSF_67",
+  nomad_147_au_smsf: "STRIPE_NOMAD_SMSF_147",
   // UK-01 mtd-scorecard (engine-native, PANELBEAT migration) — registered per
   // OPERATOR-MANUAL §N4.3 so a preview buy falls back to STRIPE_AU_TEST_<tier> instead of
   // resolving the LIVE price under the test key. PRODUCTION IS UNCHANGED: these are the SAME
   // env vars the includes()-chain uk block already returns (STRIPE_UK_MTD_67/147).
+  // NOMAD-08 us-expat-tax (engine-native, F29) - registered per OPERATOR-MANUAL N4.3 so a preview
+  // buy falls back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: these are the SAME env vars the includes()-chain nomad us_expat_tax
+  // block below already returns (STRIPE_NOMAD_USET_67/147, route.ts:188-190 pre-edit). The registry
+  // value must stay the PRODUCTION var: getPriceId substitutes STRIPE_AU_TEST_<tier> itself when
+  // isPreview(), so mapping the value to the test var would hand production the sandbox price.
+  // Keys read off the wrapper's own emitter, UsExpatTaxCalculator.tsx:126
+  // (`nomad_${c.tier}_us_expat_tax`), not inferred from the slug.
+  nomad_67_us_expat_tax:  "STRIPE_NOMAD_USET_67",
+  nomad_147_us_expat_tax: "STRIPE_NOMAD_USET_147",
   uk_67_mtd_scorecard:  "STRIPE_UK_MTD_67",
   uk_147_mtd_scorecard: "STRIPE_UK_MTD_147",
   // NOMAD-02 tax-treaty-navigator (M4, ruled 2026-10-13). NOT an engine-native migration - this

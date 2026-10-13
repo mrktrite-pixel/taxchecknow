@@ -92,6 +92,32 @@ export function corpusWriteDecision(config: ProductConfig): CorpusDecision {
 
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 
+/**
+ * The recurrence a rule-declared product publishes instead of a date, or null.
+ *
+ * Emitted from the config's OWN `temporal` declaration, so the corpus cannot disagree with the
+ * gate page, the success pages or the email scheduler — all four now read one declaration.
+ * `basis` travels with it: a grounded model quoting a due date should be able to cite where it
+ * came from, and a corpus that states a date without provenance invites the model to invent one.
+ */
+function deadlineRecurrence(config: ProductConfig): Record<string, unknown> | null {
+  const t = config.temporal;
+  if (!t || t.kind !== "deadline") return null;
+  const r = t.rule as unknown as Record<string, unknown>;
+  if (r.source !== "fixed") return null;
+  return {
+    recurrence: {
+      kind:      r.recurrence,
+      month:     r.month,
+      day:       r.day,
+      timezone:  r.timezone,
+      shift:     r.shift,
+      ...(t.label ? { label: t.label } : {}),
+      ...(t.basis ? { basis: t.basis } : {}),
+    },
+  };
+}
+
 export function generateRulesRoute(config: ProductConfig): string {
   // Abort rows fire here too, so a caller that bypasses cole-generate still cannot
   // produce output destined to overwrite an authored corpus. A "skip" decision is
@@ -142,11 +168,26 @@ function buildRulesPayload(config: ProductConfig): object {
     legal_anchor:     config.legalAnchor,
 
     // ── DEADLINE ───────────────────────────────────────────────────────────────
+    //
+    // A RULE-DECLARED PRODUCT PUBLISHES THE RULE, NOT A RESOLVED DATE — and this is the one
+    // surface where that distinction is forced rather than chosen.
+    //
+    // This route is the CORPUS: /api/assess fetches it to ground a paid assessment, and
+    // ship-check compares the literal in this file against the body the deployment serves
+    // (lib/ship/corpus-parity.ts extracts `const rules = {`). Resolving the date at request time
+    // would make the served body differ from the source literal every day, so corpus parity would
+    // report DRIFT for a product that had not changed. Static it must be.
+    //
+    // Which leaves two static options, and only one of them is true: a stored instant that goes
+    // wrong on a known date, or the recurrence itself. The rule is strictly more informative — a
+    // model grounded on "31 October each year, next business day if it lands on a weekend" can
+    // state the right date for any year, which a baked "31 October 2026" cannot.
     deadline: {
       iso_date:      config.deadline.isoDate,
       display:       config.deadline.display,
       description:   config.deadline.description,
       urgency_label: config.deadline.urgencyLabel,
+      ...(deadlineRecurrence(config) ?? {}),
     },
 
     // ── KEY FACTS (GEO extraction table) ──────────────────────────────────────

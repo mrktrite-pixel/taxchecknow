@@ -10,12 +10,12 @@ import Day183RuleCalculator from "./Day183RuleCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "183-Day Rule and the U.S. Substantial Presence Test — Does Under 183 Days Make You a Non-Resident? | TaxCheckNow",
-  description: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
+  title: "183-Day Rule: U.S. Substantial Presence Test Check | TaxCheckNow",
+  description: "Under 183 days does not make you a U.S. non-resident. The IRS test needs 31 days this year plus 183 weighted days over three years. Free check.",
   alternates: { canonical: "https://taxchecknow.com/nomad/check/183-day-rule" },
   openGraph: {
-    title: "183-Day Rule and the U.S. Substantial Presence Test — Does Under 183 Days Make You a Non-Resident? | TaxCheckNow",
-    description: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
+    title: "183-Day Rule: U.S. Substantial Presence Test Check | TaxCheckNow",
+    description: "Under 183 days does not make you a U.S. non-resident. The IRS test needs 31 days this year plus 183 weighted days over three years. Free check.",
     url: "https://taxchecknow.com/nomad/check/183-day-rule",
     siteName: "TaxCheckNow",
     type: "website",
@@ -386,7 +386,7 @@ export default function Day183RulePage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "183-Day Rule Reality Check — Rules August 2026",
-    description: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
+    description: "Under 183 days does not make you a U.S. non-resident. The IRS test needs 31 days this year plus 183 weighted days over three years. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -402,7 +402,7 @@ export default function Day183RulePage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "183-Day Rule Reality Check",
-    description: "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
+    description: "Under 183 days does not make you a U.S. non-resident. The IRS test needs 31 days this year plus 183 weighted days over three years. Free check.",
     url: "https://taxchecknow.com/nomad/check/183-day-rule",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -456,7 +456,7 @@ export default function Day183RulePage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nomad/check/183-day-rule#calculator",
-    "description": "The U.S. Substantial Presence Test does not count one year of days. It counts 31 days in the current year plus a weighted three-year total of 183 — all of this year, a third of last year, a sixth of the year before. Some days do not count at all. Free checker shows where you land. Other countries apply their own tests, which differ.",
+    "description": "Under 183 days does not make you a U.S. non-resident. The IRS test needs 31 days this year plus 183 weighted days over three years. Free check.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
