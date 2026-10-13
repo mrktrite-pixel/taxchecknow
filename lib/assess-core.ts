@@ -224,6 +224,35 @@ export function looksLikeProtectionLoop(err: unknown): boolean {
   return /redirect count exceeded|too many redirects|sso-api|vercel\.com\/sso/i.test(text);
 }
 
+/**
+ * F103 — DIAGNOSTIC. What the deployment is ACTUALLY about to put on the wire.
+ *
+ * Five rounds of "IS set and was sent, and Vercel rejected it" have not said WHICH value was sent,
+ * and the same URL answers 200 to a caller presenting XS3I…p1cf. Every other explanation is ruled
+ * out (fresh build, right host, trimming, the secret being valid), so the remaining question is
+ * purely: what does THIS deployment hold, byte-shape-wise?
+ *
+ * FINGERPRINT ONLY, NEVER THE SECRET. Length, first4, last4, and the shape facts that catch the
+ * things a fingerprint comparison would miss — surrounding quotes, internal whitespace, a
+ * non-alphanumeric character. A value stored in Vercel as "XS3I…p1cf" WITH QUOTES would be 34
+ * characters starting '"XS3', and that would be invisible in any length-only check.
+ */
+export function secretShape(raw: string | undefined): string {
+  if (raw === undefined) return "ABSENT (undefined)";
+  if (raw === "") return "EMPTY STRING";
+  const t = raw.trim();
+  const bits = [
+    `rawLen=${raw.length}`,
+    `trimmedLen=${t.length}`,
+    t.length >= 8 ? `first4=${t.slice(0, 4)} last4=${t.slice(-4)}` : `tooShortToFingerprint`,
+    `alnum=${/^[A-Za-z0-9]+$/.test(t)}`,
+  ];
+  if (raw !== t) bits.push(`SURROUNDING_WHITESPACE codes=[${[...raw].filter((c) => c.trim() === "").map((c) => c.charCodeAt(0)).join(",")}]`);
+  if (/^["']|["']$/.test(t)) bits.push("QUOTED — the stored value carries quote characters");
+  if (/\s/.test(t)) bits.push("INTERNAL_WHITESPACE");
+  return bits.join(" · ");
+}
+
 export function corpusFetchHeaders(target: CorpusOrigin, env: Record<string, string | undefined> = process.env): Record<string, string> {
   const headers: Record<string, string> = { accept: "application/json" };
   const secret = env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
@@ -300,10 +329,45 @@ export async function generateAssessment(input: AssessInput): Promise<AssessResu
     // exceeded": Vercel sends an unauthenticated request to its login, which redirects again. Manual
     // turns that into ONE 3xx response, which lands in the branch below that already knows how to
     // explain protection — instead of an opaque throw.
-    const cr = await fetch(corpusUrl, {
-      headers: corpusFetchHeaders(corpusTarget),
+    // ── F103 DIAGNOSTIC ─────────────────────────────────────────────────────
+    // Built from the SAME headers object that goes on the wire, not from env a second time, so
+    // what is logged is what is sent.
+    const corpusHeaders = corpusFetchHeaders(corpusTarget);
+    const fetchOpts = {
+      headers: corpusHeaders,
       ...(corpusTarget.isSelf ? { redirect: "manual" as const } : {}),
-    });
+    };
+    const sentBypass = corpusHeaders["x-vercel-protection-bypass"];
+    console.log(
+      `[assess-core] F103 pre-fetch` +
+      ` url=${corpusUrl}` +
+      ` isSelf=${corpusTarget.isSelf} source=${corpusTarget.source}` +
+      ` headerNames=[${Object.keys(corpusHeaders).join(",")}]` +
+      ` redirect=${"redirect" in fetchOpts ? fetchOpts.redirect : "(default: follow)"}` +
+      ` cache=(not set) next=(not set)` +
+      ` bypassHeaderPresent=${Boolean(sentBypass)}` +
+      ` sentSecret{${sentBypass === undefined ? "NOT SENT" : secretShape(sentBypass)}}` +
+      ` envSecret{${secretShape(process.env.VERCEL_AUTOMATION_BYPASS_SECRET)}}`,
+    );
+    const cr = await fetch(corpusUrl, fetchOpts);
+    // ── F103 DIAGNOSTIC: what came back ─────────────────────────────────────────
+    // location is the one that names the wall: a redirect to vercel.com/sso-api is protection.
+    // Cookie NAMES only — _vercel_sso_nonce vs _vercel_jwt says which stage rejected us.
+    {
+      const cookieNames = (typeof (cr.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie === "function"
+        ? (cr.headers as unknown as { getSetCookie: () => string[] }).getSetCookie()
+        : [cr.headers.get("set-cookie") ?? ""].filter(Boolean)
+      ).map((c) => c.split("=")[0].trim());
+      console.log(
+        `[assess-core] F103 post-fetch` +
+        ` status=${cr.status}` +
+        ` location=${cr.headers.get("location") ?? "(none)"}` +
+        ` x-vercel-id=${cr.headers.get("x-vercel-id") ?? "(none)"}` +
+        ` x-vercel-error=${cr.headers.get("x-vercel-error") ?? "(none)"}` +
+        ` www-authenticate=${cr.headers.get("www-authenticate") ?? "(none)"}` +
+        ` setCookieNames=[${cookieNames.join(",")}]`,
+      );
+    }
     if (!cr.ok) {
       // READ THE BODY BEFORE DECIDING. A 401 from a protected preview and a 401 from the route
       // itself are different facts, and only the body separates them.
