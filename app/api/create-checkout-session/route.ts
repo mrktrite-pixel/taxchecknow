@@ -69,6 +69,18 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // env vars the includes()-chain uk block already returns (STRIPE_UK_MTD_67/147).
   uk_67_mtd_scorecard:  "STRIPE_UK_MTD_67",
   uk_147_mtd_scorecard: "STRIPE_UK_MTD_147",
+  // NOMAD-02 tax-treaty-navigator (M4, ruled 2026-10-13). NOT an engine-native migration - this
+  // product KEEPS its bespoke GateTest calculator, and the ruling is that it stays live as it is.
+  // It is registered anyway, for the reason the registry exists: a key that is only in the
+  // includes()-chain resolves the LIVE price on a branch preview, which runs the TEST secret key,
+  // and 500s. That is exactly what step 4 run #4 hit -
+  //   [test-delivery] REFUSED - productKey nomad_67_tax_treaty_navigator not in PRICE_ENV_REGISTRY
+  // PRODUCTION IS BYTE-FOR-BYTE UNCHANGED: these are the SAME two env vars the nomad tax_treaty
+  // block in the includes()-chain below already returns (STRIPE_NOMAD_TTN_67/147), so off-preview
+  // the registry short-circuits to the identical answer. What it ADDS is the preview fallback the
+  // chain lacks. The chain block is now dead for these two keys and is left in place.
+  nomad_67_tax_treaty_navigator:  "STRIPE_NOMAD_TTN_67",
+  nomad_147_tax_treaty_navigator: "STRIPE_NOMAD_TTN_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {
