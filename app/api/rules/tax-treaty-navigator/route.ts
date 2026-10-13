@@ -207,7 +207,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/tax-treaty-navigator",
     "api_endpoint": "/api/rules/tax-treaty-navigator",
-    "generated_at": "2026-04-23T08:20:10.549Z"
+    "generated_at": "2026-10-13T23:11:48.242Z"
 };
 
   return NextResponse.json(rules, {
