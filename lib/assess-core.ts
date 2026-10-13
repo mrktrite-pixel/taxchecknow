@@ -228,13 +228,18 @@ export function looksLikeProtectionLoop(err: unknown): boolean {
  * F103 — DIAGNOSTIC. What the deployment is ACTUALLY about to put on the wire.
  *
  * Five rounds of "IS set and was sent, and Vercel rejected it" have not said WHICH value was sent,
- * and the same URL answers 200 to a caller presenting XS3I…p1cf. Every other explanation is ruled
+ * and the same URL answers 200 to a caller presenting the project's bypass secret. Every other
  * out (fresh build, right host, trimming, the secret being valid), so the remaining question is
  * purely: what does THIS deployment hold, byte-shape-wise?
  *
+ * ⚠ REMOVE THIS BLOCK WHEN THE BYPASS QUESTION IS SETTLED. first4/last4 is 8 characters of a LIVE
+ * credential written into Vercel's function logs, which is proportionate for a named diagnostic and
+ * is not something to leave running. It is also why the live value is not repeated in these
+ * comments: a fingerprint in a transient log is time-boxed, one in committed source is forever.
+ *
  * FINGERPRINT ONLY, NEVER THE SECRET. Length, first4, last4, and the shape facts that catch the
  * things a fingerprint comparison would miss — surrounding quotes, internal whitespace, a
- * non-alphanumeric character. A value stored in Vercel as "XS3I…p1cf" WITH QUOTES would be 34
+ * non-alphanumeric character. A 32-character secret stored WITH SURROUNDING QUOTES would be 34
  * characters starting '"XS3', and that would be invisible in any length-only check.
  */
 export function secretShape(raw: string | undefined): string {
