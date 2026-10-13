@@ -8,7 +8,7 @@
 // 2026-09-27, when production served the stale FEIE limit $126,500 seven times and a regeneration
 // wrote it into a fresh pack with every local check passing.
 
-import { resolveCorpusOrigin, corpusFetchHeaders, protectedResponse, looksLikeProtectionLoop } from "../assess-core.js";
+import { resolveCorpusOrigin, corpusFetchHeaders, protectedResponse, looksLikeProtectionLoop, selfFetchIsProtection, protectionDetail } from "../assess-core.js";
 
 let failed = 0;
 function check(name: string, got: unknown, want: unknown): void {
@@ -65,7 +65,10 @@ console.log("\n-- the bypass secret goes ONLY to our own origin ----------------
   const self = resolveCorpusOrigin({ VERCEL_ENV: "preview", VERCEL_URL: "x.vercel.app" });
   const h = corpusFetchHeaders(self, { VERCEL_AUTOMATION_BYPASS_SECRET: "s3cr3t" });
   check("sent for a self origin", h["x-vercel-protection-bypass"], "s3cr3t");
-  check("  with the cookie hint, for redirect hops", h["x-vercel-set-bypass-cookie"], "samesitenone");
+  // WAS: check("with the cookie hint, for redirect hops", h["x-vercel-set-bypass-cookie"], "samesitenone")
+  // That assertion pinned the bug. Asking Vercel for the bypass COOKIE is what created the redirect
+  // hop its comment claimed to be surviving — see the F104 block at the end of this file.
+  check("  and NO cookie-handshake header", "x-vercel-set-bypass-cookie" in h, false);
   check("  accept is still there", h.accept, "application/json");
 
   const pub = resolveCorpusOrigin({ NEXT_PUBLIC_SITE_URL: "https://taxchecknow.com" });
@@ -113,6 +116,50 @@ console.log("\n-- and from a thrown redirect loop, which is the same wall ------
   check("a DNS failure is not either", looksLikeProtectionLoop(new Error("getaddrinfo ENOTFOUND")), false);
   check("a non-Error does not throw the detector", looksLikeProtectionLoop("redirect count exceeded"), true);
   check("null is safe", looksLikeProtectionLoop(null), false);
+}
+
+console.log("\n-- F104: the bypass header goes ALONE ------------------------------------------");
+{
+  const self = resolveCorpusOrigin({ VERCEL_ENV: "preview", VERCEL_URL: "taxchecknow-hh29i88n2-x.vercel.app" });
+  const h = corpusFetchHeaders(self, { VERCEL_AUTOMATION_BYPASS_SECRET: "s".repeat(32) });
+  // THE REGRESSION THIS PINS, measured 2026-10-13 on one URL in one minute:
+  //   bypass header only                 200, zero redirects
+  //   bypass header + set-bypass-cookie  307 + Set-Cookie _vercel_jwt, Location = the same path
+  //   the latter, following redirects    307 after 5 hops ("redirect count exceeded")
+  check("the cookie-handshake header is NOT sent", "x-vercel-set-bypass-cookie" in h, false);
+  check("  the bypass header still is", h["x-vercel-protection-bypass"], "s".repeat(32));
+  check("  exactly two headers go out", Object.keys(h).sort(), ["accept", "x-vercel-protection-bypass"]);
+}
+
+console.log("\n-- F104: an ON-ORIGIN 3xx is NOT protection -------------------------------------");
+{
+  const U = "https://taxchecknow-hh29i88n2-x.vercel.app/api/rules/australia-smsf-residency";
+  const P = (status: number, location: string | null, isSelf = true): boolean =>
+    selfFetchIsProtection({ isSelf, status, location, corpusUrl: U });
+  // THE EXACT RESPONSE misread for six days: 307 back to the same relative path.
+  check("307 to the SAME relative path is NOT protection", P(307, "/api/rules/australia-smsf-residency"), false);
+  check("307 to the same ABSOLUTE origin is NOT protection", P(307, U), false);
+  check("302 on-origin is NOT protection", P(302, "/anything"), false);
+  check("a 3xx with NO Location is NOT protection", P(307, null), false);
+  // AND THE WALL IS STILL THE WALL.
+  check("307 to vercel.com/sso-api IS protection", P(307, "https://vercel.com/sso-api?url=x&nonce=y"), true);
+  check("401 IS protection", P(401, null), true);
+  check("403 IS protection", P(403, null), true);
+  check("an unparseable absolute Location is not waved through", P(307, "https://"), true);
+  check("a non-self fetch is never protection here", P(401, null, false), false);
+  check("200 / 404 / 500 are not protection", [P(200, null), P(404, null), P(500, null)], [false, false, false]);
+}
+
+console.log("\n-- F104: the message no longer speculates about the secret ----------------------");
+{
+  const d = protectionDetail("https://x.vercel.app/api/rules/y", { VERCEL_AUTOMATION_BYPASS_SECRET: "s".repeat(32) });
+  check("it says the self-fetch was redirected", /the self-fetch was redirected/.test(d), true);
+  check("  and names what to look at", /cookie-handshake header or an off-origin Location/.test(d), true);
+  check("  it does NOT say regenerate", /regenerate/i.test(d), false);
+  check("  it does NOT say redeploy", /redeploy/i.test(d), false);
+  check("  the secret is reported, not blamed", /is set and was sent/.test(d), true);
+  check("absent secret still reported as absent",
+    /is NOT set in this deployment/.test(protectionDetail("https://x.vercel.app/api/rules/y", {})), true);
 }
 
 console.log(`\n${failed === 0 ? "ALL PASS" : `${failed} FAILED`}\n`);

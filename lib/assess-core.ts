@@ -192,23 +192,22 @@ export function protectedResponse(status: number, body: string): boolean {
 
 export function protectionDetail(corpusUrl: string, env: Record<string, string | undefined> = process.env): string {
   const secret = env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
+  // ⚠ THIS SENTENCE HAS BEEN WRONG TWICE, AND EACH TIME IT SENT THE FIX SOMEWHERE ELSE.
+  //   v1 "…was rejected — regenerate it"  -> regenerating also invalidates the Stripe endpoint
+  //        URL's ?x-vercel-protection-bypass= token, so inbound deliveries start 401ing at the
+  //        edge where they leave no function logs. Two rounds lost.
+  //   v2 "…built before the variable was corrected, REDEPLOY first" -> five redeploys, all fine,
+  //        none of it the cause.
+  // The actual cause both times was a REDIRECT the deployment asked for and could not complete.
+  // So this no longer speculates about the secret: it names what was observed and what to look at.
   return (
-    `${corpusUrl} could not be read from the deployment itself: the request was redirected to ` +
-    `Vercel's login (a redirect loop), which is what Deployment Protection does to an unauthenticated ` +
-    // "SET BUT REJECTED" ALMOST ALWAYS MEANS A STALE BAKED VALUE, NOT A BAD SECRET.
-    //
-    // This sentence used to end "— regenerate it", and that advice misdirected the fix TWICE on
-    // 2026-10-07. A deployment's env is fixed at build time, so correcting the project variable
-    // does nothing for a deployment already running; what it needs is a REDEPLOY. And regenerating
-    // is actively harmful here: the same secret is embedded in the Stripe webhook endpoint's
-    // ?x-vercel-protection-bypass= query token, so regenerating silently breaks INBOUND delivery
-    // too — which is exactly what happened, costing two round-trips with no events arriving at all.
-    //
-    // The ordering below is the cheap-and-likely-first rule: redeploy, verify, and only then
-    // consider regenerating — with the Stripe URL updated in the same move.
-    `request. VERCEL_AUTOMATION_BYPASS_SECRET ${secret ? "IS set and was sent, and Vercel rejected it — which usually means THIS DEPLOYMENT WAS BUILT BEFORE the variable was corrected, because a deployment's env is baked at build time. REDEPLOY and retry first. Only if a fresh deployment still fails is the secret itself wrong, and if you regenerate it you must also update the Stripe webhook endpoint URL's ?x-vercel-protection-bypass= token, which carries the same value" : "is NOT set in this deployment, which is what Vercel populates when Protection Bypass for Automation is enabled"}. ` +
-    `Until that is on, a protected preview cannot ground on its own corpus and every paid assessment ` +
-    `on it fails closed.`
+    `${corpusUrl} could not be read from the deployment itself: the self-fetch was redirected — ` +
+    `check for a cookie-handshake header or an off-origin Location. A 3xx whose Location is ` +
+    `vercel.com/sso-api is Deployment Protection; a 3xx back to the SAME origin, with ` +
+    `Set-Cookie: _vercel_jwt, is Vercel ACCEPTING the bypass and expecting a cookie round-trip that ` +
+    `a server-side fetch cannot make. ` +
+    `VERCEL_AUTOMATION_BYPASS_SECRET ${secret ? "is set and was sent" : "is NOT set in this deployment"}. ` +
+    `Read the Location and Set-Cookie headers before changing any secret, env var or deployment.`
   );
 }
 
@@ -225,47 +224,61 @@ export function looksLikeProtectionLoop(err: unknown): boolean {
 }
 
 /**
- * F103 — DIAGNOSTIC. What the deployment is ACTUALLY about to put on the wire.
+ * Is THIS response the protection wall, for a self-origin fetch?
  *
- * Five rounds of "IS set and was sent, and Vercel rejected it" have not said WHICH value was sent,
- * and the same URL answers 200 to a caller presenting the project's bypass secret. Every other
- * out (fresh build, right host, trimming, the secret being valid), so the remaining question is
- * purely: what does THIS deployment hold, byte-shape-wise?
+ * Extracted from generateAssessment so the on-origin rule can be pinned by a test — it was inline,
+ * and inline is how it stayed wrong for six days.
  *
- * ⚠ REMOVE THIS BLOCK WHEN THE BYPASS QUESTION IS SETTLED. first4/last4 is 8 characters of a LIVE
- * credential written into Vercel's function logs, which is proportionate for a named diagnostic and
- * is not something to leave running. It is also why the live value is not repeated in these
- * comments: a fingerprint in a transient log is time-boxed, one in committed source is forever.
- *
- * FINGERPRINT ONLY, NEVER THE SECRET. Length, first4, last4, and the shape facts that catch the
- * things a fingerprint comparison would miss — surrounding quotes, internal whitespace, a
- * non-alphanumeric character. A 32-character secret stored WITH SURROUNDING QUOTES would be 34
- * characters starting '"XS3', and that would be invisible in any length-only check.
+ * 401/403            -> the wall.
+ * 3xx OFF-ORIGIN     -> the wall (Location: vercel.com/sso-api).
+ * 3xx ON-ORIGIN      -> NOT the wall. Vercel accepted the bypass, issued Set-Cookie _vercel_jwt and
+ *                       redirected back to the same path for a cookie round-trip. Reading this as
+ *                       protection is the bug this function exists to prevent recurring.
+ * relative Location  -> on-origin by definition.
  */
-export function secretShape(raw: string | undefined): string {
-  if (raw === undefined) return "ABSENT (undefined)";
-  if (raw === "") return "EMPTY STRING";
-  const t = raw.trim();
-  const bits = [
-    `rawLen=${raw.length}`,
-    `trimmedLen=${t.length}`,
-    t.length >= 8 ? `first4=${t.slice(0, 4)} last4=${t.slice(-4)}` : `tooShortToFingerprint`,
-    `alnum=${/^[A-Za-z0-9]+$/.test(t)}`,
-  ];
-  if (raw !== t) bits.push(`SURROUNDING_WHITESPACE codes=[${[...raw].filter((c) => c.trim() === "").map((c) => c.charCodeAt(0)).join(",")}]`);
-  if (/^["']|["']$/.test(t)) bits.push("QUOTED — the stored value carries quote characters");
-  if (/\s/.test(t)) bits.push("INTERNAL_WHITESPACE");
-  return bits.join(" · ");
+export function selfFetchIsProtection(args: {
+  isSelf: boolean;
+  status: number;
+  location: string | null;
+  corpusUrl: string;
+}): boolean {
+  if (!args.isSelf) return false;
+  if (args.status === 401 || args.status === 403) return true;
+  if (args.status < 300 || args.status >= 400) return false;
+  const loc = args.location ?? "";
+  if (!loc) return false;
+  // A relative Location cannot leave the origin.
+  if (!/^https?:\/\//i.test(loc)) return false;
+  try {
+    return new URL(loc).origin !== new URL(args.corpusUrl).origin;
+  } catch {
+    // An unparseable absolute Location is not something to wave through.
+    return true;
+  }
 }
 
 export function corpusFetchHeaders(target: CorpusOrigin, env: Record<string, string | undefined> = process.env): Record<string, string> {
   const headers: Record<string, string> = { accept: "application/json" };
   const secret = env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
   if (target.isSelf && secret) {
+    // THE BYPASS HEADER ALONE, AND NOTHING ELSE.
+    //
+    // This used to also send x-vercel-set-bypass-cookie: "samesitenone", with a comment claiming
+    // "the header alone is not carried across a redirect hop". That was exactly backwards, and it
+    // cost six days.
+    //
+    // MEASURED 2026-10-13 against the same URL in the same minute:
+    //   bypass header ONLY                           200, zero redirects
+    //   bypass header + x-vercel-set-bypass-cookie    307, Location: <the same path>,
+    //                                                 Set-Cookie: _vercel_jwt=…; SameSite=None
+    //   the latter, following redirects               307 after 5 hops
+    //
+    // The header alone needs no hop. ASKING FOR THE COOKIE is what creates one: Vercel accepts the
+    // secret, issues _vercel_jwt and redirects back to the same path expecting the caller to return
+    // carrying the cookie. A server-side fetch has no cookie jar, so it never can — it either loops
+    // ("redirect count exceeded", the 28 Sep symptom) or stops on the 3xx and gets misread as a
+    // protection wall (every symptom since). The bypass was working the whole time.
     headers["x-vercel-protection-bypass"] = secret;
-    // Ask Vercel to set the bypass cookie too: the fetch may be redirected internally, and the
-    // header alone is not carried across a redirect hop.
-    headers["x-vercel-set-bypass-cookie"] = "samesitenone";
   }
   return headers;
 }
@@ -334,54 +347,28 @@ export async function generateAssessment(input: AssessInput): Promise<AssessResu
     // exceeded": Vercel sends an unauthenticated request to its login, which redirects again. Manual
     // turns that into ONE 3xx response, which lands in the branch below that already knows how to
     // explain protection — instead of an opaque throw.
-    // ── F103 DIAGNOSTIC ─────────────────────────────────────────────────────
-    // Built from the SAME headers object that goes on the wire, not from env a second time, so
-    // what is logged is what is sent.
-    const corpusHeaders = corpusFetchHeaders(corpusTarget);
-    const fetchOpts = {
-      headers: corpusHeaders,
+    const cr = await fetch(corpusUrl, {
+      headers: corpusFetchHeaders(corpusTarget),
       ...(corpusTarget.isSelf ? { redirect: "manual" as const } : {}),
-    };
-    const sentBypass = corpusHeaders["x-vercel-protection-bypass"];
-    console.log(
-      `[assess-core] F103 pre-fetch` +
-      ` url=${corpusUrl}` +
-      ` isSelf=${corpusTarget.isSelf} source=${corpusTarget.source}` +
-      ` headerNames=[${Object.keys(corpusHeaders).join(",")}]` +
-      ` redirect=${"redirect" in fetchOpts ? fetchOpts.redirect : "(default: follow)"}` +
-      ` cache=(not set) next=(not set)` +
-      ` bypassHeaderPresent=${Boolean(sentBypass)}` +
-      ` sentSecret{${sentBypass === undefined ? "NOT SENT" : secretShape(sentBypass)}}` +
-      ` envSecret{${secretShape(process.env.VERCEL_AUTOMATION_BYPASS_SECRET)}}`,
-    );
-    const cr = await fetch(corpusUrl, fetchOpts);
-    // ── F103 DIAGNOSTIC: what came back ─────────────────────────────────────────
-    // location is the one that names the wall: a redirect to vercel.com/sso-api is protection.
-    // Cookie NAMES only — _vercel_sso_nonce vs _vercel_jwt says which stage rejected us.
-    {
-      const cookieNames = (typeof (cr.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie === "function"
-        ? (cr.headers as unknown as { getSetCookie: () => string[] }).getSetCookie()
-        : [cr.headers.get("set-cookie") ?? ""].filter(Boolean)
-      ).map((c) => c.split("=")[0].trim());
-      console.log(
-        `[assess-core] F103 post-fetch` +
-        ` status=${cr.status}` +
-        ` location=${cr.headers.get("location") ?? "(none)"}` +
-        ` x-vercel-id=${cr.headers.get("x-vercel-id") ?? "(none)"}` +
-        ` x-vercel-error=${cr.headers.get("x-vercel-error") ?? "(none)"}` +
-        ` www-authenticate=${cr.headers.get("www-authenticate") ?? "(none)"}` +
-        ` setCookieNames=[${cookieNames.join(",")}]`,
-      );
-    }
+    });
     if (!cr.ok) {
       // READ THE BODY BEFORE DECIDING. A 401 from a protected preview and a 401 from the route
       // itself are different facts, and only the body separates them.
       const errBody = await cr.text().catch(() => "");
       // A self-origin 401/403 is Deployment Protection, which has a specific fix — say which one
       // it is rather than making someone infer it from a bare status code.
-      // 3xx counts too now that redirects are manual: a self-origin redirect goes to vercel.com/sso-api.
-      const protectionLikely = corpusTarget.isSelf
-        && (cr.status === 401 || cr.status === 403 || (cr.status >= 300 && cr.status < 400));
+      //
+      // A 3xx COUNTS ONLY WHEN IT LEAVES THE ORIGIN. A protection wall redirects to
+      // vercel.com/sso-api; an ON-ORIGIN redirect back to the same host is something else entirely,
+      // and treating every self-origin 3xx as a wall is what turned a successful bypass handshake
+      // (307 + Set-Cookie _vercel_jwt, Location: the same path) into six days of "DEPLOYMENT
+      // PROTECTION". Measured 2026-10-13 on dpl_9nCBWSY2NfwFCEmuEhsxjSJP64ep.
+      const protectionLikely = selfFetchIsProtection({
+        isSelf: corpusTarget.isSelf,
+        status: cr.status,
+        location: cr.headers.get("location"),
+        corpusUrl,
+      });
       // A NON-SELF FETCH CAN ALSO HIT THE WALL, and it gets a different remedy: no bypass secret
       // was sent, and that was correct rather than an oversight — corpusFetchHeaders will not post
       // a per-project secret at an origin it was told to use. Saying "the secret was rejected"
