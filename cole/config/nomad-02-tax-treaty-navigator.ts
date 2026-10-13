@@ -4,6 +4,11 @@ export const PRODUCT_CONFIG: ProductConfig = {
   slug: "nomad/check/tax-treaty-navigator", url: "https://taxchecknow.com/nomad/check/tax-treaty-navigator", apiRoute: "/api/rules/tax-treaty-navigator",
   authority: "OECD Model Tax Convention", authorityUrl: "https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm", legalAnchor: "OECD Model Tax Convention Article 4(2) — Tie-Breaker Rules", legislation: "OECD Model Tax Convention Article 4(2) — sequential tie-breaker tests applied when an individual is resident in two contracting states under each state's domestic law. Applied through bilateral tax treaties (3,000+ in force worldwide).",
   lastVerified: "April 2026",
+  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Treaty Decision Pack", tagline: "Which country actually taxes you — and which test resolved it?", value: "A personalised tie-breaker analysis applying OECD Article 4 tests in strict sequence to your facts — identifies primary taxing country, filing obligations, and treaty relief available.", cta: "Get My Treaty Decision — $67 →", productKey: "nomad_67_tax_treaty_navigator", envVar: "STRIPE_NOMAD_TTN_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Global Tax Residency System", tagline: "Treaty position + filing sequence + audit-ready documentation", value: "A personalised tie-breaker analysis plus multi-country filing sequence, treaty application process, audit defence documentation, and long-term residency strategy.", cta: "Get My Treaty System — $147 →", productKey: "nomad_147_tax_treaty_navigator", envVar: "STRIPE_NOMAD_TTN_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2026-12-31T23:59:59.000+00:00", display: "31 December 2026", short: "31 Dec 2026", description: "Calendar year-end — treaty position must be documented for each filing jurisdiction", urgencyLabel: "FILING BOUNDARY", countdownLabel: "Countdown to 31 December 2026 — treaty-position documentation for each jurisdiction" },

@@ -105,6 +105,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "firstAction"],
     tier2: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "preSettlementExecutionPlan", "applicationDetailsChecklist", "buyerSolicitorInstruction", "withholdingContingencyPlan", "accountantImplementationChecklist"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for nomad/check/tax-treaty-navigator. Lists copied VERBATIM
+  // from nomad-02-tax-treaty-navigator.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "tax-treaty-navigator": {
+    tier1: ["primaryTaxingCountry", "tieBreakerTestApplied", "treatyReliefAvailable", "filingObligations", "secondaryCountryRights", "evidenceRequired", "riskClassification", "immediateActions"],
+    tier2: ["primaryTaxingCountry", "tieBreakerTestApplied", "treatyReliefAvailable", "filingObligations", "secondaryCountryRights", "evidenceRequired", "riskClassification", "immediateActions", "residencyOptimisationStrategy", "treatyApplicationProcess", "multiCountryFilingSequence", "auditDefenceDocumentation", "longTermResidencyPlan"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
