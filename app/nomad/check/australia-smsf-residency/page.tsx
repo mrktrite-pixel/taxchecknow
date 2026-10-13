@@ -54,7 +54,7 @@ function progressFromDaysAway(daysAway: number): number {
 const faqs = [
   {
     "question": "What are the three SMSF residency tests?",
-    "answer": "Under ITAA 1997 s 295-95(2), a fund is an 'Australian superannuation fund' if: (1) it was established in Australia OR at least one asset of the fund is located in Australia; (2) the central management and control (CM&C) of the fund is ordinarily in Australia at all times; (3) either the fund has no active members, or at least 50% of the total market value of the fund's assets attributable to active members is held by active members who are Australian residents. All three tests must be passed."
+    "answer": "Under ITAA 1997 s 295-95(2), a fund is an 'Australian superannuation fund' if: (1) it was established in Australia OR at least one asset of the fund is located in Australia — the deed need not be signed in Australia; establishment turns on where the initial contribution was paid and accepted by the trustee; (2) the central management and control (CM&C) of the fund is ordinarily in Australia at all times; (3) either the fund has no active members, or at least 50% of the total market value of the fund's assets attributable to active members is held by active members who are Australian residents. All three tests must be passed."
   },
   {
     "question": "What does 'central management and control' mean?",
@@ -78,7 +78,7 @@ const faqs = [
   },
   {
     "question": "Can my SMSF be remediated after becoming non-complying?",
-    "answer": "Only with ATO approval and only in limited circumstances. The fund must apply for re-complying status once the underlying breach is rectified (e.g. return of CM&C to Australia). The ATO has discretion to restore complying status but is not required to. The year of non-compliance already produces the 45% tax on the low tax component — that tax is not refunded even if the fund is later re-complying. Prevention is vastly preferable to remediation."
+    "answer": "Act BEFORE it becomes non-complying: the ATO's own answer is to roll the benefits over to an APRA-regulated fund and wind the SMSF up, or to appoint a professional trustee so the fund becomes a small APRA-regulated fund. Once the fund HAS become non-complying, the Commissioner has a discretion to treat it as complying, but that is a discretion and not a planning route — it may simply not be exercised. And the year of non-compliance has already produced the 45% tax on the low tax component, which is not refunded even if complying status is later restored. Prevention is vastly preferable to remediation."
   },
   {
     "question": "What documentation should I keep?",
@@ -272,7 +272,7 @@ const geoFacts = [
   },
   {
     "label": "Remediation path",
-    "value": "Notice to ATO + application for complying status restoration; not automatic"
+    "value": "Roll benefits over to an APRA-regulated fund and wind up the SMSF before the fund becomes non-complying (ATO); alternatively appoint a professional trustee (small APRA fund). The Commissioner's discretion to treat the fund as complying is not a planning route."
   }
 ];
 
@@ -570,7 +570,7 @@ export default function AustraliaSmsfResidencyPage() {
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          A self-managed super fund (SMSF) must meet the three residency conditions in subsection 295-95(2) of the Income Tax Assessment Act 1997 to remain an 'Australian superannuation fund' and retain complying status. The tests are: (1) established in Australia or assets located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; and (3) active member test — Australian-resident active members hold at least 50% of EITHER the market value of fund assets attributable to super interests OR the amounts that would be payable to active members if they left the fund (or the fund has no active members). Failure on any test causes the fund to cease being an Australian superannuation fund — and the moment the fund is no longer an Australian superannuation fund, it becomes non-complying for tax purposes.
+          A self-managed super fund (SMSF) must meet the three residency conditions in subsection 295-95(2) of the Income Tax Assessment Act 1997 to remain an 'Australian superannuation fund' and retain complying status. The tests are: (1) established in Australia or assets located in Australia — the deed need not be signed in Australia; establishment turns on where the initial contribution was paid and accepted by the trustee; (2) central management and control (CM&C) of the fund ordinarily in Australia; and (3) active member test — Australian-resident active members hold at least 50% of EITHER the market value of fund assets attributable to super interests OR the amounts that would be payable to active members if they left the fund (or the fund has no active members). Failure on any test causes the fund to cease being an Australian superannuation fund — and the moment the fund is no longer an Australian superannuation fund, it becomes non-complying for tax purposes.
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -724,7 +724,7 @@ export default function AustraliaSmsfResidencyPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The answer — ATO SMSF residency rule, confirmed September 2026
           </p>
-          <p className="mb-2 text-neutral-900">A self-managed super fund (SMSF) must meet the three residency conditions in subsection 295-95(2) of the Income Tax Assessment Act 1997 to remain an 'Australian superannuation fund' and retain complying status. The tests are: (1) established in Australia or assets located in Australia; (2) central management and control (CM&C) of the fund ordinarily in Australia; and (3) active member test — Australian-resident active members hold at least 50% of EITHER the market value of fund assets attributable to super interests OR the amounts that would be payable to active members if they left the fund (or the fund has no active members). Failure on any test causes the fund to cease being an Australian superannuation fund — and the moment the fund is no longer an Australian superannuation fund, it becomes non-complying for tax purposes.</p>
+          <p className="mb-2 text-neutral-900">A self-managed super fund (SMSF) must meet the three residency conditions in subsection 295-95(2) of the Income Tax Assessment Act 1997 to remain an 'Australian superannuation fund' and retain complying status. The tests are: (1) established in Australia or assets located in Australia — the deed need not be signed in Australia; establishment turns on where the initial contribution was paid and accepted by the trustee; (2) central management and control (CM&C) of the fund ordinarily in Australia; and (3) active member test — Australian-resident active members hold at least 50% of EITHER the market value of fund assets attributable to super interests OR the amounts that would be payable to active members if they left the fund (or the fund has no active members). Failure on any test causes the fund to cease being an Australian superannuation fund — and the moment the fund is no longer an Australian superannuation fund, it becomes non-complying for tax purposes.</p>
           <p className="mb-2 text-neutral-900">The central management and control test is the test that most commonly bites when trustees move overseas. 'Central management and control' means where the strategic and high-level decisions of the fund are made — investment policy, strategy reviews, trustee meetings, significant asset decisions. If all trustees are physically overseas and making these decisions from overseas, CM&C is overseas. A temporary absence is acceptable — the ATO generally accepts CM&C as 'ordinarily' in Australia during an absence of up to 2 years, provided the absence is temporary in nature and there is a genuine intention to resume Australian CM&C. Longer absences, or absences without a clear Australian return plan, put the fund at breach risk.</p>
           <p className="mb-2 text-neutral-900">The consequences of becoming non-complying are severe. Under ITAA 1997 section 295-320, when a fund becomes non-complying, the 'low tax component' of the fund (effectively the market value of fund assets less any amounts for which the fund has received undeducted contributions) is included in assessable income for the year the fund becomes non-complying, and taxed at the 45% top marginal rate. On a $1,000,000 SMSF that can produce a tax liability of up to about $450,000 in a single year. This assumes the low-tax component is close to the whole balance, which is the usual case; it is reduced by any undeducted (non-concessional) contributions in the fund, so a fund with substantial undeducted contributions is taxed on less. Ongoing earnings are then taxed at 45% rather than the 15% concessional rate. Remediation to compliant status requires the ATO's approval, which it can refuse.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ITAA 1997 s 295-95(2) · ITAA 1997 s 295-320 · TR 2008/9 · ATO: Check your SMSF is an Australian super fund + How SMSFs are taxed · Confirmed September 2026</p>
@@ -868,7 +868,7 @@ export default function AustraliaSmsfResidencyPage() {
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Remediation path</td>
-                  <td className="p-2">Notice to ATO + application for complying status restoration; not automatic</td>
+                  <td className="p-2">Roll benefits over to an APRA-regulated fund and wind up the SMSF before the fund becomes non-complying (ATO); alternatively appoint a professional trustee (small APRA fund). The Commissioner's discretion to treat the fund as complying is not a planning route.</td>
                   <td className="p-2 text-neutral-500">ITAA 1997 s 295-95(2) + s 295-320 + SIS Act 1993 s 17A — SMSF residency (Australian superannuation fund), non-complying fund taxation, and the trustee/director conditions</td>
                 </tr>
               </tbody>

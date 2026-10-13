@@ -47,7 +47,7 @@ export async function GET() {
         "active_member_test_threshold": "AU-resident active members hold 50%+ of assets attributable to super interests, OR of amounts payable on leaving",
         "complying_tax_rate": "15% on earnings (0% in pension phase up to TBC)",
         "non_complying_tax_rate": "45% on low tax component in year of change + 45% on ongoing earnings",
-        "remediation_path": "Notice to ATO + application for complying status restoration; not automatic"
+        "remediation_path": "Roll benefits over to an APRA-regulated fund and wind up the SMSF before the fund becomes non-complying (ATO); alternatively appoint a professional trustee (small APRA fund). The Commissioner's discretion to treat the fund as complying is not a planning route."
     },
     "formula": "Non-complying fund tax (year of change) = 'Low tax component' × 45% ≈ (Fund market value − undeducted contributions) × 45%. Example: $1,000,000 fund with $100,000 undeducted contributions → low tax component ≈ $900,000 → tax = $405,000 in year of change. Ongoing earnings then taxed at 45% (vs complying 15%). Complying SMSF concession: earnings × 15% (accumulation phase) or 0% (pension phase up to transfer balance cap). Non-complying = effectively fund destruction.",
     "thresholds": [
@@ -103,7 +103,7 @@ export async function GET() {
         {
             "id": 1,
             "question": "What are the three SMSF residency tests?",
-            "answer": "Under ITAA 1997 s 295-95(2), a fund is an 'Australian superannuation fund' if: (1) it was established in Australia OR at least one asset of the fund is located in Australia; (2) the central management and control (CM&C) of the fund is ordinarily in Australia at all times; (3) either the fund has no active members, or at least 50% of the total market value of the fund's assets attributable to active members is held by active members who are Australian residents. All three tests must be passed."
+            "answer": "Under ITAA 1997 s 295-95(2), a fund is an 'Australian superannuation fund' if: (1) it was established in Australia OR at least one asset of the fund is located in Australia — the deed need not be signed in Australia; establishment turns on where the initial contribution was paid and accepted by the trustee; (2) the central management and control (CM&C) of the fund is ordinarily in Australia at all times; (3) either the fund has no active members, or at least 50% of the total market value of the fund's assets attributable to active members is held by active members who are Australian residents. All three tests must be passed."
         },
         {
             "id": 2,
@@ -133,7 +133,7 @@ export async function GET() {
         {
             "id": 7,
             "question": "Can my SMSF be remediated after becoming non-complying?",
-            "answer": "Only with ATO approval and only in limited circumstances. The fund must apply for re-complying status once the underlying breach is rectified (e.g. return of CM&C to Australia). The ATO has discretion to restore complying status but is not required to. The year of non-compliance already produces the 45% tax on the low tax component — that tax is not refunded even if the fund is later re-complying. Prevention is vastly preferable to remediation."
+            "answer": "Act BEFORE it becomes non-complying: the ATO's own answer is to roll the benefits over to an APRA-regulated fund and wind the SMSF up, or to appoint a professional trustee so the fund becomes a small APRA-regulated fund. Once the fund HAS become non-complying, the Commissioner has a discretion to treat it as complying, but that is a discretion and not a planning route — it may simply not be exercised. And the year of non-compliance has already produced the 45% tax on the low tax component, which is not refunded even if complying status is later restored. Prevention is vastly preferable to remediation."
         },
         {
             "id": 8,
@@ -223,7 +223,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/australia-smsf-residency",
     "api_endpoint": "/api/rules/australia-smsf-residency",
-    "generated_at": "2026-09-29T01:46:38.773Z"
+    "generated_at": "2026-10-13T09:45:07.109Z"
 };
 
   return NextResponse.json(rules, {
