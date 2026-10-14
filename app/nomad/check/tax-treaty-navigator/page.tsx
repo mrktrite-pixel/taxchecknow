@@ -691,18 +691,18 @@ export default function TaxTreatyNavigatorPage() {
               <p className="mb-1 text-xs text-neutral-800">✗ NOT applicable without a treaty — domestic law alone governs</p>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-neutral-500">Source: OECD Model Tax Convention Article 4(2) · Applied through 3,000+ bilateral treaties worldwide · Confirmed April 2026</p>
+          <p className="mt-3 text-[10px] text-neutral-500">Source: OECD Model Tax Convention Article 4(2) · Applied through 3,000+ bilateral treaties worldwide · Confirmed October 2026</p>
         </div>
 
         {/* BLOCK 1 — Answer-first strike */}
         <div className="mb-5 border-l-4 border-blue-600 bg-blue-50 p-6">
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
-            The answer — OECD Model Article 4(2), confirmed April 2026
+            The answer — OECD Model Article 4(2), confirmed October 2026
           </p>
           <p className="mb-2 text-neutral-900">Tax treaties resolve dual residency conflicts using a strict sequential test established in Article 4 of the OECD Model Tax Convention. The tests are applied in order — if the first test resolves the conflict, the remaining tests are not applied. The sequence is: permanent home, centre of vital interests, habitual abode, nationality, and mutual agreement by tax authorities. You do not choose which country taxes you. The treaty determines it by applying these tests to your specific facts.</p>
           <p className="mb-2 text-neutral-900">The most commonly decisive test is centre of vital interests — where your personal and economic ties are strongest. Family location, the place where you conduct your occupation, where you manage your financial affairs, and where your social and cultural activities are centred all contribute. When a person has a permanent home in both countries — which is increasingly common for high-mobility professionals — the permanent home test does not resolve the conflict and the centre of vital interests test becomes the primary determinant.</p>
           <p className="mb-2 text-neutral-900">When no tax treaty exists between two countries that both claim a person as resident, there is no automatic mechanism to resolve the conflict. Both countries may tax the same income under their domestic laws. Unilateral relief (a domestic law credit in one country for tax paid to the other) may be available in some cases — but it is not automatic and the scope varies. This is the highest-risk residency state and the most complex to resolve.</p>
-          <p className="mt-3 text-xs text-neutral-600">Source: OECD Model Tax Convention Article 4(2) · Applied via bilateral tax treaties · UK HMRC / ATO / IRD NZ / CRA / IRS treaty guidance · Confirmed April 2026</p>
+          <p className="mt-3 text-xs text-neutral-600">Source: OECD Model Tax Convention Article 4(2) · Applied via bilateral tax treaties · UK HMRC / ATO / IRD NZ / CRA / IRS treaty guidance · Confirmed October 2026</p>
         </div>
 
         {/* CHAIN VISUAL — if present in config */}
@@ -777,7 +777,7 @@ export default function TaxTreatyNavigatorPage() {
             AI extraction block — OECD Article 4 tie-breaker
           </p>
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-            Double Tax Treaty Tie-Breaker — OECD Article 4(2) · April 2026
+            Double Tax Treaty Tie-Breaker — OECD Article 4(2) · October 2026
           </h2>
           <p className="mb-4 text-neutral-800">Tax treaties based on the OECD Model Tax Convention resolve dual residency conflicts through a sequential tie-breaker test in Article 4(2). Where an individual is resident in two contracting states under their respective domestic laws, the treaty determines which state has the primary right of taxation. The tie-breaker applies four tests in sequence: first, where the individual has a permanent home available; second, where the centre of vital interests (personal and economic ties) is strongest; third, where the individual has a habitual abode; and fourth, nationality. If none of the tests resolves the conflict, the competent authorities of the two states resolve the matter by mutual agreement. The test that resolves the conflict determines the treaty residence — subsequent tests are not applied. Where no bilateral tax treaty exists between the two countries, both may tax the same income under their domestic laws without automatic relief, constituting genuine double taxation. Unilateral relief may be available under domestic law but cannot be assumed. The OECD Model Convention has been adopted, with variations, in over 3,000 bilateral tax treaties worldwide.</p>
           

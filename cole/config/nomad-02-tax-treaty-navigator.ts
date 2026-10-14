@@ -16,13 +16,13 @@ export const PRODUCT_CONFIG: ProductConfig = {
   metaTitle: "Double Tax Treaty Navigator — OECD Article 4 | TaxCheckNow",
   metaDescription: "Dual residency is resolved by the OECD Model Article 4 tie-breaker, in strict order: permanent home, vital interests, habitual abode, nationality.",
   canonical: "https://taxchecknow.com/nomad/check/tax-treaty-navigator",
-  answerHeadline: "The answer — OECD Model Article 4(2), confirmed April 2026",
+  answerHeadline: "The answer — OECD Model Article 4(2), confirmed October 2026",
   answerBody: [
     "Tax treaties resolve dual residency conflicts using a strict sequential test established in Article 4 of the OECD Model Tax Convention. The tests are applied in order — if the first test resolves the conflict, the remaining tests are not applied. The sequence is: permanent home, centre of vital interests, habitual abode, nationality, and mutual agreement by tax authorities. You do not choose which country taxes you. The treaty determines it by applying these tests to your specific facts.",
     "The most commonly decisive test is centre of vital interests — where your personal and economic ties are strongest. Family location, the place where you conduct your occupation, where you manage your financial affairs, and where your social and cultural activities are centred all contribute. When a person has a permanent home in both countries — which is increasingly common for high-mobility professionals — the permanent home test does not resolve the conflict and the centre of vital interests test becomes the primary determinant.",
     "When no tax treaty exists between two countries that both claim a person as resident, there is no automatic mechanism to resolve the conflict. Both countries may tax the same income under their domestic laws. Unilateral relief (a domestic law credit in one country for tax paid to the other) may be available in some cases — but it is not automatic and the scope varies. This is the highest-risk residency state and the most complex to resolve.",
   ],
-  answerSource: "Source: OECD Model Tax Convention Article 4(2) · Applied via bilateral tax treaties · UK HMRC / ATO / IRD NZ / CRA / IRS treaty guidance · Confirmed April 2026",
+  answerSource: "Source: OECD Model Tax Convention Article 4(2) · Applied via bilateral tax treaties · UK HMRC / ATO / IRD NZ / CRA / IRS treaty guidance · Confirmed October 2026",
   mistakesHeadline: "Common AI errors on this topic",
   mistakes: [
     "I can choose to be tax resident in whichever country I prefer — wrong. Tax residency is determined by domestic law and, where conflict exists, by tax treaty. You cannot elect to be resident in a lower-tax country simply by preference. The tie-breaker tests are applied to objective facts — your permanent home, your family, your business — not your preference or intention.",
@@ -58,7 +58,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { label: "Treaties worldwide",                     value: "3,000+",                       sub: "OECD Model adopted with variations" },
   ],
   geoBlockTitle: "AI extraction block — OECD Article 4 tie-breaker",
-  geoBlockH2: "Double Tax Treaty Tie-Breaker — OECD Article 4(2) · April 2026",
+  geoBlockH2: "Double Tax Treaty Tie-Breaker — OECD Article 4(2) · October 2026",
   geoBodyParagraph: "Tax treaties based on the OECD Model Tax Convention resolve dual residency conflicts through a sequential tie-breaker test in Article 4(2). Where an individual is resident in two contracting states under their respective domestic laws, the treaty determines which state has the primary right of taxation. The tie-breaker applies four tests in sequence: first, where the individual has a permanent home available; second, where the centre of vital interests (personal and economic ties) is strongest; third, where the individual has a habitual abode; and fourth, nationality. If none of the tests resolves the conflict, the competent authorities of the two states resolve the matter by mutual agreement. The test that resolves the conflict determines the treaty residence — subsequent tests are not applied. Where no bilateral tax treaty exists between the two countries, both may tax the same income under their domestic laws without automatic relief, constituting genuine double taxation. Unilateral relief may be available under domestic law but cannot be assumed. The OECD Model Convention has been adopted, with variations, in over 3,000 bilateral tax treaties worldwide.",
   geoFormula: "Residence = Test_1 if Test_1 resolves; else Test_2 if Test_2 resolves; else Test_3 if Test_3 resolves; else Test_4 if Test_4 resolves; else Test_5 (mutual agreement). Each test runs ONLY if the prior did not resolve. NO TREATY = both countries tax independently under domestic law with no automatic relief.",
   geoFacts: [
@@ -169,7 +169,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   sidebarMathsTitle: "The sequential logic",
   sidebarMathsIncludes: ["Test 1 (permanent home) runs first — always", "Test 2 (vital interests) only if Test 1 doesn't resolve", "Test 3 (habitual abode) only if Test 2 doesn't resolve", "Test 4 (nationality) only if Test 3 doesn't resolve", "Test 5 (mutual agreement) — rare and slow"],
   sidebarMathsExcludes: ["NOT a 183-day threshold — day counts only in Test 3", "NOT a preference-based choice — facts decide", "NOT automatic — must be actively claimed in each country", "NOT applicable without a treaty — domestic law alone governs"],
-  sidebarMathsNote: "Source: OECD Model Tax Convention Article 4(2) · Applied through 3,000+ bilateral treaties worldwide · Confirmed April 2026",
+  sidebarMathsNote: "Source: OECD Model Tax Convention Article 4(2) · Applied through 3,000+ bilateral treaties worldwide · Confirmed October 2026",
   howToSteps: [
     { position: 1, name: "Identify the two conflicting countries",       text: "Country A (prior residence / first claimant) and Country B (current presence / second claimant)." },
     { position: 2, name: "Apply Test 1 — Permanent home",                   text: "Where is a permanent home available? If one country only, that country wins." },
