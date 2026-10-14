@@ -25,6 +25,7 @@
 // │ with the broken template. The guard below machine-enforces this rule.      │
 // │ See reports/2026-07-23-frcgw-success-content-migration-scope.txt           │
 // └────────────────────────────────────────────────────────────────────────────┘
+import * as fs from "node:fs";
 import type { ProductConfig } from "../types/product-config";
 import { verifyEngineNative, engineSessionKey } from "./verify-engine-native";
 // The ONE predicate that decides rule-vs-stored, shared with the gate and files generators so
@@ -32,10 +33,53 @@ import { verifyEngineNative, engineSessionKey } from "./verify-engine-native";
 import { resolvesFromRule } from "./generate-gate-page";
 import { findDoubledWords, joinJurisdictionAuthority } from "../validators/doubled-word";
 
-// Machine-enforced hard rule. buildSuccessPage() THROWS unless the template has been
-// upgraded (R-A2/R-A3) and the operator opts in with COLE_SUCCESS_TEMPLATE_RA2_RA3=1.
-// Deliberate tripwire — a broken template must not silently re-emit over a fixed page.
-const RA2_RA3_LANDED = process.env.COLE_SUCCESS_TEMPLATE_RA2_RA3 === "1";
+// ═════════════════════════════════════════════════════════════════════════════════════════════
+// F127 — THE GUARD NOW TESTS THE CODE. IT USED TO TEST AN ENVIRONMENT VARIABLE.
+//
+// The old predicate was `process.env.COLE_SUCCESS_TEMPLATE_RA2_RA3 === "1"`, and its refusal said
+// R-A2 and R-A3 "are not yet landed in generate-success-pages.ts". It never looked at this file.
+// MEASURED 2026-10-14: both HAD landed — the template emits buildComposerInputsFromSession and
+// the render-time annualDate/annualLabel helpers, and the lines immediately below this guard say
+// Phase 0 "supersedes the R-A3 hard block" and are UNREACHABLE behind it. So the message asserted
+// something false about the file, and the only thing actually blocking ~80 products' success
+// pages was an unset variable nobody had set.
+//
+// A guard whose condition is unrelated to its claim is worse than no guard: it cannot tell a
+// fixed template from a broken one, and it says it can.
+//
+// SO IT READS THIS FILE AND LOOKS FOR THE TWO EMIT SITES.
+//
+// THE MARKERS ARE CHOSEN SO THEY CANNOT MATCH THE GUARD'S OWN MESSAGE — otherwise the check
+// would pass purely because the refusal text mentions the function names, which is exactly the
+// self-referential false pass this is replacing. `buildComposerInputsFromSession("` only occurs
+// where the call is EMITTED with its session-key argument; the prose below names the function
+// without parentheses. Likewise `function annualDate(` only occurs inside the emitted template.
+// ═════════════════════════════════════════════════════════════════════════════════════════════
+const EMIT_MARKERS: ReadonlyArray<readonly [string, string, string]> = [
+  ["R-A2", 'buildComposerInputsFromSession("', "the composer inputs are emitted from the session"],
+  ["R-A3", "function annualDate(", "dates resolve AT RENDER, not at generate time"],
+];
+
+/**
+ * Which capabilities the template is missing, by reading its own source.
+ *
+ * An UNREADABLE source blocks rather than passes. "We could not check" and "the check passed"
+ * must never look the same — that is the F122 false-PASS shape, and this file is where it would
+ * do the most damage.
+ */
+export function missingMarkers(src: string): string[] {
+  return EMIT_MARKERS.filter(([, marker]) => !src.includes(marker)).map(([name, , why]) => `${name} — ${why}`);
+}
+
+function templateMissing(): string[] {
+  let src: string;
+  try {
+    src = fs.readFileSync(__filename, "utf-8");
+  } catch {
+    return ["(could not read generate-success-pages.ts to verify it — refusing rather than assuming)"];
+  }
+  return missingMarkers(src);
+}
 
 export function generateSuccessAssess(config: ProductConfig): string {
   return buildSuccessPage(config, "tier1");
@@ -146,14 +190,18 @@ function customerSources(config: ProductConfig) {
 }
 
 function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): string {
-  // ── HARD-RULE GUARD (2026-07-23) ──────────────────────────────────────────
-  if (!RA2_RA3_LANDED) {
+  // ── HARD-RULE GUARD (2026-07-23, rewritten F127 2026-10-14) ───────────────
+  // Blocks on what this file DOES, not on who remembered to export a variable. The message names
+  // the capability that is actually absent, so a refusal is actionable instead of a riddle.
+  const missing = templateMissing();
+  if (missing.length > 0) {
     throw new Error(
       `[COLE hard rule 2026-07-23] Success-page regeneration is BLOCKED (product "${config.id}", ${tier}). ` +
-      `R-A2 (emit buildComposerInputsFromSession) and R-A3 (no hardcoded/stale dates) are not yet landed in ` +
-      `generate-success-pages.ts. Regenerating now would overwrite the FRCGW hand-patch (commit 50eced7) with ` +
-      `the still-broken template. Land R-A2 (gated on the product being engine-native) + R-A3, verify, then set ` +
-      `COLE_SUCCESS_TEMPLATE_RA2_RA3=1. See reports/2026-07-23-frcgw-success-content-migration-scope.txt`
+      `The template in generate-success-pages.ts is missing: ${missing.join("; ")}. ` +
+      `Regenerating now would overwrite a working page with a template that cannot bind the buyer's own ` +
+      `answers or resolve its dates at render — the defects R-A2 and R-A3 were raised for. ` +
+      `Restore those emit sites and the block lifts by itself; there is no variable to set. ` +
+      `See reports/2026-07-23-frcgw-success-content-migration-scope.txt`
     );
   }
   // TEMPORAL v1 Phase 0 supersedes the R-A3 hard block: the countdown now fail-closes on time
@@ -1000,6 +1048,13 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
                 Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 ${isTier2 ? "Work through the checklist above." : ""}
+                {/* F106 — JSX DROPS THE NEWLINE BETWEEN TEXT AND AN EXPRESSION ENTIRELY.
+                    It condenses a newline between two TEXT nodes to one space, which is why the
+                    qualitative branch (plain prose) read correctly and this one did not. With a
+                    live deadline the countdown is an expression, so the emitted page rendered
+                    "Work through the checklist above.30 days to 5 April 2027." — measured in the
+                    accepted snapshots for allowance-sniper, app-tax-gst-sniper and au-expat-cgt.
+                    An explicit {" "} is the only thing that survives that. */}{" "}
                 ${qualitative ? qualitative.cta : CTA_COUNTDOWN}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
