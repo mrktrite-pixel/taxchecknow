@@ -37,6 +37,30 @@ import type { GeoBake } from "../generators/generate-gate-page";
 const APP_ROOT        = path.join(__dirname, "../../app");
 const CONFIG_DIR      = path.join(__dirname, "../config");
 const CALCULATORS_DIR = path.join(__dirname, "../calculators"); // hand-built calculators live here
+/**
+ * F126 — what writeTemporalEvidence actually did. "written" is the only success.
+ *
+ * A skip is not an error (nothing is broken; the declaration or the env is absent) and it is not
+ * a success either, so it needs its own vocabulary — otherwise it falls through the errors[] check
+ * and the run prints "✅ recorded" over the top of its own SKIPPED warning.
+ */
+export type TemporalEvidenceOutcome =
+  | "written"
+  | "skipped_no_declaration"
+  | "skipped_no_env"
+  | "skipped_no_product_row"
+  | "skipped_no_build_job"
+  | "failed";
+
+const SKIP_REASONS: Record<TemporalEvidenceOutcome, string> = {
+  written: "written",
+  skipped_no_declaration: "the config has no `temporal` declaration. Declare the shape, then re-run",
+  skipped_no_env: "no Supabase env (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)",
+  skipped_no_product_row: "no products row for this site/slug to attach it to",
+  skipped_no_build_job: "products.temporal_kind was set, but there is no build_job to attach the declaration to",
+  failed: "the write failed — see the error above",
+};
+
 const SUPABASE_URL    = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY    = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -291,10 +315,29 @@ async function cole(productId: string, successOnly = false, evidenceOnly = false
   if (evidenceOnly) {
     console.log(`   → --evidence-only: temporal registry + gate evidence for ${config.id} (NO page regenerated)\n`);
     emitTemporalRegistry(filesGenerated, errors);
-    await writeTemporalEvidence(config, errors);
-    const ok = errors.length === 0;
+    const outcome = await writeTemporalEvidence(config, errors);
+    // ── F126 — "✅ recorded" AFTER A SKIP, AND EXIT 0. ────────────────────────
+    //
+    // A skip pushes no error, so `errors.length === 0` was true and the run ended with
+    // "✅ Temporal evidence recorded: <product>" and exit 0 — two lines after announcing
+    // "Temporal evidence SKIPPED". MEASURED on tax-treaty-navigator 2026-10-14: the same run
+    // printed both, and an operator reading only the summary would have concluded step 7 was
+    // done. Worse, any automation keying on the exit code read success.
+    //
+    // The outcome now decides both the word and the code. A skip is NOT an error — nothing is
+    // broken, the declaration or the env is simply absent — so it is reported as a SKIP and
+    // still exits non-zero, because the thing the caller asked for did not happen.
+    const skipped = outcome !== "written";
+    const ok = errors.length === 0 && !skipped;
     console.log(`\n${"─".repeat(60)}`);
-    console.log(ok ? `\n✅ Temporal evidence recorded: ${productId}` : `\n⚠️  Completed with ${errors.length} error(s):`);
+    if (ok) {
+      console.log(`\n✅ Temporal evidence recorded: ${productId}`);
+    } else if (errors.length > 0) {
+      console.log(`\n⚠️  Completed with ${errors.length} error(s):`);
+    } else {
+      console.log(`\n⚠️  Temporal evidence NOT recorded for ${productId} — ${SKIP_REASONS[outcome]}`);
+      console.log(`   Nothing was written, so the soverella gate item stays unticked. Exit 1.`);
+    }
     errors.forEach(e => console.log(`   • ${e}`));
     if (ok) await syncMonitorUrlsForProduct(config);
     if (!ok) process.exitCode = 1;
@@ -633,15 +676,15 @@ function emitTemporalRegistry(filesGenerated: string[], errors: string[]): void 
 // Non-fatal throughout: evidence is an observability/gating concern and must
 // never fail a product build. A miss is logged loudly and leaves the gate item
 // unticked — which correctly blocks the ship rather than silently passing it.
-async function writeTemporalEvidence(config: ProductConfig, errors: string[]): Promise<void> {
+async function writeTemporalEvidence(config: ProductConfig, errors: string[]): Promise<TemporalEvidenceOutcome> {
   if (!config.temporal) {
     console.log(`   ⚠️  Temporal evidence SKIPPED — ${config.id} has no \`temporal\` declaration.`);
     console.log(`      The soverella gate item \`temporal_declared\` will stay UNTICKED and block the ship (Step 6.4).`);
-    return;
+    return "skipped_no_declaration";
   }
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     console.log(`   ⚠️  Temporal evidence SKIPPED — no Supabase env; the gate item will stay unticked.`);
-    return;
+    return "skipped_no_env";
   }
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -654,7 +697,7 @@ async function writeTemporalEvidence(config: ProductConfig, errors: string[]): P
     const product = (products ?? [])[0];
     if (!product) {
       console.log(`   ⚠️  Temporal evidence — no products row for ${config.site}/${config.slug}; nothing to attach to.`);
-      return;
+      return "skipped_no_product_row";
     }
 
     // Mirror the KIND for the catalogue.
@@ -675,7 +718,7 @@ async function writeTemporalEvidence(config: ProductConfig, errors: string[]): P
     const job = (jobs ?? [])[0];
     if (!job) {
       console.log(`   ⚠️  Temporal evidence — products.temporal_kind set, but no build_job for ${config.slug} to attach the declaration to.`);
-      return;
+      return "skipped_no_build_job";
     }
 
     const { error: bErr } = await sb.from("build_jobs")
@@ -685,12 +728,14 @@ async function writeTemporalEvidence(config: ProductConfig, errors: string[]): P
     console.log(`   ✅ Temporal evidence written — kind "${config.temporal.kind}"`);
     console.log(`      products.temporal_kind → ${product.id}`);
     console.log(`      build_jobs.temporal_declaration → ${job.id} (${job.build_state})`);
+    return "written";
   } catch (err) {
     rethrowIfGuardRefusal(err);   // a guard refusal aborts the run; it is never collected
     // Recorded, not thrown: see the non-fatal note above.
     errors.push(`Temporal evidence: ${err}`);
     console.error(`   ❌ Temporal evidence: ${err}`);
     console.error(`      Has the Step 6 DDL been run? (build_jobs.temporal_declaration, products.temporal_kind)`);
+    return "failed";
   }
 }
 

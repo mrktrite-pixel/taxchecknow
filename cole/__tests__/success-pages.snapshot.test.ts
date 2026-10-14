@@ -8,14 +8,18 @@
 //   RUN:     npm run test:snap
 //   UPDATE:  npm run test:snap:update
 //
-// WHY THE TRIPWIRE IS SET HERE: buildSuccessPage() throws unless
-// COLE_SUCCESS_TEMPLATE_RA2_RA3 is set, and the guard is read AT MODULE LOAD, so
-// this must precede the generator import. A snapshot test generates IN MEMORY and
-// writes nothing into app/, so bypassing the tripwire here cannot overwrite a
-// live page — it only means the suite runs without operator environment setup.
-// Naming it plainly because it IS a bypass, just a harmless one.
+// THERE IS NO LONGER A TRIPWIRE TO BYPASS (F127, 2026-10-14).
+//
+// This file used to set COLE_SUCCESS_TEMPLATE_RA2_RA3=1 before importing the generator, because
+// buildSuccessPage() threw unless that variable was set. The guard now reads the generator's own
+// source for the two emit sites it names (buildComposerInputsFromSession and the render-time
+// annualDate helper), so there is nothing an environment variable can unlock or hide — and this
+// suite no longer needs operator environment setup to run.
+//
+// The line is REMOVED rather than left as a no-op: a bypass that bypasses nothing still tells the
+// next reader that a bypass is needed here, which is how a stale workaround outlives its cause.
+// See cole/__tests__/success-guard.test.ts for the guard's own positive and negative controls.
 // ─────────────────────────────────────────────────────────────────────────────
-process.env.COLE_SUCCESS_TEMPLATE_RA2_RA3 = "1";
 
 import { test } from "node:test";
 import * as path from "node:path";
