@@ -1,5 +1,5 @@
 {
-  "_ruling": "operator 2026-10-14 — explainer/happy-path 67, s118-192 exclusion structural 147",
+  "_ruling": "Ruled from the Ship Plan stepper, 2026-10-14T10:40:17.293Z. 0 row(s) re-tiered from the drafter's proposal.",
   "_doc": "DRAFTED presentation overlay — machine first draft from the build's own terminals, NOT an operator ruling. tier: default 67, 147 only where the terminal's own grounded text shows money at stake, a live deadline, or an adverse determination. Escapes are forced to tier 67 by the translator. Rule the tiers, then re-run emit-engine with --accept-overlay. Remove _drafted once ruled.",
   "_doctrine": "structural/critical → 147; explainer/guidance → 67. Every row's evidence is printed by the drafter.",
   "states": {
