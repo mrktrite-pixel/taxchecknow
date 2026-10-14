@@ -80,6 +80,13 @@ export default function Page() {
               </Link>
             </p>
           </div>
+
+          <div className="!mt-8">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">More in {"Rental Property Deduction Audit"}</p>
+            <ul className="mt-3 list-disc space-y-2 pl-6 text-[16px]">
+            <li><Link href={"/blog/rental-property-deduction-audit/can-i-deduct-the-costs-of-holding-vacant-land"} className="underline decoration-neutral-400 underline-offset-2 hover:text-neutral-950">{"Can I deduct the costs of holding vacant land?"}</Link></li>
+            </ul>
+          </div>
         </div>
       </article>
 
