@@ -19,7 +19,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     label:        "No act-by date",
     basis:        "OECD Model Tax Convention Article 4(2) is a standing tie-breaker rule: it states no deadline, window or effective-from date. Operator ruling 2026-10-14.",
   },
-  deadline: { isoDate: "2026-12-31T23:59:59.000+00:00", display: "31 December 2026", short: "31 Dec 2026", description: "Calendar year-end — treaty position must be documented for each filing jurisdiction", urgencyLabel: "FILING BOUNDARY", countdownLabel: "Countdown to 31 December 2026 — treaty-position documentation for each jurisdiction" },
+  deadline: { isoDate: "", display: "31 December 2026", short: "31 Dec 2026", description: "Calendar year-end — treaty position must be documented for each filing jurisdiction", urgencyLabel: "FILING BOUNDARY", countdownLabel: "" },
   h1: "Double Tax Treaty Tie-Breaker: Which Country Actually Taxes You?",
   metaTitle: "Double Tax Treaty Navigator — OECD Article 4 | TaxCheckNow",
   metaDescription: "Dual residency is resolved by the OECD Model Article 4 tie-breaker, in strict order: permanent home, vital interests, habitual abode, nationality.",
