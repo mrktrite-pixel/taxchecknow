@@ -351,6 +351,20 @@ function buildSuccessPage(config: ProductConfig, tier: "tier1" | "tier2"): strin
   const STRIP_COUNTDOWN = RULE_PATH
     ? '{DEADLINE_PHRASE} {daysToDeadline === 0 ? "\u2014" : "to"} {DEADLINE_DISPLAY}'
     : `{daysToDeadline} days to ${config.deadline.display}`;
+  // ── F106 — THE COUNTDOWN NEEDS AN EXPLICIT {" "} IN FRONT OF IT ───────────────────────────
+  //
+  // JSX condenses a newline between two TEXT nodes to one space, but REMOVES the newline between
+  // a text node and an adjacent expression entirely. The CTA paragraph ends with prose and then
+  // interpolates either qualitative.cta (text — fine) or this countdown (an expression — not).
+  // So with a live deadline the emitted page rendered:
+  //
+  //     Work through the checklist above.30 days to 5 April 2027.
+  //
+  // measured in the accepted snapshots for allowance-sniper, app-tax-gst-sniper and au-expat-cgt.
+  // The emit site below carries a bare {" "} and nothing else: the FIRST version of this fix put
+  // this explanation in the emitted JSX, which pushed seven lines of generator commentary into
+  // every buyer-facing success page — including the example sentence above, which then read like a
+  // live defect to anything grepping the output. Explanations belong in the generator.
   const CTA_COUNTDOWN = RULE_PATH
     ? '{deadlineLive ? `${DEADLINE_PHRASE}${daysToDeadline === 0 ? " \u2014 " : " to "}${DEADLINE_DISPLAY}.` : ""}'
     : "{deadlineLive ? `${daysToDeadline} days to " + config.deadline.display + ".` : \"\"}";
@@ -1048,14 +1062,7 @@ ${emittableEvents.length === 0 ? `            {/* CALENDAR — suppressed at gen
                 Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 ${isTier2 ? "Work through the checklist above." : ""}
-                {/* F106 — JSX DROPS THE NEWLINE BETWEEN TEXT AND AN EXPRESSION ENTIRELY.
-                    It condenses a newline between two TEXT nodes to one space, which is why the
-                    qualitative branch (plain prose) read correctly and this one did not. With a
-                    live deadline the countdown is an expression, so the emitted page rendered
-                    "Work through the checklist above.30 days to 5 April 2027." — measured in the
-                    accepted snapshots for allowance-sniper, app-tax-gst-sniper and au-expat-cgt.
-                    An explicit {" "} is the only thing that survives that. */}{" "}
-                ${qualitative ? qualitative.cta : CTA_COUNTDOWN}
+                {" "}${qualitative ? qualitative.cta : CTA_COUNTDOWN}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
