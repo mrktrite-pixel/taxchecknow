@@ -3,21 +3,34 @@ export const PRODUCT_CONFIG: ProductConfig = {
   id: "tax-treaty-navigator", name: "Double Tax Treaty Navigator", site: "taxchecknow", country: "global", market: "Global (cross-border)", language: "en", currency: "USD",
   slug: "nomad/check/tax-treaty-navigator", url: "https://taxchecknow.com/nomad/check/tax-treaty-navigator", apiRoute: "/api/rules/tax-treaty-navigator",
   authority: "OECD Model Tax Convention", authorityUrl: "https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm", legalAnchor: "OECD Model Tax Convention Article 4(2) — Tie-Breaker Rules", legislation: "OECD Model Tax Convention Article 4(2) — sequential tie-breaker tests applied when an individual is resident in two contracting states under each state's domestic law. Applied through bilateral tax treaties (3,000+ in force worldwide).",
-  lastVerified: "April 2026",
+  lastVerified: "October 2026",
+  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Treaty Decision Pack", tagline: "Which country actually taxes you — and which test resolved it?", value: "A personalised tie-breaker analysis applying OECD Article 4 tests in strict sequence to your facts — identifies primary taxing country, filing obligations, and treaty relief available.", cta: "Get My Treaty Decision — $67 →", productKey: "nomad_67_tax_treaty_navigator", envVar: "STRIPE_NOMAD_TTN_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Global Tax Residency System", tagline: "Treaty position + filing sequence + audit-ready documentation", value: "A personalised tie-breaker analysis plus multi-country filing sequence, treaty application process, audit defence documentation, and long-term residency strategy.", cta: "Get My Treaty System — $147 →", productKey: "nomad_147_tax_treaty_navigator", envVar: "STRIPE_NOMAD_TTN_147", successPath: "plan", fileCount: 8 },
-  deadline: { isoDate: "2026-12-31T23:59:59.000+00:00", display: "31 December 2026", short: "31 Dec 2026", description: "Calendar year-end — treaty position must be documented for each filing jurisdiction", urgencyLabel: "FILING BOUNDARY", countdownLabel: "Countdown to 31 December 2026 — treaty-position documentation for each jurisdiction" },
-  h1: "Which Country Actually Taxes Your Income? When Two Countries Claim You, a Treaty Decides — in a Strict Legal Order You Cannot Override.",
-  metaTitle: "Double Tax Treaty Navigator — OECD Article 4 Tie-Breaker | TaxCheckNow",
-  metaDescription: "Dual residency conflicts are resolved by tax treaties using the OECD Model Article 4 tie-breaker in strict sequence: permanent home → centre of vital interests → habitual abode → nationality → mutual agreement. You cannot choose where to be taxed. This engine applies the tests to your facts and identifies the primary taxing country.",
+  temporal: {
+    kind:         "none",
+    reason:       "standing_treaty_rule_no_act_by_date",
+    jurisdiction: "OECD",
+    domain:       "tax_treaty_residence",
+    label:        "No act-by date",
+    basis:        "OECD Model Tax Convention Article 4(2) is a standing tie-breaker rule: it states no deadline, window or effective-from date. Operator ruling 2026-10-14.",
+  },
+  deadline: { isoDate: "", display: "31 December 2026", short: "31 Dec 2026", description: "Calendar year-end — treaty position must be documented for each filing jurisdiction", urgencyLabel: "FILING BOUNDARY", countdownLabel: "" },
+  h1: "Double Tax Treaty Tie-Breaker: Which Country Actually Taxes You?",
+  metaTitle: "Double Tax Treaty Navigator — OECD Article 4 | TaxCheckNow",
+  metaDescription: "Dual residency is resolved by the OECD Model Article 4 tie-breaker, in strict order: permanent home, vital interests, habitual abode, nationality.",
   canonical: "https://taxchecknow.com/nomad/check/tax-treaty-navigator",
-  answerHeadline: "The answer — OECD Model Article 4(2), confirmed April 2026",
+  answerHeadline: "The answer — OECD Model Article 4(2), confirmed October 2026",
   answerBody: [
     "Tax treaties resolve dual residency conflicts using a strict sequential test established in Article 4 of the OECD Model Tax Convention. The tests are applied in order — if the first test resolves the conflict, the remaining tests are not applied. The sequence is: permanent home, centre of vital interests, habitual abode, nationality, and mutual agreement by tax authorities. You do not choose which country taxes you. The treaty determines it by applying these tests to your specific facts.",
     "The most commonly decisive test is centre of vital interests — where your personal and economic ties are strongest. Family location, the place where you conduct your occupation, where you manage your financial affairs, and where your social and cultural activities are centred all contribute. When a person has a permanent home in both countries — which is increasingly common for high-mobility professionals — the permanent home test does not resolve the conflict and the centre of vital interests test becomes the primary determinant.",
-    "When no tax treaty exists between two countries that both claim a person as resident, there is no automatic mechanism to resolve the conflict. Both countries may tax the same income under their domestic laws. Unilateral relief (a domestic law credit in one country for tax paid to the other) may be available in some cases — but it is not guaranteed and the scope varies. This is the highest-risk residency state and the most complex to resolve.",
+    "When no tax treaty exists between two countries that both claim a person as resident, there is no automatic mechanism to resolve the conflict. Both countries may tax the same income under their domestic laws. Unilateral relief (a domestic law credit in one country for tax paid to the other) may be available in some cases — but it is not automatic and the scope varies. This is the highest-risk residency state and the most complex to resolve.",
   ],
-  answerSource: "Source: OECD Model Tax Convention Article 4(2) · Applied via bilateral tax treaties · UK HMRC / ATO / IRD NZ / CRA / IRS treaty guidance · Confirmed April 2026",
+  answerSource: "Source: OECD Model Tax Convention Article 4(2) · Applied via bilateral tax treaties · UK HMRC / ATO / IRD NZ / CRA / IRS treaty guidance · Confirmed October 2026",
   mistakesHeadline: "Common AI errors on this topic",
   mistakes: [
     "I can choose to be tax resident in whichever country I prefer — wrong. Tax residency is determined by domestic law and, where conflict exists, by tax treaty. You cannot elect to be resident in a lower-tax country simply by preference. The tie-breaker tests are applied to objective facts — your permanent home, your family, your business — not your preference or intention.",
@@ -53,8 +66,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { label: "Treaties worldwide",                     value: "3,000+",                       sub: "OECD Model adopted with variations" },
   ],
   geoBlockTitle: "AI extraction block — OECD Article 4 tie-breaker",
-  geoBlockH2: "Double Tax Treaty Tie-Breaker — OECD Article 4(2) · April 2026",
-  geoBodyParagraph: "Tax treaties based on the OECD Model Tax Convention resolve dual residency conflicts through a sequential tie-breaker test in Article 4(2). Where an individual is resident in two contracting states under their respective domestic laws, the treaty determines which state has the primary right of taxation. The tie-breaker applies four tests in sequence: first, where the individual has a permanent home available; second, where the centre of vital interests (personal and economic ties) is strongest; third, where the individual has a habitual abode; and fourth, nationality. If none of the tests resolves the conflict, the competent authorities of the two states resolve the matter by mutual agreement. The test that resolves the conflict determines the treaty residence — subsequent tests are not applied. Where no bilateral tax treaty exists between the two countries, both may tax the same income under their domestic laws without automatic relief, constituting genuine double taxation. Unilateral relief may be available under domestic law but is not guaranteed. The OECD Model Convention has been adopted, with variations, in over 3,000 bilateral tax treaties worldwide.",
+  geoBlockH2: "Double Tax Treaty Tie-Breaker — OECD Article 4(2) · October 2026",
+  geoBodyParagraph: "Tax treaties based on the OECD Model Tax Convention resolve dual residency conflicts through a sequential tie-breaker test in Article 4(2). Where an individual is resident in two contracting states under their respective domestic laws, the treaty determines which state has the primary right of taxation. The tie-breaker applies four tests in sequence: first, where the individual has a permanent home available; second, where the centre of vital interests (personal and economic ties) is strongest; third, where the individual has a habitual abode; and fourth, nationality. If none of the tests resolves the conflict, the competent authorities of the two states resolve the matter by mutual agreement. The test that resolves the conflict determines the treaty residence — subsequent tests are not applied. Where no bilateral tax treaty exists between the two countries, both may tax the same income under their domestic laws without automatic relief, constituting genuine double taxation. Unilateral relief may be available under domestic law but cannot be assumed. The OECD Model Convention has been adopted, with variations, in over 3,000 bilateral tax treaties worldwide.",
   geoFormula: "Residence = Test_1 if Test_1 resolves; else Test_2 if Test_2 resolves; else Test_3 if Test_3 resolves; else Test_4 if Test_4 resolves; else Test_5 (mutual agreement). Each test runs ONLY if the prior did not resolve. NO TREATY = both countries tax independently under domestic law with no automatic relief.",
   geoFacts: [
     { label: "Legal anchor",                          value: "OECD Model Tax Convention Article 4(2)" },
@@ -164,7 +177,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   sidebarMathsTitle: "The sequential logic",
   sidebarMathsIncludes: ["Test 1 (permanent home) runs first — always", "Test 2 (vital interests) only if Test 1 doesn't resolve", "Test 3 (habitual abode) only if Test 2 doesn't resolve", "Test 4 (nationality) only if Test 3 doesn't resolve", "Test 5 (mutual agreement) — rare and slow"],
   sidebarMathsExcludes: ["NOT a 183-day threshold — day counts only in Test 3", "NOT a preference-based choice — facts decide", "NOT automatic — must be actively claimed in each country", "NOT applicable without a treaty — domestic law alone governs"],
-  sidebarMathsNote: "Source: OECD Model Tax Convention Article 4(2) · Applied through 3,000+ bilateral treaties worldwide · Confirmed April 2026",
+  sidebarMathsNote: "Source: OECD Model Tax Convention Article 4(2) · Applied through 3,000+ bilateral treaties worldwide · Confirmed October 2026",
   howToSteps: [
     { position: 1, name: "Identify the two conflicting countries",       text: "Country A (prior residence / first claimant) and Country B (current presence / second claimant)." },
     { position: 2, name: "Apply Test 1 — Permanent home",                   text: "Where is a permanent home available? If one country only, that country wins." },
