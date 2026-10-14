@@ -11,6 +11,14 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Your Treaty Decision Pack", tagline: "Which country actually taxes you — and which test resolved it?", value: "A personalised tie-breaker analysis applying OECD Article 4 tests in strict sequence to your facts — identifies primary taxing country, filing obligations, and treaty relief available.", cta: "Get My Treaty Decision — $67 →", productKey: "nomad_67_tax_treaty_navigator", envVar: "STRIPE_NOMAD_TTN_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Global Tax Residency System", tagline: "Treaty position + filing sequence + audit-ready documentation", value: "A personalised tie-breaker analysis plus multi-country filing sequence, treaty application process, audit defence documentation, and long-term residency strategy.", cta: "Get My Treaty System — $147 →", productKey: "nomad_147_tax_treaty_navigator", envVar: "STRIPE_NOMAD_TTN_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "none",
+    reason:       "standing_treaty_rule_no_act_by_date",
+    jurisdiction: "OECD",
+    domain:       "tax_treaty_residence",
+    label:        "No act-by date",
+    basis:        "OECD Model Tax Convention Article 4(2) is a standing tie-breaker rule: it states no deadline, window or effective-from date. Operator ruling 2026-10-14.",
+  },
   deadline: { isoDate: "2026-12-31T23:59:59.000+00:00", display: "31 December 2026", short: "31 Dec 2026", description: "Calendar year-end — treaty position must be documented for each filing jurisdiction", urgencyLabel: "FILING BOUNDARY", countdownLabel: "Countdown to 31 December 2026 — treaty-position documentation for each jurisdiction" },
   h1: "Double Tax Treaty Tie-Breaker: Which Country Actually Taxes You?",
   metaTitle: "Double Tax Treaty Navigator — OECD Article 4 | TaxCheckNow",
