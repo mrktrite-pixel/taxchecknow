@@ -108,7 +108,7 @@ export default function TaxTreatyNavigatorFile03() {
               🏳️ OECD Model Tax Convention · OECD Model Tax Convention Article 4(2) — Tie-Breaker Rules
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: October 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 03 of 8
@@ -228,7 +228,7 @@ export default function TaxTreatyNavigatorFile03() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Global (cross-border) tax adviser for your personal situation.
-            Based on OECD Model Tax Convention guidance April 2026.
+            Based on OECD Model Tax Convention guidance October 2026.
           </p>
         </div>
 

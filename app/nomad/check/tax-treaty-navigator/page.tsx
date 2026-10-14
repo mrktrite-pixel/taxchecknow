@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "October 2026";
 const DEADLINE_LABEL = "31 December 2026";
 const DEADLINE_ISO   = "2026-12-31T23:59:59.000+00:00";
 
@@ -379,7 +379,7 @@ export default function TaxTreatyNavigatorPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Double Tax Treaty Navigator — Rules April 2026",
+    name: "Double Tax Treaty Navigator — Rules October 2026",
     description: "Dual residency is resolved by the OECD Model Article 4 tie-breaker, in strict order: permanent home, vital interests, habitual abode, nationality.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
@@ -461,7 +461,7 @@ export default function TaxTreatyNavigatorPage() {
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on OECD Model Tax Convention guidance April 2026"
+      "Based on OECD Model Tax Convention guidance October 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -790,7 +790,7 @@ export default function TaxTreatyNavigatorPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (October 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1213,7 +1213,7 @@ export default function TaxTreatyNavigatorPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from OECD Model Tax Convention and GOV.UK guidance for April 2026.
+          built from OECD Model Tax Convention and GOV.UK guidance for October 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1227,7 +1227,7 @@ export default function TaxTreatyNavigatorPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Global (cross-border) tax position checks. April 2026.</p>
+            <p className="mt-1">Global (cross-border) tax position checks. October 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/global/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

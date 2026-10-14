@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Global (cross-border)",
     "language": "en",
     "currency": "USD",
-    "last_verified": "April 2026",
+    "last_verified": "October 2026",
     "legislation": "OECD Model Tax Convention Article 4(2) — sequential tie-breaker tests applied when an individual is resident in two contracting states under each state's domestic law. Applied through bilateral tax treaties (3,000+ in force worldwide).",
     "legal_anchor": "OECD Model Tax Convention Article 4(2) — Tie-Breaker Rules",
     "deadline": {
@@ -207,7 +207,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/tax-treaty-navigator",
     "api_endpoint": "/api/rules/tax-treaty-navigator",
-    "generated_at": "2026-10-13T23:11:48.242Z"
+    "generated_at": "2026-10-14T02:16:58.838Z"
 };
 
   return NextResponse.json(rules, {
@@ -217,7 +217,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "tax-treaty-navigator",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "October 2026",
     },
   });
 }

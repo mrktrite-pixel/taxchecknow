@@ -3,7 +3,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   id: "tax-treaty-navigator", name: "Double Tax Treaty Navigator", site: "taxchecknow", country: "global", market: "Global (cross-border)", language: "en", currency: "USD",
   slug: "nomad/check/tax-treaty-navigator", url: "https://taxchecknow.com/nomad/check/tax-treaty-navigator", apiRoute: "/api/rules/tax-treaty-navigator",
   authority: "OECD Model Tax Convention", authorityUrl: "https://www.oecd.org/tax/treaties/oecd-model-tax-convention-available-products.htm", legalAnchor: "OECD Model Tax Convention Article 4(2) — Tie-Breaker Rules", legislation: "OECD Model Tax Convention Article 4(2) — sequential tie-breaker tests applied when an individual is resident in two contracting states under each state's domestic law. Applied through bilateral tax treaties (3,000+ in force worldwide).",
-  lastVerified: "April 2026",
+  lastVerified: "October 2026",
   // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
   // EngineCalculator wrapper, so the success pages must bind inputs through
   // buildComposerInputsFromSession, and the parity census must cover this product.
