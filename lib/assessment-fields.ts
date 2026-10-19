@@ -105,6 +105,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "firstAction"],
     tier2: ["salePrice", "withholdingExposure", "residencyStatusConfirm", "certificateEligibility", "certificateProcessingTime", "daysToSettlementAnalysis", "applicationUrgency", "cashFlowImpact", "preSettlementExecutionPlan", "applicationDetailsChecklist", "buyerSolicitorInstruction", "withholdingContingencyPlan", "accountantImplementationChecklist"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for nomad/check/us-expat-tax. Lists copied VERBATIM
+  // from nomad-08-us-expat-tax.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "us-expat-tax": {
+    tier1: ["currentStrategyAnalysis", "feieEligibility", "ftcCalculation", "optimalStrategyRecommendation", "annualTaxSaving", "passiveIncomeStrategy", "filingObligations", "fbarFatcaRequirements", "immediateActions"],
+    tier2: ["currentStrategyAnalysis", "feieEligibility", "ftcCalculation", "optimalStrategyRecommendation", "annualTaxSaving", "passiveIncomeStrategy", "filingObligations", "fbarFatcaRequirements", "immediateActions", "hybridStrategyPlan", "multiYearCreditOptimisation", "incomeClassificationStrategy", "crossBorderStructuringOptions", "auditDefenceDocumentation"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */

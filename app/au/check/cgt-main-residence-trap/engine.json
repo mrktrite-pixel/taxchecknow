@@ -1,0 +1,452 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Menu covering the CGT main residence exemption for former homes under Australian tax law: the 6-year rule for income-producing properties, indefinite exemption for non-income-producing former homes, partial exemption scenarios (mixed use, exceeding the 6-year limit), the overlap rule when moving house, how to calculate and report a capital gain, and guidance for users unsure whether the exemption applies to their situation.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_scope",
+      "text": "Which of the following best describes your situation with the property you are asking about?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I used to live in the property as my main home, then moved out — and I am now thinking about selling it or want to understand my CGT position",
+          "value": "moved_out_former_home",
+          "flags": [
+            "q1_scope:moved_out_former_home"
+          ]
+        },
+        {
+          "label": "I am currently moving house and temporarily own two properties at the same time",
+          "value": "moving_house_overlap",
+          "flags": [
+            "q1_scope:moving_house_overlap"
+          ]
+        },
+        {
+          "label": "I bought the property as an investment and rented it out before I ever lived in it as my main home",
+          "value": "rented_before_living",
+          "flags": [
+            "q1_scope:rented_before_living"
+          ]
+        },
+        {
+          "label": "I am a foreign resident at the time of sale",
+          "value": "foreign_resident",
+          "flags": [
+            "q1_scope:foreign_resident"
+          ]
+        },
+        {
+          "label": "I am not sure whether any of these apply to me",
+          "value": "unsure_scope",
+          "flags": [
+            "q1_scope:unsure_scope"
+          ]
+        },
+        {
+          "label": "None of these describe my situation",
+          "value": "none_fit_scope",
+          "flags": [
+            "q1_scope:none_fit_scope"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_income_use",
+      "text": "After you moved out of your former home, did you use it to produce income (for example, by renting it out)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_scope:moved_out_former_home"
+        ]
+      },
+      "options": [
+        {
+          "label": "No — I left it vacant or let a family member stay rent-free; it produced no income",
+          "value": "no_income",
+          "flags": [
+            "q2_income_use:no_income"
+          ]
+        },
+        {
+          "label": "Yes — I rented it out (or otherwise used it to produce income) after moving out",
+          "value": "yes_income",
+          "flags": [
+            "q2_income_use:yes_income"
+          ]
+        },
+        {
+          "label": "I moved back in at some point and then rented it out again",
+          "value": "moved_back_then_rented",
+          "flags": [
+            "q2_income_use:moved_back_then_rented"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure_income",
+          "flags": [
+            "q2_income_use:unsure_income"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_mixed_use_before",
+      "text": "Before you moved out, did you use any part of your home to produce income while you were still living in it (for example, as a home office, business, or doctor's surgery)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2_income_use:yes_income"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — part of my home was used to produce income while I still lived there",
+          "value": "mixed_use_yes",
+          "flags": [
+            "q3_mixed_use_before:mixed_use_yes"
+          ]
+        },
+        {
+          "label": "No — the whole property was my main residence until I moved out",
+          "value": "mixed_use_no",
+          "flags": [
+            "q3_mixed_use_before:mixed_use_no"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure_mixed",
+          "flags": [
+            "q3_mixed_use_before:unsure_mixed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4_six_year",
+      "text": "Thinking about the total period your former home was used to produce income in a single continuous absence (vacant periods between rental stints do not count toward the limit): did the income-producing period exceed 6 years?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q3_mixed_use_before:mixed_use_no"
+        ]
+      },
+      "options": [
+        {
+          "label": "No — the total income-producing period was within 6 years",
+          "value": "within_6_years",
+          "flags": [
+            "q4_six_year:within_6_years"
+          ]
+        },
+        {
+          "label": "Yes — the total income-producing period exceeded 6 years",
+          "value": "exceeds_6_years",
+          "flags": [
+            "q4_six_year:exceeds_6_years"
+          ]
+        },
+        {
+          "label": "I want to understand how the 6-year rule works and how any partial exemption is calculated",
+          "value": "want_explainer",
+          "flags": [
+            "q4_six_year:want_explainer"
+          ]
+        },
+        {
+          "label": "I'm not sure whether the total exceeded 6 years",
+          "value": "unsure_6_year",
+          "flags": [
+            "q4_six_year:unsure_6_year"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5_calculation_detail",
+      "text": "You have indicated the income-producing period exceeded 6 years, meaning CGT applies to the portion beyond the 6-year limit. Do you also want to understand how the partial CGT exemption is calculated (the apportionment method)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q4_six_year:exceeds_6_years"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — show me how the partial exemption is calculated",
+          "value": "want_calc_explainer",
+          "flags": [
+            "q5_calculation_detail:want_calc_explainer"
+          ]
+        },
+        {
+          "label": "No — I just need to know that partial CGT applies and what that means",
+          "value": "no_calc_detail",
+          "flags": [
+            "q5_calculation_detail:no_calc_detail"
+          ]
+        },
+        {
+          "label": "I also need to know when to report the capital gain (contract date vs settlement date)",
+          "value": "want_reporting_date",
+          "flags": [
+            "q5_calculation_detail:want_reporting_date"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "former-home-not-used-for-income-indefinite-exemption",
+      "when": {
+        "any": [
+          "q2_income_use:no_income"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I moved out but left my former home vacant (or let family use it rent-free) — no rental income",
+      "result_copy": "Indicated outcome: Because your former home was not used to produce income after you moved out, the main residence exemption is indicated to apply for the entire period you were absent, with no time limit. You are not simultaneously treating another property as your main residence during this period. The full CGT main residence exemption is indicated to apply when you sell. Note: this indication is based on the information you provided; individual circumstances may vary and professional advice is recommended.",
+      "figure_ids": []
+    },
+    {
+      "id": "former-home-rented-within-6-year-rule",
+      "when": {
+        "any": [
+          "q4_six_year:within_6_years"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I rented out my former home and the total rental period is within the 6-year limit",
+      "result_copy": "Indicated outcome: Because the total period your former home was used to produce income did not exceed 6 years in a single continuous absence, the 6-year rule is indicated to apply. You may be able to treat the property as your main residence for that entire period, and the full CGT main residence exemption is indicated to apply when you sell. Vacant periods between rental stints do not count toward the 6-year limit — for example, 3 years rental + 2 years vacant + 3 years rental equals 6 years total income-producing, which meets the 6-year limit. Review recommended to confirm your specific dates and circumstances.",
+      "figure_ids": [
+        "fig_0",
+        "fig_2",
+        "fig_5",
+        "fig_6",
+        "fig_7",
+        "fig_8",
+        "fig_9",
+        "fig_11"
+      ]
+    },
+    {
+      "id": "former-home-rented-exceeds-6-year-rule-partial-exemption",
+      "when": {
+        "any": [
+          "q5_calculation_detail:no_calc_detail"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I rented out my former home and the rental period exceeded 6 years — partial CGT applies",
+      "result_copy": "Indicated outcome: Because the total income-producing period in a single continuous absence exceeded 6 years, CGT is indicated to apply to the portion of the ownership period beyond the 6-year limit. The capital gain is apportioned by the ratio of non-main-residence days to total ownership period days. The 50% CGT discount may then apply if eligibility conditions are met. Review recommended — the exact assessable gain depends on your specific dates, proceeds, cost base, and eligibility for the CGT discount.",
+      "figure_ids": [
+        "fig_0",
+        "fig_9",
+        "fig_21"
+      ]
+    },
+    {
+      "id": "how-partial-exemption-is-calculated-explainer",
+      "when": {
+        "any": [
+          "q4_six_year:want_explainer",
+          "q5_calculation_detail:want_calc_explainer"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How is the partial CGT exemption calculated when the 6-year rule is exceeded?",
+      "result_copy": "Indicated calculation method: When the 6-year rule is exceeded, the assessable capital gain is calculated as: (capital gain) × (non-main-residence days ÷ ownership period days). The cost base is reset to the market value at the date the property first began producing income. The 50% CGT discount may then reduce the assessable gain if eligibility conditions are met. For reference, the ATO's worked example uses: sale proceeds of $555,000 minus deemed cost base of $220,000 and fees of $15,000 equals a capital gain of $320,000; multiplied by 6,940 days ÷ 9,133 days equals $243,162; then reduced by 50% to $121,581. Your own figures will differ — review recommended.",
+      "figure_ids": [
+        "fig_14",
+        "fig_15",
+        "fig_16",
+        "fig_17",
+        "fig_18",
+        "fig_19",
+        "fig_20",
+        "fig_21",
+        "fig_22"
+      ]
+    },
+    {
+      "id": "mixed-use-home-partial-exemption-income-producing-portion",
+      "when": {
+        "any": [
+          "q3_mixed_use_before:mixed_use_yes"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I used part of my home to produce income (e.g. home office or business) before moving out",
+      "result_copy": "Indicated outcome: Because part of your home was used to produce income while you were still living in it, the main residence exemption cannot apply to that portion either before or after you moved out. Only the main-residence portion qualifies for the exemption. For reference, the ATO's example uses 75% main residence and 25% income-producing: the assessable capital gain on a $400,000 total gain was $100,000 (25% × $400,000). Your own proportions and gain will differ — review recommended.",
+      "figure_ids": [
+        "fig_23",
+        "fig_24",
+        "fig_25",
+        "fig_26"
+      ]
+    },
+    {
+      "id": "two-properties-overlap-moving-house",
+      "when": {
+        "any": [
+          "q1_scope:moving_house_overlap"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm moving house and temporarily own two properties — which one gets the exemption?",
+      "result_copy": "Indicated outcome: When moving house, you can treat both your old and new property as your main residence simultaneously for up to 6 months. Outside that 6-month overlap window, only one property can be treated as your main residence at a time. Review recommended to confirm which property should be treated as your main residence for which period, and whether any CGT exposure arises on the property not treated as your main residence.",
+      "figure_ids": [
+        "fig_1"
+      ]
+    },
+    {
+      "id": "when-to-report-cgt-contract-vs-settlement",
+      "when": {
+        "any": [
+          "q5_calculation_detail:want_reporting_date"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Which tax year do I report my capital gain — the contract date or the settlement date?",
+      "result_copy": "Indicated outcome: For CGT purposes, the relevant date is generally the date the contract is signed (not the settlement date). This determines which income year the capital gain or loss is reported in. Review recommended to confirm the correct tax year for your specific contract and settlement dates.",
+      "figure_ids": []
+    },
+    {
+      "id": "foreign-resident-exemption-not-available",
+      "when": {
+        "any": [
+          "q1_scope:foreign_resident"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I was a foreign resident when I sold my former home — does the exemption still apply?",
+      "result_copy": "Indicated outcome: If you are a foreign resident at the time of sale, the main residence CGT exemption is indicated to be unavailable. High-risk signal — foreign residents are generally not entitled to the main residence exemption on Australian property. Review recommended and professional advice strongly indicated given the significance of this outcome.",
+      "figure_ids": []
+    },
+    {
+      "id": "property-rented-before-living-in-it-no-exemption",
+      "when": {
+        "any": [
+          "q1_scope:rented_before_living"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I rented out the property before I ever lived in it — can I claim the exemption for that early period?",
+      "result_copy": "Indicated outcome: If the property was used to produce income before you ever lived in it as your main home, the main residence exemption is indicated to be unavailable for that income-producing period prior to you moving in. The exemption can only apply from the time you began using it as your main residence. Review recommended to assess the full CGT position across all periods of ownership.",
+      "figure_ids": []
+    },
+    {
+      "id": "moved-back-in-then-rented-again-6-year-reset",
+      "when": {
+        "any": [
+          "q2_income_use:moved_back_then_rented"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I moved back into my former home as my main residence, then moved out and rented it again — does the 6-year clock reset?",
+      "result_copy": "Indicated outcome: If you moved back into the property and treated it as your main residence again before renting it out a second time, the 6-year absence period is indicated to reset for the new rental period. For example, the ATO's example describes a first rental period of 5 years, then 2 years back as main residence, then a second rental period of 4 years — each rental period is assessed separately against the 6-year limit. Review recommended to confirm your specific periods and whether each rental stint is within the 6-year limit.",
+      "figure_ids": [
+        "fig_6",
+        "fig_8",
+        "fig_10",
+        "fig_11",
+        "fig_12"
+      ]
+    },
+    {
+      "id": "not-sure-if-exemption-applies",
+      "when": {
+        "any": [
+          "q2_income_use:unsure_income"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure whether the main residence exemption applies to my situation",
+      "result_copy": "Indicated outcome: Not enough information to determine whether the main residence CGT exemption applies to your situation. The exemption depends on factors including how the property was used, whether it produced income, the length of any income-producing periods, and your residency status. Review recommended — consider seeking professional advice or using the ATO's resources to clarify your specific circumstances before selling.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1_scope:none_fit_scope"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1_scope:unsure_scope",
+          "q3_mixed_use_before:unsure_mixed",
+          "q4_six_year:unsure_6_year"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}
