@@ -1,0 +1,527 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "This menu covers the Australian CGT discount, which allows eligible individuals and entities to reduce a capital gain by 50% when an asset has been owned for at least 12 months. Dishes cover who qualifies, how the 12-month ownership period is counted, key exclusions (foreign residents, home-first-used-for-rental, new assets), special rates for super funds (33.33%) and affordable rental housing (up to 60% total), and guidance for users uncertain about their eligibility.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-entity-type",
+      "text": "Which of the following best describes who or what made the capital gain?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Me — I am an individual (person, not a company or fund)",
+          "value": "individual",
+          "flags": [
+            "q1-entity-type:individual"
+          ]
+        },
+        {
+          "label": "A complying superannuation fund",
+          "value": "super-fund",
+          "flags": [
+            "q1-entity-type:super-fund"
+          ]
+        },
+        {
+          "label": "A company",
+          "value": "company",
+          "flags": [
+            "q1-entity-type:company"
+          ]
+        },
+        {
+          "label": "An Australian trust (not a super fund)",
+          "value": "trust",
+          "flags": [
+            "q1-entity-type:trust"
+          ]
+        },
+        {
+          "label": "None of these / I'm not sure what entity type applies",
+          "value": "unsure-entity",
+          "flags": [
+            "q1-entity-type:unsure-entity"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-residency-status",
+      "text": "At the time of the CGT event (e.g. the date of the contract to sell), what was your Australian tax residency status?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-entity-type:individual",
+          "q1-entity-type:trust"
+        ]
+      },
+      "options": [
+        {
+          "label": "I was an Australian resident for tax purposes",
+          "value": "resident",
+          "flags": [
+            "q2-residency-status:resident"
+          ]
+        },
+        {
+          "label": "I was a foreign or temporary resident (not an Australian tax resident)",
+          "value": "foreign-temp",
+          "flags": [
+            "q2-residency-status:foreign-temp"
+          ]
+        },
+        {
+          "label": "I'm not sure of my tax residency status",
+          "value": "unsure-residency",
+          "flags": [
+            "q2-residency-status:unsure-residency"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-asset-type",
+      "text": "What type of asset did you dispose of (or what CGT event occurred)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-residency-status:resident"
+        ]
+      },
+      "options": [
+        {
+          "label": "A home (main residence) that I first used to produce income (rental or business) before living in it",
+          "value": "home-rental-first",
+          "flags": [
+            "q3-asset-type:home-rental-first"
+          ]
+        },
+        {
+          "label": "A newly created asset (e.g. a contractual right or other intangible you created, not purchased)",
+          "value": "new-asset",
+          "flags": [
+            "q3-asset-type:new-asset"
+          ]
+        },
+        {
+          "label": "I want to understand whether the indexation method or the discount method is better for a pre-September 1999 asset",
+          "value": "pre-1999-indexation",
+          "flags": [
+            "q3-asset-type:pre-1999-indexation"
+          ]
+        },
+        {
+          "label": "I provide affordable rental housing to low-to-moderate income tenants",
+          "value": "affordable-rental",
+          "flags": [
+            "q3-asset-type:affordable-rental"
+          ]
+        },
+        {
+          "label": "Another asset type (shares, investment property, other)",
+          "value": "other-asset",
+          "flags": [
+            "q3-asset-type:other-asset"
+          ]
+        },
+        {
+          "label": "I want a general explanation of how the CGT discount works",
+          "value": "general-explainer",
+          "flags": [
+            "q3-asset-type:general-explainer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-ownership-period",
+      "text": "How long did you own the asset before the CGT event (e.g. the contract date if sold under a contract)?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q3-asset-type:other-asset"
+        ]
+      },
+      "options": [
+        {
+          "label": "At least 12 months (excluding the day of acquisition and the day of the CGT event)",
+          "value": "12-months-or-more",
+          "flags": [
+            "q4-ownership-period:12-months-or-more"
+          ]
+        },
+        {
+          "label": "Less than 12 months",
+          "value": "less-than-12-months",
+          "flags": [
+            "q4-ownership-period:less-than-12-months"
+          ]
+        },
+        {
+          "label": "I'm not sure how to count the 12-month period (e.g. inherited asset, relationship breakdown, contract vs settlement date)",
+          "value": "unsure-counting",
+          "flags": [
+            "q4-ownership-period:unsure-counting"
+          ]
+        },
+        {
+          "label": "I don't know whether I've held it for 12 months",
+          "value": "unsure-period",
+          "flags": [
+            "q4-ownership-period:unsure-period"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-affordable-rental-ownership",
+      "text": "How long did you own the affordable rental housing asset before the CGT event?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q3-asset-type:affordable-rental"
+        ]
+      },
+      "options": [
+        {
+          "label": "At least 12 months",
+          "value": "affordable-12-months-met",
+          "flags": [
+            "q4-affordable-rental-ownership:affordable-12-months-met"
+          ]
+        },
+        {
+          "label": "Less than 12 months",
+          "value": "affordable-less-than-12",
+          "flags": [
+            "q4-affordable-rental-ownership:affordable-less-than-12"
+          ]
+        },
+        {
+          "label": "I'm not sure how to count the 12-month period",
+          "value": "affordable-unsure-counting",
+          "flags": [
+            "q4-affordable-rental-ownership:affordable-unsure-counting"
+          ]
+        },
+        {
+          "label": "I don't know whether I've held it for 12 months",
+          "value": "affordable-unsure-period",
+          "flags": [
+            "q4-affordable-rental-ownership:affordable-unsure-period"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5-super-fund-ownership",
+      "text": "How long did the complying super fund own the asset before the CGT event?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q1-entity-type:super-fund"
+        ]
+      },
+      "options": [
+        {
+          "label": "At least 12 months",
+          "value": "super-12-months-met",
+          "flags": [
+            "q5-super-fund-ownership:super-12-months-met"
+          ]
+        },
+        {
+          "label": "Less than 12 months",
+          "value": "super-less-than-12",
+          "flags": [
+            "q5-super-fund-ownership:super-less-than-12"
+          ]
+        },
+        {
+          "label": "I'm not sure how to count the 12-month period",
+          "value": "super-unsure-counting",
+          "flags": [
+            "q5-super-fund-ownership:super-unsure-counting"
+          ]
+        },
+        {
+          "label": "I don't know whether the fund held it for 12 months",
+          "value": "super-unsure-period",
+          "flags": [
+            "q5-super-fund-ownership:super-unsure-period"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "cgt-discount-explainer",
+      "when": {
+        "any": [
+          "q3-asset-type:general-explainer"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How the 50% CGT discount works",
+      "result_copy": "The CGT discount allows you to reduce your capital gain by 50% if you owned the asset for at least 12 months and are an Australian resident for tax purposes. You must subtract any capital losses from your capital gains before applying the discount, then reduce the remaining capital gain by 50% and report this amount in your income tax return. The discount applies to individuals and Australian trusts. Complying super funds use a different rate. Companies cannot use the CGT discount.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_2"
+      ]
+    },
+    {
+      "id": "individual-resident-qualifies",
+      "when": {
+        "any": [
+          "q4-ownership-period:12-months-or-more"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I am an Australian resident individual who owned the asset for at least 12 months — I qualify for the 50% discount",
+      "result_copy": "Based on your answers, both conditions for the 50% CGT discount appear to be indicated as met: you are an Australian resident for tax purposes and you owned the asset for at least 12 months before the CGT event. The rule states 'you can reduce your capital gain by 50%, if both of the following apply.' You must subtract any capital losses from your capital gains before applying the discount, then reduce the remaining capital gain by 50% and report this amount in your income tax return. Review recommended to confirm all conditions are satisfied before lodging.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_2"
+      ]
+    },
+    {
+      "id": "12-month-ownership-how-counted",
+      "when": {
+        "any": [
+          "q4-ownership-period:unsure-counting",
+          "q4-affordable-rental-ownership:affordable-unsure-counting",
+          "q5-super-fund-ownership:super-unsure-counting"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How to count the 12-month ownership period (contracts, deceased estates, relationship breakdowns)",
+      "result_copy": "To determine whether the 12-month minimum ownership period is met, you exclude the day of acquisition and the day of the CGT event. For assets sold under a contract, the CGT event is the contract date, not the settlement date. Previous ownership periods may count in certain circumstances — for example, where the asset was acquired through a deceased estate (where the deceased acquired it on or after 20 September 1985), through a relationship breakdown (where the combined spousal period may count), or as a rollover replacement for a lost, destroyed or compulsorily acquired asset. If you cannot confirm the exact dates, consult your purchase records or a tax professional.",
+      "figure_ids": []
+    },
+    {
+      "id": "held-less-than-12-months",
+      "when": {
+        "any": [
+          "q4-ownership-period:less-than-12-months",
+          "q4-affordable-rental-ownership:affordable-less-than-12",
+          "q5-super-fund-ownership:super-less-than-12"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I owned the asset for less than 12 months — I do not qualify for the CGT discount",
+      "result_copy": "Based on your answers, the 12-month minimum ownership period does not appear to be met. The rule requires that 'you owned the asset for at least 12 months' before the CGT event. Because this condition is not satisfied, the 50% CGT discount is not available for this capital gain. The full capital gain (after subtracting any capital losses) would be included in your assessable income. Review recommended to confirm the exact ownership dates before lodging.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_2"
+      ]
+    },
+    {
+      "id": "not-sure-if-12-months-met",
+      "when": {
+        "any": [
+          "q4-ownership-period:unsure-period",
+          "q4-affordable-rental-ownership:affordable-unsure-period",
+          "q5-super-fund-ownership:super-unsure-period"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure whether I've owned the asset for 12 months — how do I determine this?",
+      "result_copy": "To qualify for the CGT discount, you must own the asset for at least 12 months before the CGT event, excluding both the day of acquisition and the day of the CGT event. For assets sold under a contract, the CGT event is the contract date, not settlement. If you cannot confirm the exact dates, consult your purchase records or a tax professional. If the 12-month period is met and you are an Australian resident for tax purposes, the 50% discount may apply; if not, it will not.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_2"
+      ]
+    },
+    {
+      "id": "foreign-temporary-resident",
+      "when": {
+        "any": [
+          "q2-residency-status:foreign-temp"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I am a foreign or temporary resident — the full CGT discount does not apply to me",
+      "result_copy": "Based on your answers, you are indicated as a foreign or temporary resident. The full 50% CGT discount is not available to foreign or temporary residents for capital gains made after 8 May 2012. However, if you had a period of Australian tax residency during your ownership of the asset, you may be entitled to an apportioned discount. Seek advice to calculate any partial entitlement. Review recommended before lodging.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "not-sure-residency-status",
+      "when": {
+        "any": [
+          "q2-residency-status:unsure-residency"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure if I'm an Australian resident for tax purposes — how does this affect my CGT discount?",
+      "result_copy": "Australian tax residency is determined by the ATO's residency rules, not simply by citizenship or visa status. If you are a foreign or temporary resident, the full 50% CGT discount cannot be used for capital gains made after 8 May 2012, though an apportioned discount may apply for periods of Australian residency. To determine your residency status, use the ATO's residency tool or consult a tax professional before lodging.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "home-first-used-rental-business-exclusion",
+      "when": {
+        "any": [
+          "q3-asset-type:home-rental-first"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My home was first used for rental or business less than 12 months before I sold it — the CGT discount is excluded",
+      "result_copy": "Based on your answers, your home was first used to produce income (rental or business use) before you lived in it as your main residence. This situation involves specific CGT rules that may affect your eligibility for the main residence exemption and the CGT discount. The applicable rules depend on the specific facts of your situation. Review recommended — consult a tax professional to determine how the CGT discount and main residence exemption interact in your circumstances.",
+      "figure_ids": [
+        "fig_1",
+        "fig_2"
+      ]
+    },
+    {
+      "id": "new-asset-creation-exclusion",
+      "when": {
+        "any": [
+          "q3-asset-type:new-asset"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "The CGT event created a new asset (e.g. a restrictive covenant) — the discount is not available",
+      "result_copy": "Based on your answers, the asset involved is a newly created asset (such as a contractual right or other intangible you created rather than purchased). Specific CGT rules apply to newly created assets, including how the acquisition date and ownership period are determined. Whether the 12-month ownership period and the 50% CGT discount apply depends on the specific facts. Review recommended — consult a tax professional to confirm eligibility in your circumstances.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "complying-super-fund-discount",
+      "when": {
+        "any": [
+          "q5-super-fund-ownership:super-12-months-met"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I am a complying super fund — my CGT discount rate is 33.33%, not 50%",
+      "result_copy": "Based on your answers, the asset is held by a complying super fund that owned it for at least 12 months before the CGT event. The rule states that 'complying super funds can discount a capital gain by 33.33%.' The fund must subtract any capital losses from capital gains before applying the discount, then reduce the remaining capital gain by 33.33% and report this amount in the fund's income tax return. Review recommended to confirm all conditions are satisfied before lodging.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_2",
+        "fig_3"
+      ]
+    },
+    {
+      "id": "affordable-rental-housing-discount",
+      "when": {
+        "any": [
+          "q4-affordable-rental-ownership:affordable-12-months-met"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I provide affordable rental housing to low-to-moderate income tenants — I may qualify for an additional 10% discount (up to 60% total)",
+      "result_copy": "Based on your answers, you are an Australian resident individual who provides affordable rental housing to people earning low to moderate income and owned the asset for at least 12 months. The rule states: 'There is an additional CGT discount of up to 10% for individuals who are Australian residents for tax purposes who provide affordable rental housing to people earning low to moderate income. This increases the CGT discount to up to 60% for owners of these residential rental properties.' You must subtract any capital losses from your capital gains before applying the discount. Review recommended to confirm all eligibility conditions are met before lodging.",
+      "figure_ids": [
+        "fig_1",
+        "fig_2",
+        "fig_4",
+        "fig_5"
+      ]
+    },
+    {
+      "id": "indexation-vs-discount-pre-1999",
+      "when": {
+        "any": [
+          "q3-asset-type:pre-1999-indexation"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I have owned the asset since before 21 September 1999 — should I use indexation or the 50% discount?",
+      "result_copy": "For assets acquired before a relevant date in September 1999, you may have the option to use either the indexation method or the CGT discount method to calculate your capital gain. The indexation method adjusts the cost base for inflation up to a certain point, while the discount method reduces the capital gain by 50% (for eligible individuals and Australian trusts). The better method depends on your specific cost base, indexed cost base, and capital gain figures. Review recommended — consult your records and a tax professional to determine which method produces the more favourable outcome in your circumstances.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-entity-type:company"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1-entity-type:unsure-entity"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

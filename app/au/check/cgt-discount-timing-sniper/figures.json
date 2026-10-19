@@ -1,0 +1,44 @@
+[
+  {
+    "id": "fig_0",
+    "label": "CGT discount rate (individuals and Australian trusts)",
+    "value": "50",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_1",
+    "label": "Minimum ownership period for CGT discount eligibility",
+    "value": "12",
+    "unit": "months",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "Minimum ownership period (12-month requirement detail)",
+    "value": "12",
+    "unit": "months",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_3",
+    "label": "CGT discount rate for complying super funds",
+    "value": "33.33",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_4",
+    "label": "Additional CGT discount for affordable rental housing",
+    "value": "10",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_5",
+    "label": "Total CGT discount cap for affordable rental housing owners",
+    "value": "60",
+    "unit": "%",
+    "fact_role": "cap"
+  }
+]
