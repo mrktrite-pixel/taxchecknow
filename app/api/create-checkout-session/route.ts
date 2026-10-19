@@ -98,7 +98,7 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // the registry short-circuits to the identical answer. What it ADDS is the preview fallback the
   // chain lacks. The chain block is now dead for these two keys and is left in place.
   nomad_67_tax_treaty_navigator:  "STRIPE_NOMAD_TTN_67",
-  nomad_147_tax_treaty_navigator: "STRIPE_NOMAD_TTN_147",
+  nomad_147_tax_treaty_navigator: "STRIPE_NOMAD_TTN_147",
   // au/check/cgt-discount-timing-sniper (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
   // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
   // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that

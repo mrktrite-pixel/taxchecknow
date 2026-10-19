@@ -2,7 +2,8 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "cgt-discount-timing-sniper", name: "CGT Discount Timing Sniper", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/cgt-discount-timing-sniper", url: "https://taxchecknow.com/au/check/cgt-discount-timing-sniper", apiRoute: "/api/rules/cgt-discount-timing-sniper",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — CGT discount (s.115-10)", legislation: "Income Tax Assessment Act 1997 s.115-10 — 50% CGT discount for individuals and trusts", lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — CGT discount (s.115-10)", legislation: "Income Tax Assessment Act 1997 s.115-10 — 50% CGT discount for individuals and trusts", lastVerified: "April 2026",
+  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
   // EngineCalculator wrapper, so the success pages must bind inputs through
   // buildComposerInputsFromSession, and the parity census must cover this product.
   engineNative: true,
