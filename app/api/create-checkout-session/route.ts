@@ -68,7 +68,13 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // resolving the LIVE price under the test key. PRODUCTION IS UNCHANGED: these are the SAME
   // env vars the includes()-chain uk block already returns (STRIPE_UK_MTD_67/147).
   uk_67_mtd_scorecard:  "STRIPE_UK_MTD_67",
-  uk_147_mtd_scorecard: "STRIPE_UK_MTD_147",
+  uk_147_mtd_scorecard: "STRIPE_UK_MTD_147",
+  // au/check/cgt-discount-timing-sniper (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
+  // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that
+  // key, read out of this same file rather than guessed.
+  au_67_cgt_discount_timing_sniper:   "STRIPE_AU_CGT_DT_67",
+  au_147_cgt_discount_timing_sniper:  "STRIPE_AU_CGT_DT_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {
