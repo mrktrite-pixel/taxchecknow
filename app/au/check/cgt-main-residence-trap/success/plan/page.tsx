@@ -131,25 +131,16 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("2027-06-30T23:59:59.000+10:00").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "none", reason: "standing_rule_periods_are_dwelling_relative_no_act_by_date").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
-
-  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
-  // expired or will not parse, is a real defect — surface it so it is never silent.
-  // Phase 5 replaces this with real alerting.
-  useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "cgt-main-residence-trap", deadlineIso: "2027-06-30T23:59:59.000+10:00" });
-  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -286,7 +277,7 @@ export default function SuccessPlan() {
       nextActionRecommendation: "Your personalised nextActionRecommendation is on its way by email.",
       accountantQuestions: [
         "What is my exact ATO position based on my answers?",
-        "What is the single most important action I should take before 30 June 2027?",
+        "What is the single most important action I should take before No act-by date?",
         "Are there any planning opportunities specific to my situation?",
       ],
       actions: [],
@@ -318,15 +309,6 @@ export default function SuccessPlan() {
       `DTSTAMP:${now}`,
       "SUMMARY:CGT — Review cost base and exemption with accountant",
       "DESCRIPTION:Gather all records before meeting accountant to maximise cost base.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "BEGIN:VEVENT",
-      `UID:cgt-return-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20261031"}`,
-      `DTEND;VALUE=DATE:${"20261031"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:CGT — Lodge tax return",
-      "DESCRIPTION:CGT declared in return due October 2026.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -472,7 +454,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before 30 June 2027
+                  What to do — in order — before No act-by date
                 </h2>
                 <div className="space-y-4">
                   {pack!.actions.map((action, i) => (
@@ -564,15 +546,6 @@ export default function SuccessPlan() {
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     In 2 weeks
-                  </span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">CGT — Lodge tax return</p>
-                    <p className="text-xs text-neutral-500">CGT declared in return due October 2026.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Oct 2026
                   </span>
                 </div>
               </div>

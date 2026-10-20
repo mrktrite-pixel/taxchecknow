@@ -107,28 +107,19 @@ export default function SuccessAssess() {
   // than spinning silently for a minute and a half.
   const [waitedMs,   setWaitedMs]   = useState(0);
   const [copied,     setCopied]     = useState(false);
-  const [calDone,    setCalDone]    = useState(false);
+
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("2027-06-30T23:59:59.000+10:00").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "none", reason: "standing_rule_periods_are_dwelling_relative_no_act_by_date").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
-
-  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
-  // expired or will not parse, is a real defect — surface it so it is never silent.
-  // Phase 5 replaces this with real alerting.
-  useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "cgt-main-residence-trap", deadlineIso: "2027-06-30T23:59:59.000+10:00" });
-  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -260,7 +251,7 @@ export default function SuccessAssess() {
       firstAction: "Your personalised firstAction is on its way by email.",
       accountantQuestions: [
         "What is my exact ATO position based on my answers?",
-        "What is the single most important action I should take before 30 June 2027?",
+        "What is the single most important action I should take before No act-by date?",
         "Are there any planning opportunities specific to my situation?",
       ],
       
@@ -275,35 +266,8 @@ export default function SuccessAssess() {
     setLoading(false);
   }
 
-  function handleCalendar() {
-    const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    function relativeDate(d: number): string {
-      return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
-    }
-    const ics = [
-      "BEGIN:VCALENDAR","VERSION:2.0",
-      "PRODID:-//TaxCheckNow//COLE//EN",
-      "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      `X-WR-CALNAME:CGT Main Residence Trap Engine — Deadlines`,
-      "BEGIN:VEVENT",
-      `UID:cgt-return-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20261031"}`,
-      `DTEND;VALUE=DATE:${"20261031"}`,
-      `DTSTAMP:${now}`,
-      "SUMMARY:CGT — Lodge tax return including property sale",
-      "DESCRIPTION:CGT from 2025/26 property sale must be declared in return due October 2026.",
-      "STATUS:CONFIRMED",
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
-    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "cgt-main-residence-trap.ics";
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
-    setCalDone(true);
-  }
+  // handleCalendar() omitted: no event survived the R-A3 date gate, so there is no
+  // .ics to build and no button to trigger it.
 
   async function handleCopy() {
     if (!pack?.accountantQuestions.length) return;
@@ -470,31 +434,10 @@ export default function SuccessAssess() {
               </div>
             )}
 
-            {/* CALENDAR */}
-            <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
-              <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                Key dates for your calendar
-              </p>
-              <h2 className="mb-4 font-serif text-lg font-bold text-neutral-950">
-                Add these now — don't rely on memory
-              </h2>
-              <div className="mb-4 space-y-2">
-                
-                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">CGT — Lodge tax return including property sale</p>
-                    <p className="text-xs text-neutral-500">CGT from 2025/26 property sale must be declared in return due October 2026.</p>
-                  </div>
-                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Oct 2026
-                  </span>
-                </div>
-              </div>
-              <button onClick={handleCalendar}
-                className="no-print w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
-                {calDone ? "✓ Downloaded — open the .ics file to add to your calendar" : "📅 Add all dates to Apple / Google / Outlook calendar →"}
-              </button>
-            </div>
+            {/* CALENDAR — suppressed at generate time: every dated event was dropped
+                (see the R-A3 calendar warning in the build log). An empty "key dates"
+                panel with a download button that yields an eventless .ics is worse than
+                no panel at all. */}
 
             {/* YOUR FILES */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
@@ -549,10 +492,7 @@ export default function SuccessAssess() {
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   ⬇ Save as PDF
                 </button>
-                <button onClick={handleCalendar}
-                  className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
-                  📅 Add to calendar
-                </button>
+
                 <button onClick={handleCopy}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   📋 Copy accountant questions

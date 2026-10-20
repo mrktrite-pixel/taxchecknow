@@ -10,6 +10,14 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Your Main Residence CGT Fix Plan", tagline: "Is your tax-free home actually taxable?", value: "A personalised CGT audit built around your purchase date, rental periods, and sale date — not a generic ATO guide.", cta: "Get My CGT Fix Plan — $67 →", productKey: "au_67_cgt_main_residence_trap", envVar: "STRIPE_AU_CGT_MR_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your CGT Minimisation System", tagline: "Minimise CGT with the right timing, structure, and documentation", value: "A full CGT minimisation plan including ownership structuring, sale timing strategy, and partial exemption calculation.", cta: "Get My CGT System — $147 →", productKey: "au_147_cgt_main_residence_trap", envVar: "STRIPE_AU_CGT_MR_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "none",
+    reason:       "standing_rule_periods_are_dwelling_relative_no_act_by_date",
+    jurisdiction: "AU",
+    domain:       "main_residence_exemption_periods",
+    label:        "No act-by date",
+    basis:        "ITAA 1997 Subdiv 118-B: the main residence exemption's periods run from the owner's own dates per dwelling (s118-145's 6-year absence limit, the 6-month moving-house overlap); no calendar deadline. Research proposed unresolvable - 27 quoted sentences examined, every date in an example. Declared none under the operator's standing step-7 ruling, 2026-10-20",
+  },
   deadline: { isoDate: "2027-06-30T23:59:59.000+10:00", display: "30 June 2027", short: "30 Jun 2027", description: "Australian tax year end — CGT events in 2026/27 must be reported", urgencyLabel: "EOFY", countdownLabel: "Countdown to 30 June 2027 EOFY" },
   h1: "CGT Main Residence 2026: Is Your Tax-Free Home Actually Taxable?", metaTitle: "Main Residence CGT: Is Your Home Fully Tax-Free? | TaxCheckNow", metaDescription: "The main residence CGT exemption is not automatic: renting out your home, or the 6-year rule, can make part of the sale taxable. Check your position.", canonical: "https://taxchecknow.com/au/check/cgt-main-residence-trap",
   answerHeadline: "Is your home sale tax-free in Australia? Not always.",
