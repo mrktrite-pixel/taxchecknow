@@ -158,9 +158,33 @@ export function corpusFetchHeaders(target: CorpusOrigin, env: Record<string, str
   const secret = env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
   if (target.isSelf && secret) {
     headers["x-vercel-protection-bypass"] = secret;
-    // Ask Vercel to set the bypass cookie too: the fetch may be redirected internally, and the
-    // header alone is not carried across a redirect hop.
-    headers["x-vercel-set-bypass-cookie"] = "samesitenone";
+    // ═══════════════════════════════════════════════════════════════════════════════════════
+    // F145 — `x-vercel-set-bypass-cookie` IS NOT SENT, AND THAT HEADER IS WHY PAID GENERATION
+    // FAILED ON EVERY PREVIEW.
+    //
+    // It used to be set to "samesitenone", on this reasoning: "the fetch may be redirected
+    // internally, and the header alone is not carried across a redirect hop." The opposite is
+    // true. Asking Vercel to SET the cookie makes it answer 307 so the browser can store it —
+    // and a server-side fetch has no cookie jar, so the redirect target re-asks, and the loop
+    // runs until Node's 20-redirect limit throws:
+    //
+    //     TypeError: fetch failed
+    //       [cause]: Error: redirect count exceeded
+    //
+    // which assess-core catches and reports as `corpus_unreachable` (424), after which the
+    // webhook's fail-closed rule stores NOTHING. The buyer gets the delivery email and a
+    // success page reading "Assessment generation issue"; `assessments` has no row at all.
+    //
+    // MEASURED 2026-10-20 against the failing deployment's own corpus URL
+    // (taxchecknow-ojkt7r2mj…/api/rules/cgt-discount-timing-sniper), three requests:
+    //
+    //   no headers                      → 2 redirects to vercel.com/login (protection is on)
+    //   bypass header only              → 200, 0 redirects, corpus JSON returned
+    //   bypass header + set-bypass-cookie → 307, 20 redirects, "redirect count exceeded"
+    //
+    // So the bypass header alone needs no redirect hop to survive: there is no hop. The cookie
+    // is for a browser session, and nothing here is a browser.
+    // ═══════════════════════════════════════════════════════════════════════════════════════
   }
   return headers;
 }
