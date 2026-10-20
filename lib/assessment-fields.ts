@@ -195,6 +195,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["discountEligibility", "holdingPeriodCalculation", "contractDateRule", "entityDiscountRate", "residencyImpact", "lossSequencingOrder", "rollerOverImpact", "taxDeltaEstimate", "firstAction"],
     tier2: ["discountEligibility", "holdingPeriodCalculation", "contractDateRule", "entityDiscountRate", "residencyImpact", "lossSequencingOrder", "rollerOverImpact", "taxDeltaEstimate", "saleTimingOptimisation", "entityRestructureAnalysis", "offThePlanAdvantage", "exitSequenceStrategy"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/cgt-main-residence-trap. Lists copied VERBATIM
+  // from au-01-cgt-main-residence-trap.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "cgt-main-residence-trap": {
+    tier1: ["exemptionStatus", "taxableFractionCalculation", "sixYearRuleAnalysis", "incomeUseImpact", "foreignResidencyCheck", "businessUseImpact", "overlapPropertyIssue", "evidenceChecklist", "firstAction"],
+    tier2: ["exemptionStatus", "taxableFractionCalculation", "sixYearRuleAnalysis", "incomeUseImpact", "foreignResidencyCheck", "businessUseImpact", "overlapPropertyIssue", "evidenceChecklist", "costBaseAdjustmentMap", "saleTimingScenarios", "overlapNominationStrategy", "marketValueResetAnalysis", "firstUseIncomeRules", "nextActionRecommendation"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */

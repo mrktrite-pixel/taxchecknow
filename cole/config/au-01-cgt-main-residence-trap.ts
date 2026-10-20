@@ -2,7 +2,11 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "cgt-main-residence-trap", name: "CGT Main Residence Trap Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/cgt-main-residence-trap", url: "https://taxchecknow.com/au/check/cgt-main-residence-trap", apiRoute: "/api/rules/cgt-main-residence-trap",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Main Residence Exemption (s.118-110)", legislation: "Income Tax Assessment Act 1997 s.118-110 to s.118-195 — Main Residence CGT Exemption", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Main Residence Exemption (s.118-110)", legislation: "Income Tax Assessment Act 1997 s.118-110 to s.118-195 — Main Residence CGT Exemption", lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Main Residence CGT Fix Plan", tagline: "Is your tax-free home actually taxable?", value: "A personalised CGT audit built around your purchase date, rental periods, and sale date — not a generic ATO guide.", cta: "Get My CGT Fix Plan — $67 →", productKey: "au_67_cgt_main_residence_trap", envVar: "STRIPE_AU_CGT_MR_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your CGT Minimisation System", tagline: "Minimise CGT with the right timing, structure, and documentation", value: "A full CGT minimisation plan including ownership structuring, sale timing strategy, and partial exemption calculation.", cta: "Get My CGT System — $147 →", productKey: "au_147_cgt_main_residence_trap", envVar: "STRIPE_AU_CGT_MR_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2027-06-30T23:59:59.000+10:00", display: "30 June 2027", short: "30 Jun 2027", description: "Australian tax year end — CGT events in 2026/27 must be reported", urgencyLabel: "EOFY", countdownLabel: "Countdown to 30 June 2027 EOFY" },
