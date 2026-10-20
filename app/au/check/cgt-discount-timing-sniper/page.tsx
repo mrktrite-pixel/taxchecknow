@@ -10,30 +10,34 @@ import CgtDiscountTimingSniperCalculator from "./CgtDiscountTimingSniperCalculat
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "CGT 50% Discount Australia 2026 — Did Your Asset Qualify? | TaxCheckNow",
-  description: "The 50% CGT discount halves your capital gain if you held the asset for more than 12 months. But the clock starts at different times for different assets — and the contract date matters, not settlement. Check your position in 2 minutes.",
+  title: "CGT 50% Discount: Did Your Asset Qualify? | TaxCheckNow",
+  description: "The 50% CGT discount applies only if you held the asset at least 12 months — and the clock starts at different dates for different assets. Check yours.",
   alternates: { canonical: "https://taxchecknow.com/au/check/cgt-discount-timing-sniper" },
   openGraph: {
-    title: "CGT 50% Discount Australia 2026 — Did Your Asset Qualify? | TaxCheckNow",
-    description: "The 50% CGT discount halves your capital gain if you held the asset for more than 12 months. But the clock starts at different times for different assets — and the contract date matters, not settlement. Check your position in 2 minutes.",
+    title: "CGT 50% Discount: Did Your Asset Qualify? | TaxCheckNow",
+    description: "The 50% CGT discount applies only if you held the asset at least 12 months — and the clock starts at different dates for different assets. Check yours.",
     url: "https://taxchecknow.com/au/check/cgt-discount-timing-sniper",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "October 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -51,7 +55,7 @@ function progressPct(): number {
 const faqs = [
   {
     "question": "What is the 50% CGT discount?",
-    "answer": "The 50% CGT discount reduces the taxable capital gain by half for individuals and trusts that have held an asset for more than 12 months. Instead of paying tax on the full $200,000 gain, you pay tax on $100,000. At a 45% marginal rate, this saves $45,000."
+    "answer": "The 50% CGT discount reduces the taxable capital gain by half for individuals and trusts that have held an asset for at least 12 months. Instead of paying tax on the full $200,000 gain, you pay tax on $100,000. At a 45% marginal rate, this saves $45,000."
   },
   {
     "question": "When does the 12-month clock start?",
@@ -63,7 +67,7 @@ const faqs = [
   },
   {
     "question": "Does the CGT discount apply to shares?",
-    "answer": "Yes — the 50% CGT discount applies to shares held by individuals and trusts for more than 12 months. The purchase date is the date the purchase was confirmed (settlement of the share trade, typically T+2 for ASX shares). Shares sold within 12 months are taxed at full marginal rates."
+    "answer": "Yes — the 50% CGT discount applies to shares held by individuals and trusts for at least 12 months. The purchase date is the date the purchase was confirmed (settlement of the share trade, typically T+2 for ASX shares). Shares sold within 12 months are taxed at full marginal rates."
   },
   {
     "question": "Can I get the CGT discount through a trust?",
@@ -137,19 +141,19 @@ const comparisonRows = [
     "position": "Individual",
     "metric1": "50%",
     "metric2": "$45,000",
-    "bestMove": "Held over 12 months"
+    "bestMove": "Held at least 12 months"
   },
   {
     "position": "Discretionary trust",
     "metric1": "50%",
     "metric2": "$45,000",
-    "bestMove": "Held over 12 months — distributed to individual"
+    "bestMove": "Held at least 12 months — distributed to individual"
   },
   {
     "position": "SMSF",
     "metric1": "33.33%",
     "metric2": "$30,000 (at 15% rate)",
-    "bestMove": "Held over 12 months — pension phase exempt"
+    "bestMove": "Held at least 12 months — pension phase exempt"
   },
   {
     "position": "Company",
@@ -185,7 +189,7 @@ const toolsRows = [
 const geoFacts = [
   {
     "label": "Individual/trust discount",
-    "value": "50% if held over 12 months"
+    "value": "50% if held at least 12 months"
   },
   {
     "label": "Company discount",
@@ -193,7 +197,7 @@ const geoFacts = [
   },
   {
     "label": "SMSF discount",
-    "value": "33.33% if held over 12 months"
+    "value": "33.33% if held at least 12 months"
   },
   {
     "label": "Holding period start",
@@ -232,6 +236,10 @@ const sources = [
   {
     "title": "ATO — CGT discount",
     "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-discount"
+  },
+  {
+    "title": "ITAA 1997 Div 115 — s115-10 Who can make a discount capital gain?",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   }
 ];
 
@@ -239,7 +247,7 @@ const countdownStats = [
   {
     "label": "CGT discount — individuals",
     "value": "50%",
-    "sub": "if held over 12 months"
+    "sub": "if held at least 12 months"
   },
   {
     "label": "CGT discount — companies",
@@ -264,8 +272,13 @@ const countdownStats = [
 
 export default function CgtDiscountTimingSniperPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/cgt-discount-timing-sniper", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -281,8 +294,8 @@ export default function CgtDiscountTimingSniperPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "CGT Discount Timing Sniper — Rules April 2026",
-    description: "The 50% CGT discount halves your capital gain if you held the asset for more than 12 months. But the clock starts at different times for different assets — and the contract date matters, not settlement. Check your position in 2 minutes.",
+    name: "CGT Discount Timing Sniper — Rules October 2026",
+    description: "The 50% CGT discount applies only if you held the asset at least 12 months — and the clock starts at different dates for different assets. Check yours.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -298,7 +311,7 @@ export default function CgtDiscountTimingSniperPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "CGT Discount Timing Sniper",
-    description: "The 50% CGT discount halves your capital gain if you held the asset for more than 12 months. But the clock starts at different times for different assets — and the contract date matters, not settlement. Check your position in 2 minutes.",
+    description: "The 50% CGT discount applies only if you held the asset at least 12 months — and the clock starts at different dates for different assets. Check yours.",
     url: "https://taxchecknow.com/au/check/cgt-discount-timing-sniper",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -347,13 +360,13 @@ export default function CgtDiscountTimingSniperPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/cgt-discount-timing-sniper#calculator",
-    "description": "The 50% CGT discount halves your capital gain if you held the asset for more than 12 months. But the clock starts at different times for different assets — and the contract date matters, not settlement. Check your position in 2 minutes.",
+    "description": "The 50% CGT discount applies only if you held the asset at least 12 months — and the clock starts at different dates for different assets. Check yours.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance October 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -437,7 +450,7 @@ export default function CgtDiscountTimingSniperPage() {
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
         <p className="mb-6 text-base leading-relaxed text-neutral-600 max-w-2xl">
-          The 50% CGT discount applies to capital gains made by individuals and trusts on assets held for more than 12 months. For companies, the discount is not available — companies pay CGT at their corporate tax rate on the full gain. Superannuation funds receive a one-third discount (33.33%).
+          The 50% CGT discount applies to capital gains made by individuals and trusts on assets held for at least 12 months. For companies, the discount is not available — companies pay CGT at their corporate tax rate on the full gain. Superannuation funds receive a one-third discount (33.33%).
         </p>
 
         {/* Calculator + Sidebar grid — immediately after H1 for mobile conversions */}
@@ -524,7 +537,7 @@ export default function CgtDiscountTimingSniperPage() {
               <p className={`mb-1 text-2xl font-bold ${false ? "text-red-400" : ""}`}>
                 50%
               </p>
-              <p className="text-xs text-neutral-400">if held over 12 months</p>
+              <p className="text-xs text-neutral-400">if held at least 12 months</p>
             </div>
             <div className={`rounded-lg border p-4 ${true ? "border-red-900 bg-red-950/30" : "border-neutral-800"}`}>
               <p className={`mb-2 text-xs uppercase tracking-wide ${true ? "text-red-400" : "text-neutral-400"}`}>
@@ -591,7 +604,7 @@ export default function CgtDiscountTimingSniperPage() {
           <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-900">
             The answer — ATO confirmed April 2026
           </p>
-          <p className="mb-2 text-neutral-900">The 50% CGT discount applies to capital gains made by individuals and trusts on assets held for more than 12 months. For companies, the discount is not available — companies pay CGT at their corporate tax rate on the full gain. Superannuation funds receive a one-third discount (33.33%).</p>
+          <p className="mb-2 text-neutral-900">The 50% CGT discount applies to capital gains made by individuals and trusts on assets held for at least 12 months. For companies, the discount is not available — companies pay CGT at their corporate tax rate on the full gain. Superannuation funds receive a one-third discount (33.33%).</p>
           <p className="mb-2 text-neutral-900">The 12-month holding period is measured from the date of acquisition to the date of disposal. For most assets, the disposal date is the date you enter into the contract — not the settlement date. Selling a property in May with July settlement means the CGT event occurred in May.</p>
           <p className="mb-2 text-neutral-900">The most common mistake: selling just inside the 12-month mark and paying double the CGT unnecessarily. Waiting even a few days to push the contract date past the 12-month anniversary can halve the tax bill. On a $200,000 gain at a 45% rate, that difference is $45,000.</p>
           <p className="mt-3 text-xs text-neutral-600">Source: ATO — CGT discount · ITAA 1997 s.115-10</p>
@@ -671,18 +684,18 @@ export default function CgtDiscountTimingSniperPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Australian 50% CGT Discount — confirmed 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Under ITAA 1997 s.115-10, individuals and trusts are entitled to a 50% CGT discount on capital gains from assets held for more than 12 months. The 12-month holding period is calculated from the acquisition date (generally the date of the purchase contract) to the disposal date (generally the date of the sale contract). Complying superannuation funds receive a one-third (33.33%) discount. Companies are not entitled to any CGT discount. Capital losses from the current year and carried-forward losses must be offset against capital gains before applying the discount. The discount does not apply to assets acquired before 20 September 1985 (pre-CGT assets), foreign residents on Australian property (in most cases), or revenue assets such as trading stock.</p>
+          <p className="mb-4 text-neutral-800">Under ITAA 1997 s.115-10, individuals and trusts are entitled to a 50% CGT discount on capital gains from assets held for at least 12 months. The 12-month holding period is calculated from the acquisition date (generally the date of the purchase contract) to the disposal date (generally the date of the sale contract). Complying superannuation funds receive a one-third (33.33%) discount. Companies are not entitled to any CGT discount. Capital losses from the current year and carried-forward losses must be offset against capital gains before applying the discount. The discount does not apply to assets acquired before 20 September 1985 (pre-CGT assets), foreign residents on Australian property (in most cases), or revenue assets such as trading stock.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
-            Discounted Capital Gain = (Total Gain - Capital Losses) × 50% (for individuals and trusts held over 12 months). Tax = Discounted Gain × Marginal Rate. No discount if held under 12 months: Tax = Full Gain × Marginal Rate.
+            Discounted Capital Gain = (Total Gain - Capital Losses) × 50% (for individuals and trusts held at least 12 months). Tax = Discounted Gain × Marginal Rate. No discount if held under 12 months: Tax = Full Gain × Marginal Rate.
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (October 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -690,7 +703,7 @@ export default function CgtDiscountTimingSniperPage() {
                 
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">Individual/trust discount</td>
-                  <td className="p-2">50% if held over 12 months</td>
+                  <td className="p-2">50% if held at least 12 months</td>
                   <td className="p-2 text-neutral-500">ITAA 1997 — CGT discount (s.115-10)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -700,7 +713,7 @@ export default function CgtDiscountTimingSniperPage() {
                 </tr>
                 <tr className="border-b border-neutral-200">
                   <td className="p-2">SMSF discount</td>
-                  <td className="p-2">33.33% if held over 12 months</td>
+                  <td className="p-2">33.33% if held at least 12 months</td>
                   <td className="p-2 text-neutral-500">ITAA 1997 — CGT discount (s.115-10)</td>
                 </tr>
                 <tr className="border-b border-neutral-200">
@@ -829,19 +842,19 @@ export default function CgtDiscountTimingSniperPage() {
                 <td className="p-3 font-bold">Individual</td>
                 <td className="p-3 font-mono text-xs">50%</td>
                 <td className="p-3 text-xs">$45,000</td>
-                <td className="p-3 text-xs text-neutral-700">Held over 12 months</td>
+                <td className="p-3 text-xs text-neutral-700">Held at least 12 months</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Discretionary trust</td>
                 <td className="p-3 font-mono text-xs">50%</td>
                 <td className="p-3 text-xs">$45,000</td>
-                <td className="p-3 text-xs text-neutral-700">Held over 12 months — distributed to individual</td>
+                <td className="p-3 text-xs text-neutral-700">Held at least 12 months — distributed to individual</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">SMSF</td>
                 <td className="p-3 font-mono text-xs">33.33%</td>
                 <td className="p-3 text-xs">$30,000 (at 15% rate)</td>
-                <td className="p-3 text-xs text-neutral-700">Held over 12 months — pension phase exempt</td>
+                <td className="p-3 text-xs text-neutral-700">Held at least 12 months — pension phase exempt</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Company</td>
@@ -1003,7 +1016,7 @@ export default function CgtDiscountTimingSniperPage() {
             Law bar
           </p>
           <p className="mb-6 max-w-3xl text-lg text-neutral-900">
-            CGT 50% discount: applies to individuals and trusts on assets held over 12 months. Holding period: purchase contract to sale contract date. Zero discount for companies. 33.33% for superannuation funds. Capital losses offset before discount applies. Under ITAA 1997 s.115-10.
+            CGT 50% discount: applies to individuals and trusts on assets held at least 12 months. Holding period: purchase contract to sale contract date. Zero discount for companies. 33.33% for superannuation funds. Capital losses offset before discount applies. Under ITAA 1997 s.115-10.
           </p>
           <div className="mb-6 flex flex-wrap gap-2">
             
@@ -1022,10 +1035,15 @@ export default function CgtDiscountTimingSniperPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-discount" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-discount" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — CGT discount ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-discount</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 Div 115 — s115-10 Who can make a discount capital gain? ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
             </a>
           </div>
         </div>
@@ -1037,7 +1055,7 @@ export default function CgtDiscountTimingSniperPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for October 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1051,7 +1069,7 @@ export default function CgtDiscountTimingSniperPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. October 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
