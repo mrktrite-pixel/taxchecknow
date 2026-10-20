@@ -10,7 +10,15 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Your CGT Discount Timing Plan", tagline: "Did you hold long enough for the 50% discount?", value: "A personalised CGT discount audit — exact eligibility check based on your purchase and contract dates.", cta: "Get My CGT Timing Plan — $67 →", productKey: "au_67_cgt_discount_timing_sniper", envVar: "STRIPE_AU_CGT_DT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Multi-Asset CGT Strategy", tagline: "Optimise CGT across your entire portfolio", value: "Multi-asset CGT strategy, trust and entity optimisation, and exit timing blueprint for minimum CGT across your portfolio.", cta: "Get My CGT Strategy — $147 →", productKey: "au_147_cgt_discount_timing_sniper", envVar: "STRIPE_AU_CGT_DT_147", successPath: "plan", fileCount: 8 },
-  deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "Australian EOFY — CGT events in 2025/26 must be reported in the annual return", urgencyLabel: "EOFY", countdownLabel: "Countdown to 30 June 2026 EOFY" },
+  temporal: {
+    kind:         "none",
+    reason:       "standing_rule_holding_period_is_asset_relative_no_act_by_date",
+    jurisdiction: "AU",
+    domain:       "cgt_discount_holding_period",
+    label:        "No act-by date",
+    basis:        "ITAA 1997 Div 115: 12-month ownership measured per asset from acquisition; no calendar deadline. Operator ruling 2026-10-20",
+  },
+  deadline: { isoDate: "", display: "30 June 2026", short: "30 Jun 2026", description: "Australian EOFY — CGT events in 2025/26 must be reported in the annual return", urgencyLabel: "EOFY", countdownLabel: "" },
   h1: "CGT Discount 2026: Did You Hold Long Enough for the 50% Discount?", metaTitle: "CGT 50% Discount: Did Your Asset Qualify? | TaxCheckNow", metaDescription: "The 50% CGT discount applies only if you held the asset at least 12 months — and the clock starts at different dates for different assets. Check yours.", canonical: "https://taxchecknow.com/au/check/cgt-discount-timing-sniper",
   answerHeadline: "The answer — ATO confirmed April 2026",
   answerBody: [

@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 11
+// Declared products: 12
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -42,6 +42,16 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "super",
                 "label": "SMSF annual return due (self-lodged)",
                 "basis": "ATO, Lodge SMSF annual returns, fetched 2026-09-28: \"You should lodge and pay all other SARs by 28 February unless we ask you to lodge on a different date.\" 31 October applies only to newly registered funds and funds with overdue prior-year returns; where a tax agent lodges, the agent provides the date."
+          }
+    },
+    "cgt-discount-timing-sniper": {
+          "temporal": {
+                "kind": "none",
+                "reason": "standing_rule_holding_period_is_asset_relative_no_act_by_date",
+                "jurisdiction": "AU",
+                "domain": "cgt_discount_holding_period",
+                "label": "No act-by date",
+                "basis": "ITAA 1997 Div 115: 12-month ownership measured per asset from acquisition; no calendar deadline. Operator ruling 2026-10-20"
           }
     },
     "day-183-rule": {

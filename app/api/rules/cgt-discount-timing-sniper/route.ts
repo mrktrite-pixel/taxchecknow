@@ -23,7 +23,7 @@ export async function GET() {
     "legislation": "Income Tax Assessment Act 1997 s.115-10 — 50% CGT discount for individuals and trusts",
     "legal_anchor": "ITAA 1997 — CGT discount (s.115-10)",
     "deadline": {
-        "iso_date": "2026-06-30T23:59:59.000+10:00",
+        "iso_date": "",
         "display": "30 June 2026",
         "description": "Australian EOFY — CGT events in 2025/26 must be reported in the annual return",
         "urgency_label": "EOFY"
@@ -139,7 +139,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/cgt-discount-timing-sniper",
     "api_endpoint": "/api/rules/cgt-discount-timing-sniper",
-    "generated_at": "2026-10-20T01:59:05.897Z"
+    "generated_at": "2026-10-20T03:04:54.411Z"
 };
 
   return NextResponse.json(rules, {

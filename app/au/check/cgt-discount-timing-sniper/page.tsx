@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 const LAST_VERIFIED  = "October 2026";
 const DEADLINE_LABEL = "30 June 2026";
-const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
+const DEADLINE_ISO   = "";
 
 // TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
 // is no attestable future deadline (absent, unparseable, or already passed). A null result
@@ -519,7 +519,7 @@ export default function CgtDiscountTimingSniperPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 30 June 2026 EOFY
+            
           </p>
           <div className="mb-4 flex items-baseline gap-4">
             <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
