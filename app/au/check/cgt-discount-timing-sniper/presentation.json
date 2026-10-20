@@ -1,0 +1,95 @@
+{
+  "_ruling": "Ruled from the Ship Plan stepper, 2026-10-19T07:21:00.442Z. 0 row(s) re-tiered from the drafter's proposal.",
+  "_doc": "DRAFTED presentation overlay — machine first draft from the build's own terminals, NOT an operator ruling. tier: default 67, 147 only where the terminal's own grounded text shows money at stake, a live deadline, or an adverse determination. Escapes are forced to tier 67 by the translator. Rule the tiers, then re-run emit-engine with --accept-overlay. Remove _drafted once ruled.",
+  "_doctrine": "structural/critical → 147; explainer/guidance → 67. Every row's evidence is printed by the drafter.",
+  "states": {
+    "cgt-discount-explainer": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "individual-resident-qualifies": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "12-month-ownership-how-counted": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "held-less-than-12-months": {
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "not-sure-if-12-months-met": {
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "foreign-temporary-resident": {
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "not-sure-residency-status": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "home-first-used-rental-business-exclusion": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "new-asset-creation-exclusion": {
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "complying-super-fund-discount": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "affordable-rental-housing-discount": {
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "indexation-vs-discount-pre-1999": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "none_fit": {
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position."
+    },
+    "insufficient_information": {
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand."
+    }
+  }
+}

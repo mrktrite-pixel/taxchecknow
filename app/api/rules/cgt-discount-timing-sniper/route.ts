@@ -19,27 +19,27 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "October 2026",
     "legislation": "Income Tax Assessment Act 1997 s.115-10 — 50% CGT discount for individuals and trusts",
     "legal_anchor": "ITAA 1997 — CGT discount (s.115-10)",
     "deadline": {
-        "iso_date": "2026-06-30T23:59:59.000+10:00",
+        "iso_date": "",
         "display": "30 June 2026",
         "description": "Australian EOFY — CGT events in 2025/26 must be reported in the annual return",
         "urgency_label": "EOFY"
     },
     "key_facts": {
-        "individual_trust_discount": "50% if held over 12 months",
+        "individual_trust_discount": "50% if held at least 12 months",
         "company_discount": "None — zero",
-        "smsf_discount": "33.33% if held over 12 months",
+        "smsf_discount": "33.33% if held at least 12 months",
         "holding_period_start": "Purchase contract date",
         "holding_period_end": "Sale contract date",
         "legislative_anchor": "ITAA 1997 s.115-10"
     },
-    "formula": "Discounted Capital Gain = (Total Gain - Capital Losses) × 50% (for individuals and trusts held over 12 months). Tax = Discounted Gain × Marginal Rate. No discount if held under 12 months: Tax = Full Gain × Marginal Rate.",
+    "formula": "Discounted Capital Gain = (Total Gain - Capital Losses) × 50% (for individuals and trusts held at least 12 months). Tax = Discounted Gain × Marginal Rate. No discount if held under 12 months: Tax = Full Gain × Marginal Rate.",
     "thresholds": [
         {
-            "label": "Held over 12 months — discount confirmed",
+            "label": "Held at least 12 months — discount confirmed",
             "value": 1,
             "status": "clear"
         },
@@ -85,7 +85,7 @@ export async function GET() {
         {
             "id": 1,
             "question": "What is the 50% CGT discount?",
-            "answer": "The 50% CGT discount reduces the taxable capital gain by half for individuals and trusts that have held an asset for more than 12 months. Instead of paying tax on the full $200,000 gain, you pay tax on $100,000. At a 45% marginal rate, this saves $45,000."
+            "answer": "The 50% CGT discount reduces the taxable capital gain by half for individuals and trusts that have held an asset for at least 12 months. Instead of paying tax on the full $200,000 gain, you pay tax on $100,000. At a 45% marginal rate, this saves $45,000."
         },
         {
             "id": 2,
@@ -100,7 +100,7 @@ export async function GET() {
         {
             "id": 4,
             "question": "Does the CGT discount apply to shares?",
-            "answer": "Yes — the 50% CGT discount applies to shares held by individuals and trusts for more than 12 months. The purchase date is the date the purchase was confirmed (settlement of the share trade, typically T+2 for ASX shares). Shares sold within 12 months are taxed at full marginal rates."
+            "answer": "Yes — the 50% CGT discount applies to shares held by individuals and trusts for at least 12 months. The purchase date is the date the purchase was confirmed (settlement of the share trade, typically T+2 for ASX shares). Shares sold within 12 months are taxed at full marginal rates."
         },
         {
             "id": 5,
@@ -112,6 +112,10 @@ export async function GET() {
         {
             "title": "ATO — CGT discount",
             "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-discount"
+        },
+        {
+            "title": "ITAA 1997 Div 115 — s115-10 Who can make a discount capital gain?",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         }
     ],
     "products": {
@@ -135,7 +139,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/cgt-discount-timing-sniper",
     "api_endpoint": "/api/rules/cgt-discount-timing-sniper",
-    "generated_at": "2026-04-21T12:32:49.150Z"
+    "generated_at": "2026-10-20T03:04:54.411Z"
 };
 
   return NextResponse.json(rules, {
@@ -145,7 +149,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "cgt-discount-timing-sniper",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "October 2026",
     },
   });
 }
