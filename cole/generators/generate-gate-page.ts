@@ -6,6 +6,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { ProductConfig } from "../types/product-config";
+// F149 — one flag rule, keyed on market/authority. See cole/generators/jurisdiction-flag.ts.
+import { jurisdictionFlag } from "./jurisdiction-flag";
 
 // GEO bake — transcript + published-video facts fetched at generate time (both optional).
 // Drives a server-rendered transcript <section> + a VideoObject JSON-LD block, each emitted
@@ -432,7 +434,7 @@ ${videoSchemaConst}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
           <a href="${config.sources[0]?.url}" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            ${ config.country === "au" ? "🇦🇺" : config.country === "us" ? "🇺🇸" : config.country === "nz" ? "🇳🇿" : config.country === "ca" ? "🇨🇦" : "🇬🇧" } ${config.authority} Verified · ${config.legalAnchor} ↗
+            ${jurisdictionFlag(config)} ${config.authority} Verified · ${config.legalAnchor} ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · ${config.language}
