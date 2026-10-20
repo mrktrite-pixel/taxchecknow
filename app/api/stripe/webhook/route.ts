@@ -17,6 +17,8 @@ import { generateAssessment } from "@/lib/assess-core";
 import { resolve as resolveTemporal, schedulableDate } from "@/lib/temporal-resolver";
 import { lookupTemporal, nurtureTracksFor } from "@/lib/temporal-registry";
 import { nurtureEmailType } from "@/lib/nurture-types";
+// F146/F147 — the two session decisions as named rules. See lib/delivery-gate.ts.
+import { sessionAction, deliveryDecision } from "@/lib/delivery-gate";
 
 // ── PRODUCT DELIVERY MAP — all 25 TaxCheckNow + 5 SuperTaxCheck ─────────────
 const DELIVERY_MAP: Record<string, {
@@ -172,7 +174,7 @@ async function generateAndStoreAssessment(
   delivery: typeof DELIVERY_MAP[string],
   customerEmail: string,
   customerName: string,
-): Promise<void> {
+): Promise<boolean> {
   try {
     const { data: ds } = await supabase
       .from("decision_sessions")
@@ -216,10 +218,10 @@ async function generateAndStoreAssessment(
     // FAIL-CLOSED: on any generator failure (corpus unreachable/malformed = status 424, etc.) we
     // do NOT store an ungrounded assessment. result.ok===true GUARANTEES grounded===true. The
     // success page then shows a retry/support state instead of confidently-wrong law. (Ruling.)
-    if (!result.ok) { console.error(`[webhook] assess ${result.status} (${result.error}) for ${stripeSessionId} — NOT stored (fail-closed)`); return; }
+    if (!result.ok) { console.error(`[webhook] assess ${result.status} (${result.error}) for ${stripeSessionId} — NOT stored (fail-closed)`); return false; }
     const { assessment, corpus_source, corpus_verified } = result;
 
-    await (supabase as any).from("assessments").upsert({
+    const { error: upsertErr } = await (supabase as any).from("assessments").upsert({
       stripe_session_id:   stripeSessionId,
       decision_session_id: decisionSessionId,
       product_id:          delivery.productId,
@@ -248,9 +250,20 @@ async function generateAndStoreAssessment(
       created_at:          new Date().toISOString(),
     }, { onConflict: "stripe_session_id" });
 
+    // F146 — THE RETURN VALUE IS A CLAIM ABOUT THE ROW, so the upsert's own error is checked.
+    // supabase-js RESOLVES with { error } rather than throwing, so this call used to be able to
+    // fail and leave the function reporting success by falling through to its own last line. The
+    // delivery email is now gated on that claim; an unchecked write would gate it on nothing.
+    if (upsertErr) {
+      console.error(`[webhook] assessments upsert FAILED for ${stripeSessionId}: ${upsertErr.message}`);
+      return false;
+    }
+
     console.log(`[webhook] Assessment stored (grounded, ${corpus_source}):`, stripeSessionId);
+    return true;
   } catch (err) {
     console.error("[webhook] Assessment failed (non-blocking):", err);
+    return false;
   }
 }
 
@@ -448,6 +461,95 @@ async function queueReminders(
   }
 }
 
+// ── SEND THE DELIVERY EMAIL AND RECORD THAT IT WENT ──────────────────────────
+//
+// F146 — lifted out of the handler UNCHANGED (market context, send, email_log, delivery_status,
+// both operator alerts) so it can be called from inside after(), behind the assessment store.
+// The body is the same code in the same order; what changed is WHEN it runs.
+async function deliverAndLog(args: {
+  supabase: any;
+  sessionId: string;
+  purchaseId: string | null;
+  productKey: string;
+  tier: number;
+  delivery: typeof DELIVERY_MAP[string];
+  customerEmail: string;
+}): Promise<void> {
+  const { supabase, sessionId, purchaseId, productKey, tier, delivery, customerEmail } = args;
+
+  // Resolve all multi-market context (authority full name + URL,
+  // deadline, success-page URL, per-product copy with tier-aware
+  // fallback to TIER_DEFAULTS, etc.)
+  const marketContext = getMarketContext("taxchecknow", productKey, tier, sessionId, delivery);
+
+  const emailResult = await sendDeliveryEmail({
+    to:                customerEmail,
+    productName:       delivery.productName,
+    productKey,
+    tierLabel:         delivery.tierLabel,
+    subject:           delivery.subject,
+    marketDisplayName: marketContext.marketDisplayName,
+    authority:         marketContext.authority,
+    authorityFullName: marketContext.authorityFullName,
+    authorityUrl:      marketContext.authorityUrl,
+    deadlineDate:      marketContext.deadlineDate,
+    deadlineLabel:     marketContext.deadlineLabel,
+    successUrl:        marketContext.successUrl,
+    ctaLabel:          marketContext.ctaLabel,
+    bullets:           marketContext.bullets,
+    nextStep:          marketContext.nextStep,
+    tagline:           marketContext.tagline,
+  });
+
+  // Log email status.
+  // supabase-js .insert() RESOLVES with { error } rather than throwing, so an unchecked
+  // insert failed SILENTLY here (email_log stayed empty even when delivery_status went "sent").
+  // Surface both errors like the purchases insert. Diagnostic confirmed the live
+  // email_log schema accepts this exact payload, so any future error is a real signal.
+  if (purchaseId) {
+    try {
+      const supabase2 = getSupabase();
+      const { error: logErr } = await (supabase2 as any).from("email_log").insert({
+        purchase_id:     purchaseId,
+        recipient_email: customerEmail,
+        email_type:      "delivery",
+        subject:         delivery.subject,
+        resend_id:       emailResult.resendId || null,
+        status:          emailResult.success ? "sent" : "failed",
+        // Phase 1.4a/1.3 — stamp sent_at so the per-recipient 24h cap can see this delivery.
+        sent_at:         emailResult.success ? new Date().toISOString() : null,
+      });
+      // Phase 1.4a — fail LOUDLY: a delivery went out but left no log record. Page the operator.
+      if (logErr) {
+        console.error("[webhook] email_log insert error:", logErr.message);
+        await alertOperator(
+          `email_log insert FAILED after delivery send.\nsession: ${sessionId}\npurchase: ${purchaseId}\n` +
+          `recipient: ${customerEmail}\nproduct: ${productKey}\ndelivery_sent: ${emailResult.success}\nerror: ${logErr.message}`,
+        );
+      }
+      const { error: updErr } = await supabase2.from("purchases").update({
+        delivery_status:  emailResult.success ? "sent" : "failed",
+        delivery_sent_at: emailResult.success ? new Date().toISOString() : null,
+      }).eq("id", purchaseId);
+      if (updErr) console.error("[webhook] purchases delivery_status update error:", updErr.message);
+    } catch (err) {
+      console.error("[webhook] Log error:", err);
+      await alertOperator(`Delivery log path threw for session ${sessionId} (${customerEmail}): ${err instanceof Error ? err.message : String(err)}`);
+    }
+  } else if (emailResult.success) {
+    // Phase 1.4a — delivery email SENT but purchaseId is null (purchase upsert failed), so no
+    // email_log record can be written. This is the exact FRCGW-live silent-failure mode: a paid
+    // delivery with zero delivery record. Never let it pass quietly.
+    console.error("[webhook] delivery sent but purchaseId is null — no email_log record written:", sessionId);
+    await alertOperator(
+      `Delivery email SENT but NO purchase row (purchaseId null) — no email_log record written.\n` +
+      `session: ${sessionId}\nrecipient: ${customerEmail}\nproduct: ${productKey}\nresendId: ${emailResult.resendId || "?"}`,
+    );
+  }
+
+  console.log("[webhook] Complete. Email:", emailResult.success);
+}
+
 // ── MAIN HANDLER ─────────────────────────────────────────────────────────────
 export async function POST(req: Request) {
   const body      = await req.text();
@@ -491,18 +593,53 @@ export async function POST(req: Request) {
   // send below, so a re-fire cannot re-deliver. The UNIQUE constraint on
   // purchases.stripe_session_id (migration) is the concurrent-race backstop; this pre-check
   // handles the common sequential retry.
+  //
+  // ── F147 — "ALREADY PROCESSED" MUST MEAN THE ASSESSMENT LANDED, NOT JUST THE PURCHASE ─────
+  //
+  // It keyed on the purchase row alone, and returned before step 2. So a session whose assessment
+  // FAILED was permanently un-repairable: resending the event — the one tool Stripe gives you —
+  // hit this guard and did nothing.
+  //
+  // MEASURED 2026-10-20 on build 7995b89f. Both tiers had failed on F145's redirect loop, leaving
+  // purchases + email_log rows and no assessment. The events were resent after F145 merged:
+  //
+  //     [webhook] duplicate — session already processed, skipping: cs_test_a18Ocdo…
+  //     [webhook] duplicate — session already processed, skipping: cs_test_a1dOOZp…
+  //
+  // Nothing was retried, and nothing could be. That also leaves F146 below with no exit: gating
+  // the email on a row that cannot be repaired would turn one bad page into permanent silence.
+  //
+  // So the guard now asks the question it was always meant to ask. Purchase AND assessment → skip,
+  // exactly as before. Purchase but NO assessment → repair: generate and store it, and send the
+  // delivery email only if one was never sent. A re-fire still cannot double-charge, double-insert
+  // or double-deliver.
+  let purchaseId: string | null = null;
+  let repair = false;
+  let deliveryAlreadySent = false;
   {
     const { data: existing } = await supabase
-      .from("purchases").select("id").eq("stripe_session_id", session.id).maybeSingle();
+      .from("purchases").select("id, delivery_status").eq("stripe_session_id", session.id).maybeSingle();
     if (existing) {
-      console.log("[webhook] duplicate — session already processed, skipping:", session.id);
-      return NextResponse.json({ received: true, duplicate: true });
+      const { data: storedAssessment } = await supabase
+        .from("assessments").select("id").eq("stripe_session_id", session.id).maybeSingle();
+      if (sessionAction({ purchaseExists: true, assessmentExists: !!storedAssessment }) === "skip") {
+        console.log("[webhook] duplicate — session already processed, skipping:", session.id);
+        return NextResponse.json({ received: true, duplicate: true });
+      }
+      repair = true;
+      purchaseId = (existing as { id: string }).id;
+      deliveryAlreadySent = (existing as { delivery_status?: string }).delivery_status === "sent";
+      console.log(
+        `[webhook] F147 repair — purchase exists, assessment does NOT: ${session.id} ` +
+        `(delivery already sent: ${deliveryAlreadySent})`,
+      );
     }
   }
 
   // 1. Record purchase (upsert on stripe_session_id — belt to the pre-check for concurrent races).
-  let purchaseId: string | null = null;
-  try {
+  // Skipped on the repair path: the row is already there and re-upserting it would reset
+  // delivery_status to "pending" on a purchase that has already been delivered.
+  if (!repair) try {
     const { data, error } = await supabase
       .from("purchases")
       .upsert({
@@ -532,32 +669,6 @@ export async function POST(req: Request) {
     console.error("[webhook] Supabase purchase error:", err);
   }
 
-  // 2. Generate + store assessment — deferred to after() (post-response, platform-kept-alive).
-  // ROOT CAUSE FIX (2026-07-23): this was fire-and-forget (`...catch(()=>{})`). On Vercel the
-  // function is FROZEN once the response returns, so the un-awaited store only landed if it
-  // happened to finish during the awaited email — a RACE the SLOWER tier lost (tier 147's
-  // /api/assess uses max_tokens 2500 + more fields → slower than tier 67's 1500 → its store was
-  // routinely cut off → has_assessment=false, no error logged). Latency-dependent, so which tier
-  // "lost" could flip between runs. `after()` keeps the lambda alive until the store completes
-  // for EVERY tier, while the response still returns fast (no Stripe-timeout retry → no duplicate
-  // delivery emails, which an `await` here would have risked since the purchase insert is not
-  // idempotent). Its own try/catch logs any real failure.
-  if (delivery && decisionSid && customerEmail) {
-    after(() => generateAndStoreAssessment(
-      supabase, session.id, decisionSid, productKey,
-      tier, delivery, customerEmail, customerName
-    ));
-  }
-
-  // 3. Queue reminder emails — same deferral (same latent race).
-  if (delivery && customerEmail) {
-    after(() => queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery, decisionSid));
-    // Step 7.4 — the purchase anchor. Same after() deferral and the same
-    // non-fatal contract: a nurture-queue failure must never affect delivery.
-    after(() => queueNurtureOnPurchase(supabase, delivery.productId, productKey, customerEmail, customerName, decisionSid));
-  }
-
-  // 4. Send delivery email
   if (!delivery) {
     console.error("[webhook] No delivery config for:", productKey);
     return NextResponse.json({ received: true });
@@ -567,77 +678,81 @@ export async function POST(req: Request) {
     return NextResponse.json({ received: true });
   }
 
-  // Resolve all multi-market context (authority full name + URL,
-  // deadline, success-page URL, per-product copy with tier-aware
-  // fallback to TIER_DEFAULTS, etc.)
-  const marketContext = getMarketContext("taxchecknow", productKey, tier, session.id, delivery);
+  // ═══════════════════════════════════════════════════════════════════════════════════════════
+  // 2 + 4. THE ASSESSMENT, THEN THE EMAIL — F146.
+  //
+  // THE ORDER WAS THE DEFECT. The assessment was deferred to after() (correct — see below) while
+  // the delivery email was AWAITED in the request, so the email always went out BEFORE the
+  // assessment was even attempted, and nothing connected the two. When generation failed the
+  // buyer got a confident "your pack is ready" email pointing at a success page reading
+  // "Assessment generation issue", with every field "being prepared".
+  //
+  // MEASURED 2026-10-20, build 7995b89f, both tiers: purchases delivery_status=sent, email_log
+  // delivery_state=delivered, assessments 0 rows. The delivery record was immaculate and there
+  // was nothing to deliver.
+  //
+  // So the email now runs INSIDE the same after() chain, after the store, and only if the store
+  // reports a row. The response still returns immediately — Stripe gets its 2xx without waiting
+  // for a model call, which is why awaiting the assessment in the request was never an option
+  // (that is a Stripe-timeout retry, and a retry is a second delivery email).
+  //
+  // WHY after() AT ALL (2026-07-23 root cause, unchanged and still load-bearing): this used to be
+  // fire-and-forget. On Vercel the function is FROZEN once the response returns, so the un-awaited
+  // store only landed if it happened to finish during the awaited email — a race the SLOWER tier
+  // lost (tier 2 uses max_tokens 2500 and more fields), so has_assessment=false with nothing
+  // logged, and which tier "lost" flipped between runs.
+  //
+  // ON FAILURE THE EMAIL IS WITHHELD AND THE OPERATOR IS PAGED. delivery_status stays "pending",
+  // which is the honest state and is what the step-4 delivery check reads. The buyer is not told
+  // their pack is ready when it is not; F147 above is what lets a resent event repair it.
+  // ═══════════════════════════════════════════════════════════════════════════════════════════
+  after(async () => {
+    const stored = decisionSid
+      ? await generateAndStoreAssessment(
+          supabase, session.id, decisionSid, productKey,
+          tier, delivery, customerEmail, customerName,
+        )
+      : false;
 
-  const emailResult = await sendDeliveryEmail({
-    to:                customerEmail,
-    productName:       delivery.productName,
-    productKey,
-    tierLabel:         delivery.tierLabel,
-    subject:           delivery.subject,
-    marketDisplayName: marketContext.marketDisplayName,
-    authority:         marketContext.authority,
-    authorityFullName: marketContext.authorityFullName,
-    authorityUrl:      marketContext.authorityUrl,
-    deadlineDate:      marketContext.deadlineDate,
-    deadlineLabel:     marketContext.deadlineLabel,
-    successUrl:        marketContext.successUrl,
-    ctaLabel:          marketContext.ctaLabel,
-    bullets:           marketContext.bullets,
-    nextStep:          marketContext.nextStep,
-    tagline:           marketContext.tagline,
+    const decision = deliveryDecision({ assessmentStored: stored, deliveryAlreadySent });
+
+    if (decision.send === false && decision.reason === "no-assessment") {
+      console.error(
+        `[webhook] F146: no assessments row for ${session.id} — delivery email WITHHELD` +
+        (decisionSid ? "" : " (no decision_session_id on the session metadata)"),
+      );
+      await alertOperator(
+        `DELIVERY WITHHELD — the assessment was not stored, so no "your pack is ready" email was sent.\n` +
+        `session: ${session.id}\nrecipient: ${customerEmail}\nproduct: ${productKey}\ntier: ${tier}\n` +
+        `purchase: ${purchaseId ?? "NULL"}\ndecision_session_id: ${decisionSid || "MISSING"}\n` +
+        `The buyer has PAID and has nothing. Read the [assess-core] line in this request's logs for ` +
+        `the cause, fix it, then resend the Stripe event — F147 makes a resend repair this.`,
+      );
+      return;
+    }
+
+    if (decision.send === false) {
+      // reason === "already-sent" — the F147 repair path: the email went out before the assessment
+      // failed, and a second one would be a duplicate delivery for one purchase.
+      console.log(`[webhook] F147 repair complete — assessment stored; delivery email NOT re-sent for ${session.id}`);
+      return;
+    }
+
+    await deliverAndLog({
+      supabase, sessionId: session.id, purchaseId, productKey, tier, delivery, customerEmail,
+    });
   });
 
-  // 5. Log email status.
-  // supabase-js .insert() RESOLVES with { error } rather than throwing, so an unchecked
-  // insert failed SILENTLY here (email_log stayed empty even when delivery_status went "sent").
-  // Surface both errors like the purchases insert (line ~324). Diagnostic confirmed the live
-  // email_log schema accepts this exact payload, so any future error is a real signal.
-  if (purchaseId) {
-    try {
-      const supabase2 = getSupabase();
-      const { error: logErr } = await (supabase2 as any).from("email_log").insert({
-        purchase_id:     purchaseId,
-        recipient_email: customerEmail,
-        email_type:      "delivery",
-        subject:         delivery.subject,
-        resend_id:       emailResult.resendId || null,
-        status:          emailResult.success ? "sent" : "failed",
-        // Phase 1.4a/1.3 — stamp sent_at so the per-recipient 24h cap can see this delivery.
-        sent_at:         emailResult.success ? new Date().toISOString() : null,
-      });
-      // Phase 1.4a — fail LOUDLY: a delivery went out but left no log record. Page the operator.
-      if (logErr) {
-        console.error("[webhook] email_log insert error:", logErr.message);
-        await alertOperator(
-          `email_log insert FAILED after delivery send.\nsession: ${session.id}\npurchase: ${purchaseId}\n` +
-          `recipient: ${customerEmail}\nproduct: ${productKey}\ndelivery_sent: ${emailResult.success}\nerror: ${logErr.message}`,
-        );
-      }
-      const { error: updErr } = await supabase2.from("purchases").update({
-        delivery_status:  emailResult.success ? "sent" : "failed",
-        delivery_sent_at: emailResult.success ? new Date().toISOString() : null,
-      }).eq("id", purchaseId);
-      if (updErr) console.error("[webhook] purchases delivery_status update error:", updErr.message);
-    } catch (err) {
-      console.error("[webhook] Log error:", err);
-      await alertOperator(`Delivery log path threw for session ${session.id} (${customerEmail}): ${err instanceof Error ? err.message : String(err)}`);
-    }
-  } else if (emailResult.success) {
-    // Phase 1.4a — delivery email SENT but purchaseId is null (purchase upsert failed), so no
-    // email_log record can be written. This is the exact FRCGW-live silent-failure mode: a paid
-    // delivery with zero delivery record. Never let it pass quietly.
-    console.error("[webhook] delivery sent but purchaseId is null — no email_log record written:", session.id);
-    await alertOperator(
-      `Delivery email SENT but NO purchase row (purchaseId null) — no email_log record written.\n` +
-      `session: ${session.id}\nrecipient: ${customerEmail}\nproduct: ${productKey}\nresendId: ${emailResult.resendId || "?"}`,
-    );
+  // 3. Queue reminder emails — same deferral (same latent race). NOT gated on the assessment:
+  // a reminder is about the product's deadline, not about the pack, and suppressing reminders
+  // because a model call failed would lose the date as well as the document.
+  if (!repair) {
+    after(() => queueReminders(supabase, session.id, productKey, customerEmail, customerName, delivery, decisionSid));
+    // Step 7.4 — the purchase anchor. Same after() deferral and the same
+    // non-fatal contract: a nurture-queue failure must never affect delivery.
+    after(() => queueNurtureOnPurchase(supabase, delivery.productId, productKey, customerEmail, customerName, decisionSid));
   }
 
-  console.log("[webhook] Complete. Email:", emailResult.success);
   return NextResponse.json({ received: true });
 }
 
