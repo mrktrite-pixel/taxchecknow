@@ -14,6 +14,23 @@ import { GuardRefusal } from "./guard-refusal";
 
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 
+/**
+ * THE EMITTED verdict_status READS THE SELECTED BRACKET, not a verdict object.
+ *
+ * The /api/leads body used to emit "verdict?.status". That identifier is declared only in the
+ * HAND-BUILT calculators -- div296-wealth-eraser and bring-forward-window each define their own
+ * calcVerdict -- so every calculator produced by THIS generator failed to compile on an
+ * undefined name. Measured 2026-10-20 on division-293-tax-calculation, the first product in
+ * months to take the generated path: CLAUDE.md step 2 hand-builds a calculator, and this
+ * fallback runs only when cole/calculators/ has none for the product.
+ *
+ * selectedBracketData is in scope in the generated component and carries the same value with
+ * the same "nothing selected -> empty string" semantics the original intended.
+ *
+ * A NOTE ON EDITING THIS FILE: almost all of it is one template literal. A backtick in a
+ * comment inside that literal terminates it, which is how two attempts at this fix broke the
+ * generator itself. Explanations belong out here.
+ */
 export function generateCalculator(config: ProductConfig): string {
   // ── R-A2 GUARD: NEVER OVERWRITE AN ENGINE-NATIVE CALCULATOR ────────────────
   // An engine-native product's calculator is a hand-built wrapper that mounts
@@ -252,7 +269,7 @@ ${stateKeys.map(k => `    ${buildStateReset(config, k)}`).join("\n")}
         country_code:   "${config.country.toUpperCase()}",
         site:           "${config.site}",
         session_id:     sessionId ?? localStorage.getItem("${config.id}_session_id") ?? "",
-        verdict_status: verdict?.status ?? "",
+        verdict_status: selectedBracketData?.status ?? "",
       }),
     }).catch(() => {});
     setEmailSent(true);
