@@ -1,0 +1,191 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Maximum absence period for income-producing former home (6-year rule)",
+    "value": "6",
+    "unit": "years",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_1",
+    "label": "Overlap period allowed when treating another property as main residence while moving house",
+    "value": "6",
+    "unit": "months",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_2",
+    "label": "Period Bill lived in unit before moving out (example)",
+    "value": "3",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_3",
+    "label": "Period after which Bill sold the unit (example — unlimited absence, no income)",
+    "value": "12",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_4",
+    "label": "Total period after Lisa moved out (10-year period, example 2)",
+    "value": "10",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_5",
+    "label": "Lisa's rental period 1 (example 2)",
+    "value": "3",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_6",
+    "label": "Lisa's vacant period 1 (example 2)",
+    "value": "2",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_7",
+    "label": "Lisa's rental period 2 (example 2)",
+    "value": "3",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_8",
+    "label": "Lisa's vacant period 2 (example 2)",
+    "value": "2",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_9",
+    "label": "Total income-producing period meeting 6-year limit (example 2)",
+    "value": "6",
+    "unit": "years",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_10",
+    "label": "Jez's first rental period (example 3)",
+    "value": "5",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_11",
+    "label": "Jez's period back in house as main residence (example 3)",
+    "value": "2",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_12",
+    "label": "Jez's second rental period (example 3)",
+    "value": "4",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_13",
+    "label": "Roya's purchase price of apartment",
+    "value": "$180,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_14",
+    "label": "Market value of apartment when first used to produce income (deemed cost base)",
+    "value": "$220,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_15",
+    "label": "Sale proceeds of Roya's apartment",
+    "value": "$555,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_16",
+    "label": "Agent's and solicitor's fees incurred on sale",
+    "value": "$15,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_17",
+    "label": "Capital gain before apportionment (Roya example)",
+    "value": "$320,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_18",
+    "label": "Non-main residence days (days over 6-year limit, Roya example)",
+    "value": "6,940",
+    "unit": "days",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_19",
+    "label": "Ownership period days from deemed acquisition date (Roya example)",
+    "value": "9,133",
+    "unit": "days",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_20",
+    "label": "Assessable capital gain before CGT discount (Roya example)",
+    "value": "$243,162",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_21",
+    "label": "CGT discount rate",
+    "value": "50",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_22",
+    "label": "Net capital gain after 50% CGT discount (Roya example)",
+    "value": "$121,581",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_23",
+    "label": "Proportion of house used as main residence (Helen example)",
+    "value": "75",
+    "unit": "%",
+    "fact_role": "other"
+  },
+  {
+    "id": "fig_24",
+    "label": "Proportion of house used to produce income before ceasing to live in it (Helen example)",
+    "value": "25",
+    "unit": "%",
+    "fact_role": "other"
+  },
+  {
+    "id": "fig_25",
+    "label": "Total capital gain on sale of Helen's house",
+    "value": "$400,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_26",
+    "label": "Assessable portion of capital gain (25% of $400,000, Helen example)",
+    "value": "$100,000",
+    "unit": null,
+    "fact_role": "amount"
+  }
+]
