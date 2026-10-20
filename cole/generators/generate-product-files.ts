@@ -8,11 +8,11 @@ import { execFileSync } from "node:child_process";
 import type { ProductConfig, ProductFile } from "../types/product-config";
 import { resolvesFromRule } from "./generate-gate-page";
 import { engineSessionKey } from "./verify-engine-native";
+import { jurisdictionFlag } from "./jurisdiction-flag";
 
-// Jurisdiction flag from config.country — NEVER hardcode a flag (was leaking 🇬🇧 on AU).
-function countryFlag(country: string): string {
-  return ({ au: "🇦🇺", uk: "🇬🇧", us: "🇺🇸", nz: "🇳🇿", ca: "🇨🇦" } as Record<string, string>)[country?.toLowerCase()] ?? "🏳️";
-}
+// F149 — the flag comes from MARKET and AUTHORITY, in one shared rule. This was a country-keyed
+// map that missed "can" and "global", so 16 products rendered 🏳️ in the paid deliverable; see
+// cole/generators/jurisdiction-flag.ts for the measurement and why country is the wrong key.
 
 /**
  * The red deadline bar at the top of every delivered document.
@@ -275,7 +275,7 @@ export default function ${toPascal(config.id)}File${file.num}() {
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap gap-2 text-xs">
             <span className="bg-neutral-900 text-white px-2.5 py-1 font-medium">
-              ${countryFlag(config.country)} ${config.authority} · ${config.legalAnchor}
+              ${jurisdictionFlag(config)} ${config.authority} · ${config.legalAnchor}
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
               Last verified: ${config.lastVerified}
