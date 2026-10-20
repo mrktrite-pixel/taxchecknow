@@ -18,12 +18,14 @@ import type { ProductConfig } from "../types/product-config";
 // worked_examples, comparison, faq), the copy is composed from the verified figures and the
 // formula above — not from recollection.
 //
-// TWO THINGS THIS CONFIG DOES NOT DECLARE, DELIBERATELY:
+// ONE THING THIS CONFIG DOES NOT DECLARE, DELIBERATELY:
 //
-//   envVar  — F71. A Stripe price env var name is the operator's to choose and must never be
-//             derived, so both carry a ⚠REVIEW tag that cannot be mistaken for a real variable.
-//             The productKeys ARE declared: they come from the products row Assembly wrote
-//             (tier1_key / tier2_key), so they are data, not a derivation.
+//   envVar  — F71, now CLOSED. Both fields held a ⚠REVIEW tag through PR #85 precisely because a
+//             Stripe price env var name is the operator's to choose and must never be derived.
+//             Matt assigned STRIPE_AU_DIV293_67 / _147 and confirmed both exist in Vercel on
+//             2026-10-20; they are written in below because he chose them, not because the slug
+//             implies them. The productKeys were always declared — they come from the products row
+//             Assembly wrote (tier1_key / tier2_key), so they are data, not a derivation.
 //
 //   temporal — step 7's ruling, not this file's. The research reports
 //             deadline_window_days: null and urgency_triggers: [], which is why deadline.isoDate
@@ -36,8 +38,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
   slug: "au/check/division-293-tax-calculation", url: "https://taxchecknow.com/au/check/division-293-tax-calculation", apiRoute: "/api/rules/division-293-tax-calculation",
   authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Division 293 (additional tax on concessional contributions)", legislation: "Income Tax Assessment Act 1997 Division 293 — an additional 15% tax on the concessional contributions of individuals whose income plus certain super contributions exceeds the Division 293 threshold. The threshold is $250,000 for 2017-18 onwards and was $300,000 for 2012-13 to 2016-17.", lastVerified: "October 2026",
 
-  tier1: { price: 67, name: "Your Division 293 Threshold Report", tagline: "Which side of the $250,000 line are you on?", value: "Your personalised Division 293 position: the threshold test applied to your income and concessional contributions, the amount the 15% would be charged on, and what to confirm with your fund.", cta: "Get My Division 293 Report — $67 →", productKey: "au_67_division_293_tax_calculation", envVar: "⚠REVIEW — F71: the operator assigns this Stripe price env var; it must never be derived", successPath: "assess", fileCount: 5 },
-  tier2: { price: 147, name: "Your Division 293 Management Plan", tagline: "Contribution structure, income timing and payment options in one plan", value: "The full Division 293 plan: concessional contribution structuring, income timing against the threshold, defined benefit mechanics including the Treasury bond rates, and the deferred-debt payment and election options.", cta: "Get My Division 293 Plan — $147 →", productKey: "au_147_division_293_tax_calculation", envVar: "⚠REVIEW — F71: the operator assigns this Stripe price env var; it must never be derived", successPath: "plan", fileCount: 8 },
+  tier1: { price: 67, name: "Your Division 293 Threshold Report", tagline: "Which side of the $250,000 line are you on?", value: "Your personalised Division 293 position: the threshold test applied to your income and concessional contributions, the amount the 15% would be charged on, and what to confirm with your fund.", cta: "Get My Division 293 Report — $67 →", productKey: "au_67_division_293_tax_calculation", envVar: "STRIPE_AU_DIV293_67", successPath: "assess", fileCount: 5 },
+  tier2: { price: 147, name: "Your Division 293 Management Plan", tagline: "Contribution structure, income timing and payment options in one plan", value: "The full Division 293 plan: concessional contribution structuring, income timing against the threshold, defined benefit mechanics including the Treasury bond rates, and the deferred-debt payment and election options.", cta: "Get My Division 293 Plan — $147 →", productKey: "au_147_division_293_tax_calculation", envVar: "STRIPE_AU_DIV293_147", successPath: "plan", fileCount: 8 },
 
   deadline: { isoDate: "", display: "End of the income year", short: "Income year end", description: "Division 293 is assessed per income year on income plus certain super contributions — there is no separate act-by date", urgencyLabel: "PER INCOME YEAR", countdownLabel: "" },
 

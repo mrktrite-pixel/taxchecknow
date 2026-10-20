@@ -42,6 +42,17 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // PREVIEW (where those prod vars aren't scoped and the deploy runs the TEST secret key) falls back to
   // STRIPE_AU_TEST_<tier> so a branch-preview buy completes against the sandbox instead of a live-price/
   // test-key 500. The legacy frcgw includes()-block below is now dead for these keys (registry hits first).
+  // AU-17 division-293-tax-calculation (engine-native, built from its research 2026-10-20).
+  // Registered for the reason the registry exists: a key that lives ONLY in the includes()-chain
+  // resolves the LIVE price on a branch preview, which runs the TEST secret key, and 500s — the
+  // same thing step 4 hit on tax-treaty-navigator ("not in PRICE_ENV_REGISTRY"). Off-preview these
+  // return exactly what the chain block below returns, so there is one answer, not two.
+  // F71: the keys are the CONFIG'S DECLARED pair (tier1/tier2.productKey, matching products
+  // .tier1_key/.tier2_key), never derived from the slug. Vars confirmed present in Vercel by the
+  // operator 2026-10-20; the names are his, not inferred.
+  au_67_division_293_tax_calculation:  "STRIPE_AU_DIV293_67",
+  au_147_division_293_tax_calculation: "STRIPE_AU_DIV293_147",
+
   au_67_frcgw_clearance_certificate:  "STRIPE_AU_FRCGW_67",
   au_147_frcgw_clearance_certificate: "STRIPE_AU_FRCGW_147",
   // AU-09 rental-property-deduction-audit (engine-native, PANELBEAT migration) — registered per
@@ -265,6 +276,14 @@ function getPriceId(tier: number, productKey: string): string | undefined {
   // ─── TAXCHECKNOW AU ────────────────────────────────────────────────────────
   // All AU product keys start with "au_" — always check au_ prefix first.
   // Never let legacy supertaxcheck blocks below catch these.
+  // AU-17 division-293-tax-calculation. au_ FIRST, per the header above: measured 2026-10-20,
+  // nothing in this chain matched au_67/147_division_293_tax_calculation (only the bare "au_"
+  // literal did), so without this block the key fell through every branch and getPriceId
+  // returned undefined. division_7a does NOT collide with division_293 in either direction.
+  if (key.includes("au_") && key.includes("division_293")) {
+    if (tier === 67)  return process.env.STRIPE_AU_DIV293_67;
+    if (tier === 147) return process.env.STRIPE_AU_DIV293_147;
+  }
   if (key.includes("au_") && key.includes("cgt_main_residence")) {
     if (tier === 67)  return process.env.STRIPE_AU_CGT_MR_67;
     if (tier === 147) return process.env.STRIPE_AU_CGT_MR_147;
