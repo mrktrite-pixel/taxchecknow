@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 12
+// Declared products: 13
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -52,6 +52,16 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "cgt_discount_holding_period",
                 "label": "No act-by date",
                 "basis": "ITAA 1997 Div 115: 12-month ownership measured per asset from acquisition; no calendar deadline. Operator ruling 2026-10-20"
+          }
+    },
+    "cgt-main-residence-trap": {
+          "temporal": {
+                "kind": "none",
+                "reason": "standing_rule_periods_are_dwelling_relative_no_act_by_date",
+                "jurisdiction": "AU",
+                "domain": "main_residence_exemption_periods",
+                "label": "No act-by date",
+                "basis": "ITAA 1997 Subdiv 118-B: the main residence exemption's periods run from the owner's own dates per dwelling (s118-145's 6-year absence limit, the 6-month moving-house overlap); no calendar deadline. Research proposed unresolvable - 27 quoted sentences examined, every date in an example. Declared none under the operator's standing step-7 ruling, 2026-10-20"
           }
     },
     "day-183-rule": {

@@ -10,30 +10,34 @@ import CgtMainResidenceTrapCalculator from "./CgtMainResidenceTrapCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "CGT Main Residence Exemption Australia 2026 — Is Your Home Fully Tax-Free? | TaxCheckNow",
-  description: "The main residence CGT exemption is not automatic. Renting your home, moving out, or using the 6-year rule incorrectly can make part of your sale taxable. Free calculator shows your position in 2 minutes.",
+  title: "Main Residence CGT: Is Your Home Fully Tax-Free? | TaxCheckNow",
+  description: "The main residence CGT exemption is not automatic: renting out your home, or the 6-year rule, can make part of the sale taxable. Check your position.",
   alternates: { canonical: "https://taxchecknow.com/au/check/cgt-main-residence-trap" },
   openGraph: {
-    title: "CGT Main Residence Exemption Australia 2026 — Is Your Home Fully Tax-Free? | TaxCheckNow",
-    description: "The main residence CGT exemption is not automatic. Renting your home, moving out, or using the 6-year rule incorrectly can make part of your sale taxable. Free calculator shows your position in 2 minutes.",
+    title: "Main Residence CGT: Is Your Home Fully Tax-Free? | TaxCheckNow",
+    description: "The main residence CGT exemption is not automatic: renting out your home, or the 6-year rule, can make part of the sale taxable. Check your position.",
     url: "https://taxchecknow.com/au/check/cgt-main-residence-trap",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "October 2026";
 const DEADLINE_LABEL = "30 June 2027";
 const DEADLINE_ISO   = "2027-06-30T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -250,12 +254,32 @@ const sidebarNumbers = [
 
 const sources = [
   {
-    "title": "ATO — Main residence exemption",
-    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption"
+    "title": "ATO — Your main residence (home) and CGT",
+    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home"
   },
   {
     "title": "ATO — 6-year absence rule",
     "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/treating-former-home-as-main-residence"
+  },
+  {
+    "title": "ITAA 1997 s118-110 — main residence exemption: basic case",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s118-145 — absence rule: treating a former home as your main residence",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s118-190 — partial exemption where the dwelling was used to produce income",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s118-192 — first use to produce income: market value substitution",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s118-195 — dwelling acquired from a deceased estate",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   }
 ];
 
@@ -288,8 +312,13 @@ const countdownStats = [
 
 export default function CgtMainResidenceTrapPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/cgt-main-residence-trap", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -305,8 +334,8 @@ export default function CgtMainResidenceTrapPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "CGT Main Residence Trap Engine — Rules April 2026",
-    description: "The main residence CGT exemption is not automatic. Renting your home, moving out, or using the 6-year rule incorrectly can make part of your sale taxable. Free calculator shows your position in 2 minutes.",
+    name: "CGT Main Residence Trap Engine — Rules October 2026",
+    description: "The main residence CGT exemption is not automatic: renting out your home, or the 6-year rule, can make part of the sale taxable. Check your position.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -322,7 +351,7 @@ export default function CgtMainResidenceTrapPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "CGT Main Residence Trap Engine",
-    description: "The main residence CGT exemption is not automatic. Renting your home, moving out, or using the 6-year rule incorrectly can make part of your sale taxable. Free calculator shows your position in 2 minutes.",
+    description: "The main residence CGT exemption is not automatic: renting out your home, or the 6-year rule, can make part of the sale taxable. Check your position.",
     url: "https://taxchecknow.com/au/check/cgt-main-residence-trap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -371,13 +400,13 @@ export default function CgtMainResidenceTrapPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/cgt-main-residence-trap#calculator",
-    "description": "The main residence CGT exemption is not automatic. Renting your home, moving out, or using the 6-year rule incorrectly can make part of your sale taxable. Free calculator shows your position in 2 minutes.",
+    "description": "The main residence CGT exemption is not automatic: renting out your home, or the 6-year rule, can make part of the sale taxable. Check your position.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance October 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -445,7 +474,7 @@ export default function CgtMainResidenceTrapPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
             🇦🇺 ATO Verified · ITAA 1997 — Main Residence Exemption (s.118-110) ↗
           </a>
@@ -707,7 +736,7 @@ export default function CgtMainResidenceTrapPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (October 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -748,9 +777,9 @@ export default function CgtMainResidenceTrapPage() {
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              ATO — Main residence exemption
+              ATO — Your main residence (home) and CGT
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/cgt-main-residence-trap" className="font-mono text-blue-700 hover:underline">
@@ -1047,15 +1076,40 @@ export default function CgtMainResidenceTrapPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
-              <p className="font-bold text-neutral-900">ATO — Main residence exemption ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption</p>
+              <p className="font-bold text-neutral-900">ATO — Your main residence (home) and CGT ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home</p>
             </a>
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/treating-former-home-as-main-residence" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/treating-former-home-as-main-residence" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — 6-year absence rule ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/treating-former-home-as-main-residence</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s118-110 — main residence exemption: basic case ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s118-145 — absence rule: treating a former home as your main residence ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s118-190 — partial exemption where the dwelling was used to produce income ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s118-192 — first use to produce income: market value substitution ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s118-195 — dwelling acquired from a deceased estate ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
             </a>
           </div>
         </div>
@@ -1067,7 +1121,7 @@ export default function CgtMainResidenceTrapPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for October 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1081,7 +1135,7 @@ export default function CgtMainResidenceTrapPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. October 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

@@ -105,6 +105,12 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // key, read out of this same file rather than guessed.
   au_67_cgt_discount_timing_sniper:   "STRIPE_AU_CGT_DT_67",
   au_147_cgt_discount_timing_sniper:  "STRIPE_AU_CGT_DT_147",
+  // au/check/cgt-main-residence-trap (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
+  // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that
+  // key, read out of this same file rather than guessed.
+  au_67_cgt_main_residence_trap:   "STRIPE_AU_CGT_MR_67",
+  au_147_cgt_main_residence_trap:  "STRIPE_AU_CGT_MR_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {
