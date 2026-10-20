@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "October 2026",
     "legislation": "Income Tax Assessment Act 1997 s.118-110 to s.118-195 — Main Residence CGT Exemption",
     "legal_anchor": "ITAA 1997 — Main Residence Exemption (s.118-110)",
     "deadline": {
@@ -130,12 +130,32 @@ export async function GET() {
     ],
     "sources": [
         {
-            "title": "ATO — Main residence exemption",
-            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption"
+            "title": "ATO — Your main residence (home) and CGT",
+            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home"
         },
         {
             "title": "ATO — 6-year absence rule",
             "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/treating-former-home-as-main-residence"
+        },
+        {
+            "title": "ITAA 1997 s118-110 — main residence exemption: basic case",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s118-145 — absence rule: treating a former home as your main residence",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s118-190 — partial exemption where the dwelling was used to produce income",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s118-192 — first use to produce income: market value substitution",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s118-195 — dwelling acquired from a deceased estate",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         }
     ],
     "products": {
@@ -155,11 +175,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home/main-residence-exemption"
+        "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/property-and-capital-gains-tax/your-main-residence-home"
     ],
     "canonical": "https://taxchecknow.com/au/check/cgt-main-residence-trap",
     "api_endpoint": "/api/rules/cgt-main-residence-trap",
-    "generated_at": "2026-04-22T00:06:07.783Z"
+    "generated_at": "2026-10-20T07:40:43.073Z"
 };
 
   return NextResponse.json(rules, {
@@ -169,7 +189,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "cgt-main-residence-trap",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "October 2026",
     },
   });
 }
