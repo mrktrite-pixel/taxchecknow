@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 14
+// Declared products: 15
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -83,6 +83,24 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                       "anchor": "lead"
                 }
           ]
+    },
+    "div296-wealth-eraser": {
+          "temporal": {
+                "kind": "effective_from",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "one_off",
+                      "month": 7,
+                      "day": 1,
+                      "year": 2026,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "super_division_296",
+                "label": "Division 296 commences",
+                "basis": "Operator ruling 2026-10-21: Division 296 commences 1 July 2026 and the thresholds are indexed. effective_from, not deadline, because commencement is a STATE CHANGE in the law and not an act-by date — the kind's own definition. one_off with year 2026 so the resolver returns EXPIRED after it rather than silently rolling to 1 July 2027, which is what an annual recurrence would do to a transitional cut-over. The indexed thresholds are the reason there is no fixed recurring act-by date to declare instead."
+          }
     },
     "division-293-tax-calculation": {
           "temporal": {
