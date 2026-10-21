@@ -47,7 +47,7 @@ const GPT_SLUGS = [
   "nz-interest-reinstatement-engine",
 ];
 
-// All 46 product gate-page paths (the calculators that GPT pages link into).
+// All 47 product gate-page paths (the calculators that GPT pages link into).
 const PRODUCT_PATHS = [
   // AU
   "/au/check/cgt-main-residence-trap",
@@ -66,6 +66,7 @@ const PRODUCT_PATHS = [
   "/au/check/super-to-trust-exit",
   "/au/check/transfer-balance-cap",
   "/au/check/frcgw-clearance-certificate",
+  "/au/check/division-293-tax-calculation",
   // UK
   "/uk/check/mtd-scorecard",
   "/uk/check/allowance-sniper",
