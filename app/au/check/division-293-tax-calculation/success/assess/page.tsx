@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { renderPack, hasFrozenPack, type RenderedPack } from "@/lib/render-pack";
 import { getAssessmentFields } from "@/lib/assessment-fields";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -109,25 +110,16 @@ export default function SuccessAssess() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "none", reason: "standing_rule_assessed_per_income_year_no_act_by_date").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
-
-  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
-  // expired or will not parse, is a real defect — surface it so it is never silent.
-  // Phase 5 replaces this with real alerting.
-  useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "division-293-tax-calculation", deadlineIso: "" });
-  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -258,7 +250,7 @@ export default function SuccessAssess() {
       firstAction: "Your personalised firstAction is on its way by email.",
       accountantQuestions: [
         "What is my exact ATO position based on my answers?",
-        "What is the single most important action I should take before End of the income year?",
+        "What is the single most important action I should take before Income year end?",
         "Are there any planning opportunities specific to my situation?",
       ],
       
@@ -275,11 +267,6 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const super_type = sessionStorage.getItem("division-293-tax-calculation_super_type") || "accumulation";
-    const income_level = sessionStorage.getItem("division-293-tax-calculation_income_level") || "near_threshold";
-    const contribution_structure = sessionStorage.getItem("division-293-tax-calculation_contribution_structure") || "mix";
-    const assessment_status = sessionStorage.getItem("division-293-tax-calculation_assessment_status") || "planning_ahead";
-    const primary_concern = sessionStorage.getItem("division-293-tax-calculation_primary_concern") || "applicability";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }

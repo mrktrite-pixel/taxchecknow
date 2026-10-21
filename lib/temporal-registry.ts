@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 13
+// Declared products: 14
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -83,6 +83,16 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                       "anchor": "lead"
                 }
           ]
+    },
+    "division-293-tax-calculation": {
+          "temporal": {
+                "kind": "none",
+                "reason": "standing_rule_assessed_per_income_year_no_act_by_date",
+                "jurisdiction": "AU",
+                "domain": "superannuation",
+                "label": "Income year end",
+                "basis": "ITAA 1997 Division 293 (additional tax on concessional contributions): assessed per income year on income plus certain super contributions, and there is no separate act-by date — config au-17 deadline.description, with display \"End of the income year\" and urgencyLabel \"PER INCOME YEAR\". isoDate and countdownLabel are deliberately empty in that config (the au-10 pattern for a standing rule). Operator ruling 2026-10-21."
+          }
     },
     "frcgw-clearance-certificate": {
           "temporal": {

@@ -1,0 +1,100 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Division 293 tax rate",
+    "value": "15",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_1",
+    "label": "Division 293 threshold (2017–18 onwards)",
+    "value": "250000",
+    "unit": "AUD",
+    "fact_role": null
+  },
+  {
+    "id": "fig_2",
+    "label": "Division 293 threshold (2012–13 to 2016–17)",
+    "value": "300000",
+    "unit": "AUD",
+    "fact_role": null
+  },
+  {
+    "id": "fig_3",
+    "label": "Average 10-year Treasury bond rate 2024–25",
+    "value": "4.2906",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_4",
+    "label": "Average 10-year Treasury bond rate 2023–24",
+    "value": "4.2482",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_5",
+    "label": "Average 10-year Treasury bond rate 2022–23",
+    "value": "3.6096",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_6",
+    "label": "Average 10-year Treasury bond rate 2021–22",
+    "value": "2.1124",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_7",
+    "label": "Average 10-year Treasury bond rate 2020–21",
+    "value": "1.1816",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_8",
+    "label": "Average 10-year Treasury bond rate 2019–20",
+    "value": "1.0333",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_9",
+    "label": "Average 10-year Treasury bond rate 2018–19",
+    "value": "2.2547",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_10",
+    "label": "Average 10-year Treasury bond rate 2017–18",
+    "value": "2.7021",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_11",
+    "label": "Average 10-year Treasury bond rate 2016–17",
+    "value": "2.4157",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_12",
+    "label": "Average 10-year Treasury bond rate 2015–16",
+    "value": "2.6139",
+    "unit": "%",
+    "fact_role": null
+  },
+  {
+    "id": "fig_13",
+    "label": "Average 10-year Treasury bond rate 2014–15",
+    "value": "2.9978",
+    "unit": "%",
+    "fact_role": null
+  }
+]
