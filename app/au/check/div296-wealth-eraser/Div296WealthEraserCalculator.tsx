@@ -12,7 +12,10 @@
 // COMMERCE IS UNCHANGED: the productKey and success paths are the live product's, so checkout
 // still resolves through the same create-checkout-session block and the same Stripe env vars.
 //
-// ⚠REVIEW 1 field(s) need authoring: escape body — copy it from presentation.json's escape result_copy
+// escape body: taken from presentation.json's none_fit result_copy (the general escape), 2026-10-21,
+// which is the precedent set by cgt-main-residence-trap. It renders only when an escape terminal
+// carries no copy of its own — EngineVerdictPanel shows escapeBody only where toArrowLines(
+// indicatedResult) is empty — so here it is a fallback behind the per-terminal copy, not visible prose.
 
 import EngineCalculator, { type Engine, type EngineCheckout } from "@/app/_components/EngineCalculator";
 import type { EngineConfig } from "@/app/_components/engine-config";
@@ -52,7 +55,7 @@ const ENGINE_CONFIG: EngineConfig = {
     saveHeading: "Save your Division 296 Wealth Eraser Engine result to show your adviser.",
     saveSubcopy: "Get a copy of your result by email — free.",
     escapeLabel: "A closer look at your Division 296 Wealth Eraser Engine position",
-    escapeBody: "⚠REVIEW escape body — the config has no escape copy; the presentation overlay's escape result_copy is the authored version and should be used here.",
+    escapeBody: "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
     escapeCtaLabel: "Get my personalised review — {price} →",
     reviewGuideTitle: "Division 296 Wealth Eraser Engine Review Guide",
   },
