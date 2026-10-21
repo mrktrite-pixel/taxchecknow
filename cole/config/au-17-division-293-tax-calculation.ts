@@ -45,6 +45,14 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier1: { price: 67, name: "Your Division 293 Threshold Report", tagline: "Which side of the $250,000 line are you on?", value: "Your personalised Division 293 position: the threshold test applied to your income and concessional contributions, the amount the 15% would be charged on, and what to confirm with your fund.", cta: "Get My Division 293 Report — $67 →", productKey: "au_67_division_293_tax_calculation", envVar: "STRIPE_AU_DIV293_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Division 293 Management Plan", tagline: "Contribution structure, income timing and payment options in one plan", value: "The full Division 293 plan: concessional contribution structuring, income timing against the threshold, defined benefit mechanics including the Treasury bond rates, and the deferred-debt payment and election options.", cta: "Get My Division 293 Plan — $147 →", productKey: "au_147_division_293_tax_calculation", envVar: "STRIPE_AU_DIV293_147", successPath: "plan", fileCount: 8 },
 
+  temporal: {
+    kind:         "none",
+    reason:       "standing_rule_assessed_per_income_year_no_act_by_date",
+    jurisdiction: "AU",
+    domain:       "superannuation",
+    label:        "Income year end",
+    basis:        "ITAA 1997 Division 293 (additional tax on concessional contributions): assessed per income year on income plus certain super contributions, and there is no separate act-by date — config au-17 deadline.description, with display \"End of the income year\" and urgencyLabel \"PER INCOME YEAR\". isoDate and countdownLabel are deliberately empty in that config (the au-10 pattern for a standing rule). Operator ruling 2026-10-21.",
+  },
   deadline: { isoDate: "", display: "End of the income year", short: "Income year end", description: "Division 293 is assessed per income year on income plus certain super contributions — there is no separate act-by date", urgencyLabel: "PER INCOME YEAR", countdownLabel: "" },
 
   h1: "Division 293 Tax: Do You Cross the $250,000 Threshold?",
