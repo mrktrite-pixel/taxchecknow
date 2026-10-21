@@ -1,0 +1,113 @@
+{
+  "_doc": "DRAFTED presentation overlay — machine first draft from the build's own terminals, NOT an operator ruling. tier: default 67, 147 only where the terminal's own grounded text shows money at stake, a live deadline, or an adverse determination. Escapes are forced to tier 67 by the translator. Rule the tiers, then re-run emit-engine with --accept-overlay. Remove _drafted once ruled.",
+  "_doctrine": "structural/critical → 147; explainer/guidance → 67. Every row's evidence is printed by the drafter.",
+  "_evidence": {
+    "div293-threshold-check": [
+      "money:$2"
+    ],
+    "div293-salary-sacrifice-optimisation": [
+      "money:15%"
+    ],
+    "div293-income-timing-strategies": [
+      "money:$2"
+    ],
+    "div293-non-concessional-alternatives": [
+      "money:15%"
+    ],
+    "div293-interaction-other-tools": [
+      "money:15%"
+    ],
+    "div293-payment-deferral-cashflow": [
+      "money:4.2906%"
+    ],
+    "div293-defined-benefit-interests": [
+      "money:15%"
+    ],
+    "none_fit": [
+      "(escape — tier 67 forced)",
+      "⚠SPECIALISE:generic copy, make it about this product"
+    ],
+    "insufficient_information": [
+      "(escape — tier 67 forced)",
+      "⚠SPECIALISE:generic copy, make it about this product"
+    ],
+    "mixed_profile": [
+      "REMOVED (operator ruling 2026-10-21, option a): declared in escape_states, routed to by nothing",
+      "measured on the LOAD-BEARING field questions[].options[].routes_to: 0 of 38 options route here (routing_logic is a human-readable summary and is parsed by no gate — bee-d:1024)"
+    ],
+    "high_complexity": [
+      "(escape — tier 67 forced)",
+      "⚠SPECIALISE:generic copy, make it about this product"
+    ],
+    "manual_review_required": [
+      "REMOVED (operator ruling 2026-10-21, option a): declared in escape_states, routed to by nothing",
+      "measured on the LOAD-BEARING field questions[].options[].routes_to: 0 of 38 options route here (routing_logic is a human-readable summary and is parsed by no gate — bee-d:1024)"
+    ]
+  },
+  "states": {
+    "div293-threshold-check": {
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "div293-salary-sacrifice-optimisation": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "div293-income-timing-strategies": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "div293-non-concessional-alternatives": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "div293-interaction-other-tools": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "div293-payment-deferral-cashflow": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "div293-defined-benefit-interests": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "none_fit": {
+      "severity": "blue",
+      "criticality": "standard",
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position."
+    },
+    "insufficient_information": {
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand."
+    },
+    "high_complexity": {
+      "severity": "blue",
+      "criticality": "standard",
+      "title_key": "review_guide",
+      "heading": "This needs more than a self-serve check",
+      "result_copy": "Your answers place you in more than one area at once, and those areas interact — the right answer to one changes the answer to another. A short self-serve check cannot resolve that responsibly, and pretending otherwise would not serve you. A personalised review, or a qualified adviser, is the appropriate next step."
+    }
+  },
+  "_ruling": "Ship Plan stepper 2026-10-20T13:36:06.010Z: 1 re-tiered.\nShip Plan stepper 2026-10-21T00:30:35.048Z: 0 re-tiered.\nShip Plan stepper 2026-10-21T00:46:07.414Z: 0 re-tiered.\nShip Plan stepper 2026-10-21T00:47:46.778Z: 0 re-tiered."
+}

@@ -1,0 +1,523 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Division 293 tax is an additional 15% tax on concessional super contributions for high-income earners whose income plus certain super contributions exceed $250,000 (from 2017–18 onwards) or $300,000 (2012–13 to 2016–17), under the Income Tax Assessment Act 1997. Competitors explain what Division 293 is and how to calculate it, but none address planning strategies, mitigation techniques, or how to structure income and contributions to minimise or avoid the tax.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-super-type",
+      "text": "What type of superannuation interest do you hold?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Accumulation account only",
+          "value": "accumulation",
+          "flags": [
+            "q1-super-type:accumulation"
+          ]
+        },
+        {
+          "label": "Defined benefit interest (e.g. public sector or corporate defined benefit fund)",
+          "value": "defined_benefit",
+          "flags": [
+            "q1-super-type:defined_benefit"
+          ]
+        },
+        {
+          "label": "Both accumulation and defined benefit interests",
+          "value": "both",
+          "flags": [
+            "q1-super-type:both"
+          ]
+        },
+        {
+          "label": "I don't know what type of super I have",
+          "value": "unknown",
+          "flags": [
+            "q1-super-type:unknown"
+          ]
+        },
+        {
+          "label": "I don't have superannuation",
+          "value": "no_super",
+          "flags": [
+            "q1-super-type:no_super"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-income-level",
+      "text": "Approximately where does your income (including concessional super contributions) sit relative to the Division 293 threshold of $250,000 (for 2017–18 onwards)?",
+      "criticality": "standard",
+      "options": [
+        {
+          "label": "Clearly below $250,000 — Division 293 does not apply to me",
+          "value": "below_threshold",
+          "flags": [
+            "q2-income-level:below_threshold"
+          ]
+        },
+        {
+          "label": "Around or close to $250,000 — I'm not sure whether I cross it",
+          "value": "near_threshold",
+          "flags": [
+            "q2-income-level:near_threshold"
+          ]
+        },
+        {
+          "label": "Clearly above $250,000 — I know Division 293 applies to me",
+          "value": "above_threshold",
+          "flags": [
+            "q2-income-level:above_threshold"
+          ]
+        },
+        {
+          "label": "My income varied — I was above $300,000 in earlier years (2012–13 to 2016–17) but my situation has changed",
+          "value": "historical_threshold",
+          "flags": [
+            "q2-income-level:historical_threshold"
+          ]
+        },
+        {
+          "label": "I don't know my income level relative to the threshold",
+          "value": "unknown_income",
+          "flags": [
+            "q2-income-level:unknown_income"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-primary-concern",
+      "text": "What is your primary concern regarding Division 293?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Understanding whether and how the 15% Division 293 tax applies to me",
+          "value": "applicability",
+          "flags": [
+            "q3-primary-concern:applicability"
+          ]
+        },
+        {
+          "label": "Structuring my salary sacrifice and employer contributions to manage Division 293",
+          "value": "salary_sacrifice",
+          "flags": [
+            "q3-primary-concern:salary_sacrifice"
+          ]
+        },
+        {
+          "label": "Timing my income (e.g. bonuses, investment income) to stay below the $250,000 threshold",
+          "value": "income_timing",
+          "flags": [
+            "q3-primary-concern:income_timing"
+          ]
+        },
+        {
+          "label": "Shifting to non-concessional contributions or recontribution strategies to reduce exposure",
+          "value": "non_concessional",
+          "flags": [
+            "q3-primary-concern:non_concessional"
+          ]
+        },
+        {
+          "label": "How Division 293 interacts with contribution splitting, spouse contributions, or carry-forward rules",
+          "value": "other_tools",
+          "flags": [
+            "q3-primary-concern:other_tools"
+          ]
+        },
+        {
+          "label": "Paying a Division 293 assessment — deferral options and cash flow",
+          "value": "payment_deferral",
+          "flags": [
+            "q3-primary-concern:payment_deferral"
+          ]
+        },
+        {
+          "label": "None of these match my situation",
+          "value": "none_match",
+          "flags": [
+            "q3-primary-concern:none_match"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-concessional-contribution-structure",
+      "text": "How are your concessional contributions currently structured?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Employer contributions only (no salary sacrifice)",
+          "value": "employer_only",
+          "flags": [
+            "q4-concessional-contribution-structure:employer_only"
+          ]
+        },
+        {
+          "label": "A mix of salary sacrifice and employer contributions",
+          "value": "mix",
+          "flags": [
+            "q4-concessional-contribution-structure:mix"
+          ]
+        },
+        {
+          "label": "I make personal concessional contributions (e.g. claiming a deduction)",
+          "value": "personal_concessional",
+          "flags": [
+            "q4-concessional-contribution-structure:personal_concessional"
+          ]
+        },
+        {
+          "label": "I am considering switching some contributions to non-concessional",
+          "value": "considering_non_concessional",
+          "flags": [
+            "q4-concessional-contribution-structure:considering_non_concessional"
+          ]
+        },
+        {
+          "label": "I don't make any concessional contributions",
+          "value": "no_concessional",
+          "flags": [
+            "q4-concessional-contribution-structure:no_concessional"
+          ]
+        },
+        {
+          "label": "I'm not sure how my contributions are structured",
+          "value": "unsure_structure",
+          "flags": [
+            "q4-concessional-contribution-structure:unsure_structure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5-assessment-received",
+      "text": "Have you already received a Division 293 tax assessment from the ATO?",
+      "criticality": "standard",
+      "options": [
+        {
+          "label": "Yes — I have received an assessment and need to decide how to pay it",
+          "value": "assessment_received",
+          "flags": [
+            "q5-assessment-received:assessment_received"
+          ]
+        },
+        {
+          "label": "Yes — and I want to understand deferral or election options to pay from my super fund",
+          "value": "assessment_deferral",
+          "flags": [
+            "q5-assessment-received:assessment_deferral"
+          ]
+        },
+        {
+          "label": "No — I am planning ahead to understand or reduce my Division 293 exposure",
+          "value": "planning_ahead",
+          "flags": [
+            "q5-assessment-received:planning_ahead"
+          ]
+        },
+        {
+          "label": "I'm not sure whether I have received one",
+          "value": "unsure_assessment",
+          "flags": [
+            "q5-assessment-received:unsure_assessment"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q6-other-strategies-interest",
+      "text": "Are you interested in how Division 293 interacts with any of the following strategies?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Contribution splitting with my spouse",
+          "value": "contribution_splitting",
+          "flags": [
+            "q6-other-strategies-interest:contribution_splitting"
+          ]
+        },
+        {
+          "label": "Making spouse contributions",
+          "value": "spouse_contributions",
+          "flags": [
+            "q6-other-strategies-interest:spouse_contributions"
+          ]
+        },
+        {
+          "label": "Using carry-forward concessional contribution rules",
+          "value": "carry_forward",
+          "flags": [
+            "q6-other-strategies-interest:carry_forward"
+          ]
+        },
+        {
+          "label": "Timing or deferring income such as bonuses or investment income",
+          "value": "income_timing_strategy",
+          "flags": [
+            "q6-other-strategies-interest:income_timing_strategy"
+          ]
+        },
+        {
+          "label": "None of these — my situation involves multiple overlapping strategies",
+          "value": "complex_multiple",
+          "flags": [
+            "q6-other-strategies-interest:complex_multiple"
+          ]
+        },
+        {
+          "label": "I don't know enough about these strategies to answer",
+          "value": "unknown_strategies",
+          "flags": [
+            "q6-other-strategies-interest:unknown_strategies"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q7-defined-benefit-deferred-debt",
+      "text": "If you hold a defined benefit interest and have a Division 293 deferred debt, which aspect are you most focused on?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "How the 15% Division 293 tax rate is calculated for my defined benefit interest",
+          "value": "db_tax_calculation",
+          "flags": [
+            "q7-defined-benefit-deferred-debt:db_tax_calculation"
+          ]
+        },
+        {
+          "label": "How Treasury bond rates (such as 4.2906% for 2024–25) apply to my deferred debt",
+          "value": "db_bond_rate",
+          "flags": [
+            "q7-defined-benefit-deferred-debt:db_bond_rate"
+          ]
+        },
+        {
+          "label": "Payment and deferral options for my defined benefit Division 293 assessment",
+          "value": "db_payment",
+          "flags": [
+            "q7-defined-benefit-deferred-debt:db_payment"
+          ]
+        },
+        {
+          "label": "This question does not apply — I do not hold a defined benefit interest",
+          "value": "not_db",
+          "flags": [
+            "q7-defined-benefit-deferred-debt:not_db"
+          ]
+        },
+        {
+          "label": "I'm not sure whether I hold a defined benefit interest",
+          "value": "unsure_db",
+          "flags": [
+            "q7-defined-benefit-deferred-debt:unsure_db"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "div293-threshold-check",
+      "when": {
+        "any": [
+          "q1-super-type:accumulation",
+          "q2-income-level:near_threshold",
+          "q2-income-level:above_threshold",
+          "q2-income-level:historical_threshold",
+          "q3-primary-concern:applicability",
+          "q5-assessment-received:planning_ahead"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Am I over the $250,000 threshold? — Understanding when Division 293 applies",
+      "result_copy": "High-risk signal indicated: your income and concessional contributions profile suggests review of whether the $250,000 threshold (2017–18 onwards) is crossed is recommended. Review of the Division 293 calculation under the Income Tax Assessment Act 1997 is indicated.",
+      "figure_ids": []
+    },
+    {
+      "id": "div293-salary-sacrifice-optimisation",
+      "when": {
+        "any": [
+          "q3-primary-concern:salary_sacrifice",
+          "q4-concessional-contribution-structure:employer_only",
+          "q4-concessional-contribution-structure:mix"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Salary sacrifice vs. employer contributions — Structuring concessional contributions to manage Division 293",
+      "result_copy": "Review recommended: your concessional contribution structure — including the mix of salary sacrifice and employer contributions — may affect the amount subject to the 15% Division 293 tax. Structuring review is indicated.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "div293-income-timing-strategies",
+      "when": {
+        "any": [
+          "q3-primary-concern:income_timing",
+          "q6-other-strategies-interest:income_timing_strategy"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Income timing and the $250,000 threshold — Strategies to stay below the Division 293 trigger",
+      "result_copy": "Indicated risk: your income timing relative to the $250,000 threshold suggests that review of how assessable income timing interacts with Division 293 is recommended.",
+      "figure_ids": []
+    },
+    {
+      "id": "div293-non-concessional-alternatives",
+      "when": {
+        "any": [
+          "q3-primary-concern:non_concessional",
+          "q4-concessional-contribution-structure:personal_concessional",
+          "q4-concessional-contribution-structure:considering_non_concessional"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Non-concessional contributions and recontribution strategies — Reducing concessional contribution exposure",
+      "result_copy": "Review recommended: shifting contribution types or using recontribution strategies may affect the concessional contributions counted in the Division 293 calculation at the 15% rate. Further review is indicated.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "div293-interaction-other-tools",
+      "when": {
+        "any": [
+          "q3-primary-concern:other_tools",
+          "q6-other-strategies-interest:contribution_splitting",
+          "q6-other-strategies-interest:spouse_contributions",
+          "q6-other-strategies-interest:carry_forward"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Division 293 and other super planning tools — Contribution splitting, spouse contributions, and carry-forward rules",
+      "result_copy": "Review recommended: your profile indicates potential interaction between Division 293 and other contribution strategies. How these tools affect concessional contributions subject to the 15% Division 293 tax warrants further review.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "div293-payment-deferral-cashflow",
+      "when": {
+        "any": [
+          "q3-primary-concern:payment_deferral",
+          "q5-assessment-received:assessment_received",
+          "q5-assessment-received:assessment_deferral",
+          "q7-defined-benefit-deferred-debt:db_payment"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Paying your Division 293 assessment — Deferral options, payment timing, and cash flow management",
+      "result_copy": "Review recommended: your situation indicates that Division 293 assessment payment options — including deferral elections and the application of Treasury bond rates such as 4.2906% for 2024–25 to deferred debt obligations — warrant further review.",
+      "figure_ids": [
+        "fig_3"
+      ]
+    },
+    {
+      "id": "div293-defined-benefit-interests",
+      "when": {
+        "any": [
+          "q1-super-type:defined_benefit",
+          "q1-super-type:both",
+          "q7-defined-benefit-deferred-debt:db_tax_calculation",
+          "q7-defined-benefit-deferred-debt:db_bond_rate"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Division 293 and defined benefit interests — How the tax applies differently",
+      "result_copy": "High-risk signal indicated: your defined benefit interest profile suggests that the specific Division 293 calculation and payment mechanics — including the 15% tax rate and relevant Treasury bond rates applicable to deferred debt — warrant detailed review.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-super-type:no_super",
+          "q2-income-level:below_threshold",
+          "q3-primary-concern:none_match",
+          "q4-concessional-contribution-structure:no_concessional",
+          "q7-defined-benefit-deferred-debt:not_db"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1-super-type:unknown",
+          "q2-income-level:unknown_income",
+          "q4-concessional-contribution-structure:unsure_structure",
+          "q5-assessment-received:unsure_assessment",
+          "q6-other-strategies-interest:unknown_strategies",
+          "q7-defined-benefit-deferred-debt:unsure_db"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    },
+    {
+      "id": "high_complexity",
+      "when": {
+        "any": [
+          "q6-other-strategies-interest:complex_multiple"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This needs more than a self-serve check",
+      "result_copy": "Your answers place you in more than one area at once, and those areas interact — the right answer to one changes the answer to another. A short self-serve check cannot resolve that responsibly, and pretending otherwise would not serve you. A personalised review, or a qualified adviser, is the appropriate next step.",
+      "figure_ids": []
+    }
+  ]
+}
