@@ -209,6 +209,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["thresholdTest", "amountChargedOn", "contributionStructureReview", "incomeTimingPosition", "interestTypeImpact", "earlierYearExposure", "fundConfirmationList", "firstAction"],
     tier2: ["thresholdTest", "amountChargedOn", "contributionStructureReview", "incomeTimingPosition", "interestTypeImpact", "earlierYearExposure", "fundConfirmationList", "definedBenefitMechanics", "deferredDebtRateSchedule", "paymentAndElectionOptions", "otherStrategyInteractions", "multiYearThresholdPlan"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/div296-wealth-eraser. Lists copied VERBATIM
+  // from au-13-div296-wealth-eraser.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "div296-wealth-eraser": {
+    tier1: ["div296ExposureStatus", "tsbBandAnalysis", "embeddedGainsAnalysis", "exposurePerAssetSummary", "resetElectionRecommendation", "avoidableTaxQuantum", "lossAssetHandling", "valuationRequirements", "firstAction"],
+    tier2: ["div296ExposureStatus", "tsbBandAnalysis", "embeddedGainsAnalysis", "exposurePerAssetSummary", "resetElectionRecommendation", "avoidableTaxQuantum", "lossAssetHandling", "valuationRequirements", "preJune30DisposalPlan", "electionLodgementProcess", "twoTrackRecordKeepingSetup", "longTermProjectionModel", "accountantImplementationChecklist"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
