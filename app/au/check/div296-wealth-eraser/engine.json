@@ -1,0 +1,304 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Division 296 tax applies from 1 July 2026 at 15% on taxable super earnings where a total super balance exceeds the $3,000,000 large super balance threshold (LSBT), with an additional 10% applying where the balance exceeds the $10,000,000 very large super balance threshold (VLSBT). Both thresholds are indexed in future years in increments of $150,000 (LSBT) and $500,000 (VLSBT). Once a notice of assessment is issued, the tax is due within 84 days, and an election to release funds from super must be made within 60 days.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-primary-topic",
+      "text": "What is the main Division 296 question you need answered?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I want to know if Division 296 tax applies to me based on my super balance",
+          "value": "eligibility",
+          "flags": [
+            "q1-primary-topic:eligibility"
+          ]
+        },
+        {
+          "label": "I've received a Division 296 notice of assessment and need to know how and when to pay",
+          "value": "payment",
+          "flags": [
+            "q1-primary-topic:payment"
+          ]
+        },
+        {
+          "label": "I have a limited recourse borrowing arrangement (LRBA) in my SMSF and want to know if the loan counts toward my total super balance",
+          "value": "lrba",
+          "flags": [
+            "q1-primary-topic:lrba"
+          ]
+        },
+        {
+          "label": "I'm in a defined benefit scheme and want to understand how my balance is valued for Division 296",
+          "value": "defined-benefit",
+          "flags": [
+            "q1-primary-topic:defined-benefit"
+          ]
+        },
+        {
+          "label": "I want to understand how the thresholds are indexed over time",
+          "value": "indexation",
+          "flags": [
+            "q1-primary-topic:indexation"
+          ]
+        },
+        {
+          "label": "I'm not sure what my question is or none of these fit",
+          "value": "none",
+          "flags": [
+            "q1-primary-topic:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-balance-level",
+      "text": "Approximately where does your total super balance (TSB) sit at the end of the 2026–27 income year (or just before the start of a subsequent income year)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-primary-topic:eligibility"
+        ]
+      },
+      "options": [
+        {
+          "label": "Below $3,000,000",
+          "value": "below-lsbt",
+          "flags": [
+            "q2-balance-level:below-lsbt"
+          ]
+        },
+        {
+          "label": "At or above $3,000,000 but below $10,000,000",
+          "value": "between-lsbt-vlsbt",
+          "flags": [
+            "q2-balance-level:between-lsbt-vlsbt"
+          ]
+        },
+        {
+          "label": "At or above $10,000,000",
+          "value": "above-vlsbt",
+          "flags": [
+            "q2-balance-level:above-vlsbt"
+          ]
+        },
+        {
+          "label": "I'm not sure what my total super balance is",
+          "value": "unsure-balance",
+          "flags": [
+            "q2-balance-level:unsure-balance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-payment-topic",
+      "text": "Which aspect of paying your Division 296 tax do you need guidance on?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-primary-topic:payment"
+        ]
+      },
+      "options": [
+        {
+          "label": "I want to understand my payment options and deadlines after receiving the notice",
+          "value": "payment-options",
+          "flags": [
+            "q3-payment-topic:payment-options"
+          ]
+        },
+        {
+          "label": "My super fund holds illiquid assets (e.g. property or unlisted investments) and I'm concerned about finding the cash to pay",
+          "value": "liquidity",
+          "flags": [
+            "q3-payment-topic:liquidity"
+          ]
+        },
+        {
+          "label": "I'm not sure which of these applies to my situation",
+          "value": "unsure-payment",
+          "flags": [
+            "q3-payment-topic:unsure-payment"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "div296-applies-lsbt",
+      "when": {
+        "any": [
+          "q2-balance-level:between-lsbt-vlsbt"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My total super balance exceeds $3,000,000 — does Division 296 tax apply to me?",
+      "result_copy": "Where your total super balance (TSB) at the end of the 2026–27 income year exceeds the large super balance threshold (LSBT) of $3,000,000, Division 296 tax is indicated to apply. The tax rate is 15% on your taxable super earnings — the portion of earnings attributable to the extent your TSB exceeds the $3,000,000 LSBT. For subsequent income years, the test is whether your TSB just before the start of, or at the end of, the income year exceeds the LSBT. Review recommended to confirm your TSB calculation and applicable earnings.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "div296-vlsbt-additional-rate",
+      "when": {
+        "any": [
+          "q2-balance-level:above-vlsbt"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My super balance exceeds $10,000,000 — how does the additional 10% rate work on top of the 15%?",
+      "result_copy": "Where your TSB exceeds the very large super balance threshold (VLSBT) of $10,000,000, the 15% rate on taxable super earnings (the portion attributable to the extent your TSB exceeds the $3,000,000 LSBT) is indicated to apply, and an additional 10% rate is indicated to apply to your very large super balance earnings component — the portion of earnings attributable to the extent your TSB exceeds the $10,000,000 VLSBT. This is an explainer of how the rate structure works; your specific liability depends on your fund's earnings and TSB figures. Review recommended.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1"
+      ]
+    },
+    {
+      "id": "div296-payment-options",
+      "when": {
+        "any": [
+          "q3-payment-topic:payment-options"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I've received a Division 296 notice of assessment — how and when do I pay?",
+      "result_copy": "Once the ATO issues a Division 296 tax notice of assessment, the tax is generally due and payable 84 days after the notice is issued. You may elect within 60 days after the notice is issued to release money from one or more of your super funds to pay the liability. If you do not pay on time and do not make the election, the Commissioner of Taxation may require your fund to release super to pay the debt. Review recommended to confirm your specific notice dates and elected payment method.",
+      "figure_ids": [
+        "fig_6",
+        "fig_7"
+      ]
+    },
+    {
+      "id": "div296-liquidity-trap",
+      "when": {
+        "any": [
+          "q3-payment-topic:liquidity"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My super fund holds illiquid assets (e.g., property or unlisted assets) — how do I pay Division 296 tax when there's no cash?",
+      "result_copy": "Division 296 tax may be assessed on earnings that include unrealised gains on illiquid assets held inside your super fund. The tax is generally due and payable 84 days after the notice of assessment is issued. If you elect within 60 days after the notice is issued to release funds from super, your fund must have sufficient liquid assets to do so. Whether a genuine liquidity problem exists depends on your fund's specific asset mix and cash position. Specialist SMSF or financial advice is recommended to assess your fund's liquidity position before a notice is issued. This is guidance on the rule; it does not confirm your specific outcome.",
+      "figure_ids": [
+        "fig_6",
+        "fig_7"
+      ]
+    },
+    {
+      "id": "div296-lrba-tsb-exclusion",
+      "when": {
+        "any": [
+          "q1-primary-topic:lrba"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I have a limited recourse borrowing arrangement (LRBA) in my SMSF — does the loan amount count toward my TSB for Division 296?",
+      "result_copy": "Based on the verified rule, limited recourse borrowing arrangement (LRBA) amounts are disregarded when calculating your total super balance (TSB) for Division 296 tax purposes. This means the outstanding loan balance under an LRBA does not inflate your TSB when determining whether you exceed the $3,000,000 LSBT or the $10,000,000 VLSBT. Review recommended to confirm how this applies to your specific LRBA structure.",
+      "figure_ids": []
+    },
+    {
+      "id": "div296-defined-benefit-tsb",
+      "when": {
+        "any": [
+          "q1-primary-topic:defined-benefit"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm in a defined benefit scheme — could the valuation method push my TSB over $3,000,000 even if my real economic value is lower?",
+      "result_copy": "Defined benefit interests are included in your TSB using a commutation value or prescribed valuation method, which can produce a TSB figure that exceeds the $3,000,000 LSBT even when the underlying economic value of your pension entitlement is lower. Whether this applies to you depends on your specific defined benefit scheme and the valuation rules that apply to it. This is guidance on how the rule works; it does not confirm your specific TSB or tax outcome. Review recommended.",
+      "figure_ids": []
+    },
+    {
+      "id": "div296-threshold-indexation",
+      "when": {
+        "any": [
+          "q1-primary-topic:indexation"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Will the $3,000,000 and $10,000,000 thresholds increase over time?",
+      "result_copy": "The large super balance threshold (LSBT) is indexed in $150,000 increments, and the very large super balance threshold (VLSBT) is indexed in $500,000 increments. For the 2026–27 income year, the LSBT is $3,000,000 and the VLSBT is $10,000,000. This is an explainer of the indexation mechanism; the thresholds applicable to a specific income year depend on the indexation applied for that year. Review recommended to confirm the thresholds for your relevant income year.",
+      "figure_ids": []
+    },
+    {
+      "id": "div296-not-sure-if-applies",
+      "when": {
+        "any": [
+          "q2-balance-level:below-lsbt"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure whether my total super balance is close to or over $3,000,000 — how do I find out if Division 296 applies to me?",
+      "result_copy": "Where your total super balance (TSB) is below the large super balance threshold (LSBT) of $3,000,000 at the end of the 2026–27 income year (and below the LSBT just before the start of a subsequent income year), Division 296 tax is not indicated to apply for that income year. No Division 296 tax liability is indicated on these facts. If your TSB is approaching $3,000,000, review recommended to monitor future years as the threshold may be indexed and your balance may change.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-primary-topic:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2-balance-level:unsure-balance",
+          "q3-payment-topic:unsure-payment"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

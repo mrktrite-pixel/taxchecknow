@@ -1,0 +1,58 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Division 296 tax rate on taxable super earnings",
+    "value": "15",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_1",
+    "label": "Additional rate on very large super balance earnings component",
+    "value": "10",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_2",
+    "label": "Large super balance threshold (LSBT) for 2026–27",
+    "value": "3000000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_3",
+    "label": "Very large super balance threshold (VLSBT) for 2026–27",
+    "value": "10000000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_4",
+    "label": "LSBT indexation increment",
+    "value": "150000",
+    "unit": "AUD",
+    "fact_role": "other"
+  },
+  {
+    "id": "fig_5",
+    "label": "VLSBT indexation increment",
+    "value": "500000",
+    "unit": "AUD",
+    "fact_role": "other"
+  },
+  {
+    "id": "fig_6",
+    "label": "Payment due period after notice of assessment",
+    "value": "84",
+    "unit": "days",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_7",
+    "label": "Election window to release money from super fund",
+    "value": "60",
+    "unit": "days",
+    "fact_role": "duration"
+  }
+]
