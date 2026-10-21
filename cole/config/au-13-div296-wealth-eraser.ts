@@ -148,6 +148,12 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { title: "ATO — Key superannuation rates and thresholds (includes Division 296)", url: "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" },
     { title: "ATO — Division 296 tax on super balances above $3 million", url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families" },
     { title: "Treasury — Building a Stronger and Fairer Super System (enacted 13 March 2026)", url: "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" },
+    // ⚠ URL NOT VERIFIED IN SESSION, against F306. The provision name is the operator's own
+    // legalAnchor, verbatim; the URL follows au-17's precedent. But F306 requires the source be
+    // FETCHED AND READ, and neither source could be: legislation.gov.au/C2004A05138/latest/text
+    // returns the ITAA 1997 but truncates inside Division 34, so Subdiv 296-B is neither found nor
+    // ruled out, and ato.gov.au returns HTTP 403 to an automated fetch. This entry takes citation
+    // coverage 0% -> 100%, so READ THAT 100% AS UNVERIFIED until someone opens both by hand.
     { title: "ITAA 1997 Subdivision 296-B — Division 296 tax on superannuation earnings attributable to a total super balance above $3M", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
   ],
   files: [
