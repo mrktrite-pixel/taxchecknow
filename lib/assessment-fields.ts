@@ -202,6 +202,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["exemptionStatus", "taxableFractionCalculation", "sixYearRuleAnalysis", "incomeUseImpact", "foreignResidencyCheck", "businessUseImpact", "overlapPropertyIssue", "evidenceChecklist", "firstAction"],
     tier2: ["exemptionStatus", "taxableFractionCalculation", "sixYearRuleAnalysis", "incomeUseImpact", "foreignResidencyCheck", "businessUseImpact", "overlapPropertyIssue", "evidenceChecklist", "costBaseAdjustmentMap", "saleTimingScenarios", "overlapNominationStrategy", "marketValueResetAnalysis", "firstUseIncomeRules", "nextActionRecommendation"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/division-293-tax-calculation. Lists copied VERBATIM
+  // from au-17-division-293-tax-calculation.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "division-293-tax-calculation": {
+    tier1: ["thresholdTest", "amountChargedOn", "contributionStructureReview", "incomeTimingPosition", "interestTypeImpact", "earlierYearExposure", "fundConfirmationList", "firstAction"],
+    tier2: ["thresholdTest", "amountChargedOn", "contributionStructureReview", "incomeTimingPosition", "interestTypeImpact", "earlierYearExposure", "fundConfirmationList", "definedBenefitMechanics", "deferredDebtRateSchedule", "paymentAndElectionOptions", "otherStrategyInteractions", "multiYearThresholdPlan"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
