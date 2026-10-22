@@ -19,13 +19,13 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "2026-06-05",
-    "legislation": "Income Tax Assessment Act 1997 Subdivision 296-B (Division 296 tax) · Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 (Royal Assent 13 March 2026, commences 1 July 2026) · Superannuation (Building a Stronger and Fairer Super System) Imposition Act 2026 · SMSF cost-base reset election (fund-level, all-or-nothing, irrevocable, due by 2026-27 SMSF annual return)",
+    "last_verified": "October 2026",
+    "legislation": "Income Tax Assessment Act 1997 Subdivision 296-B (Division 296 tax: liability s 296-15, LSBT s 296-30, VLSBT s 296-35) · Income Tax (Transitional Provisions) Act 1997 Subdivision 296-B (CGT adjustments: s 296-50 the cost-base choice, s 296-55 record-keeping) · Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 No. 8, 2026 (Royal Assent 13 March 2026, commences 1 July 2026) · Superannuation (Building a Stronger and Fairer Super System) Imposition Act 2026 No. 9, 2026 · cost-base choice for a small superannuation fund (fund-level, all CGT assets held at 30 June 2026, cannot be revoked, available until the 2026-27 return is due)",
     "legal_anchor": "ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M",
     "deadline": {
-        "iso_date": "2026-06-30T23:59:59.000+10:00",
+        "iso_date": "",
         "display": "30 June 2026",
-        "description": "30 June 2026 — the valuation date that locks in your cost-base reset option",
+        "description": "30 June 2026 — the valuation date that locked in your cost-base reset option",
         "urgency_label": "VALUATION DATE — NOT LODGEMENT DATE"
     },
     "key_facts": {
@@ -79,7 +79,7 @@ export async function GET() {
         {
             "error_id": 2,
             "ai_says": "ChatGPT says: You can make the election later once you know the outcome",
-            "correct": "Reality: The election is lodged via the 2026-27 SMSF annual return but is based on MARKET VALUES AT 30 JUNE 2026. Any asset disposals to optimise the all-or-nothing election (e.g. selling loss-position assets) must happen BEFORE 30 June 2026. Missing the valuation date locks the outcome permanently."
+            "correct": "Reality: The election is lodged via the 2026-27 SMSF annual return but is based on MARKET VALUES AT 30 JUNE 2026. Any asset disposals to optimise the all-or-nothing election (e.g. selling loss-position assets) closed on 30 June 2026. Missing the valuation date locks the outcome permanently."
         },
         {
             "error_id": 3,
@@ -101,7 +101,7 @@ export async function GET() {
         {
             "id": 3,
             "question": "Why is the all-or-nothing structure a trap?",
-            "answer": "The election applies to every CGT asset held on 30 June 2026, or none at all. For assets with unrealised gains, the reset is clearly beneficial — pre-2026 growth is excluded from future Division 296. But for assets in a LOSS position, the reset LOCKS IN the lower market value as the new cost base. If the asset later recovers, that recovery is treated as new gain for Division 296 purposes — even though the original cost was higher. For funds holding mixed gain/loss assets, the optimal path often involves SELLING loss-position assets BEFORE 30 June 2026, then electing the reset so only gain-position assets get the benefit."
+            "answer": "The election applies to every CGT asset held on 30 June 2026, or none at all. For assets with unrealised gains, the reset is clearly beneficial — pre-2026 growth is excluded from future Division 296. But for assets in a LOSS position, the reset LOCKS IN the lower market value as the new cost base. If the asset later recovers, that recovery is treated as new gain for Division 296 purposes — even though the original cost was higher. For funds holding mixed gain/loss assets, the optimal path combined two steps: DISPOSING of loss-position assets during the 2025-26 year, then electing the reset so only gain-position assets got the benefit. The disposal step closed on 30 June 2026 and is no longer available. The election step remains open until the 2026-27 return is due."
         },
         {
             "id": 4,
@@ -111,7 +111,7 @@ export async function GET() {
         {
             "id": 5,
             "question": "What are the valuation requirements?",
-            "answer": "Listed assets (ASX shares, ETFs) use the published 30 June 2026 closing price — no professional valuation needed. Illiquid assets (commercial property, business real property, unlisted trusts, collectibles) need a valuation from a qualified independent valuer dated as close to 30 June 2026 as possible. These are the values the ATO will scrutinise most heavily. Records must be kept for 5 years. Start the valuation process well before 30 June 2026 — qualified valuers book out ahead of the deadline."
+            "answer": "Listed assets (ASX shares, ETFs) use the published 30 June 2026 closing price — no professional valuation needed. Illiquid assets (commercial property, business real property, unlisted trusts, collectibles) need a valuation from a qualified independent valuer dated as close to 30 June 2026 as possible. These are the values the ATO will scrutinise most heavily. Records must be kept for 5 years. The valuation date is fixed at 30 June 2026, so the market values that matter are already set — a qualified valuer can still establish them for that date retrospectively, and you need those figures before you lodge the choice."
         }
     ],
     "sources": [
@@ -126,6 +126,26 @@ export async function GET() {
         {
             "title": "Treasury — Building a Stronger and Fairer Super System (enacted 13 March 2026)",
             "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
+        },
+        {
+            "title": "ITAA 1997 Subdivision 296-B — Better targeted superannuation concessions (Division 296 tax: liability 296-15, LSBT 296-30, VLSBT 296-35, taxable superannuation earnings 296-40)",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ATO — Division 296 tax thresholds and interest (Table 28: 2026–27 LSBT $3,000,000, VLSBT $10,000,000; 15% above LSBT plus an additional 10% above VLSBT; indexation in $150,000 / $500,000 increments; LRBA amounts excluded from TSB)",
+            "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/division-296-tax-thresholds-and-interest"
+        },
+        {
+            "title": "Income Tax (Transitional Provisions) Act 1997 Subdivision 296-B — CGT adjustments: s 296-50 CGT adjustment for small superannuation funds (the cost-base choice), s 296-55 requirement to keep records, s 296-60 complying funds other than small funds",
+            "url": "https://www.legislation.gov.au/C2026A00008/asmade/2026-03-13/text/original/epub/OEBPS/document_1/document_1.html"
+        },
+        {
+            "title": "Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 No. 8, 2026 (C2026A00008; assented 13 March 2026; inserts ITAA 1997 Div 296 and the Income Tax (Transitional Provisions) Act 1997 CGT adjustments)",
+            "url": "https://www.legislation.gov.au/C2026A00008/asmade"
+        },
+        {
+            "title": "Superannuation (Building a Stronger and Fairer Super System) Imposition Act 2026 No. 9, 2026 (C2026A00009; assented 13 March 2026; imposes the Division 296 tax)",
+            "url": "https://www.legislation.gov.au/C2026A00009/asmade"
         }
     ],
     "products": {
@@ -133,7 +153,7 @@ export async function GET() {
             "name": "Your Div 296 Decision Pack",
             "price": 67,
             "currency": "AUD",
-            "description": "Know if the cost-base reset is right for your fund — before 30 June 2026",
+            "description": "Know if the cost-base reset is right for your fund — the choice is open until your 2026-27 return is due",
             "url": "https://taxchecknow.com/au/check/div296-wealth-eraser/success/assess"
         },
         "tier2": {
@@ -145,11 +165,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
+        "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/division-296-tax-thresholds-and-interest"
     ],
     "canonical": "https://taxchecknow.com/au/check/div296-wealth-eraser",
     "api_endpoint": "/api/rules/div296-wealth-eraser",
-    "generated_at": "2026-06-05T15:11:19.070Z"
+    "generated_at": "2026-10-22T02:04:53.489Z"
 };
 
   return NextResponse.json(rules, {
@@ -159,7 +179,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "div296-wealth-eraser",
-      "X-Last-Verified":             "2026-06-05",
+      "X-Last-Verified":             "October 2026",
     },
   });
 }
