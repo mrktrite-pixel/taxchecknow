@@ -6,44 +6,47 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
 import Div296WealthEraserCalculator from "./Div296WealthEraserCalculator";
+import { resolvedDeadlineFor } from "@/lib/temporal-display";
 
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Division 296 Wealth Eraser — SMSF Cost-Base Reset Election Before 30 June 2026 | TaxCheckNow",
-  description: "From 1 July 2026, Division 296 adds 15% tax on super earnings above $3M — including pre-2026 gains unless your SMSF elects the cost-base reset. The election is all-or-nothing, irrevocable, and must be decided based on 30 June 2026 valuations. Run your check in 2 minutes.",
+  title: "Division 296 Cost-Base Reset: Decide by 30 June | TaxCheckNow",
+  description: "Division 296 taxes super earnings above $3M from 1 July 2026, including pre-2026 gains unless your SMSF elects the cost-base reset. Check yours.",
   alternates: { canonical: "https://taxchecknow.com/au/check/div296-wealth-eraser" },
   openGraph: {
-    title: "Division 296 Wealth Eraser — SMSF Cost-Base Reset Election Before 30 June 2026 | TaxCheckNow",
-    description: "From 1 July 2026, Division 296 adds 15% tax on super earnings above $3M — including pre-2026 gains unless your SMSF elects the cost-base reset. The election is all-or-nothing, irrevocable, and must be decided based on 30 June 2026 valuations. Run your check in 2 minutes.",
+    title: "Division 296 Cost-Base Reset: Decide by 30 June | TaxCheckNow",
+    description: "Division 296 taxes super earnings above $3M from 1 July 2026, including pre-2026 gains unless your SMSF elects the cost-base reset. Check yours.",
     url: "https://taxchecknow.com/au/check/div296-wealth-eraser",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
+// STEP8: the day-count is only as fresh as the last render, so re-render daily.
+export const revalidate = 86400;
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "2026-06-05";
-const DEADLINE_LABEL = "30 June 2026";
-const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
+const LAST_VERIFIED  = "October 2026";
 
-function daysToDeadline(): number | null {
-  if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
-}
-
-function progressPct(): number {
-  if (!DEADLINE_ISO) return 50;
-  const start = new Date("2026-04-06T00:00:00Z").getTime();
-  const end   = new Date(DEADLINE_ISO).getTime();
-  const now   = Date.now();
-  const total = end - start;
-  const elapsed = Math.max(0, Math.min(total, now - start));
-  return Math.round((elapsed / total) * 100);
+// ── DEADLINE: RESOLVED AT RENDER, NOT BAKED (STEP7-JUNE15) ──────────────────
+// This page holds NO date. div296-wealth-eraser declares a recurrence rule, and the rule is resolved
+// on every render by lib/temporal-display.ts — the same arithmetic lib/temporal-resolver.ts
+// gives the email scheduler, so the countdown and the reminder cannot drift apart.
+//
+// What used to be here was a stored instant: correct until it passed, then confidently wrong,
+// with the page logging an expired-deadline error on every load until someone regenerated it.
+//
+// Resolved INSIDE the component, never at module scope: a module-level const is evaluated once
+// per server process, which would freeze the day-count for the lifetime of that process.
+function progressFromDaysAway(daysAway: number): number {
+  // Progress through the recurrence period that ENDS on the resolved date, so the bar refills
+  // the day after the deadline rolls. The stored-date version measured from a hardcoded
+  // 6 April 2026, which was meaningless for any product not on the UK tax year.
+  const PERIOD = 365;
+  return Math.round(((PERIOD - Math.min(PERIOD, daysAway)) / PERIOD) * 100);
 }
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
@@ -59,7 +62,7 @@ const faqs = [
   },
   {
     "question": "Why is the all-or-nothing structure a trap?",
-    "answer": "The election applies to every CGT asset held on 30 June 2026, or none at all. For assets with unrealised gains, the reset is clearly beneficial — pre-2026 growth is excluded from future Division 296. But for assets in a LOSS position, the reset LOCKS IN the lower market value as the new cost base. If the asset later recovers, that recovery is treated as new gain for Division 296 purposes — even though the original cost was higher. For funds holding mixed gain/loss assets, the optimal path often involves SELLING loss-position assets BEFORE 30 June 2026, then electing the reset so only gain-position assets get the benefit."
+    "answer": "The election applies to every CGT asset held on 30 June 2026, or none at all. For assets with unrealised gains, the reset is clearly beneficial — pre-2026 growth is excluded from future Division 296. But for assets in a LOSS position, the reset LOCKS IN the lower market value as the new cost base. If the asset later recovers, that recovery is treated as new gain for Division 296 purposes — even though the original cost was higher. For funds holding mixed gain/loss assets, the optimal path combined two steps: DISPOSING of loss-position assets during the 2025-26 year, then electing the reset so only gain-position assets got the benefit. The disposal step closed on 30 June 2026 and is no longer available. The election step remains open until the 2026-27 return is due."
   },
   {
     "question": "Can I elect even if my TSB is currently under $3M?",
@@ -67,7 +70,7 @@ const faqs = [
   },
   {
     "question": "What are the valuation requirements?",
-    "answer": "Listed assets (ASX shares, ETFs) use the published 30 June 2026 closing price — no professional valuation needed. Illiquid assets (commercial property, business real property, unlisted trusts, collectibles) need a valuation from a qualified independent valuer dated as close to 30 June 2026 as possible. These are the values the ATO will scrutinise most heavily. Records must be kept for 5 years. Start the valuation process well before 30 June 2026 — qualified valuers book out ahead of the deadline."
+    "answer": "Listed assets (ASX shares, ETFs) use the published 30 June 2026 closing price — no professional valuation needed. Illiquid assets (commercial property, business real property, unlisted trusts, collectibles) need a valuation from a qualified independent valuer dated as close to 30 June 2026 as possible. These are the values the ATO will scrutinise most heavily. Records must be kept for 5 years. The valuation date is fixed at 30 June 2026, so the market values that matter are already set — a qualified valuer can still establish them for that date retrospectively, and you need those figures before you lodge the choice."
   }
 ];
 
@@ -78,7 +81,7 @@ const aiCorrections = [
   },
   {
     "wrong": "ChatGPT says: You can make the election later once you know the outcome",
-    "correct": "Reality: The election is lodged via the 2026-27 SMSF annual return but is based on MARKET VALUES AT 30 JUNE 2026. Any asset disposals to optimise the all-or-nothing election (e.g. selling loss-position assets) must happen BEFORE 30 June 2026. Missing the valuation date locks the outcome permanently."
+    "correct": "Reality: The election is lodged via the 2026-27 SMSF annual return but is based on MARKET VALUES AT 30 JUNE 2026. Any asset disposals to optimise the all-or-nothing election (e.g. selling loss-position assets) closed on 30 June 2026. Missing the valuation date locks the outcome permanently."
   },
   {
     "wrong": "ChatGPT says: The cost-base reset is always beneficial if the fund is above $3M",
@@ -89,7 +92,7 @@ const aiCorrections = [
 const accountantQuestions = [
   {
     "q": "What are the current market values vs original cost bases for every CGT asset in my SMSF?",
-    "why": "The all-or-nothing structure means asset-by-asset modelling is essential. Any asset in a loss position may need to be disposed of BEFORE 30 June 2026 to avoid the lower cost base being locked in for Division 296."
+    "why": "The all-or-nothing structure means asset-by-asset modelling is essential. Disposing of a loss-position asset kept its lower cost base out of the election pool, and that opportunity closed on 30 June 2026. From 1 July 2026 it is no longer available, so the remaining question is whether the election still helps on the assets the fund actually held at that date."
   },
   {
     "q": "Based on my current asset mix, is the cost-base reset net beneficial — and if not, what pre-30-June disposals would fix it?",
@@ -167,7 +170,7 @@ const toolsRows = [
   {
     "tool": "Loss-position assets identified and sold (if beneficial)",
     "effect": "Avoids all-or-nothing reset locking in lower cost base",
-    "note": "Before 30 June 2026"
+    "note": "Window closed 30 June 2026"
   },
   {
     "tool": "Member TSB trajectory projections",
@@ -263,6 +266,26 @@ const sources = [
   {
     "title": "Treasury — Building a Stronger and Fairer Super System (enacted 13 March 2026)",
     "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
+  },
+  {
+    "title": "ITAA 1997 Subdivision 296-B — Better targeted superannuation concessions (Division 296 tax: liability 296-15, LSBT 296-30, VLSBT 296-35, taxable superannuation earnings 296-40)",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ATO — Division 296 tax thresholds and interest (Table 28: 2026–27 LSBT $3,000,000, VLSBT $10,000,000; 15% above LSBT plus an additional 10% above VLSBT; indexation in $150,000 / $500,000 increments; LRBA amounts excluded from TSB)",
+    "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/division-296-tax-thresholds-and-interest"
+  },
+  {
+    "title": "Income Tax (Transitional Provisions) Act 1997 Subdivision 296-B — CGT adjustments: s 296-50 CGT adjustment for small superannuation funds (the cost-base choice), s 296-55 requirement to keep records, s 296-60 complying funds other than small funds",
+    "url": "https://www.legislation.gov.au/C2026A00008/asmade/2026-03-13/text/original/epub/OEBPS/document_1/document_1.html"
+  },
+  {
+    "title": "Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 No. 8, 2026 (C2026A00008; assented 13 March 2026; inserts ITAA 1997 Div 296 and the Income Tax (Transitional Provisions) Act 1997 CGT adjustments)",
+    "url": "https://www.legislation.gov.au/C2026A00008/asmade"
+  },
+  {
+    "title": "Superannuation (Building a Stronger and Fairer Super System) Imposition Act 2026 No. 9, 2026 (C2026A00009; assented 13 March 2026; imposes the Division 296 tax)",
+    "url": "https://www.legislation.gov.au/C2026A00009/asmade"
   }
 ];
 
@@ -293,9 +316,21 @@ const countdownStats = [
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 
 export default function Div296WealthEraserPage() {
-  const countdown = daysToDeadline();
+  // One resolve per render. Null means the declaration stopped resolving, and for a fixed rule
+  // that is a real defect (a bad timezone, a missing registry entry) — logged, never absorbed.
+  const _deadline = resolvedDeadlineFor("taxchecknow", "div296-wealth-eraser");
+  const countdown = _deadline ? _deadline.daysAway : null;
+  const progress  = _deadline ? progressFromDaysAway(_deadline.daysAway) : 50;
   const deadlineLive = countdown !== null;
-  const progress  = progressPct();
+  const DEADLINE_LABEL = _deadline?.display ?? "";
+  // "0 days" is not a sentence anyone says. The stored-date path could never reach zero (it
+  // returned null for anything not strictly in the future, so the banner vanished on the due
+  // date — the worst possible day to hide it). A resolved rule CAN land on today, so today has
+  // its own words.
+  const DEADLINE_PHRASE = countdown === 0 ? "Due today" : `${countdown} days`;
+  if (!deadlineLive) {
+    console.error("[TEMPORAL] fixed rule did not resolve on gate page", { product: "au/check/div296-wealth-eraser" });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -311,8 +346,8 @@ export default function Div296WealthEraserPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Division 296 Wealth Eraser Engine — Rules 2026-06-05",
-    description: "From 1 July 2026, Division 296 adds 15% tax on super earnings above $3M — including pre-2026 gains unless your SMSF elects the cost-base reset. The election is all-or-nothing, irrevocable, and must be decided based on 30 June 2026 valuations. Run your check in 2 minutes.",
+    name: "Division 296 Wealth Eraser Engine — Rules October 2026",
+    description: "Division 296 taxes super earnings above $3M from 1 July 2026, including pre-2026 gains unless your SMSF elects the cost-base reset. Check yours.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -328,7 +363,7 @@ export default function Div296WealthEraserPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Division 296 Wealth Eraser Engine",
-    description: "From 1 July 2026, Division 296 adds 15% tax on super earnings above $3M — including pre-2026 gains unless your SMSF elects the cost-base reset. The election is all-or-nothing, irrevocable, and must be decided based on 30 June 2026 valuations. Run your check in 2 minutes.",
+    description: "Division 296 taxes super earnings above $3M from 1 July 2026, including pre-2026 gains unless your SMSF elects the cost-base reset. Check yours.",
     url: "https://taxchecknow.com/au/check/div296-wealth-eraser",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -358,8 +393,8 @@ export default function Div296WealthEraserPage() {
       },
       {
             "@type": "HowToStep",
-            "name": "Handle loss-position assets before 30 June",
-            "text": "If beneficial, sell loss-position assets BEFORE 30 June 2026 to avoid the reset locking in the lower cost base. Repurchase after if desired."
+            "name": "Loss-position assets: what the closed 30 June window means",
+            "text": "Disposing of loss-position assets avoided the reset locking in their lower cost base, and that window closed on 30 June 2026. It is settled either way now — work out whether the election still nets out in your favour on the assets the fund actually held at that date. Repurchase after if desired."
       },
       {
             "@type": "HowToStep",
@@ -377,13 +412,13 @@ export default function Div296WealthEraserPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/div296-wealth-eraser#calculator",
-    "description": "From 1 July 2026, Division 296 adds 15% tax on super earnings above $3M — including pre-2026 gains unless your SMSF elects the cost-base reset. The election is all-or-nothing, irrevocable, and must be decided based on 30 June 2026 valuations. Run your check in 2 minutes.",
+    "description": "Division 296 taxes super earnings above $3M from 1 July 2026, including pre-2026 gains unless your SMSF elects the cost-base reset. Check yours.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance 2026-06-05"
+      "Based on ATO guidance October 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -408,6 +443,18 @@ export default function Div296WealthEraserPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What is Division 296? The 40% super tax explained",
+    description: "Division 296 taxes super earnings above $3M from 1 July 2026, including pre-2026 gains unless your SMSF elects the cost-base reset. Check yours.",
+    thumbnailUrl: "https://i.ytimg.com/vi/gLwId_cwBhY/hqdefault.jpg",
+    uploadDate: "2026-06-13T01:00:14.892+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=gLwId_cwBhY",
+    embedUrl: "https://www.youtube.com/embed/gLwId_cwBhY",
+    transcript: "\"What is Division 296?\" Sound like you? You've heard the term but don't know what it means for your fund. The actual truth is: it's an extra tax on super balances above $3 million. Between $3M and $10M, you pay an additional 15%. Above $10M, a further 10% kicks in — 40% total, including the standard fund tax. The ATO confirms this. Here's what most people get wrong: ChatGPT says old gains are safe. They're not. Without the cost-base reset election, your original acquisition costs are used — so decades of pre-2026 growth get caught. That election locks to 30 June 2026 values. Miss that date and the outcome is permanent. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -417,6 +464,7 @@ export default function Div296WealthEraserPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -427,7 +475,7 @@ export default function Div296WealthEraserPage() {
           <div className="flex items-center gap-4 text-sm">
             {deadlineLive && (
             <span className="hidden items-center gap-1 text-neutral-600 md:flex">
-              <span className="font-bold text-red-600">{countdown}</span> days to {DEADLINE_LABEL}
+              <span className="font-bold text-red-600">{DEADLINE_PHRASE}</span> {countdown === 0 ? "—" : "to"} {DEADLINE_LABEL}
             </span>
             )}
             <Link href="/au" className="text-neutral-600 hover:text-neutral-900">
@@ -440,7 +488,7 @@ export default function Div296WealthEraserPage() {
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · VALUATION DATE — NOT LODGEMENT DATE
+        🔴 {DEADLINE_PHRASE} · {DEADLINE_LABEL} · VALUATION DATE — NOT LODGEMENT DATE
       </div>
       )}
 
@@ -462,7 +510,7 @@ export default function Div296WealthEraserPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Division 296 Is About to Tax the Same Super Growth Twice — Unless You Elect to Reset Before 30 June 2026
+          Division 296 Cost-Base Reset: Your SMSF's One-Time Election
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -536,11 +584,11 @@ export default function Div296WealthEraserPage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 30 June 2026 — cost-base reset valuation date
+            
           </p>
           <div className="mb-4 flex items-baseline gap-4">
-            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 30 June 2026</span>
+            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown === 0 ? "Today" : countdown}</span>
+            <span className="text-lg text-neutral-300">{countdown === 0 ? DEADLINE_LABEL : `days until ${DEADLINE_LABEL}`}</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -650,7 +698,7 @@ export default function Div296WealthEraserPage() {
           </p>
           <ul className="space-y-1.5 text-sm text-neutral-900">
             <li>✗ Division 296 is just a small extra tax on very large balances — wrong. The 15% additional tax compounds every year the balance stays above $3M (indexed in $150k steps). Without the cost-base reset, it also captures DECADES of pre-2026 growth when assets are eventually sold. On an SMSF with $600k of embedded gains on a property bought in 2015, that's potentially $90,000 of avoidable tax from pre-commencement growth alone — not including the ongoing annual drain.</li>
-            <li>✗ You can decide later whether to elect — wrong. The election is lodged via the 2026-27 SMSF annual return, but the CALCULATION is based on market values at 30 June 2026. Any disposal decisions to optimise the election (e.g. selling loss-position assets to avoid the all-or-nothing trap) must happen BEFORE 30 June 2026. Missing the valuation date = permanent exposure. No retrospective valuations. No asset-by-asset opt-in.</li>
+            <li>✗ You can decide later whether to elect — wrong. The election is lodged via the 2026-27 SMSF annual return, but the CALCULATION is based on market values at 30 June 2026. Any disposal decisions to optimise the election (e.g. selling loss-position assets to avoid the all-or-nothing trap) closed with the 2025-26 year, on 30 June 2026. That window has gone; the choice itself has not. Missing the valuation date = permanent exposure. No retrospective valuations. No asset-by-asset opt-in.</li>
             <li>✗ Only funds with members over $3M need to worry — wrong. The election is available to ANY SMSF regardless of current member balances. If any member's TSB might exceed $3M in the future, opting in now protects pre-2026 gains from Division 296 when the threshold is crossed later. And because the $3M threshold is indexed only in $150k steps, balance growth will push more members into scope every year.</li>
             <li>✗ The cost-base reset is always beneficial — wrong. The election is all-or-nothing — it applies to EVERY CGT asset held at 30 June 2026 or none. Assets currently in a loss position have their cost base RESET TO THE LOWER VALUE — you lose the higher original cost base permanently for Division 296 purposes. For funds holding mixed gain/loss assets, the optimal path is often to sell loss-position assets BEFORE 30 June, then elect the reset so only appreciated assets get the benefit.</li>
           </ul>
@@ -683,7 +731,7 @@ export default function Div296WealthEraserPage() {
             <p>What Gary had not thought about was the word 'earnings' in the Division 296 legislation. Because the tax is calculated on realised earnings using the asset's original cost base, the $550,000 gain on his Bibra Lake property would be swept into Division 296 when he eventually sold it — even though every dollar of that gain had accrued BEFORE Division 296 existed as law. Decades of pre-law growth, captured by a law that wasn't on the books when it happened.</p>
             <p className="font-semibold text-neutral-900">Gary's accountant laid out the numbers. Without the cost-base reset election, the $550,000 embedded gain on the Bibra Lake property would be exposed to Division 296 when sold — and with Gary at $3.4M TSB, the attributable proportion would mean roughly $18,000 of avoidable Division 296 tax from that pre-2026 gain alone, more if the property appreciated further. But the election was all-or-nothing. It would also reset the CSL shares from their $500,000 original cost base down to their $300,000 current market value. If CSL recovered to $500,000 over the next two years, that $200,000 recovery would be treated as a new gain for Division 296 purposes — an extra $6,000 of tax that wouldn't exist if Gary kept the original cost base.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Gary ran the div296-wealth-eraser check. The plan: sell the CSL shares before 30 June 2026 (realising the loss against his ordinary CGT, saving him about $30,000 in tax in the 2025-26 year), then elect the cost-base reset on the remaining assets. The Bibra Lake property's cost base would reset to $1.5M, protecting the full $550,000 pre-2026 gain from Division 296. The share portfolio's cost base would reset to $700,000, protecting another $200,000 of gain. Combined protection: about $95,000 of future Division 296 tax that Gary would have paid if he'd done nothing. He could buy the CSL shares back after 30 June 2026 at their then-current price if he still wanted exposure. Booked the valuer for the Bibra Lake property the next week.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Gary ran the div296-wealth-eraser check. The plan had two legs. He sold the CSL shares during the 2025-26 year, realising the loss against his ordinary CGT and saving about $30,000 in tax, and that leg closed with the year on 30 June 2026. The second leg — electing the cost-base reset on the remaining assets — can still be lodged with the 2026-27 return. The Bibra Lake property's cost base would reset to $1.5M, protecting the full $550,000 pre-2026 gain from Division 296. The share portfolio's cost base would reset to $700,000, protecting another $200,000 of gain. Combined protection: about $95,000 of future Division 296 tax that Gary would have paid if he'd done nothing. He could buy the CSL shares back after 30 June 2026 at their then-current price if he still wanted exposure. Booked the valuer for the Bibra Lake property the next week.</p>
             </div>
           </div>
           
@@ -701,7 +749,7 @@ export default function Div296WealthEraserPage() {
           <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
             Division 296 Tax and SMSF Cost-Base Reset Election — Confirmed April 2026
           </h2>
-          <p className="mb-4 text-neutral-800">Division 296 is an additional personal income tax on superannuation earnings attributable to the portion of an individual's Total Super Balance above $3 million. It commences 1 July 2026 under Subdivision 296-B of the Income Tax Assessment Act 1997, enacted by the Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 (Royal Assent 13 March 2026). The tax rate is 15% on the proportion of realised earnings attributable to TSB above $3 million, plus a further 10% (total 40%) on the portion above $10 million. Both thresholds are indexed to CPI in $150,000 and $500,000 increments respectively. Division 296 is assessed on the individual member, not the fund, but can be paid from super via a release authority. Only realised earnings are taxable — unrealised gains were removed from the final legislation. For the first year (2026-27) only, a transitional rule uses TSB at 30 June 2027 only. From 2027-28 onwards, the higher of the opening or closing TSB is used. SMSFs have a one-off cost-base reset election under the legislation: trustees can elect to reset the cost base of all CGT assets held at 30 June 2026 to their market value at that date, for Division 296 purposes only. This election is fund-level and all-or-nothing — it applies to every CGT asset held on 30 June 2026, or none. Once made, it is irrevocable. It must be lodged in the approved form by the due date of the SMSF's 2026-27 annual return. The election does not change the asset's cost base for ordinary income tax or CGT purposes — two sets of records must be maintained. The election is available to any SMSF regardless of current member balances, offering forward-looking protection for funds whose balances may cross $3 million in the future. The election does NOT extend to underlying assets held indirectly through unit trusts or companies unless existing statutory look-through rules apply. Assets in a loss position at 30 June 2026 are penalised by the all-or-nothing structure — their cost base is reset to the lower market value. For funds holding mixed gain and loss assets, loss-position assets often need to be disposed of before 30 June 2026 to optimise the election outcome.</p>
+          <p className="mb-4 text-neutral-800">Division 296 is an additional personal income tax on superannuation earnings attributable to the portion of an individual's Total Super Balance above $3 million. It commences 1 July 2026 under Subdivision 296-B of the Income Tax Assessment Act 1997, enacted by the Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 (Royal Assent 13 March 2026). The tax rate is 15% on the proportion of realised earnings attributable to TSB above $3 million, plus a further 10% (total 40%) on the portion above $10 million. Both thresholds are indexed to CPI in $150,000 and $500,000 increments respectively. Division 296 is assessed on the individual member, not the fund, but can be paid from super via a release authority. Only realised earnings are taxable — unrealised gains were removed from the final legislation. For the first year (2026-27) only, a transitional rule uses TSB at 30 June 2027 only. From 2027-28 onwards, the higher of the opening or closing TSB is used. SMSFs have a one-off cost-base reset election under the legislation: trustees can elect to reset the cost base of all CGT assets held at 30 June 2026 to their market value at that date, for Division 296 purposes only. This election is fund-level and all-or-nothing — it applies to every CGT asset held on 30 June 2026, or none. Once made, it is irrevocable. It must be lodged in the approved form by the due date of the SMSF's 2026-27 annual return. The election does not change the asset's cost base for ordinary income tax or CGT purposes — two sets of records must be maintained. The election is available to any SMSF regardless of current member balances, offering forward-looking protection for funds whose balances may cross $3 million in the future. The election does NOT extend to underlying assets held indirectly through unit trusts or companies unless existing statutory look-through rules apply. Assets in a loss position at 30 June 2026 are penalised by the all-or-nothing structure — their cost base is reset to the lower market value. For funds holding mixed gain and loss assets, disposing of loss-position assets was the usual way to optimise the election outcome, and that window closed on 30 June 2026. The election itself remains open until the 2026-27 return is due.</p>
           
           <div className="mb-4 rounded-xl border border-neutral-200 bg-white px-4 py-3 font-mono text-sm text-neutral-800">
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-neutral-400">Formula</p>
@@ -712,7 +760,7 @@ export default function Div296WealthEraserPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (2026-06-05)</th>
+                  <th className="p-2 text-left font-bold">Value (October 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -915,7 +963,7 @@ export default function Div296WealthEraserPage() {
           Tools
         </p>
         <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">
-          What to check before 30 June 2026
+          What to check before you lodge the choice
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full border border-neutral-300 text-sm">
@@ -941,7 +989,7 @@ export default function Div296WealthEraserPage() {
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Loss-position assets identified and sold (if beneficial)</td>
                 <td className="p-3 text-xs">Avoids all-or-nothing reset locking in lower cost base</td>
-                <td className="p-3 text-xs text-neutral-700">Before 30 June 2026</td>
+                <td className="p-3 text-xs text-neutral-700">Window closed 30 June 2026</td>
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Member TSB trajectory projections</td>
@@ -1011,7 +1059,7 @@ export default function Div296WealthEraserPage() {
             Accountant brief
           </p>
           <h2 className="mb-6 text-2xl font-bold text-emerald-950 md:text-3xl">
-            Ask these before 30 June 2026
+            Ask these before you lodge the choice
           </h2>
           <ol className="space-y-5">
             {accountantQuestions.map((item, i) => (
@@ -1096,10 +1144,35 @@ export default function Div296WealthEraserPage() {
               <p className="font-bold text-neutral-900">ATO — Division 296 tax on super balances above $3 million ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/super-for-individuals-and-families</p>
             </a>
-            <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">Treasury — Building a Stronger and Fairer Super System (enacted 13 March 2026) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 Subdivision 296-B — Better targeted superannuation concessions (Division 296 tax: liability 296-15, LSBT 296-30, VLSBT 296-35, taxable superannuation earnings 296-40) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/division-296-tax-thresholds-and-interest" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Division 296 tax thresholds and interest (Table 28: 2026–27 LSBT $3,000,000, VLSBT $10,000,000; 15% above LSBT plus an additional 10% above VLSBT; indexation in $150,000 / $500,000 increments; LRBA amounts excluded from TSB) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/division-296-tax-thresholds-and-interest</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2026A00008/asmade/2026-03-13/text/original/epub/OEBPS/document_1/document_1.html" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">Income Tax (Transitional Provisions) Act 1997 Subdivision 296-B — CGT adjustments: s 296-50 CGT adjustment for small superannuation funds (the cost-base choice), s 296-55 requirement to keep records, s 296-60 complying funds other than small funds ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2026A00008/asmade/2026-03-13/text/original/epub/OEBPS/document_1/document_1.html</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2026A00008/asmade" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 No. 8, 2026 (C2026A00008; assented 13 March 2026; inserts ITAA 1997 Div 296 and the Income Tax (Transitional Provisions) Act 1997 CGT adjustments) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2026A00008/asmade</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2026A00009/asmade" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">Superannuation (Building a Stronger and Fairer Super System) Imposition Act 2026 No. 9, 2026 (C2026A00009; assented 13 March 2026; imposes the Division 296 tax) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2026A00009/asmade</p>
             </a>
           </div>
         </div>
@@ -1111,11 +1184,20 @@ export default function Div296WealthEraserPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for 2026-06-05.
+          built from ATO and GOV.UK guidance for October 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=gLwId_cwBhY" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"\"What is Division 296?\" Sound like you? You've heard the term but don't know what it means for your fund. The actual truth is: it's an extra tax on super balances above $3 million. Between $3M and $10M, you pay an additional 15%. Above $10M, a further 10% kicks in — 40% total, including the standard fund tax. The ATO confirms this. Here's what most people get wrong: ChatGPT says old gains are safe. They're not. Without the cost-base reset election, your original acquisition costs are used — so decades of pre-2026 growth get caught. That election locks to 30 June 2026 values. Miss that date and the outcome is permanent. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -1125,7 +1207,7 @@ export default function Div296WealthEraserPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. 2026-06-05.</p>
+            <p className="mt-1">Australia tax position checks. October 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

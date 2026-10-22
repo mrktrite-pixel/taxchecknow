@@ -122,6 +122,12 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // key, read out of this same file rather than guessed.
   au_67_cgt_main_residence_trap:   "STRIPE_AU_CGT_MR_67",
   au_147_cgt_main_residence_trap:  "STRIPE_AU_CGT_MR_147",
+  // au/check/div296-wealth-eraser (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
+  // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that
+  // key, read out of this same file rather than guessed.
+  au_67_div296_wealth_eraser:   "STRIPE_AU_DIV296_67",
+  au_147_div296_wealth_eraser:  "STRIPE_AU_DIV296_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {
