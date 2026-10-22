@@ -59,6 +59,29 @@ const MIN_STEM = 4;
 const isCapitalised = (w: string): boolean => /^[A-Z]/.test(w);
 const bare = (w: string): string => w.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9]+$/g, "");
 
+// A THOUSANDS SEPARATOR IS NOT A WORD BOUNDARY (2026-10-22, with soverella PR #215).
+//
+// The split below lists "," as a separator, so "$3,000,000" became the three tokens 3 / 000 / 000
+// and the adjacent-equal test below did exactly what it should with two identical neighbours:
+//
+//   "below $3,000,000 at the end"   -> ["000 000"]
+//   "above $10,000,000 of balance"  -> ["000 000"]
+//
+// measured against this very function, 2026-10-22. In soverella's copy of this rule the same bug
+// held div296-wealth-eraser's step 5 at NEEDS_YOU on two DELIVERED packs whose copy was correct.
+// Here it is worse: generate-success-pages.ts BLOCKS generation on these hits rather than
+// reporting them, so any product whose copy names a comma-separated figure next to a repeat of
+// its own digit groups could not generate a success page at all.
+//
+// The comma is protected only BETWEEN DIGITS, with a lookahead so consecutive groups all survive
+// ("3,000,000", not just the leading group). Every other comma still splits, so the
+// "Australia, Australian" distinction below is untouched — and a repeated NUMBER ("in 2026 2026")
+// is still caught, because its separator is whitespace. Fixing the split rather than filtering
+// all-digit hits is what preserves that case.
+const THOUSANDS_SEP = String.fromCharCode(0);
+const protectThousands = (s: string): string => s.replace(/(\d),(?=\d)/g, `$1${THOUSANDS_SEP}`);
+const unprotectThousands = (s: string): string => s.split(THOUSANDS_SEP).join(",");
+
 /**
  * Every visible doubled word in a piece of text.
  *
@@ -73,7 +96,11 @@ export function findDoubledWords(text: string): DoubledWordHit[] {
   for (const [i, lineText] of lines.entries()) {
     // Sentence boundaries end adjacency: a repeat across ". " or a closing tag is not a doubling.
     for (const clause of lineText.split(/(?:[.!?;:]|<\/?[a-zA-Z][^>]*>)+/)) {
-      const words = clause.split(/[\s,(){}[\]"'`/—–-]+/).map(bare).filter(Boolean);
+      const words = protectThousands(clause)
+        .split(/[\s,(){}[\]"'`/—–-]+/)
+        .map(bare)
+        .filter(Boolean)
+        .map(unprotectThousands);
       for (let k = 0; k + 1 < words.length; k++) {
         const a = words[k];
         const b = words[k + 1];
