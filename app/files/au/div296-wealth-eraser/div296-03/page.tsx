@@ -117,7 +117,8 @@ export default function Div296WealthEraserFile03() {
 
           <DocStrip
             productId={PRODUCT_ID}
-            fallbackText="VALUATION DATE — NOT LODGEMENT DATE: 30 June 2026"
+            fallbackUrgencyLabel={"VALUATION DATE — NOT LODGEMENT DATE"}
+            fallbackText=""
             checkHref="/au/check/div296-wealth-eraser"
           />
 
