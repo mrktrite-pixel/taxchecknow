@@ -15,7 +15,7 @@ const PRODUCT_ID = "div296-wealth-eraser";
 const SESSION_KEY = "div296-wealth-eraser";
 const SLUG = "div296-07";
 const FALLBACK_LABEL = { name: "Pre-30-June Disposal Strategy", desc: "How to optimise the all-or-nothing election by disposing of loss-position assets first." };
-const BODY = `<h2>Pre-30-June Loss-Asset Disposal Strategy</h2><p>Selling loss-position assets BEFORE 30 June 2026 removes them from the election pool — they keep their original (higher) cost base for Division 296.</p><h2>The Decision Formula</h2><p>Sell loss asset before 30 June if: (Future Div 296 tax on recovery if reset) > (Immediate CGT cost of selling + repurchase cost + market risk during gap)</p><h2>Worked Example (CSL)</h2><p>Original cost $500,000, current market value $300,000. If held through reset: cost base drops to $300,000. If CSL recovers to $500,000: $200,000 recovery taxed under Div 296 at attributable proportion × 15%.</p><p>If sold before 30 June: CGT loss of $200,000 realised in 2025-26. Shares repurchased after 30 June at ~$300,000. New cost base = repurchase price. No reset penalty.</p><h2>Wash-Sale Consideration</h2><p>Document the Division 296 commercial rationale in SMSF trustee minutes. Part IVA may apply if the disposal/repurchase lacks genuine commercial purpose.</p>`;
+const BODY = `<h2>Loss-Asset Disposal Strategy — window closed 30 June 2026</h2><p>Disposing of loss-position assets removed them from the election pool, so they kept their original (higher) cost base for Division 296. That window closed on 30 June 2026. What follows is recorded so you can see how the fund’s position was set, and judge the election on the assets it actually held at that date.</p><h2>The Decision Formula</h2><p>Sell loss asset before 30 June if: (Future Div 296 tax on recovery if reset) > (Immediate CGT cost of selling + repurchase cost + market risk during gap)</p><h2>Worked Example (CSL)</h2><p>Original cost $500,000, current market value $300,000. If held through reset: cost base drops to $300,000. If CSL recovers to $500,000: $200,000 recovery taxed under Div 296 at attributable proportion × 15%.</p><p>If sold before 30 June: CGT loss of $200,000 realised in 2025-26. Shares repurchased after 30 June at ~$300,000. New cost base = repurchase price. No reset penalty.</p><h2>Wash-Sale Consideration</h2><p>Document the Division 296 commercial rationale in SMSF trustee minutes. Part IVA may apply if the disposal/repurchase lacks genuine commercial purpose.</p>`;
 
 export default function Div296WealthEraserFile07() {
   // R1 — bind the body to the buyer's own answers where we have them.
@@ -108,7 +108,7 @@ export default function Div296WealthEraserFile07() {
               🇦🇺 ATO · ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: June 2026
+              Last verified: October 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 07 of 8
@@ -229,7 +229,7 @@ export default function Div296WealthEraserFile07() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance June 2026.
+            Based on ATO guidance October 2026.
           </p>
         </div>
 

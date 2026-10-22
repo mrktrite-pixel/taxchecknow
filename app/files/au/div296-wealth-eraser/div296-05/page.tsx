@@ -14,7 +14,7 @@ import { resolveDocLabel } from "@/lib/terminal-labels";
 const PRODUCT_ID = "div296-wealth-eraser";
 const SESSION_KEY = "div296-wealth-eraser";
 const SLUG = "div296-05";
-const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "4 questions to take to your SMSF accountant before 30 June 2026." };
+const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "4 questions to take to your SMSF accountant before you lodge the choice." };
 const BODY = `<div class="info-box">Ask these at your pre-June 2026 SMSF review — not at the lodgement review in 2028.</div><div class="action-box"><h3>Question 1</h3><p>"What are the current market values vs original cost bases for every CGT asset in my SMSF?"</p></div><h3>Question 2</h3><p>"Based on my asset mix, is the cost-base reset net beneficial — and if not, what pre-30-June disposals fix it?"</p><h3>Question 3</h3><p>"Do I need independent valuations for illiquid assets — which valuer, when, and what evidence do you need?"</p><h3>Question 4</h3><p>"What's my two-track record-keeping obligation after electing, and how will you maintain it for the next 5+ years?"</p>`;
 
 export default function Div296WealthEraserFile05() {
@@ -108,7 +108,7 @@ export default function Div296WealthEraserFile05() {
               🇦🇺 ATO · ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: June 2026
+              Last verified: October 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 05 of 8
@@ -229,7 +229,7 @@ export default function Div296WealthEraserFile05() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance June 2026.
+            Based on ATO guidance October 2026.
           </p>
         </div>
 

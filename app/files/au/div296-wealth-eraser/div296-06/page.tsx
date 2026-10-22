@@ -15,7 +15,7 @@ const PRODUCT_ID = "div296-wealth-eraser";
 const SESSION_KEY = "div296-wealth-eraser";
 const SLUG = "div296-06";
 const FALLBACK_LABEL = { name: "Full Cost-Base Reset Execution Plan", desc: "Step-by-step execution for electing the cost-base reset without creating irreversible errors." };
-const BODY = `<h2>Cost-Base Reset — Full Execution</h2><h2>Phase 1 — April-May 2026 (Analysis)</h2><ol><li>Obtain full SMSF asset register with original cost base and acquisition dates</li><li>Get preliminary market values for all CGT assets (listed + indicative for illiquid)</li><li>Identify loss-position assets — flag for pre-30-June disposal decision</li><li>Run fund-level modelling: Div 296 tax WITH reset vs WITHOUT (10-20 year horizon)</li><li>Decide: ELECT, DO NOT ELECT, or ELECT + sell specific loss assets first</li></ol><h2>Phase 2 — May-June 2026 (Preparation)</h2><ol><li>Engage qualified independent valuer for illiquid assets</li><li>If selling loss-position assets: execute disposals before 30 June 2026</li><li>Draft SMSF trustee minute resolving to make the election</li></ol><h2>Phase 3 — After 30 June 2026 (Valuations Locked)</h2><ol><li>Obtain final 30 June 2026 market values for all assets</li><li>Update SMSF cost base records to reflect election values</li><li>Set up two-track record-keeping: ordinary CGT ledger + Division 296 reset ledger</li></ol><h2>Phase 4 — 2026-27 Annual Return (Lodgement)</h2><ol><li>Lodge the election in the approved form with the SMSF's 2026-27 annual return</li><li>Once lodged: irrevocable. Retain all documentation for minimum 5 years.</li></ol>`;
+const BODY = `<h2>Cost-Base Reset — Full Execution</h2><h2>Phase 1 — Analysis (was April-May 2026)</h2><ol><li>Obtain full SMSF asset register with original cost base and acquisition dates</li><li>Get preliminary market values for all CGT assets (listed + indicative for illiquid)</li><li>Identify loss-position assets — flag for pre-30-June disposal decision</li><li>Run fund-level modelling: Div 296 tax WITH reset vs WITHOUT (10-20 year horizon)</li><li>Decide: ELECT, DO NOT ELECT, or ELECT + sell specific loss assets first</li></ol><h2>Phase 2 — May-June 2026 (Preparation)</h2><ol><li>Engage qualified independent valuer for illiquid assets</li><li>Loss-position asset disposals — window closed on 30 June 2026, no longer available</li><li>Draft SMSF trustee minute resolving to make the election</li></ol><h2>Phase 3 — After 30 June 2026 (Valuations Locked)</h2><ol><li>Obtain final 30 June 2026 market values for all assets</li><li>Update SMSF cost base records to reflect election values</li><li>Set up two-track record-keeping: ordinary CGT ledger + Division 296 reset ledger</li></ol><h2>Phase 4 — 2026-27 Annual Return (Lodgement)</h2><ol><li>Lodge the election in the approved form with the SMSF's 2026-27 annual return</li><li>Once lodged: irrevocable. Retain all documentation for minimum 5 years.</li></ol>`;
 
 export default function Div296WealthEraserFile06() {
   // R1 — bind the body to the buyer's own answers where we have them.
@@ -108,7 +108,7 @@ export default function Div296WealthEraserFile06() {
               🇦🇺 ATO · ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: June 2026
+              Last verified: October 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 06 of 8
@@ -229,7 +229,7 @@ export default function Div296WealthEraserFile06() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance June 2026.
+            Based on ATO guidance October 2026.
           </p>
         </div>
 
