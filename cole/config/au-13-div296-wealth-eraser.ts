@@ -1,5 +1,46 @@
 import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
+  // ══════════════════════════════════════════════════════════════════════════════════════════
+  // ⚠ AUTHORITY RE-READ 2026-10-22 — WHAT IS VERIFIED, AND THE ONE THING THAT IS NOT
+  //
+  // Asked to re-stamp `lastVerified` to "October 2026", I fetched the pinned ATO page and the
+  // ITAA 1997 text (curl, HTTP 200 both). lastVerified is DELIBERATELY NOT RE-STAMPED. Everything
+  // about the TAX is confirmed; the product's central MECHANISM could not be found at all.
+  //
+  // VERIFIED, quoted verbatim from ato.gov.au/.../division-296-tax-thresholds-and-interest:
+  //   "From 1 July 2026, Division 296 tax reduces the tax concession for individuals whose TSB
+  //    exceeds the large super balance threshold (LSBT)."
+  //   "15% on the proportion of your taxable super earnings relating to your TSB that exceeds the
+  //    LSBT, and an additional 10% on the proportion ... that exceeds the very large super balance
+  //    threshold (VLSBT)."
+  //   "The thresholds are subject to indexation in line with the consumer price index, in
+  //    increments of $150,000 for the LSBT and $500,000 for the VLSBT."
+  //   "For Division 296 tax purposes, limited recourse borrowing arrangement amounts are excluded
+  //    from your TSB."
+  //   Table 28 — Income year 2026–27 | LSBT $3,000,000 | VLSBT 10,000,000
+  // That confirms the commencement date, both rates, both thresholds, the indexation steps, the
+  // LRBA exclusion and the defined-benefit deferral — i.e. every figure this config asserts about
+  // the tax itself, and the `temporal` effective_from declaration below.
+  //
+  // NOT VERIFIED, AND THE PRODUCT IS BUILT ON IT: the "SMSF cost-base reset election".
+  //   Division 296's COMPLETE provision list in ITAA 1997 is 296-A (object), 296-B (296-10..296-75),
+  //   296-C (296-125..296-140), 296-E (296-190..296-205), 296-G (296-255..296-265). There is no
+  //   Subdivision 296-D and no 296-F; the Division ends at 296-265, before Division 301.
+  //   In that whole list: 0 occurrences of "cost base", "cost-base" or "reset the cost base", and
+  //   no election provision of any kind. The Division's machinery is earnings-based — 296-40
+  //   "taxable superannuation earnings", 296-55 "total superannuation earnings", 296-60 "Division
+  //   296 fund earnings" — computed from TSB movement, with no asset-level cost base in it at all.
+  //   "Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026", the
+  //   enacting act named in `legislation` below, appears nowhere in the text; Division 296's own
+  //   title is "Better targeted superannuation concessions".
+  //
+  // HONEST LIMIT ON THAT FINDING: a transitional election can live in an AMENDING act rather than
+  // in the compiled principal act, and this fetch did not retrieve the amending act or the
+  // compilation endnotes. So this is "not locatable in the authority this product cites", not
+  // "proven not to exist". It is not a gap a generator may paper over either way, which is why
+  // nothing downstream was re-stamped, regenerated or test-bought on it. See
+  // reports/2026-10-22-div296-costbase-reset-unverified.txt.
+  // ══════════════════════════════════════════════════════════════════════════════════════════
   id: "div296-wealth-eraser", name: "Division 296 Wealth Eraser Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/div296-wealth-eraser", url: "https://taxchecknow.com/au/check/div296-wealth-eraser", apiRoute: "/api/rules/div296-wealth-eraser",
   authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 Subdivision 296-B — Division 296 tax on super balances above $3M", legislation: "Income Tax Assessment Act 1997 Subdivision 296-B (Division 296 tax) · Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026 (Royal Assent 13 March 2026, commences 1 July 2026) · Superannuation (Building a Stronger and Fairer Super System) Imposition Act 2026 · SMSF cost-base reset election (fund-level, all-or-nothing, irrevocable, due by 2026-27 SMSF annual return)", lastVerified: "June 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
@@ -164,13 +205,21 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { title: "ATO — Key superannuation rates and thresholds (includes Division 296)", url: "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" },
     { title: "ATO — Division 296 tax on super balances above $3 million", url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families" },
     { title: "Treasury — Building a Stronger and Fairer Super System (enacted 13 March 2026)", url: "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" },
-    // ⚠ URL NOT VERIFIED IN SESSION, against F306. The provision name is the operator's own
-    // legalAnchor, verbatim; the URL follows au-17's precedent. But F306 requires the source be
-    // FETCHED AND READ, and neither source could be: legislation.gov.au/C2004A05138/latest/text
-    // returns the ITAA 1997 but truncates inside Division 34, so Subdiv 296-B is neither found nor
-    // ruled out, and ato.gov.au returns HTTP 403 to an automated fetch. This entry takes citation
-    // coverage 0% -> 100%, so READ THAT 100% AS UNVERIFIED until someone opens both by hand.
-    { title: "ITAA 1997 Subdivision 296-B — Division 296 tax on superannuation earnings attributable to a total super balance above $3M", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    // ✔ FETCHED AND READ 2026-10-22, per F306. The earlier "NOT VERIFIED" note here was a
+    // limitation of the fetch tool, not of the page: WebFetch truncated inside Division 34 and the
+    // ATO host returns HTTP 403 to it. curl with a browser UA returns HTTP 200 for both — ITAA 1997
+    // at 3,486,346 bytes. Subdivision 296-B IS present, and its real statutory heading is "Better
+    // targeted superannuation concessions", which is what this title now uses instead of a
+    // paraphrase. Division 296's complete structure, read off that text:
+    //   296-A Object · 296-B (296-10..296-75) · 296-C When tax is payable (296-125..296-140)
+    //   296-E Temporary residents who depart (296-190..296-205) · 296-G Other (296-255..296-265)
+    // There is no Subdivision 296-D and no 296-F; Division 296 ends at 296-265, before Division 301.
+    // ⚠ SEE THE SCOPE WARNING ABOVE `legalAnchor`: that provision list contains NO cost-base reset
+    // election, which is this product's entire proposition.
+    { title: "ITAA 1997 Subdivision 296-B — Better targeted superannuation concessions (Division 296 tax: liability 296-15, LSBT 296-30, VLSBT 296-35, taxable superannuation earnings 296-40)", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    // ✔ FETCHED AND READ 2026-10-22. The page that actually carries the thresholds, reached from
+    // the pinned monitorUrl (which is only an index). Quoted verbatim in the warning above.
+    { title: "ATO — Division 296 tax thresholds and interest (Table 28: 2026–27 LSBT $3,000,000, VLSBT $10,000,000; 15% above LSBT plus an additional 10% above VLSBT; indexation in $150,000 / $500,000 increments; LRBA amounts excluded from TSB)", url: "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/division-296-tax-thresholds-and-interest" },
   ],
   files: [
     { num: "01", slug: "div296-01", name: "Your Div 296 Exposure & Reset Decision", desc: "Your exact Division 296 exposure and whether the cost-base reset is net beneficial for your fund.", tier: 1, content: `<h2>Your Division 296 Exposure</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: Your TSB vs $3M threshold (and $10M threshold if applicable)</p><p>Number 2: Total embedded unrealised gains across fund CGT assets</p><p>Number 3: Loss-position assets and their impact on the all-or-nothing election</p></div><h3>Division 296 Tax Calculation</h3><p>Tax = Realised earnings × ((TSB − $3M) / TSB) × 15%</p><p>For TSB above $10M: further 10% on attributable portion (40% total)</p><p>Source: <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds">ATO — Key superannuation rates and thresholds</a> · ITAA 1997 Subdiv 296-B</p>` },
