@@ -135,12 +135,12 @@ export async function GET() {
     ],
     "sources": [
         {
-            "title": "IRS — Research and Experimental Expenditures (Section 174)",
-            "url": "https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174"
+            "title": "IRS Notice 2023-63 — Section 174 research and experimental expenditures guidance",
+            "url": "https://www.irs.gov/pub/irs-drop/n-23-63.pdf"
         },
         {
             "title": "IRS Revenue Procedure 2023-8 (Section 174 implementation guidance)",
-            "url": "https://www.irs.gov/pub/irs-drop/rp-23-8.pdf"
+            "url": "https://www.irs.gov/pub/irs-drop/rp-23-08.pdf"
         },
         {
             "title": "IRS — Credit for Increasing Research Activities (Section 41)",
@@ -172,11 +172,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174"
+        "https://www.irs.gov/pub/irs-drop/n-23-63.pdf"
     ],
     "canonical": "https://taxchecknow.com/us/check/section-174-auditor",
     "api_endpoint": "/api/rules/section-174-auditor",
-    "generated_at": "2026-04-23T03:22:55.268Z"
+    "generated_at": "2026-10-26T09:34:10.281Z"
 };
 
   return NextResponse.json(rules, {

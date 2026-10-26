@@ -152,11 +152,11 @@ export async function GET() {
     "sources": [
         {
             "title": "IRD — GST on listed services (operative 1 April 2024)",
-            "url": "https://www.ird.govt.nz/gst/gst-for-marketplace-sellers"
+            "url": "https://www.ird.govt.nz/sharing-economy/online-marketplaces/gst-on-listed-services/gst-obligations-for-marketplaces"
         },
         {
             "title": "IRD — Flat-rate credit scheme (8.5%)",
-            "url": "https://www.ird.govt.nz/gst/gst-for-marketplace-sellers/flat-rate-credit"
+            "url": "https://www.ird.govt.nz/sharing-economy/listing-intermediary-rules/flat-rate-credit-scheme"
         },
         {
             "title": "IRD — Cancelling your GST registration (deemed sale on retained assets)",
@@ -188,11 +188,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ird.govt.nz/gst/gst-for-marketplace-sellers"
+        "https://www.ird.govt.nz/sharing-economy/sellers-of-listed-services/gst-for-listed-services"
     ],
     "canonical": "https://taxchecknow.com/nz/check/app-tax-gst-sniper",
     "api_endpoint": "/api/rules/app-tax-gst-sniper",
-    "generated_at": "2026-04-23T05:40:46.838Z"
+    "generated_at": "2026-10-26T09:34:10.067Z"
 };
 
   return NextResponse.json(rules, {
