@@ -120,8 +120,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "NZ marketplace rules for listed services — operative 1 April 2024 (Goods and Services Tax Act 1985). Platforms collect and return 15% GST on ride-sharing, food delivery, and short-stay accommodation regardless of seller registration status. Unregistered sellers receive 8.5% flat-rate credit; platform retains 6.5% for IRD. Registered sellers zero-rate the platform supply and claim 15% input tax on costs. $60,000 threshold applies. Five distinct decision paths: stay flat-rate / voluntary register / threshold-triggered / register before big purchase / don't register due to deregistration clawback risk.",
   lawBarBadges: ["IRD", "GST Act 1985", "Operative 1 April 2024", "15% Platform GST · 8.5% Flat-Rate Credit", "$60k Registration Threshold", "Deregistration Clawback Risk"],
   sources: [
-    { title: "IRD — GST on listed services (operative 1 April 2024)", url: "https://www.ird.govt.nz/gst/gst-for-marketplace-sellers" },
-    { title: "IRD — Flat-rate credit scheme (8.5%)", url: "https://www.ird.govt.nz/gst/gst-for-marketplace-sellers/flat-rate-credit" },
+    { title: "IRD — GST on listed services (operative 1 April 2024)", url: "https://www.ird.govt.nz/sharing-economy/online-marketplaces/gst-on-listed-services/gst-obligations-for-marketplaces" },
+    { title: "IRD — Flat-rate credit scheme (8.5%)", url: "https://www.ird.govt.nz/sharing-economy/listing-intermediary-rules/flat-rate-credit-scheme" },
     { title: "IRD — Cancelling your GST registration (deemed sale on retained assets)", url: "https://www.ird.govt.nz/gst/cancelling-your-gst-registration" },
     { title: "IRD — Registering for GST", url: "https://www.ird.govt.nz/gst/registering-for-gst" },
     { title: "Machine-readable JSON rules", url: "/api/rules/app-tax-gst-sniper" },

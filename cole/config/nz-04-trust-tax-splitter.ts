@@ -124,10 +124,10 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "NZ trust income — Income Tax Act 2007, section HC 32 as amended by Taxation Act 2024. Trustee rate 39% from 1 April 2024. Beneficiary income taxed at beneficiary's marginal rate (10.5% / 17.5% / 30% / 33% / 39%). Anti-splitting rule for minors under 16 (attributed or 39%). Personal services income cannot be split. General anti-avoidance (BG 1) voids artificial distributions. Resolutions required within tax return filing period. Company beneficiary path: 28% company rate.",
   lawBarBadges: ["IRD", "Income Tax Act 2007 HC 32", "39% Trustee Rate from April 2024", "Beneficiary Rate Arbitrage", "Anti-Splitting Rules Apply", "BG 1 Scrutiny Risk"],
   sources: [
-    { title: "IRD — Trust and estate income", url: "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income" },
-    { title: "IRD — Trustee tax rate increase (from 1 April 2024)", url: "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income/trustee-tax-rate" },
-    { title: "IRD — Minor beneficiary rule", url: "https://www.ird.govt.nz/income-tax/income-tax-for-individuals/types-of-individual-income/trust-income" },
-    { title: "IRD — Section BG 1 general anti-avoidance", url: "https://www.ird.govt.nz/about-us/tax-policy-and-law/tax-avoidance-and-the-interpretation-of-sections-bg-1" },
+    { title: "IRD — Trust and estate income", url: "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trusts-and-estates" },
+    { title: "IRD — Trustee tax rate increase (from 1 April 2024)", url: "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trusts-and-estates/income/trustee-tax-rates" },
+    { title: "IRD — Minor beneficiary rule", url: "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/income-tax-for-trusts-and-estates/getting-beneficiary-income" },
+    { title: "IRD — Section BG 1 general anti-avoidance", url: "https://www.taxtechnical.ird.govt.nz/interpretation-statements/2023/is-23-01" },
     { title: "Machine-readable JSON rules", url: "/api/rules/trust-tax-splitter" },
   ],
   files: [
