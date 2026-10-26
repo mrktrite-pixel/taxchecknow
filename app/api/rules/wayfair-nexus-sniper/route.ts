@@ -154,15 +154,15 @@ export async function GET() {
     "sources": [
         {
             "title": "Sales Tax Institute — Nexus State-by-State Guide 2026",
-            "url": "https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide"
+            "url": "https://www.salestaxinstitute.com/resources/economic-nexus-state-guide"
         },
         {
-            "title": "IRS — State and Local Taxes",
-            "url": "https://www.irs.gov/businesses/small-businesses-self-employed/state-and-local-taxes"
+            "title": "Streamlined Sales Tax — Remote Seller State Guidance",
+            "url": "https://www.streamlinedsalestax.org/for-businesses/remote-seller-faqs/remote-seller-state-guidance"
         },
         {
-            "title": "Supreme Court — South Dakota v. Wayfair Inc.",
-            "url": "https://www.supremecourt.gov/opinions/17pdf/17-494_j4el.pdf"
+            "title": "Cornell LII — South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)",
+            "url": "https://www.law.cornell.edu/supremecourt/text/17-494"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -186,12 +186,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide",
         "https://www.streamlinedsalestax.org"
     ],
     "canonical": "https://taxchecknow.com/us/check/wayfair-nexus-sniper",
     "api_endpoint": "/api/rules/wayfair-nexus-sniper",
-    "generated_at": "2026-04-23T04:58:18.526Z"
+    "generated_at": "2026-10-26T09:34:10.380Z"
 };
 
   return NextResponse.json(rules, {

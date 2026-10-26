@@ -156,11 +156,11 @@ export async function GET() {
     "sources": [
         {
             "title": "HMRC — Non-Resident Landlord Scheme (guidance notes for letting agents and tenants)",
-            "url": "https://www.gov.uk/government/publications/non-resident-landlord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes"
+            "url": "https://www.gov.uk/government/publications/non-resident-landord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes"
         },
         {
             "title": "HMRC — Apply to receive rental income without UK tax deducted (NRL1)",
-            "url": "https://www.gov.uk/government/publications/non-resident-landlord-application-by-an-individual-to-receive-uk-rental-income-without-deduction-of-uk-tax-nrl1"
+            "url": "https://www.gov.uk/government/publications/non-resident-landlord-application-to-have-uk-rental-income-without-deduction-of-uk-tax-individuals-nrl1"
         },
         {
             "title": "HMRC — Non-resident landlords: companies (NRL2)",
@@ -168,11 +168,11 @@ export async function GET() {
         },
         {
             "title": "HMRC — Non-resident landlords: trustees (NRL3)",
-            "url": "https://www.gov.uk/government/publications/non-resident-landlord-application-to-receive-uk-rental-income-without-deduction-of-uk-tax-trustees-nrl3"
+            "url": "https://www.gov.uk/government/publications/trusts-and-estates-apply-to-get-uk-rental-income-without-deduction-of-uk-tax-non-resident-trustees-nrl3"
         },
         {
             "title": "HMRC — Let Property Campaign",
-            "url": "https://www.gov.uk/government/publications/let-property-campaign-make-a-disclosure-informing-hmrc-of-your-let-property-disclosure"
+            "url": "https://www.gov.uk/government/publications/let-property-campaign-your-guide-to-making-a-disclosure/let-property-campaign-your-guide-to-making-a-disclosure"
         },
         {
             "title": "Income Tax Act 2007 Part 15 Chapter 2 (legislation.gov.uk)",
@@ -204,11 +204,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.gov.uk/government/publications/non-resident-landlord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes"
+        "https://www.gov.uk/guidance/paying-tax-on-rent-to-landlords-abroad"
     ],
     "canonical": "https://taxchecknow.com/nomad/check/uk-nrls",
     "api_endpoint": "/api/rules/uk-nrls",
-    "generated_at": "2026-04-23T10:27:55.480Z"
+    "generated_at": "2026-10-26T09:34:09.909Z"
 };
 
   return NextResponse.json(rules, {

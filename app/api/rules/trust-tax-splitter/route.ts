@@ -146,19 +146,19 @@ export async function GET() {
     "sources": [
         {
             "title": "IRD — Trust and estate income",
-            "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income"
+            "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trusts-and-estates"
         },
         {
             "title": "IRD — Trustee tax rate increase (from 1 April 2024)",
-            "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income/trustee-tax-rate"
+            "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trusts-and-estates/income/trustee-tax-rates"
         },
         {
             "title": "IRD — Minor beneficiary rule",
-            "url": "https://www.ird.govt.nz/income-tax/income-tax-for-individuals/types-of-individual-income/trust-income"
+            "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/income-tax-for-trusts-and-estates/getting-beneficiary-income"
         },
         {
             "title": "IRD — Section BG 1 general anti-avoidance",
-            "url": "https://www.ird.govt.nz/about-us/tax-policy-and-law/tax-avoidance-and-the-interpretation-of-sections-bg-1"
+            "url": "https://www.taxtechnical.ird.govt.nz/interpretation-statements/2023/is-23-01"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -182,11 +182,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trust-and-estate-income"
+        "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/trusts-and-estates/income"
     ],
     "canonical": "https://taxchecknow.com/nz/check/trust-tax-splitter",
     "api_endpoint": "/api/rules/trust-tax-splitter",
-    "generated_at": "2026-04-23T06:20:20.798Z"
+    "generated_at": "2026-10-26T09:34:10.174Z"
 };
 
   return NextResponse.json(rules, {

@@ -155,11 +155,11 @@ export async function GET() {
     "sources": [
         {
             "title": "IRD — Investment Boost",
-            "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost"
+            "url": "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/types-of-business-expenses/new-assets---investment-boost/what--you-can-claim-with-investment-boost"
         },
         {
             "title": "IRD — IR10 Form Guide",
-            "url": "https://www.ird.govt.nz/forms-and-guides/ir10"
+            "url": "https://www.ird.govt.nz/managing-my-tax/record-keeping/financial-reporting-for-companies/standards-for-minimum-financial-reporting/complete-a-financial-statements-summary-ir10"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -183,11 +183,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost"
+        "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/types-of-business-expenses/new-assets---investment-boost"
     ],
     "canonical": "https://taxchecknow.com/nz/check/investment-boost-auditor",
     "api_endpoint": "/api/rules/investment-boost-auditor",
-    "generated_at": "2026-04-23T06:37:48.463Z"
+    "generated_at": "2026-10-26T09:34:10.233Z"
 };
 
   return NextResponse.json(rules, {

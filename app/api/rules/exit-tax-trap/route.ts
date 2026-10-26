@@ -159,19 +159,19 @@ export async function GET() {
     "sources": [
         {
             "title": "CRA — Leaving Canada (emigrants)",
-            "url": "https://www.canada.ca/en/revenue-agency/services/tax/international-non-residents/individuals-leaving-or-entering-canada-establishing-residency/leaving-canada-emigrants.html"
+            "url": "https://www.canada.ca/en/revenue-agency/services/tax/international-non-residents/individuals-leaving-entering-canada-non-residents/leaving-canada-emigrants.html"
         },
         {
             "title": "CRA — Deemed disposition on emigration",
-            "url": "https://www.canada.ca/en/revenue-agency/services/tax/international-non-residents/information-been-moved/disposing-property.html"
+            "url": "https://www.canada.ca/en/revenue-agency/services/tax/international-non-residents/individuals-leaving-entering-canada-non-residents/dispositions-property.html"
         },
         {
             "title": "ATO — Tax for foreign residents (including main residence exemption changes)",
-            "url": "https://www.ato.gov.au/individuals/international-tax-for-individuals/going-overseas/"
+            "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/living-overseas-and-becoming-a-foreign-tax-resident"
         },
         {
             "title": "HMRC — Temporary non-residence rules",
-            "url": "https://www.gov.uk/hmrc-internal-manuals/capital-gains-manual/cg26000"
+            "url": "https://www.gov.uk/hmrc-internal-manuals/capital-gains-manual/cg26500"
         },
         {
             "title": "HMRC — Non-resident CGT on UK property",
@@ -207,11 +207,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.canada.ca/en/revenue-agency/services/tax/international-non-residents/individuals-leaving-or-entering-canada-establishing-residency/leaving-canada-emigrants.html"
+        "https://www.canada.ca/en/revenue-agency/services/tax/international-non-residents/individuals-leaving-entering-canada-non-residents/leaving-canada-emigrants.html"
     ],
     "canonical": "https://taxchecknow.com/nomad/check/exit-tax-trap",
     "api_endpoint": "/api/rules/exit-tax-trap",
-    "generated_at": "2026-04-23T09:50:12.227Z"
+    "generated_at": "2026-10-26T09:34:09.846Z"
 };
 
   return NextResponse.json(rules, {
