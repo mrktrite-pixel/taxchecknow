@@ -115,9 +115,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "Economic nexus established by South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018). 45 states + DC have economic nexus statutes. Most common threshold: $100,000 in sales OR 200 transactions per state per calendar year. Retroactive from date threshold crossed. Marketplace sales count toward threshold even when platform collects. VDA caps lookback at 3-4 years and typically waives penalties — only available before first audit contact.",
   lawBarBadges: ["IRS", "Wayfair 2018", "$100K / 200 Transaction Threshold", "45 States Economic Nexus", "VDA Available", "Retroactive From Threshold Date"],
   sources: [
-    { title: "Sales Tax Institute — Nexus State-by-State Guide 2026", url: "https://www.salestaxinstitute.com/sales_tax_faqs/economic-nexus-state-by-state-guide" },
-    { title: "IRS — State and Local Taxes", url: "https://www.irs.gov/businesses/small-businesses-self-employed/state-and-local-taxes" },
-    { title: "Supreme Court — South Dakota v. Wayfair Inc.", url: "https://www.supremecourt.gov/opinions/17pdf/17-494_j4el.pdf" },
+    { title: "Sales Tax Institute — Nexus State-by-State Guide 2026", url: "https://www.salestaxinstitute.com/resources/economic-nexus-state-guide" },
+    { title: "Streamlined Sales Tax — Remote Seller State Guidance", url: "https://www.streamlinedsalestax.org/for-businesses/remote-seller-faqs/remote-seller-state-guidance" },
+    { title: "Cornell LII — South Dakota v. Wayfair, Inc., 585 U.S. 162 (2018)", url: "https://www.law.cornell.edu/supremecourt/text/17-494" },
     { title: "Machine-readable JSON rules", url: "/api/rules/wayfair-nexus-sniper" },
   ],
   files: [

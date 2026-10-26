@@ -146,7 +146,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "IRC §1202 Qualified Small Business Stock exclusion. Pre-July 4, 2025: 5-year hold, 100% exclusion, cap greater of $10M or 10× basis. Post-July 4, 2025 (OBBBA): 3yr=50%, 4yr=75%, 5yr=100%, cap greater of $15M or 10× basis. Requires C-corporation at issuance, original issuance, gross assets under $50M, qualified active business (excludes professional services, finance, hospitality, farming). All structural gates binary — one failure eliminates entire exclusion. Federal tax on non-excluded gain: 23.8% combined (20% + 3.8% NIIT). §1045 rollover available for 60-day deferral into new QSBS.",
   lawBarBadges: ["IRS", "IRC §1202", "$15M Cap Post-2025", "5-Year Hold Full Exclusion", "C-Corp Required", "Original Issuance Only"],
   sources: [
-    { title: "IRS — Partial exclusion for gain from certain small business stock (Section 1202)",              url: "https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock" },
+    { title: "IRS — Instructions for Schedule D (Form 1040): section 1202 exclusion", url: "https://www.irs.gov/instructions/i1040sd" },
     { title: "IRC Section 1202",                                                                                url: "https://www.law.cornell.edu/uscode/text/26/1202" },
     { title: "IRC Section 1045 (rollover of QSBS gain)",                                                        url: "https://www.law.cornell.edu/uscode/text/26/1045" },
     { title: "IRS Form 8949 (Sales and Other Dispositions of Capital Assets)",                                  url: "https://www.irs.gov/forms-pubs/about-form-8949" },
@@ -176,7 +176,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "qsbs-apr15", summary: "Federal filing deadline", description: "April 15 filing with QSBS exclusion claim.", date: "20260415" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock"],
+  monitorUrls: ["https://www.irs.gov/instructions/i1040sd"],
   sidebarNumbers: [{ label: "Pre-2025 cap", value: "$10M" }, { label: "Post-2025 cap", value: "$15M" }, { label: "Combined federal rate", value: "23.8%" }, { label: "Full exclusion hold", value: "5 years" }],
   sidebarMathsTitle: "QSBS — the two regimes",
   sidebarMathsIncludes: [

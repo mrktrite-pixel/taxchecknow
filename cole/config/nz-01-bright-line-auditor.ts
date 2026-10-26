@@ -117,8 +117,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "NZ bright-line property rule — Income Tax Act 2007, subpart CB. Four regimes by settlement date: 2yr (pre-29 Mar 2018), 5yr (29 Mar 2018–26 Mar 2021), 10yr (27 Mar 2021–30 Jun 2024; 5yr for new builds), 2yr (from 1 Jul 2024). Amendments not retrospective. Start: SETTLEMENT date. End: AGREEMENT date (not settlement of sale). Tax: income tax at marginal rate (20.5–39%). Main home exemption conditional on predominant main home use for majority of period — mixed rental/Airbnb reduces exemption proportionally.",
   lawBarBadges: ["IRD", "Income Tax Act 2007", "2-Year Rule from 1 July 2024", "Agreement Date Not Settlement", "Main Home Exception Conditional"],
   sources: [
-    { title: "IRD — Bright-line property rule", url: "https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test" },
-    { title: "IRD — Main home exclusion", url: "https://www.ird.govt.nz/property/buying-and-selling/bright-line-test/main-home" },
+    { title: "IRD — Bright-line property rule", url: "https://www.ird.govt.nz/property/buying-and-selling/when-you-need-to-pay/the-brightline-test/start-and-end-dates" },
+    { title: "IRD — Main home exclusion", url: "https://www.ird.govt.nz/property/buying-and-selling/when-you-need-to-pay/the-brightline-test/exclusions-to-the-brightline-test" },
     { title: "Machine-readable JSON rules", url: "/api/rules/bright-line-auditor" },
   ],
   files: [
