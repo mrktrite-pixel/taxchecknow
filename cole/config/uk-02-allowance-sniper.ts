@@ -3,7 +3,12 @@ export const PRODUCT_CONFIG: ProductConfig = {
   id: "allowance-sniper", name: "60% Tax Trap Engine", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
   slug: "uk/check/allowance-sniper", url: "https://taxchecknow.com/uk/check/allowance-sniper", apiRoute: "/api/rules/allowance-sniper",
   authority: "HMRC", authorityUrl: "https://www.gov.uk/government/organisations/hm-revenue-customs", legalAnchor: "Income Tax Act 2007 section 35 — Personal allowance taper above £100,000", legislation: "Income Tax Act 2007 section 35 — personal allowance reduced by £1 for every £2 of adjusted net income above £100,000 · Personal allowance £12,570 for tax year 2025-26 · Allowance fully withdrawn at £125,140 · Higher rate income tax 40% on income between £50,270 and £125,140 · Additional rate income tax 45% above £125,140 · Pension contributions and salary sacrifice reduce adjusted net income for taper purposes",
-  lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // RE-STAMPED 2026-10-27, step 6. The authority was re-read, not assumed:
+  //   GET https://www.gov.uk/income-tax-rates/income-over-100000  [200, 200, 200]  87,854 bytes
+  //   "Your personal allowance goes down by £1 for every £2 that your adjusted net income is
+  //    above £100,000. This means your allowance is zero if your income is £125,140 or above."
+  //   £12,570, £100,000 and £125,140 all present on the page as fetched.
+  lastVerified: "October 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
   // EngineCalculator wrapper, so the success pages must bind inputs through
   // buildComposerInputsFromSession, and the parity census must cover this product.
   engineNative: true,
