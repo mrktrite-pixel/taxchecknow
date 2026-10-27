@@ -160,6 +160,10 @@ export async function GET() {
             "url": "https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt"
         },
         {
+            "title": "HMRC — RDR3 guidance note, HTML (carries the day counts in prose)",
+            "url": "https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt/guidance-note-for-statutory-residence-test-srt-rdr3"
+        },
+        {
             "title": "HMRC Internal Manual — Residence, Domicile and Remittance Basis",
             "url": "https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis"
         },
@@ -201,7 +205,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/uk-residency",
     "api_endpoint": "/api/rules/uk-residency",
-    "generated_at": "2026-04-23T10:08:32.721Z"
+    "generated_at": "2026-10-27T09:36:45.630Z"
 };
 
   return NextResponse.json(rules, {
