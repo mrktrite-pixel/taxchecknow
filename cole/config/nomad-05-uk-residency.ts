@@ -132,6 +132,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarBadges: ["HMRC", "Finance Act 2013 Sch 45", "Automatic Overseas Tests", "Sufficient Ties Test", "Worldwide Income if Resident"],
   sources: [
     { title: "HMRC — Statutory Residence Test (RDR3 guidance)",                   url: "https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt" },
+    { title: "HMRC — RDR3 guidance note, HTML (carries the day counts in prose)", url: "https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt/guidance-note-for-statutory-residence-test-srt-rdr3" },
     { title: "HMRC Internal Manual — Residence, Domicile and Remittance Basis",    url: "https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" },
     { title: "Finance Act 2013 Schedule 45 (legislation.gov.uk)",                    url: "https://www.legislation.gov.uk/ukpga/2013/29/schedule/45" },
     { title: "HMRC — Tax on foreign income for UK residents",                          url: "https://www.gov.uk/tax-foreign-income" },
