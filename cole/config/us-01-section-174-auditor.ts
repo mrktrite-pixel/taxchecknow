@@ -142,8 +142,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "IRC §174 amendment (TCJA 2017, effective for tax years beginning after December 31, 2021): mandatory capitalization and amortization of R&D costs. Domestic: 5 years, half-year convention (10%/20%/20%/20%/20%/10%). Foreign: 15 years, half-year convention. Software development included. $1M domestic R&D → $100k year 1 deduction → ~$189k additional tax at 21% corporate rate. Proposed Section 174A under OBBBA would restore immediate expensing prospectively — not yet enacted April 2026. Rev. Proc. 2023-8 provides implementation guidance. Form 3115 available for change-of-method corrections.",
   lawBarBadges: ["IRS", "IRC §174", "TCJA Amendment 2022", "5-Year Domestic Amortization", "174A Proposed", "Cashflow Impact"],
   sources: [
-    { title: "IRS — Research and Experimental Expenditures (Section 174)",                                                            url: "https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174" },
-    { title: "IRS Revenue Procedure 2023-8 (Section 174 implementation guidance)",                                                    url: "https://www.irs.gov/pub/irs-drop/rp-23-8.pdf" },
+    { title: "IRS Notice 2023-63 — Section 174 research and experimental expenditures guidance", url: "https://www.irs.gov/pub/irs-drop/n-23-63.pdf" },
+    { title: "IRS Revenue Procedure 2023-8 (Section 174 implementation guidance)",                                                    url: "https://www.irs.gov/pub/irs-drop/rp-23-08.pdf" },
     { title: "IRS — Credit for Increasing Research Activities (Section 41)",                                                          url: "https://www.irs.gov/businesses/research-credit" },
     { title: "IRC Section 174 (as amended)",                                                                                           url: "https://www.law.cornell.edu/uscode/text/26/174" },
     { title: "Machine-readable JSON rules",                                                                                             url: "/api/rules/section-174-auditor" },
@@ -172,7 +172,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { uid: "s174-174a", summary: "Section 174A monitoring checkpoint", description: "Check OBBBA legislative status.", date: "20260901" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.irs.gov/businesses/corporations/research-and-experimental-expenditures-section-174"],
+  monitorUrls: ["https://www.irs.gov/pub/irs-drop/n-23-63.pdf"],
   sidebarNumbers: [{ label: "Domestic amortization", value: "5 years" }, { label: "Foreign amortization", value: "15 years" }, { label: "C-corp federal rate", value: "21%" }, { label: "Section 41 credit cap", value: "~10% of QREs" }],
   sidebarMathsTitle: "Section 174 — the three periods",
   sidebarMathsIncludes: [

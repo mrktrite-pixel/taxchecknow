@@ -135,8 +135,8 @@ export async function GET() {
     ],
     "sources": [
         {
-            "title": "IRS — Partial exclusion for gain from certain small business stock (Section 1202)",
-            "url": "https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock"
+            "title": "IRS — Instructions for Schedule D (Form 1040): section 1202 exclusion",
+            "url": "https://www.irs.gov/instructions/i1040sd"
         },
         {
             "title": "IRC Section 1202",
@@ -172,11 +172,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.irs.gov/businesses/small-businesses-self-employed/section-1202-qualified-small-business-stock"
+        "https://www.irs.gov/instructions/i1040sd"
     ],
     "canonical": "https://taxchecknow.com/us/check/qsbs-exit-auditor",
     "api_endpoint": "/api/rules/qsbs-exit-auditor",
-    "generated_at": "2026-04-23T04:05:33.039Z"
+    "generated_at": "2026-10-26T09:34:10.327Z"
 };
 
   return NextResponse.json(rules, {

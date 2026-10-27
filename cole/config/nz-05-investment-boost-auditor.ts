@@ -122,8 +122,8 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "NZ Investment Boost — Income Tax Act 2007 as amended by Budget 2025 legislation (enacted May 2025). 20% upfront deduction in year 1 on qualifying depreciable assets; remaining 80% depreciated at normal rate. TOTAL LIFETIME DEDUCTIONS UNCHANGED — cashflow acceleration, not tax saving. Trigger: first available for use on or after 22 May 2025 (not purchase date). Excluded: residential rental, second-hand NZ assets, land, intangibles. IR10 Box 60 disclosure required.",
   lawBarBadges: ["IRD", "Income Tax Act 2007", "Budget 2025", "22 May 2025 Trigger", "Accelerated Not Additional", "Residential Property Excluded"],
   sources: [
-    { title: "IRD — Investment Boost", url: "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/depreciation/investment-boost" },
-    { title: "IRD — IR10 Form Guide", url: "https://www.ird.govt.nz/forms-and-guides/ir10" },
+    { title: "IRD — Investment Boost", url: "https://www.ird.govt.nz/income-tax/income-tax-for-businesses-and-organisations/types-of-business-expenses/new-assets---investment-boost/what--you-can-claim-with-investment-boost" },
+    { title: "IRD — IR10 Form Guide", url: "https://www.ird.govt.nz/managing-my-tax/record-keeping/financial-reporting-for-companies/standards-for-minimum-financial-reporting/complete-a-financial-statements-summary-ir10" },
     { title: "Machine-readable JSON rules", url: "/api/rules/investment-boost-auditor" },
   ],
   files: [

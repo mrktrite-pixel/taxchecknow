@@ -145,7 +145,7 @@ export async function GET() {
     "sources": [
         {
             "title": "IRD — Interest deductibility for residential rental properties",
-            "url": "https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/deductions-for-residential-rental-property/interest"
+            "url": "https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/property-interest-rules/how-interest-deductions-are-affected"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -169,11 +169,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/deductions-for-residential-rental-property/interest"
+        "https://www.ird.govt.nz/property-interest-rules"
     ],
     "canonical": "https://taxchecknow.com/nz/check/interest-reinstatement-engine",
     "api_endpoint": "/api/rules/interest-reinstatement-engine",
-    "generated_at": "2026-04-23T06:04:14.991Z"
+    "generated_at": "2026-10-26T09:34:10.119Z"
 };
 
   return NextResponse.json(rules, {

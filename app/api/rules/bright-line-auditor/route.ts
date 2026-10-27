@@ -155,11 +155,11 @@ export async function GET() {
     "sources": [
         {
             "title": "IRD — Bright-line property rule",
-            "url": "https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test"
+            "url": "https://www.ird.govt.nz/property/buying-and-selling/when-you-need-to-pay/the-brightline-test/start-and-end-dates"
         },
         {
             "title": "IRD — Main home exclusion",
-            "url": "https://www.ird.govt.nz/property/buying-and-selling/bright-line-test/main-home"
+            "url": "https://www.ird.govt.nz/property/buying-and-selling/when-you-need-to-pay/the-brightline-test/exclusions-to-the-brightline-test"
         },
         {
             "title": "Machine-readable JSON rules",
@@ -183,11 +183,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ird.govt.nz/property/buying-and-selling/buying-and-selling-a-house/the-bright-line-test"
+        "https://www.ird.govt.nz/property/buying-and-selling/when-you-need-to-pay/the-brightline-test"
     ],
     "canonical": "https://taxchecknow.com/nz/check/bright-line-auditor",
     "api_endpoint": "/api/rules/bright-line-auditor",
-    "generated_at": "2026-04-23T05:19:21.058Z"
+    "generated_at": "2026-10-26T09:34:10.015Z"
 };
 
   return NextResponse.json(rules, {

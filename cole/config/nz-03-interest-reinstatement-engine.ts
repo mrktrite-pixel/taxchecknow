@@ -118,7 +118,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   lawBarSummary: "NZ mortgage interest deductibility — Income Tax Act 2007, section DB 2, restored by the Taxation (Annual Rates for 2023-24, Multinational Tax, and Remedial Matters) Act 2024. 80% from 1 April 2024; 100% from 1 April 2025. Existing residential investment properties were restricted 0% during 1 October 2021 – 31 March 2024. New builds (post-July 2020) and commercial property never restricted. Ownership structure determines claim location. Ring-fencing rules (2019) still apply.",
   lawBarBadges: ["IRD", "Income Tax Act 2007 DB 2", "80% from 1 April 2024", "100% from 1 April 2025", "New Builds Always Deductible", "Restoration Act 2024"],
   sources: [
-    { title: "IRD — Interest deductibility for residential rental properties", url: "https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/deductions-for-residential-rental-property/interest" },
+    { title: "IRD — Interest deductibility for residential rental properties", url: "https://www.ird.govt.nz/property/renting-out-residential-property/residential-rental-income-and-paying-tax-on-it/property-interest-rules/how-interest-deductions-are-affected" },
     { title: "Machine-readable JSON rules", url: "/api/rules/interest-reinstatement-engine" },
   ],
   files: [

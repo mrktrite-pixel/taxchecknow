@@ -107,6 +107,10 @@ export async function GET() {
         {
             "title": "ATO — Fringe benefits tax",
             "url": "https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax"
+        },
+        {
+            "title": "ATO — Fringe benefits tax rates and thresholds (47% FBT rate, 2.0802 type 1 gross-up)",
+            "url": "https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds"
         }
     ],
     "products": {
@@ -130,7 +134,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/fbt-hidden-exposure",
     "api_endpoint": "/api/rules/fbt-hidden-exposure",
-    "generated_at": "2026-04-21T13:32:49.502Z"
+    "generated_at": "2026-10-26T09:34:09.781Z"
 };
 
   return NextResponse.json(rules, {
