@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { renderPack, hasFrozenPack, type RenderedPack } from "@/lib/render-pack";
 import { getAssessmentFields } from "@/lib/assessment-fields";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -276,16 +277,6 @@ export default function SuccessAssess() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const income_band = sessionStorage.getItem("allowance-sniper_income_band") || "110k_120k";
-    const pension_contributions = sessionStorage.getItem("allowance-sniper_pension_contributions") || "none";
-    const salary_sacrifice = sessionStorage.getItem("allowance-sniper_salary_sacrifice") || "no";
-    const adjusted_net_income = sessionStorage.getItem("allowance-sniper_adjusted_net_income") || "115000";
-    const trap_band_income = sessionStorage.getItem("allowance-sniper_trap_band_income") || "15000";
-    const trap_tax = sessionStorage.getItem("allowance-sniper_trap_tax") || "9000";
-    const pension_needed = sessionStorage.getItem("allowance-sniper_pension_needed") || "15000";
-    const pension_tax_saving = sessionStorage.getItem("allowance-sniper_pension_tax_saving") || "6000";
-    const status = sessionStorage.getItem("allowance-sniper_status") || "IN THE 60% TRAP — DEEP ZONE";
-    const tier = sessionStorage.getItem("allowance-sniper_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -619,7 +610,7 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified United Kingdom tax adviser before making financial decisions.
-            Based on HMRC guidance April 2026.{" "}
+            Based on HMRC guidance October 2026.{" "}
             <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Income Tax rates and Personal Allowances</a> · <a href="https://www.gov.uk/income-tax-rates/income-over-100000" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Personal Allowance and income over £100,000</a>
           </p>
         </div>

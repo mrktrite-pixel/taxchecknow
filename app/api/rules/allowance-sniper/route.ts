@@ -26,7 +26,16 @@ export async function GET() {
         "iso_date": "2027-04-05T23:59:59.000+01:00",
         "display": "5 April 2027",
         "description": "5 April 2027 — UK tax year end for 2026-27. Pension contributions must be made before year end to affect adjusted net income.",
-        "urgency_label": "YEAR END — ALLOWANCE LOST IF MISSED"
+        "urgency_label": "YEAR END — ALLOWANCE LOST IF MISSED",
+        "recurrence": {
+            "kind": "annual",
+            "month": 4,
+            "day": 5,
+            "timezone": "Europe/London",
+            "shift": "none",
+            "label": "5 April",
+            "basis": "Operator ruling 2026-10-28: UK tax year end; pension/salary-sacrifice to restore the PA must land in-year"
+        }
     },
     "key_facts": {
         "personal_allowance_2025_26": "£12,570",
@@ -175,7 +184,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/allowance-sniper",
     "api_endpoint": "/api/rules/allowance-sniper",
-    "generated_at": "2026-10-27T10:58:23.834Z"
+    "generated_at": "2026-10-28T02:03:09.683Z"
 };
 
   return NextResponse.json(rules, {

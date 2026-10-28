@@ -22,9 +22,10 @@ export const metadata: Metadata = {
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "October 2026";
 const DEADLINE_LABEL = "5 April 2027";
 const DEADLINE_ISO   = "2027-04-05T23:59:59.000+01:00";
 
@@ -346,7 +347,7 @@ export default function AllowanceSniperPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "60% Tax Trap Engine — Rules April 2026",
+    name: "60% Tax Trap Engine — Rules October 2026",
     description: "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
@@ -418,7 +419,7 @@ export default function AllowanceSniperPage() {
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on HMRC guidance April 2026"
+      "Based on HMRC guidance October 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -443,18 +444,6 @@ export default function AllowanceSniperPage() {
     ],
   };
 
-  const videoSchema = {
-    "@context": "https://schema.org",
-    "@type": "VideoObject",
-    name: "What is the UK 60% tax trap? The truth HMRC won't simplify",
-    description: "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
-    thumbnailUrl: "https://i.ytimg.com/vi/PZbAbPHCZHY/hqdefault.jpg",
-    uploadDate: "2026-06-13T11:00:12.318+00:00",
-    contentUrl: "https://www.youtube.com/watch?v=PZbAbPHCZHY",
-    embedUrl: "https://www.youtube.com/embed/PZbAbPHCZHY",
-    transcript: "What is the UK 60% tax trap? Sound like your situation? Here's the actual truth. Between £100,000 and £125,140, HMRC withdraws £1 of your personal allowance for every £2 you earn. That means 40% income tax plus a 20% allowance cost — 60% effective marginal rate. ChatGPT says UK tax rates are 20%, 40%, and 45% — there is no 60% rate. That's wrong. The 60% is real arithmetic, confirmed by HMRC. Get it wrong and you hand over 60p of every extra pound earned in that band. Pension contributions can pull your income below £100,000 and restore your full £12,570 allowance — but only before 5 April. Go to taxchecknow.com and check for yourself.",
-  };
-
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -464,7 +453,6 @@ export default function AllowanceSniperPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
-      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -760,7 +748,7 @@ export default function AllowanceSniperPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (October 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1162,20 +1150,11 @@ export default function AllowanceSniperPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from HMRC and GOV.UK guidance for April 2026.
+          built from HMRC and GOV.UK guidance for October 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
-        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
-        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=PZbAbPHCZHY" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
-        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"What is the UK 60% tax trap? Sound like your situation? Here's the actual truth. Between £100,000 and £125,140, HMRC withdraws £1 of your personal allowance for every £2 you earn. That means 40% income tax plus a 20% allowance cost — 60% effective marginal rate. ChatGPT says UK tax rates are 20%, 40%, and 45% — there is no 60% rate. That's wrong. The 60% is real arithmetic, confirmed by HMRC. Get it wrong and you hand over 60p of every extra pound earned in that band. Pension contributions can pull your income below £100,000 and restore your full £12,570 allowance — but only before 5 April. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -1185,7 +1164,7 @@ export default function AllowanceSniperPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">United Kingdom tax position checks. April 2026.</p>
+            <p className="mt-1">United Kingdom tax position checks. October 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/uk/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
