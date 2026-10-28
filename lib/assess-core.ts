@@ -49,7 +49,11 @@ export interface AssessInput {
 }
 
 export type AssessResult =
-  | { ok: true; assessment: Record<string, unknown>; grounded: true; corpus_source: string; corpus_verified: string | null }
+  | { ok: true; assessment: Record<string, unknown>;
+      /** Keys the model returned that were never asked for, and asked-for keys it omitted.
+       *  null when they match. Part of the contract so a caller can record it. */
+      field_mismatch: { unrequested: string[]; missing: string[] } | null;
+      grounded: true; corpus_source: string; corpus_verified: string | null }
   | { ok: false; status: number; error: string; detail?: string; product_id?: string };
 
 // productId → /api/rules SLUG. Seven products carry a DELIVERY_MAP productId that differs from
@@ -472,10 +476,49 @@ Apply this test to every entry before you emit it.`;
     return { ok: false, status: 500, error: "Failed to parse Claude response as JSON", detail: clean.slice(0, 500) };
   }
 
+  // ── A KEY THAT WAS NOT ASKED FOR IS NOT A FIELD ─────────────────────────────────────────
+  //
+  // MEASURED on allowance-sniper, 2026-10-27. The prompt asked for the product's 13 registered
+  // tier-2 fields; the stored pack came back with 13, twelve of them exact and one RENAMED:
+  //
+  //     requested   multiYearPensionPlan        (cole/config/uk-02-allowance-sniper.ts:230,
+  //                                              and lib/assessment-fields.ts, copied from it)
+  //     stored      multiYearPlanningStrategy   — a string that appears NOWHERE in either repo
+  //
+  // The success page binds by key, so that section renders blank for every buyer, and nothing
+  // noticed: the field-parity gate compares the pack against the GENERIC schema (it asks "are
+  // these product keys or generic keys?"), which a renamed product-shaped key passes.
+  //
+  // So the check belongs here, at the only point that knows what was ASKED FOR. It is the same
+  // construction as F-S234's tooth (c) in Bee D: the producer verifies its own output against the
+  // list it was given, rather than leaving it to a reviewer one stage later.
+  //
+  // REPORTED, NOT SILENTLY DROPPED, and never auto-renamed. Renaming would be a guess about which
+  // requested field the model meant; dropping silently is how this got to production. The pack is
+  // returned with the unrequested keys REMOVED and both lists recorded, so the caller stores a
+  // pack whose every key binds, and the operator can see what the model tried to call it.
+  //
+  // IN-PROCESS CALLERS GET THIS TOO. The Stripe webhook calls generateAssessment() directly
+  // rather than through /api/assess, so a check in the route alone would miss every real buy.
+  const RESERVED = new Set(["_meta", "rendered", "status", "actions", "accountantQuestions"]);
+  const requested = new Set(fields);
+  const unrequestedKeys = Object.keys(assessment).filter((k) => !requested.has(k) && !RESERVED.has(k));
+  const missingKeys = fields.filter((f) => !(f in assessment));
+  if (unrequestedKeys.length > 0 || missingKeys.length > 0) {
+    console.error(
+      `[assess-core] FIELD MISMATCH product=${product_id} tier=${tier}`
+      + ` unrequested=[${unrequestedKeys.join(", ")}] missing=[${missingKeys.join(", ")}]`,
+    );
+  }
+  for (const k of unrequestedKeys) delete assessment[k];
+
   // Reaching here means the corpus was fetched, valid, and injected — grounded is always true.
   return {
     ok: true,
     assessment,
+    field_mismatch: unrequestedKeys.length > 0 || missingKeys.length > 0
+      ? { unrequested: unrequestedKeys, missing: missingKeys }
+      : null,
     grounded: true,
     corpus_source: corpusUrl,
     corpus_verified: (rules.last_verified as string) ?? null,
