@@ -444,6 +444,18 @@ export default function AllowanceSniperPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What is the UK 60% tax trap? The truth HMRC won't simplify",
+    description: "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
+    thumbnailUrl: "https://i.ytimg.com/vi/PZbAbPHCZHY/hqdefault.jpg",
+    uploadDate: "2026-06-13T11:00:12.318+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=PZbAbPHCZHY",
+    embedUrl: "https://www.youtube.com/embed/PZbAbPHCZHY",
+    transcript: "What is the UK 60% tax trap? Sound like your situation? Here's the actual truth. Between £100,000 and £125,140, HMRC withdraws £1 of your personal allowance for every £2 you earn. That means 40% income tax plus a 20% allowance cost — 60% effective marginal rate. ChatGPT says UK tax rates are 20%, 40%, and 45% — there is no 60% rate. That's wrong. The 60% is real arithmetic, confirmed by HMRC. Get it wrong and you hand over 60p of every extra pound earned in that band. Pension contributions can pull your income below £100,000 and restore your full £12,570 allowance — but only before 5 April. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -453,6 +465,7 @@ export default function AllowanceSniperPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -1155,6 +1168,15 @@ export default function AllowanceSniperPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=PZbAbPHCZHY" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"What is the UK 60% tax trap? Sound like your situation? Here's the actual truth. Between £100,000 and £125,140, HMRC withdraws £1 of your personal allowance for every £2 you earn. That means 40% income tax plus a 20% allowance cost — 60% effective marginal rate. ChatGPT says UK tax rates are 20%, 40%, and 45% — there is no 60% rate. That's wrong. The 60% is real arithmetic, confirmed by HMRC. Get it wrong and you hand over 60p of every extra pound earned in that band. Pension contributions can pull your income below £100,000 and restore your full £12,570 allowance — but only before 5 April. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
