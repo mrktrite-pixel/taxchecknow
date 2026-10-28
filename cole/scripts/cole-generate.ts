@@ -24,7 +24,9 @@ import { generateCalculator,    getCalculatorPath     } from "../generators/gene
 import { generateSuccessAssess, getSuccessAssessPath,
          generateSuccessPlan,   getSuccessPlanPath   } from "../generators/generate-success-pages";
 import { generateAllProductFiles                      } from "../generators/generate-product-files";
-import { isGuardRefusal, rethrowIfGuardRefusal } from "../generators/guard-refusal";
+import { GuardRefusal, isGuardRefusal, rethrowIfGuardRefusal } from "../generators/guard-refusal";
+// The GEO bake fails closed rather than silently dropping a page's published video facts.
+import { geoBakeRefusal } from "../generators/geo-bake-guard";
 import { generateRulesRoute,    getRulesRoutePath,
          corpusWriteDecision                          } from "../generators/generate-rules-route";
 import { generateTemporalRegistry, getTemporalRegistryPath } from "../generators/generate-temporal-registry";
@@ -742,6 +744,12 @@ async function writeTemporalEvidence(config: ProductConfig, errors: string[]): P
 async function emitGatePage(config: ProductConfig, filesGenerated: string[], errors: string[]): Promise<void> {
   try {
     const filePath = getGatePagePath(config, APP_ROOT);
+    // FAIL CLOSED before writing: a page that already carries a VideoObject or a transcript must
+    // not have it silently removed because this shell cannot reach the database. See
+    // geoBakeRefusal — measured on allowance-sniper, where exactly that happened.
+    const refusal = geoBakeRefusal(filePath, Boolean(SUPABASE_URL && SUPABASE_KEY));
+    if (refusal && !allowGeoLoss) throw new GuardRefusal("GEO bake", refusal);
+    if (refusal) console.warn(`   ⚠️  --allow-geo-loss: ${refusal}`);
     const geo = await fetchGeoBake(config); // transcript + published-video facts (best-effort; null if absent/no DB)
     writeFile(filePath, generateGatePage(config, geo));
     filesGenerated.push(filePath);
@@ -875,6 +883,9 @@ const evidenceOnly = args.includes("--evidence-only");   // TEMPORAL v1 Step 6
 const gateOnly     = args.includes("--gate-only");       // R-A2 — per-surface emit
 const filesOnly    = args.includes("--files-only");      // R-A2 — per-surface emit
 const pagesOnly    = args.includes("--pages-only");      // every page surface EXCEPT the calculator
+// Deliberate escape hatch for the one case the guard cannot tell apart from a mistake: a product
+// whose video really has been unpublished. Named in the refusal so the operator is told it exists.
+const allowGeoLoss = args.includes("--allow-geo-loss");
 const productId    = args.find(a => !a.startsWith("--"));
 if (!productId) {
   console.error("\n❌ Usage: npx ts-node --project cole/tsconfig.json cole/scripts/cole-generate.ts [product-id] [mode]");
