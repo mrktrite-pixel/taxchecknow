@@ -53,6 +53,15 @@ export type AssessResult =
       /** Keys the model returned that were never asked for, and asked-for keys it omitted.
        *  null when they match. Part of the contract so a caller can record it. */
       field_mismatch: { unrequested: string[]; missing: string[] } | null;
+      /**
+       * The second pass, when the first omitted requested fields.
+       *
+       * `asked` is what the retry was told to produce; `filled` is what came back usable. A
+       * caller records this so a pack that needed a retry is distinguishable from one that did
+       * not — a product whose every delivery needs a second call is a prompt problem, and it is
+       * invisible if the retry is silent.
+       */
+      retry?: { asked: string[]; filled: string[] };
       grounded: true; corpus_source: string; corpus_verified: string | null }
   | { ok: false; status: number; error: string; detail?: string; product_id?: string };
 
@@ -428,6 +437,14 @@ Where such a fact is needed, phrase the entry as something to BRING, not somethi
   BAD:  "What did I originally pay for the property?"                          (only I know that)
 Apply this test to every entry before you emit it.`;
 
+  // ── ONE CALL, EXPRESSED ONCE, SO THE RETRY CANNOT DRIFT FROM THE FIRST PASS ──────────────
+  //
+  // The retry below must use the SAME model, the same version header and the same token budget.
+  // A second fetch written out longhand is how those quietly diverge — and a retry that ran on a
+  // different model would make the two halves of one delivered pack inconsistent.
+  const callModel = async (promptText: string): Promise<
+    { ok: true; obj: Record<string, unknown> } | { ok: false; status: number; error: string; detail: string }
+  > => {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -448,7 +465,7 @@ Apply this test to every entry before you emit it.`;
       // The env var exists so that A/B needs no deploy.
       model: process.env.ASSESS_MODEL ?? "claude-opus-4-5-20251101",
       max_tokens: isTier2 ? 2500 : 1500,
-      messages: [{ role: "user", content: prompt }],
+      messages: [{ role: "user", content: promptText }],
     }),
   });
 
@@ -468,13 +485,17 @@ Apply this test to every entry before you emit it.`;
   }
   const clean = text.slice(firstBrace, lastBrace + 1);
 
-  let assessment: Record<string, unknown>;
   try {
-    assessment = JSON.parse(clean);
+    return { ok: true, obj: JSON.parse(clean) as Record<string, unknown> };
   } catch {
     console.error("[assess-core] JSON parse failed. Raw response:", clean);
     return { ok: false, status: 500, error: "Failed to parse Claude response as JSON", detail: clean.slice(0, 500) };
   }
+  };
+
+  const first = await callModel(prompt);
+  if (!first.ok) return { ok: false, status: first.status, error: first.error, detail: first.detail };
+  const assessment: Record<string, unknown> = first.obj;
 
   // ── A KEY THAT WAS NOT ASKED FOR IS NOT A FIELD ─────────────────────────────────────────
   //
@@ -502,23 +523,107 @@ Apply this test to every entry before you emit it.`;
   // rather than through /api/assess, so a check in the route alone would miss every real buy.
   const RESERVED = new Set(["_meta", "rendered", "status", "actions", "accountantQuestions"]);
   const requested = new Set(fields);
+  const usable = (v: unknown): boolean =>
+    v !== null && v !== undefined && !(typeof v === "string" && v.trim() === "");
+  const missingFrom = (obj: Record<string, unknown>): string[] =>
+    fields.filter((f) => !(f in obj) || !usable(obj[f]));
+
+  let retry: { asked: string[]; filled: string[] } | undefined;
+  let missingKeys = missingFrom(assessment);
+
+  // ── A MISSING FIELD IS A BLANK SECTION, SO ASK AGAIN — ONCE ──────────────────────────────
+  //
+  // The check above has reported the absence since #93, and reporting was the right first step:
+  // it is how multiYearPensionPlan's absence was finally measured. But a reported absence still
+  // DELIVERS. MEASURED on allowance-sniper's tier-2 test buy, 2026-10-27: the pack carried 13
+  // keys, twelve exact and one renamed, so `multiYearPensionPlan` was absent and the buyer's page
+  // rendered that section empty. The gate on the dashboard side saw it after the fact.
+  //
+  // ONE retry, asking ONLY for what is missing and merging the answer in. Asking only for the
+  // gaps is deliberate: a full re-run could come back with DIFFERENT text for the twelve fields
+  // that were already correct, so a second complete pass risks replacing good content to fix one
+  // absence. Merging cannot regress a field that was already there.
+  //
+  // ONE, not a loop. If naming the exact keys once does not produce them, a third identical ask
+  // is unlikely to, and a paid request must not sit in a retry loop while a buyer waits.
+  if (missingKeys.length > 0) {
+    console.error(
+      `[assess-core] MISSING REQUESTED FIELD(S) product=${product_id} tier=${tier}`
+      + ` missing=[${missingKeys.join(", ")}] — retrying once for those keys only`,
+    );
+    // THE KEYS ARE NAMED, ONE PER LINE, SPELLED EXACTLY. The whole defect was a rename, so a
+    // retry that said "you missed some fields" would invite the same substitution again.
+    const retryPrompt = `${prompt}
+
+── SECOND PASS — YOU OMITTED REQUIRED FIELDS ──
+Your previous answer did not include these keys, or left them empty:
+${missingKeys.map((k) => `  - ${k}`).join("\n")}
+Return a JSON object containing ONLY those keys, spelled EXACTLY as listed above — do not rename
+them, do not abbreviate them, do not substitute a similar name. Every other field has already been
+accepted; do not repeat it. Apply the same corpus, the same fact rules and the same date rules as
+above. If a key genuinely cannot be answered from this taxpayer's inputs, still emit it with an
+honest explanation of what is needed and why — an empty value is not an acceptable answer for a
+field the buyer paid for.`;
+
+    const second = await callModel(retryPrompt);
+    if (second.ok) {
+      const filled: string[] = [];
+      for (const k of missingKeys) {
+        if (k in second.obj && usable(second.obj[k])) { assessment[k] = second.obj[k]; filled.push(k); }
+      }
+      retry = { asked: missingKeys, filled };
+      console.log(`[assess-core] retry filled ${filled.length}/${missingKeys.length}: [${filled.join(", ")}]`);
+    } else {
+      // The retry itself failed. Recorded, and the still-missing check below decides the delivery.
+      retry = { asked: missingKeys, filled: [] };
+      console.error(`[assess-core] retry call failed (${second.error}) — nothing filled`);
+    }
+    missingKeys = missingFrom(assessment);
+  }
+
   const unrequestedKeys = Object.keys(assessment).filter((k) => !requested.has(k) && !RESERVED.has(k));
-  const missingKeys = fields.filter((f) => !(f in assessment));
-  if (unrequestedKeys.length > 0 || missingKeys.length > 0) {
+  if (unrequestedKeys.length > 0) {
     console.error(
       `[assess-core] FIELD MISMATCH product=${product_id} tier=${tier}`
-      + ` unrequested=[${unrequestedKeys.join(", ")}] missing=[${missingKeys.join(", ")}]`,
+      + ` unrequested=[${unrequestedKeys.join(", ")}]`,
     );
   }
   for (const k of unrequestedKeys) delete assessment[k];
+
+  // ── STILL MISSING AFTER THE RETRY: THE DELIVERY FAILS ───────────────────────────────────
+  //
+  // FAIL CLOSED, the same discipline as corpus_unreachable above and for the same reason: this is
+  // paid content. A pack with an absent registered field renders a blank section on a page the
+  // buyer paid for, and the two previous occasions were both found by a human reading the
+  // delivered PDF. Returning ok:true with the absence merely NOTED is what let that happen twice.
+  //
+  // The caller stores NOTHING on a failure, so there is no half-pack to deliver and no row for a
+  // later gate to argue about — the page shows its retry/support state and the operator has the
+  // key names.
+  if (missingKeys.length > 0) {
+    console.error(
+      `[assess-core] FAIL-CLOSED: ${missingKeys.length} requested field(s) still missing after the`
+      + ` retry for ${product_id} tier=${tier}: [${missingKeys.join(", ")}]`,
+    );
+    return {
+      ok: false,
+      status: 502,
+      error: "assessment_incomplete",
+      detail:
+        `the model omitted ${missingKeys.length} requested field(s) and a second pass naming them`
+        + ` did not produce them: ${missingKeys.join(", ")}. Nothing was stored — the page a buyer`
+        + ` would see renders a section for each of those keys and would have had nothing to put`
+        + ` in it.`,
+      product_id,
+    };
+  }
 
   // Reaching here means the corpus was fetched, valid, and injected — grounded is always true.
   return {
     ok: true,
     assessment,
-    field_mismatch: unrequestedKeys.length > 0 || missingKeys.length > 0
-      ? { unrequested: unrequestedKeys, missing: missingKeys }
-      : null,
+    field_mismatch: unrequestedKeys.length > 0 ? { unrequested: unrequestedKeys, missing: [] } : null,
+    ...(retry ? { retry } : {}),
     grounded: true,
     corpus_source: corpusUrl,
     corpus_verified: (rules.last_verified as string) ?? null,
