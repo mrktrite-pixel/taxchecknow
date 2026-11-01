@@ -3,9 +3,41 @@ export const PRODUCT_CONFIG: ProductConfig = {
   id: "allowance-sniper", name: "60% Tax Trap Engine", site: "taxchecknow", country: "uk", market: "United Kingdom", language: "en-GB", currency: "GBP",
   slug: "uk/check/allowance-sniper", url: "https://taxchecknow.com/uk/check/allowance-sniper", apiRoute: "/api/rules/allowance-sniper",
   authority: "HMRC", authorityUrl: "https://www.gov.uk/government/organisations/hm-revenue-customs", legalAnchor: "Income Tax Act 2007 section 35 — Personal allowance taper above £100,000", legislation: "Income Tax Act 2007 section 35 — personal allowance reduced by £1 for every £2 of adjusted net income above £100,000 · Personal allowance £12,570 for tax year 2025-26 · Allowance fully withdrawn at £125,140 · Higher rate income tax 40% on income between £50,270 and £125,140 · Additional rate income tax 45% above £125,140 · Pension contributions and salary sacrifice reduce adjusted net income for taper purposes",
-  lastVerified: "April 2026",
+  // RE-STAMPED 2026-10-27, step 6. The authority was re-read, not assumed:
+  //   GET https://www.gov.uk/income-tax-rates/income-over-100000  [200, 200, 200]  87,854 bytes
+  //   "Your personal allowance goes down by £1 for every £2 that your adjusted net income is
+  //    above £100,000. This means your allowance is zero if your income is £125,140 or above."
+  //   £12,570, £100,000 and £125,140 all present on the page as fetched.
+  lastVerified: "October 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Allowance Audit Pack", tagline: "Your exact 60% trap exposure and the pension contribution that escapes it", value: "Your exact 60% trap exposure calculation, pension contribution needed to restore the full allowance, tax saving projection, and 5 accountant questions — built for your income band and current pension setup.", cta: "Get My Allowance Audit — £67 →", productKey: "uk_67_allowance_sniper", envVar: "STRIPE_UK_ALLOWANCE_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your 60% Tax Escape Plan", tagline: "Full escape plan: pension optimisation, salary sacrifice, bonus timing — written for your situation", value: "Full escape strategy: pension contribution sequencing, salary sacrifice vs personal contribution comparison, bonus timing to avoid the £125,140 cliff, multi-year pension planning, and written accountant coordination brief.", cta: "Get My 60% Escape Plan — £147 →", productKey: "uk_147_allowance_sniper", envVar: "STRIPE_UK_ALLOWANCE_147", successPath: "plan", fileCount: 8 },
+  // ── TEMPORAL DECLARATION ───────────────────────────────────────────────────────────────
+  // OPERATOR RULING 2026-10-28, written BY HAND because the card's Declare path cannot emit a
+  // dated shape: renderTemporalBlock produces { reason, isoDate } while DeadlineDeclaration in
+  // lib/temporal-types.ts requires { rule: ComputableRule } and has no `reason` at all, so
+  // cole-generate refuses the config it just wrote —
+  //   TS2353: 'reason' does not exist in type 'DeadlineDeclaration'
+  // ANNUAL, not one_off. 5 April is the UK tax year end every year; a one_off with year 2027
+  // would make the resolver return EXPIRED on 6 April 2027 for a product that still sells.
+  temporal: {
+    kind: "deadline",
+    rule: {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      4,
+      day:        5,
+      timezone:   "Europe/London",
+      shift:      "none",
+    },
+    jurisdiction: "GB",
+    domain:       "uk_tax_year_end",
+    label:        "5 April",
+    basis:        "Operator ruling 2026-10-28: UK tax year end; pension/salary-sacrifice to restore the PA must land in-year",
+  },
   deadline: { isoDate: "2027-04-05T23:59:59.000+01:00", display: "5 April 2027", short: "5 Apr 2027", description: "5 April 2027 — UK tax year end for 2026-27. Pension contributions must be made before year end to affect adjusted net income.", urgencyLabel: "YEAR END — ALLOWANCE LOST IF MISSED", countdownLabel: "Countdown to 5 April 2027 UK tax year end" },
   h1: "UK 60% Tax Trap 2026: Exact Exposure and How to Escape",
   metaTitle: "UK 60% Tax Trap 2026: Exposure and Pension Fix | TaxCheckNow",

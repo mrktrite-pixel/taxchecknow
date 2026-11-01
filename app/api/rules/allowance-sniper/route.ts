@@ -19,14 +19,23 @@ export async function GET() {
     "jurisdiction": "United Kingdom",
     "language": "en-GB",
     "currency": "GBP",
-    "last_verified": "April 2026",
+    "last_verified": "October 2026",
     "legislation": "Income Tax Act 2007 section 35 — personal allowance reduced by £1 for every £2 of adjusted net income above £100,000 · Personal allowance £12,570 for tax year 2025-26 · Allowance fully withdrawn at £125,140 · Higher rate income tax 40% on income between £50,270 and £125,140 · Additional rate income tax 45% above £125,140 · Pension contributions and salary sacrifice reduce adjusted net income for taper purposes",
     "legal_anchor": "Income Tax Act 2007 section 35 — Personal allowance taper above £100,000",
     "deadline": {
         "iso_date": "2027-04-05T23:59:59.000+01:00",
         "display": "5 April 2027",
         "description": "5 April 2027 — UK tax year end for 2026-27. Pension contributions must be made before year end to affect adjusted net income.",
-        "urgency_label": "YEAR END — ALLOWANCE LOST IF MISSED"
+        "urgency_label": "YEAR END — ALLOWANCE LOST IF MISSED",
+        "recurrence": {
+            "kind": "annual",
+            "month": 4,
+            "day": 5,
+            "timezone": "Europe/London",
+            "shift": "none",
+            "label": "5 April",
+            "basis": "Operator ruling 2026-10-28: UK tax year end; pension/salary-sacrifice to restore the PA must land in-year"
+        }
     },
     "key_facts": {
         "personal_allowance_2025_26": "£12,570",
@@ -175,7 +184,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/uk/check/allowance-sniper",
     "api_endpoint": "/api/rules/allowance-sniper",
-    "generated_at": "2026-04-23T01:37:28.723Z"
+    "generated_at": "2026-10-28T02:03:09.683Z"
 };
 
   return NextResponse.json(rules, {
@@ -185,7 +194,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "allowance-sniper",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "October 2026",
     },
   });
 }

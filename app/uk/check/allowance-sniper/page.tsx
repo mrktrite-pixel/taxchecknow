@@ -22,9 +22,10 @@ export const metadata: Metadata = {
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "October 2026";
 const DEADLINE_LABEL = "5 April 2027";
 const DEADLINE_ISO   = "2027-04-05T23:59:59.000+01:00";
 
@@ -346,7 +347,7 @@ export default function AllowanceSniperPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "60% Tax Trap Engine — Rules April 2026",
+    name: "60% Tax Trap Engine — Rules October 2026",
     description: "Above £100,000 adjusted net income, the 60% marginal rate hits as your personal allowance is withdrawn. Quantify and escape it in minutes. Free check.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
@@ -418,7 +419,7 @@ export default function AllowanceSniperPage() {
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on HMRC guidance April 2026"
+      "Based on HMRC guidance October 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -760,7 +761,7 @@ export default function AllowanceSniperPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (October 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1162,7 +1163,7 @@ export default function AllowanceSniperPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from HMRC and GOV.UK guidance for April 2026.
+          built from HMRC and GOV.UK guidance for October 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1185,7 +1186,7 @@ export default function AllowanceSniperPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">United Kingdom tax position checks. April 2026.</p>
+            <p className="mt-1">United Kingdom tax position checks. October 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/uk/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

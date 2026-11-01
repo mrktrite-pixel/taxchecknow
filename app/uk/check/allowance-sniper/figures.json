@@ -1,0 +1,79 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Standard Personal Allowance",
+    "value": "12,570",
+    "unit": "GBP",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_1",
+    "label": "Income threshold above which Personal Allowance is withdrawn",
+    "value": "100,000",
+    "unit": "GBP",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "Income level at which Personal Allowance reaches zero",
+    "value": "125,140",
+    "unit": "GBP",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_3",
+    "label": "Personal Allowance tax rate",
+    "value": "0",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_4",
+    "label": "Basic rate band lower bound",
+    "value": "12,571",
+    "unit": "GBP",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_5",
+    "label": "Basic rate band upper bound",
+    "value": "50,270",
+    "unit": "GBP",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_6",
+    "label": "Basic rate of Income Tax",
+    "value": "20",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_7",
+    "label": "Higher rate band lower bound",
+    "value": "50,271",
+    "unit": "GBP",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_8",
+    "label": "Higher rate of Income Tax",
+    "value": "40",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_9",
+    "label": "Additional rate of Income Tax",
+    "value": "45",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_10",
+    "label": "Trading allowance (first £1,000 of self-employment income)",
+    "value": "1,000",
+    "unit": "GBP",
+    "fact_role": "threshold"
+  }
+]

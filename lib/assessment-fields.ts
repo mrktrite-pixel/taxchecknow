@@ -216,6 +216,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["div296ExposureStatus", "tsbBandAnalysis", "embeddedGainsAnalysis", "exposurePerAssetSummary", "resetElectionRecommendation", "avoidableTaxQuantum", "lossAssetHandling", "valuationRequirements", "firstAction"],
     tier2: ["div296ExposureStatus", "tsbBandAnalysis", "embeddedGainsAnalysis", "exposurePerAssetSummary", "resetElectionRecommendation", "avoidableTaxQuantum", "lossAssetHandling", "valuationRequirements", "preJune30DisposalPlan", "electionLodgementProcess", "twoTrackRecordKeepingSetup", "longTermProjectionModel", "accountantImplementationChecklist"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for uk/check/allowance-sniper. Lists copied VERBATIM
+  // from uk-02-allowance-sniper.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "allowance-sniper": {
+    tier1: ["trapStatusSummary", "adjustedNetIncomeCalculation", "allowanceTaperImpact", "trapBandExposure", "taxOnLast10k", "pensionEscapeRequirement", "taxSavingProjection", "salarySacrificeRecommendation", "firstAction"],
+    tier2: ["trapStatusSummary", "adjustedNetIncomeCalculation", "allowanceTaperImpact", "trapBandExposure", "taxOnLast10k", "pensionEscapeRequirement", "taxSavingProjection", "salarySacrificeOptimisation", "personalSippTopupStrategy", "bonusTimingStrategy", "multiYearPensionPlan", "spousalIncomeShifting", "accountantCoordinationBrief"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */

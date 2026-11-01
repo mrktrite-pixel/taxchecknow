@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 15
+// Declared products: 16
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -27,6 +27,23 @@ export interface ProductDeclarations {
 
 export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclarations>> = {
   "taxchecknow": {
+    "allowance-sniper": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 4,
+                      "day": 5,
+                      "timezone": "Europe/London",
+                      "shift": "none"
+                },
+                "jurisdiction": "GB",
+                "domain": "uk_tax_year_end",
+                "label": "5 April",
+                "basis": "Operator ruling 2026-10-28: UK tax year end; pension/salary-sacrifice to restore the PA must land in-year"
+          }
+    },
     "australia-smsf-residency": {
           "temporal": {
                 "kind": "deadline",

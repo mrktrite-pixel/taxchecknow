@@ -1,0 +1,266 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "UK Income Tax rates and Personal Allowances for the 2026–27 tax year: how income is taxed across the Personal Allowance (up to £12,570 at 0%), basic rate band (£12,571 to £50,270 at 20%), higher rate band (£50,271 to £125,140 at 40%), and additional rate (above £125,140 at 45%), including the taper of the Personal Allowance above £100,000 and the trading allowance of £1,000.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_income_type",
+      "text": "What best describes the income you want to understand the tax position for?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Employment, pension, rental, or other non-self-employment income",
+          "value": "non_se",
+          "flags": [
+            "q1_income_type:non_se"
+          ]
+        },
+        {
+          "label": "Self-employment or freelance income",
+          "value": "se",
+          "flags": [
+            "q1_income_type:se"
+          ]
+        },
+        {
+          "label": "A mix of self-employment and other income",
+          "value": "mixed",
+          "flags": [
+            "q1_income_type:mixed"
+          ]
+        },
+        {
+          "label": "I'm not sure what category my income falls into",
+          "value": "unsure_type",
+          "flags": [
+            "q1_income_type:unsure_type"
+          ]
+        },
+        {
+          "label": "None of these / something else entirely",
+          "value": "other",
+          "flags": [
+            "q1_income_type:other"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_income_band",
+      "text": "Approximately where does your total income (before tax) fall?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_income_type:non_se",
+          "q1_income_type:mixed",
+          "q3_se_amount:se_over_1000"
+        ]
+      },
+      "options": [
+        {
+          "label": "Up to £12,570 (at or below the Personal Allowance)",
+          "value": "pa_band",
+          "flags": [
+            "q2_income_band:pa_band"
+          ]
+        },
+        {
+          "label": "Between £12,571 and £50,270 (basic rate band)",
+          "value": "basic_band",
+          "flags": [
+            "q2_income_band:basic_band"
+          ]
+        },
+        {
+          "label": "Between £50,271 and £100,000 (higher rate band, before Personal Allowance taper)",
+          "value": "higher_band_lower",
+          "flags": [
+            "q2_income_band:higher_band_lower"
+          ]
+        },
+        {
+          "label": "Between £100,000 and £125,140 (Personal Allowance taper zone)",
+          "value": "taper_band",
+          "flags": [
+            "q2_income_band:taper_band"
+          ]
+        },
+        {
+          "label": "£125,140 or above (additional rate)",
+          "value": "additional_band",
+          "flags": [
+            "q2_income_band:additional_band"
+          ]
+        },
+        {
+          "label": "I'm not sure where my income falls",
+          "value": "unsure_band",
+          "flags": [
+            "q2_income_band:unsure_band"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_se_amount",
+      "text": "How much self-employment income do you expect to receive in the tax year?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_income_type:se"
+        ]
+      },
+      "options": [
+        {
+          "label": "£1,000 or less",
+          "value": "se_under_1000",
+          "flags": [
+            "q3_se_amount:se_under_1000"
+          ]
+        },
+        {
+          "label": "More than £1,000",
+          "value": "se_over_1000",
+          "flags": [
+            "q3_se_amount:se_over_1000"
+          ]
+        },
+        {
+          "label": "I'm not sure of the amount",
+          "value": "unsure_se",
+          "flags": [
+            "q3_se_amount:unsure_se"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "basic-rate-band-outcome",
+      "when": {
+        "any": [
+          "q2_income_band:basic_band"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My income falls in the basic rate band (£12,571 to £50,270) — what rate do I pay?",
+      "result_copy": "Income between £12,571 and £50,270 is taxed at the basic rate of 20% on that portion of income. The Personal Allowance (£12,570, taxed at 0%) applies to income below that threshold. Review recommended to confirm your total income and any allowances or reliefs that may apply.",
+      "figure_ids": [
+        "fig_3",
+        "fig_6"
+      ]
+    },
+    {
+      "id": "higher-rate-band-outcome",
+      "when": {
+        "any": [
+          "q2_income_band:higher_band_lower",
+          "q2_income_band:taper_band"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My income falls in the higher rate band (£50,271 to £125,140) — what rate do I pay?",
+      "result_copy": "Income between £50,271 and £125,140 is taxed at the higher rate of 40% on that portion of income. If your adjusted net income is above £100,000, the Personal Allowance begins to be withdrawn: 'Your personal allowance goes down by £1 for every £2 that your adjusted net income is above £100,000. This means your allowance is zero if your income is £125,140 or above.' This withdrawal creates an indicated higher effective marginal rate in the £100,000–£125,140 range. Review recommended to assess your adjusted net income and any pension contributions or other reliefs that may reduce it.",
+      "figure_ids": [
+        "fig_3",
+        "fig_8"
+      ]
+    },
+    {
+      "id": "additional-rate-outcome",
+      "when": {
+        "any": [
+          "q2_income_band:additional_band"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My income is above £125,140 — what rate do I pay?",
+      "result_copy": "Income at £125,140 or above is taxed at the additional rate of 45% on income above that level. At this point the Personal Allowance has been fully withdrawn, as 'your allowance is zero if your income is £125,140 or above.' Review recommended to confirm your total income and any available reliefs.",
+      "figure_ids": [
+        "fig_9"
+      ]
+    },
+    {
+      "id": "trading-allowance-outcome",
+      "when": {
+        "any": [
+          "q3_se_amount:se_under_1000"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I have self-employment income of up to £1,000 — do I need to pay tax on it?",
+      "result_copy": "The first £1,000 of income from self-employment is the trading allowance. Where self-employment income is £1,000 or less, this allowance indicated as covering that income so it is not subject to Income Tax. Review recommended to confirm the trading allowance applies to your specific circumstances and that no other conditions affect your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "personal-allowance-explainer",
+      "when": {
+        "any": [
+          "q2_income_band:pa_band"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the Personal Allowance and how much is it?",
+      "result_copy": "The standard Personal Allowance is £12,570 — the amount of income you do not have to pay tax on, taxed at 0%. Income up to this level is not subject to Income Tax. Note: 'Your personal allowance goes down by £1 for every £2 that your adjusted net income is above £100,000. This means your allowance is zero if your income is £125,140 or above.' If your income is at or below £12,570, review recommended to confirm no other income sources affect your position.",
+      "figure_ids": [
+        "fig_3"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1_income_type:other"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1_income_type:unsure_type",
+          "q2_income_band:unsure_band",
+          "q3_se_amount:unsure_se"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}
