@@ -310,6 +310,42 @@ export default function SuccessPlan() {
       "DESCRIPTION:Review NRL1 status + agent withholding + filing currency.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:nrls-q-jun-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(6, 30, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(6, 30, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:NRL Scheme tax quarter ends — 30 June",
+      "DESCRIPTION:Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:nrls-q-sep-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(9, 30, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(9, 30, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:NRL Scheme tax quarter ends — 30 September",
+      "DESCRIPTION:Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:nrls-q-dec-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(12, 31, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(12, 31, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:NRL Scheme tax quarter ends — 31 December",
+      "DESCRIPTION:Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:nrls-q-mar-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(3, 31, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(3, 31, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:NRL Scheme tax quarter ends — 31 March",
+      "DESCRIPTION:Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
     const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
@@ -545,6 +581,42 @@ export default function SuccessPlan() {
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     In 90 days
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">NRL Scheme tax quarter ends — 30 June</p>
+                    <p className="text-xs text-neutral-500">Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(6, 30, false)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">NRL Scheme tax quarter ends — 30 September</p>
+                    <p className="text-xs text-neutral-500">Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(9, 30, false)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">NRL Scheme tax quarter ends — 31 December</p>
+                    <p className="text-xs text-neutral-500">Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(12, 31, false)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">NRL Scheme tax quarter ends — 31 March</p>
+                    <p className="text-xs text-neutral-500">Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(3, 31, false)}
                   </span>
                 </div>
               </div>

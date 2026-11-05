@@ -110,25 +110,16 @@ export default function SuccessAssess() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("2027-01-31T23:59:59.000+00:00").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "none", reason: "nrl_scheme_has_no_fixed_act_by_date_quarterly_returns_recur").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
-
-  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
-  // expired or will not parse, is a real defect — surface it so it is never silent.
-  // Phase 5 replaces this with real alerting.
-  useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "uk-nrls", deadlineIso: "2027-01-31T23:59:59.000+00:00" });
-  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -259,7 +250,7 @@ export default function SuccessAssess() {
       immediateActions: "Your personalised immediateActions is on its way by email.",
       accountantQuestions: [
         "What is my exact HMRC position based on my answers?",
-        "What is the single most important action I should take before 31 January 2027?",
+        "What is the single most important action I should take before No act-by date?",
         "Are there any planning opportunities specific to my situation?",
       ],
       
@@ -285,12 +276,39 @@ export default function SuccessAssess() {
       "CALSCALE:GREGORIAN","METHOD:PUBLISH",
       `X-WR-CALNAME:UK Non-Resident Landlord Scheme Auditor — Deadlines`,
       "BEGIN:VEVENT",
-      `UID:nrls-jan-${Date.now()}@taxchecknow.com`,
-      `DTSTART;VALUE=DATE:${"20270131"}`,
-      `DTEND;VALUE=DATE:${"20270131"}`,
+      `UID:nrls-q-jun-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(6, 30, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(6, 30, false)}`,
       `DTSTAMP:${now}`,
-      "SUMMARY:UK Self Assessment — 31 January (online)",
-      "DESCRIPTION:Online SA deadline for 2025/26 tax year + payment.",
+      "SUMMARY:NRL Scheme tax quarter ends — 30 June",
+      "DESCRIPTION:Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:nrls-q-sep-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(9, 30, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(9, 30, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:NRL Scheme tax quarter ends — 30 September",
+      "DESCRIPTION:Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:nrls-q-dec-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(12, 31, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(12, 31, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:NRL Scheme tax quarter ends — 31 December",
+      "DESCRIPTION:Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:nrls-q-mar-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(3, 31, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(3, 31, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:NRL Scheme tax quarter ends — 31 March",
+      "DESCRIPTION:Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "END:VCALENDAR",
@@ -481,11 +499,38 @@ export default function SuccessAssess() {
                 
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-neutral-900">UK Self Assessment — 31 January (online)</p>
-                    <p className="text-xs text-neutral-500">Online SA deadline for 2025/26 tax year + payment.</p>
+                    <p className="text-sm font-semibold text-neutral-900">NRL Scheme tax quarter ends — 30 June</p>
+                    <p className="text-xs text-neutral-500">Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.</p>
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
-                    31 Jan 2027
+                    {annualLabel(6, 30, false)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">NRL Scheme tax quarter ends — 30 September</p>
+                    <p className="text-xs text-neutral-500">Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(9, 30, false)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">NRL Scheme tax quarter ends — 31 December</p>
+                    <p className="text-xs text-neutral-500">Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(12, 31, false)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">NRL Scheme tax quarter ends — 31 March</p>
+                    <p className="text-xs text-neutral-500">Payment of tax deducted under the NRL Scheme is due within 30 days of this quarter end. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(3, 31, false)}
                   </span>
                 </div>
               </div>

@@ -212,7 +212,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/uk-nrls",
     "api_endpoint": "/api/rules/uk-nrls",
-    "generated_at": "2026-11-05T10:12:23.677Z"
+    "generated_at": "2026-11-05T10:42:56.345Z"
 };
 
   return NextResponse.json(rules, {
