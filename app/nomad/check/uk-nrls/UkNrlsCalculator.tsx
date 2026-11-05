@@ -12,7 +12,8 @@
 // COMMERCE IS UNCHANGED: the productKey and success paths are the live product's, so checkout
 // still resolves through the same create-checkout-session block and the same Stripe env vars.
 //
-// ⚠REVIEW 1 field(s) need authoring: escape body — copy it from presentation.json's escape result_copy
+// escape body: taken verbatim from presentation.json's none_fit result_copy, as the generator
+// directed (ruled 2026-11-05). No ⚠REVIEW field remains in this file.
 
 import EngineCalculator, { type Engine, type EngineCheckout } from "@/app/_components/EngineCalculator";
 import type { EngineConfig } from "@/app/_components/engine-config";
@@ -52,7 +53,7 @@ const ENGINE_CONFIG: EngineConfig = {
     saveHeading: "Save your UK Non-Resident Landlord Scheme Auditor result to show your adviser.",
     saveSubcopy: "Get a copy of your result by email — free.",
     escapeLabel: "A closer look at your UK Non-Resident Landlord Scheme Auditor position",
-    escapeBody: "⚠REVIEW escape body — the config has no escape copy; the presentation overlay's escape result_copy is the authored version and should be used here.",
+    escapeBody: "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
     escapeCtaLabel: "Get my personalised review — {price} →",
     reviewGuideTitle: "UK Non-Resident Landlord Scheme Auditor Review Guide",
   },

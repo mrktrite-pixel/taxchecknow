@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "United Kingdom",
     "language": "en",
     "currency": "GBP",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "UK Non-Resident Landlord Scheme (NRLS) established under Income Tax Act 2007 Part 15 Chapter 2 and the Non-Resident Landlords Scheme Regulations 1995 (SI 1995/2902). Requires letting agents to withhold basic rate tax (20%) from UK rental income paid to landlords whose usual place of abode is outside the UK, unless HMRC has approved gross payment via Form NRL1/NRL2/NRL3. Tenants must withhold where no agent and weekly rent exceeds £100.",
     "legal_anchor": "Income Tax Act 2007 Part 15 Chapter 2 + SI 1995/2902 — Non-Resident Landlords Scheme Regulations",
     "deadline": {
@@ -120,7 +120,7 @@ export async function GET() {
         {
             "id": 6,
             "question": "What expenses can I claim as a non-resident landlord?",
-            "answer": "Mortgage interest (subject to finance cost restriction — 20% tax credit rather than deduction from April 2020); repairs and maintenance; letting agent fees; insurance (buildings, contents, rent guarantee); professional fees (accountant, tax advisor); utilities paid by landlord; ground rent; service charges. Capital improvements NOT deductible — they reduce CGT gain on eventual sale."
+            "answer": "Mortgage interest (subject to finance cost restriction — 20% tax credit rather than deduction from April 2020); repairs and maintenance; letting agent fees; insurance (buildings, contents, rent protection); professional fees (accountant, tax advisor); utilities paid by landlord; ground rent; service charges. Capital improvements NOT deductible — they reduce CGT gain on eventual sale."
         },
         {
             "id": 7,
@@ -154,6 +154,10 @@ export async function GET() {
         }
     ],
     "sources": [
+        {
+            "title": "HMRC — Paying tax on rent on behalf of landlords who are abroad (NRL Scheme: quarterly returns and payment deadlines)",
+            "url": "https://www.gov.uk/guidance/paying-tax-on-rent-to-landlords-abroad"
+        },
         {
             "title": "HMRC — Non-Resident Landlord Scheme (guidance notes for letting agents and tenants)",
             "url": "https://www.gov.uk/government/publications/non-resident-landord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes"
@@ -208,7 +212,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/uk-nrls",
     "api_endpoint": "/api/rules/uk-nrls",
-    "generated_at": "2026-10-26T09:34:09.909Z"
+    "generated_at": "2026-11-05T10:12:23.677Z"
 };
 
   return NextResponse.json(rules, {
@@ -218,7 +222,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "uk-nrls",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

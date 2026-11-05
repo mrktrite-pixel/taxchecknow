@@ -10,30 +10,34 @@ import UkNrlsCalculator from "./UkNrlsCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "UK Non-Resident Landlord Scheme Auditor — NRLS + NRL1 Compliance | TaxCheckNow",
-  description: "UK Non-Resident Landlord Scheme: letting agents must withhold 20% from rent paid to non-resident landlords unless HMRC has approved gross payment via NRL1. Tenants must withhold where rent over £100/week and no agent. Under ITA 2007 Part 15 Ch 2 + SI 1995/2902.",
+  title: "Non-Resident Landlord Scheme: Must You Deduct 20%? | TaxCheckNow",
+  description: "Letting agents and tenants paying rent over £100 a week to a landlord abroad must deduct 20% tax under the NRL Scheme unless HMRC approves gross payment.",
   alternates: { canonical: "https://taxchecknow.com/nomad/check/uk-nrls" },
   openGraph: {
-    title: "UK Non-Resident Landlord Scheme Auditor — NRLS + NRL1 Compliance | TaxCheckNow",
-    description: "UK Non-Resident Landlord Scheme: letting agents must withhold 20% from rent paid to non-resident landlords unless HMRC has approved gross payment via NRL1. Tenants must withhold where rent over £100/week and no agent. Under ITA 2007 Part 15 Ch 2 + SI 1995/2902.",
+    title: "Non-Resident Landlord Scheme: Must You Deduct 20%? | TaxCheckNow",
+    description: "Letting agents and tenants paying rent over £100 a week to a landlord abroad must deduct 20% tax under the NRL Scheme unless HMRC approves gross payment.",
     url: "https://taxchecknow.com/nomad/check/uk-nrls",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "31 January 2027";
 const DEADLINE_ISO   = "2027-01-31T23:59:59.000+00:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -71,7 +75,7 @@ const faqs = [
   },
   {
     "question": "What expenses can I claim as a non-resident landlord?",
-    "answer": "Mortgage interest (subject to finance cost restriction — 20% tax credit rather than deduction from April 2020); repairs and maintenance; letting agent fees; insurance (buildings, contents, rent guarantee); professional fees (accountant, tax advisor); utilities paid by landlord; ground rent; service charges. Capital improvements NOT deductible — they reduce CGT gain on eventual sale."
+    "answer": "Mortgage interest (subject to finance cost restriction — 20% tax credit rather than deduction from April 2020); repairs and maintenance; letting agent fees; insurance (buildings, contents, rent protection); professional fees (accountant, tax advisor); utilities paid by landlord; ground rent; service charges. Capital improvements NOT deductible — they reduce CGT gain on eventual sale."
   },
   {
     "question": "Can I claim the UK personal allowance as a non-resident?",
@@ -291,12 +295,16 @@ const sidebarNumbers = [
 
 const sources = [
   {
+    "title": "HMRC — Paying tax on rent on behalf of landlords who are abroad (NRL Scheme: quarterly returns and payment deadlines)",
+    "url": "https://www.gov.uk/guidance/paying-tax-on-rent-to-landlords-abroad"
+  },
+  {
     "title": "HMRC — Non-Resident Landlord Scheme (guidance notes for letting agents and tenants)",
-    "url": "https://www.gov.uk/government/publications/non-resident-landlord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes"
+    "url": "https://www.gov.uk/government/publications/non-resident-landord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes"
   },
   {
     "title": "HMRC — Apply to receive rental income without UK tax deducted (NRL1)",
-    "url": "https://www.gov.uk/government/publications/non-resident-landlord-application-by-an-individual-to-receive-uk-rental-income-without-deduction-of-uk-tax-nrl1"
+    "url": "https://www.gov.uk/government/publications/non-resident-landlord-application-to-have-uk-rental-income-without-deduction-of-uk-tax-individuals-nrl1"
   },
   {
     "title": "HMRC — Non-resident landlords: companies (NRL2)",
@@ -304,11 +312,11 @@ const sources = [
   },
   {
     "title": "HMRC — Non-resident landlords: trustees (NRL3)",
-    "url": "https://www.gov.uk/government/publications/non-resident-landlord-application-to-receive-uk-rental-income-without-deduction-of-uk-tax-trustees-nrl3"
+    "url": "https://www.gov.uk/government/publications/trusts-and-estates-apply-to-get-uk-rental-income-without-deduction-of-uk-tax-non-resident-trustees-nrl3"
   },
   {
     "title": "HMRC — Let Property Campaign",
-    "url": "https://www.gov.uk/government/publications/let-property-campaign-make-a-disclosure-informing-hmrc-of-your-let-property-disclosure"
+    "url": "https://www.gov.uk/government/publications/let-property-campaign-your-guide-to-making-a-disclosure/let-property-campaign-your-guide-to-making-a-disclosure"
   },
   {
     "title": "Income Tax Act 2007 Part 15 Chapter 2 (legislation.gov.uk)",
@@ -353,8 +361,13 @@ const countdownStats = [
 
 export default function UkNrlsPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "nomad/check/uk-nrls", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -370,8 +383,8 @@ export default function UkNrlsPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "UK Non-Resident Landlord Scheme Auditor — Rules April 2026",
-    description: "UK Non-Resident Landlord Scheme: letting agents must withhold 20% from rent paid to non-resident landlords unless HMRC has approved gross payment via NRL1. Tenants must withhold where rent over £100/week and no agent. Under ITA 2007 Part 15 Ch 2 + SI 1995/2902.",
+    name: "UK Non-Resident Landlord Scheme Auditor — Rules November 2026",
+    description: "Letting agents and tenants paying rent over £100 a week to a landlord abroad must deduct 20% tax under the NRL Scheme unless HMRC approves gross payment.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -387,7 +400,7 @@ export default function UkNrlsPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "UK Non-Resident Landlord Scheme Auditor",
-    description: "UK Non-Resident Landlord Scheme: letting agents must withhold 20% from rent paid to non-resident landlords unless HMRC has approved gross payment via NRL1. Tenants must withhold where rent over £100/week and no agent. Under ITA 2007 Part 15 Ch 2 + SI 1995/2902.",
+    description: "Letting agents and tenants paying rent over £100 a week to a landlord abroad must deduct 20% tax under the NRL Scheme unless HMRC approves gross payment.",
     url: "https://taxchecknow.com/nomad/check/uk-nrls",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -446,13 +459,13 @@ export default function UkNrlsPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nomad/check/uk-nrls#calculator",
-    "description": "UK Non-Resident Landlord Scheme: letting agents must withhold 20% from rent paid to non-resident landlords unless HMRC has approved gross payment via NRL1. Tenants must withhold where rent over £100/week and no agent. Under ITA 2007 Part 15 Ch 2 + SI 1995/2902.",
+    "description": "Letting agents and tenants paying rent over £100 a week to a landlord abroad must deduct 20% tax under the NRL Scheme unless HMRC approves gross payment.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on HM Revenue & Customs (HMRC) guidance April 2026"
+      "Based on HM Revenue & Customs (HMRC) guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -520,7 +533,7 @@ export default function UkNrlsPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.gov.uk/government/publications/non-resident-landlord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.gov.uk/guidance/paying-tax-on-rent-to-landlords-abroad" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
             🇬🇧 HM Revenue & Customs (HMRC) Verified · Income Tax Act 2007 Part 15 Chapter 2 + SI 1995/2902 — Non-Resident Landlords Scheme Regulations ↗
           </a>
@@ -531,7 +544,7 @@ export default function UkNrlsPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Your UK Rental Income May Be Taxed Before You Receive It. Non-Resident Landlords Must Register With HMRC or Agents Deduct 20% at Source.
+          Non-Resident Landlord Scheme: Do You Have to Deduct 20% Tax?
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -781,7 +794,7 @@ export default function UkNrlsPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -847,9 +860,9 @@ export default function UkNrlsPage() {
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.gov.uk/government/publications/non-resident-landlord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/guidance/paying-tax-on-rent-to-landlords-abroad" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
-              HMRC — Non-Resident Landlord Scheme (guidance notes for letting agents and tenants)
+              HMRC — Paying tax on rent on behalf of landlords who are abroad (NRL Scheme: quarterly returns and payment deadlines)
             </a>
             {" · "}Machine-readable JSON:{" "}
             <a href="/api/rules/uk-nrls" className="font-mono text-blue-700 hover:underline">
@@ -1157,30 +1170,35 @@ export default function UkNrlsPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.gov.uk/government/publications/non-resident-landlord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/guidance/paying-tax-on-rent-to-landlords-abroad" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — Paying tax on rent on behalf of landlords who are abroad (NRL Scheme: quarterly returns and payment deadlines) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/guidance/paying-tax-on-rent-to-landlords-abroad</p>
+            </a>
+            <a href="https://www.gov.uk/government/publications/non-resident-landord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">HMRC — Non-Resident Landlord Scheme (guidance notes for letting agents and tenants) ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/non-resident-landlord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/non-resident-landord-guidance-notes-for-letting-agents-and-tenants-non-resident-landlords-scheme-guidance-notes</p>
             </a>
-            <a href="https://www.gov.uk/government/publications/non-resident-landlord-application-by-an-individual-to-receive-uk-rental-income-without-deduction-of-uk-tax-nrl1" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/government/publications/non-resident-landlord-application-to-have-uk-rental-income-without-deduction-of-uk-tax-individuals-nrl1" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">HMRC — Apply to receive rental income without UK tax deducted (NRL1) ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/non-resident-landlord-application-by-an-individual-to-receive-uk-rental-income-without-deduction-of-uk-tax-nrl1</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/non-resident-landlord-application-to-have-uk-rental-income-without-deduction-of-uk-tax-individuals-nrl1</p>
             </a>
             <a href="https://www.gov.uk/government/publications/non-resident-landlord-application-to-receive-uk-rental-income-without-deduction-of-uk-tax-companies-nrl2" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">HMRC — Non-resident landlords: companies (NRL2) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/non-resident-landlord-application-to-receive-uk-rental-income-without-deduction-of-uk-tax-companies-nrl2</p>
             </a>
-            <a href="https://www.gov.uk/government/publications/non-resident-landlord-application-to-receive-uk-rental-income-without-deduction-of-uk-tax-trustees-nrl3" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/government/publications/trusts-and-estates-apply-to-get-uk-rental-income-without-deduction-of-uk-tax-non-resident-trustees-nrl3" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">HMRC — Non-resident landlords: trustees (NRL3) ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/non-resident-landlord-application-to-receive-uk-rental-income-without-deduction-of-uk-tax-trustees-nrl3</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/trusts-and-estates-apply-to-get-uk-rental-income-without-deduction-of-uk-tax-non-resident-trustees-nrl3</p>
             </a>
-            <a href="https://www.gov.uk/government/publications/let-property-campaign-make-a-disclosure-informing-hmrc-of-your-let-property-disclosure" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/government/publications/let-property-campaign-your-guide-to-making-a-disclosure/let-property-campaign-your-guide-to-making-a-disclosure" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">HMRC — Let Property Campaign ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/let-property-campaign-make-a-disclosure-informing-hmrc-of-your-let-property-disclosure</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/let-property-campaign-your-guide-to-making-a-disclosure/let-property-campaign-your-guide-to-making-a-disclosure</p>
             </a>
             <a href="https://www.legislation.gov.uk/ukpga/2007/3/part/15/chapter/2" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
@@ -1207,7 +1225,7 @@ export default function UkNrlsPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from HM Revenue & Customs (HMRC) and GOV.UK guidance for April 2026.
+          built from HM Revenue & Customs (HMRC) and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1221,7 +1239,7 @@ export default function UkNrlsPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">United Kingdom tax position checks. April 2026.</p>
+            <p className="mt-1">United Kingdom tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/global/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
