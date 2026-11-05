@@ -1,0 +1,86 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Minimum absence period to be a non-resident landlord",
+    "value": "6",
+    "unit": "months",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_1",
+    "label": "Letting agent UK residence threshold",
+    "value": "6",
+    "unit": "months",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "Tenant-finder maximum rent collection period for exemption",
+    "value": "3",
+    "unit": "months",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_3",
+    "label": "Rent collected by Janet (Example 1)",
+    "value": "2",
+    "unit": "months",
+    "fact_role": "other"
+  },
+  {
+    "id": "fig_4",
+    "label": "Annual rent in Example 2",
+    "value": "2000",
+    "unit": "GBP",
+    "fact_role": "other"
+  },
+  {
+    "id": "fig_5",
+    "label": "Rent collected by John (Example 2)",
+    "value": "6",
+    "unit": "months",
+    "fact_role": "other"
+  },
+  {
+    "id": "fig_6",
+    "label": "Total rent paid by Julie (Example)",
+    "value": "1500",
+    "unit": "GBP",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_7",
+    "label": "Direct payment to landlord by Julie (Example)",
+    "value": "1200",
+    "unit": "GBP",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_8",
+    "label": "Taxable amount in Julie's example",
+    "value": "1300",
+    "unit": "GBP",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_9",
+    "label": "Basic rate of Income Tax applied to net rent",
+    "value": "20",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_10",
+    "label": "Payment deadline after end of each tax quarter",
+    "value": "30",
+    "unit": "days",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_11",
+    "label": "Record-keeping period",
+    "value": "4",
+    "unit": "years",
+    "fact_role": "duration"
+  }
+]

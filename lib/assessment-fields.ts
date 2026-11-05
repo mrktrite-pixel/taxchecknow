@@ -223,6 +223,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["trapStatusSummary", "adjustedNetIncomeCalculation", "allowanceTaperImpact", "trapBandExposure", "taxOnLast10k", "pensionEscapeRequirement", "taxSavingProjection", "salarySacrificeRecommendation", "firstAction"],
     tier2: ["trapStatusSummary", "adjustedNetIncomeCalculation", "allowanceTaperImpact", "trapBandExposure", "taxOnLast10k", "pensionEscapeRequirement", "taxSavingProjection", "salarySacrificeOptimisation", "personalSippTopupStrategy", "bonusTimingStrategy", "multiYearPensionPlan", "spousalIncomeShifting", "accountantCoordinationBrief"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for nomad/check/uk-nrls. Lists copied VERBATIM
+  // from nomad-06-uk-nrls.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "uk-nrls": {
+    tier1: ["nrlsStatus", "withholdingObligation", "grossPaymentEligibility", "nrl1ApplicationPathway", "tenantObligationRisk", "annualWithholdingAmount", "selfAssessmentRequirement", "immediateActions"],
+    tier2: ["nrlsStatus", "withholdingObligation", "grossPaymentEligibility", "nrl1ApplicationPathway", "tenantObligationRisk", "annualWithholdingAmount", "selfAssessmentRequirement", "immediateActions", "rentalProfitOptimisation", "expensesStrategy", "crossBorderCashflowPlan", "treatyPersonalAllowance", "auditDefenceDocumentation"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
