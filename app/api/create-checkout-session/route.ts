@@ -134,6 +134,12 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // key, read out of this same file rather than guessed.
   uk_67_allowance_sniper:   "STRIPE_UK_ALLOWANCE_67",
   uk_147_allowance_sniper:  "STRIPE_UK_ALLOWANCE_147",
+  // nomad/check/uk-nrls (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
+  // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that
+  // key, read out of this same file rather than guessed.
+  nomad_67_uk_nrls:   "STRIPE_NOMAD_NRLS_67",
+  nomad_147_uk_nrls:  "STRIPE_NOMAD_NRLS_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {

@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 16
+// Declared products: 17
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -286,6 +286,16 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "tax_treaty_residence",
                 "label": "No act-by date",
                 "basis": "OECD Model Tax Convention Article 4(2) is a standing tie-breaker rule: it states no deadline, window or effective-from date. Operator ruling 2026-10-14."
+          }
+    },
+    "uk-nrls": {
+          "temporal": {
+                "kind": "none",
+                "reason": "nrl_scheme_has_no_fixed_act_by_date_quarterly_returns_recur",
+                "jurisdiction": "GB",
+                "domain": "non_resident_landlord_scheme",
+                "label": "No act-by date",
+                "basis": "NRL Scheme has no fixed act-by date; quarterly returns recur. Declared under the operator's step-7 ruling, 2026-11-05, because this config carries no temporal block of its own. Re-read https://www.gov.uk/guidance/paying-tax-on-rent-to-landlords-abroad on 2026-11-05 (3 consecutive 200s), which states: \"You must send payment within 30 days of the end of each tax quarter — 30 June, 30 September, 31 December and 31 March.\" Four recurring quarter ends are a recurring obligation, not a one-off act-by date, which is what kind \"none\" records. The 31 January 2027 Self Assessment date in `deadline` is retained: it is a true filing deadline for a non-resident landlord and is NOT an NRLS act-by date — the same shape as au-01-cgt-main-residence-trap, which declares none and keeps its EOFY countdown."
           }
     },
     "us-expat-tax": {

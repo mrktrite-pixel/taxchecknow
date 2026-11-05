@@ -1,0 +1,534 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "The Non-resident Landlord (NRL) Scheme requires UK tenants and letting agents to deduct basic-rate Income Tax from rent paid to landlords who live abroad for more than 6 months of the year, and to pay that tax to HMRC quarterly within 30 days of each quarter end. This menu routes users to the specific outcome, explainer, or guidance dish that matches their situation.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-role",
+      "text": "Which best describes your role in relation to the UK rental property?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I am a tenant paying rent directly to a landlord",
+          "value": "tenant",
+          "flags": [
+            "q1-role:tenant"
+          ]
+        },
+        {
+          "label": "I am a letting agent managing the property and collecting rent",
+          "value": "letting-agent",
+          "flags": [
+            "q1-role:letting-agent"
+          ]
+        },
+        {
+          "label": "I found a tenant for the property and collected rent briefly",
+          "value": "finder",
+          "flags": [
+            "q1-role:finder"
+          ]
+        },
+        {
+          "label": "I am a landlord wanting to understand the scheme",
+          "value": "landlord",
+          "flags": [
+            "q1-role:landlord"
+          ]
+        },
+        {
+          "label": "None of these describe my situation",
+          "value": "none",
+          "flags": [
+            "q1-role:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-landlord-residency",
+      "text": "Does your landlord live abroad for more than 6 months of the year?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-role:tenant"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — my landlord lives abroad for more than 6 months of the year",
+          "value": "yes",
+          "flags": [
+            "q2-landlord-residency:yes"
+          ]
+        },
+        {
+          "label": "No — my landlord lives in the UK for more than 6 months of the year",
+          "value": "no",
+          "flags": [
+            "q2-landlord-residency:no"
+          ]
+        },
+        {
+          "label": "I'm not sure how long my landlord lives abroad",
+          "value": "unsure",
+          "flags": [
+            "q2-landlord-residency:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-agent-residency",
+      "text": "Do you (the letting agent) live in the UK for more than 6 months a year?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-role:letting-agent"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — I live in the UK for more than 6 months a year",
+          "value": "yes",
+          "flags": [
+            "q3-agent-residency:yes"
+          ]
+        },
+        {
+          "label": "No — I do not live in the UK for more than 6 months a year",
+          "value": "no",
+          "flags": [
+            "q3-agent-residency:no"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q3-agent-residency:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-finder-duration",
+      "text": "For how long did you collect rent from the tenant?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-role:finder"
+        ]
+      },
+      "options": [
+        {
+          "label": "I collected rent for no more than 3 months",
+          "value": "short",
+          "flags": [
+            "q4-finder-duration:short"
+          ]
+        },
+        {
+          "label": "I collected rent for more than 3 months",
+          "value": "long",
+          "flags": [
+            "q4-finder-duration:long"
+          ]
+        },
+        {
+          "label": "I'm not sure exactly how long",
+          "value": "unsure",
+          "flags": [
+            "q4-finder-duration:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5-agent-present",
+      "text": "Is there a letting agent collecting rent on behalf of your landlord?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-landlord-residency:yes"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — a letting agent collects the rent",
+          "value": "yes",
+          "flags": [
+            "q5-agent-present:yes"
+          ]
+        },
+        {
+          "label": "No — I pay rent directly to the landlord with no letting agent involved",
+          "value": "no",
+          "flags": [
+            "q5-agent-present:no"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q6-agent-landlord-residency",
+      "text": "Does the landlord whose property you manage live abroad for more than 6 months of the year?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q3-agent-residency:yes"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — the landlord lives abroad for more than 6 months of the year",
+          "value": "yes",
+          "flags": [
+            "q6-agent-landlord-residency:yes"
+          ]
+        },
+        {
+          "label": "No — the landlord lives in the UK for more than 6 months of the year",
+          "value": "no",
+          "flags": [
+            "q6-agent-landlord-residency:no"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q6-agent-landlord-residency:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q7-tenant-topic",
+      "text": "What would you like to know about your obligations as a tenant under the NRL Scheme?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q5-agent-present:no"
+        ]
+      },
+      "options": [
+        {
+          "label": "What tax must I deduct and when must I pay it?",
+          "value": "obligation",
+          "flags": [
+            "q7-tenant-topic:obligation"
+          ]
+        },
+        {
+          "label": "How do I calculate the tax amount?",
+          "value": "calculation",
+          "flags": [
+            "q7-tenant-topic:calculation"
+          ]
+        },
+        {
+          "label": "When are the payment deadlines?",
+          "value": "deadlines",
+          "flags": [
+            "q7-tenant-topic:deadlines"
+          ]
+        },
+        {
+          "label": "How long must I keep records?",
+          "value": "records",
+          "flags": [
+            "q7-tenant-topic:records"
+          ]
+        },
+        {
+          "label": "Is the landlord a non-UK company or trustee?",
+          "value": "company",
+          "flags": [
+            "q7-tenant-topic:company"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q8-agent-topic",
+      "text": "What would you like to know about your obligations as a letting agent under the NRL Scheme?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q6-agent-landlord-residency:yes"
+        ]
+      },
+      "options": [
+        {
+          "label": "What are my deduction and payment obligations?",
+          "value": "obligation",
+          "flags": [
+            "q8-agent-topic:obligation"
+          ]
+        },
+        {
+          "label": "When are the payment deadlines?",
+          "value": "deadlines",
+          "flags": [
+            "q8-agent-topic:deadlines"
+          ]
+        },
+        {
+          "label": "How long must I keep records?",
+          "value": "records",
+          "flags": [
+            "q8-agent-topic:records"
+          ]
+        },
+        {
+          "label": "The landlord is a non-UK company or trustee",
+          "value": "company",
+          "flags": [
+            "q8-agent-topic:company"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "tenant-nrl-obligation",
+      "when": {
+        "any": [
+          "q7-tenant-topic:obligation"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I am a tenant paying rent to a landlord who lives abroad — what must I do?",
+      "result_copy": "Indicated position: where your landlord lives abroad for more than 6 months of the year and no letting agent is collecting rent, you as tenant are indicated to be required to deduct basic-rate Income Tax at 20% from the rent and pay it to HMRC within 30 days of the end of each tax quarter. You are also indicated to be required to keep records for 4 years. Review recommended to confirm your specific circumstances with HMRC.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_5",
+        "fig_9",
+        "fig_10",
+        "fig_11"
+      ]
+    },
+    {
+      "id": "tenant-finder-exemption",
+      "when": {
+        "any": [
+          "q4-finder-duration:short"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I only found the tenant and collected rent briefly — am I exempt from the NRL Scheme?",
+      "result_copy": "Indicated position: a person who only finds a tenant and collects rent for no more than 3 months may fall within the exemption from operating the NRL Scheme. If rent is collected for more than 3 months, the exemption is not indicated to apply and the scheme obligations are indicated to arise. Review recommended to confirm your specific circumstances.",
+      "figure_ids": [
+        "fig_2"
+      ]
+    },
+    {
+      "id": "letting-agent-nrl-obligation",
+      "when": {
+        "any": [
+          "q4-finder-duration:long",
+          "q8-agent-topic:obligation"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I am a letting agent managing a property for a landlord who lives abroad — what must I do?",
+      "result_copy": "Indicated position: where you are a letting agent who lives in the UK for more than 6 months a year and you collect rent on behalf of a landlord who lives abroad for more than 6 months of the year, you are indicated to be required to operate the NRL Scheme — deducting basic-rate Income Tax at 20% from the rent, paying it to HMRC within 30 days of the end of each tax quarter, and keeping records for 4 years. Review recommended to confirm your specific circumstances with HMRC.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_5",
+        "fig_9",
+        "fig_10",
+        "fig_11"
+      ]
+    },
+    {
+      "id": "quarterly-payment-deadlines",
+      "when": {
+        "any": [
+          "q7-tenant-topic:deadlines",
+          "q8-agent-topic:deadlines"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "When and how do I pay the tax I have deducted under the NRL Scheme?",
+      "result_copy": "Indicated position: payment of tax deducted under the NRL Scheme must be sent within 30 days of the end of each tax quarter. The four quarter-end dates are 30 June, 30 September, 31 December, and 31 March. Tax is deducted at the basic rate of 20% on the net rental income. Records must be kept for 4 years. Review recommended to confirm your specific circumstances.",
+      "figure_ids": [
+        "fig_9",
+        "fig_10",
+        "fig_11"
+      ]
+    },
+    {
+      "id": "record-keeping-obligation",
+      "when": {
+        "any": [
+          "q7-tenant-topic:records",
+          "q8-agent-topic:records"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What records must I keep and for how long?",
+      "result_copy": "Indicated position: those operating the NRL Scheme are indicated to be required to keep records for 4 years. This dish states the rule as sourced from the authority — it does not assert your individual outcome. Review recommended to confirm your specific circumstances.",
+      "figure_ids": [
+        "fig_11"
+      ]
+    },
+    {
+      "id": "tenant-no-agent-landlord-resident",
+      "when": {
+        "any": [
+          "q2-landlord-residency:no",
+          "q6-agent-landlord-residency:no"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My landlord lives in the UK — the NRL Scheme does not apply to me",
+      "result_copy": "Indicated position: where the landlord lives in the UK for more than 6 months of the year, the NRL Scheme is not indicated to apply. The scheme is triggered only when a landlord lives abroad for more than 6 months of the year. No deduction obligation on the tenant or agent is indicated in this scenario. Review recommended to confirm your specific circumstances.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_5"
+      ]
+    },
+    {
+      "id": "landlord-residency-check",
+      "when": {
+        "any": [
+          "q2-landlord-residency:unsure",
+          "q6-agent-landlord-residency:unsure"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Is my landlord abroad long enough to trigger the NRL Scheme?",
+      "result_copy": "The NRL Scheme is triggered when a landlord lives abroad for more than 6 months of the year. If you are uncertain whether your landlord meets this threshold, seek confirmation from your landlord or HMRC. If they do meet it and no letting agent is involved, you as tenant may be required to operate the scheme. This dish explains how to determine status and the conditional consequence — it does not assert your individual outcome.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_5"
+      ]
+    },
+    {
+      "id": "non-uk-company-landlord",
+      "when": {
+        "any": [
+          "q7-tenant-topic:company",
+          "q8-agent-topic:company"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My landlord is a non-UK company — does the NRL Scheme apply?",
+      "result_copy": "Where the landlord is a company or trustee rather than an individual, the rules about their usual place of abode apply in determining whether the NRL Scheme is triggered. The authority source notes this but does not set out the full detail of those rules in the verified facts available. Insufficient information is available here to assert an individual outcome — review recommended and professional or HMRC guidance should be sought.",
+      "figure_ids": []
+    },
+    {
+      "id": "nrl-scheme-overview",
+      "when": {
+        "any": [
+          "q1-role:landlord",
+          "q3-agent-residency:no",
+          "q5-agent-present:yes"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What the NRL Scheme is and who it covers",
+      "result_copy": "The Non-resident Landlord (NRL) Scheme applies when a landlord lives abroad for more than 6 months of the year. Under the scheme, the responsibility for deducting and paying tax on UK rental income falls on the tenant or letting agent, not the landlord. If the landlord is a company or trustee, the rules about their usual place of abode apply. This dish explains how the scheme works; it does not assert any individual's outcome.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_5"
+      ]
+    },
+    {
+      "id": "tax-calculation-worked-example",
+      "when": {
+        "any": [
+          "q7-tenant-topic:calculation"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How do I calculate the tax I owe under the NRL Scheme?",
+      "result_copy": "Tax under the NRL Scheme is charged at the basic rate of 20% on the taxable (net) rental amount. For illustration: Julie paid £1,500 rent between 30 June and 30 September, of which £1,200 went directly to her landlord. The taxable amount is £1,300, and 20% of £1,300 gives a payment of £260 due to HMRC. This dish illustrates the calculation method using the verified example from the authority source — it does not assert your individual tax amount.",
+      "figure_ids": [
+        "fig_9"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-role:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q3-agent-residency:unsure",
+          "q4-finder-duration:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}
