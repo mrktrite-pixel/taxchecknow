@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 17
+// Declared products: 18
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -127,6 +127,16 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "superannuation",
                 "label": "Income year end",
                 "basis": "ITAA 1997 Division 293 (additional tax on concessional contributions): assessed per income year on income plus certain super contributions, and there is no separate act-by date — config au-17 deadline.description, with display \"End of the income year\" and urgencyLabel \"PER INCOME YEAR\". isoDate and countdownLabel are deliberately empty in that config (the au-10 pattern for a standing rule). Operator ruling 2026-10-21."
+          }
+    },
+    "fbt-hidden-exposure": {
+          "temporal": {
+                "kind": "none",
+                "reason": "fbt_return_recurs_annually_on_21_may_no_single_act_by_date",
+                "jurisdiction": "AU",
+                "domain": "fringe_benefits_tax",
+                "label": "No act-by date",
+                "basis": "The FBT return and payment are due by 21 May each year for the FBT year ended the preceding 31 March, so the obligation RECURS and there is no single act-by date. Declared under the operator's step-7 ruling, 2026-11-06, because this config carries no temporal block of its own. Re-read https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds on 2026-11-06 (the page shows last updated 20 May 2026), which states \"A fringe benefits tax (FBT) rate of 47% applies across the 31 March 2023 to 31 March 2027 FBT years. The FBT year runs from 1 April to 31 March\", gives the Type 1 gross-up rate 2.0802 and the Type 2 rate 1.8868, and states \"If your FBT liability for the last year was $3,000 or more, you will need to pay 4 quarterly instalments\". THE 21 MAY DATE IS NOT ON THAT PAGE AT ALL (0 occurrences), so it is not grounded in the pinned source. The config's own `deadline` carried 21 May 2026, which has PASSED; its isoDate and countdownLabel are emptied (the au-10 pattern) so no expired countdown ships, and the recurrence is kept in the prose. The next occurrence is 21 May 2027, but which year applies is a declaration for the operator at sign-off, not an inference this build may make."
           }
     },
     "frcgw-clearance-certificate": {

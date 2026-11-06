@@ -2,15 +2,23 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "fbt-hidden-exposure", name: "FBT Hidden Exposure Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/fbt-hidden-exposure", url: "https://taxchecknow.com/au/check/fbt-hidden-exposure", apiRoute: "/api/rules/fbt-hidden-exposure",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "FBTAA 1986 — Fringe Benefits Tax Assessment Act", legislation: "Fringe Benefits Tax Assessment Act 1986 — FBT year 1 April 2025 to 31 March 2026", lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "FBTAA 1986 — Fringe Benefits Tax Assessment Act", legislation: "Fringe Benefits Tax Assessment Act 1986 — FBT year 1 April 2025 to 31 March 2026", lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
   // EngineCalculator wrapper, so the success pages must bind inputs through
   // buildComposerInputsFromSession, and the parity census must cover this product.
   engineNative: true,
 
   tier1: { price: 67, name: "Your FBT Risk Fix Plan", tagline: "What benefits are costing you 47% tax?", value: "A personalised FBT risk audit — car benefit analysis, benefit classification, and safe structuring guide.", cta: "Get My FBT Fix Plan — $67 →", productKey: "au_67_fbt_hidden_exposure", envVar: "STRIPE_AU_FBT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your FBT Compliance System", tagline: "Audit-proof FBT management across your entire business", value: "Full FBT audit, payroll integration plan, and annual compliance framework to minimise FBT and avoid ATO penalties.", cta: "Get My FBT System — $147 →", productKey: "au_147_fbt_hidden_exposure", envVar: "STRIPE_AU_FBT_147", successPath: "plan", fileCount: 8 },
-  deadline: { isoDate: "2026-05-21T23:59:59.000+10:00", display: "21 May 2026", short: "21 May 2026", description: "FBT return and payment due — FBT year ended 31 March 2026", urgencyLabel: "FBT RETURN DUE", countdownLabel: "Countdown to 21 May 2026 — FBT return due" },
-  h1: "FBT 2026: What Benefits Are Costing Your Business 47% Tax?", metaTitle: "FBT Hidden Exposure Australia 2026 — Are You Paying Too Much Fringe Benefits Tax? | TaxCheckNow", metaDescription: "FBT is charged at 47% on the taxable value of benefits provided to employees. Car benefits, entertainment, and loans are the most common traps. Free calculator shows your FBT exposure in 2 minutes.", canonical: "https://taxchecknow.com/au/check/fbt-hidden-exposure",
+  temporal: {
+    kind:         "none",
+    reason:       "fbt_return_recurs_annually_on_21_may_no_single_act_by_date",
+    jurisdiction: "AU",
+    domain:       "fringe_benefits_tax",
+    label:        "No act-by date",
+    basis:        "The FBT return and payment are due by 21 May each year for the FBT year ended the preceding 31 March, so the obligation RECURS and there is no single act-by date. Declared under the operator's step-7 ruling, 2026-11-06, because this config carries no temporal block of its own. Re-read https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds on 2026-11-06 (the page shows last updated 20 May 2026), which states \"A fringe benefits tax (FBT) rate of 47% applies across the 31 March 2023 to 31 March 2027 FBT years. The FBT year runs from 1 April to 31 March\", gives the Type 1 gross-up rate 2.0802 and the Type 2 rate 1.8868, and states \"If your FBT liability for the last year was $3,000 or more, you will need to pay 4 quarterly instalments\". THE 21 MAY DATE IS NOT ON THAT PAGE AT ALL (0 occurrences), so it is not grounded in the pinned source. The config's own `deadline` carried 21 May 2026, which has PASSED; its isoDate and countdownLabel are emptied (the au-10 pattern) so no expired countdown ships, and the recurrence is kept in the prose. The next occurrence is 21 May 2027, but which year applies is a declaration for the operator at sign-off, not an inference this build may make.",
+  },
+  deadline: { isoDate: "", display: "21 May, annually", short: "21 May", description: "The FBT return and payment are due by 21 May each year, for the FBT year ended the preceding 31 March. There is no single act-by date for this product.", urgencyLabel: "FBT RETURN DUE", countdownLabel: "" },
+  h1: "FBT 2026: What Benefits Are Costing Your Business 47% Tax?", metaTitle: "FBT 2026: What Benefits Cost You 47% Tax | TaxCheckNow", metaDescription: "FBT is charged at 47% on the grossed-up taxable value of benefits given to employees. Car benefits, entertainment and loans are the common traps.", canonical: "https://taxchecknow.com/au/check/fbt-hidden-exposure",
   answerHeadline: "The answer — ATO confirmed April 2026",
   answerBody: [
     "Fringe benefits tax is charged at 47% on the taxable value of non-cash benefits provided to employees or their associates. FBT is paid by the employer — not the employee — and is separate from income tax. The FBT year runs from 1 April to 31 March, with the return and payment due by 21 May.",

@@ -19,13 +19,13 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Fringe Benefits Tax Assessment Act 1986 — FBT year 1 April 2025 to 31 March 2026",
     "legal_anchor": "FBTAA 1986 — Fringe Benefits Tax Assessment Act",
     "deadline": {
-        "iso_date": "2026-05-21T23:59:59.000+10:00",
-        "display": "21 May 2026",
-        "description": "FBT return and payment due — FBT year ended 31 March 2026",
+        "iso_date": "",
+        "display": "21 May, annually",
+        "description": "The FBT return and payment are due by 21 May each year, for the FBT year ended the preceding 31 March. There is no single act-by date for this product.",
         "urgency_label": "FBT RETURN DUE"
     },
     "key_facts": {
@@ -134,7 +134,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/fbt-hidden-exposure",
     "api_endpoint": "/api/rules/fbt-hidden-exposure",
-    "generated_at": "2026-10-26T09:34:09.781Z"
+    "generated_at": "2026-11-06T11:19:40.798Z"
 };
 
   return NextResponse.json(rules, {
@@ -144,7 +144,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "fbt-hidden-exposure",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }
