@@ -7,9 +7,9 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier1: { price: 67, name: "Your Expat CGT Risk Report", tagline: "Are you about to lose the main residence exemption on your Australian home by selling as a non-resident?", value: "Your personalised CGT exposure, residency-at-contract-date risk, estimated tax liability, withholding obligation, and life event eligibility.", cta: "Get My Expat CGT Risk Report — $67 →", productKey: "nomad_67_au_expat_cgt", envVar: "STRIPE_NOMAD_AUCGT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Expat CGT Strategy System", tagline: "Full sale-timing + residency alignment + CGT minimisation + ATO clearance certificate pathway", value: "Complete expat CGT strategy: contract timing, residency alignment options, CGT minimisation analysis, ATO clearance process, and audit-ready documentation.", cta: "Get My Expat CGT Strategy — $147 →", productKey: "nomad_147_au_expat_cgt", envVar: "STRIPE_NOMAD_AUCGT_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2026-10-31T23:59:59.000+10:00", display: "31 October 2026", short: "31 Oct 2026", description: "Australian tax return deadline (self-lodgers) for 2025/26 year — CGT events in the year must be declared", urgencyLabel: "ATO LODGMENT DEADLINE", countdownLabel: "Countdown to 31 October 2026 — ATO self-lodgment deadline" },
-  h1: "Selling Your Australian Home While Overseas Can Trigger Full CGT on the Entire Gain — Even if You Lived There for Years. Residency at Contract Date Is the Only Test That Matters.",
-  metaTitle: "Australian Expat CGT Trap Auditor — Main Residence Exemption + 9 May 2017 Rule | TaxCheckNow",
-  metaDescription: "Foreign residents are denied the Australian main residence CGT exemption on residential property (ITAA 1997 s118-115). Residency at contract date is the test — not settlement. No 50% CGT discount. 12.5% withholding on sales over $750k. Confirmed April 2026.",
+  h1: "Expat CGT: Your Residency at Contract Date Decides the Exemption",
+  metaTitle: "Expat CGT: Contract Date Decides Your Exemption | TaxCheckNow",
+  metaDescription: "Foreign residents lose the main residence CGT exemption (ITAA 1997 s118-115), and residency at contract date decides it, not settlement date.",
   canonical: "https://taxchecknow.com/nomad/check/au-expat-cgt",
   answerHeadline: "The answer — ATO foreign resident CGT rule, confirmed April 2026",
   answerBody: [

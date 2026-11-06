@@ -15,7 +15,7 @@ export async function GET() {
     "title": "Australian Expat CGT Trap Auditor",
     "site": "https://taxchecknow.com/nomad/check/au-expat-cgt",
     "authority": "Australian Taxation Office (ATO)",
-    "authority_url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/your-home-and-other-real-estate/main-residence-exemption-for-foreign-residents",
+    "authority_url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents",
     "jurisdiction": "Australia",
     "language": "en",
     "currency": "AUD",
@@ -150,19 +150,19 @@ export async function GET() {
     "sources": [
         {
             "title": "ATO — Main residence exemption for foreign residents",
-            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/your-home-and-other-real-estate/main-residence-exemption-for-foreign-residents"
+            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents"
         },
         {
             "title": "ATO — Capital gains tax (CGT) and foreign residents",
-            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-for-foreign-residents"
+            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax"
         },
         {
             "title": "ATO — Foreign resident capital gains withholding (FRCGW)",
-            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-resident-capital-gains-withholding"
+            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/foreign-resident-capital-gains-withholding"
         },
         {
             "title": "ATO — Work out your tax residency",
-            "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/work-out-your-tax-residency"
+            "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/your-tax-residency"
         },
         {
             "title": "ITAA 1997 s118-110 — Main residence exemption",
@@ -198,11 +198,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/your-home-and-other-real-estate/main-residence-exemption-for-foreign-residents"
+        "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents"
     ],
     "canonical": "https://taxchecknow.com/nomad/check/au-expat-cgt",
     "api_endpoint": "/api/rules/au-expat-cgt",
-    "generated_at": "2026-04-23T10:49:46.137Z"
+    "generated_at": "2026-11-06T01:15:40.229Z"
 };
 
   return NextResponse.json(rules, {
