@@ -310,6 +310,15 @@ export default function SuccessPlan() {
       "DESCRIPTION:Review all benefits provided during FBT year ended 31 March.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:fbt-return-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(5, 21, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(5, 21, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:FBT Return Due — 21 May",
+      "DESCRIPTION:Lodge and pay the FBT return by 21 May. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
     const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
@@ -545,6 +554,15 @@ export default function SuccessPlan() {
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     This week
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">FBT Return Due — 21 May</p>
+                    <p className="text-xs text-neutral-500">Lodge and pay the FBT return by 21 May. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(5, 21, false)}
                   </span>
                 </div>
               </div>

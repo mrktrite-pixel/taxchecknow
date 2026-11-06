@@ -111,6 +111,22 @@ export async function GET() {
         {
             "title": "ATO — Fringe benefits tax rates and thresholds (47% FBT rate, 2.0802 type 1 gross-up)",
             "url": "https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds"
+        },
+        {
+            "title": "FBTAA 1986 s 8 — Exempt car benefits",
+            "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+        },
+        {
+            "title": "FBTAA 1986 s 9 — Taxable value of car fringe benefits, statutory formula",
+            "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+        },
+        {
+            "title": "FBTAA 1986 s 40 — Property benefits",
+            "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+        },
+        {
+            "title": "FBTAA 1986 s 58P — Exempt benefits, minor benefits",
+            "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
         }
     ],
     "products": {
@@ -134,7 +150,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/fbt-hidden-exposure",
     "api_endpoint": "/api/rules/fbt-hidden-exposure",
-    "generated_at": "2026-11-06T11:19:40.798Z"
+    "generated_at": "2026-11-06T11:30:34.892Z"
 };
 
   return NextResponse.json(rules, {

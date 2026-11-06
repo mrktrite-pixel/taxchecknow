@@ -224,6 +224,22 @@ const sources = [
   {
     "title": "ATO — Fringe benefits tax rates and thresholds (47% FBT rate, 2.0802 type 1 gross-up)",
     "url": "https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds"
+  },
+  {
+    "title": "FBTAA 1986 s 8 — Exempt car benefits",
+    "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+  },
+  {
+    "title": "FBTAA 1986 s 9 — Taxable value of car fringe benefits, statutory formula",
+    "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+  },
+  {
+    "title": "FBTAA 1986 s 40 — Property benefits",
+    "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+  },
+  {
+    "title": "FBTAA 1986 s 58P — Exempt benefits, minor benefits",
+    "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
   }
 ];
 
@@ -1011,10 +1027,30 @@ export default function FbtHiddenExposurePage() {
               <p className="font-bold text-neutral-900">ATO — Fringe benefits tax ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax</p>
             </a>
-            <a href="https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Fringe benefits tax rates and thresholds (47% FBT rate, 2.0802 type 1 gross-up) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A03280/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">FBTAA 1986 s 8 — Exempt car benefits ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A03280/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A03280/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">FBTAA 1986 s 9 — Taxable value of car fringe benefits, statutory formula ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A03280/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A03280/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">FBTAA 1986 s 40 — Property benefits ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A03280/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A03280/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">FBTAA 1986 s 58P — Exempt benefits, minor benefits ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A03280/latest/text</p>
             </a>
           </div>
         </div>

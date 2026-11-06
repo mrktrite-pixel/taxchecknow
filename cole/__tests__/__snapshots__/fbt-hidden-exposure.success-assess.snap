@@ -107,7 +107,7 @@ export default function SuccessAssess() {
   // than spinning silently for a minute and a half.
   const [waitedMs,   setWaitedMs]   = useState(0);
   const [copied,     setCopied]     = useState(false);
-
+  const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   // TEMPORAL v1 — this product DECLARES that it has no resolvable date
@@ -266,8 +266,44 @@ export default function SuccessAssess() {
     setLoading(false);
   }
 
-  // handleCalendar() omitted: no event survived the R-A3 date gate, so there is no
-  // .ics to build and no button to trigger it.
+  function handleCalendar() {
+    const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
+    function relativeDate(d: number): string {
+      return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
+    }
+    const ics = [
+      "BEGIN:VCALENDAR","VERSION:2.0",
+      "PRODID:-//TaxCheckNow//COLE//EN",
+      "CALSCALE:GREGORIAN","METHOD:PUBLISH",
+      `X-WR-CALNAME:FBT Hidden Exposure Engine — Deadlines`,
+      "BEGIN:VEVENT",
+      `UID:fbt-return-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(5, 21, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(5, 21, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:FBT Return Due — 21 May",
+      "DESCRIPTION:FBT return and payment due 21 May\\, for the FBT year ended the preceding 31 March. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:fbt-year-end-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(3, 31, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(3, 31, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:FBT year ends — 31 March",
+      "DESCRIPTION:The FBT year runs from 1 April to 31 March. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "fbt-hidden-exposure.ics";
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    setCalDone(true);
+  }
 
   async function handleCopy() {
     if (!pack?.accountantQuestions.length) return;
@@ -434,10 +470,40 @@ export default function SuccessAssess() {
               </div>
             )}
 
-            {/* CALENDAR — suppressed at generate time: every dated event was dropped
-                (see the R-A3 calendar warning in the build log). An empty "key dates"
-                panel with a download button that yields an eventless .ics is worse than
-                no panel at all. */}
+            {/* CALENDAR */}
+            <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
+              <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                Key dates for your calendar
+              </p>
+              <h2 className="mb-4 font-serif text-lg font-bold text-neutral-950">
+                Add these now — don't rely on memory
+              </h2>
+              <div className="mb-4 space-y-2">
+                
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">FBT Return Due — 21 May</p>
+                    <p className="text-xs text-neutral-500">FBT return and payment due 21 May, for the FBT year ended the preceding 31 March. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(5, 21, false)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">FBT year ends — 31 March</p>
+                    <p className="text-xs text-neutral-500">The FBT year runs from 1 April to 31 March. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(3, 31, false)}
+                  </span>
+                </div>
+              </div>
+              <button onClick={handleCalendar}
+                className="no-print w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
+                {calDone ? "✓ Downloaded — open the .ics file to add to your calendar" : "📅 Add all dates to Apple / Google / Outlook calendar →"}
+              </button>
+            </div>
 
             {/* YOUR FILES */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
@@ -492,7 +558,10 @@ export default function SuccessAssess() {
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   ⬇ Save as PDF
                 </button>
-
+                <button onClick={handleCalendar}
+                  className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
+                  📅 Add to calendar
+                </button>
                 <button onClick={handleCopy}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   📋 Copy accountant questions
