@@ -3,7 +3,11 @@ export const PRODUCT_CONFIG: ProductConfig = {
   id: "uk-residency", name: "UK Statutory Residence Test Auditor", site: "taxchecknow", country: "global", market: "United Kingdom", language: "en", currency: "GBP",
   slug: "nomad/check/uk-residency", url: "https://taxchecknow.com/nomad/check/uk-residency", apiRoute: "/api/rules/uk-residency",
   authority: "HM Revenue & Customs (HMRC)", authorityUrl: "https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis", legalAnchor: "Finance Act 2013, Schedule 45 — Statutory Residence Test (SRT)", legislation: "Finance Act 2013, Schedule 45 — Statutory Residence Test (SRT): three-layer sequential test applied annually (tax year 6 April – 5 April). Layer 1: Automatic Overseas Tests (AOT1-3) — non-residence if met. Layer 2: Automatic UK Tests (ART1-3) — residence if met. Layer 3: Sufficient Ties Test — days × ties matrix where neither automatic test resolves.",
-  lastVerified: "April 2026",
+  lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your UK Residency Decision Pack", tagline: "Are you UK tax resident — yes or no? Deterministic answer via the SRT.", value: "A deterministic SRT analysis identifying which test resolves your position, tie-by-tie assessment, filing obligations, and routing to UK tax engines.", cta: "Get My UK Residency Decision — £67 →", productKey: "nomad_67_uk_residency", envVar: "STRIPE_NOMAD_UKR_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your UK Residency Strategy System", tagline: "Full ties analysis + tie-reduction plan + split-year + treaty interaction + audit defence", value: "Full UK residency strategy including tie reduction plan, split-year treatment analysis, dual-residency treaty tie-breaker, UK-source income management, and audit-ready documentation.", cta: "Get My UK Residency Strategy — £147 →", productKey: "nomad_147_uk_residency", envVar: "STRIPE_NOMAD_UKR_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2027-01-31T23:59:59.000+00:00", display: "31 January 2027", short: "31 Jan 2027", description: "UK Self Assessment deadline for 2025/26 tax year (online filing)", urgencyLabel: "UK FILING DEADLINE", countdownLabel: "Countdown to 31 January 2027 — UK Self Assessment deadline for 2025/26 tax year" },
