@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "United Kingdom",
     "language": "en",
     "currency": "GBP",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Finance Act 2013, Schedule 45 — Statutory Residence Test (SRT): three-layer sequential test applied annually (tax year 6 April – 5 April). Layer 1: Automatic Overseas Tests (AOT1-3) — non-residence if met. Layer 2: Automatic UK Tests (ART1-3) — residence if met. Layer 3: Sufficient Ties Test — days × ties matrix where neither automatic test resolves.",
     "legal_anchor": "Finance Act 2013, Schedule 45 — Statutory Residence Test (SRT)",
     "deadline": {
@@ -205,7 +205,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/uk-residency",
     "api_endpoint": "/api/rules/uk-residency",
-    "generated_at": "2026-10-27T09:36:45.630Z"
+    "generated_at": "2026-11-06T11:19:23.303Z"
 };
 
   return NextResponse.json(rules, {
@@ -215,7 +215,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "uk-residency",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }
