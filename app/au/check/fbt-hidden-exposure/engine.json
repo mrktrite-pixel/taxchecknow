@@ -1,0 +1,349 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "An overview of how Fringe Benefits Tax (FBT) works in Australia under the Fringe Benefits Tax Assessment Act 1986, covering who pays FBT, what counts as a fringe benefit, how the tax is calculated using the gross-up method at 47%, and the distinction between employees and non-employees (including sole traders, partners, clients, and volunteers) for FBT purposes.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-what-brings-you-here",
+      "text": "What best describes what you want to understand about Fringe Benefits Tax (FBT)?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I want to understand what FBT is and whether it applies to my business",
+          "value": "what_is_fbt",
+          "flags": [
+            "q1-what-brings-you-here:what_is_fbt"
+          ]
+        },
+        {
+          "label": "I want to know whether the person receiving a benefit counts as an 'employee' for FBT",
+          "value": "who_is_employee",
+          "flags": [
+            "q1-what-brings-you-here:who_is_employee"
+          ]
+        },
+        {
+          "label": "I want to understand how FBT is calculated",
+          "value": "how_calculated",
+          "flags": [
+            "q1-what-brings-you-here:how_calculated"
+          ]
+        },
+        {
+          "label": "I want to know what my obligations are as an employer with an FBT liability",
+          "value": "obligations",
+          "flags": [
+            "q1-what-brings-you-here:obligations"
+          ]
+        },
+        {
+          "label": "I want to know whether a particular benefit is exempt from FBT",
+          "value": "exemptions",
+          "flags": [
+            "q1-what-brings-you-here:exemptions"
+          ]
+        },
+        {
+          "label": "None of these match what I need",
+          "value": "none",
+          "flags": [
+            "q1-what-brings-you-here:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-recipient-type",
+      "text": "Which of the following best describes the person who is receiving (or would receive) the benefit?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-what-brings-you-here:who_is_employee"
+        ]
+      },
+      "options": [
+        {
+          "label": "A current, former, or future employee (including a company director)",
+          "value": "employee",
+          "flags": [
+            "q2-recipient-type:employee"
+          ]
+        },
+        {
+          "label": "A trust beneficiary who works in the business",
+          "value": "trust_beneficiary_worker",
+          "flags": [
+            "q2-recipient-type:trust_beneficiary_worker"
+          ]
+        },
+        {
+          "label": "A sole trader or partner receiving a benefit from their own business",
+          "value": "sole_trader_partner",
+          "flags": [
+            "q2-recipient-type:sole_trader_partner"
+          ]
+        },
+        {
+          "label": "A client or customer (not employed by the business)",
+          "value": "client",
+          "flags": [
+            "q2-recipient-type:client"
+          ]
+        },
+        {
+          "label": "A volunteer or contractor",
+          "value": "volunteer_contractor",
+          "flags": [
+            "q2-recipient-type:volunteer_contractor"
+          ]
+        },
+        {
+          "label": "I'm not sure how to classify the recipient",
+          "value": "unsure",
+          "flags": [
+            "q2-recipient-type:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-benefit-type",
+      "text": "What type of benefit are you asking about?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-what-brings-you-here:exemptions"
+        ]
+      },
+      "options": [
+        {
+          "label": "A benefit provided to a religious practitioner by a religious institution",
+          "value": "religious",
+          "flags": [
+            "q3-benefit-type:religious"
+          ]
+        },
+        {
+          "label": "Salary, wages, or superannuation contributions",
+          "value": "salary_super",
+          "flags": [
+            "q3-benefit-type:salary_super"
+          ]
+        },
+        {
+          "label": "Benefits under an approved employee share scheme or employment termination payment",
+          "value": "share_scheme_etp",
+          "flags": [
+            "q3-benefit-type:share_scheme_etp"
+          ]
+        },
+        {
+          "label": "A Division 7A dividend",
+          "value": "div7a",
+          "flags": [
+            "q3-benefit-type:div7a"
+          ]
+        },
+        {
+          "label": "A benefit provided to a volunteer or contractor (not an employee)",
+          "value": "volunteer_contractor_benefit",
+          "flags": [
+            "q3-benefit-type:volunteer_contractor_benefit"
+          ]
+        },
+        {
+          "label": "A benefit that does not fall into any of the above categories (e.g. car use, gym membership, entertainment, expense reimbursement, discounted loan)",
+          "value": "standard_fringe_benefit",
+          "flags": [
+            "q3-benefit-type:standard_fringe_benefit"
+          ]
+        },
+        {
+          "label": "I'm not sure what category the benefit falls into",
+          "value": "unsure",
+          "flags": [
+            "q3-benefit-type:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-family-business-context",
+      "text": "Is the benefit being provided through a family business or discretionary trust where the recipient is also an owner or beneficiary?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q3-benefit-type:standard_fringe_benefit"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — the business is run through a family trust and the recipient is a beneficiary who works in the business",
+          "value": "family_trust_worker",
+          "flags": [
+            "q4-family-business-context:family_trust_worker"
+          ]
+        },
+        {
+          "label": "No — this is a straightforward employer-employee arrangement",
+          "value": "standard_employer",
+          "flags": [
+            "q4-family-business-context:standard_employer"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q4-family-business-context:unsure"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "fbt-who-is-an-employee",
+      "when": {
+        "any": [
+          "q2-recipient-type:employee",
+          "q2-recipient-type:sole_trader_partner",
+          "q2-recipient-type:client",
+          "q2-recipient-type:volunteer_contractor"
+        ]
+      },
+      "tier": 147,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Is the person receiving the benefit an 'employee' for FBT purposes?",
+      "result_copy": "FBT applies only to benefits provided to employees (current, future, or past), company directors, and trust beneficiaries who work in the business. Sole traders and partners are not employees for FBT purposes — benefits they provide to themselves are not subject to FBT. Clients are not employees — benefits such as entertainment provided to clients are not subject to FBT. Volunteers and contractors are also outside the definition. Whether the recipient in your situation meets the employee definition for FBT purposes depends on the nature of the relationship and the specific facts — review the recipient's role against these categories to determine whether FBT obligations may arise.",
+      "figure_ids": []
+    },
+    {
+      "id": "fbt-family-business-owner-perks",
+      "when": {
+        "any": [
+          "q2-recipient-type:trust_beneficiary_worker",
+          "q4-family-business-context:family_trust_worker"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Are 'owner perks' in a family business or trust at FBT risk?",
+      "result_copy": "In a family business run through a discretionary trust, the line between 'owner' and 'employee' is not always clear. If a trust beneficiary works in the business, they are treated as an employee for FBT purposes — meaning benefits flowing to them may be subject to FBT even where no formal salary or employment contract exists. Whether informal arrangements in your specific situation create an FBT exposure depends on the facts, the nature of the benefits provided, and how the relationship is documented. This is an area where the characterisation of the arrangement is load-bearing — review recommended.",
+      "figure_ids": []
+    },
+    {
+      "id": "fbt-what-is-it",
+      "when": {
+        "any": [
+          "q1-what-brings-you-here:what_is_fbt",
+          "q4-family-business-context:standard_employer"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is FBT and does it apply to my business?",
+      "result_copy": "FBT is a tax paid by employers on certain benefits provided to their employees, or to their employees' family or other associates. It is separate from income tax and is calculated on the taxable value of the fringe benefit. Benefits that may be caught include use of a work car for private purposes, car parking, gym memberships, entertainment, expense reimbursements, discounted loans, and salary sacrifice arrangements. Benefits that are not fringe benefits at all — and are therefore outside FBT — include salary and wages, employer superannuation contributions, approved employee share schemes, employment termination payments, Division 7A dividends, and benefits to volunteers and contractors. Whether FBT applies to your business depends on whether you provide benefits of a type caught by the rules to persons who are employees (or their associates) for FBT purposes.",
+      "figure_ids": []
+    },
+    {
+      "id": "fbt-how-calculated",
+      "when": {
+        "any": [
+          "q1-what-brings-you-here:how_calculated"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How is FBT calculated — the gross-up method explained",
+      "result_copy": "To work out how much FBT to pay, you 'gross-up' the taxable value of the benefits provided — equivalent to the gross income employees would have to earn, at the highest marginal tax rate (including the Medicare levy), to buy the benefits themselves. For a GST-inclusive fringe benefit, the gross-up rate is 2.0802. The FBT you pay is 47% of this 'grossed-up' value of the fringe benefits. For example, a gym membership costing $1,100 (including $100 GST) results in FBT of $1,075.46. The taxable value of the specific benefit provided in your situation must be determined before this calculation can be applied.",
+      "figure_ids": [
+        "fig_3",
+        "fig_4"
+      ]
+    },
+    {
+      "id": "fbt-employer-obligations",
+      "when": {
+        "any": [
+          "q1-what-brings-you-here:obligations"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What are my obligations as an employer if I have an FBT liability?",
+      "result_copy": "As an employer, you must self-assess your FBT liability for the FBT year (1 April to 31 March). If you have an FBT liability, you must lodge an FBT return and pay the FBT you owe. The employer pays FBT — this is the case even if the benefit is provided by a third party under an arrangement with the employer. Whether you have an FBT liability in a given year depends on your self-assessment of the taxable value of benefits provided to employees (or their associates) during that year.",
+      "figure_ids": []
+    },
+    {
+      "id": "fbt-exempt-benefits",
+      "when": {
+        "any": [
+          "q3-benefit-type:religious",
+          "q3-benefit-type:salary_super",
+          "q3-benefit-type:share_scheme_etp",
+          "q3-benefit-type:div7a",
+          "q3-benefit-type:volunteer_contractor_benefit"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Are any benefits exempt from FBT?",
+      "result_copy": "Certain benefits are exempt from FBT or are not fringe benefits at all. The authority source identifies exempt benefits as including certain benefits provided by religious institutions to their religious practitioners. Categories that are not fringe benefits at all — and therefore outside FBT entirely — include salary and wages, employer superannuation contributions, approved employee share schemes, employment termination payments, Division 7A dividends, and benefits to volunteers and contractors. Whether a specific benefit in your situation falls within an exempt or excluded category depends on the nature of the benefit and the recipient — review the benefit against these categories to determine whether FBT applies.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-what-brings-you-here:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2-recipient-type:unsure",
+          "q3-benefit-type:unsure",
+          "q4-family-business-context:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

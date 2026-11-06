@@ -1,0 +1,37 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Gym membership cost (including GST) — example",
+    "value": "1100",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_1",
+    "label": "GST component of gym membership — example",
+    "value": "100",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_2",
+    "label": "FBT liability on gym membership — example",
+    "value": "1075.46",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_3",
+    "label": "FBT rate",
+    "value": "47",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_4",
+    "label": "Gross-up rate (GST-inclusive fringe benefit)",
+    "value": "2.0802",
+    "unit": null,
+    "fact_role": "rate"
+  }
+]

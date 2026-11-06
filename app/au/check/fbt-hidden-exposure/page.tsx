@@ -6,44 +6,47 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
 import FbtHiddenExposureCalculator from "./FbtHiddenExposureCalculator";
+import { resolvedDeadlineFor } from "@/lib/temporal-display";
 
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "FBT Hidden Exposure Australia 2026 — Are You Paying Too Much Fringe Benefits Tax? | TaxCheckNow",
-  description: "FBT is charged at 47% on the taxable value of benefits provided to employees. Car benefits, entertainment, and loans are the most common traps. Free calculator shows your FBT exposure in 2 minutes.",
+  title: "FBT 2026: What Benefits Cost You 47% Tax | TaxCheckNow",
+  description: "FBT is charged at 47% on the grossed-up taxable value of benefits given to employees. Car benefits, entertainment and loans are the common traps.",
   alternates: { canonical: "https://taxchecknow.com/au/check/fbt-hidden-exposure" },
   openGraph: {
-    title: "FBT Hidden Exposure Australia 2026 — Are You Paying Too Much Fringe Benefits Tax? | TaxCheckNow",
-    description: "FBT is charged at 47% on the taxable value of benefits provided to employees. Car benefits, entertainment, and loans are the most common traps. Free calculator shows your FBT exposure in 2 minutes.",
+    title: "FBT 2026: What Benefits Cost You 47% Tax | TaxCheckNow",
+    description: "FBT is charged at 47% on the grossed-up taxable value of benefits given to employees. Car benefits, entertainment and loans are the common traps.",
     url: "https://taxchecknow.com/au/check/fbt-hidden-exposure",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
+// STEP8: the day-count is only as fresh as the last render, so re-render daily.
+export const revalidate = 86400;
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
-const DEADLINE_LABEL = "21 May 2026";
-const DEADLINE_ISO   = "2026-05-21T23:59:59.000+10:00";
+const LAST_VERIFIED  = "November 2026";
 
-function daysToDeadline(): number | null {
-  if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
-}
-
-function progressPct(): number {
-  if (!DEADLINE_ISO) return 50;
-  const start = new Date("2026-04-06T00:00:00Z").getTime();
-  const end   = new Date(DEADLINE_ISO).getTime();
-  const now   = Date.now();
-  const total = end - start;
-  const elapsed = Math.max(0, Math.min(total, now - start));
-  return Math.round((elapsed / total) * 100);
+// ── DEADLINE: RESOLVED AT RENDER, NOT BAKED (STEP7-JUNE15) ──────────────────
+// This page holds NO date. fbt-hidden-exposure declares a recurrence rule, and the rule is resolved
+// on every render by lib/temporal-display.ts — the same arithmetic lib/temporal-resolver.ts
+// gives the email scheduler, so the countdown and the reminder cannot drift apart.
+//
+// What used to be here was a stored instant: correct until it passed, then confidently wrong,
+// with the page logging an expired-deadline error on every load until someone regenerated it.
+//
+// Resolved INSIDE the component, never at module scope: a module-level const is evaluated once
+// per server process, which would freeze the day-count for the lifetime of that process.
+function progressFromDaysAway(daysAway: number): number {
+  // Progress through the recurrence period that ENDS on the resolved date, so the bar refills
+  // the day after the deadline rolls. The stored-date version measured from a hardcoded
+  // 6 April 2026, which was meaningless for any product not on the UK tax year.
+  const PERIOD = 365;
+  return Math.round(((PERIOD - Math.min(PERIOD, daysAway)) / PERIOD) * 100);
 }
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
@@ -216,6 +219,30 @@ const sources = [
   {
     "title": "ATO — Fringe benefits tax",
     "url": "https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax"
+  },
+  {
+    "title": "ATO — Fringe benefits tax rates and thresholds (47% FBT rate, 2.0802 type 1 gross-up)",
+    "url": "https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds"
+  },
+  {
+    "title": "ATO — Lodging your FBT return and paying (due 21 May; 25 June tax-agent concession)",
+    "url": "https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax/fbt-registration-lodgment-payment-and-reporting/lodging-your-fbt-return-and-paying"
+  },
+  {
+    "title": "FBTAA 1986 s 8 — Exempt car benefits",
+    "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+  },
+  {
+    "title": "FBTAA 1986 s 9 — Taxable value of car fringe benefits, statutory formula",
+    "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+  },
+  {
+    "title": "FBTAA 1986 s 40 — Property benefits",
+    "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+  },
+  {
+    "title": "FBTAA 1986 s 58P — Exempt benefits, minor benefits",
+    "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
   }
 ];
 
@@ -247,9 +274,21 @@ const countdownStats = [
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 
 export default function FbtHiddenExposurePage() {
-  const countdown = daysToDeadline();
+  // One resolve per render. Null means the declaration stopped resolving, and for a fixed rule
+  // that is a real defect (a bad timezone, a missing registry entry) — logged, never absorbed.
+  const _deadline = resolvedDeadlineFor("taxchecknow", "fbt-hidden-exposure");
+  const countdown = _deadline ? _deadline.daysAway : null;
+  const progress  = _deadline ? progressFromDaysAway(_deadline.daysAway) : 50;
   const deadlineLive = countdown !== null;
-  const progress  = progressPct();
+  const DEADLINE_LABEL = _deadline?.display ?? "";
+  // "0 days" is not a sentence anyone says. The stored-date path could never reach zero (it
+  // returned null for anything not strictly in the future, so the banner vanished on the due
+  // date — the worst possible day to hide it). A resolved rule CAN land on today, so today has
+  // its own words.
+  const DEADLINE_PHRASE = countdown === 0 ? "Due today" : `${countdown} days`;
+  if (!deadlineLive) {
+    console.error("[TEMPORAL] fixed rule did not resolve on gate page", { product: "au/check/fbt-hidden-exposure" });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -265,8 +304,8 @@ export default function FbtHiddenExposurePage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "FBT Hidden Exposure Engine — Rules April 2026",
-    description: "FBT is charged at 47% on the taxable value of benefits provided to employees. Car benefits, entertainment, and loans are the most common traps. Free calculator shows your FBT exposure in 2 minutes.",
+    name: "FBT Hidden Exposure Engine — Rules November 2026",
+    description: "FBT is charged at 47% on the grossed-up taxable value of benefits given to employees. Car benefits, entertainment and loans are the common traps.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -282,7 +321,7 @@ export default function FbtHiddenExposurePage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "FBT Hidden Exposure Engine",
-    description: "FBT is charged at 47% on the taxable value of benefits provided to employees. Car benefits, entertainment, and loans are the most common traps. Free calculator shows your FBT exposure in 2 minutes.",
+    description: "FBT is charged at 47% on the grossed-up taxable value of benefits given to employees. Car benefits, entertainment and loans are the common traps.",
     url: "https://taxchecknow.com/au/check/fbt-hidden-exposure",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -331,13 +370,13 @@ export default function FbtHiddenExposurePage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/fbt-hidden-exposure#calculator",
-    "description": "FBT is charged at 47% on the taxable value of benefits provided to employees. Car benefits, entertainment, and loans are the most common traps. Free calculator shows your FBT exposure in 2 minutes.",
+    "description": "FBT is charged at 47% on the grossed-up taxable value of benefits given to employees. Car benefits, entertainment and loans are the common traps.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -381,7 +420,7 @@ export default function FbtHiddenExposurePage() {
           <div className="flex items-center gap-4 text-sm">
             {deadlineLive && (
             <span className="hidden items-center gap-1 text-neutral-600 md:flex">
-              <span className="font-bold text-red-600">{countdown}</span> days to {DEADLINE_LABEL}
+              <span className="font-bold text-red-600">{DEADLINE_PHRASE}</span> {countdown === 0 ? "—" : "to"} {DEADLINE_LABEL}
             </span>
             )}
             <Link href="/au" className="text-neutral-600 hover:text-neutral-900">
@@ -394,7 +433,7 @@ export default function FbtHiddenExposurePage() {
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · FBT RETURN DUE
+        🔴 {DEADLINE_PHRASE} · {DEADLINE_LABEL} · FBT RETURN DUE
       </div>
       )}
 
@@ -490,11 +529,11 @@ export default function FbtHiddenExposurePage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Countdown to 21 May 2026 — FBT return due
+            Countdown to 21 May — FBT return and payment due
           </p>
           <div className="mb-4 flex items-baseline gap-4">
-            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 21 May 2026</span>
+            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown === 0 ? "Today" : countdown}</span>
+            <span className="text-lg text-neutral-300">{countdown === 0 ? DEADLINE_LABEL : `days until ${DEADLINE_LABEL}`}</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -666,7 +705,7 @@ export default function FbtHiddenExposurePage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -993,10 +1032,40 @@ export default function FbtHiddenExposurePage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Fringe benefits tax ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax</p>
+            </a>
+            <a href="https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Fringe benefits tax rates and thresholds (47% FBT rate, 2.0802 type 1 gross-up) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds</p>
+            </a>
+            <a href="https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax/fbt-registration-lodgment-payment-and-reporting/lodging-your-fbt-return-and-paying" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Lodging your FBT return and paying (due 21 May; 25 June tax-agent concession) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax/fbt-registration-lodgment-payment-and-reporting/lodging-your-fbt-return-and-paying</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A03280/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">FBTAA 1986 s 8 — Exempt car benefits ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A03280/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A03280/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">FBTAA 1986 s 9 — Taxable value of car fringe benefits, statutory formula ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A03280/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A03280/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">FBTAA 1986 s 40 — Property benefits ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A03280/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A03280/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">FBTAA 1986 s 58P — Exempt benefits, minor benefits ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A03280/latest/text</p>
             </a>
           </div>
         </div>
@@ -1008,7 +1077,7 @@ export default function FbtHiddenExposurePage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1022,7 +1091,7 @@ export default function FbtHiddenExposurePage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
