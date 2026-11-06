@@ -2,7 +2,11 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "fbt-hidden-exposure", name: "FBT Hidden Exposure Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/fbt-hidden-exposure", url: "https://taxchecknow.com/au/check/fbt-hidden-exposure", apiRoute: "/api/rules/fbt-hidden-exposure",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "FBTAA 1986 — Fringe Benefits Tax Assessment Act", legislation: "Fringe Benefits Tax Assessment Act 1986 — FBT year 1 April 2025 to 31 March 2026", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "FBTAA 1986 — Fringe Benefits Tax Assessment Act", legislation: "Fringe Benefits Tax Assessment Act 1986 — FBT year 1 April 2025 to 31 March 2026", lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your FBT Risk Fix Plan", tagline: "What benefits are costing you 47% tax?", value: "A personalised FBT risk audit — car benefit analysis, benefit classification, and safe structuring guide.", cta: "Get My FBT Fix Plan — $67 →", productKey: "au_67_fbt_hidden_exposure", envVar: "STRIPE_AU_FBT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your FBT Compliance System", tagline: "Audit-proof FBT management across your entire business", value: "Full FBT audit, payroll integration plan, and annual compliance framework to minimise FBT and avoid ATO penalties.", cta: "Get My FBT System — $147 →", productKey: "au_147_fbt_hidden_exposure", envVar: "STRIPE_AU_FBT_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2026-05-21T23:59:59.000+10:00", display: "21 May 2026", short: "21 May 2026", description: "FBT return and payment due — FBT year ended 31 March 2026", urgencyLabel: "FBT RETURN DUE", countdownLabel: "Countdown to 21 May 2026 — FBT return due" },
