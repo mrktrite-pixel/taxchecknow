@@ -131,12 +131,19 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
     },
     "fbt-hidden-exposure": {
           "temporal": {
-                "kind": "none",
-                "reason": "fbt_return_recurs_annually_on_21_may_no_single_act_by_date",
+                "kind": "deadline",
                 "jurisdiction": "AU",
                 "domain": "fringe_benefits_tax",
-                "label": "No act-by date",
-                "basis": "The FBT return and payment are due by 21 May each year for the FBT year ended the preceding 31 March, so the obligation RECURS and there is no single act-by date. Declared under the operator's step-7 ruling, 2026-11-06, because this config carries no temporal block of its own. Re-read https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds on 2026-11-06 (the page shows last updated 20 May 2026), which states \"A fringe benefits tax (FBT) rate of 47% applies across the 31 March 2023 to 31 March 2027 FBT years. The FBT year runs from 1 April to 31 March\", gives the Type 1 gross-up rate 2.0802 and the Type 2 rate 1.8868, and states \"If your FBT liability for the last year was $3,000 or more, you will need to pay 4 quarterly instalments\". THE 21 MAY DATE IS NOT ON THAT PAGE AT ALL (0 occurrences), so it is not grounded in the pinned source. The config's own `deadline` carried 21 May 2026, which has PASSED; its isoDate and countdownLabel are emptied (the au-10 pattern) so no expired countdown ships, and the recurrence is kept in the prose. The next occurrence is 21 May 2027, but which year applies is a declaration for the operator at sign-off, not an inference this build may make."
+                "label": "FBT return due",
+                "basis": "RULED BY THE OPERATOR, 2026-11-06, overriding the kind \"none\" declared earlier the same day. Re-read https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax/fbt-registration-lodgment-payment-and-reporting/lodging-your-fbt-return-and-paying on 2026-11-06 (the page shows last updated 10 September 2026), under the heading \"Due date to lodge your return and pay\": \"You must lodge your return and pay the FBT you owe by 21 May, unless either: your tax agent lodges your return electronically - in this case the due date is generally 25 June (you must be an FBT client of the tax agent by 21 May)\". The same page states \"If the final date falls on a weekend or public holiday, the due date is the next business day\", which is why shift is next_business_day. 21 May recurs every year, so this is a FIXED annual rule and NOT a stored date - no calendar year appears anywhere in this declaration, which is what stops it going stale the day after it passes. The 25 June tax-agent concession is a different due date for a different lodger and is deliberately NOT declared here. NOTE: the pinned rates-and-thresholds source carries the 47% rate and the gross-up rates but does NOT carry 21 May (0 occurrences); this lodgment page is where the date is grounded, and it is now in sources.",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 5,
+                      "day": 21,
+                      "timezone": "Australia/Sydney",
+                      "shift": "next_business_day"
+                }
           }
     },
     "frcgw-clearance-certificate": {
