@@ -10,17 +10,18 @@ import AuExpatCgtCalculator from "./AuExpatCgtCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Australian Expat CGT Trap Auditor — Main Residence Exemption + 9 May 2017 Rule | TaxCheckNow",
-  description: "Foreign residents are denied the Australian main residence CGT exemption on residential property (ITAA 1997 s118-115). Residency at contract date is the test — not settlement. No 50% CGT discount. 12.5% withholding on sales over $750k. Confirmed April 2026.",
+  title: "Expat CGT: Contract Date Decides Your Exemption | TaxCheckNow",
+  description: "Foreign residents lose the main residence CGT exemption (ITAA 1997 s118-115), and residency at contract date decides it, not settlement date.",
   alternates: { canonical: "https://taxchecknow.com/nomad/check/au-expat-cgt" },
   openGraph: {
-    title: "Australian Expat CGT Trap Auditor — Main Residence Exemption + 9 May 2017 Rule | TaxCheckNow",
-    description: "Foreign residents are denied the Australian main residence CGT exemption on residential property (ITAA 1997 s118-115). Residency at contract date is the test — not settlement. No 50% CGT discount. 12.5% withholding on sales over $750k. Confirmed April 2026.",
+    title: "Expat CGT: Contract Date Decides Your Exemption | TaxCheckNow",
+    description: "Foreign residents lose the main residence CGT exemption (ITAA 1997 s118-115), and residency at contract date decides it, not settlement date.",
     url: "https://taxchecknow.com/nomad/check/au-expat-cgt",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
+
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
@@ -28,12 +29,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "31 October 2026";
 const DEADLINE_ISO   = "2026-10-31T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -284,19 +288,19 @@ const sidebarNumbers = [
 const sources = [
   {
     "title": "ATO — Main residence exemption for foreign residents",
-    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/your-home-and-other-real-estate/main-residence-exemption-for-foreign-residents"
+    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents"
   },
   {
     "title": "ATO — Capital gains tax (CGT) and foreign residents",
-    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-for-foreign-residents"
+    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax"
   },
   {
     "title": "ATO — Foreign resident capital gains withholding (FRCGW)",
-    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-resident-capital-gains-withholding"
+    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/foreign-resident-capital-gains-withholding"
   },
   {
     "title": "ATO — Work out your tax residency",
-    "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/work-out-your-tax-residency"
+    "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/your-tax-residency"
   },
   {
     "title": "ITAA 1997 s118-110 — Main residence exemption",
@@ -346,8 +350,13 @@ const countdownStats = [
 
 export default function AuExpatCgtPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "nomad/check/au-expat-cgt", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -364,7 +373,7 @@ export default function AuExpatCgtPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Australian Expat CGT Trap Auditor — Rules April 2026",
-    description: "Foreign residents are denied the Australian main residence CGT exemption on residential property (ITAA 1997 s118-115). Residency at contract date is the test — not settlement. No 50% CGT discount. 12.5% withholding on sales over $750k. Confirmed April 2026.",
+    description: "Foreign residents lose the main residence CGT exemption (ITAA 1997 s118-115), and residency at contract date decides it, not settlement date.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -380,7 +389,7 @@ export default function AuExpatCgtPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Australian Expat CGT Trap Auditor",
-    description: "Foreign residents are denied the Australian main residence CGT exemption on residential property (ITAA 1997 s118-115). Residency at contract date is the test — not settlement. No 50% CGT discount. 12.5% withholding on sales over $750k. Confirmed April 2026.",
+    description: "Foreign residents lose the main residence CGT exemption (ITAA 1997 s118-115), and residency at contract date decides it, not settlement date.",
     url: "https://taxchecknow.com/nomad/check/au-expat-cgt",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -444,7 +453,7 @@ export default function AuExpatCgtPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nomad/check/au-expat-cgt#calculator",
-    "description": "Foreign residents are denied the Australian main residence CGT exemption on residential property (ITAA 1997 s118-115). Residency at contract date is the test — not settlement. No 50% CGT discount. 12.5% withholding on sales over $750k. Confirmed April 2026.",
+    "description": "Foreign residents lose the main residence CGT exemption (ITAA 1997 s118-115), and residency at contract date decides it, not settlement date.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -475,6 +484,18 @@ export default function AuExpatCgtPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "Does the denial apply to all Australian property? CGT trap",
+    description: "Foreign residents lose the main residence CGT exemption (ITAA 1997 s118-115), and residency at contract date decides it, not settlement date.",
+    thumbnailUrl: "https://i.ytimg.com/vi/jkVwdzu5QQ8/hqdefault.jpg",
+    uploadDate: "2026-06-11T11:00:27.117+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=jkVwdzu5QQ8",
+    embedUrl: "https://www.youtube.com/embed/jkVwdzu5QQ8",
+    transcript: "Does the denial apply to all Australian property? Sound like you? You sold your old home, you lived there for years, and you think you're covered. The actual truth is — if you were a foreign resident when you signed the contract, the ATO denies the main residence exemption. Full stop. Doesn't matter how long you lived there. The ATO says residency is tested at contract date, not settlement. Your full gain is taxed at up to 45%. No 50% discount. On an $800,000 gain that's $360,000 in tax. Get this wrong before the 31 October deadline and you owe the lot. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -484,6 +505,7 @@ export default function AuExpatCgtPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -518,9 +540,9 @@ export default function AuExpatCgtPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/your-home-and-other-real-estate/main-residence-exemption-for-foreign-residents" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
-            🇬🇧 Australian Taxation Office (ATO) Verified · ITAA 1997 s118-110 + s118-115 + s104-15 — Foreign residents denied main residence CGT exemption ↗
+            🇦🇺 Australian Taxation Office (ATO) Verified · ITAA 1997 s118-110 + s118-115 + s104-15 — Foreign residents denied main residence CGT exemption ↗
           </a>
           <span className="inline-flex items-center gap-1 bg-neutral-100 px-2.5 py-1 font-medium tracking-wide text-neutral-700">
             Last verified: {LAST_VERIFIED} · en
@@ -529,7 +551,7 @@ export default function AuExpatCgtPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Selling Your Australian Home While Overseas Can Trigger Full CGT on the Entire Gain — Even if You Lived There for Years. Residency at Contract Date Is the Only Test That Matters.
+          Expat CGT: Your Residency at Contract Date Decides the Exemption
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -840,7 +862,7 @@ export default function AuExpatCgtPage() {
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/your-home-and-other-real-estate/main-residence-exemption-for-foreign-residents" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
               ATO — Main residence exemption for foreign residents
             </a>
@@ -1150,25 +1172,25 @@ export default function AuExpatCgtPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/your-home-and-other-real-estate/main-residence-exemption-for-foreign-residents" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Main residence exemption for foreign residents ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/your-home-and-other-real-estate/main-residence-exemption-for-foreign-residents</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents</p>
             </a>
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-for-foreign-residents" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Capital gains tax (CGT) and foreign residents ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-for-foreign-residents</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax</p>
             </a>
-            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-resident-capital-gains-withholding" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/foreign-resident-capital-gains-withholding" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Foreign resident capital gains withholding (FRCGW) ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-resident-capital-gains-withholding</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/foreign-resident-capital-gains-withholding</p>
             </a>
-            <a href="https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/work-out-your-tax-residency" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/your-tax-residency" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Work out your tax residency ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/work-out-your-tax-residency</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/your-tax-residency</p>
             </a>
             <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
@@ -1205,6 +1227,15 @@ export default function AuExpatCgtPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=jkVwdzu5QQ8" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"Does the denial apply to all Australian property? Sound like you? You sold your old home, you lived there for years, and you think you're covered. The actual truth is — if you were a foreign resident when you signed the contract, the ATO denies the main residence exemption. Full stop. Doesn't matter how long you lived there. The ATO says residency is tested at contract date, not settlement. Your full gain is taxed at up to 45%. No 50% discount. On an $800,000 gain that's $360,000 in tax. Get this wrong before the 31 October deadline and you owe the lot. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
