@@ -202,7 +202,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/au-expat-cgt",
     "api_endpoint": "/api/rules/au-expat-cgt",
-    "generated_at": "2026-11-06T01:15:40.229Z"
+    "generated_at": "2026-11-06T02:18:01.068Z"
 };
 
   return NextResponse.json(rules, {

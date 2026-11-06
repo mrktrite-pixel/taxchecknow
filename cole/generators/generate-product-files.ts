@@ -5,6 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { execFileSync } from "node:child_process";
+import { adviserPhrase } from "./market-demonym";
 import type { ProductConfig, ProductFile } from "../types/product-config";
 import { resolvesFromRule } from "./generate-gate-page";
 import { engineSessionKey } from "./verify-engine-native";
@@ -323,7 +324,7 @@ ${deadlineBar(config)}
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified ${adviserJurisdiction(config)} tax adviser for your personal situation.
+            Always consult ${adviserPhrase(config)} for your personal situation.
             Based on ${config.authority} guidance ${config.lastVerified}.
           </p>
         </div>
@@ -374,6 +375,13 @@ ${deadlineBar(config)}
  *
  * Unknown country → fall back to `market`, so a new jurisdiction degrades to today's
  * behaviour rather than to a wrong country.
+ */
+/**
+ * DEPRECATED, kept only because it is exported and may have callers outside this file.
+ *
+ * It is keyed on config.country, which is "global" for every nomad product, so it fell through to
+ * the RAW MARKET and emitted "a qualified Australia tax adviser". Use adviserPhrase/marketDemonym
+ * from ./market-demonym, which key on the market the product's law belongs to.
  */
 export function adviserJurisdiction(config: { country?: string; market?: string }): string {
   const byCountry: Record<string, string> = {
