@@ -310,6 +310,33 @@ export default function SuccessPlan() {
       "DESCRIPTION:Apply SRT fresh each tax year — prior year result does not auto-carry.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:ukr-oct-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(10, 31, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(10, 31, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:UK Self Assessment — paper deadline",
+      "DESCRIPTION:Paper return deadline. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:ukr-jan-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(1, 31, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(1, 31, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:UK Self Assessment — online deadline + tax payment",
+      "DESCRIPTION:Online filing and tax payment deadline. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:ukr-july-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${annualDate(7, 31, false)}`,
+      `DTEND;VALUE=DATE:${annualDate(7, 31, false)}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:UK payment on account — 31 July",
+      "DESCRIPTION:Second payment on account. Recurs every year.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
     const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
@@ -545,6 +572,33 @@ export default function SuccessPlan() {
                   </div>
                   <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
                     In 365 days
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">UK Self Assessment — paper deadline</p>
+                    <p className="text-xs text-neutral-500">Paper return deadline. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(10, 31, false)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">UK Self Assessment — online deadline + tax payment</p>
+                    <p className="text-xs text-neutral-500">Online filing and tax payment deadline. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(1, 31, false)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">UK payment on account — 31 July</p>
+                    <p className="text-xs text-neutral-500">Second payment on account. Recurs every year.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    {annualLabel(7, 31, false)}
                   </span>
                 </div>
               </div>
