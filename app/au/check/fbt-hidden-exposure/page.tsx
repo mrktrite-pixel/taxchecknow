@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
 import FbtHiddenExposureCalculator from "./FbtHiddenExposureCalculator";
+import { resolvedDeadlineFor } from "@/lib/temporal-display";
 
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
@@ -23,31 +24,29 @@ export const metadata: Metadata = {
 };
 
 
+// STEP8: the day-count is only as fresh as the last render, so re-render daily.
+export const revalidate = 86400;
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
 const LAST_VERIFIED  = "November 2026";
-const DEADLINE_LABEL = "21 May, annually";
-const DEADLINE_ISO   = "";
 
-// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
-// is no attestable future deadline (absent, unparseable, or already passed). A null result
-// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
-function daysToDeadline(): number | null {
-  if (!DEADLINE_ISO) return null;
-  const end = new Date(DEADLINE_ISO).getTime();
-  if (Number.isNaN(end)) return null;
-  const days = Math.ceil((end - Date.now()) / 86_400_000);
-  return days > 0 ? days : null;
-}
-
-function progressPct(): number {
-  if (!DEADLINE_ISO) return 50;
-  const start = new Date("2026-04-06T00:00:00Z").getTime();
-  const end   = new Date(DEADLINE_ISO).getTime();
-  const now   = Date.now();
-  const total = end - start;
-  const elapsed = Math.max(0, Math.min(total, now - start));
-  return Math.round((elapsed / total) * 100);
+// ── DEADLINE: RESOLVED AT RENDER, NOT BAKED (STEP7-JUNE15) ──────────────────
+// This page holds NO date. fbt-hidden-exposure declares a recurrence rule, and the rule is resolved
+// on every render by lib/temporal-display.ts — the same arithmetic lib/temporal-resolver.ts
+// gives the email scheduler, so the countdown and the reminder cannot drift apart.
+//
+// What used to be here was a stored instant: correct until it passed, then confidently wrong,
+// with the page logging an expired-deadline error on every load until someone regenerated it.
+//
+// Resolved INSIDE the component, never at module scope: a module-level const is evaluated once
+// per server process, which would freeze the day-count for the lifetime of that process.
+function progressFromDaysAway(daysAway: number): number {
+  // Progress through the recurrence period that ENDS on the resolved date, so the bar refills
+  // the day after the deadline rolls. The stored-date version measured from a hardcoded
+  // 6 April 2026, which was meaningless for any product not on the UK tax year.
+  const PERIOD = 365;
+  return Math.round(((PERIOD - Math.min(PERIOD, daysAway)) / PERIOD) * 100);
 }
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
@@ -226,6 +225,10 @@ const sources = [
     "url": "https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds"
   },
   {
+    "title": "ATO — Lodging your FBT return and paying (due 21 May; 25 June tax-agent concession)",
+    "url": "https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax/fbt-registration-lodgment-payment-and-reporting/lodging-your-fbt-return-and-paying"
+  },
+  {
     "title": "FBTAA 1986 s 8 — Exempt car benefits",
     "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
   },
@@ -271,13 +274,20 @@ const countdownStats = [
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 
 export default function FbtHiddenExposurePage() {
-  const countdown = daysToDeadline();
-  const progress  = progressPct();
+  // One resolve per render. Null means the declaration stopped resolving, and for a fixed rule
+  // that is a real defect (a bad timezone, a missing registry entry) — logged, never absorbed.
+  const _deadline = resolvedDeadlineFor("taxchecknow", "fbt-hidden-exposure");
+  const countdown = _deadline ? _deadline.daysAway : null;
+  const progress  = _deadline ? progressFromDaysAway(_deadline.daysAway) : 50;
   const deadlineLive = countdown !== null;
-  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
-  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
-  if (!deadlineLive && DEADLINE_ISO) {
-    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/fbt-hidden-exposure", deadlineIso: DEADLINE_ISO });
+  const DEADLINE_LABEL = _deadline?.display ?? "";
+  // "0 days" is not a sentence anyone says. The stored-date path could never reach zero (it
+  // returned null for anything not strictly in the future, so the banner vanished on the due
+  // date — the worst possible day to hide it). A resolved rule CAN land on today, so today has
+  // its own words.
+  const DEADLINE_PHRASE = countdown === 0 ? "Due today" : `${countdown} days`;
+  if (!deadlineLive) {
+    console.error("[TEMPORAL] fixed rule did not resolve on gate page", { product: "au/check/fbt-hidden-exposure" });
   }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
@@ -410,7 +420,7 @@ export default function FbtHiddenExposurePage() {
           <div className="flex items-center gap-4 text-sm">
             {deadlineLive && (
             <span className="hidden items-center gap-1 text-neutral-600 md:flex">
-              <span className="font-bold text-red-600">{countdown}</span> days to {DEADLINE_LABEL}
+              <span className="font-bold text-red-600">{DEADLINE_PHRASE}</span> {countdown === 0 ? "—" : "to"} {DEADLINE_LABEL}
             </span>
             )}
             <Link href="/au" className="text-neutral-600 hover:text-neutral-900">
@@ -423,7 +433,7 @@ export default function FbtHiddenExposurePage() {
       {/* Mobile red bar */}
       {deadlineLive && (
       <div className="sticky top-[53px] z-40 bg-red-600 px-4 py-2 text-center text-sm font-medium text-white lg:hidden">
-        🔴 {countdown} days · {DEADLINE_LABEL} · FBT RETURN DUE
+        🔴 {DEADLINE_PHRASE} · {DEADLINE_LABEL} · FBT RETURN DUE
       </div>
       )}
 
@@ -519,11 +529,11 @@ export default function FbtHiddenExposurePage() {
       <section className="mx-auto mb-8 max-w-6xl px-4">
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950 p-6 text-white md:p-8">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            
+            Countdown to 21 May — FBT return and payment due
           </p>
           <div className="mb-4 flex items-baseline gap-4">
-            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown}</span>
-            <span className="text-lg text-neutral-300">days until 21 May, annually</span>
+            <span className="text-5xl font-bold tabular-nums md:text-6xl">{countdown === 0 ? "Today" : countdown}</span>
+            <span className="text-lg text-neutral-300">{countdown === 0 ? DEADLINE_LABEL : `days until ${DEADLINE_LABEL}`}</span>
           </div>
           <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-neutral-800">
             <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
@@ -1031,6 +1041,11 @@ export default function FbtHiddenExposurePage() {
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Fringe benefits tax rates and thresholds (47% FBT rate, 2.0802 type 1 gross-up) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds</p>
+            </a>
+            <a href="https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax/fbt-registration-lodgment-payment-and-reporting/lodging-your-fbt-return-and-paying" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Lodging your FBT return and paying (due 21 May; 25 June tax-agent concession) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax/fbt-registration-lodgment-payment-and-reporting/lodging-your-fbt-return-and-paying</p>
             </a>
             <a href="https://www.legislation.gov.au/C2004A03280/latest/text" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">

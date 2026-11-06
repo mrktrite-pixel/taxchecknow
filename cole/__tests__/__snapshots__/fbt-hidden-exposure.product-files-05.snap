@@ -117,7 +117,8 @@ export default function FbtHiddenExposureFile05() {
 
           <DocStrip
             productId={PRODUCT_ID}
-            fallbackText="FBT RETURN DUE: 21 May, annually"
+            fallbackUrgencyLabel={"FBT RETURN DUE"}
+            fallbackText=""
             checkHref="/au/check/fbt-hidden-exposure"
           />
 

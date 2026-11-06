@@ -24,7 +24,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
       shift:      "next_business_day",
     },
   },
-  deadline: { isoDate: "", display: "21 May, annually", short: "21 May", description: "The FBT return and payment are due by 21 May each year, for the FBT year ended the preceding 31 March. There is no single act-by date for this product.", urgencyLabel: "FBT RETURN DUE", countdownLabel: "" },
+  deadline: { isoDate: "", display: "21 May, annually", short: "21 May", description: "The FBT return and payment are due by 21 May each year, for the FBT year ended the preceding 31 March. There is no single act-by date for this product.", urgencyLabel: "FBT RETURN DUE", countdownLabel: "Countdown to 21 May — FBT return and payment due" },
   h1: "FBT 2026: What Benefits Are Costing Your Business 47% Tax?", metaTitle: "FBT 2026: What Benefits Cost You 47% Tax | TaxCheckNow", metaDescription: "FBT is charged at 47% on the grossed-up taxable value of benefits given to employees. Car benefits, entertainment and loans are the common traps.", canonical: "https://taxchecknow.com/au/check/fbt-hidden-exposure",
   answerHeadline: "The answer — ATO confirmed April 2026",
   answerBody: [

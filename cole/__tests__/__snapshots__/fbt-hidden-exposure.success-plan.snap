@@ -6,6 +6,7 @@ import Link from "next/link";
 import { renderPack, hasFrozenPack, type RenderedPack } from "@/lib/render-pack";
 import { getAssessmentFields } from "@/lib/assessment-fields";
 import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
+import { resolvedDeadlineFor } from "@/lib/temporal-display";
 
 const FILES = [
   {
@@ -131,16 +132,29 @@ export default function SuccessPlan() {
   const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
-  // (temporal.kind = "none", reason: "fbt_return_recurs_annually_on_21_may_no_single_act_by_date").
-  // There is no countdown to suppress and nothing to alert about: the absence is the
-  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
-  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
-  // channel — a channel trained to be ignored is worse than no channel.
-  const daysToDeadline: number | null = null;
-  const deadlineLive = false;
+  // The date is this product's RULE, resolved on every render by lib/temporal-display.ts —
+  // the same arithmetic lib/temporal-resolver.ts gives the email scheduler, so the
+  // countdown on this page and the reminder in the inbox cannot drift apart.
+  //
+  // No date is stored anywhere in this file. The version that stored one showed a stale
+  // label and logged an expired-deadline error on every load once it passed.
+  const _deadline = resolvedDeadlineFor("taxchecknow", "fbt-hidden-exposure");
+  const daysToDeadline: number | null = _deadline ? _deadline.daysAway : null;
+  const DEADLINE_DISPLAY = _deadline?.display ?? "";
+  const DEADLINE_SHORT   = _deadline?.short ?? "";
+  // "0 days" is not a sentence anyone says; the due date gets its own words. Only a resolved
+  // rule can land on today — the stored-date path returned null for anything not in the future.
+  const DEADLINE_PHRASE = daysToDeadline === 0 ? "Due today" : `${daysToDeadline} days`;
+  const deadlineLive = daysToDeadline !== null;
 
   useEffect(() => { init(); }, []);
+
+  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
+  // expired or will not parse, is a real defect — surface it so it is never silent.
+  // Phase 5 replaces this with real alerting.
+  useEffect(() => {
+    if (!deadlineLive) console.error("[TEMPORAL] fixed rule did not resolve on success page", { product: "fbt-hidden-exposure" });
+  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -276,7 +290,7 @@ export default function SuccessPlan() {
       strongestRiskTrigger: "Your personalised strongestRiskTrigger is on its way by email.",
       accountantQuestions: [
         "What is my exact ATO position based on my answers?",
-        "What is the single most important action I should take before No act-by date?",
+        "What is the single most important action I should take before FBT return due?",
         "Are there any planning opportunities specific to my situation?",
       ],
       actions: [],
@@ -391,8 +405,8 @@ export default function SuccessPlan() {
           </p>
           {deadlineLive && (
           <div className="mt-4 flex items-center justify-between rounded-xl bg-red-700 px-4 py-2.5">
-            <span className="text-sm font-bold text-white">🔴 {daysToDeadline} days to 21 May, annually</span>
-            <span className="font-mono text-sm font-bold text-white">21 May</span>
+            <span className="text-sm font-bold text-white">🔴 {DEADLINE_PHRASE} {daysToDeadline === 0 ? "—" : "to"} {DEADLINE_DISPLAY}</span>
+            <span className="font-mono text-sm font-bold text-white">{DEADLINE_SHORT}</span>
           </div>
           )}
         </div>
@@ -462,7 +476,7 @@ export default function SuccessPlan() {
                   Your action checklist
                 </p>
                 <h2 className="mb-4 font-serif text-xl font-bold text-neutral-950">
-                  What to do — in order — before No act-by date
+                  What to do — in order — before FBT return due
                 </h2>
                 <div className="space-y-4">
                   {pack!.actions.map((action, i) => (
@@ -618,7 +632,7 @@ export default function SuccessPlan() {
                 Open File 02 and run your numbers through it.
                 Forward File 05 to your accountant.
                 Work through the checklist above.
-                {" "}{deadlineLive ? `${daysToDeadline} days to 21 May, annually.` : ""}
+                {" "}{deadlineLive ? `${DEADLINE_PHRASE}${daysToDeadline === 0 ? " — " : " to "}${DEADLINE_DISPLAY}.` : ""}
               </p>
               <div className="flex flex-wrap gap-3 no-print">
                 <button onClick={() => window.print()}
