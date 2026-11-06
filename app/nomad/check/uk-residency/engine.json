@@ -1,0 +1,507 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "The Statutory Residence Test (SRT) under Finance Act 2013, Schedule 45 determines whether an individual is UK resident in a given tax year. The test works in sequence: automatic overseas tests (non-residence if met), then automatic UK tests (residence if met), then the sufficient ties test for borderline cases. Key day-count thresholds govern each stage, and different rules apply depending on whether the individual was previously UK resident.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_prior_residence",
+      "text": "Were you UK resident in any of the 3 tax years before the current tax year?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Yes — I was UK resident in at least one of the 3 prior tax years",
+          "value": "previously_resident",
+          "flags": [
+            "q1_prior_residence:previously_resident"
+          ]
+        },
+        {
+          "label": "No — I was not UK resident in any of the 3 prior tax years",
+          "value": "not_previously_resident",
+          "flags": [
+            "q1_prior_residence:not_previously_resident"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q1_prior_residence:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_days_previously_resident",
+      "text": "How many days did you spend in the UK in the current tax year? (You were UK resident in at least one of the 3 prior tax years.)",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_prior_residence:previously_resident"
+        ]
+      },
+      "options": [
+        {
+          "label": "Fewer than 16 days",
+          "value": "under_16",
+          "flags": [
+            "q2_days_previously_resident:under_16"
+          ]
+        },
+        {
+          "label": "16 to 45 days",
+          "value": "16_to_45",
+          "flags": [
+            "q2_days_previously_resident:16_to_45"
+          ]
+        },
+        {
+          "label": "46 to 90 days",
+          "value": "46_to_90",
+          "flags": [
+            "q2_days_previously_resident:46_to_90"
+          ]
+        },
+        {
+          "label": "91 to 120 days",
+          "value": "91_to_120",
+          "flags": [
+            "q2_days_previously_resident:91_to_120"
+          ]
+        },
+        {
+          "label": "More than 120 days but fewer than 183 days",
+          "value": "121_to_182",
+          "flags": [
+            "q2_days_previously_resident:121_to_182"
+          ]
+        },
+        {
+          "label": "183 days or more",
+          "value": "183_plus",
+          "flags": [
+            "q2_days_previously_resident:183_plus"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q2_days_previously_resident:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_days_not_previously_resident",
+      "text": "How many days did you spend in the UK in the current tax year? (You were not UK resident in any of the 3 prior tax years.)",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_prior_residence:not_previously_resident"
+        ]
+      },
+      "options": [
+        {
+          "label": "Fewer than 46 days",
+          "value": "under_46",
+          "flags": [
+            "q3_days_not_previously_resident:under_46"
+          ]
+        },
+        {
+          "label": "46 to 90 days",
+          "value": "46_to_90",
+          "flags": [
+            "q3_days_not_previously_resident:46_to_90"
+          ]
+        },
+        {
+          "label": "91 to 120 days",
+          "value": "91_to_120",
+          "flags": [
+            "q3_days_not_previously_resident:91_to_120"
+          ]
+        },
+        {
+          "label": "More than 120 days but fewer than 183 days",
+          "value": "121_to_182",
+          "flags": [
+            "q3_days_not_previously_resident:121_to_182"
+          ]
+        },
+        {
+          "label": "183 days or more",
+          "value": "183_plus",
+          "flags": [
+            "q3_days_not_previously_resident:183_plus"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q3_days_not_previously_resident:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4_automatic_uk_tests",
+      "text": "Do any of the following apply to you in the current tax year? (Select the first that applies, or 'None of these'.)",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2_days_previously_resident:16_to_45",
+          "q2_days_previously_resident:46_to_90",
+          "q2_days_previously_resident:91_to_120",
+          "q2_days_previously_resident:121_to_182",
+          "q3_days_not_previously_resident:46_to_90",
+          "q3_days_not_previously_resident:91_to_120",
+          "q3_days_not_previously_resident:121_to_182"
+        ]
+      },
+      "options": [
+        {
+          "label": "I had a UK home for at least 91 consecutive days (with at least 30 of those days in the tax year and I was present in it for at least 30 days), and I had no overseas home (or was present in any overseas home for fewer than 30 days in the year)",
+          "value": "uk_home_test",
+          "flags": [
+            "q4_automatic_uk_tests:uk_home_test"
+          ]
+        },
+        {
+          "label": "I worked full-time in the UK across a 365-day period falling in the tax year, with more than 75% of my working days in the UK",
+          "value": "uk_fulltime_work",
+          "flags": [
+            "q4_automatic_uk_tests:uk_fulltime_work"
+          ]
+        },
+        {
+          "label": "None of these automatic UK tests apply to me",
+          "value": "none_automatic_uk",
+          "flags": [
+            "q4_automatic_uk_tests:none_automatic_uk"
+          ]
+        },
+        {
+          "label": "I'm not sure whether any automatic UK test applies",
+          "value": "unsure",
+          "flags": [
+            "q4_automatic_uk_tests:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5_overseas_work_test",
+      "text": "Do you work full-time overseas? Specifically: did you spend fewer than 91 days in the UK, work more than 3 hours in the UK on fewer than 31 days, and have no significant break (a gap of at least 31 days with no overseas work) from your overseas work?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q4_automatic_uk_tests:none_automatic_uk"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — all three conditions are met (fewer than 91 UK days, fewer than 31 UK working days, no significant break)",
+          "value": "overseas_fulltime",
+          "flags": [
+            "q5_overseas_work_test:overseas_fulltime"
+          ]
+        },
+        {
+          "label": "No — I do not meet all three conditions for full-time overseas work",
+          "value": "not_overseas_fulltime",
+          "flags": [
+            "q5_overseas_work_test:not_overseas_fulltime"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q5_overseas_work_test:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q6_split_year_or_ties",
+      "text": "Which of the following best describes your situation? (No automatic test has resolved your residence status.)",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q5_overseas_work_test:not_overseas_fulltime"
+        ]
+      },
+      "options": [
+        {
+          "label": "I moved to or from the UK part-way through the tax year and want to understand split-year treatment",
+          "value": "split_year",
+          "flags": [
+            "q6_split_year_or_ties:split_year"
+          ]
+        },
+        {
+          "label": "I was previously UK resident and my UK days fall between 16 and 120 — I want to understand how UK ties determine my residence",
+          "value": "sufficient_ties_prev",
+          "flags": [
+            "q6_split_year_or_ties:sufficient_ties_prev"
+          ]
+        },
+        {
+          "label": "I want to understand whether a significant break affects my overseas work test",
+          "value": "significant_break",
+          "flags": [
+            "q6_split_year_or_ties:significant_break"
+          ]
+        },
+        {
+          "label": "I want to understand the temporary non-residence rules",
+          "value": "temp_non_res",
+          "flags": [
+            "q6_split_year_or_ties:temp_non_res"
+          ]
+        },
+        {
+          "label": "None of these describe my situation",
+          "value": "none",
+          "flags": [
+            "q6_split_year_or_ties:none"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "automatic-overseas-previously-resident",
+      "when": {
+        "any": [
+          "q2_days_previously_resident:under_16"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I was UK resident in at least one of the last 3 tax years and spent fewer than 16 days in the UK this year",
+      "result_copy": "The first automatic overseas test is indicated as potentially met. If you were UK resident in one or more of the 3 tax years before the current tax year and you spent fewer than 16 days in the UK in the current tax year, you meet the first automatic overseas test and are automatically non-UK resident for that year. Review recommended to confirm your day count and prior-year residence status.",
+      "figure_ids": [
+        "fig_1",
+        "fig_11"
+      ]
+    },
+    {
+      "id": "automatic-overseas-not-previously-resident",
+      "when": {
+        "any": [
+          "q3_days_not_previously_resident:under_46"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I was not UK resident in any of the last 3 tax years and spent fewer than 46 days in the UK this year",
+      "result_copy": "The second automatic overseas test is indicated as potentially met. If you were not UK resident in any of the 3 tax years before the current tax year and you spent fewer than 46 days in the UK in the current tax year, you meet the second automatic overseas test and are automatically non-UK resident for that year. Review recommended to confirm your day count and prior-year non-residence status.",
+      "figure_ids": [
+        "fig_2",
+        "fig_13",
+        "fig_17"
+      ]
+    },
+    {
+      "id": "automatic-overseas-full-time-work-abroad",
+      "when": {
+        "any": [
+          "q5_overseas_work_test:overseas_fulltime"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I work full-time overseas, spent fewer than 91 days in the UK, and worked more than 3 hours in the UK on fewer than 31 of those days",
+      "result_copy": "The third automatic overseas test is indicated as potentially met. If you spend fewer than 91 days in the UK in the tax year, the number of days on which you work more than 3 hours in the UK is fewer than 31, and you have no significant break from your overseas work, you meet the third automatic overseas test and are automatically non-UK resident. Review recommended to confirm all three conditions and the absence of a significant break.",
+      "figure_ids": [
+        "fig_3",
+        "fig_6",
+        "fig_15",
+        "fig_19"
+      ]
+    },
+    {
+      "id": "automatic-uk-183-days",
+      "when": {
+        "any": [
+          "q2_days_previously_resident:183_plus",
+          "q3_days_not_previously_resident:183_plus"
+        ]
+      },
+      "tier": 147,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I spent 183 or more days in the UK this tax year",
+      "result_copy": "Automatic UK residence is indicated. If you have been in the UK for 183 or more days in the tax year, you are automatically UK resident for that year under the first automatic UK test. Review recommended to confirm your day count.",
+      "figure_ids": []
+    },
+    {
+      "id": "automatic-uk-only-home",
+      "when": {
+        "any": [
+          "q4_automatic_uk_tests:uk_home_test"
+        ]
+      },
+      "tier": 147,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I had a UK home for at least 91 consecutive days (with at least 30 of those days in the tax year) and no overseas home",
+      "result_copy": "The second automatic UK test is indicated as potentially met. If there was at least one period of 91 consecutive days when you had a home in the UK, at least 30 of those 91 days fall in the tax year during which you were present in that UK home for at least 30 days, and you had no overseas home (or were present in any overseas home for fewer than 30 days in the year), you meet the second automatic UK test and are automatically UK resident. Review recommended to confirm the home and day conditions.",
+      "figure_ids": [
+        "fig_3",
+        "fig_6",
+        "fig_7",
+        "fig_15",
+        "fig_19"
+      ]
+    },
+    {
+      "id": "automatic-uk-full-time-work",
+      "when": {
+        "any": [
+          "q4_automatic_uk_tests:uk_fulltime_work"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I work full-time in the UK across a 365-day period falling in the tax year, with more than 75% of my working days in the UK",
+      "result_copy": "The third automatic UK test is indicated as potentially met. If you work full-time in the UK for any period of 365 days that falls in the tax year, and more than 75% of the total days in that 365-day period on which you do more than 3 hours of work are days when you do more than 3 hours of work in the UK, you meet the third automatic UK test and are automatically UK resident. Review recommended to confirm your working day counts and the 365-day period.",
+      "figure_ids": [
+        "fig_8",
+        "fig_9"
+      ]
+    },
+    {
+      "id": "sufficient-ties-previously-resident",
+      "when": {
+        "any": [
+          "q6_split_year_or_ties:sufficient_ties_prev"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I was previously UK resident and my UK days fall between 16 and 120 — how many ties do I need to be resident?",
+      "result_copy": "Where no automatic test resolves your status and you were UK resident in at least one of the 3 prior tax years, the sufficient ties test using Table A applies. The number of UK ties required for residence depends on your day band: 16 to 45 days, 46 to 90 days, or 91 to 120 days in the UK. Ties include factors such as a 90-day tie (having spent more than 90 days in the UK in either of the 2 preceding tax years). You should count your UK ties and match them to your day band to determine whether you are resident. The specific tie counts required per band are not reproduced here as they are not present in the verified source — seek professional advice to confirm your tie count and day count.",
+      "figure_ids": [
+        "fig_10",
+        "fig_12",
+        "fig_14",
+        "fig_16",
+        "fig_18",
+        "fig_20"
+      ]
+    },
+    {
+      "id": "split-year-treatment-explainer",
+      "when": {
+        "any": [
+          "q6_split_year_or_ties:split_year"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I moved to or from the UK part-way through the tax year — what is split-year treatment?",
+      "result_copy": "Split-year treatment may apply if you moved to or from the UK part-way through a tax year. Where split-year treatment applies, the tax year is divided into a UK-resident part and a non-UK-resident part, and different tax rules apply to each part. Whether split-year treatment applies and which case covers your circumstances depends on the specific conditions of each case. Seek professional advice to determine whether split-year treatment applies to your situation and which case is relevant.",
+      "figure_ids": []
+    },
+    {
+      "id": "temporary-non-residence-explainer",
+      "when": {
+        "any": [
+          "q6_split_year_or_ties:temp_non_res"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I left the UK temporarily — could income or gains I receive abroad still be taxed in the UK when I return?",
+      "result_copy": "Temporary non-residence rules may apply if you were previously UK resident, became non-UK resident for a period, and then returned to the UK. These rules can affect how certain income and gains arising during the period of non-residence are taxed on your return. Whether the temporary non-residence rules apply depends on the length and nature of your non-residence period. Seek professional advice to determine whether these rules affect your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "significant-break-overseas-work",
+      "when": {
+        "any": [
+          "q6_split_year_or_ties:significant_break"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What counts as a 'significant break' from overseas work for the third automatic overseas test?",
+      "result_copy": "A significant break from overseas work is relevant to the third automatic overseas test. A significant break is when at least 31 days go by and not one of those days is a day where you work more than 3 hours overseas (subject to the conditions in the source). If a significant break occurred during the tax year, you may not meet the third automatic overseas test even if your UK day and UK working day counts are otherwise within the required thresholds. Seek professional advice to assess whether a significant break applies to your circumstances.",
+      "figure_ids": [
+        "fig_4",
+        "fig_5"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q6_split_year_or_ties:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1_prior_residence:unsure",
+          "q2_days_previously_resident:unsure",
+          "q3_days_not_previously_resident:unsure",
+          "q4_automatic_uk_tests:unsure",
+          "q5_overseas_work_test:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

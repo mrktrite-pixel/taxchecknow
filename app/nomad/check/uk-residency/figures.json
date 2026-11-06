@@ -1,0 +1,149 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Automatic UK resident threshold (days in UK)",
+    "value": "183",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_1",
+    "label": "First automatic overseas test — days threshold (previously UK resident)",
+    "value": "16",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "Second automatic overseas test — days threshold (not previously UK resident)",
+    "value": "46",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_3",
+    "label": "Third automatic overseas test — days in UK threshold",
+    "value": "91",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_4",
+    "label": "Third automatic overseas test — days working more than 3 hours in UK",
+    "value": "31",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_5",
+    "label": "Significant break from overseas work — minimum days",
+    "value": "31",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_6",
+    "label": "Second automatic UK test — consecutive days with UK home",
+    "value": "91",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_7",
+    "label": "Second automatic UK test — days present in UK home / overseas home limit",
+    "value": "30",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_8",
+    "label": "Third automatic UK test — full-time work period",
+    "value": "365",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_9",
+    "label": "Third automatic UK test — proportion of working days in UK",
+    "value": "75%",
+    "unit": null,
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_10",
+    "label": "Sufficient ties test — 90 day tie",
+    "value": "90",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_11",
+    "label": "Table A — days band lower (previously UK resident)",
+    "value": "16",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_12",
+    "label": "Table A — days band upper first tier",
+    "value": "45",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_13",
+    "label": "Table A — days band second tier lower",
+    "value": "46",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_14",
+    "label": "Table A — days band second tier upper",
+    "value": "90",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_15",
+    "label": "Table A — days band third tier lower",
+    "value": "91",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_16",
+    "label": "Table A — days band third tier upper",
+    "value": "120",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_17",
+    "label": "Table B — days band first tier lower (not previously UK resident)",
+    "value": "46",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_18",
+    "label": "Table B — days band first tier upper",
+    "value": "90",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_19",
+    "label": "Table B — days band second tier lower",
+    "value": "91",
+    "unit": "days",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_20",
+    "label": "Table B — days band second tier upper",
+    "value": "120",
+    "unit": "days",
+    "fact_role": "threshold"
+  }
+]
