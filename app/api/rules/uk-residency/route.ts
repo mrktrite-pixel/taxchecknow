@@ -205,7 +205,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/uk-residency",
     "api_endpoint": "/api/rules/uk-residency",
-    "generated_at": "2026-11-06T11:30:29.033Z"
+    "generated_at": "2026-11-07T03:45:45.804Z"
 };
 
   return NextResponse.json(rules, {

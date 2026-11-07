@@ -617,7 +617,7 @@ export default function SuccessAssess() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
-            Always consult a qualified United Kingdom tax adviser before making financial decisions.
+            Always consult a qualified UK tax adviser before making financial decisions.
             Based on HM Revenue & Customs (HMRC) guidance November 2026.{" "}
             <a href="https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt" target="_blank" rel="noopener noreferrer" className="underline">HMRC — Statutory Residence Test (RDR3 guidance)</a> · <a href="https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt/guidance-note-for-statutory-residence-test-srt-rdr3" target="_blank" rel="noopener noreferrer" className="underline">HMRC — RDR3 guidance note, HTML (carries the day counts in prose)</a>
           </p>
