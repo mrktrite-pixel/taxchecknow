@@ -172,11 +172,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/withdrawing-and-using-your-super"
+        "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
     ],
     "canonical": "https://taxchecknow.com/au/check/super-to-trust-exit",
     "api_endpoint": "/api/rules/super-to-trust-exit",
-    "generated_at": "2026-11-07T13:15:27.818Z"
+    "generated_at": "2026-11-07T13:42:11.043Z"
 };
 
   return NextResponse.json(rules, {
