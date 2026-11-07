@@ -2,7 +2,11 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "small-business-cgt-concessions", name: "Small Business CGT Concessions Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/small-business-cgt-concessions", url: "https://taxchecknow.com/au/check/small-business-cgt-concessions", apiRoute: "/api/rules/small-business-cgt-concessions",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Small business CGT concessions (Div 152)", legislation: "Income Tax Assessment Act 1997 Division 152 — Small Business CGT Concessions", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Small business CGT concessions (Div 152)", legislation: "Income Tax Assessment Act 1997 Division 152 — Small Business CGT Concessions", lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Small Business CGT Eligibility Check", tagline: "Do you qualify for the $500k lifetime CGT exemption?", value: "A personalised small business CGT concessions eligibility check — active asset test, turnover test, and retirement exemption analysis.", cta: "Get My CGT Check — $67 →", productKey: "au_67_small_business_cgt_concessions", envVar: "STRIPE_AU_SBCGT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Small Business Exit Tax Strategy", tagline: "Structure your business exit to pay zero or minimal CGT", value: "Full exit tax strategy — retirement exemption, rollover, and multi-entity structuring to minimise CGT on your business sale.", cta: "Get My Exit Strategy — $147 →", productKey: "au_147_small_business_cgt_concessions", envVar: "STRIPE_AU_SBCGT_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2026-10-31T23:59:59.000+11:00", display: "31 October 2026", short: "31 Oct 2026", description: "Individual tax return due — business CGT events reported here", urgencyLabel: "RETURN DUE", countdownLabel: "Countdown to 31 October 2026 — tax return due" },
