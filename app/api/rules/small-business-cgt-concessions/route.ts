@@ -26,7 +26,16 @@ export async function GET() {
         "iso_date": "2026-10-31T23:59:59.000+11:00",
         "display": "31 October 2026",
         "description": "Individual tax return due — business CGT events reported here",
-        "urgency_label": "RETURN DUE"
+        "urgency_label": "RETURN DUE",
+        "recurrence": {
+            "kind": "annual",
+            "month": 10,
+            "day": 31,
+            "timezone": "Australia/Sydney",
+            "shift": "none",
+            "label": "Individual tax return due",
+            "basis": "cole/config/au-06-small-business-cgt-concessions.ts deadline block, verbatim: isoDate \"2026-10-31T23:59:59.000+11:00\", display \"31 October 2026\", description \"Individual tax return due — business CGT events reported here\", urgencyLabel \"RETURN DUE\"."
+        }
     },
     "key_facts": {
         "turnover_threshold": "Under $2M aggregate",
@@ -126,11 +135,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions"
+        "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/incentives-and-concessions/small-business-cgt-concessions"
     ],
     "canonical": "https://taxchecknow.com/au/check/small-business-cgt-concessions",
     "api_endpoint": "/api/rules/small-business-cgt-concessions",
-    "generated_at": "2026-04-21T11:26:59.058Z"
+    "generated_at": "2026-11-07T12:40:26.860Z"
 };
 
   return NextResponse.json(rules, {
