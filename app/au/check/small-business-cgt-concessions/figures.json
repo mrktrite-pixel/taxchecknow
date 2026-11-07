@@ -1,0 +1,16 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Small business 15-year exemption",
+    "value": "15",
+    "unit": "year",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_1",
+    "label": "Small business 50% active asset reduction",
+    "value": "50",
+    "unit": "%",
+    "fact_role": "rate"
+  }
+]
