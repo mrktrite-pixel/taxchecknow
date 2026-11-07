@@ -297,17 +297,16 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "kind": "deadline",
                 "rule": {
                       "source": "fixed",
-                      "recurrence": "one_off",
+                      "recurrence": "annual",
                       "month": 6,
                       "day": 30,
-                      "year": 2026,
                       "timezone": "Australia/Sydney",
                       "shift": "none"
                 },
                 "jurisdiction": "AU",
                 "domain": "super_to_trust_exit",
-                "label": "Last pre-Division 296 planning window",
-                "basis": "cole/config/au-14-super-to-trust-exit.ts deadline block, verbatim: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"30 June 2026 — last planning window before Division 296 commences 1 July 2026\", urgencyLabel \"DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW\"."
+                "label": "End of financial year — exit-to-trust planning window",
+                "basis": "cole/config/au-14-super-to-trust-exit.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"30 June 2026 — last planning window before Division 296 commences 1 July 2026\". The DATE is the config's; the RECURRENCE is the operator's ruling of 2026-11-07, because the config's own description reads as one-off while the underlying 30 June planning window recurs."
           }
     },
     "superannuation-tax-leaving-australia-confusion-2026": {

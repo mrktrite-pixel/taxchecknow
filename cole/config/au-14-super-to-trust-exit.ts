@@ -11,24 +11,25 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier2: { price: 147, name: "Your Full Exit Decision Model", tagline: "The full 20-year model plus the in-super alternatives most accountants skip over", value: "Full 20-year NPV model, staged withdrawal strategy, pension phase optimisation, trust distribution planning, alternative strategies ranked by tax saving, and accountant-ready implementation documents.", cta: "Get My Full Exit Model — $147 →", productKey: "au_147_super_to_trust_exit", envVar: "STRIPE_AU_STREXIT_147", successPath: "plan", fileCount: 8 },
   temporal: {
     kind:         "deadline",
-    // Taken from the config's own deadline block, which ties this date to a single event rather
-    // than a recurring one: 30 June 2026 is the last planning window before Division 296 commences
-    // 1 July 2026. A commencement happens once, so recurrence is one_off and the year is pinned to
-    // 2026 rather than rolling forward. NOTE FOR THE OPERATOR: as declared this date is already in
-    // the past, so it resolves as expired rather than counting down.
+    // RE-DECLARED 2026-11-07 as annual, replacing the one_off that was declared straight from the
+    // config's deadline block. One_off pinned year 2026 and therefore resolved EXPIRED, because 30
+    // June 2026 has passed. 30 June is the end of the Australian financial year and the planning
+    // window for an exit-to-trust decision closes on it EVERY year, not only in the year Division
+    // 296 commenced. Annual is the shape that keeps the window live: renderTemporalBlock omits
+    // year for annual precisely so the resolver rolls it forward, so this now resolves to 30 June
+    // 2027 and keeps rolling.
     rule:         {
       source:     "fixed",
-      recurrence: "one_off",
+      recurrence: "annual",
       month:      6,
       day:        30,
-      year:       2026,
       timezone:   "Australia/Sydney",
       shift:      "none",
     },
     jurisdiction: "AU",
     domain:       "super_to_trust_exit",
-    label:        "Last pre-Division 296 planning window",
-    basis:        "cole/config/au-14-super-to-trust-exit.ts deadline block, verbatim: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"30 June 2026 — last planning window before Division 296 commences 1 July 2026\", urgencyLabel \"DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW\".",
+    label:        "End of financial year — exit-to-trust planning window",
+    basis:        "cole/config/au-14-super-to-trust-exit.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"30 June 2026 — last planning window before Division 296 commences 1 July 2026\". The DATE is the config's; the RECURRENCE is the operator's ruling of 2026-11-07, because the config's own description reads as one-off while the underlying 30 June planning window recurs.",
   },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "30 June 2026 — last planning window before Division 296 commences 1 July 2026", urgencyLabel: "DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW", countdownLabel: "Countdown to 30 June 2026 — last pre-Div 296 planning window" },
   h1: "Super-to-Trust Exit: The Break-Even Year Most SMSF Members Never See",
