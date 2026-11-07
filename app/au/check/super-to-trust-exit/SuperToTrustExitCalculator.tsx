@@ -52,7 +52,7 @@ const ENGINE_CONFIG: EngineConfig = {
     saveHeading: "Save your Super-to-Trust Exit Engine result to show your adviser.",
     saveSubcopy: "Get a copy of your result by email — free.",
     escapeLabel: "A closer look at your Super-to-Trust Exit Engine position",
-    escapeBody: "⚠REVIEW escape body — the config has no escape copy; the presentation overlay's escape result_copy is the authored version and should be used here.",
+    escapeBody: "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
     escapeCtaLabel: "Get my personalised review — {price} →",
     reviewGuideTitle: "Super-to-Trust Exit Engine Review Guide",
   },

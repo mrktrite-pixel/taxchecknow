@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
@@ -269,6 +269,22 @@ const sources = [
   {
     "title": "ATO — Pension phase and Transfer Balance Cap",
     "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap"
+  },
+  {
+    "title": "ITAA 1997 s301-10 — Tax on super lump sum withdrawals",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s292-85 — Non-concessional contributions cap",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s295-385 — Exempt current pension income",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 Subdiv 296-B — Division 296 tax on super earnings",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   }
 ];
 
@@ -322,7 +338,7 @@ export default function SuperToTrustExitPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Super-to-Trust Exit Engine — Rules April 2026",
+    name: "Super-to-Trust Exit Engine — Rules November 2026",
     description: "Withdrawing super into a family trust to avoid Division 296 trades a 15% environment for 32-47%, and costs exit tax to do it. Check your break-even.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
@@ -394,7 +410,7 @@ export default function SuperToTrustExitPage() {
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -736,7 +752,7 @@ export default function SuperToTrustExitPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1121,10 +1137,30 @@ export default function SuperToTrustExitPage() {
               <p className="font-bold text-neutral-900">ATO — Key superannuation rates and thresholds (includes Division 296) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds</p>
             </a>
-            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Pension phase and Transfer Balance Cap ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s301-10 — Tax on super lump sum withdrawals ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s292-85 — Non-concessional contributions cap ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s295-385 — Exempt current pension income ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 Subdiv 296-B — Division 296 tax on super earnings ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
             </a>
           </div>
         </div>
@@ -1136,7 +1172,7 @@ export default function SuperToTrustExitPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1159,7 +1195,7 @@ export default function SuperToTrustExitPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
