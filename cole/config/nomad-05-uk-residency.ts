@@ -3,13 +3,25 @@ export const PRODUCT_CONFIG: ProductConfig = {
   id: "uk-residency", name: "UK Statutory Residence Test Auditor", site: "taxchecknow", country: "global", market: "United Kingdom", language: "en", currency: "GBP",
   slug: "nomad/check/uk-residency", url: "https://taxchecknow.com/nomad/check/uk-residency", apiRoute: "/api/rules/uk-residency",
   authority: "HM Revenue & Customs (HMRC)", authorityUrl: "https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis", legalAnchor: "Finance Act 2013, Schedule 45 — Statutory Residence Test (SRT)", legislation: "Finance Act 2013, Schedule 45 — Statutory Residence Test (SRT): three-layer sequential test applied annually (tax year 6 April – 5 April). Layer 1: Automatic Overseas Tests (AOT1-3) — non-residence if met. Layer 2: Automatic UK Tests (ART1-3) — residence if met. Layer 3: Sufficient Ties Test — days × ties matrix where neither automatic test resolves.",
-  lastVerified: "April 2026",
+  lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your UK Residency Decision Pack", tagline: "Are you UK tax resident — yes or no? Deterministic answer via the SRT.", value: "A deterministic SRT analysis identifying which test resolves your position, tie-by-tie assessment, filing obligations, and routing to UK tax engines.", cta: "Get My UK Residency Decision — £67 →", productKey: "nomad_67_uk_residency", envVar: "STRIPE_NOMAD_UKR_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your UK Residency Strategy System", tagline: "Full ties analysis + tie-reduction plan + split-year + treaty interaction + audit defence", value: "Full UK residency strategy including tie reduction plan, split-year treatment analysis, dual-residency treaty tie-breaker, UK-source income management, and audit-ready documentation.", cta: "Get My UK Residency Strategy — £147 →", productKey: "nomad_147_uk_residency", envVar: "STRIPE_NOMAD_UKR_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "none",
+    reason:       "srt_has_no_act_by_date_residence_determined_by_tax_year_facts",
+    jurisdiction: "GB",
+    domain:       "statutory_residence_test",
+    label:        "No act-by date",
+    basis:        "The Statutory Residence Test has no act-by date: residence for a tax year is determined by that year's facts (days and ties) and is not something a taxpayer acts by a deadline to secure. Declared under the operator's step-7 ruling, 2026-11-06, because this config carries no temporal block of its own. Re-read https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt/guidance-note-for-statutory-residence-test-srt-rdr3 on 2026-11-06 (gov.uk shows it last updated 11 June 2026), which states the test \"is split into the following parts: automatic overseas tests, automatic UK tests, sufficient ties test, application of the SRT to deceased persons, split years\"; that \"If you've been in the UK for 183 or more days you'll be a UK resident\"; and, for someone previously resident, that 16-45 days requires \"At least 4\" ties. None of those is a date to act by. The 31 January 2027 Self Assessment date in `deadline` is retained: it is a true filing deadline for someone who turns out to be UK resident, and it is NOT an SRT act-by date - the same shape as nomad-06-uk-nrls, which declares none and keeps this very countdown.",
+  },
   deadline: { isoDate: "2027-01-31T23:59:59.000+00:00", display: "31 January 2027", short: "31 Jan 2027", description: "UK Self Assessment deadline for 2025/26 tax year (online filing)", urgencyLabel: "UK FILING DEADLINE", countdownLabel: "Countdown to 31 January 2027 — UK Self Assessment deadline for 2025/26 tax year" },
-  h1: "Are You UK Tax Resident in 2025/26? The Answer Depends on Ties — Not Just Days. With 4 UK Ties and 45 Days, You Are UK Resident on Worldwide Income.",
-  metaTitle: "UK Statutory Residence Test Auditor — SRT Decision Engine | TaxCheckNow",
-  metaDescription: "UK Statutory Residence Test (Finance Act 2013 Sch 45) applies three layers in sequence: automatic overseas tests, automatic UK tests, sufficient ties test. With 4 UK ties, you are UK resident from 16 days. UK residence means worldwide income is UK-taxable.",
+  h1: "UK Statutory Residence Test: Your Ties Decide It, Not Just Your Days",
+  metaTitle: "UK Statutory Residence Test: Ties Decide It | TaxCheckNow",
+  metaDescription: "The UK Statutory Residence Test (Finance Act 2013 Sch 45) runs three layers in order. With 4 UK ties you are UK resident from just 16 days.",
   canonical: "https://taxchecknow.com/nomad/check/uk-residency",
   answerHeadline: "The answer — HMRC Statutory Residence Test, confirmed April 2026",
   answerBody: [
@@ -151,15 +163,15 @@ export const PRODUCT_CONFIG: ProductConfig = {
   ],
   calendarTitle: "UK Residency — Self Assessment dates",
   tier1Calendar: [
-    { uid: "ukr-oct",  summary: "UK Self Assessment — paper deadline 31 October",   description: "Paper return filing deadline for previous tax year.", date: "20261031" },
-    { uid: "ukr-jan",  summary: "UK Self Assessment — online deadline 31 January",    description: "Online filing + tax payment deadline for previous tax year (2025/26).", date: "20270131" },
-    { uid: "ukr-july", summary: "UK payment on account — 31 July",                      description: "Second payment on account (if applicable) for current tax year.",         date: "20260731" },
+    { uid: "ukr-oct",  summary: "UK Self Assessment — paper deadline 31 October",   description: "Paper return filing deadline for the previous tax year. Recurs every year.", date: "annual:10-31" },
+    { uid: "ukr-jan",  summary: "UK Self Assessment — online deadline 31 January",    description: "Online filing and tax payment deadline for the previous tax year. Recurs every year.", date: "annual:01-31" },
+    { uid: "ukr-july", summary: "UK payment on account — 31 July",                      description: "Second payment on account (if applicable) for the current tax year. Recurs every year.", date: "annual:07-31" },
   ],
   tier2Calendar: [
     { uid: "ukr-review", summary: "UK Residency — annual SRT review",                       description: "Apply SRT fresh each tax year — prior year result does not auto-carry.", date: "relative:+365days" },
-    { uid: "ukr-oct",     summary: "UK Self Assessment — paper deadline",                     description: "Paper return deadline.",                                                    date: "20261031" },
-    { uid: "ukr-jan",     summary: "UK Self Assessment — online deadline + tax payment",      description: "Online filing and tax payment deadline for 2025/26.",                         date: "20270131" },
-    { uid: "ukr-july",     summary: "UK payment on account — 31 July",                         description: "Second payment on account.",                                                  date: "20260731" },
+    { uid: "ukr-oct",     summary: "UK Self Assessment — paper deadline",                     description: "Paper return deadline. Recurs every year.",                                 date: "annual:10-31" },
+    { uid: "ukr-jan",     summary: "UK Self Assessment — online deadline + tax payment",      description: "Online filing and tax payment deadline. Recurs every year.",                  date: "annual:01-31" },
+    { uid: "ukr-july",     summary: "UK payment on account — 31 July",                         description: "Second payment on account. Recurs every year.",                               date: "annual:07-31" },
   ],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
   monitorUrls: ["https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt"],

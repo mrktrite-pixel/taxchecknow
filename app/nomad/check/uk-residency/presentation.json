@@ -1,0 +1,140 @@
+{
+  "_doc": "DRAFTED presentation overlay — machine first draft from the build's own terminals, NOT an operator ruling. tier: default 67, 147 only where the terminal's own grounded text shows money at stake, a live deadline, or an adverse determination. Escapes are forced to tier 67 by the translator. Rule the tiers, then re-run emit-engine with --accept-overlay. Remove _drafted once ruled.",
+  "_doctrine": "structural/critical → 147; explainer/guidance → 67. Every row's evidence is printed by the drafter.",
+  "_evidence": {
+    "automatic-overseas-previously-resident": [
+      "(none — explainer, default 67)"
+    ],
+    "automatic-overseas-not-previously-resident": [
+      "(none — explainer, default 67)"
+    ],
+    "automatic-overseas-full-time-work-abroad": [
+      "(none — explainer, default 67)"
+    ],
+    "automatic-uk-183-days": [
+      "(none — explainer, default 67)"
+    ],
+    "automatic-uk-only-home": [
+      "(none — explainer, default 67)"
+    ],
+    "automatic-uk-full-time-work": [
+      "money:75%"
+    ],
+    "sufficient-ties-previously-resident": [
+      "unresolved:depends on"
+    ],
+    "split-year-treatment-explainer": [
+      "unresolved:depends on"
+    ],
+    "temporary-non-residence-explainer": [
+      "unresolved:depends on"
+    ],
+    "significant-break-overseas-work": [
+      "(none — explainer, default 67)"
+    ],
+    "none_fit": [
+      "(escape — tier 67 forced)",
+      "⚠SPECIALISE:generic copy, make it about this product"
+    ],
+    "insufficient_information": [
+      "(escape — tier 67 forced)",
+      "⚠SPECIALISE:generic copy, make it about this product"
+    ]
+  },
+  "states": {
+    "automatic-overseas-previously-resident": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "automatic-overseas-not-previously-resident": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "automatic-overseas-full-time-work-abroad": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "automatic-uk-183-days": {
+      "tier": 147,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "automatic-uk-only-home": {
+      "tier": 147,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "automatic-uk-full-time-work": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "sufficient-ties-previously-resident": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "split-year-treatment-explainer": {
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "temporary-non-residence-explainer": {
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "significant-break-overseas-work": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "none_fit": {
+      "severity": "blue",
+      "criticality": "standard",
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "tier": 67
+    },
+    "insufficient_information": {
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "tier": 67
+    }
+  },
+  "_ruled": {
+    "by": "operator tier doctrine, applied 2026-11-06",
+    "rule": "explainer/happy-path 67; money/structural 147; the drafter's criticality and severity kept as drafted",
+    "per_state": {
+      "automatic-uk-183-days": "STRUCTURAL: an automatic UK-resident determination — worldwide income becomes taxable. Adverse outcome, not an explainer.",
+      "automatic-uk-only-home": "STRUCTURAL: the only-home test MET makes you UK resident automatically. Same adverse determination as the 183-day test.",
+      "automatic-uk-full-time-work": "STRUCTURAL + money:75% — UK resident by full-time work, and the drafter already had this at 147.",
+      "sufficient-ties-previously-resident": "STRUCTURAL: this is the product's own calculation — the day bands against the tie count, Table A and Table B. The engine turns on it.",
+      "automatic-overseas-previously-resident": "HAPPY PATH: an automatic overseas test met — you are non-resident. A clear, favourable determination.",
+      "automatic-overseas-not-previously-resident": "HAPPY PATH: same shape, the not-previously-resident limb.",
+      "automatic-overseas-full-time-work-abroad": "HAPPY PATH: full-time work abroad met — non-resident.",
+      "split-year-treatment-explainer": "EXPLAINER by name and by content — it explains the split-year cases, it does not determine one.",
+      "temporary-non-residence-explainer": "EXPLAINER by name — the temporary non-residence anti-avoidance rule, explained.",
+      "significant-break-overseas-work": "EXPLAINER: what a significant break is. Feeds the overseas-work test rather than deciding it.",
+      "none_fit": "ESCAPE — tier 67 forced.",
+      "insufficient_information": "ESCAPE — tier 67 forced."
+    }
+  }
+}

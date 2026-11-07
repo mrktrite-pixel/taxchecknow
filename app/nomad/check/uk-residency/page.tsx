@@ -10,30 +10,34 @@ import UkResidencyCalculator from "./UkResidencyCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "UK Statutory Residence Test Auditor — SRT Decision Engine | TaxCheckNow",
-  description: "UK Statutory Residence Test (Finance Act 2013 Sch 45) applies three layers in sequence: automatic overseas tests, automatic UK tests, sufficient ties test. With 4 UK ties, you are UK resident from 16 days. UK residence means worldwide income is UK-taxable.",
+  title: "UK Statutory Residence Test: Ties Decide It | TaxCheckNow",
+  description: "The UK Statutory Residence Test (Finance Act 2013 Sch 45) runs three layers in order. With 4 UK ties you are UK resident from just 16 days.",
   alternates: { canonical: "https://taxchecknow.com/nomad/check/uk-residency" },
   openGraph: {
-    title: "UK Statutory Residence Test Auditor — SRT Decision Engine | TaxCheckNow",
-    description: "UK Statutory Residence Test (Finance Act 2013 Sch 45) applies three layers in sequence: automatic overseas tests, automatic UK tests, sufficient ties test. With 4 UK ties, you are UK resident from 16 days. UK residence means worldwide income is UK-taxable.",
+    title: "UK Statutory Residence Test: Ties Decide It | TaxCheckNow",
+    description: "The UK Statutory Residence Test (Finance Act 2013 Sch 45) runs three layers in order. With 4 UK ties you are UK resident from just 16 days.",
     url: "https://taxchecknow.com/nomad/check/uk-residency",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "31 January 2027";
 const DEADLINE_ISO   = "2027-01-31T23:59:59.000+00:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -311,6 +315,10 @@ const sources = [
     "url": "https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt"
   },
   {
+    "title": "HMRC — RDR3 guidance note, HTML (carries the day counts in prose)",
+    "url": "https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt/guidance-note-for-statutory-residence-test-srt-rdr3"
+  },
+  {
     "title": "HMRC Internal Manual — Residence, Domicile and Remittance Basis",
     "url": "https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis"
   },
@@ -361,8 +369,13 @@ const countdownStats = [
 
 export default function UkResidencyPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "nomad/check/uk-residency", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -378,8 +391,8 @@ export default function UkResidencyPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "UK Statutory Residence Test Auditor — Rules April 2026",
-    description: "UK Statutory Residence Test (Finance Act 2013 Sch 45) applies three layers in sequence: automatic overseas tests, automatic UK tests, sufficient ties test. With 4 UK ties, you are UK resident from 16 days. UK residence means worldwide income is UK-taxable.",
+    name: "UK Statutory Residence Test Auditor — Rules November 2026",
+    description: "The UK Statutory Residence Test (Finance Act 2013 Sch 45) runs three layers in order. With 4 UK ties you are UK resident from just 16 days.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -395,7 +408,7 @@ export default function UkResidencyPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "UK Statutory Residence Test Auditor",
-    description: "UK Statutory Residence Test (Finance Act 2013 Sch 45) applies three layers in sequence: automatic overseas tests, automatic UK tests, sufficient ties test. With 4 UK ties, you are UK resident from 16 days. UK residence means worldwide income is UK-taxable.",
+    description: "The UK Statutory Residence Test (Finance Act 2013 Sch 45) runs three layers in order. With 4 UK ties you are UK resident from just 16 days.",
     url: "https://taxchecknow.com/nomad/check/uk-residency",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -454,13 +467,13 @@ export default function UkResidencyPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/nomad/check/uk-residency#calculator",
-    "description": "UK Statutory Residence Test (Finance Act 2013 Sch 45) applies three layers in sequence: automatic overseas tests, automatic UK tests, sufficient ties test. With 4 UK ties, you are UK resident from 16 days. UK residence means worldwide income is UK-taxable.",
+    "description": "The UK Statutory Residence Test (Finance Act 2013 Sch 45) runs three layers in order. With 4 UK ties you are UK resident from just 16 days.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on HM Revenue & Customs (HMRC) guidance April 2026"
+      "Based on HM Revenue & Customs (HMRC) guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -485,6 +498,18 @@ export default function UkResidencyPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "Are You UK Tax Resident in 2025/26?",
+    description: "The UK Statutory Residence Test (Finance Act 2013 Sch 45) runs three layers in order. With 4 UK ties you are UK resident from just 16 days.",
+    thumbnailUrl: "https://i.ytimg.com/vi/mI_6lI6zeps/hqdefault.jpg",
+    uploadDate: "2026-06-26T11:00:18.897+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=mI_6lI6zeps",
+    embedUrl: "https://www.youtube.com/embed/mI_6lI6zeps",
+    transcript: "Are You UK Tax Resident in 2025/26? You might think: fewer than 183 days in the UK means you're not resident. Wrong. That's one of the most common mistakes HMRC sees. The 183-day rule only confirms residence if you hit it — it does NOT confirm non-residence if you don't. If you were previously UK resident, just 16 days plus four UK ties makes you resident again. Resident means worldwide income is UK-taxable. Non-resident means UK-source income only. Get this wrong and you owe tax on everything. The deadline is 31 January 2027. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -494,6 +519,7 @@ export default function UkResidencyPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -539,7 +565,7 @@ export default function UkResidencyPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Are You UK Tax Resident in 2025/26? The Answer Depends on Ties — Not Just Days. With 4 UK Ties and 45 Days, You Are UK Resident on Worldwide Income.
+          UK Statutory Residence Test: Your Ties Decide It, Not Just Your Days
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -789,7 +815,7 @@ export default function UkResidencyPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1184,6 +1210,11 @@ export default function UkResidencyPage() {
               <p className="font-bold text-neutral-900">HMRC — Statutory Residence Test (RDR3 guidance) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/rdr3-statutory-residence-test-srt</p>
             </a>
+            <a href="https://www.gov.uk/government/publications/rdr3-statutory-residence-test-srt/guidance-note-for-statutory-residence-test-srt-rdr3" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">HMRC — RDR3 guidance note, HTML (carries the day counts in prose) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.gov.uk/government/publications/rdr3-statutory-residence-test-srt/guidance-note-for-statutory-residence-test-srt-rdr3</p>
+            </a>
             <a href="https://www.gov.uk/hmrc-internal-manuals/residence-domicile-and-remittance-basis" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">HMRC Internal Manual — Residence, Domicile and Remittance Basis ↗</p>
@@ -1219,11 +1250,20 @@ export default function UkResidencyPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from HM Revenue & Customs (HMRC) and GOV.UK guidance for April 2026.
+          built from HM Revenue & Customs (HMRC) and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=mI_6lI6zeps" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"Are You UK Tax Resident in 2025/26? You might think: fewer than 183 days in the UK means you're not resident. Wrong. That's one of the most common mistakes HMRC sees. The 183-day rule only confirms residence if you hit it — it does NOT confirm non-residence if you don't. If you were previously UK resident, just 16 days plus four UK ties makes you resident again. Resident means worldwide income is UK-taxable. Non-resident means UK-source income only. Get this wrong and you owe tax on everything. The deadline is 31 January 2027. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -1233,7 +1273,7 @@ export default function UkResidencyPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">United Kingdom tax position checks. April 2026.</p>
+            <p className="mt-1">United Kingdom tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/global/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
