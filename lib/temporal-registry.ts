@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 20
+// Declared products: 21
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -291,6 +291,24 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                       "anchor": "lead"
                 }
           ]
+    },
+    "super-to-trust-exit": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "one_off",
+                      "month": 6,
+                      "day": 30,
+                      "year": 2026,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "super_to_trust_exit",
+                "label": "Last pre-Division 296 planning window",
+                "basis": "cole/config/au-14-super-to-trust-exit.ts deadline block, verbatim: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"30 June 2026 — last planning window before Division 296 commences 1 July 2026\", urgencyLabel \"DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW\"."
+          }
     },
     "superannuation-tax-leaving-australia-confusion-2026": {
           "temporal": {

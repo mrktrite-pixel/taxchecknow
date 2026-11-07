@@ -9,10 +9,31 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Your Exit Break-Even Pack", tagline: "See the actual year where exit tax and lost earnings are recovered — before you act", value: "Your exact break-even horizon at 3 earnings scenarios, exit tax quantum, 20-year trust vs super comparison, and 4 accountant questions — built for your balance, age, and beneficiary profile.", cta: "Show My Break-Even Number — $67 →", productKey: "au_67_super_to_trust_exit", envVar: "STRIPE_AU_STREXIT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Full Exit Decision Model", tagline: "The full 20-year model plus the in-super alternatives most accountants skip over", value: "Full 20-year NPV model, staged withdrawal strategy, pension phase optimisation, trust distribution planning, alternative strategies ranked by tax saving, and accountant-ready implementation documents.", cta: "Get My Full Exit Model — $147 →", productKey: "au_147_super_to_trust_exit", envVar: "STRIPE_AU_STREXIT_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // Taken from the config's own deadline block, which ties this date to a single event rather
+    // than a recurring one: 30 June 2026 is the last planning window before Division 296 commences
+    // 1 July 2026. A commencement happens once, so recurrence is one_off and the year is pinned to
+    // 2026 rather than rolling forward. NOTE FOR THE OPERATOR: as declared this date is already in
+    // the past, so it resolves as expired rather than counting down.
+    rule:         {
+      source:     "fixed",
+      recurrence: "one_off",
+      month:      6,
+      day:        30,
+      year:       2026,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "super_to_trust_exit",
+    label:        "Last pre-Division 296 planning window",
+    basis:        "cole/config/au-14-super-to-trust-exit.ts deadline block, verbatim: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"30 June 2026 — last planning window before Division 296 commences 1 July 2026\", urgencyLabel \"DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW\".",
+  },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "30 June 2026 — last planning window before Division 296 commences 1 July 2026", urgencyLabel: "DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW", countdownLabel: "Countdown to 30 June 2026 — last pre-Div 296 planning window" },
-  h1: "Exiting Your SMSF Into a Family Trust Before Division 296 Sounds Smart — Until You See the Break-Even Year",
-  metaTitle: "Super-to-Trust Exit Engine — Break-Even Model Before Division 296 | TaxCheckNow",
-  metaDescription: "Thinking of withdrawing super into a family trust to avoid Division 296? Most members are trading a 15% super environment for a 32-47% trust environment and paying exit tax to do it. Run your break-even check in 2 minutes — ATO-referenced, confirmed April 2026.",
+  h1: "Super-to-Trust Exit: The Break-Even Year Most SMSF Members Never See",
+  metaTitle: "Super-to-Trust Exit: The Break-Even Year | TaxCheckNow",
+  metaDescription: "Withdrawing super into a family trust to avoid Division 296 trades a 15% environment for 32-47%, and costs exit tax to do it. Check your break-even.",
   canonical: "https://taxchecknow.com/au/check/super-to-trust-exit",
   answerHeadline: "The exit-to-trust decision — a 15-25 year break-even that most SMSF members never actually see",
   answerBody: [

@@ -10,17 +10,18 @@ import SuperToTrustExitCalculator from "./SuperToTrustExitCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Super-to-Trust Exit Engine — Break-Even Model Before Division 296 | TaxCheckNow",
-  description: "Thinking of withdrawing super into a family trust to avoid Division 296? Most members are trading a 15% super environment for a 32-47% trust environment and paying exit tax to do it. Run your break-even check in 2 minutes — ATO-referenced, confirmed April 2026.",
+  title: "Super-to-Trust Exit: The Break-Even Year | TaxCheckNow",
+  description: "Withdrawing super into a family trust to avoid Division 296 trades a 15% environment for 32-47%, and costs exit tax to do it. Check your break-even.",
   alternates: { canonical: "https://taxchecknow.com/au/check/super-to-trust-exit" },
   openGraph: {
-    title: "Super-to-Trust Exit Engine — Break-Even Model Before Division 296 | TaxCheckNow",
-    description: "Thinking of withdrawing super into a family trust to avoid Division 296? Most members are trading a 15% super environment for a 32-47% trust environment and paying exit tax to do it. Run your break-even check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    title: "Super-to-Trust Exit: The Break-Even Year | TaxCheckNow",
+    description: "Withdrawing super into a family trust to avoid Division 296 trades a 15% environment for 32-47%, and costs exit tax to do it. Check your break-even.",
     url: "https://taxchecknow.com/au/check/super-to-trust-exit",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
+
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
@@ -28,12 +29,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -296,8 +300,13 @@ const countdownStats = [
 
 export default function SuperToTrustExitPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/super-to-trust-exit", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -314,7 +323,7 @@ export default function SuperToTrustExitPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Super-to-Trust Exit Engine — Rules April 2026",
-    description: "Thinking of withdrawing super into a family trust to avoid Division 296? Most members are trading a 15% super environment for a 32-47% trust environment and paying exit tax to do it. Run your break-even check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    description: "Withdrawing super into a family trust to avoid Division 296 trades a 15% environment for 32-47%, and costs exit tax to do it. Check your break-even.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -330,7 +339,7 @@ export default function SuperToTrustExitPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Super-to-Trust Exit Engine",
-    description: "Thinking of withdrawing super into a family trust to avoid Division 296? Most members are trading a 15% super environment for a 32-47% trust environment and paying exit tax to do it. Run your break-even check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    description: "Withdrawing super into a family trust to avoid Division 296 trades a 15% environment for 32-47%, and costs exit tax to do it. Check your break-even.",
     url: "https://taxchecknow.com/au/check/super-to-trust-exit",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -379,7 +388,7 @@ export default function SuperToTrustExitPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/super-to-trust-exit#calculator",
-    "description": "Thinking of withdrawing super into a family trust to avoid Division 296? Most members are trading a 15% super environment for a 32-47% trust environment and paying exit tax to do it. Run your break-even check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    "description": "Withdrawing super into a family trust to avoid Division 296 trades a 15% environment for 32-47%, and costs exit tax to do it. Check your break-even.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -410,6 +419,18 @@ export default function SuperToTrustExitPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "When is it tax-free to withdraw from super? The trap",
+    description: "Withdrawing super into a family trust to avoid Division 296 trades a 15% environment for 32-47%, and costs exit tax to do it. Check your break-even.",
+    thumbnailUrl: "https://i.ytimg.com/vi/b1ATqZ9PLAg/hqdefault.jpg",
+    uploadDate: "2026-10-09T06:01:38.985+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=b1ATqZ9PLAg",
+    embedUrl: "https://www.youtube.com/embed/b1ATqZ9PLAg",
+    transcript: "\"When is it tax-free to withdraw from super?\" Sound like you? You've heard that once you're retired and over 60, withdrawal is tax-free. That part is true — the ATO confirms 0% tax on the taxable component. But free to withdraw does not mean free to exit. The actual truth is: the moment you move that money to a family trust, you swap a 0% or 15% super earnings environment for trust rates of 19 to 47 percent on every dollar, every year. Undistributed trust income hits 47% — the top marginal rate. For most scenarios, break-even is 15 to 25 years, or never. And Division 296 starts 1 July 2026 — this decision window closes soon. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -419,6 +440,7 @@ export default function SuperToTrustExitPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -464,7 +486,7 @@ export default function SuperToTrustExitPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Exiting Your SMSF Into a Family Trust Before Division 296 Sounds Smart — Until You See the Break-Even Year
+          Super-to-Trust Exit: The Break-Even Year Most SMSF Members Never See
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -1119,6 +1141,15 @@ export default function SuperToTrustExitPage() {
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=b1ATqZ9PLAg" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"\"When is it tax-free to withdraw from super?\" Sound like you? You've heard that once you're retired and over 60, withdrawal is tax-free. That part is true — the ATO confirms 0% tax on the taxable component. But free to withdraw does not mean free to exit. The actual truth is: the moment you move that money to a family trust, you swap a 0% or 15% super earnings environment for trust rates of 19 to 47 percent on every dollar, every year. Undistributed trust income hits 47% — the top marginal rate. For most scenarios, break-even is 15 to 25 years, or never. And Division 296 starts 1 July 2026 — this decision window closes soon. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
