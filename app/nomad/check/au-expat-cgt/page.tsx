@@ -303,6 +303,10 @@ const sources = [
     "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/your-tax-residency"
   },
   {
+    "title": "ATO — CGT events",
+    "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-events"
+  },
+  {
     "title": "ITAA 1997 s118-110 — Main residence exemption",
     "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   },
@@ -1191,6 +1195,11 @@ export default function AuExpatCgtPage() {
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Work out your tax residency ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/your-tax-residency</p>
+            </a>
+            <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-events" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — CGT events ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-events</p>
             </a>
             <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">

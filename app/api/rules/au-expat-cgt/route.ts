@@ -165,6 +165,10 @@ export async function GET() {
             "url": "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/your-tax-residency"
         },
         {
+            "title": "ATO — CGT events",
+            "url": "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-events"
+        },
+        {
             "title": "ITAA 1997 s118-110 — Main residence exemption",
             "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         },
@@ -202,7 +206,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/au-expat-cgt",
     "api_endpoint": "/api/rules/au-expat-cgt",
-    "generated_at": "2026-11-06T02:18:01.068Z"
+    "generated_at": "2026-11-07T04:49:12.440Z"
 };
 
   return NextResponse.json(rules, {
