@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "31 October 2026";
 const DEADLINE_ISO   = "2026-10-31T23:59:59.000+11:00";
 
@@ -232,6 +232,10 @@ const sources = [
   {
     "title": "ATO — Small business CGT concessions",
     "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions"
+  },
+  {
+    "title": "ITAA 1997 Division 152 — Small business CGT concessions",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   }
 ];
 
@@ -284,7 +288,7 @@ export default function SmallBusinessCgtConcessionsPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Small Business CGT Concessions Engine — Rules April 2026",
+    name: "Small Business CGT Concessions Engine — Rules November 2026",
     description: "Selling a small business can trigger large CGT. Four ATO concessions, including the $500k lifetime retirement exemption, may reduce or remove it.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
@@ -356,7 +360,7 @@ export default function SmallBusinessCgtConcessionsPage() {
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -698,7 +702,7 @@ export default function SmallBusinessCgtConcessionsPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1037,10 +1041,15 @@ export default function SmallBusinessCgtConcessionsPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Small business CGT concessions ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 Division 152 — Small business CGT concessions ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
             </a>
           </div>
         </div>
@@ -1052,7 +1061,7 @@ export default function SmallBusinessCgtConcessionsPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1075,7 +1084,7 @@ export default function SmallBusinessCgtConcessionsPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

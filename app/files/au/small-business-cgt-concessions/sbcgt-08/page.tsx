@@ -108,7 +108,7 @@ export default function SmallBusinessCgtConcessionsFile08() {
               🇦🇺 ATO · ITAA 1997 — Small business CGT concessions (Div 152)
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 08 of 8
@@ -228,7 +228,7 @@ export default function SmallBusinessCgtConcessionsFile08() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance November 2026.
           </p>
         </div>
 
@@ -248,6 +248,7 @@ export default function SmallBusinessCgtConcessionsFile08() {
               ← Back to Small Business CGT Concessions Engine
             </a>
             <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — Small business CGT concessions ↗</a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ITAA 1997 Division 152 — Small business CGT concessions ↗</a>
           </div>
         </div>
       </footer>

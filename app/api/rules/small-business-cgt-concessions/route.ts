@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1997 Division 152 — Small Business CGT Concessions",
     "legal_anchor": "ITAA 1997 — Small business CGT concessions (Div 152)",
     "deadline": {
@@ -116,6 +116,10 @@ export async function GET() {
         {
             "title": "ATO — Small business CGT concessions",
             "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions"
+        },
+        {
+            "title": "ITAA 1997 Division 152 — Small business CGT concessions",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         }
     ],
     "products": {
@@ -139,7 +143,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/small-business-cgt-concessions",
     "api_endpoint": "/api/rules/small-business-cgt-concessions",
-    "generated_at": "2026-11-07T12:40:26.860Z"
+    "generated_at": "2026-11-07T13:16:19.987Z"
 };
 
   return NextResponse.json(rules, {
@@ -149,7 +153,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "small-business-cgt-concessions",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

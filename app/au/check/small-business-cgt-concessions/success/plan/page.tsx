@@ -649,8 +649,8 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australian tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
-            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" target="_blank" rel="noopener noreferrer" className="underline">ATO — Small business CGT concessions</a>
+            Based on ATO guidance November 2026.{" "}
+            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" target="_blank" rel="noopener noreferrer" className="underline">ATO — Small business CGT concessions</a> · <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer" className="underline">ITAA 1997 Division 152 — Small business CGT concessions</a>
           </p>
         </div>
 
