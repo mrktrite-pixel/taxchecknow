@@ -10,6 +10,25 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Your Expat CGT Risk Report", tagline: "Are you about to lose the main residence exemption on your Australian home by selling as a non-resident?", value: "Your personalised CGT exposure, residency-at-contract-date risk, estimated tax liability, withholding obligation, and life event eligibility.", cta: "Get My Expat CGT Risk Report — $67 →", productKey: "nomad_67_au_expat_cgt", envVar: "STRIPE_NOMAD_AUCGT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Expat CGT Strategy System", tagline: "Full sale-timing + residency alignment + CGT minimisation + ATO clearance certificate pathway", value: "Complete expat CGT strategy: contract timing, residency alignment options, CGT minimisation analysis, ATO clearance process, and audit-ready documentation.", cta: "Get My Expat CGT Strategy — $147 →", productKey: "nomad_147_au_expat_cgt", envVar: "STRIPE_NOMAD_AUCGT_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "effective_from",
+    // A single past commencement, not a recurring date: disposals after 30 June 2020 must satisfy
+    // the life events test to claim the main residence exemption, disposals by that date need not.
+    // Nothing rolls forward, so recurrence is one_off and there is no countdown to run.
+    rule:         {
+      source:     "fixed",
+      recurrence: "one_off",
+      month:      6,
+      day:        30,
+      year:       2020,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "cgt-main-residence-exemption",
+    label:        "Foreign resident main residence exemption cut-off",
+    basis:        "ATO, Main residence exemption for foreign residents: \"Foreign residents can't claim the main residence exemption for property sold after 30 June 2020, unless they satisfy the requirements of the life events test.\" https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents",
+  },
   deadline: { isoDate: "2026-10-31T23:59:59.000+10:00", display: "31 October 2026", short: "31 Oct 2026", description: "Australian tax return deadline (self-lodgers) for 2025/26 year — CGT events in the year must be declared", urgencyLabel: "ATO LODGMENT DEADLINE", countdownLabel: "Countdown to 31 October 2026 — ATO self-lodgment deadline" },
   h1: "Expat CGT: Your Residency at Contract Date Decides the Exemption",
   metaTitle: "Expat CGT: Contract Date Decides Your Exemption | TaxCheckNow",
