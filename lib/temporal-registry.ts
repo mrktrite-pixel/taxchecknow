@@ -272,6 +272,23 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 }
           ]
     },
+    "small-business-cgt-concessions": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 10,
+                      "day": 31,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "small_business_cgt_concessions",
+                "label": "Individual tax return due",
+                "basis": "cole/config/au-06-small-business-cgt-concessions.ts deadline block, verbatim: isoDate \"2026-10-31T23:59:59.000+11:00\", display \"31 October 2026\", description \"Individual tax return due — business CGT events reported here\", urgencyLabel \"RETURN DUE\"."
+          }
+    },
     "spain-beckham": {
           "temporal": {
                 "kind": "unresolvable",

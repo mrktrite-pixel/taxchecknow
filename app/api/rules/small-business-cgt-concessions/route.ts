@@ -19,14 +19,23 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1997 Division 152 — Small Business CGT Concessions",
     "legal_anchor": "ITAA 1997 — Small business CGT concessions (Div 152)",
     "deadline": {
         "iso_date": "2026-10-31T23:59:59.000+11:00",
         "display": "31 October 2026",
         "description": "Individual tax return due — business CGT events reported here",
-        "urgency_label": "RETURN DUE"
+        "urgency_label": "RETURN DUE",
+        "recurrence": {
+            "kind": "annual",
+            "month": 10,
+            "day": 31,
+            "timezone": "Australia/Sydney",
+            "shift": "none",
+            "label": "Individual tax return due",
+            "basis": "cole/config/au-06-small-business-cgt-concessions.ts deadline block, verbatim: isoDate \"2026-10-31T23:59:59.000+11:00\", display \"31 October 2026\", description \"Individual tax return due — business CGT events reported here\", urgencyLabel \"RETURN DUE\"."
+        }
     },
     "key_facts": {
         "turnover_threshold": "Under $2M aggregate",
@@ -107,6 +116,10 @@ export async function GET() {
         {
             "title": "ATO — Small business CGT concessions",
             "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions"
+        },
+        {
+            "title": "ITAA 1997 Division 152 — Small business CGT concessions",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         }
     ],
     "products": {
@@ -126,11 +139,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions"
+        "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/incentives-and-concessions/small-business-cgt-concessions"
     ],
     "canonical": "https://taxchecknow.com/au/check/small-business-cgt-concessions",
     "api_endpoint": "/api/rules/small-business-cgt-concessions",
-    "generated_at": "2026-04-21T11:26:59.058Z"
+    "generated_at": "2026-11-07T13:16:19.987Z"
 };
 
   return NextResponse.json(rules, {
@@ -140,7 +153,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "small-business-cgt-concessions",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

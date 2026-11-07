@@ -1,0 +1,323 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Small business CGT concessions available under the Income Tax Assessment Act 1997 (QC72742): the 15-year exemption, the 50% active asset reduction, the retirement exemption, and the roll-over. Covers eligibility conditions, the fixed order of application, and how each concession works.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-main-topic",
+      "text": "What is the main thing you want to understand about the small business CGT concessions?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Whether I am eligible for the small business CGT concessions at all",
+          "value": "eligibility",
+          "flags": [
+            "q1-main-topic:eligibility"
+          ]
+        },
+        {
+          "label": "In what order I must apply the four concessions to the same capital gain",
+          "value": "order",
+          "flags": [
+            "q1-main-topic:order"
+          ]
+        },
+        {
+          "label": "A specific concession I want to use or understand in more detail",
+          "value": "specific-concession",
+          "flags": [
+            "q1-main-topic:specific-concession"
+          ]
+        },
+        {
+          "label": "Whether a particular asset in my sale qualifies — some assets may not",
+          "value": "asset-type",
+          "flags": [
+            "q1-main-topic:asset-type"
+          ]
+        },
+        {
+          "label": "I pass some tests but not others, or only some of my assets qualify",
+          "value": "partial",
+          "flags": [
+            "q1-main-topic:partial"
+          ]
+        },
+        {
+          "label": "None of these describe my situation",
+          "value": "none",
+          "flags": [
+            "q1-main-topic:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-which-concession",
+      "text": "Which specific small business CGT concession do you want to understand?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-main-topic:specific-concession"
+        ]
+      },
+      "options": [
+        {
+          "label": "The 15-year exemption — I have owned the asset for 15 years and want to know if I can disregard the gain entirely",
+          "value": "15-year",
+          "flags": [
+            "q2-which-concession:15-year"
+          ]
+        },
+        {
+          "label": "The 50% active asset reduction — reducing the capital gain by 50%",
+          "value": "50pct",
+          "flags": [
+            "q2-which-concession:50pct"
+          ]
+        },
+        {
+          "label": "The retirement exemption — reducing or disregarding CGT and how it interacts with super",
+          "value": "retirement",
+          "flags": [
+            "q2-which-concession:retirement"
+          ]
+        },
+        {
+          "label": "The small business roll-over — deferring all or part of a capital gain from selling an active asset",
+          "value": "rollover",
+          "flags": [
+            "q2-which-concession:rollover"
+          ]
+        },
+        {
+          "label": "I'm not sure which concession applies to me",
+          "value": "unsure",
+          "flags": [
+            "q2-which-concession:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-asset-type",
+      "text": "What type of asset are you asking about in your business sale?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-main-topic:asset-type"
+        ]
+      },
+      "options": [
+        {
+          "label": "A depreciating asset (e.g. plant, equipment, or other assets subject to depreciation)",
+          "value": "depreciating",
+          "flags": [
+            "q3-asset-type:depreciating"
+          ]
+        },
+        {
+          "label": "A mix of depreciating and non-depreciating assets in the same sale",
+          "value": "mixed",
+          "flags": [
+            "q3-asset-type:mixed"
+          ]
+        },
+        {
+          "label": "A non-depreciating active asset (e.g. goodwill, land, shares in a company)",
+          "value": "active",
+          "flags": [
+            "q3-asset-type:active"
+          ]
+        },
+        {
+          "label": "I'm not sure what type of asset I have",
+          "value": "unsure",
+          "flags": [
+            "q3-asset-type:unsure"
+          ]
+        },
+        {
+          "label": "My asset type is not listed here",
+          "value": "other",
+          "flags": [
+            "q3-asset-type:other"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "sb-cgt-eligibility-conditions",
+      "when": {
+        "any": [
+          "q1-main-topic:eligibility",
+          "q3-asset-type:active"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Am I eligible for the small business CGT concessions?",
+      "result_copy": "Before any of the four small business CGT concessions can apply, eligibility conditions must be satisfied. This guidance explains the conditions — including the active asset test, turnover test, net asset value test, and the affiliate and connected entity aggregation rules — and how to determine whether your situation may meet them. No definite outcome is asserted; review recommended with a tax adviser for your specific circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "sb-cgt-15-year-exemption",
+      "when": {
+        "any": [
+          "q2-which-concession:15-year"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I have owned my business asset for 15 years — can I disregard the capital gain entirely?",
+      "result_copy": "The small business 15-year exemption may allow you to disregard CGT on a business asset if you have continuously owned an active asset for 15 years and meet the other eligibility conditions. Whether your situation qualifies depends on the specific facts; this guidance explains the conditions to assess. Review recommended with a tax adviser before relying on this concession.",
+      "figure_ids": [
+        "fig_0"
+      ]
+    },
+    {
+      "id": "sb-cgt-rollover",
+      "when": {
+        "any": [
+          "q2-which-concession:rollover"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Can I defer my capital gain by using the small business roll-over?",
+      "result_copy": "The small business roll-over allows you to defer all or part of a capital gain made from selling an active asset. This guidance explains the conditions that must be met and how to determine whether this concession may apply to your situation. No definite outcome is asserted; the applicability of the roll-over depends on the specific facts of your sale.",
+      "figure_ids": []
+    },
+    {
+      "id": "sb-cgt-mixed-asset-partial-eligibility",
+      "when": {
+        "any": [
+          "q1-main-topic:partial",
+          "q3-asset-type:mixed"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I pass some eligibility tests but not others for some assets — what happens to my sale?",
+      "result_copy": "Where a sale involves multiple assets and not all of them pass the relevant eligibility tests — for example, passing the turnover test but failing the active asset test for some assets, or including depreciating assets alongside qualifying active assets — the concessions may apply to some assets but not others. This guidance explains how to determine which assets may qualify and what the conditional consequences are for a mixed-asset sale. No definite outcome is asserted; review recommended with a tax adviser.",
+      "figure_ids": []
+    },
+    {
+      "id": "sb-cgt-order-of-application",
+      "when": {
+        "any": [
+          "q1-main-topic:order"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "In what order must the four small business CGT concessions be applied?",
+      "result_copy": "The four small business CGT concessions — the 15-year exemption, the 50% active asset reduction, the retirement exemption, and the roll-over — must be applied in a fixed order when more than one applies to the same capital gain. This explainer describes what that order is and why the sequence matters at each step. The rule governing order is set by the legislation; how it applies to your specific gain depends on which concessions you qualify for.",
+      "figure_ids": [
+        "fig_1"
+      ]
+    },
+    {
+      "id": "sb-cgt-50pct-active-asset-reduction",
+      "when": {
+        "any": [
+          "q2-which-concession:50pct"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How does the 50% active asset reduction work and can I use it alongside the CGT discount?",
+      "result_copy": "The small business 50% active asset reduction reduces the capital gain on an active asset by 50% (in addition to the CGT discount if conditions are met). This explainer explains how that reduction works and how it interacts with the other concessions when applied in the required order. Whether the reduction applies to your gain depends on whether the eligibility conditions are met.",
+      "figure_ids": [
+        "fig_1"
+      ]
+    },
+    {
+      "id": "sb-cgt-retirement-exemption",
+      "when": {
+        "any": [
+          "q2-which-concession:retirement"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How does the small business retirement exemption reduce my CGT, and how does it interact with super?",
+      "result_copy": "The small business retirement exemption allows you to reduce or disregard CGT on active assets. This explainer explains how the exemption works, the lifetime cap that applies, and how the exemption interacts with superannuation contribution caps. Whether and how it applies to your situation depends on your specific circumstances; review recommended with a tax adviser.",
+      "figure_ids": []
+    },
+    {
+      "id": "sb-cgt-depreciating-assets-excluded",
+      "when": {
+        "any": [
+          "q3-asset-type:depreciating"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Are depreciating assets in my business sale covered by the CGT concessions?",
+      "result_copy": "Depreciating assets are excluded from the small business CGT concessions and are instead taxed as income. This explainer explains the distinction between depreciating and non-depreciating assets in a business sale, and why sellers of mixed-asset businesses need to identify which assets in their sale may not qualify for the CGT concessions.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-main-topic:none",
+          "q3-asset-type:other"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2-which-concession:unsure",
+          "q3-asset-type:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}
