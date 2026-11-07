@@ -10,30 +10,34 @@ import SmallBusinessCgtConcessionsCalculator from "./SmallBusinessCgtConcessions
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Small Business CGT Concessions Australia 2026 — Do You Qualify? | TaxCheckNow",
-  description: "Selling a small business can trigger large CGT. But eligible owners can reduce or eliminate the gain using four ATO concessions including the $500k lifetime retirement exemption and 15-year exemption. Check your eligibility in 2 minutes.",
+  title: "Small Business CGT Concessions: Do You Qualify? | TaxCheckNow",
+  description: "Selling a small business can trigger large CGT. Four ATO concessions, including the $500k lifetime retirement exemption, may reduce or remove it.",
   alternates: { canonical: "https://taxchecknow.com/au/check/small-business-cgt-concessions" },
   openGraph: {
-    title: "Small Business CGT Concessions Australia 2026 — Do You Qualify? | TaxCheckNow",
-    description: "Selling a small business can trigger large CGT. But eligible owners can reduce or eliminate the gain using four ATO concessions including the $500k lifetime retirement exemption and 15-year exemption. Check your eligibility in 2 minutes.",
+    title: "Small Business CGT Concessions: Do You Qualify? | TaxCheckNow",
+    description: "Selling a small business can trigger large CGT. Four ATO concessions, including the $500k lifetime retirement exemption, may reduce or remove it.",
     url: "https://taxchecknow.com/au/check/small-business-cgt-concessions",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "31 October 2026";
 const DEADLINE_ISO   = "2026-10-31T23:59:59.000+11:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -228,6 +232,10 @@ const sources = [
   {
     "title": "ATO — Small business CGT concessions",
     "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions"
+  },
+  {
+    "title": "ITAA 1997 Division 152 — Small business CGT concessions",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   }
 ];
 
@@ -258,8 +266,13 @@ const countdownStats = [
 
 export default function SmallBusinessCgtConcessionsPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/small-business-cgt-concessions", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -275,8 +288,8 @@ export default function SmallBusinessCgtConcessionsPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Small Business CGT Concessions Engine — Rules April 2026",
-    description: "Selling a small business can trigger large CGT. But eligible owners can reduce or eliminate the gain using four ATO concessions including the $500k lifetime retirement exemption and 15-year exemption. Check your eligibility in 2 minutes.",
+    name: "Small Business CGT Concessions Engine — Rules November 2026",
+    description: "Selling a small business can trigger large CGT. Four ATO concessions, including the $500k lifetime retirement exemption, may reduce or remove it.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -292,7 +305,7 @@ export default function SmallBusinessCgtConcessionsPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Small Business CGT Concessions Engine",
-    description: "Selling a small business can trigger large CGT. But eligible owners can reduce or eliminate the gain using four ATO concessions including the $500k lifetime retirement exemption and 15-year exemption. Check your eligibility in 2 minutes.",
+    description: "Selling a small business can trigger large CGT. Four ATO concessions, including the $500k lifetime retirement exemption, may reduce or remove it.",
     url: "https://taxchecknow.com/au/check/small-business-cgt-concessions",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -341,13 +354,13 @@ export default function SmallBusinessCgtConcessionsPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/small-business-cgt-concessions#calculator",
-    "description": "Selling a small business can trigger large CGT. But eligible owners can reduce or eliminate the gain using four ATO concessions including the $500k lifetime retirement exemption and 15-year exemption. Check your eligibility in 2 minutes.",
+    "description": "Selling a small business can trigger large CGT. Four ATO concessions, including the $500k lifetime retirement exemption, may reduce or remove it.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -372,6 +385,18 @@ export default function SmallBusinessCgtConcessionsPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What are the small business CGT concessions?",
+    description: "Selling a small business can trigger large CGT. Four ATO concessions, including the $500k lifetime retirement exemption, may reduce or remove it.",
+    thumbnailUrl: "https://i.ytimg.com/vi/yLqT4mZugYk/hqdefault.jpg",
+    uploadDate: "2026-10-11T03:32:01.219+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=yLqT4mZugYk",
+    embedUrl: "https://www.youtube.com/embed/yLqT4mZugYk",
+    transcript: "What are the small business CGT concessions? Four concessions that can wipe most of your capital gain. Sound like you — selling a business asset and assuming your accountant handles it automatically? The actual truth is: you must elect the concessions in your tax return for the year of the sale. Miss that election and you forfeit them — even if you qualify. The ATO does not apply them for you. Get it wrong and you lose access to up to $500,000 lifetime retirement exemption, plus the 50% active asset reduction. Go to taxchecknow.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -381,6 +406,7 @@ export default function SmallBusinessCgtConcessionsPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -426,7 +452,7 @@ export default function SmallBusinessCgtConcessionsPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Small Business CGT 2026: Do You Qualify for the $500K Lifetime Exemption?
+          Small Business CGT: Do You Qualify for the $500K Lifetime Exemption?
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -676,7 +702,7 @@ export default function SmallBusinessCgtConcessionsPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1015,10 +1041,15 @@ export default function SmallBusinessCgtConcessionsPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Small business CGT concessions ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 Division 152 — Small business CGT concessions ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
             </a>
           </div>
         </div>
@@ -1030,11 +1061,20 @@ export default function SmallBusinessCgtConcessionsPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=yLqT4mZugYk" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"What are the small business CGT concessions? Four concessions that can wipe most of your capital gain. Sound like you — selling a business asset and assuming your accountant handles it automatically? The actual truth is: you must elect the concessions in your tax return for the year of the sale. Miss that election and you forfeit them — even if you qualify. The ATO does not apply them for you. Get it wrong and you lose access to up to $500,000 lifetime retirement exemption, plus the 50% active asset reduction. Go to taxchecknow."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -1044,7 +1084,7 @@ export default function SmallBusinessCgtConcessionsPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

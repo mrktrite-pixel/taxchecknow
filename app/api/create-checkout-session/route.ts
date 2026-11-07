@@ -158,6 +158,12 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // key, read out of this same file rather than guessed.
   nomad_67_au_expat_cgt:   "STRIPE_NOMAD_AUCGT_67",
   nomad_147_au_expat_cgt:  "STRIPE_NOMAD_AUCGT_147",
+  // au/check/small-business-cgt-concessions (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
+  // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that
+  // key, read out of this same file rather than guessed.
+  au_67_small_business_cgt_concessions:   "STRIPE_AU_SBCGT_67",
+  au_147_small_business_cgt_concessions:  "STRIPE_AU_SBCGT_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {

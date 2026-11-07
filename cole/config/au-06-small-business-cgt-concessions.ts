@@ -2,11 +2,35 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "small-business-cgt-concessions", name: "Small Business CGT Concessions Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/small-business-cgt-concessions", url: "https://taxchecknow.com/au/check/small-business-cgt-concessions", apiRoute: "/api/rules/small-business-cgt-concessions",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Small business CGT concessions (Div 152)", legislation: "Income Tax Assessment Act 1997 Division 152 — Small Business CGT Concessions", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Small business CGT concessions (Div 152)", legislation: "Income Tax Assessment Act 1997 Division 152 — Small Business CGT Concessions", lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Small Business CGT Eligibility Check", tagline: "Do you qualify for the $500k lifetime CGT exemption?", value: "A personalised small business CGT concessions eligibility check — active asset test, turnover test, and retirement exemption analysis.", cta: "Get My CGT Check — $67 →", productKey: "au_67_small_business_cgt_concessions", envVar: "STRIPE_AU_SBCGT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Small Business Exit Tax Strategy", tagline: "Structure your business exit to pay zero or minimal CGT", value: "Full exit tax strategy — retirement exemption, rollover, and multi-entity structuring to minimise CGT on your business sale.", cta: "Get My Exit Strategy — $147 →", productKey: "au_147_small_business_cgt_concessions", envVar: "STRIPE_AU_SBCGT_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // Taken from the config's own deadline block: 31 October is the individual tax return due
+    // date, and business CGT events are reported in that return. A return due date recurs every
+    // year, so recurrence is annual and NO year is pinned — renderTemporalBlock omits year for
+    // annual precisely so the resolver rolls it forward instead of reporting EXPIRED after the
+    // first one passes. 31 October 2026 has passed, so this resolves to 31 October 2027.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      10,
+      day:        31,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "small_business_cgt_concessions",
+    label:        "Individual tax return due",
+    basis:        "cole/config/au-06-small-business-cgt-concessions.ts deadline block, verbatim: isoDate \"2026-10-31T23:59:59.000+11:00\", display \"31 October 2026\", description \"Individual tax return due — business CGT events reported here\", urgencyLabel \"RETURN DUE\".",
+  },
   deadline: { isoDate: "2026-10-31T23:59:59.000+11:00", display: "31 October 2026", short: "31 Oct 2026", description: "Individual tax return due — business CGT events reported here", urgencyLabel: "RETURN DUE", countdownLabel: "Countdown to 31 October 2026 — tax return due" },
-  h1: "Small Business CGT 2026: Do You Qualify for the $500K Lifetime Exemption?", metaTitle: "Small Business CGT Concessions Australia 2026 — Do You Qualify? | TaxCheckNow", metaDescription: "Selling a small business can trigger large CGT. But eligible owners can reduce or eliminate the gain using four ATO concessions including the $500k lifetime retirement exemption and 15-year exemption. Check your eligibility in 2 minutes.", canonical: "https://taxchecknow.com/au/check/small-business-cgt-concessions",
+  h1: "Small Business CGT: Do You Qualify for the $500K Lifetime Exemption?", metaTitle: "Small Business CGT Concessions: Do You Qualify? | TaxCheckNow", metaDescription: "Selling a small business can trigger large CGT. Four ATO concessions, including the $500k lifetime retirement exemption, may reduce or remove it.", canonical: "https://taxchecknow.com/au/check/small-business-cgt-concessions",
   answerHeadline: "The answer — ATO confirmed April 2026",
   answerBody: [
     "Division 152 of ITAA 1997 provides four CGT concessions specifically for small businesses: the 15-year exemption (eliminates the gain entirely after 15 years), the 50% active asset reduction, the retirement exemption (up to $500,000 lifetime, tax-free), and the rollover (defer the gain for two years). These can be combined — potentially eliminating CGT entirely on a business sale.",
@@ -101,7 +125,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   crosslink: { title: "Also check your Division 7A position before the sale.", body: "Business sales often involve unwinding loan balances and trust entitlements that trigger Division 7A. Check your position before signing a sale contract.", url: "/au/check/division-7a-loan-trap", label: "Check Division 7A position →" },
   lawBarSummary: "Division 152 small business CGT concessions: basic conditions — turnover under $2M or net assets under $6M. Active asset test — used in business 50%+ of ownership. Four concessions: 15-year exemption, 50% reduction, $500k lifetime retirement exemption, 2-year rollover. Must be elected in return for CGT event year. Under ITAA 1997 Div 152.",
   lawBarBadges: ["ATO", "ITAA 1997", "Division 152", "$500k Retirement Exemption"],
-  sources: [{ title: "ATO — Small business CGT concessions", url: "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" }],
+  sources: [{ title: "ATO — Small business CGT concessions", url: "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions" }, { title: "ITAA 1997 Division 152 — Small business CGT concessions", url: "https://www.legislation.gov.au/C2004A05138/latest/text" } ],
   files: [
     { num: "01", slug: "sbcgt-01", name: "Your Division 152 Eligibility Report", desc: "Whether you qualify for small business CGT concessions and which apply.", tier: 1, content: `<h2>Division 152 Eligibility Check</h2><div class="action-box"><h3>Basic Conditions</h3><p>Test 1: Aggregate turnover under $2M — include connected entities and affiliates</p><p>Test 2: OR net assets under $6M — excluding personal use assets and super</p><p>Active Asset Test: Asset used in business for 50%+ of ownership period</p></div><p>Source: <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/concessions-for-small-business-entities/small-business-cgt-concessions">ATO — Small business CGT concessions</a></p>` },
     { num: "02", slug: "sbcgt-02", name: "Active Asset Test Guide", desc: "Which assets qualify as active assets under Division 152.", tier: 1, content: `<h2>Active Asset Test — What Qualifies</h2><table><tr><th>Asset</th><th>Active Asset?</th></tr><tr><td>Business goodwill</td><td>Yes</td></tr><tr><td>Business premises used in the business</td><td>Yes</td></tr><tr><td>Plant and equipment used in the business</td><td>Yes</td></tr><tr><td>Shares in operating company (if company passes test)</td><td>Yes — additional conditions</td></tr><tr><td>Rental property — investment use</td><td>No — passive investment</td></tr><tr><td>Cash or financial assets</td><td>No — financial assets excluded</td></tr></table>` },

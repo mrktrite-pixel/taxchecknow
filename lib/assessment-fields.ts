@@ -251,6 +251,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["exemptionStatus", "residencyAtContractDate", "mainResidenceHistory", "estimatedCgtExposure", "cgtDiscountAvailability", "withholdingObligation", "lifeEventEligibility", "immediateActions"],
     tier2: ["exemptionStatus", "residencyAtContractDate", "mainResidenceHistory", "estimatedCgtExposure", "cgtDiscountAvailability", "withholdingObligation", "lifeEventEligibility", "immediateActions", "contractTimingStrategy", "residencyAlignmentPlan", "cgtMinimisationOptions", "clearanceCertificateProcess", "auditDefenceDocumentation"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/small-business-cgt-concessions. Lists copied VERBATIM
+  // from au-06-small-business-cgt-concessions.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "small-business-cgt-concessions": {
+    tier1: ["eligibilityVerdict", "sizeGateResult", "activeAssetResult", "significantIndividualStatus", "availableConcessions", "applicationOrder", "estimatedTaxSaving", "strongestRiskTrigger", "firstAction"],
+    tier2: ["eligibilityVerdict", "sizeGateResult", "activeAssetResult", "significantIndividualStatus", "availableConcessions", "applicationOrder", "optimalConcessionStack", "retirementExemptionAnalysis", "fifteenYearExemptionAnalysis", "preSaleCleanupIssues", "stakeholderMapping", "estimatedTaxSaving", "strongestRiskTrigger"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
