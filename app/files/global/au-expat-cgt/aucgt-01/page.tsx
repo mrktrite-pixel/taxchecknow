@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "au-expat-cgt";
+const SESSION_KEY = "au-expat-cgt";
 const SLUG = "aucgt-01";
 const FALLBACK_LABEL = { name: "Your Expat CGT Exposure Assessment", desc: "Your specific foreign resident CGT position + estimated tax under current and alternative scenarios." };
 const BODY = `<h2>Your Expat CGT Exposure</h2><div class="action-box"><h3>Core rule applied</h3><p>ITAA 1997 s118-115: foreign residents are denied the main residence CGT exemption on Australian residential property for contracts signed on or after 9 May 2017.</p><p>Residency test date: the date the contract is signed (CGT event A1 under s104-15) — NOT settlement date.</p></div><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents">ATO Main Residence Exemption for Foreign Residents</a></p>`;
@@ -27,7 +28,7 @@ export default function AuExpatCgtFile01() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function AuExpatCgtFile01() {
               🇦🇺 Australian Taxation Office (ATO) · ITAA 1997 s118-110 + s118-115 + s104-15 — Foreign residents denied main residence CGT exemption
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 01 of 8
@@ -227,7 +228,7 @@ export default function AuExpatCgtFile01() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on Australian Taxation Office (ATO) guidance April 2026.
+            Based on Australian Taxation Office (ATO) guidance November 2026.
           </p>
         </div>
 

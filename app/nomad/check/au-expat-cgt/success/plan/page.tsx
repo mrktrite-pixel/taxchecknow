@@ -685,7 +685,7 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australian tax adviser before making financial decisions.
-            Based on Australian Taxation Office (ATO) guidance April 2026.{" "}
+            Based on Australian Taxation Office (ATO) guidance November 2026.{" "}
             <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents" target="_blank" rel="noopener noreferrer" className="underline">ATO — Main residence exemption for foreign residents</a> · <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax" target="_blank" rel="noopener noreferrer" className="underline">ATO — Capital gains tax (CGT) and foreign residents</a>
           </p>
         </div>

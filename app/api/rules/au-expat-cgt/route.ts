@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1997 sections 118-110 (main residence exemption), 118-115 (foreign residents exemption denied), and 104-15 (CGT event A1 — contract date). Foreign residents are denied the main residence CGT exemption on disposal of Australian residential property for contracts signed on or after 9 May 2017. The residency test applies at the date the contract is made (CGT event A1), not at settlement. Foreign residents are also denied the 50% CGT discount on taxable Australian real property under section 115-105 (removed from 8 May 2012).",
     "legal_anchor": "ITAA 1997 s118-110 + s118-115 + s104-15 — Foreign residents denied main residence CGT exemption",
     "deadline": {
@@ -206,7 +206,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/au-expat-cgt",
     "api_endpoint": "/api/rules/au-expat-cgt",
-    "generated_at": "2026-11-07T04:49:12.440Z"
+    "generated_at": "2026-11-07T10:00:55.463Z"
 };
 
   return NextResponse.json(rules, {
@@ -216,7 +216,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "au-expat-cgt",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

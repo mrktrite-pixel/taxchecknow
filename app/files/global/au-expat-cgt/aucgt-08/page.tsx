@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "au-expat-cgt";
+const SESSION_KEY = "au-expat-cgt";
 const SLUG = "aucgt-08";
 const FALLBACK_LABEL = { name: "ATO Clearance Certificate Process", desc: "Step-by-step: how to apply, timing, documentation, avoiding pitfalls." };
 const BODY = `<h2>ATO Clearance Certificate — Full Process</h2><h3>Eligibility</h3><ul><li>Available to Australian tax residents</li><li>Vendor applies — not purchaser</li><li>Foreign residents cannot obtain a clearance certificate (but can apply for variation — reducing 12.5% to lower rate)</li></ul><h3>Application steps</h3><ol><li>Log in to ATO portal (myGov or Business Portal)</li><li>Select "Foreign resident capital gains withholding" → "Apply for a clearance certificate"</li><li>Complete online form — property details, expected sale date, vendor details</li><li>Submit and monitor status</li></ol><h3>Timing</h3><ul><li>Simple cases: 2-4 weeks</li><li>Complex (trusts, companies, contested residency): 6-12 weeks</li><li>Apply WELL before settlement — no certificate at settlement = 12.5% withheld automatically</li></ul><h3>Variation (foreign residents)</h3><p>Foreign residents expecting final tax below 12.5% can apply for a variation — reducing the withholding percentage. Supporting evidence required (valuation, cost base evidence, tax liability modelling).</p><h3>Audit documentation</h3><ul><li>Certificate + application reference</li><li>Settlement statement showing withholding amount (if any)</li><li>Tax return with CGT schedule + withholding credit</li><li>Cost base documentation (purchase contract, improvements, legal fees)</li></ul>`;
@@ -27,7 +28,7 @@ export default function AuExpatCgtFile08() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function AuExpatCgtFile08() {
               🇦🇺 Australian Taxation Office (ATO) · ITAA 1997 s118-110 + s118-115 + s104-15 — Foreign residents denied main residence CGT exemption
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 08 of 8
@@ -227,7 +228,7 @@ export default function AuExpatCgtFile08() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on Australian Taxation Office (ATO) guidance April 2026.
+            Based on Australian Taxation Office (ATO) guidance November 2026.
           </p>
         </div>
 

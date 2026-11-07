@@ -3,7 +3,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   id: "au-expat-cgt", name: "Australian Expat CGT Trap Auditor", site: "taxchecknow", country: "global", market: "Australia", language: "en", currency: "AUD",
   slug: "nomad/check/au-expat-cgt", url: "https://taxchecknow.com/nomad/check/au-expat-cgt", apiRoute: "/api/rules/au-expat-cgt",
   authority: "Australian Taxation Office (ATO)", authorityUrl: "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents", legalAnchor: "ITAA 1997 s118-110 + s118-115 + s104-15 — Foreign residents denied main residence CGT exemption", legislation: "Income Tax Assessment Act 1997 sections 118-110 (main residence exemption), 118-115 (foreign residents exemption denied), and 104-15 (CGT event A1 — contract date). Foreign residents are denied the main residence CGT exemption on disposal of Australian residential property for contracts signed on or after 9 May 2017. The residency test applies at the date the contract is made (CGT event A1), not at settlement. Foreign residents are also denied the 50% CGT discount on taxable Australian real property under section 115-105 (removed from 8 May 2012).",
-  lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
   // EngineCalculator wrapper, so the success pages must bind inputs through
   // buildComposerInputsFromSession, and the parity census must cover this product.
   engineNative: true,
