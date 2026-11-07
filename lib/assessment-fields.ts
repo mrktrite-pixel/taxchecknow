@@ -244,6 +244,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["fbtExposureSummary", "benefitByBenefitClassification", "carMethodComparison", "entertainmentTreatment", "evExemptionAnalysis", "minorBenefitExemptions", "recordGapsList", "strongestRiskTrigger", "firstAction"],
     tier2: ["fbtExposureSummary", "benefitByBenefitClassification", "carMethodComparison", "entertainmentTreatment", "evExemptionAnalysis", "minorBenefitExemptions", "recordGapsList", "annualFBTWorkflow", "entertainmentPolicySettings", "evidenceTemplates", "payrollReportingFlags", "remediationPlan", "strongestRiskTrigger"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for nomad/check/au-expat-cgt. Lists copied VERBATIM
+  // from nomad-07-au-expat-cgt.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "au-expat-cgt": {
+    tier1: ["exemptionStatus", "residencyAtContractDate", "mainResidenceHistory", "estimatedCgtExposure", "cgtDiscountAvailability", "withholdingObligation", "lifeEventEligibility", "immediateActions"],
+    tier2: ["exemptionStatus", "residencyAtContractDate", "mainResidenceHistory", "estimatedCgtExposure", "cgtDiscountAvailability", "withholdingObligation", "lifeEventEligibility", "immediateActions", "contractTimingStrategy", "residencyAlignmentPlan", "cgtMinimisationOptions", "clearanceCertificateProcess", "auditDefenceDocumentation"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
