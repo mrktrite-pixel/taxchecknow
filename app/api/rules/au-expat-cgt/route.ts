@@ -124,7 +124,7 @@ export async function GET() {
         {
             "id": 7,
             "question": "Can I temporarily return to Australia to sign the contract?",
-            "answer": "Technically returning to Australian residency around the contract date could preserve the exemption — but the ATO examines substance, not form. A token visit to sign papers is unlikely to establish genuine residency. A genuine resumption of residency (closing overseas ties, resuming Australian primary activities) is required. Seek specific tax advice; this is a fact-intensive area."
+            "answer": "Technically returning to Australian residency around the contract date could preserve the exemption — but the ATO examines substance, not form. A token visit to sign papers is unlikely to establish genuine residency. A genuine resumption of residency (closing overseas ties, resuming Australian primary activities) is required. This is a fact-intensive area; a qualified adviser can assess your specific facts."
         },
         {
             "id": 8,
@@ -210,7 +210,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/au-expat-cgt",
     "api_endpoint": "/api/rules/au-expat-cgt",
-    "generated_at": "2026-11-07T10:04:39.451Z"
+    "generated_at": "2026-11-07T11:43:02.664Z"
 };
 
   return NextResponse.json(rules, {

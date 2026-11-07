@@ -79,7 +79,7 @@ const faqs = [
   },
   {
     "question": "Can I temporarily return to Australia to sign the contract?",
-    "answer": "Technically returning to Australian residency around the contract date could preserve the exemption — but the ATO examines substance, not form. A token visit to sign papers is unlikely to establish genuine residency. A genuine resumption of residency (closing overseas ties, resuming Australian primary activities) is required. Seek specific tax advice; this is a fact-intensive area."
+    "answer": "Technically returning to Australian residency around the contract date could preserve the exemption — but the ATO examines substance, not form. A token visit to sign papers is unlikely to establish genuine residency. A genuine resumption of residency (closing overseas ties, resuming Australian primary activities) is required. This is a fact-intensive area; a qualified adviser can assess your specific facts."
   },
   {
     "question": "What if I was only temporarily non-resident?",
