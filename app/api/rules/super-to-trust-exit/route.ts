@@ -26,7 +26,16 @@ export async function GET() {
         "iso_date": "2026-06-30T23:59:59.000+10:00",
         "display": "30 June 2026",
         "description": "30 June 2026 — last planning window before Division 296 commences 1 July 2026",
-        "urgency_label": "DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW"
+        "urgency_label": "DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW",
+        "recurrence": {
+            "kind": "one_off",
+            "month": 6,
+            "day": 30,
+            "timezone": "Australia/Sydney",
+            "shift": "none",
+            "label": "Last pre-Division 296 planning window",
+            "basis": "cole/config/au-14-super-to-trust-exit.ts deadline block, verbatim: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"30 June 2026 — last planning window before Division 296 commences 1 July 2026\", urgencyLabel \"DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW\"."
+        }
     },
     "key_facts": {
         "withdrawal_tax_60_retired": "0% (s301-10)",
@@ -147,11 +156,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/accessing-your-super"
+        "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/withdrawing-and-using-your-super"
     ],
     "canonical": "https://taxchecknow.com/au/check/super-to-trust-exit",
     "api_endpoint": "/api/rules/super-to-trust-exit",
-    "generated_at": "2026-04-22T13:32:08.224Z"
+    "generated_at": "2026-11-07T12:40:02.900Z"
 };
 
   return NextResponse.json(rules, {
