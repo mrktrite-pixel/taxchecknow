@@ -1,0 +1,301 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "From 1 July 2026, Division 296 tax applies under the Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026. Individuals with a total super balance (TSB) above the Large Super Balance Threshold (LSBT) of $3,000,000 for 2026-27 face an additional 15% tax on the proportion of earnings above that threshold. Individuals with a TSB above the Very Large Super Balance Threshold (VLSBT) of $10,000,000 for 2026-27 face an additional 10% tax on the proportion of earnings above that threshold. Thresholds are indexed to CPI. Separately, no competitor content explains the tax mechanics, preservation rules, or estate-planning rationale for exiting super into a trust structure — a significant gap for high-net-worth individuals affected by these changes.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-goal",
+      "text": "What are you trying to understand about Division 296 tax?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "How Division 296 tax works in general",
+          "value": "explainer",
+          "flags": [
+            "q1-goal:explainer"
+          ]
+        },
+        {
+          "label": "Whether my total super balance (TSB) puts me in scope for Division 296 tax",
+          "value": "tsb-check",
+          "flags": [
+            "q1-goal:tsb-check"
+          ]
+        },
+        {
+          "label": "Strategies for managing a large super balance, such as exiting into a trust",
+          "value": "exit-strategy",
+          "flags": [
+            "q1-goal:exit-strategy"
+          ]
+        },
+        {
+          "label": "How future threshold changes (CPI indexation) may affect me",
+          "value": "indexation",
+          "flags": [
+            "q1-goal:indexation"
+          ]
+        },
+        {
+          "label": "None of these / something else",
+          "value": "out-of-scope",
+          "flags": [
+            "q1-goal:out-of-scope"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-tsb-level",
+      "text": "What is your total super balance (TSB) for 2026-27? (Check your ATO online services account or contact your super fund if unsure.)",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q1-goal:tsb-check"
+        ]
+      },
+      "options": [
+        {
+          "label": "At or below $3,000,000",
+          "value": "at-or-below-lsbt",
+          "flags": [
+            "q2-tsb-level:at-or-below-lsbt"
+          ]
+        },
+        {
+          "label": "Above $3,000,000 but not above $10,000,000",
+          "value": "above-lsbt-below-vlsbt",
+          "flags": [
+            "q2-tsb-level:above-lsbt-below-vlsbt"
+          ]
+        },
+        {
+          "label": "Above $10,000,000",
+          "value": "above-vlsbt",
+          "flags": [
+            "q2-tsb-level:above-vlsbt"
+          ]
+        },
+        {
+          "label": "I'm not sure what my total super balance is",
+          "value": "unsure-tsb",
+          "flags": [
+            "q2-tsb-level:unsure-tsb"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-strategy-type",
+      "text": "Which strategy are you looking to understand?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-goal:exit-strategy"
+        ]
+      },
+      "options": [
+        {
+          "label": "Exiting superannuation into a trust structure (e.g. family trust or testamentary trust)",
+          "value": "trust-exit",
+          "flags": [
+            "q3-strategy-type:trust-exit"
+          ]
+        },
+        {
+          "label": "Winding down an SMSF and moving assets to a trust destination",
+          "value": "smsf-winddown",
+          "flags": [
+            "q3-strategy-type:smsf-winddown"
+          ]
+        },
+        {
+          "label": "I'm not sure which strategy applies to my situation",
+          "value": "unsure-strategy",
+          "flags": [
+            "q3-strategy-type:unsure-strategy"
+          ]
+        },
+        {
+          "label": "None of these / a different strategy",
+          "value": "other-strategy",
+          "flags": [
+            "q3-strategy-type:other-strategy"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "tsb-above-lsbt-below-vlsbt",
+      "when": {
+        "any": [
+          "q2-tsb-level:above-lsbt-below-vlsbt"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My total super balance is above $3,000,000 but not above $10,000,000",
+      "result_copy": "Your answers indicate your TSB exceeds $3,000,000 but does not exceed $10,000,000 for 2026-27. This is a high-risk signal that an additional 15% tax applies to the proportion of your earnings relating to your TSB that exceeds the LSBT. Review by a qualified adviser is recommended to determine the exact amount and payment options.",
+      "figure_ids": [
+        "fig_2"
+      ]
+    },
+    {
+      "id": "tsb-above-vlsbt",
+      "when": {
+        "any": [
+          "q2-tsb-level:above-vlsbt"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My total super balance is above $10,000,000",
+      "result_copy": "Your answers indicate your TSB exceeds $10,000,000 for 2026-27. This is a high-risk signal that an additional 15% tax applies to the proportion of your earnings relating to your TSB that exceeds $3,000,000, and an additional 10% tax applies to the proportion of your earnings relating to your TSB that exceeds $10,000,000. Review by a qualified adviser is strongly recommended.",
+      "figure_ids": [
+        "fig_2",
+        "fig_3"
+      ]
+    },
+    {
+      "id": "tsb-at-or-below-lsbt",
+      "when": {
+        "any": [
+          "q2-tsb-level:at-or-below-lsbt"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My total super balance is at or below $3,000,000",
+      "result_copy": "Your answers indicate your TSB does not exceed the Large Super Balance Threshold (LSBT) of $3,000,000 for 2026-27. Based on this, Division 296 additional tax does not appear to apply to you for 2026-27, and your existing superannuation tax concessions are indicated as unaffected by this measure. Review recommended if your TSB is close to $3,000,000 or may change.",
+      "figure_ids": []
+    },
+    {
+      "id": "not-sure-of-tsb",
+      "when": {
+        "any": [
+          "q2-tsb-level:unsure-tsb"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure what my total super balance is",
+      "result_copy": "Your liability for Division 296 additional tax depends on whether your TSB exceeds $3,000,000 or $10,000,000 for 2026-27. Without a confirmed TSB figure, no outcome can be indicated. Check your ATO online services account, contact your super fund(s), or consult a financial adviser to determine your TSB, then return to identify your outcome.",
+      "figure_ids": []
+    },
+    {
+      "id": "super-to-trust-exit-strategy",
+      "when": {
+        "any": [
+          "q3-strategy-type:trust-exit"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I want to understand exiting super into a trust structure to manage my large balance",
+      "result_copy": "Whether exiting superannuation into a trust structure is available or advantageous depends on superannuation preservation rules (conditions of release must be met), the tax treatment of any lump-sum withdrawal, and the trust distribution implications — all of which are fact-specific. No single general rule can be stated here. Professional advice is indicated before taking any action.",
+      "figure_ids": []
+    },
+    {
+      "id": "smsf-winddown-trust-destination",
+      "when": {
+        "any": [
+          "q3-strategy-type:smsf-winddown"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I am winding up my SMSF and want to direct proceeds to a trust",
+      "result_copy": "The mechanics, tax consequences, and strategic considerations of winding down an SMSF and transferring assets to a trust destination are complex and fact-specific. No general outcome can be indicated without detailed review of your fund's circumstances, preservation status, and the proposed trust structure. Professional advice is indicated before taking any action.",
+      "figure_ids": []
+    },
+    {
+      "id": "how-division-296-works",
+      "when": {
+        "any": [
+          "q1-goal:explainer"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How does Division 296 tax work?",
+      "result_copy": "Division 296 tax is an additional tax effective from 1 July 2026. It imposes an additional 15% tax on the proportion of earnings relating to the part of a TSB that exceeds the LSBT of $3,000,000 for 2026-27, and an additional 10% tax on the proportion of earnings relating to the part of a TSB that exceeds the VLSBT of $10,000,000 for 2026-27. Both thresholds are indexed to CPI. The law also changes the definition of total super balance and introduces a new concept called total super balance value. Whether and how these rules apply depends on your individual TSB and earnings — consult the ATO or a qualified adviser for your specific circumstances.",
+      "figure_ids": [
+        "fig_2",
+        "fig_3"
+      ]
+    },
+    {
+      "id": "cpi-indexation-future-thresholds",
+      "when": {
+        "any": [
+          "q1-goal:indexation"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Will the $3,000,000 and $10,000,000 thresholds change over time?",
+      "result_copy": "The Large Super Balance Threshold (LSBT) of $3,000,000 and the Very Large Super Balance Threshold (VLSBT) of $10,000,000 for 2026-27 are both indexed to CPI. Future threshold values cannot be stated here as they depend on CPI movements not yet verified. Monitor ATO announcements or consult a financial adviser for updated thresholds in future years.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-goal:out-of-scope",
+          "q3-strategy-type:other-strategy"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q3-strategy-type:unsure-strategy"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

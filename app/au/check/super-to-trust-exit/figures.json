@@ -1,0 +1,30 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Large Super Balance Threshold (LSBT) for 2026-27",
+    "value": "3000000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_1",
+    "label": "Very Large Super Balance Threshold (VLSBT) for 2026-27",
+    "value": "10000000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "Additional tax rate on earnings above LSBT",
+    "value": "15",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_3",
+    "label": "Additional tax rate on earnings above VLSBT",
+    "value": "10",
+    "unit": "%",
+    "fact_role": "rate"
+  }
+]

@@ -251,6 +251,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["exemptionStatus", "residencyAtContractDate", "mainResidenceHistory", "estimatedCgtExposure", "cgtDiscountAvailability", "withholdingObligation", "lifeEventEligibility", "immediateActions"],
     tier2: ["exemptionStatus", "residencyAtContractDate", "mainResidenceHistory", "estimatedCgtExposure", "cgtDiscountAvailability", "withholdingObligation", "lifeEventEligibility", "immediateActions", "contractTimingStrategy", "residencyAlignmentPlan", "cgtMinimisationOptions", "clearanceCertificateProcess", "auditDefenceDocumentation"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/super-to-trust-exit. Lists copied VERBATIM
+  // from au-14-super-to-trust-exit.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "super-to-trust-exit": {
+    tier1: ["exitDecisionStatus", "ageExitTaxAnalysis", "tsbDiv296Analysis", "phaseEnvironmentAnalysis", "breakEvenHorizonCalc", "twentyYearNpvSummary", "beneficiaryRateImpact", "exitRecommendation", "firstAction"],
+    tier2: ["exitDecisionStatus", "ageExitTaxAnalysis", "tsbDiv296Analysis", "phaseEnvironmentAnalysis", "breakEvenHorizonCalc", "twentyYearNpvSummary", "beneficiaryRateImpact", "spouseEqualisationPlan", "pensionPhaseTransitionPlan", "costBaseResetAlternative", "stagedWithdrawalExecutionPlan", "trustDistributionStrategy", "accountantImplementationChecklist"],
+  },
   // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/small-business-cgt-concessions. Lists copied VERBATIM
   // from au-06-small-business-cgt-concessions.ts (tier1AssessmentFields / tier2AssessmentFields) — never
   // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.

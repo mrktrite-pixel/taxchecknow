@@ -433,6 +433,18 @@ Where such a fact is needed, phrase the entry as something to BRING, not somethi
   GOOD: "Which income year does this sale fall in, and what does that mean for the credit?"
   GOOD: "Bring the contract and the settlement statement to the meeting."      (customer supplies)
   BAD:  "What was my sale price?"                                              (only I know that)
+
+WHOSE VOICE THE QUESTION IS IN:
+accountantQuestions are the CUSTOMER'S OWN WORDS, written for them to read out to their
+accountant. The customer is the first person there and that is correct: "what is the rate
+I would face", "Am I maximising my cap", "Given my TSB" are all right.
+NEVER write them in the ADVISER's first person — you are not the accountant answering, you
+are the customer asking. No "I would recommend", "I would suggest", "I would advise",
+"I would expect", "in my view", "I think", "I will need".  COPY-LINT-ALLOW
+  GOOD: "What weighted-average rate would I face on trust distributions?"   (customer asking)
+  BAD:  "I would recommend exiting before 30 June."              (adviser answering)  COPY-LINT-ALLOW
+  BAD:  "I think you should stay in pension phase."              (adviser answering)  COPY-LINT-ALLOW
+A delivered pack is gated on this, so an adviser-voice entry blocks the ship.
   BAD:  "Has my settlement happened yet?"                                      (only I know that)
   BAD:  "What did I originally pay for the property?"                          (only I know that)
 Apply this test to every entry before you emit it.`;

@@ -19,14 +19,23 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1997 s301-10 (tax on superannuation benefits — 0% if 60+ retired, 15% on taxable component if under 60) · ITAA 1997 s295-385 (super fund earnings tax — 15% accumulation, 0% pension phase on TBC portion) · ITAA 1997 Subdivision 296-B (Division 296 additional 15% tax on earnings above $3M TSB from 1 July 2026) · ITAA 1997 s292-85 (non-concessional contribution cap — $120k/year, $360k bring-forward) · Income Tax Rates Act 1986 Part III (trust income tax rates — distributed at beneficiary marginal rate, undistributed at 47% top rate)",
     "legal_anchor": "ITAA 1997 s301-10 (super benefit tax on withdrawal) + Subdivision 296-B (Division 296)",
     "deadline": {
         "iso_date": "2026-06-30T23:59:59.000+10:00",
         "display": "30 June 2026",
         "description": "30 June 2026 — last planning window before Division 296 commences 1 July 2026",
-        "urgency_label": "DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW"
+        "urgency_label": "DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW",
+        "recurrence": {
+            "kind": "annual",
+            "month": 6,
+            "day": 30,
+            "timezone": "Australia/Sydney",
+            "shift": "none",
+            "label": "End of financial year — exit-to-trust planning window",
+            "basis": "cole/config/au-14-super-to-trust-exit.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"30 June 2026 — last planning window before Division 296 commences 1 July 2026\". The DATE is the config's; the RECURRENCE is the operator's ruling of 2026-11-07, because the config's own description reads as one-off while the underlying 30 June planning window recurs."
+        }
     },
     "key_facts": {
         "withdrawal_tax_60_retired": "0% (s301-10)",
@@ -128,6 +137,22 @@ export async function GET() {
         {
             "title": "ATO — Pension phase and Transfer Balance Cap",
             "url": "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap"
+        },
+        {
+            "title": "ITAA 1997 s301-10 — Tax on super lump sum withdrawals",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s292-85 — Non-concessional contributions cap",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s295-385 — Exempt current pension income",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 Subdiv 296-B — Division 296 tax on super earnings",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         }
     ],
     "products": {
@@ -147,11 +172,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/accessing-your-super"
+        "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
     ],
     "canonical": "https://taxchecknow.com/au/check/super-to-trust-exit",
     "api_endpoint": "/api/rules/super-to-trust-exit",
-    "generated_at": "2026-04-22T13:32:08.224Z"
+    "generated_at": "2026-11-07T13:42:11.043Z"
 };
 
   return NextResponse.json(rules, {
@@ -161,7 +186,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "super-to-trust-exit",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

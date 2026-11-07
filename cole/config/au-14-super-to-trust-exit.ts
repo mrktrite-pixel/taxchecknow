@@ -2,13 +2,39 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "super-to-trust-exit", name: "Super-to-Trust Exit Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/super-to-trust-exit", url: "https://taxchecknow.com/au/check/super-to-trust-exit", apiRoute: "/api/rules/super-to-trust-exit",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 s301-10 (super benefit tax on withdrawal) + Subdivision 296-B (Division 296)", legislation: "Income Tax Assessment Act 1997 s301-10 (tax on superannuation benefits — 0% if 60+ retired, 15% on taxable component if under 60) · ITAA 1997 s295-385 (super fund earnings tax — 15% accumulation, 0% pension phase on TBC portion) · ITAA 1997 Subdivision 296-B (Division 296 additional 15% tax on earnings above $3M TSB from 1 July 2026) · ITAA 1997 s292-85 (non-concessional contribution cap — $120k/year, $360k bring-forward) · Income Tax Rates Act 1986 Part III (trust income tax rates — distributed at beneficiary marginal rate, undistributed at 47% top rate)", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 s301-10 (super benefit tax on withdrawal) + Subdivision 296-B (Division 296)", legislation: "Income Tax Assessment Act 1997 s301-10 (tax on superannuation benefits — 0% if 60+ retired, 15% on taxable component if under 60) · ITAA 1997 s295-385 (super fund earnings tax — 15% accumulation, 0% pension phase on TBC portion) · ITAA 1997 Subdivision 296-B (Division 296 additional 15% tax on earnings above $3M TSB from 1 July 2026) · ITAA 1997 s292-85 (non-concessional contribution cap — $120k/year, $360k bring-forward) · Income Tax Rates Act 1986 Part III (trust income tax rates — distributed at beneficiary marginal rate, undistributed at 47% top rate)", lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Exit Break-Even Pack", tagline: "See the actual year where exit tax and lost earnings are recovered — before you act", value: "Your exact break-even horizon at 3 earnings scenarios, exit tax quantum, 20-year trust vs super comparison, and 4 accountant questions — built for your balance, age, and beneficiary profile.", cta: "Show My Break-Even Number — $67 →", productKey: "au_67_super_to_trust_exit", envVar: "STRIPE_AU_STREXIT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Full Exit Decision Model", tagline: "The full 20-year model plus the in-super alternatives most accountants skip over", value: "Full 20-year NPV model, staged withdrawal strategy, pension phase optimisation, trust distribution planning, alternative strategies ranked by tax saving, and accountant-ready implementation documents.", cta: "Get My Full Exit Model — $147 →", productKey: "au_147_super_to_trust_exit", envVar: "STRIPE_AU_STREXIT_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // RE-DECLARED 2026-11-07 as annual, replacing the one_off that was declared straight from the
+    // config's deadline block. One_off pinned year 2026 and therefore resolved EXPIRED, because 30
+    // June 2026 has passed. 30 June is the end of the Australian financial year and the planning
+    // window for an exit-to-trust decision closes on it EVERY year, not only in the year Division
+    // 296 commenced. Annual is the shape that keeps the window live: renderTemporalBlock omits
+    // year for annual precisely so the resolver rolls it forward, so this now resolves to 30 June
+    // 2027 and keeps rolling.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      6,
+      day:        30,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "super_to_trust_exit",
+    label:        "End of financial year — exit-to-trust planning window",
+    basis:        "cole/config/au-14-super-to-trust-exit.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"30 June 2026 — last planning window before Division 296 commences 1 July 2026\". The DATE is the config's; the RECURRENCE is the operator's ruling of 2026-11-07, because the config's own description reads as one-off while the underlying 30 June planning window recurs.",
+  },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "30 June 2026 — last planning window before Division 296 commences 1 July 2026", urgencyLabel: "DIV 296 STARTS — IRREVERSIBLE DECISION WINDOW", countdownLabel: "Countdown to 30 June 2026 — last pre-Div 296 planning window" },
-  h1: "Exiting Your SMSF Into a Family Trust Before Division 296 Sounds Smart — Until You See the Break-Even Year",
-  metaTitle: "Super-to-Trust Exit Engine — Break-Even Model Before Division 296 | TaxCheckNow",
-  metaDescription: "Thinking of withdrawing super into a family trust to avoid Division 296? Most members are trading a 15% super environment for a 32-47% trust environment and paying exit tax to do it. Run your break-even check in 2 minutes — ATO-referenced, confirmed April 2026.",
+  h1: "Super-to-Trust Exit: The Break-Even Year Most SMSF Members Never See",
+  metaTitle: "Super-to-Trust Exit: The Break-Even Year | TaxCheckNow",
+  metaDescription: "Withdrawing super into a family trust to avoid Division 296 trades a 15% environment for 32-47%, and costs exit tax to do it. Check your break-even.",
   canonical: "https://taxchecknow.com/au/check/super-to-trust-exit",
   answerHeadline: "The exit-to-trust decision — a 15-25 year break-even that most SMSF members never actually see",
   answerBody: [
@@ -58,7 +84,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   tier1Calendar: [{ uid: "strexit-june30", summary: "Div 296 commences — last pre-act planning date", description: "30 June 2026 is the final window to plan before Division 296 starts 1 July 2026.", date: "20260630" }],
   tier2Calendar: [{ uid: "strexit-may", summary: "Alternatives modelling — spouse equalisation + cost-base reset", description: "Model spouse balance equalisation and cost-base reset election BEFORE considering exit.", date: "20260501" }, { uid: "strexit-june15", summary: "Exit tax lock-in date check", description: "If exit is proceeding: age, retirement, and component split all lock in at withdrawal date.", date: "20260615" }, { uid: "strexit-june30b", summary: "Div 296 commences", description: "30 June 2026 — last planning window before Division 296 starts.", date: "20260630" }],
   delivery: { tier1DriveEnvVar: "", tier2DriveEnvVar: "" },
-  monitorUrls: ["https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/withdrawing-and-using-your-super"],
+  monitorUrls: ["https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"],
   sidebarNumbers: [{ label: "Exit tax under 60", value: "15% on taxable" }, { label: "Super pension rate", value: "0% on TBC" }, { label: "Trust top rate", value: "47% undistributed" }, { label: "NCC re-entry cap", value: "$120k/yr, $360k bring-fwd" }],
   sidebarMathsTitle: "Super-to-trust exit — rules vs reality",
   sidebarMathsIncludes: [
@@ -145,7 +171,10 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { title: "ATO — Tax on super benefits (withdrawal tax rules)",                    url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/withdrawing-and-using-your-super/tax-on-super-benefits" },
     { title: "ATO — Super contribution caps (NCC re-entry after withdrawal)",          url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/contributions-caps" },
     { title: "ATO — Key superannuation rates and thresholds (includes Division 296)",  url: "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" },
-    { title: "ATO — Pension phase and Transfer Balance Cap",                           url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap" },
+    { title: "ATO — Pension phase and Transfer Balance Cap",                           url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap" },    { title: "ITAA 1997 s301-10 — Tax on super lump sum withdrawals",       url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1997 s292-85 — Non-concessional contributions cap",      url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1997 s295-385 — Exempt current pension income",          url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1997 Subdiv 296-B — Division 296 tax on super earnings",  url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
   ],
   files: [
     { num: "01", slug: "strexit-01", name: "Your Exit Break-Even Number", desc: "Your exact break-even horizon at 3 earnings scenarios — the number most members never see.", tier: 1, content: `<h2>Your Exit Break-Even Horizon</h2><div class="action-box"><h3>The Three Numbers That Decide Exit</h3><p>Number 1: Exit tax today (0% if 60+ retired, 15% on taxable if under 60)</p><p>Number 2: Annual earnings differential (trust rate − super rate including Div 296)</p><p>Number 3: Break-even year = Exit Tax ÷ (Annual Div 296 Saved − Annual Trust Differential)</p></div><h3>Why Most Exit Recommendations Skip This Math</h3><p>Generic Division 296 framing produces generic exit advice. Your break-even depends on: age (determines exit tax), taxable component %, TSB, phase (accumulation vs pension), beneficiary marginal rates, and horizon. No exit decision should happen without this number.</p><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/withdrawing-and-using-your-super/tax-on-super-benefits">ATO — Tax on super benefits</a> · ITAA 1997 s301-10, s295-385, Subdiv 296-B</p>` },
