@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { renderPack, hasFrozenPack, type RenderedPack } from "@/lib/render-pack";
 import { getAssessmentFields } from "@/lib/assessment-fields";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -301,15 +302,6 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const au_residency_status = sessionStorage.getItem("au-expat-cgt_au_residency_status") || "non_resident";
-    const purchase_date = sessionStorage.getItem("au-expat-cgt_purchase_date") || "post_2017";
-    const was_main_residence = sessionStorage.getItem("au-expat-cgt_was_main_residence") || "yes";
-    const departure_timing = sessionStorage.getItem("au-expat-cgt_departure_timing") || "2_5_years";
-    const contract_signed = sessionStorage.getItem("au-expat-cgt_contract_signed") || "no";
-    const estimated_gain = sessionStorage.getItem("au-expat-cgt_estimated_gain") || "300k_to_700k";
-    const life_event = sessionStorage.getItem("au-expat-cgt_life_event") || "none";
-    const status = sessionStorage.getItem("au-expat-cgt_status") || "EXEMPTION DENIED — FOREIGN RESIDENT";
-    const tier = sessionStorage.getItem("au-expat-cgt_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -325,6 +317,15 @@ export default function SuccessPlan() {
       `DTSTAMP:${now}`,
       "SUMMARY:Expat CGT — pre-contract residency review",
       "DESCRIPTION:90-day review of residency status + contract timing strategy.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      `UID:aucgt-lodge-may-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20270515"}`,
+      `DTEND;VALUE=DATE:${"20270515"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:AU tax return — 15 May 2027 (tax agent)",
+      "DESCRIPTION:Agent-lodgment deadline for 2025/26.",
       "STATUS:CONFIRMED",
       "END:VEVENT",
       "BEGIN:VEVENT",
@@ -575,6 +576,15 @@ export default function SuccessPlan() {
                 </div>
                 <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
                   <div>
+                    <p className="text-sm font-semibold text-neutral-900">AU tax return — 15 May 2027 (tax agent)</p>
+                    <p className="text-xs text-neutral-500">Agent-lodgment deadline for 2025/26.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    15 May 2027
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
                     <p className="text-sm font-semibold text-neutral-900">ATO clearance certificate — apply at least 4 weeks before settlement</p>
                     <p className="text-xs text-neutral-500">Avoid automatic 12.5% withholding.</p>
                   </div>
@@ -675,7 +685,7 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australian tax adviser before making financial decisions.
-            Based on Australian Taxation Office (ATO) guidance April 2026.{" "}
+            Based on Australian Taxation Office (ATO) guidance November 2026.{" "}
             <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents" target="_blank" rel="noopener noreferrer" className="underline">ATO — Main residence exemption for foreign residents</a> · <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax" target="_blank" rel="noopener noreferrer" className="underline">ATO — Capital gains tax (CGT) and foreign residents</a>
           </p>
         </div>

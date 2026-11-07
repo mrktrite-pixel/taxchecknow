@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { renderPack, hasFrozenPack, type RenderedPack } from "@/lib/render-pack";
 import { getAssessmentFields } from "@/lib/assessment-fields";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -106,7 +107,7 @@ export default function SuccessAssess() {
   // than spinning silently for a minute and a half.
   const [waitedMs,   setWaitedMs]   = useState(0);
   const [copied,     setCopied]     = useState(false);
-
+  const [calDone,    setCalDone]    = useState(false);
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
   // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
@@ -273,8 +274,35 @@ export default function SuccessAssess() {
     setLoading(false);
   }
 
-  // handleCalendar() omitted: no event survived the R-A3 date gate, so there is no
-  // .ics to build and no button to trigger it.
+  function handleCalendar() {
+    const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
+    function relativeDate(d: number): string {
+      return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
+    }
+    const ics = [
+      "BEGIN:VCALENDAR","VERSION:2.0",
+      "PRODID:-//TaxCheckNow//COLE//EN",
+      "CALSCALE:GREGORIAN","METHOD:PUBLISH",
+      `X-WR-CALNAME:Australian Expat CGT Trap Auditor — Deadlines`,
+      "BEGIN:VEVENT",
+      `UID:aucgt-lodge-may-${Date.now()}@taxchecknow.com`,
+      `DTSTART;VALUE=DATE:${"20270515"}`,
+      `DTEND;VALUE=DATE:${"20270515"}`,
+      `DTSTAMP:${now}`,
+      "SUMMARY:AU tax return — 15 May 2027 (tax agent lodgers)",
+      "DESCRIPTION:Tax agent extended deadline for 2025/26.",
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "au-expat-cgt.ics";
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    setCalDone(true);
+  }
 
   async function handleCopy() {
     if (!pack?.accountantQuestions.length) return;
@@ -441,10 +469,31 @@ export default function SuccessAssess() {
               </div>
             )}
 
-            {/* CALENDAR — suppressed at generate time: every dated event was dropped
-                (see the R-A3 calendar warning in the build log). An empty "key dates"
-                panel with a download button that yields an eventless .ics is worse than
-                no panel at all. */}
+            {/* CALENDAR */}
+            <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
+              <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+                Key dates for your calendar
+              </p>
+              <h2 className="mb-4 font-serif text-lg font-bold text-neutral-950">
+                Add these now — don't rely on memory
+              </h2>
+              <div className="mb-4 space-y-2">
+                
+                <div className="flex items-center justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">AU tax return — 15 May 2027 (tax agent lodgers)</p>
+                    <p className="text-xs text-neutral-500">Tax agent extended deadline for 2025/26.</p>
+                  </div>
+                  <span className="ml-3 shrink-0 font-mono text-xs font-bold text-neutral-500">
+                    15 May 2027
+                  </span>
+                </div>
+              </div>
+              <button onClick={handleCalendar}
+                className="no-print w-full rounded-xl bg-neutral-950 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800">
+                {calDone ? "✓ Downloaded — open the .ics file to add to your calendar" : "📅 Add all dates to Apple / Google / Outlook calendar →"}
+              </button>
+            </div>
 
             {/* YOUR FILES */}
             <div className="print-section rounded-2xl border border-neutral-200 bg-white p-6">
@@ -499,7 +548,10 @@ export default function SuccessAssess() {
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   ⬇ Save as PDF
                 </button>
-
+                <button onClick={handleCalendar}
+                  className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
+                  📅 Add to calendar
+                </button>
                 <button onClick={handleCopy}
                   className="rounded-xl border border-neutral-700 px-5 py-3 text-sm font-bold text-neutral-300 hover:bg-neutral-800 transition">
                   📋 Copy accountant questions
@@ -539,7 +591,7 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australian tax adviser before making financial decisions.
-            Based on Australian Taxation Office (ATO) guidance April 2026.{" "}
+            Based on Australian Taxation Office (ATO) guidance November 2026.{" "}
             <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents" target="_blank" rel="noopener noreferrer" className="underline">ATO — Main residence exemption for foreign residents</a> · <a href="https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax" target="_blank" rel="noopener noreferrer" className="underline">ATO — Capital gains tax (CGT) and foreign residents</a>
           </p>
         </div>

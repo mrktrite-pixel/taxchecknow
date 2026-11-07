@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "au-expat-cgt";
+const SESSION_KEY = "au-expat-cgt";
 const SLUG = "aucgt-06";
 const FALLBACK_LABEL = { name: "Sale Timing and Residency Strategy", desc: "Structural planning: when to sell, when to re-establish residency, when to accept the hit." };
 const BODY = `<h2>Sale Timing and Residency Strategy</h2><h3>Option 1 — Sell as Australian resident</h3><ul><li>Re-establish genuine Australian residency (physical presence + ties + intent)</li><li>Document the return: close overseas rental/employment, resume Australian primary activities</li><li>Time the listing + contract to occur after clean residency re-establishment</li><li>Outcome: main residence exemption may apply (if s118-110 conditions met)</li></ul><h3>Option 2 — Accept foreign resident treatment</h3><ul><li>Sell at current market conditions without residency change</li><li>Model full CGT at non-resident rate (up to 45%) + no 50% discount</li><li>Apply for clearance certificate if eligible (most won't be)</li><li>Plan cashflow: 12.5% withholding + balance of CGT due at lodgment</li></ul><h3>Option 3 — Hold and wait</h3><ul><li>Continue renting; defer sale to a point when residency change is viable</li><li>Risk: rule change; market movement; ongoing property costs</li><li>Evaluate return on waiting vs. tax saved</li></ul>`;
@@ -27,7 +28,7 @@ export default function AuExpatCgtFile06() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function AuExpatCgtFile06() {
               🇦🇺 Australian Taxation Office (ATO) · ITAA 1997 s118-110 + s118-115 + s104-15 — Foreign residents denied main residence CGT exemption
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 06 of 8
@@ -227,7 +228,7 @@ export default function AuExpatCgtFile06() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on Australian Taxation Office (ATO) guidance April 2026.
+            Based on Australian Taxation Office (ATO) guidance November 2026.
           </p>
         </div>
 

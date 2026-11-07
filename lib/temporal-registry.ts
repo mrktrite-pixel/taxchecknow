@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 19
+// Declared products: 20
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -42,6 +42,24 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "uk_tax_year_end",
                 "label": "5 April",
                 "basis": "Operator ruling 2026-10-28: UK tax year end; pension/salary-sacrifice to restore the PA must land in-year"
+          }
+    },
+    "au-expat-cgt": {
+          "temporal": {
+                "kind": "effective_from",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "one_off",
+                      "month": 6,
+                      "day": 30,
+                      "year": 2020,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "cgt-main-residence-exemption",
+                "label": "Foreign resident main residence exemption cut-off",
+                "basis": "ATO, Main residence exemption for foreign residents: \"Foreign residents can't claim the main residence exemption for property sold after 30 June 2020, unless they satisfy the requirements of the life events test.\" https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents"
           }
     },
     "australia-smsf-residency": {

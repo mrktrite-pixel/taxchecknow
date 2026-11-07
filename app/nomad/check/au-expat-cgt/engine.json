@@ -1,0 +1,370 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Decision menu for foreign residents (and Australian residents who acquired property from a deceased foreign resident) navigating the main residence exemption, life events test, capital gains withholding, and CGT discount rules when disposing of Australian residential property.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_residency_at_disposal",
+      "text": "What was your tax residency status at the time you disposed of (or plan to dispose of) the Australian residential property?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I was (or will be) an Australian resident for tax purposes at the time of disposal",
+          "value": "aus_resident",
+          "flags": [
+            "q1_residency_at_disposal:aus_resident"
+          ]
+        },
+        {
+          "label": "I was (or will be) a foreign resident for tax purposes at the time of disposal",
+          "value": "foreign_resident",
+          "flags": [
+            "q1_residency_at_disposal:foreign_resident"
+          ]
+        },
+        {
+          "label": "I am not sure of my tax residency status at the time of disposal",
+          "value": "unsure_residency",
+          "flags": [
+            "q1_residency_at_disposal:unsure_residency"
+          ]
+        },
+        {
+          "label": "This question does not relate to my situation",
+          "value": "out_of_scope",
+          "flags": [
+            "q1_residency_at_disposal:out_of_scope"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_inherited_from_foreign",
+      "text": "Did you acquire the property as a result of the death of a person who was a foreign resident for tax purposes when they died (for example, as a beneficiary, legal personal representative, trustee, or surviving joint tenant of a deceased estate)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_residency_at_disposal:aus_resident"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — I inherited or acquired the property through a deceased estate where the deceased was a foreign resident",
+          "value": "inherited_foreign",
+          "flags": [
+            "q2_inherited_from_foreign:inherited_foreign"
+          ]
+        },
+        {
+          "label": "No — I acquired the property in another way (purchase, gift, etc.)",
+          "value": "not_inherited",
+          "flags": [
+            "q2_inherited_from_foreign:not_inherited"
+          ]
+        },
+        {
+          "label": "I am not sure how the deceased's tax residency status affects my situation",
+          "value": "unsure_inheritance",
+          "flags": [
+            "q2_inherited_from_foreign:unsure_inheritance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_disposal_timing",
+      "text": "When did you dispose of the property? (The disposal time under a contract is when you entered into the contract; if there was no contract, it is when you settled.)",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_residency_at_disposal:foreign_resident"
+        ]
+      },
+      "options": [
+        {
+          "label": "I disposed of the property by 30 June 2020",
+          "value": "before_30_june_2020",
+          "flags": [
+            "q3_disposal_timing:before_30_june_2020"
+          ]
+        },
+        {
+          "label": "I disposed of (or will dispose of) the property after 30 June 2020",
+          "value": "after_30_june_2020",
+          "flags": [
+            "q3_disposal_timing:after_30_june_2020"
+          ]
+        },
+        {
+          "label": "I am not sure of the exact disposal date",
+          "value": "unsure_date",
+          "flags": [
+            "q3_disposal_timing:unsure_date"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4_life_events_test",
+      "text": "As a foreign resident disposing of the property after 30 June 2020, do you want to assess whether you satisfy the life events test, or do you have a different question about your situation?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q3_disposal_timing:after_30_june_2020"
+        ]
+      },
+      "options": [
+        {
+          "label": "I want to assess whether I satisfy the life events test for the main residence exemption",
+          "value": "assess_life_events",
+          "flags": [
+            "q4_life_events_test:assess_life_events"
+          ]
+        },
+        {
+          "label": "I want to understand how capital gains withholding applies to my sale",
+          "value": "withholding_query",
+          "flags": [
+            "q4_life_events_test:withholding_query"
+          ]
+        },
+        {
+          "label": "I want to understand whether I may be eligible for the CGT discount as a foreign resident",
+          "value": "cgt_discount_query",
+          "flags": [
+            "q4_life_events_test:cgt_discount_query"
+          ]
+        },
+        {
+          "label": "The property was inherited from a deceased foreign resident and I need guidance on the estate rules",
+          "value": "deceased_estate",
+          "flags": [
+            "q4_life_events_test:deceased_estate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5_life_events_criteria",
+      "text": "To satisfy the life events test, you must meet BOTH of the following: (1) you were a foreign resident for a continuous period of 6 years or less, AND (2) during that period a specified life event occurred. Do you know whether you meet both criteria?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q4_life_events_test:assess_life_events"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — my continuous period as a foreign resident was 6 years or less AND a qualifying life event occurred (terminal medical condition, death of spouse or child under 18, or formal relationship breakdown agreement)",
+          "value": "life_events_met",
+          "flags": [
+            "q5_life_events_criteria:life_events_met"
+          ]
+        },
+        {
+          "label": "No — I do not meet one or both criteria (e.g. my foreign residency period exceeded 6 years, or no qualifying life event occurred)",
+          "value": "life_events_not_met",
+          "flags": [
+            "q5_life_events_criteria:life_events_not_met"
+          ]
+        },
+        {
+          "label": "I am not sure whether my period as a foreign resident is short enough or whether a qualifying event applies",
+          "value": "unsure_life_events",
+          "flags": [
+            "q5_life_events_criteria:unsure_life_events"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "aus_resident_at_disposal_standard",
+      "when": {
+        "any": [
+          "q2_inherited_from_foreign:not_inherited"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I was an Australian resident when I sold (or will sell) the property",
+      "result_copy": "Indicated result: Because you were an Australian resident for tax purposes at the time of disposal, the foreign resident main residence exemption restrictions are not indicated to affect your disposal — unless you acquired the property due to the death of a foreign resident. The life events test and the post-30 June 2020 foreign resident rules are not relevant to your disposal. Review recommended to confirm your general eligibility for the main residence exemption under the standard rules.",
+      "figure_ids": []
+    },
+    {
+      "id": "foreign_resident_sold_before_30_june_2020",
+      "when": {
+        "any": [
+          "q3_disposal_timing:before_30_june_2020"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I was a foreign resident and I disposed of the property by 30 June 2020",
+      "result_copy": "Indicated result: Because you were a foreign resident and disposed of the property by 30 June 2020, you are not required to apply the life events test. If the property was also acquired before 7:30 pm (Canberra time) on 9 May 2017, the transitional rules apply. You may be eligible for the main residence exemption if you also meet the general requirements for the exemption. Note: if you were not an Australian resident for tax purposes while living in the property, you are unlikely to meet the general requirements for the CGT main residence exemption. Review recommended to confirm all general exemption requirements are satisfied.",
+      "figure_ids": []
+    },
+    {
+      "id": "foreign_resident_sold_after_30_june_2020_life_events_met",
+      "when": {
+        "any": [
+          "q5_life_events_criteria:life_events_met"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I was a foreign resident, sold after 30 June 2020, and I satisfy the life events test",
+      "result_copy": "Indicated result: Foreign residents who disposed of residential property after 30 June 2020 can claim the main residence exemption only if they satisfy the life events test. Based on your answers, the life events test criteria appear to be indicated as met: (1) you were a foreign resident for a continuous period of 6 years or less, AND (2) during that period one of the following occurred — you, your spouse, or your child under 18 years old had a terminal medical condition; your spouse or your child under 18 years old died; or the CGT event happened because of a formal agreement following the breakdown of your marriage or relationship. If you also meet the general requirements for the exemption, the main residence exemption may be available. Review recommended to confirm all conditions are satisfied.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1"
+      ]
+    },
+    {
+      "id": "foreign_resident_sold_after_30_june_2020_life_events_not_met",
+      "when": {
+        "any": [
+          "q5_life_events_criteria:life_events_not_met"
+        ]
+      },
+      "tier": 147,
+      "severity": "green",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I was a foreign resident, sold after 30 June 2020, and I do NOT satisfy the life events test",
+      "result_copy": "Indicated result: Foreign residents who disposed of residential property after 30 June 2020 can claim the main residence exemption only if they satisfy the life events test. Based on your answers, the life events test criteria are indicated as not met. Only foreign residents who sold property before 30 June 2020 may be eligible for the main residence exemption without meeting the life events test. Review recommended to confirm your CGT position and any other applicable concessions.",
+      "figure_ids": []
+    },
+    {
+      "id": "deceased_estate_foreign_resident_deceased",
+      "when": {
+        "any": [
+          "q4_life_events_test:deceased_estate"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "The deceased was a foreign resident when they died — what applies to the estate?",
+      "result_copy": "Indicated result: Special rules apply where a property passes through a deceased estate and the deceased was a foreign resident for tax purposes at the time of their death. The foreign resident main residence exemption rules apply to legal personal representatives, trustees, beneficiaries, surviving joint tenants, and special disability trusts in these circumstances. Whether the main residence exemption is available depends on whether the relevant conditions — including the life events test or the pre-30 June 2020 disposal rules — are satisfied in the context of the estate. Review recommended with a tax adviser experienced in deceased estate CGT matters.",
+      "figure_ids": []
+    },
+    {
+      "id": "aus_resident_inherited_from_foreign_resident",
+      "when": {
+        "any": [
+          "q2_inherited_from_foreign:inherited_foreign"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I am an Australian resident but I inherited the property from a foreign resident",
+      "result_copy": "Indicated result: Even though you are an Australian resident at the time of disposal, the foreign resident main residence exemption rules may apply because the deceased was a foreign resident for tax purposes when they died. The rules apply to legal personal representatives, trustees, beneficiaries of a deceased estate, surviving joint tenants, and special disability trusts in this situation. Whether the main residence exemption is available depends on whether the deceased's estate satisfies the life events test or the pre-30 June 2020 disposal rules. Seek advice specific to your estate circumstances before assessing your entitlement.",
+      "figure_ids": []
+    },
+    {
+      "id": "life_events_test_residency_period_check",
+      "when": {
+        "any": [
+          "q5_life_events_criteria:unsure_life_events"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure whether my period as a foreign resident is short enough to qualify",
+      "result_copy": "Indicated result: To satisfy the life events test, two conditions must both be met: (1) you were a foreign resident for tax purposes for a continuous period of 6 years or less, AND (2) during that period, you, your spouse, or your child under 18 years old had a terminal medical condition; your spouse or your child under 18 years old died; or the CGT event happened because of a formal agreement following the breakdown of your marriage or relationship. Whether your circumstances satisfy both conditions depends on the specific facts of your residency history and the events that occurred. Insufficient information is available from your answers to indicate a definite result — review recommended with a tax adviser who can assess your specific facts.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1"
+      ]
+    },
+    {
+      "id": "capital_gains_withholding_explainer",
+      "when": {
+        "any": [
+          "q4_life_events_test:withholding_query"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is capital gains withholding and how does it work for foreign residents selling property?",
+      "result_copy": "Indicated result: Capital gains withholding rules may apply to the disposal of Australian property by foreign residents. The rules and rates that apply, and any variation process, depend on the specific facts of your disposal. This is a separate obligation from the main residence exemption. Review recommended with a tax adviser or the ATO's guidance on foreign resident capital gains withholding to determine what applies to your sale.",
+      "figure_ids": []
+    },
+    {
+      "id": "cgt_discount_foreign_residents_explainer",
+      "when": {
+        "any": [
+          "q4_life_events_test:cgt_discount_query"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Am I eligible for the 50% CGT discount as a foreign resident?",
+      "result_copy": "Indicated result: A 50% capital gains tax (CGT) discount may be available to foreign residents in certain circumstances. Whether you are eligible for the 50% CGT discount as a foreign resident depends on the specific facts of your situation. Review recommended with a tax adviser or the ATO's guidance on the CGT discount for foreign residents to determine whether and how it applies to your disposal.",
+      "figure_ids": [
+        "fig_2"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1_residency_at_disposal:out_of_scope"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1_residency_at_disposal:unsure_residency",
+          "q2_inherited_from_foreign:unsure_inheritance",
+          "q3_disposal_timing:unsure_date"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

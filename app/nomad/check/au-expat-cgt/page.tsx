@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "31 October 2026";
 const DEADLINE_ISO   = "2026-10-31T23:59:59.000+10:00";
 
@@ -79,7 +79,7 @@ const faqs = [
   },
   {
     "question": "Can I temporarily return to Australia to sign the contract?",
-    "answer": "Technically returning to Australian residency around the contract date could preserve the exemption — but the ATO examines substance, not form. A token visit to sign papers is unlikely to establish genuine residency. A genuine resumption of residency (closing overseas ties, resuming Australian primary activities) is required. Seek specific tax advice; this is a fact-intensive area."
+    "answer": "Technically returning to Australian residency around the contract date could preserve the exemption — but the ATO examines substance, not form. A token visit to sign papers is unlikely to establish genuine residency. A genuine resumption of residency (closing overseas ties, resuming Australian primary activities) is required. This is a fact-intensive area; a qualified adviser can assess your specific facts."
   },
   {
     "question": "What if I was only temporarily non-resident?",
@@ -319,6 +319,10 @@ const sources = [
     "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   },
   {
+    "title": "ITAA 1936 s6(1) — Definition of resident",
+    "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
+  },
+  {
     "title": "Machine-readable JSON rules",
     "url": "/api/rules/au-expat-cgt"
   }
@@ -376,7 +380,7 @@ export default function AuExpatCgtPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Australian Expat CGT Trap Auditor — Rules April 2026",
+    name: "Australian Expat CGT Trap Auditor — Rules November 2026",
     description: "Foreign residents lose the main residence CGT exemption (ITAA 1997 s118-115), and residency at contract date decides it, not settlement date.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
@@ -463,7 +467,7 @@ export default function AuExpatCgtPage() {
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on Australian Taxation Office (ATO) guidance April 2026"
+      "Based on Australian Taxation Office (ATO) guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -805,7 +809,7 @@ export default function AuExpatCgtPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1216,6 +1220,11 @@ export default function AuExpatCgtPage() {
               <p className="font-bold text-neutral-900">ITAA 1997 s104-15 — CGT event A1 (contract date) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
             </a>
+            <a href="https://www.legislation.gov.au/C1936A00027/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1936 s6(1) — Definition of resident ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C1936A00027/latest/text</p>
+            </a>
             <a href="/api/rules/au-expat-cgt" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
               <p className="font-bold text-neutral-900">Machine-readable JSON rules ↗</p>
@@ -1231,7 +1240,7 @@ export default function AuExpatCgtPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from Australian Taxation Office (ATO) and GOV.UK guidance for April 2026.
+          built from Australian Taxation Office (ATO) and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1254,7 +1263,7 @@ export default function AuExpatCgtPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/global/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

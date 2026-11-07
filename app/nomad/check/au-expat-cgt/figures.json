@@ -1,0 +1,23 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Maximum continuous period as foreign resident to satisfy life events test",
+    "value": "6",
+    "unit": "years",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_1",
+    "label": "Age of child for life events test (terminal medical condition or death)",
+    "value": "18",
+    "unit": "years",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "CGT discount for foreign residents",
+    "value": "50",
+    "unit": "%",
+    "fact_role": "rate"
+  }
+]

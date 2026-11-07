@@ -3,9 +3,32 @@ export const PRODUCT_CONFIG: ProductConfig = {
   id: "au-expat-cgt", name: "Australian Expat CGT Trap Auditor", site: "taxchecknow", country: "global", market: "Australia", language: "en", currency: "AUD",
   slug: "nomad/check/au-expat-cgt", url: "https://taxchecknow.com/nomad/check/au-expat-cgt", apiRoute: "/api/rules/au-expat-cgt",
   authority: "Australian Taxation Office (ATO)", authorityUrl: "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents", legalAnchor: "ITAA 1997 s118-110 + s118-115 + s104-15 — Foreign residents denied main residence CGT exemption", legislation: "Income Tax Assessment Act 1997 sections 118-110 (main residence exemption), 118-115 (foreign residents exemption denied), and 104-15 (CGT event A1 — contract date). Foreign residents are denied the main residence CGT exemption on disposal of Australian residential property for contracts signed on or after 9 May 2017. The residency test applies at the date the contract is made (CGT event A1), not at settlement. Foreign residents are also denied the 50% CGT discount on taxable Australian real property under section 115-105 (removed from 8 May 2012).",
-  lastVerified: "April 2026",
+  lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Expat CGT Risk Report", tagline: "Are you about to lose the main residence exemption on your Australian home by selling as a non-resident?", value: "Your personalised CGT exposure, residency-at-contract-date risk, estimated tax liability, withholding obligation, and life event eligibility.", cta: "Get My Expat CGT Risk Report — $67 →", productKey: "nomad_67_au_expat_cgt", envVar: "STRIPE_NOMAD_AUCGT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Expat CGT Strategy System", tagline: "Full sale-timing + residency alignment + CGT minimisation + ATO clearance certificate pathway", value: "Complete expat CGT strategy: contract timing, residency alignment options, CGT minimisation analysis, ATO clearance process, and audit-ready documentation.", cta: "Get My Expat CGT Strategy — $147 →", productKey: "nomad_147_au_expat_cgt", envVar: "STRIPE_NOMAD_AUCGT_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "effective_from",
+    // A single past commencement, not a recurring date: disposals after 30 June 2020 must satisfy
+    // the life events test to claim the main residence exemption, disposals by that date need not.
+    // Nothing rolls forward, so recurrence is one_off and there is no countdown to run.
+    rule:         {
+      source:     "fixed",
+      recurrence: "one_off",
+      month:      6,
+      day:        30,
+      year:       2020,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "cgt-main-residence-exemption",
+    label:        "Foreign resident main residence exemption cut-off",
+    basis:        "ATO, Main residence exemption for foreign residents: \"Foreign residents can't claim the main residence exemption for property sold after 30 June 2020, unless they satisfy the requirements of the life events test.\" https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/main-residence-exemption-for-foreign-residents",
+  },
   deadline: { isoDate: "2026-10-31T23:59:59.000+10:00", display: "31 October 2026", short: "31 Oct 2026", description: "Australian tax return deadline (self-lodgers) for 2025/26 year — CGT events in the year must be declared", urgencyLabel: "ATO LODGMENT DEADLINE", countdownLabel: "Countdown to 31 October 2026 — ATO self-lodgment deadline" },
   h1: "Expat CGT: Your Residency at Contract Date Decides the Exemption",
   metaTitle: "Expat CGT: Contract Date Decides Your Exemption | TaxCheckNow",
@@ -106,7 +129,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { question: "How is foreign residency determined?",                                                    answer: "Under ITAA 1936 s6(1): resides test (ordinary meaning of residing in Australia), domicile test (Australian domicile + no permanent place of abode overseas), 183-day test (in Australia more than 183 days of the income year), and Commonwealth superannuation test. A person who fails all these tests is a foreign resident. Tax residency differs from immigration status." },
     { question: "What is the 12.5% non-resident CGT withholding?",                                          answer: "Under the Foreign Resident Capital Gains Withholding (FRCGW) regime, a purchaser of Australian property with a value of $750,000 or more must withhold 12.5% of the purchase price and remit it to the ATO at settlement — unless the vendor obtains an ATO clearance certificate confirming no withholding is required. The withholding is a payment on account of any CGT ultimately payable; the final tax is reconciled in the vendor's tax return. Australian residents obtain a clearance certificate to avoid the withholding." },
     { question: "What is the life events exception?",                                                        answer: "Under s118-115(3), the main residence exemption is preserved for a foreign resident where the disposal is connected to: (a) the death of a spouse or de facto partner; (b) a terminal medical condition of the individual, their spouse, or minor child; or (c) a Family Law Act order resulting from divorce or separation. The property must also have been the main residence for the entire relevant period (or ending at the life event). The exception is narrow and rarely applies to standard expat departures." },
-    { question: "Can I temporarily return to Australia to sign the contract?",                                answer: "Technically returning to Australian residency around the contract date could preserve the exemption — but the ATO examines substance, not form. A token visit to sign papers is unlikely to establish genuine residency. A genuine resumption of residency (closing overseas ties, resuming Australian primary activities) is required. Seek specific tax advice; this is a fact-intensive area." },
+    { question: "Can I temporarily return to Australia to sign the contract?",                                answer: "Technically returning to Australian residency around the contract date could preserve the exemption — but the ATO examines substance, not form. A token visit to sign papers is unlikely to establish genuine residency. A genuine resumption of residency (closing overseas ties, resuming Australian primary activities) is required. This is a fact-intensive area; a qualified adviser can assess your specific facts." },
     { question: "What if I was only temporarily non-resident?",                                                answer: "The test is residency at the contract date — snapshot-based, not averaging across the year. A person who is foreign resident at the contract date loses the exemption regardless of how short the non-residence period was. Conversely, a person who resumes Australian residency before signing can preserve the exemption even after years overseas, provided residency is genuine." },
     { question: "How does the 6-year main residence rule interact with foreign residency?",                    answer: "s118-145 allows a property that was formerly your main residence to be treated as your main residence for up to 6 years after you move out (if rented) — but this is only available to Australian residents at contract date. A foreign resident cannot use the 6-year rule to preserve the exemption under current law (post 9 May 2017)." },
     { question: "Does the denial apply to overseas-owned property in Australia?",                                answer: "Yes — if the property is Australian residential property, the rules apply regardless of ownership structure. Ownership via overseas companies or trusts does not change the CGT analysis: if the beneficial owner at the CGT event is a foreign resident (or the entity is deemed so), the exemption is denied." },
@@ -132,6 +155,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { title: "ITAA 1997 s118-110 — Main residence exemption",                                                   url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "ITAA 1997 s118-115 — Foreign residents denied exemption",                                           url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "ITAA 1997 s104-15 — CGT event A1 (contract date)",                                                  url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1936 s6(1) — Definition of resident",                                                       url: "https://www.legislation.gov.au/C1936A00027/latest/text" },
     { title: "Machine-readable JSON rules",                                                                        url: "/api/rules/au-expat-cgt" },
   ],
   files: [
