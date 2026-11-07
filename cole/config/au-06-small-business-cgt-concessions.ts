@@ -9,8 +9,28 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Your Small Business CGT Eligibility Check", tagline: "Do you qualify for the $500k lifetime CGT exemption?", value: "A personalised small business CGT concessions eligibility check — active asset test, turnover test, and retirement exemption analysis.", cta: "Get My CGT Check — $67 →", productKey: "au_67_small_business_cgt_concessions", envVar: "STRIPE_AU_SBCGT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Small Business Exit Tax Strategy", tagline: "Structure your business exit to pay zero or minimal CGT", value: "Full exit tax strategy — retirement exemption, rollover, and multi-entity structuring to minimise CGT on your business sale.", cta: "Get My Exit Strategy — $147 →", productKey: "au_147_small_business_cgt_concessions", envVar: "STRIPE_AU_SBCGT_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // Taken from the config's own deadline block: 31 October is the individual tax return due
+    // date, and business CGT events are reported in that return. A return due date recurs every
+    // year, so recurrence is annual and NO year is pinned — renderTemporalBlock omits year for
+    // annual precisely so the resolver rolls it forward instead of reporting EXPIRED after the
+    // first one passes. 31 October 2026 has passed, so this resolves to 31 October 2027.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      10,
+      day:        31,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "small_business_cgt_concessions",
+    label:        "Individual tax return due",
+    basis:        "cole/config/au-06-small-business-cgt-concessions.ts deadline block, verbatim: isoDate \"2026-10-31T23:59:59.000+11:00\", display \"31 October 2026\", description \"Individual tax return due — business CGT events reported here\", urgencyLabel \"RETURN DUE\".",
+  },
   deadline: { isoDate: "2026-10-31T23:59:59.000+11:00", display: "31 October 2026", short: "31 Oct 2026", description: "Individual tax return due — business CGT events reported here", urgencyLabel: "RETURN DUE", countdownLabel: "Countdown to 31 October 2026 — tax return due" },
-  h1: "Small Business CGT 2026: Do You Qualify for the $500K Lifetime Exemption?", metaTitle: "Small Business CGT Concessions Australia 2026 — Do You Qualify? | TaxCheckNow", metaDescription: "Selling a small business can trigger large CGT. But eligible owners can reduce or eliminate the gain using four ATO concessions including the $500k lifetime retirement exemption and 15-year exemption. Check your eligibility in 2 minutes.", canonical: "https://taxchecknow.com/au/check/small-business-cgt-concessions",
+  h1: "Small Business CGT: Do You Qualify for the $500K Lifetime Exemption?", metaTitle: "Small Business CGT Concessions: Do You Qualify? | TaxCheckNow", metaDescription: "Selling a small business can trigger large CGT. Four ATO concessions, including the $500k lifetime retirement exemption, may reduce or remove it.", canonical: "https://taxchecknow.com/au/check/small-business-cgt-concessions",
   answerHeadline: "The answer — ATO confirmed April 2026",
   answerBody: [
     "Division 152 of ITAA 1997 provides four CGT concessions specifically for small businesses: the 15-year exemption (eliminates the gain entirely after 15 years), the 50% active asset reduction, the retirement exemption (up to $500,000 lifetime, tax-free), and the rollover (defer the gain for two years). These can be combined — potentially eliminating CGT entirely on a business sale.",
