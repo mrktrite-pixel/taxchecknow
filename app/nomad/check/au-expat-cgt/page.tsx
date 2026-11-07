@@ -319,6 +319,10 @@ const sources = [
     "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   },
   {
+    "title": "ITAA 1936 s6(1) — Definition of resident",
+    "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
+  },
+  {
     "title": "Machine-readable JSON rules",
     "url": "/api/rules/au-expat-cgt"
   }
@@ -1215,6 +1219,11 @@ export default function AuExpatCgtPage() {
               className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ITAA 1997 s104-15 — CGT event A1 (contract date) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C1936A00027/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1936 s6(1) — Definition of resident ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C1936A00027/latest/text</p>
             </a>
             <a href="/api/rules/au-expat-cgt" 
               className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">

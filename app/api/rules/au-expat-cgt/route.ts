@@ -181,6 +181,10 @@ export async function GET() {
             "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         },
         {
+            "title": "ITAA 1936 s6(1) — Definition of resident",
+            "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
+        },
+        {
             "title": "Machine-readable JSON rules",
             "url": "/api/rules/au-expat-cgt"
         }
@@ -206,7 +210,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/nomad/check/au-expat-cgt",
     "api_endpoint": "/api/rules/au-expat-cgt",
-    "generated_at": "2026-11-07T10:00:55.463Z"
+    "generated_at": "2026-11-07T10:04:39.451Z"
 };
 
   return NextResponse.json(rules, {

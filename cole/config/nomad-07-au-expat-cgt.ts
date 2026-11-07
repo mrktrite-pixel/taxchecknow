@@ -155,6 +155,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { title: "ITAA 1997 s118-110 — Main residence exemption",                                                   url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "ITAA 1997 s118-115 — Foreign residents denied exemption",                                           url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "ITAA 1997 s104-15 — CGT event A1 (contract date)",                                                  url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1936 s6(1) — Definition of resident",                                                       url: "https://www.legislation.gov.au/C1936A00027/latest/text" },
     { title: "Machine-readable JSON rules",                                                                        url: "/api/rules/au-expat-cgt" },
   ],
   files: [
