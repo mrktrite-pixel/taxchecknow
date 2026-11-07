@@ -128,6 +128,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { title: "ATO — Capital gains tax (CGT) and foreign residents",                                          url: "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax" },
     { title: "ATO — Foreign resident capital gains withholding (FRCGW)",                                      url: "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/foreign-residents-and-capital-gains-tax/foreign-resident-capital-gains-withholding" },
     { title: "ATO — Work out your tax residency",                                                               url: "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/your-tax-residency" },
+    { title: "ATO — CGT events",                                                                            url: "https://www.ato.gov.au/individuals-and-families/investments-and-assets/capital-gains-tax/cgt-events" },
     { title: "ITAA 1997 s118-110 — Main residence exemption",                                                   url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "ITAA 1997 s118-115 — Foreign residents denied exemption",                                           url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
     { title: "ITAA 1997 s104-15 — CGT event A1 (contract date)",                                                  url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
