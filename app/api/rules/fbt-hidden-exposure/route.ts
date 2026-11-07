@@ -19,14 +19,23 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Fringe Benefits Tax Assessment Act 1986 — FBT year 1 April 2025 to 31 March 2026",
     "legal_anchor": "FBTAA 1986 — Fringe Benefits Tax Assessment Act",
     "deadline": {
-        "iso_date": "2026-05-21T23:59:59.000+10:00",
-        "display": "21 May 2026",
-        "description": "FBT return and payment due — FBT year ended 31 March 2026",
-        "urgency_label": "FBT RETURN DUE"
+        "iso_date": "",
+        "display": "21 May, annually",
+        "description": "The FBT return and payment are due by 21 May each year, for the FBT year ended the preceding 31 March. There is no single act-by date for this product.",
+        "urgency_label": "FBT RETURN DUE",
+        "recurrence": {
+            "kind": "annual",
+            "month": 5,
+            "day": 21,
+            "timezone": "Australia/Sydney",
+            "shift": "next_business_day",
+            "label": "FBT return due",
+            "basis": "RULED BY THE OPERATOR, 2026-11-06, overriding the kind \"none\" declared earlier the same day. Re-read https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax/fbt-registration-lodgment-payment-and-reporting/lodging-your-fbt-return-and-paying on 2026-11-06 (the page shows last updated 10 September 2026), under the heading \"Due date to lodge your return and pay\": \"You must lodge your return and pay the FBT you owe by 21 May, unless either: your tax agent lodges your return electronically - in this case the due date is generally 25 June (you must be an FBT client of the tax agent by 21 May)\". The same page states \"If the final date falls on a weekend or public holiday, the due date is the next business day\", which is why shift is next_business_day. 21 May recurs every year, so this is a FIXED annual rule and NOT a stored date - no calendar year appears anywhere in this declaration, which is what stops it going stale the day after it passes. The 25 June tax-agent concession is a different due date for a different lodger and is deliberately NOT declared here. NOTE: the pinned rates-and-thresholds source carries the 47% rate and the gross-up rates but does NOT carry 21 May (0 occurrences); this lodgment page is where the date is grounded, and it is now in sources."
+        }
     },
     "key_facts": {
         "fbt_rate": "47%",
@@ -111,6 +120,26 @@ export async function GET() {
         {
             "title": "ATO — Fringe benefits tax rates and thresholds (47% FBT rate, 2.0802 type 1 gross-up)",
             "url": "https://www.ato.gov.au/tax-rates-and-codes/fringe-benefits-tax-rates-and-thresholds"
+        },
+        {
+            "title": "ATO — Lodging your FBT return and paying (due 21 May; 25 June tax-agent concession)",
+            "url": "https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/fringe-benefits-tax/fbt-registration-lodgment-payment-and-reporting/lodging-your-fbt-return-and-paying"
+        },
+        {
+            "title": "FBTAA 1986 s 8 — Exempt car benefits",
+            "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+        },
+        {
+            "title": "FBTAA 1986 s 9 — Taxable value of car fringe benefits, statutory formula",
+            "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+        },
+        {
+            "title": "FBTAA 1986 s 40 — Property benefits",
+            "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
+        },
+        {
+            "title": "FBTAA 1986 s 58P — Exempt benefits, minor benefits",
+            "url": "https://www.legislation.gov.au/C2004A03280/latest/text"
         }
     ],
     "products": {
@@ -134,7 +163,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/fbt-hidden-exposure",
     "api_endpoint": "/api/rules/fbt-hidden-exposure",
-    "generated_at": "2026-10-26T09:34:09.781Z"
+    "generated_at": "2026-11-06T12:27:27.851Z"
 };
 
   return NextResponse.json(rules, {
@@ -144,7 +173,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "fbt-hidden-exposure",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

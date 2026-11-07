@@ -26,6 +26,7 @@
 // │ See reports/2026-07-23-frcgw-success-content-migration-scope.txt           │
 // └────────────────────────────────────────────────────────────────────────────┘
 import * as fs from "node:fs";
+import { adviserPhrase } from "./market-demonym";
 import type { ProductConfig } from "../types/product-config";
 import { verifyEngineNative, engineSessionKey } from "./verify-engine-native";
 // The ONE predicate that decides rule-vs-stored, shared with the gate and files generators so
@@ -1111,7 +1112,7 @@ ${!isTier2 ? `
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
-            Always consult a qualified ${marketProse(config)} tax adviser before making financial decisions.
+            Always consult ${adviserPhrase(config)} before making financial decisions.
             Based on ${config.authority} guidance ${config.lastVerified}.{" "}
             ${customerSources(config).slice(0,2).map(s =>
               `<a href="${s.url}" target="_blank" rel="noopener noreferrer" className="underline">${s.title}</a>`

@@ -237,6 +237,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["srtOutcome", "automaticTestApplied", "tiesAnalysis", "ukDayCount", "worldwideIncomeObligation", "filingRequirements", "splitYearEligibility", "immediateActions"],
     tier2: ["srtOutcome", "automaticTestApplied", "tiesAnalysis", "ukDayCount", "worldwideIncomeObligation", "filingRequirements", "splitYearEligibility", "immediateActions", "tieReductionStrategy", "residencyOptimisationPlan", "dualResidencyTreatyAnalysis", "ukSourceIncomeManagement", "auditDefenceDocumentation"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/fbt-hidden-exposure. Lists copied VERBATIM
+  // from au-03-fbt-hidden-exposure.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "fbt-hidden-exposure": {
+    tier1: ["fbtExposureSummary", "benefitByBenefitClassification", "carMethodComparison", "entertainmentTreatment", "evExemptionAnalysis", "minorBenefitExemptions", "recordGapsList", "strongestRiskTrigger", "firstAction"],
+    tier2: ["fbtExposureSummary", "benefitByBenefitClassification", "carMethodComparison", "entertainmentTreatment", "evExemptionAnalysis", "minorBenefitExemptions", "recordGapsList", "annualFBTWorkflow", "entertainmentPolicySettings", "evidenceTemplates", "payrollReportingFlags", "remediationPlan", "strongestRiskTrigger"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */

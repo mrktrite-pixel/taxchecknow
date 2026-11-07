@@ -226,7 +226,7 @@ export default function AuExpatCgtFile03() {
           <p className="text-xs leading-relaxed text-neutral-500">
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
-            Always consult a qualified Australia tax adviser for your personal situation.
+            Always consult a qualified Australian tax adviser for your personal situation.
             Based on Australian Taxation Office (ATO) guidance April 2026.
           </p>
         </div>

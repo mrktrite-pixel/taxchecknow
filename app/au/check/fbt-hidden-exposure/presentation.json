@@ -1,0 +1,105 @@
+{
+  "_doc": "DRAFTED presentation overlay — machine first draft from the build's own terminals, NOT an operator ruling. tier: default 67, 147 only where the terminal's own grounded text shows money at stake, a live deadline, or an adverse determination. Escapes are forced to tier 67 by the translator. Rule the tiers, then re-run emit-engine with --accept-overlay. Remove _drafted once ruled.",
+  "_doctrine": "structural/critical → 147; explainer/guidance → 67. Every row's evidence is printed by the drafter.",
+  "_evidence": {
+    "fbt-who-is-an-employee": [
+      "unresolved:depends on",
+      "clear:not subject to"
+    ],
+    "fbt-family-business-owner-perks": [
+      "unresolved:depends on"
+    ],
+    "fbt-what-is-it": [
+      "unresolved:depends on"
+    ],
+    "fbt-how-calculated": [
+      "money:47%",
+      "money:$1"
+    ],
+    "fbt-employer-obligations": [
+      "money:liability",
+      "adverse:you must",
+      "unresolved:depends on"
+    ],
+    "fbt-exempt-benefits": [
+      "unresolved:depends on",
+      "clear:exempt"
+    ],
+    "none_fit": [
+      "(escape — tier 67 forced)",
+      "⚠SPECIALISE:generic copy, make it about this product"
+    ],
+    "insufficient_information": [
+      "(escape — tier 67 forced)",
+      "⚠SPECIALISE:generic copy, make it about this product"
+    ]
+  },
+  "states": {
+    "fbt-who-is-an-employee": {
+      "tier": 147,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "fbt-family-business-owner-perks": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "fbt-what-is-it": {
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "fbt-how-calculated": {
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "fbt-employer-obligations": {
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "title_key": "product"
+    },
+    "fbt-exempt-benefits": {
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "title_key": "product"
+    },
+    "none_fit": {
+      "severity": "blue",
+      "criticality": "standard",
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "tier": 67
+    },
+    "insufficient_information": {
+      "severity": "amber",
+      "criticality": "critical",
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "tier": 67
+    }
+  },
+  "_ruled": {
+    "by": "operator tier doctrine, applied 2026-11-06",
+    "rule": "explainer/happy-path 67; money/structural 147; the drafter's criticality and severity kept as drafted",
+    "per_state": {
+      "fbt-how-calculated": "STRUCTURAL + money: the taxable-value calculation itself — gross-up rates 2.0802 / 1.8868 and the 47% rate. The drafter already had it.",
+      "fbt-employer-obligations": "STRUCTURAL + adverse: what the employer MUST do — register, report, pay, and the $3,000 quarterly-instalment threshold. The drafter already had it.",
+      "fbt-family-business-owner-perks": "STRUCTURAL: this is the product's own subject — benefits treated as 'part of being an owner' being reclassified as employee fringe benefits, with FBT at 47% following. Adverse and money-bearing; the drafter had it at 67 as an explainer.",
+      "fbt-who-is-an-employee": "STRUCTURAL: the employee/owner boundary IS the determination the reclassification risk turns on. Getting it wrong is what creates the liability, so it is not explanatory.",
+      "fbt-what-is-it": "EXPLAINER by name and content — what FBT is and which benefits attract it.",
+      "fbt-exempt-benefits": "HAPPY PATH: the exemptions and concessions — a favourable outcome, clearly stated.",
+      "none_fit": "ESCAPE — tier 67 forced.",
+      "insufficient_information": "ESCAPE — tier 67 forced."
+    }
+  }
+}
