@@ -2,7 +2,11 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "gst-registration-trap", name: "GST Registration Trap Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/gst-registration-trap", url: "https://taxchecknow.com/au/check/gst-registration-trap", apiRoute: "/api/rules/gst-registration-trap",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "A New Tax System (Goods and Services Tax) Act 1999 — GST registration", legislation: "GST Act 1999 — GST registration threshold and obligations", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "A New Tax System (Goods and Services Tax) Act 1999 — GST registration", legislation: "GST Act 1999 — GST registration threshold and obligations", lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your GST Registration Fix Plan", tagline: "Are you required to register for GST already?", value: "A personalised GST registration check — threshold analysis, backdating risk assessment, and registration strategy.", cta: "Get My GST Fix Plan — $67 →", productKey: "au_67_gst_registration_trap", envVar: "STRIPE_AU_GST_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your GST Compliance System", tagline: "Full GST setup, compliance framework, and BAS management", value: "Complete GST registration, BAS lodgement system, and ongoing compliance framework to avoid penalties and maximise input tax credits.", cta: "Get My GST System — $147 →", productKey: "au_147_gst_registration_trap", envVar: "STRIPE_AU_GST_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2026-07-28T23:59:59.000+10:00", display: "28 July 2026", short: "28 Jul 2026", description: "Quarterly BAS due — Q4 2025/26 April to June", urgencyLabel: "BAS DUE", countdownLabel: "Countdown to 28 July 2026 — Q4 BAS due" },
