@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1936 — Division 7A (Loans to shareholders and associates)",
     "legal_anchor": "ITAA 1936 — Division 7A",
     "deadline": {
@@ -125,6 +125,14 @@ export async function GET() {
         {
             "title": "ATO — Division 7A loans (minimum yearly repayment)",
             "url": "https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans"
+        },
+        {
+            "title": "ITAA 1936 Division 7A — Private company payments and loans",
+            "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
+        },
+        {
+            "title": "ITAA 1936 s109D — Loans treated as dividends",
+            "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
         }
     ],
     "products": {
@@ -148,7 +156,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/division-7a-loan-trap",
     "api_endpoint": "/api/rules/division-7a-loan-trap",
-    "generated_at": "2026-11-08T11:33:06.713Z"
+    "generated_at": "2026-11-08T12:14:19.236Z"
 };
 
   return NextResponse.json(rules, {
@@ -158,7 +166,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "division-7a-loan-trap",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }
