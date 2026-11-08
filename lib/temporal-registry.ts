@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 22
+// Declared products: 23
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -191,6 +191,16 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                       "anchor": "lead"
                 }
           ]
+    },
+    "gst-registration-trap": {
+          "temporal": {
+                "kind": "none",
+                "reason": "RULED none 2026-11-08. The config's deadline block names a quarterly BAS due date (28 July 2026, 'Quarterly BAS due — Q4 2025/26'), but that is a lodgment date for a business that is ALREADY registered — it is not the deadline this product's own question turns on. The registration obligation is relative, not calendar-fixed: it runs 21 days from the month a business crosses the turnover threshold, which is different for every buyer and cannot be a single product-level date. So no shape fits, and 'none' with this reason records that it was checked rather than missed. The BAS calendar rows stay (F-S276: a 'none' declaration must not empty the calendar).",
+                "jurisdiction": "AU",
+                "domain": "gst_registration_trap",
+                "label": "No product-level temporal deadline",
+                "basis": "cole/config/au-08-gst-registration-trap.ts deadline block: isoDate \"2026-07-28T23:59:59.000+10:00\", description \"Quarterly BAS due — Q4 2025/26 April to June\". Pinned authority re-read 2026-11-08, HTTP 200, ATO Last updated 14 September 2026, and it states the obligation as 'within 21 days' of exceeding the threshold — a relative window, not a fixed date."
+          }
     },
     "medicare-levy-surcharge-trap": {
           "temporal": {

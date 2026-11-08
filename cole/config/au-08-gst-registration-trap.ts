@@ -2,13 +2,21 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "gst-registration-trap", name: "GST Registration Trap Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/gst-registration-trap", url: "https://taxchecknow.com/au/check/gst-registration-trap", apiRoute: "/api/rules/gst-registration-trap",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "A New Tax System (Goods and Services Tax) Act 1999 — GST registration", legislation: "GST Act 1999 — GST registration threshold and obligations", lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "A New Tax System (Goods and Services Tax) Act 1999 — GST registration", legislation: "GST Act 1999 — GST registration threshold and obligations", lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
   // EngineCalculator wrapper, so the success pages must bind inputs through
   // buildComposerInputsFromSession, and the parity census must cover this product.
   engineNative: true,
 
   tier1: { price: 67, name: "Your GST Registration Fix Plan", tagline: "Are you required to register for GST already?", value: "A personalised GST registration check — threshold analysis, backdating risk assessment, and registration strategy.", cta: "Get My GST Fix Plan — $67 →", productKey: "au_67_gst_registration_trap", envVar: "STRIPE_AU_GST_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your GST Compliance System", tagline: "Full GST setup, compliance framework, and BAS management", value: "Complete GST registration, BAS lodgement system, and ongoing compliance framework to avoid penalties and maximise input tax credits.", cta: "Get My GST System — $147 →", productKey: "au_147_gst_registration_trap", envVar: "STRIPE_AU_GST_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "none",
+    reason:       "RULED none 2026-11-08. The config's deadline block names a quarterly BAS due date (28 July 2026, 'Quarterly BAS due — Q4 2025/26'), but that is a lodgment date for a business that is ALREADY registered — it is not the deadline this product's own question turns on. The registration obligation is relative, not calendar-fixed: it runs 21 days from the month a business crosses the turnover threshold, which is different for every buyer and cannot be a single product-level date. So no shape fits, and 'none' with this reason records that it was checked rather than missed. The BAS calendar rows stay (F-S276: a 'none' declaration must not empty the calendar).",
+    jurisdiction: "AU",
+    domain:       "gst_registration_trap",
+    label:        "No product-level temporal deadline",
+    basis:        "cole/config/au-08-gst-registration-trap.ts deadline block: isoDate \"2026-07-28T23:59:59.000+10:00\", description \"Quarterly BAS due — Q4 2025/26 April to June\". Pinned authority re-read 2026-11-08, HTTP 200, ATO Last updated 14 September 2026, and it states the obligation as 'within 21 days' of exceeding the threshold — a relative window, not a fixed date.",
+  },
   deadline: { isoDate: "2026-07-28T23:59:59.000+10:00", display: "28 July 2026", short: "28 Jul 2026", description: "Quarterly BAS due — Q4 2025/26 April to June", urgencyLabel: "BAS DUE", countdownLabel: "Countdown to 28 July 2026 — Q4 BAS due" },
   h1: "GST Registration 2026: Are You Required to Register Already?", metaTitle: "GST Registration: Are You Required to Register? | TaxCheckNow", metaDescription: "Once your business turnover crosses the GST threshold in any 12-month period you must register within 21 days, and the ATO can backdate your liability.", canonical: "https://taxchecknow.com/au/check/gst-registration-trap",
   answerHeadline: "The answer — ATO confirmed April 2026",
