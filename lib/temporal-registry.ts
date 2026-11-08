@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 21
+// Declared products: 23
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -145,6 +145,23 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "superannuation",
                 "label": "Income year end",
                 "basis": "ITAA 1997 Division 293 (additional tax on concessional contributions): assessed per income year on income plus certain super contributions, and there is no separate act-by date — config au-17 deadline.description, with display \"End of the income year\" and urgencyLabel \"PER INCOME YEAR\". isoDate and countdownLabel are deliberately empty in that config (the au-10 pattern for a standing rule). Operator ruling 2026-10-21."
+          }
+    },
+    "division-7a-loan-trap": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 6,
+                      "day": 30,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "division_7a_loan_trap",
+                "label": "End of financial year — Division 7A minimum yearly repayment due",
+                "basis": "cole/config/au-02-division-7a-loan-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"EOFY — minimum Div 7A repayments must be made before 30 June each year\", urgencyLabel \"EOFY DEADLINE\", countdownLabel \"Countdown to 30 June 2026 — Div 7A minimum repayments due\"."
           }
     },
     "fbt-hidden-exposure": {

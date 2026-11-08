@@ -9,6 +9,27 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Your Division 7A Loan Fix Plan", tagline: "Is your director loan about to become taxable income?", value: "A personalised Div 7A audit — minimum repayment calculation, loan compliance check, and risk classification.", cta: "Get My Div 7A Fix Plan — $67 →", productKey: "au_67_division_7a_loan_trap", envVar: "STRIPE_AU_DIV7A_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Division 7A Loan Restructure System", tagline: "Restructure your loans before ATO deems them dividends", value: "Full loan restructure plan, multi-year repayment strategy, and tax-efficient structuring to exit the Div 7A trap.", cta: "Get My Div 7A System — $147 →", productKey: "au_147_division_7a_loan_trap", envVar: "STRIPE_AU_DIV7A_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // The config's own deadline block says it recurs in terms: description "EOFY — minimum Div 7A
+    // repayments must be made before 30 June EACH YEAR". So annual, not one_off, and no year is
+    // pinned — renderTemporalBlock omits year for annual so the resolver rolls forward to 30 June
+    // 2027 rather than reporting EXPIRED once 2026 passes. The minimum yearly repayment is the
+    // obligation this date governs, which is why the product's figure pool is the benchmark
+    // interest rate series.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      6,
+      day:        30,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "division_7a_loan_trap",
+    label:        "End of financial year — Division 7A minimum yearly repayment due",
+    basis:        "cole/config/au-02-division-7a-loan-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"EOFY — minimum Div 7A repayments must be made before 30 June each year\", urgencyLabel \"EOFY DEADLINE\", countdownLabel \"Countdown to 30 June 2026 — Div 7A minimum repayments due\".",
+  },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "EOFY — minimum Div 7A repayments must be made before 30 June each year", urgencyLabel: "EOFY DEADLINE", countdownLabel: "Countdown to 30 June 2026 — Div 7A minimum repayments due" },
   h1: "Division 7A: Is Your Director Loan About to Become Taxable Income?", metaTitle: "Division 7A: Is a Director Loan a Deemed Dividend? | TaxCheckNow", metaDescription: "Division 7A turns a company loan to a shareholder or associate into a deemed dividend unless it is documented and the minimum yearly repayment is made.", canonical: "https://taxchecknow.com/au/check/division-7a-loan-trap",
   answerHeadline: "The answer — ATO confirmed April 2026",
