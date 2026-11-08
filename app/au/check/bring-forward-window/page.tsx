@@ -10,17 +10,18 @@ import BringForwardWindowCalculator from "./BringForwardWindowCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Super Bring-Forward Window June 30 2026 — $510K Sequenced or Locked at $360K? | TaxCheckNow",
-  description: "From 1 July 2026 the bring-forward cap rises to $390,000 by indexation. But if you already triggered a bring-forward, you're locked at $360,000 — losing $150,000 of contribution capacity permanently. Sequence $120K before June 30 + $390K from July 1 = $510K. Free check in 2 minutes.",
+  title: "Super Bring-Forward Window: Sequenced or Locked? | TaxCheckNow",
+  description: "Trigger a super bring-forward in the wrong year and you are locked to that year's lower cap, losing the indexed headroom. Check your window before 30 June.",
   alternates: { canonical: "https://taxchecknow.com/au/check/bring-forward-window" },
   openGraph: {
-    title: "Super Bring-Forward Window June 30 2026 — $510K Sequenced or Locked at $360K? | TaxCheckNow",
-    description: "From 1 July 2026 the bring-forward cap rises to $390,000 by indexation. But if you already triggered a bring-forward, you're locked at $360,000 — losing $150,000 of contribution capacity permanently. Sequence $120K before June 30 + $390K from July 1 = $510K. Free check in 2 minutes.",
+    title: "Super Bring-Forward Window: Sequenced or Locked? | TaxCheckNow",
+    description: "Trigger a super bring-forward in the wrong year and you are locked to that year's lower cap, losing the indexed headroom. Check your window before 30 June.",
     url: "https://taxchecknow.com/au/check/bring-forward-window",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
+
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
@@ -28,12 +29,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -279,8 +283,13 @@ const countdownStats = [
 
 export default function BringForwardWindowPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/bring-forward-window", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -297,7 +306,7 @@ export default function BringForwardWindowPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Super Contribution Bring-Forward Window Engine — Rules April 2026",
-    description: "From 1 July 2026 the bring-forward cap rises to $390,000 by indexation. But if you already triggered a bring-forward, you're locked at $360,000 — losing $150,000 of contribution capacity permanently. Sequence $120K before June 30 + $390K from July 1 = $510K. Free check in 2 minutes.",
+    description: "Trigger a super bring-forward in the wrong year and you are locked to that year's lower cap, losing the indexed headroom. Check your window before 30 June.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -313,7 +322,7 @@ export default function BringForwardWindowPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Super Contribution Bring-Forward Window Engine",
-    description: "From 1 July 2026 the bring-forward cap rises to $390,000 by indexation. But if you already triggered a bring-forward, you're locked at $360,000 — losing $150,000 of contribution capacity permanently. Sequence $120K before June 30 + $390K from July 1 = $510K. Free check in 2 minutes.",
+    description: "Trigger a super bring-forward in the wrong year and you are locked to that year's lower cap, losing the indexed headroom. Check your window before 30 June.",
     url: "https://taxchecknow.com/au/check/bring-forward-window",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -362,7 +371,7 @@ export default function BringForwardWindowPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/bring-forward-window#calculator",
-    "description": "From 1 July 2026 the bring-forward cap rises to $390,000 by indexation. But if you already triggered a bring-forward, you're locked at $360,000 — losing $150,000 of contribution capacity permanently. Sequence $120K before June 30 + $390K from July 1 = $510K. Free check in 2 minutes.",
+    "description": "Trigger a super bring-forward in the wrong year and you are locked to that year's lower cap, losing the indexed headroom. Check your window before 30 June.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -447,7 +456,7 @@ export default function BringForwardWindowPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          The June 30 Super Window (2026): Get $510,000 Into Super — or Locked Out at $360,000
+          Super Bring-Forward Window: Sequenced, or Locked Out at the Lower Cap?
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}

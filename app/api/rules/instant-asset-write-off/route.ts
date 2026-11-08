@@ -107,6 +107,10 @@ export async function GET() {
         {
             "title": "ATO — Instant asset write-off",
             "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/depreciation-and-capital-expenses-and-allowances/simpler-depreciation-for-small-business/instant-asset-write-off"
+        },
+        {
+            "title": "ATO — Changes to car thresholds from 1 July (car limit)",
+            "url": "https://www.ato.gov.au/businesses-and-organisations/small-business-newsroom/changes-to-car-thresholds-from-1-july"
         }
     ],
     "products": {
@@ -130,7 +134,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/instant-asset-write-off",
     "api_endpoint": "/api/rules/instant-asset-write-off",
-    "generated_at": "2026-04-21T09:49:46.059Z"
+    "generated_at": "2026-11-08T02:12:17.477Z"
 };
 
   return NextResponse.json(rules, {
