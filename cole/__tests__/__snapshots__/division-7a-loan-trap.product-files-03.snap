@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "division-7a-loan-trap";
+const SESSION_KEY = "division-7a-loan-trap";
 const SLUG = "d7a-03";
 const FALLBACK_LABEL = { name: "Loan Compliance Template Guide", desc: "What a complying Division 7A loan agreement must contain." };
 const BODY = `<h2>Division 7A Loan Agreement — Required Elements</h2><ul class="checklist"><li>Names of lender (company) and borrower (shareholder/associate)</li><li>Loan amount and date</li><li>Interest rate — must be at least ATO benchmark rate</li><li>Loan term — maximum 7 years (25 years if secured by real property)</li><li>Minimum repayment schedule</li><li>Security details if applicable</li><li>Signatures of both parties</li><li>Date — must be before company lodgement day</li></ul><div class="warning-box"><strong>Critical:</strong> The agreement must be in place BEFORE the company's lodgement day. A backdated or late agreement does not protect against deemed dividend treatment.</div>`;
@@ -27,7 +28,7 @@ export default function Division7aLoanTrapFile03() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's

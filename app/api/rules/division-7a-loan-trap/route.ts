@@ -26,7 +26,16 @@ export async function GET() {
         "iso_date": "2026-06-30T23:59:59.000+10:00",
         "display": "30 June 2026",
         "description": "EOFY — minimum Div 7A repayments must be made before 30 June each year",
-        "urgency_label": "EOFY DEADLINE"
+        "urgency_label": "EOFY DEADLINE",
+        "recurrence": {
+            "kind": "annual",
+            "month": 6,
+            "day": 30,
+            "timezone": "Australia/Sydney",
+            "shift": "none",
+            "label": "End of financial year — Division 7A minimum yearly repayment due",
+            "basis": "cole/config/au-02-division-7a-loan-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"EOFY — minimum Div 7A repayments must be made before 30 June each year\", urgencyLabel \"EOFY DEADLINE\", countdownLabel \"Countdown to 30 June 2026 — Div 7A minimum repayments due\"."
+        }
     },
     "key_facts": {
         "benchmark_interest_rate_2025_26": "8.27%",
@@ -139,7 +148,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/division-7a-loan-trap",
     "api_endpoint": "/api/rules/division-7a-loan-trap",
-    "generated_at": "2026-11-08T02:12:45.465Z"
+    "generated_at": "2026-11-08T11:33:06.713Z"
 };
 
   return NextResponse.json(rules, {

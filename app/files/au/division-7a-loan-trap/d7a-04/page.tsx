@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "division-7a-loan-trap";
+const SESSION_KEY = "division-7a-loan-trap";
 const SLUG = "d7a-04";
 const FALLBACK_LABEL = { name: "Risk Classification Summary", desc: "Your Division 7A risk level and the priority actions." };
 const BODY = `<h2>Risk Classification</h2><table><tr><th>Situation</th><th>Risk Level</th><th>Action Required</th></tr><tr><td>Agreement in place, repayments on track</td><td>Low</td><td>Annual minimum repayment check</td></tr><tr><td>Agreement exists, missed one repayment</td><td>Medium</td><td>Deemed dividend for shortfall — declare and pay</td></tr><tr><td>No agreement — informal drawings</td><td>Critical</td><td>Formalise before lodgement day immediately</td></tr><tr><td>Drawings accumulated over multiple years</td><td>Critical</td><td>Restructure — specialist advice required</td></tr></table>`;
@@ -27,7 +28,7 @@ export default function Division7aLoanTrapFile04() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
