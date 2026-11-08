@@ -598,7 +598,7 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australian tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
+            Based on ATO guidance November 2026.{" "}
             <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/in-detail/withdrawing-and-using-your-super/superannuation-benefits-paid-from-a-deceased-estate" target="_blank" rel="noopener noreferrer" className="underline">ATO — Superannuation death benefits paid from a deceased estate</a> · <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/in-detail/withdrawing-and-using-your-super" target="_blank" rel="noopener noreferrer" className="underline">ATO — Death benefit dependant and tax-free treatment</a>
           </p>
         </div>

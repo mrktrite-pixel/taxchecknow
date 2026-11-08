@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1997 Division 302 (death benefits tax, s302-60 / s302-145 / s302-195 / s302-200) · Subdivision 296-B (Division 296 tax on TSB over $3M, from 1 July 2026) · s307-125 (proportioning rule) · Superannuation Industry (Supervision) Act 1993 · Law since 2007 (not new)",
     "legal_anchor": "ITAA 1997 Division 302 — Taxation of superannuation death benefits",
     "deadline": {
@@ -132,6 +132,26 @@ export async function GET() {
         {
             "title": "ATO — Division 296 tax on superannuation balances over $3 million",
             "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
+        },
+        {
+            "title": "ITAA 1997 Division 302 — Superannuation death benefits",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s302-195 — Meaning of death benefits dependant",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s302-200 — Interdependency relationship",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s307-125 — Proportioning rule for superannuation benefits",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 Subdivision 296-B — Division 296 tax on super earnings",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         }
     ],
     "products": {
@@ -155,7 +175,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/super-death-tax-trap",
     "api_endpoint": "/api/rules/super-death-tax-trap",
-    "generated_at": "2026-11-08T10:43:58.865Z"
+    "generated_at": "2026-11-08T13:37:28.744Z"
 };
 
   return NextResponse.json(rules, {
@@ -165,7 +185,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "super-death-tax-trap",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }
