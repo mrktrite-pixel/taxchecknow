@@ -10,17 +10,18 @@ import InstantAssetWriteOffCalculator from "./InstantAssetWriteOffCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Instant Asset Write-Off Australia 2026 — Does Your Asset Qualify Before 30 June? | TaxCheckNow",
-  description: "The $20,000 instant asset write-off is available to small businesses with turnover under $10M. But the asset must be installed and ready for use by 30 June — not just ordered or paid for. Check eligibility in 2 minutes.",
+  title: "Instant Asset Write-Off: Does Your Asset Qualify? | TaxCheckNow",
+  description: "The $20,000 instant asset write-off is for small businesses under $10M turnover, and the asset must be installed ready for use by 30 June.",
   alternates: { canonical: "https://taxchecknow.com/au/check/instant-asset-write-off" },
   openGraph: {
-    title: "Instant Asset Write-Off Australia 2026 — Does Your Asset Qualify Before 30 June? | TaxCheckNow",
-    description: "The $20,000 instant asset write-off is available to small businesses with turnover under $10M. But the asset must be installed and ready for use by 30 June — not just ordered or paid for. Check eligibility in 2 minutes.",
+    title: "Instant Asset Write-Off: Does Your Asset Qualify? | TaxCheckNow",
+    description: "The $20,000 instant asset write-off is for small businesses under $10M turnover, and the asset must be installed ready for use by 30 June.",
     url: "https://taxchecknow.com/au/check/instant-asset-write-off",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
+
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
@@ -28,12 +29,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -222,6 +226,10 @@ const sources = [
   {
     "title": "ATO — Instant asset write-off",
     "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/depreciation-and-capital-expenses-and-allowances/simpler-depreciation-for-small-business/instant-asset-write-off"
+  },
+  {
+    "title": "ATO — Changes to car thresholds from 1 July (car limit)",
+    "url": "https://www.ato.gov.au/businesses-and-organisations/small-business-newsroom/changes-to-car-thresholds-from-1-july"
   }
 ];
 
@@ -253,8 +261,13 @@ const countdownStats = [
 
 export default function InstantAssetWriteOffPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/instant-asset-write-off", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -271,7 +284,7 @@ export default function InstantAssetWriteOffPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Instant Asset Write-Off Engine — Rules April 2026",
-    description: "The $20,000 instant asset write-off is available to small businesses with turnover under $10M. But the asset must be installed and ready for use by 30 June — not just ordered or paid for. Check eligibility in 2 minutes.",
+    description: "The $20,000 instant asset write-off is for small businesses under $10M turnover, and the asset must be installed ready for use by 30 June.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -287,7 +300,7 @@ export default function InstantAssetWriteOffPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Instant Asset Write-Off Engine",
-    description: "The $20,000 instant asset write-off is available to small businesses with turnover under $10M. But the asset must be installed and ready for use by 30 June — not just ordered or paid for. Check eligibility in 2 minutes.",
+    description: "The $20,000 instant asset write-off is for small businesses under $10M turnover, and the asset must be installed ready for use by 30 June.",
     url: "https://taxchecknow.com/au/check/instant-asset-write-off",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -336,7 +349,7 @@ export default function InstantAssetWriteOffPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/instant-asset-write-off#calculator",
-    "description": "The $20,000 instant asset write-off is available to small businesses with turnover under $10M. But the asset must be installed and ready for use by 30 June — not just ordered or paid for. Check eligibility in 2 minutes.",
+    "description": "The $20,000 instant asset write-off is for small businesses under $10M turnover, and the asset must be installed ready for use by 30 June.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -1005,10 +1018,15 @@ export default function InstantAssetWriteOffPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/depreciation-and-capital-expenses-and-allowances/simpler-depreciation-for-small-business/instant-asset-write-off" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/depreciation-and-capital-expenses-and-allowances/simpler-depreciation-for-small-business/instant-asset-write-off" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Instant asset write-off ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/depreciation-and-capital-expenses-and-allowances/simpler-depreciation-for-small-business/instant-asset-write-off</p>
+            </a>
+            <a href="https://www.ato.gov.au/businesses-and-organisations/small-business-newsroom/changes-to-car-thresholds-from-1-july" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Changes to car thresholds from 1 July (car limit) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/small-business-newsroom/changes-to-car-thresholds-from-1-july</p>
             </a>
           </div>
         </div>

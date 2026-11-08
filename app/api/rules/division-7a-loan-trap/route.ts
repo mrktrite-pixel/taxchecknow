@@ -111,7 +111,11 @@ export async function GET() {
     "sources": [
         {
             "title": "ATO — Division 7A",
-            "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends"
+            "url": "https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate"
+        },
+        {
+            "title": "ATO — Division 7A loans (minimum yearly repayment)",
+            "url": "https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans"
         }
     ],
     "products": {
@@ -131,11 +135,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends"
+        "https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends"
     ],
     "canonical": "https://taxchecknow.com/au/check/division-7a-loan-trap",
     "api_endpoint": "/api/rules/division-7a-loan-trap",
-    "generated_at": "2026-04-21T13:50:40.877Z"
+    "generated_at": "2026-11-08T02:12:45.465Z"
 };
 
   return NextResponse.json(rules, {
