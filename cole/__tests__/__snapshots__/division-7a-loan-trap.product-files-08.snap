@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "division-7a-loan-trap";
+const SESSION_KEY = "division-7a-loan-trap";
 const SLUG = "d7a-08";
 const FALLBACK_LABEL = { name: "Tax Minimisation Structuring Plan", desc: "Use franked dividends and salary to exit the Division 7A loan tax-efficiently." };
 const BODY = `<h2>Tax-Efficient Exit Strategy</h2><p>Exiting a large Division 7A loan requires careful planning across multiple income years to minimise tax.</p><h2>The Optimal Approach</h2><ol><li>Quantify the full loan balance and accrued interest</li><li>Assess the company's franking account balance</li><li>Model: franked dividend vs salary repayment vs property security</li><li>Spread the repayment/exit across 2-3 income years to avoid bracket creep</li><li>Time larger payments in lower-income years (e.g. post-retirement)</li></ol>`;
@@ -27,7 +28,7 @@ export default function Division7aLoanTrapFile08() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function Division7aLoanTrapFile08() {
               🇦🇺 ATO · ITAA 1936 — Division 7A
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 08 of 8
@@ -227,7 +228,7 @@ export default function Division7aLoanTrapFile08() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance November 2026.
           </p>
         </div>
 

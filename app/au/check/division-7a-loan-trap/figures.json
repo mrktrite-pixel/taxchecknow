@@ -1,0 +1,58 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Benchmark interest rate – 2027 income year (ended 30 June 2027)",
+    "value": "8.77",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_1",
+    "label": "Benchmark interest rate – 2026 income year (ended 30 June 2026)",
+    "value": "8.37",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_2",
+    "label": "Benchmark interest rate – 2025 income year (ended 30 June 2025)",
+    "value": "8.77",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_3",
+    "label": "Benchmark interest rate – 2024 income year (ended 30 June 2024)",
+    "value": "8.27",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_4",
+    "label": "Benchmark interest rate – 2023 income year (ended 30 June 2023)",
+    "value": "4.77",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_5",
+    "label": "Benchmark interest rate – 2022 income year (ended 30 June 2022)",
+    "value": "4.52",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_6",
+    "label": "Benchmark interest rate – substituted accounting period example (Company ABC, starting 1 November 2022)",
+    "value": "6.77",
+    "unit": "%",
+    "fact_role": "rate"
+  },
+  {
+    "id": "fig_7",
+    "label": "Benchmark interest rate – substituted accounting period example (Company XYZ, starting 1 May 2023)",
+    "value": "8.02",
+    "unit": "%",
+    "fact_role": "rate"
+  }
+]

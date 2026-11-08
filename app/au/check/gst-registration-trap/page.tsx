@@ -10,30 +10,34 @@ import GstRegistrationTrapCalculator from "./GstRegistrationTrapCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "GST Registration Threshold Australia 2026 — Are You Over $75,000? | TaxCheckNow",
-  description: "Once your business turnover exceeds $75,000 in any 12-month period, you must register for GST within 21 days. Miss the threshold and the ATO will backdate your liability. Free calculator checks your position in 2 minutes.",
+  title: "GST Registration: Are You Required to Register? | TaxCheckNow",
+  description: "Once your business turnover crosses the GST threshold in any 12-month period you must register within 21 days, and the ATO can backdate your liability.",
   alternates: { canonical: "https://taxchecknow.com/au/check/gst-registration-trap" },
   openGraph: {
-    title: "GST Registration Threshold Australia 2026 — Are You Over $75,000? | TaxCheckNow",
-    description: "Once your business turnover exceeds $75,000 in any 12-month period, you must register for GST within 21 days. Miss the threshold and the ATO will backdate your liability. Free calculator checks your position in 2 minutes.",
+    title: "GST Registration: Are You Required to Register? | TaxCheckNow",
+    description: "Once your business turnover crosses the GST threshold in any 12-month period you must register within 21 days, and the ATO can backdate your liability.",
     url: "https://taxchecknow.com/au/check/gst-registration-trap",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "28 July 2026";
 const DEADLINE_ISO   = "2026-07-28T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -228,6 +232,10 @@ const sources = [
   {
     "title": "ATO — GST registration",
     "url": "https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst"
+  },
+  {
+    "title": "GST Act 1999 s23-5 — Who is required to be registered",
+    "url": "https://www.legislation.gov.au/C2004A00446/latest/text"
   }
 ];
 
@@ -260,8 +268,13 @@ const countdownStats = [
 
 export default function GstRegistrationTrapPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/gst-registration-trap", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -277,8 +290,8 @@ export default function GstRegistrationTrapPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "GST Registration Trap Engine — Rules April 2026",
-    description: "Once your business turnover exceeds $75,000 in any 12-month period, you must register for GST within 21 days. Miss the threshold and the ATO will backdate your liability. Free calculator checks your position in 2 minutes.",
+    name: "GST Registration Trap Engine — Rules November 2026",
+    description: "Once your business turnover crosses the GST threshold in any 12-month period you must register within 21 days, and the ATO can backdate your liability.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -294,7 +307,7 @@ export default function GstRegistrationTrapPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "GST Registration Trap Engine",
-    description: "Once your business turnover exceeds $75,000 in any 12-month period, you must register for GST within 21 days. Miss the threshold and the ATO will backdate your liability. Free calculator checks your position in 2 minutes.",
+    description: "Once your business turnover crosses the GST threshold in any 12-month period you must register within 21 days, and the ATO can backdate your liability.",
     url: "https://taxchecknow.com/au/check/gst-registration-trap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -343,13 +356,13 @@ export default function GstRegistrationTrapPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/gst-registration-trap#calculator",
-    "description": "Once your business turnover exceeds $75,000 in any 12-month period, you must register for GST within 21 days. Miss the threshold and the ATO will backdate your liability. Free calculator checks your position in 2 minutes.",
+    "description": "Once your business turnover crosses the GST threshold in any 12-month period you must register within 21 days, and the ATO can backdate your liability.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -374,6 +387,18 @@ export default function GstRegistrationTrapPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "GST Registration 2026: Are You Required to Register Already?",
+    description: "Once your business turnover crosses the GST threshold in any 12-month period you must register within 21 days, and the ATO can backdate your liability.",
+    thumbnailUrl: "https://i.ytimg.com/vi/M5I72UWK6cA/hqdefault.jpg",
+    uploadDate: "2026-06-12T01:00:46.171+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=M5I72UWK6cA",
+    embedUrl: "https://www.youtube.com/embed/M5I72UWK6cA",
+    transcript: "GST Registration 2026: Are You Required to Register Already? Sound like you? You hit $75,000 in sales and you're not sure if you needed to register. The actual truth is — the test is not your financial year income. The ATO checks any rolling 12-month period. You could cross $75,000 across two financial years and already be required to register. You had 21 days from crossing that threshold to act. Miss it, and the ATO treats your prices as GST-inclusive — you absorb the 10% yourself. With the quarterly BAS due 28 July, the clock is running. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -383,6 +408,7 @@ export default function GstRegistrationTrapPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -678,7 +704,7 @@ export default function GstRegistrationTrapPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1017,10 +1043,15 @@ export default function GstRegistrationTrapPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — GST registration ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A00446/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">GST Act 1999 s23-5 — Who is required to be registered ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A00446/latest/text</p>
             </a>
           </div>
         </div>
@@ -1032,11 +1063,20 @@ export default function GstRegistrationTrapPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=M5I72UWK6cA" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"GST Registration 2026: Are You Required to Register Already? Sound like you? You hit $75,000 in sales and you're not sure if you needed to register. The actual truth is — the test is not your financial year income. The ATO checks any rolling 12-month period. You could cross $75,000 across two financial years and already be required to register. You had 21 days from crossing that threshold to act. Miss it, and the ATO treats your prices as GST-inclusive — you absorb the 10% yourself. With the quarterly BAS due 28 July, the clock is running. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -1046,7 +1086,7 @@ export default function GstRegistrationTrapPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

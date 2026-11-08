@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "division-7a-loan-trap";
+const SESSION_KEY = "division-7a-loan-trap";
 const SLUG = "d7a-01";
 const FALLBACK_LABEL = { name: "Your Division 7A Risk Assessment", desc: "Your loan compliance status and deemed dividend risk calculation." };
 const BODY = `<h2>Your Div 7A Position</h2><div class="action-box"><h3>The Risk Calculation</h3><p>No agreement = full balance is deemed dividend</p><p>Missed repayment = shortfall is deemed dividend</p><p>Deemed dividend is unfranked — taxed at marginal rate</p></div><p>Source: <a href="https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate">ATO — Division 7A</a></p>`;
@@ -27,7 +28,7 @@ export default function Division7aLoanTrapFile01() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function Division7aLoanTrapFile01() {
               🇦🇺 ATO · ITAA 1936 — Division 7A
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 01 of 8
@@ -227,7 +228,7 @@ export default function Division7aLoanTrapFile01() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance November 2026.
           </p>
         </div>
 

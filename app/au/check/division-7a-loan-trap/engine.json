@@ -1,0 +1,368 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Division 7A benchmark interest rates for private company loans under the Income Tax Assessment Act 1936. The current rate for the 2027 income year (ended 30 June 2027) is 8.77%, the 2026 income year rate is 8.37%, and prior years range from 4.52% to 8.77%. Companies with a substituted accounting period must look up the Reserve Bank rate last published before their period start date — for example, 6.77% for a period starting 1 November 2022, and 8.02% for a period starting 1 May 2023. No competitor explains these rates with concrete year-by-year figures or addresses the 2026 legislative and administrative changes affecting complying-loan benchmark interest rates.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-company-type",
+      "text": "Does this question relate to a private company subject to Division 7A of the Income Tax Assessment Act 1936?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Yes, it is a private company subject to Division 7A",
+          "value": "yes_private",
+          "flags": [
+            "q1-company-type:yes_private"
+          ]
+        },
+        {
+          "label": "No, it is not a private company or not subject to Division 7A",
+          "value": "no_private",
+          "flags": [
+            "q1-company-type:no_private"
+          ]
+        },
+        {
+          "label": "I'm not sure whether Division 7A applies to this company",
+          "value": "unsure",
+          "flags": [
+            "q1-company-type:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-accounting-period",
+      "text": "Does the private company use a standard income year ending 30 June, or does it have a substituted accounting period (an income year ending on a date other than 30 June)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-company-type:yes_private"
+        ]
+      },
+      "options": [
+        {
+          "label": "Standard income year ending 30 June",
+          "value": "standard",
+          "flags": [
+            "q2-accounting-period:standard"
+          ]
+        },
+        {
+          "label": "Substituted accounting period (income year ends on a date other than 30 June)",
+          "value": "substituted",
+          "flags": [
+            "q2-accounting-period:substituted"
+          ]
+        },
+        {
+          "label": "I'm not sure which type of accounting period the company uses",
+          "value": "unsure",
+          "flags": [
+            "q2-accounting-period:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-income-year",
+      "text": "Which standard income year (ending 30 June) do you need the Division 7A benchmark interest rate for?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-accounting-period:standard"
+        ]
+      },
+      "options": [
+        {
+          "label": "2027 income year (ending 30 June 2027) — rate is 8.77%",
+          "value": "2027",
+          "flags": [
+            "q3-income-year:2027"
+          ]
+        },
+        {
+          "label": "2026 income year (ending 30 June 2026) — rate is 8.37%",
+          "value": "2026",
+          "flags": [
+            "q3-income-year:2026"
+          ]
+        },
+        {
+          "label": "2025 income year (ending 30 June 2025) — rate is 8.77%",
+          "value": "2025",
+          "flags": [
+            "q3-income-year:2025"
+          ]
+        },
+        {
+          "label": "2024 income year (ending 30 June 2024) — rate is 8.27%",
+          "value": "2024",
+          "flags": [
+            "q3-income-year:2024"
+          ]
+        },
+        {
+          "label": "2023 income year (ending 30 June 2023) — rate is 4.77%",
+          "value": "2023",
+          "flags": [
+            "q3-income-year:2023"
+          ]
+        },
+        {
+          "label": "2022 income year (ending 30 June 2022) — rate is 4.52%",
+          "value": "2022",
+          "flags": [
+            "q3-income-year:2022"
+          ]
+        },
+        {
+          "label": "A different income year not listed here",
+          "value": "other_year",
+          "flags": [
+            "q3-income-year:other_year"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-substituted-sub",
+      "text": "What is your goal regarding the substituted accounting period benchmark interest rate?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-accounting-period:substituted"
+        ]
+      },
+      "options": [
+        {
+          "label": "I want to understand how the benchmark interest rate is determined for a substituted accounting period (including worked examples)",
+          "value": "understand_rule",
+          "flags": [
+            "q4-substituted-sub:understand_rule"
+          ]
+        },
+        {
+          "label": "I know my company has a substituted accounting period but I'm not sure which specific rate applies to it and need guidance on how to find out",
+          "value": "find_rate",
+          "flags": [
+            "q4-substituted-sub:find_rate"
+          ]
+        },
+        {
+          "label": "I want to understand what happens if the benchmark interest rate is not met (deemed dividend consequences)",
+          "value": "deemed_dividend",
+          "flags": [
+            "q4-substituted-sub:deemed_dividend"
+          ]
+        },
+        {
+          "label": "None of these describe what I need",
+          "value": "none",
+          "flags": [
+            "q4-substituted-sub:none"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "rate-2027-standard",
+      "when": {
+        "any": [
+          "q3-income-year:2027"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the Division 7A benchmark interest rate for the 2027 income year?",
+      "result_copy": "For a private company with an income year ending 30 June 2027, the Division 7A benchmark interest rate is indicated to be 8.77%. This rate is the 'Indicator Lending Rates – Bank variable housing loans interest rate' (Housing loans; Banks; Variable; Standard; Owner-occupier) last published by the Reserve Bank of Australia before the start of the 2027 income year. The rate does not change if the RBA later revises its published rate after the start of the income year.",
+      "figure_ids": [
+        "fig_0",
+        "fig_2"
+      ]
+    },
+    {
+      "id": "rate-2026-standard",
+      "when": {
+        "any": [
+          "q3-income-year:2026"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the Division 7A benchmark interest rate for the 2026 income year?",
+      "result_copy": "For a private company with an income year ending 30 June 2026, the Division 7A benchmark interest rate is indicated to be 8.37%. This rate is the 'Indicator Lending Rates – Bank variable housing loans interest rate' (Housing loans; Banks; Variable; Standard; Owner-occupier) last published by the Reserve Bank of Australia before the start of the 2026 income year. The rate does not change if the RBA later revises its published rate after the start of the income year.",
+      "figure_ids": [
+        "fig_1"
+      ]
+    },
+    {
+      "id": "rate-2025-standard",
+      "when": {
+        "any": [
+          "q3-income-year:2025"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the Division 7A benchmark interest rate for the 2025 income year?",
+      "result_copy": "For a private company with an income year ending 30 June 2025, the Division 7A benchmark interest rate is indicated to be 8.77%. This rate is the 'Indicator Lending Rates – Bank variable housing loans interest rate' (Housing loans; Banks; Variable; Standard; Owner-occupier) last published by the Reserve Bank of Australia before the start of the 2025 income year. The rate does not change if the RBA later revises its published rate after the start of the income year.",
+      "figure_ids": [
+        "fig_0",
+        "fig_2"
+      ]
+    },
+    {
+      "id": "rate-2024-standard",
+      "when": {
+        "any": [
+          "q3-income-year:2024"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the Division 7A benchmark interest rate for the 2024 income year?",
+      "result_copy": "For a private company with an income year ending 30 June 2024, the Division 7A benchmark interest rate is indicated to be 8.27%. This rate is the 'Indicator Lending Rates – Bank variable housing loans interest rate' (Housing loans; Banks; Variable; Standard; Owner-occupier) last published by the Reserve Bank of Australia before the start of the 2024 income year. The rate does not change if the RBA later revises its published rate after the start of the income year.",
+      "figure_ids": [
+        "fig_3"
+      ]
+    },
+    {
+      "id": "rate-2023-standard",
+      "when": {
+        "any": [
+          "q3-income-year:2023"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the Division 7A benchmark interest rate for the 2023 income year?",
+      "result_copy": "For a private company with an income year ending 30 June 2023, the Division 7A benchmark interest rate is indicated to be 4.77%. This rate is the 'Indicator Lending Rates – Bank variable housing loans interest rate' (Housing loans; Banks; Variable; Standard; Owner-occupier) last published by the Reserve Bank of Australia before the start of the 2023 income year. The rate does not change if the RBA later revises its published rate after the start of the income year.",
+      "figure_ids": [
+        "fig_4"
+      ]
+    },
+    {
+      "id": "rate-2022-standard",
+      "when": {
+        "any": [
+          "q3-income-year:2022"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the Division 7A benchmark interest rate for the 2022 income year?",
+      "result_copy": "For a private company with an income year ending 30 June 2022, the Division 7A benchmark interest rate is indicated to be 4.52%. This rate is the 'Indicator Lending Rates – Bank variable housing loans interest rate' (Housing loans; Banks; Variable; Standard; Owner-occupier) last published by the Reserve Bank of Australia before the start of the 2022 income year. The rate does not change if the RBA later revises its published rate after the start of the income year.",
+      "figure_ids": [
+        "fig_5"
+      ]
+    },
+    {
+      "id": "substituted-accounting-period-guidance",
+      "when": {
+        "any": [
+          "q4-substituted-sub:find_rate"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I'm not sure which benchmark interest rate applies to my company's substituted accounting period — how do I find out?",
+      "result_copy": "If your private company has a substituted accounting period, the benchmark interest rate that applies is determined by identifying the 'Housing loans; Banks; Variable; Standard; Owner-occupier' rate last published by the Reserve Bank of Australia before the start of that company's income year. Because the applicable rate depends on the specific start date of the substituted accounting period, review of the RBA's published indicator lending rates for the relevant date is recommended to confirm which rate applies to your company's circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "substituted-accounting-period-explainer",
+      "when": {
+        "any": [
+          "q4-substituted-sub:understand_rule"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How does the benchmark interest rate work if my private company has a substituted accounting period?",
+      "result_copy": "For a private company with a substituted accounting period, the applicable Division 7A benchmark interest rate is the 'Housing loans; Banks; Variable; Standard; Owner-occupier' rate last published by the Reserve Bank of Australia before the start of that company's substituted accounting period — not the standard table rates. The verified figures show that a company whose substituted accounting period started on 1 November 2022 would use 6.77%, and a company whose period started on 1 May 2023 would use 8.02%. Review recommended to confirm the exact RBA rate last published before the start of your company's specific substituted accounting period.",
+      "figure_ids": [
+        "fig_6",
+        "fig_7"
+      ]
+    },
+    {
+      "id": "deemed-dividend-consequence-explainer",
+      "when": {
+        "any": [
+          "q4-substituted-sub:deemed_dividend"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What happens if a Division 7A loan does not meet the benchmark interest rate requirement — what is a deemed dividend?",
+      "result_copy": "The deemed-dividend consequence under Division 7A arises where a private company loan does not meet the required conditions, including the benchmark interest rate requirement. The applicable benchmark interest rate is the 'Indicator Lending Rates – Bank variable housing loans interest rate' (Housing loans; Banks; Variable; Standard; Owner-occupier) last published by the Reserve Bank of Australia before the start of the income year. Review recommended to assess whether the specific loan terms and interest charged meet the Division 7A requirements for the relevant income year.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-company-type:no_private",
+          "q3-income-year:other_year",
+          "q4-substituted-sub:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1-company-type:unsure",
+          "q2-accounting-period:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

@@ -2,9 +2,34 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "division-7a-loan-trap", name: "Division 7A Loan Trap Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/division-7a-loan-trap", url: "https://taxchecknow.com/au/check/division-7a-loan-trap", apiRoute: "/api/rules/division-7a-loan-trap",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1936 — Division 7A", legislation: "Income Tax Assessment Act 1936 — Division 7A (Loans to shareholders and associates)", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1936 — Division 7A", legislation: "Income Tax Assessment Act 1936 — Division 7A (Loans to shareholders and associates)", lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Division 7A Loan Fix Plan", tagline: "Is your director loan about to become taxable income?", value: "A personalised Div 7A audit — minimum repayment calculation, loan compliance check, and risk classification.", cta: "Get My Div 7A Fix Plan — $67 →", productKey: "au_67_division_7a_loan_trap", envVar: "STRIPE_AU_DIV7A_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Division 7A Loan Restructure System", tagline: "Restructure your loans before ATO deems them dividends", value: "Full loan restructure plan, multi-year repayment strategy, and tax-efficient structuring to exit the Div 7A trap.", cta: "Get My Div 7A System — $147 →", productKey: "au_147_division_7a_loan_trap", envVar: "STRIPE_AU_DIV7A_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // The config's own deadline block says it recurs in terms: description "EOFY — minimum Div 7A
+    // repayments must be made before 30 June EACH YEAR". So annual, not one_off, and no year is
+    // pinned — renderTemporalBlock omits year for annual so the resolver rolls forward to 30 June
+    // 2027 rather than reporting EXPIRED once 2026 passes. The minimum yearly repayment is the
+    // obligation this date governs, which is why the product's figure pool is the benchmark
+    // interest rate series.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      6,
+      day:        30,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "division_7a_loan_trap",
+    label:        "End of financial year — Division 7A minimum yearly repayment due",
+    basis:        "cole/config/au-02-division-7a-loan-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"EOFY — minimum Div 7A repayments must be made before 30 June each year\", urgencyLabel \"EOFY DEADLINE\", countdownLabel \"Countdown to 30 June 2026 — Div 7A minimum repayments due\".",
+  },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "EOFY — minimum Div 7A repayments must be made before 30 June each year", urgencyLabel: "EOFY DEADLINE", countdownLabel: "Countdown to 30 June 2026 — Div 7A minimum repayments due" },
   h1: "Division 7A: Is Your Director Loan About to Become Taxable Income?", metaTitle: "Division 7A: Is a Director Loan a Deemed Dividend? | TaxCheckNow", metaDescription: "Division 7A turns a company loan to a shareholder or associate into a deemed dividend unless it is documented and the minimum yearly repayment is made.", canonical: "https://taxchecknow.com/au/check/division-7a-loan-trap",
   answerHeadline: "The answer — ATO confirmed April 2026",
@@ -103,7 +128,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   crosslink: { title: "Running a family trust? Check your trust distribution position.", body: "Unpaid trust entitlements to a company can trigger Division 7A. Check your trust structure.", url: "/au/check/small-business-cgt-concessions", label: "Check your business structure →" },
   lawBarSummary: "Division 7A: company loans to shareholders or associates are deemed unfranked dividends unless written loan agreement in place before lodgement day, benchmark interest rate charged (8.27% in 2025/26), and minimum repayments made. Max term 7 years unsecured, 25 years secured by real property. Under ITAA 1936 Division 7A.",
   lawBarBadges: ["ATO", "ITAA 1936", "Division 7A", "Benchmark Rate 8.27%"],
-  sources: [{ title: "ATO — Division 7A", url: "https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate" }, { title: "ATO — Division 7A loans (minimum yearly repayment)", url: "https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans" }],
+  sources: [{ title: "ATO — Division 7A", url: "https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate" }, { title: "ATO — Division 7A loans (minimum yearly repayment)", url: "https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans" }, { title: "ITAA 1936 Division 7A — Private company payments and loans", url: "https://www.legislation.gov.au/C1936A00027/latest/text" }, { title: "ITAA 1936 s109D — Loans treated as dividends", url: "https://www.legislation.gov.au/C1936A00027/latest/text" } ],
   files: [
     { num: "01", slug: "d7a-01", name: "Your Division 7A Risk Assessment", desc: "Your loan compliance status and deemed dividend risk calculation.", tier: 1, content: `<h2>Your Div 7A Position</h2><div class="action-box"><h3>The Risk Calculation</h3><p>No agreement = full balance is deemed dividend</p><p>Missed repayment = shortfall is deemed dividend</p><p>Deemed dividend is unfranked — taxed at marginal rate</p></div><p>Source: <a href="https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate">ATO — Division 7A</a></p>` },
     { num: "02", slug: "d7a-02", name: "Minimum Repayment Calculator", desc: "Calculate the exact minimum repayment due before 30 June.", tier: 1, content: `<h2>Minimum Repayment Calculation</h2><p>The minimum annual repayment depends on your loan balance, the ATO benchmark rate, and the remaining loan term.</p><div class="action-box"><h3>2025/26 Benchmark Rate: 8.27%</h3><p>Unsecured 7-year loan of $100,000:</p><p>Approximate minimum repayment: $19,808 per year</p><p>Use the ATO's online calculator for your exact amount.</p></div><table><tr><th>Loan Balance</th><th>7yr Unsecured (approx)</th><th>25yr Secured (approx)</th></tr><tr><td>$50,000</td><td>$9,904/yr</td><td>$4,540/yr</td></tr><tr><td>$100,000</td><td>$19,808/yr</td><td>$9,080/yr</td></tr><tr><td>$200,000</td><td>$39,616/yr</td><td>$18,160/yr</td></tr></table>` },

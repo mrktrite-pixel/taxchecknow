@@ -176,6 +176,18 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // key, read out of this same file rather than guessed.
   au_67_super_death_tax_trap:   "STRIPE_AU_SDTT_67",
   au_147_super_death_tax_trap:  "STRIPE_AU_SDTT_147",
+  // au/check/division-7a-loan-trap (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
+  // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that
+  // key, read out of this same file rather than guessed.
+  au_67_division_7a_loan_trap:   "STRIPE_AU_DIV7A_67",
+  au_147_division_7a_loan_trap:  "STRIPE_AU_DIV7A_147",
+  // au/check/gst-registration-trap (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
+  // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that
+  // key, read out of this same file rather than guessed.
+  au_67_gst_registration_trap:   "STRIPE_AU_GST_67",
+  au_147_gst_registration_trap:  "STRIPE_AU_GST_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {
