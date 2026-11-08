@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { renderPack, hasFrozenPack, type RenderedPack } from "@/lib/render-pack";
 import { getAssessmentFields } from "@/lib/assessment-fields";
+import { buildComposerInputsFromSession } from "@/lib/composer-inputs";
 
 const FILES = [
   {
@@ -301,13 +302,6 @@ export default function SuccessPlan() {
 
   function handleCalendar() {
     const now = new Date().toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-    const transaction_type = sessionStorage.getItem("division-7a-loan-trap_transaction_type") || "loan";
-    const has_agreement = sessionStorage.getItem("division-7a-loan-trap_has_agreement") || "false";
-    const is_deemed_dividend = sessionStorage.getItem("division-7a-loan-trap_is_deemed_dividend") || "false";
-    const status = sessionStorage.getItem("division-7a-loan-trap_status") || "HIGH RISK";
-    const strongest_risk = sessionStorage.getItem("division-7a-loan-trap_strongest_risk") || "No complying loan agreement";
-    const income_year = sessionStorage.getItem("division-7a-loan-trap_income_year") || "current_year";
-    const tier = sessionStorage.getItem("division-7a-loan-trap_tier") || "147";
     function relativeDate(d: number): string {
       return new Date(Date.now() + d * 86400000).toISOString().split("T")[0].replace(/-/g,"");
     }
@@ -655,7 +649,7 @@ export default function SuccessPlan() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australian tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
+            Based on ATO guidance November 2026.{" "}
             <a href="https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate" target="_blank" rel="noopener noreferrer" className="underline">ATO — Division 7A</a> · <a href="https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans" target="_blank" rel="noopener noreferrer" className="underline">ATO — Division 7A loans (minimum yearly repayment)</a>
           </p>
         </div>

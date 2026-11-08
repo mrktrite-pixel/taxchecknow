@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "division-7a-loan-trap";
+const SESSION_KEY = "division-7a-loan-trap";
 const SLUG = "d7a-06";
 const FALLBACK_LABEL = { name: "Full Loan Restructure Plan", desc: "All options to fix a non-compliant Division 7A loan." };
 const BODY = `<h2>Loan Restructure Options</h2><table><tr><th>Option</th><th>How It Works</th><th>Tax Impact</th></tr><tr><td>Formalise as Div 7A loan</td><td>Written agreement + benchmark interest + repayments</td><td>No deemed dividend — loan stays as loan</td></tr><tr><td>Fully-franked dividend</td><td>Company declares dividend, offsets loan balance</td><td>Tax offset by franking credits</td></tr><tr><td>Salary or bonus</td><td>Company pays wage — deductible, reduces balance</td><td>Income tax at marginal rate — company deduction</td></tr><tr><td>Property-secured facility</td><td>Extend to 25-year term — reduce annual repayment</td><td>Lower minimum repayment — manageable cashflow</td></tr></table>`;
@@ -27,7 +28,7 @@ export default function Division7aLoanTrapFile06() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function Division7aLoanTrapFile06() {
               🇦🇺 ATO · ITAA 1936 — Division 7A
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 06 of 8
@@ -227,7 +228,7 @@ export default function Division7aLoanTrapFile06() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance November 2026.
           </p>
         </div>
 

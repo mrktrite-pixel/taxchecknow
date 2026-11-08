@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
@@ -244,6 +244,14 @@ const sources = [
   {
     "title": "ATO — Division 7A loans (minimum yearly repayment)",
     "url": "https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans"
+  },
+  {
+    "title": "ITAA 1936 Division 7A — Private company payments and loans",
+    "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
+  },
+  {
+    "title": "ITAA 1936 s109D — Loans treated as dividends",
+    "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
   }
 ];
 
@@ -298,7 +306,7 @@ export default function Division7aLoanTrapPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Division 7A Loan Trap Engine — Rules April 2026",
+    name: "Division 7A Loan Trap Engine — Rules November 2026",
     description: "Division 7A turns a company loan to a shareholder or associate into a deemed dividend unless it is documented and the minimum yearly repayment is made.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
@@ -370,7 +378,7 @@ export default function Division7aLoanTrapPage() {
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -712,7 +720,7 @@ export default function Division7aLoanTrapPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1057,10 +1065,20 @@ export default function Division7aLoanTrapPage() {
               <p className="font-bold text-neutral-900">ATO — Division 7A ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate</p>
             </a>
-            <a href="https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Division 7A loans (minimum yearly repayment) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C1936A00027/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1936 Division 7A — Private company payments and loans ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C1936A00027/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C1936A00027/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1936 s109D — Loans treated as dividends ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C1936A00027/latest/text</p>
             </a>
           </div>
         </div>
@@ -1072,7 +1090,7 @@ export default function Division7aLoanTrapPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1095,7 +1113,7 @@ export default function Division7aLoanTrapPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

@@ -147,6 +147,23 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "basis": "ITAA 1997 Division 293 (additional tax on concessional contributions): assessed per income year on income plus certain super contributions, and there is no separate act-by date — config au-17 deadline.description, with display \"End of the income year\" and urgencyLabel \"PER INCOME YEAR\". isoDate and countdownLabel are deliberately empty in that config (the au-10 pattern for a standing rule). Operator ruling 2026-10-21."
           }
     },
+    "division-7a-loan-trap": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 6,
+                      "day": 30,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "division_7a_loan_trap",
+                "label": "End of financial year — Division 7A minimum yearly repayment due",
+                "basis": "cole/config/au-02-division-7a-loan-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"EOFY — minimum Div 7A repayments must be made before 30 June each year\", urgencyLabel \"EOFY DEADLINE\", countdownLabel \"Countdown to 30 June 2026 — Div 7A minimum repayments due\"."
+          }
+    },
     "fbt-hidden-exposure": {
           "temporal": {
                 "kind": "deadline",
