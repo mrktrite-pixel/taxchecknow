@@ -1,0 +1,58 @@
+[
+  {
+    "id": "fig_0",
+    "label": "GST registration threshold (general)",
+    "value": "75000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_1",
+    "label": "GST registration threshold (non-profit organisations)",
+    "value": "150000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "Example: Barry's monthly gross business income (May)",
+    "value": "2560",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_3",
+    "label": "Example: Barry's current GST turnover",
+    "value": "31170",
+    "unit": "AUD",
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_4",
+    "label": "Registration deadline after exceeding threshold",
+    "value": "21",
+    "unit": "days",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_5",
+    "label": "Minimum period to remain registered if voluntarily registered",
+    "value": "12",
+    "unit": "months",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_6",
+    "label": "Maximum backdating period for GST registration",
+    "value": "4",
+    "unit": "years",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_7",
+    "label": "Current GST turnover look-back period",
+    "value": "11",
+    "unit": "months",
+    "fact_role": "duration"
+  }
+]
