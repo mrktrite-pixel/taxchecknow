@@ -640,7 +640,7 @@ export default function SuccessPlan() {
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australian tax adviser before making financial decisions.
             Based on ATO guidance November 2026.{" "}
-            <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" target="_blank" rel="noopener noreferrer" className="underline">ATO — GST registration</a>
+            <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" target="_blank" rel="noopener noreferrer" className="underline">ATO — GST registration</a> · <a href="https://www.legislation.gov.au/C2004A00446/latest/text" target="_blank" rel="noopener noreferrer" className="underline">GST Act 1999 s23-5 — Who is required to be registered</a>
           </p>
         </div>
 

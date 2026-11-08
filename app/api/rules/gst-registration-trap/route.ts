@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "GST Act 1999 — GST registration threshold and obligations",
     "legal_anchor": "A New Tax System (Goods and Services Tax) Act 1999 — GST registration",
     "deadline": {
@@ -107,6 +107,10 @@ export async function GET() {
         {
             "title": "ATO — GST registration",
             "url": "https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst"
+        },
+        {
+            "title": "GST Act 1999 s23-5 — Who is required to be registered",
+            "url": "https://www.legislation.gov.au/C2004A00446/latest/text"
         }
     ],
     "products": {
@@ -130,7 +134,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/gst-registration-trap",
     "api_endpoint": "/api/rules/gst-registration-trap",
-    "generated_at": "2026-11-08T11:30:15.602Z"
+    "generated_at": "2026-11-08T12:15:35.732Z"
 };
 
   return NextResponse.json(rules, {
@@ -140,7 +144,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "gst-registration-trap",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

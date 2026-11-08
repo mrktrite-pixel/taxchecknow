@@ -108,7 +108,7 @@ export default function GstRegistrationTrapFile06() {
               🇦🇺 ATO · A New Tax System (Goods and Services Tax) Act 1999 — GST registration
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 06 of 8
@@ -228,7 +228,7 @@ export default function GstRegistrationTrapFile06() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance November 2026.
           </p>
         </div>
 
@@ -248,6 +248,7 @@ export default function GstRegistrationTrapFile06() {
               ← Back to GST Registration Trap Engine
             </a>
             <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">ATO — GST registration ↗</a>
+            <a href="https://www.legislation.gov.au/C2004A00446/latest/text" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 transition">GST Act 1999 s23-5 — Who is required to be registered ↗</a>
           </div>
         </div>
       </footer>

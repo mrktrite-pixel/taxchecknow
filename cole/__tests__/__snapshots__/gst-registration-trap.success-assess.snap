@@ -110,25 +110,16 @@ export default function SuccessAssess() {
 
   const [checked,    setChecked]    = useState<Record<number,boolean>>({});
 
-  // TEMPORAL v1 Phase 0 — fail-closed on time: days remaining, or null when the fixed
-  // deadline is absent / unparseable / already passed. null suppresses the countdown entirely
-  // (never "0 days", never a negative, never a stale label).
-  const daysToDeadline: number | null = (() => {
-    const end = new Date("2026-07-28T23:59:59.000+10:00").getTime();
-    if (Number.isNaN(end)) return null;
-    const d = Math.floor((end - Date.now()) / 86_400_000);
-    return d > 0 ? d : null;
-  })();
-  const deadlineLive = daysToDeadline !== null;
+  // TEMPORAL v1 — this product DECLARES that it has no resolvable date
+  // (temporal.kind = "none", reason: "RULED none 2026-11-08. The config's deadline block names a quarterly BAS due date (28 July 2026, 'Quarterly BAS due — Q4 2025/26'), but that is a lodgment date for a business that is ALREADY registered — it is not the deadline this product's own question turns on. The registration obligation is relative, not calendar-fixed: it runs 21 days from the month a business crosses the turnover threshold, which is different for every buyer and cannot be a single product-level date. So no shape fits, and 'none' with this reason records that it was checked rather than missed. The BAS calendar rows stay (F-S276: a 'none' declaration must not empty the calendar).").
+  // There is no countdown to suppress and nothing to alert about: the absence is the
+  // declared, reviewed answer, not a failure. Emitting a console.error here would fire on
+  // every page load for a product behaving exactly as ruled, and Phase 5 alerts on that
+  // channel — a channel trained to be ignored is worse than no channel.
+  const daysToDeadline: number | null = null;
+  const deadlineLive = false;
 
   useEffect(() => { init(); }, []);
-
-  // Suppress + alert (TEMPORAL v1 Phase 0): a deadline this product DOES claim, which has
-  // expired or will not parse, is a real defect — surface it so it is never silent.
-  // Phase 5 replaces this with real alerting.
-  useEffect(() => {
-    if (!deadlineLive) console.error("[TEMPORAL] expired deadline suppressed on success page", { product: "gst-registration-trap", deadlineIso: "2026-07-28T23:59:59.000+10:00" });
-  }, []);
 
   async function init() {
     const params    = new URLSearchParams(window.location.search);
@@ -259,7 +250,7 @@ export default function SuccessAssess() {
       firstAction: "Your personalised firstAction is on its way by email.",
       accountantQuestions: [
         "What is my exact ATO position based on my answers?",
-        "What is the single most important action I should take before 28 July 2026?",
+        "What is the single most important action I should take before No product-level temporal deadline?",
         "Are there any planning opportunities specific to my situation?",
       ],
       
@@ -540,8 +531,8 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australian tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
-            <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" target="_blank" rel="noopener noreferrer" className="underline">ATO — GST registration</a>
+            Based on ATO guidance November 2026.{" "}
+            <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" target="_blank" rel="noopener noreferrer" className="underline">ATO — GST registration</a> · <a href="https://www.legislation.gov.au/C2004A00446/latest/text" target="_blank" rel="noopener noreferrer" className="underline">GST Act 1999 s23-5 — Who is required to be registered</a>
           </p>
         </div>
 

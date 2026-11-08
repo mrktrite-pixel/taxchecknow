@@ -232,6 +232,10 @@ const sources = [
   {
     "title": "ATO — GST registration",
     "url": "https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst"
+  },
+  {
+    "title": "GST Act 1999 s23-5 — Who is required to be registered",
+    "url": "https://www.legislation.gov.au/C2004A00446/latest/text"
   }
 ];
 
@@ -1039,10 +1043,15 @@ export default function GstRegistrationTrapPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — GST registration ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A00446/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">GST Act 1999 s23-5 — Who is required to be registered ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A00446/latest/text</p>
             </a>
           </div>
         </div>
