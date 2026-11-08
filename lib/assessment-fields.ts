@@ -265,6 +265,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["eligibilityVerdict", "sizeGateResult", "activeAssetResult", "significantIndividualStatus", "availableConcessions", "applicationOrder", "estimatedTaxSaving", "strongestRiskTrigger", "firstAction"],
     tier2: ["eligibilityVerdict", "sizeGateResult", "activeAssetResult", "significantIndividualStatus", "availableConcessions", "applicationOrder", "optimalConcessionStack", "retirementExemptionAnalysis", "fifteenYearExemptionAnalysis", "preSaleCleanupIssues", "stakeholderMapping", "estimatedTaxSaving", "strongestRiskTrigger"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/gst-registration-trap. Lists copied VERBATIM
+  // from au-08-gst-registration-trap.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "gst-registration-trap": {
+    tier1: ["gstStatus", "registrationObligation", "triggerDateEstimate", "backdatingExposure", "invoiceCleanupRequired", "projectedTurnoverAnalysis", "strongestRiskTrigger", "firstAction"],
+    tier2: ["gstStatus", "registrationObligation", "triggerDateEstimate", "backdatingExposure", "invoiceCleanupRequired", "projectedTurnoverAnalysis", "basSetupRecommendation", "pricingTransitionGuide", "bookkeepingClassification", "retroBASPlan", "inputTaxCredits", "strongestRiskTrigger"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */

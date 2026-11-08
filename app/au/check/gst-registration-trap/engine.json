@@ -1,0 +1,392 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "A decision menu covering when and whether an Australian business or enterprise must register for GST, based on the ATO's registration rules under A New Tax System (Goods and Services Tax) Act 1999. Key thresholds are $75,000 GST turnover for general businesses and $150,000 for non-profit organisations, with a 21-day window to register once the threshold is exceeded. Special mandatory registration rules apply to ride-sourcing operators and those claiming fuel tax credits, regardless of turnover. Voluntary registration is available below the threshold but carries a minimum 12-month commitment. Backdating is capped at 4 years.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-business-type",
+      "text": "Which best describes your situation?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I operate a for-profit business or enterprise",
+          "value": "for-profit",
+          "flags": [
+            "q1-business-type:for-profit"
+          ]
+        },
+        {
+          "label": "I operate a non-profit organisation",
+          "value": "nonprofit",
+          "flags": [
+            "q1-business-type:nonprofit"
+          ]
+        },
+        {
+          "label": "None of these describe me",
+          "value": "other",
+          "flags": [
+            "q1-business-type:other"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q1-business-type:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-mandatory-category",
+      "text": "Does your for-profit business fall into any of these special categories?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-business-type:for-profit"
+        ]
+      },
+      "options": [
+        {
+          "label": "I provide taxi, limousine, or ride-sourcing travel for passengers",
+          "value": "ride-sourcing",
+          "flags": [
+            "q2-mandatory-category:ride-sourcing"
+          ]
+        },
+        {
+          "label": "I want to claim fuel tax credits",
+          "value": "fuel-tax",
+          "flags": [
+            "q2-mandatory-category:fuel-tax"
+          ]
+        },
+        {
+          "label": "Neither of these — I run a general for-profit business",
+          "value": "general",
+          "flags": [
+            "q2-mandatory-category:general"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q2-mandatory-category:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-forprofit-turnover",
+      "text": "What is your current GST turnover situation? (GST turnover is your gross income from all businesses minus GST.)",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-mandatory-category:general"
+        ]
+      },
+      "options": [
+        {
+          "label": "My GST turnover (current month plus the previous 11 months) has already reached $75,000 or more",
+          "value": "exceeded",
+          "flags": [
+            "q3-forprofit-turnover:exceeded"
+          ]
+        },
+        {
+          "label": "I am starting a new business and expect my GST turnover to reach $75,000 in my first year",
+          "value": "new-business-expects",
+          "flags": [
+            "q3-forprofit-turnover:new-business-expects"
+          ]
+        },
+        {
+          "label": "My GST turnover is below $75,000 and I do not expect to reach that threshold in my first year",
+          "value": "below-threshold",
+          "flags": [
+            "q3-forprofit-turnover:below-threshold"
+          ]
+        },
+        {
+          "label": "I'm not sure what my GST turnover is",
+          "value": "unsure",
+          "flags": [
+            "q3-forprofit-turnover:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-nonprofit-turnover",
+      "text": "What is your non-profit organisation's GST turnover per year? (GST turnover is gross income from all businesses minus GST.)",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-business-type:nonprofit"
+        ]
+      },
+      "options": [
+        {
+          "label": "Our GST turnover has reached $150,000 per year or more",
+          "value": "np-exceeded",
+          "flags": [
+            "q4-nonprofit-turnover:np-exceeded"
+          ]
+        },
+        {
+          "label": "Our GST turnover is below $150,000 per year",
+          "value": "np-below",
+          "flags": [
+            "q4-nonprofit-turnover:np-below"
+          ]
+        },
+        {
+          "label": "I'm not sure what our GST turnover is",
+          "value": "unsure",
+          "flags": [
+            "q4-nonprofit-turnover:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5-late-registration",
+      "text": "Have you already registered for GST, or are you looking into whether you should have registered earlier?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q3-forprofit-turnover:exceeded"
+        ]
+      },
+      "options": [
+        {
+          "label": "I have not yet registered and I need to register now",
+          "value": "register-now",
+          "flags": [
+            "q5-late-registration:register-now"
+          ]
+        },
+        {
+          "label": "I think I should have registered earlier and want to understand backdating",
+          "value": "backdating",
+          "flags": [
+            "q5-late-registration:backdating"
+          ]
+        },
+        {
+          "label": "I registered late and want to understand the consequences",
+          "value": "late-consequences",
+          "flags": [
+            "q5-late-registration:late-consequences"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q5-late-registration:unsure"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "outcome-general-mandatory-register",
+      "when": {
+        "any": [
+          "q5-late-registration:register-now"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Your GST turnover has exceeded $75,000 — registration is required and you must register within 21 days of crossing that threshold",
+      "result_copy": "Your GST turnover (gross income from all businesses minus GST) has reached $75,000 or more. The source states you need to register within 21 days of your GST turnover exceeding the relevant threshold. Registration is indicated as required. Penalties may apply for failing to register when required. You only need to register once even if you operate more than one business.",
+      "figure_ids": [
+        "fig_4"
+      ]
+    },
+    {
+      "id": "outcome-new-business-mandatory",
+      "when": {
+        "any": [
+          "q3-forprofit-turnover:new-business-expects"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "You are starting a new business and expect turnover to reach $75,000 in your first year — registration is required",
+      "result_copy": "You are starting a new business and expect your GST turnover to reach $75,000 in your first year. This forward-looking test indicates registration is required from the point the expectation arises. The source states you need to register within 21 days of your GST turnover exceeding the relevant threshold. Penalties may apply for failing to register when required.",
+      "figure_ids": [
+        "fig_4"
+      ]
+    },
+    {
+      "id": "outcome-nonprofit-mandatory-register",
+      "when": {
+        "any": [
+          "q4-nonprofit-turnover:np-exceeded"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Your non-profit organisation's GST turnover has reached $150,000 per year — registration is required",
+      "result_copy": "Your non-profit organisation's GST turnover has reached $150,000 per year or more. The source states the threshold for non-profit organisations is $150,000 per year or more. Registration is indicated as required. The source states you need to register within 21 days of your GST turnover exceeding the relevant threshold. Penalties may apply for failing to register when required.",
+      "figure_ids": [
+        "fig_4"
+      ]
+    },
+    {
+      "id": "outcome-ride-sourcing-mandatory",
+      "when": {
+        "any": [
+          "q2-mandatory-category:ride-sourcing"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "You provide taxi, limousine, or ride-sourcing travel — registration is required regardless of your GST turnover",
+      "result_copy": "Operators who provide taxi or limousine travel for passengers, including ride-sourcing, are indicated to be required to register for GST regardless of their GST turnover level. The $75,000 general threshold does not apply to this category.",
+      "figure_ids": []
+    },
+    {
+      "id": "outcome-fuel-tax-mandatory",
+      "when": {
+        "any": [
+          "q2-mandatory-category:fuel-tax"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "You want to claim fuel tax credits — registration is required regardless of your GST turnover",
+      "result_copy": "A business or enterprise that wants to claim fuel tax credits is indicated to be required to register for GST, regardless of its GST turnover level. The $75,000 general threshold does not apply to this category.",
+      "figure_ids": []
+    },
+    {
+      "id": "outcome-voluntary-only",
+      "when": {
+        "any": [
+          "q3-forprofit-turnover:below-threshold"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Your turnover is below $75,000 and you are not in a mandatory category — registration is optional, but carries a minimum 12-month commitment",
+      "result_copy": "Your GST turnover is below $75,000 and you do not fall into a mandatory registration category. Registration is not indicated as required. Registration remains optional. The source states that if you choose to register, generally you must stay registered for at least 12 months.",
+      "figure_ids": [
+        "fig_5"
+      ]
+    },
+    {
+      "id": "outcome-nonprofit-voluntary-only",
+      "when": {
+        "any": [
+          "q4-nonprofit-turnover:np-below"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Your non-profit's GST turnover is below $150,000 — registration is optional",
+      "result_copy": "Your non-profit organisation's GST turnover is below $150,000 per year. Registration is not indicated as required under the non-profit threshold rule. Registration remains optional. The source states that if you choose to register, generally you must stay registered for at least 12 months.",
+      "figure_ids": [
+        "fig_5"
+      ]
+    },
+    {
+      "id": "explainer-backdating-registration",
+      "when": {
+        "any": [
+          "q5-late-registration:backdating"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is backdating a GST registration and how far back can it go?",
+      "result_copy": "The ATO allows GST registration to be backdated in certain circumstances. The source states that backdating a GST registration is limited to 4 years. This is relevant where a business or enterprise may have exceeded the relevant threshold earlier but did not register at that time. Backdating does not resolve penalty or interest exposure — review recommended for situations involving potential late registration.",
+      "figure_ids": [
+        "fig_6"
+      ]
+    },
+    {
+      "id": "explainer-late-registration-consequences",
+      "when": {
+        "any": [
+          "q5-late-registration:late-consequences"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What happens if you failed to register for GST when required?",
+      "result_copy": "Where a business or enterprise did not register for GST within 21 days of its GST turnover exceeding the relevant threshold, there may be consequences including penalties. The source states you need to register within 21 days of your GST turnover exceeding the relevant threshold. Review recommended to assess exposure for the period of non-registration.",
+      "figure_ids": [
+        "fig_4"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-business-type:other"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q1-business-type:unsure",
+          "q2-mandatory-category:unsure",
+          "q3-forprofit-turnover:unsure",
+          "q4-nonprofit-turnover:unsure",
+          "q5-late-registration:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}
