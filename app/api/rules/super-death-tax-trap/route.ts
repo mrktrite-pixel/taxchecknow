@@ -19,14 +19,23 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1997 Division 302 (death benefits tax, s302-60 / s302-145 / s302-195 / s302-200) · Subdivision 296-B (Division 296 tax on TSB over $3M, from 1 July 2026) · s307-125 (proportioning rule) · Superannuation Industry (Supervision) Act 1993 · Law since 2007 (not new)",
     "legal_anchor": "ITAA 1997 Division 302 — Taxation of superannuation death benefits",
     "deadline": {
         "iso_date": "2026-06-30T23:59:59.000+10:00",
         "display": "30 June 2026",
         "description": "30 June — final EOFY window before Division 296 commences 1 July 2026",
-        "urgency_label": "DIV 296 COMMENCES 1 JULY 2026"
+        "urgency_label": "DIV 296 COMMENCES 1 JULY 2026",
+        "recurrence": {
+            "kind": "annual",
+            "month": 6,
+            "day": 30,
+            "timezone": "Australia/Sydney",
+            "shift": "none",
+            "label": "End of financial year — death benefit nomination review",
+            "basis": "cole/config/au-12-super-death-tax-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", short \"30 Jun 2026\". The DATE is the config's; the RECURRENCE is the operator ruling of 2026-11-08, consistent with the same shape ruled for super-to-trust-exit."
+        }
     },
     "key_facts": {
         "death_benefit_tax_rate_adult_children": "17% (15% + 2% Medicare)",
@@ -123,6 +132,26 @@ export async function GET() {
         {
             "title": "ATO — Division 296 tax on superannuation balances over $3 million",
             "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
+        },
+        {
+            "title": "ITAA 1997 Division 302 — Superannuation death benefits",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s302-195 — Meaning of death benefits dependant",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s302-200 — Interdependency relationship",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s307-125 — Proportioning rule for superannuation benefits",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 Subdivision 296-B — Division 296 tax on super earnings",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         }
     ],
     "products": {
@@ -142,11 +171,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/in-detail/withdrawing-and-using-your-super/superannuation-benefits-paid-from-a-deceased-estate"
+        "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super/withdrawing-and-using-your-super/superannuation-death-benefits"
     ],
     "canonical": "https://taxchecknow.com/au/check/super-death-tax-trap",
     "api_endpoint": "/api/rules/super-death-tax-trap",
-    "generated_at": "2026-04-22T11:01:58.903Z"
+    "generated_at": "2026-11-08T13:37:28.744Z"
 };
 
   return NextResponse.json(rules, {
@@ -156,7 +185,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "super-death-tax-trap",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

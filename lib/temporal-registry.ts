@@ -336,6 +336,23 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 }
           ]
     },
+    "super-death-tax-trap": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 6,
+                      "day": 30,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "super_death_tax_trap",
+                "label": "End of financial year — death benefit nomination review",
+                "basis": "cole/config/au-12-super-death-tax-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", short \"30 Jun 2026\". The DATE is the config's; the RECURRENCE is the operator ruling of 2026-11-08, consistent with the same shape ruled for super-to-trust-exit."
+          }
+    },
     "super-to-trust-exit": {
           "temporal": {
                 "kind": "deadline",
