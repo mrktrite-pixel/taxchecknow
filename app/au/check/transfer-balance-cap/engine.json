@@ -1,0 +1,301 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "The transfer balance cap (TBC) limits the total superannuation that can be transferred into the retirement phase. Key situations users face include understanding the general cap, the defined benefit income cap (which for 2025–26 is $125,000 and for 2026–27 is $131,250), how proportional indexation affects existing retirees' personal caps, what happens when the cap is exceeded, and how defined benefit income streams interact with the cap.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_topic",
+      "text": "What best describes what you want to understand about the transfer balance cap?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I want to understand what the transfer balance cap is and why it exists",
+          "value": "explainer",
+          "flags": [
+            "q1_topic:explainer"
+          ]
+        },
+        {
+          "label": "I receive (or will receive) a defined benefit income stream and want to know the cap rules that apply to me",
+          "value": "defined_benefit",
+          "flags": [
+            "q1_topic:defined_benefit"
+          ]
+        },
+        {
+          "label": "I already have a retirement phase pension and want to know how a cap increase affects my personal cap",
+          "value": "existing_retiree",
+          "flags": [
+            "q1_topic:existing_retiree"
+          ]
+        },
+        {
+          "label": "I want to find out what my personal transfer balance cap actually is",
+          "value": "personal_cap",
+          "flags": [
+            "q1_topic:personal_cap"
+          ]
+        },
+        {
+          "label": "I want to know what happens if I exceed the transfer balance cap",
+          "value": "exceeding",
+          "flags": [
+            "q1_topic:exceeding"
+          ]
+        },
+        {
+          "label": "I am deciding whether to start my pension before or after an indexation date",
+          "value": "timing",
+          "flags": [
+            "q1_topic:timing"
+          ]
+        },
+        {
+          "label": "None of these match my situation",
+          "value": "none",
+          "flags": [
+            "q1_topic:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_defined_benefit",
+      "text": "Are you asking about the defined benefit income cap in general, or do you need the specific cap figure for a particular financial year?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_topic:defined_benefit"
+        ]
+      },
+      "options": [
+        {
+          "label": "I want to understand how the defined benefit income cap differs from the general transfer balance cap",
+          "value": "explainer",
+          "flags": [
+            "q2_defined_benefit:explainer"
+          ]
+        },
+        {
+          "label": "I need the defined benefit income cap figure for a specific financial year",
+          "value": "specific_year",
+          "flags": [
+            "q2_defined_benefit:specific_year"
+          ]
+        },
+        {
+          "label": "I'm not sure what I need",
+          "value": "unsure",
+          "flags": [
+            "q2_defined_benefit:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_defined_benefit_year",
+      "text": "Which financial year does your defined benefit income stream question relate to?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q2_defined_benefit:specific_year"
+        ]
+      },
+      "options": [
+        {
+          "label": "2025–26 (the defined benefit income cap is $125,000)",
+          "value": "2025_26",
+          "flags": [
+            "q3_defined_benefit_year:2025_26"
+          ]
+        },
+        {
+          "label": "2026–27 (the defined benefit income cap is $131,250)",
+          "value": "2026_27",
+          "flags": [
+            "q3_defined_benefit_year:2026_27"
+          ]
+        },
+        {
+          "label": "An earlier financial year (2024–25 or before)",
+          "value": "earlier",
+          "flags": [
+            "q3_defined_benefit_year:earlier"
+          ]
+        },
+        {
+          "label": "I'm not sure which year applies to me",
+          "value": "unsure",
+          "flags": [
+            "q3_defined_benefit_year:unsure"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "defined-benefit-income-cap-2025-26",
+      "when": {
+        "any": [
+          "q3_defined_benefit_year:2025_26"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Defined benefit income cap for 2025–26: $125,000",
+      "result_copy": "For individuals receiving a defined benefit income stream in the 2025–26 financial year, the defined benefit income cap is $125,000. Special rules apply for defined benefit income streams under the transfer balance cap framework. Whether and how this cap affects a particular individual depends on their specific income stream and circumstances; review by the ATO or a financial adviser is recommended for a personal determination.",
+      "figure_ids": []
+    },
+    {
+      "id": "defined-benefit-income-cap-2026-27",
+      "when": {
+        "any": [
+          "q3_defined_benefit_year:2026_27"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Defined benefit income cap for 2026–27: $131,250",
+      "result_copy": "For individuals receiving a defined benefit income stream in the 2026–27 financial year, the defined benefit income cap is $131,250. Special rules apply for defined benefit income streams under the transfer balance cap framework. Whether and how this cap affects a particular individual depends on their specific income stream and circumstances; review by the ATO or a financial adviser is recommended for a personal determination.",
+      "figure_ids": []
+    },
+    {
+      "id": "proportional-indexation-existing-retirees",
+      "when": {
+        "any": [
+          "q1_topic:existing_retiree"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I already have a retirement phase pension — how does a cap increase affect my personal cap?",
+      "result_copy": "Individuals who already commenced a retirement phase pension before a cap increase receive only a partial (proportional) increase to their personal transfer balance cap, not the full indexed general cap amount. The proportion of the previous cap unused at the time of indexation determines how much of the increase applies to them. To determine their own personal cap figure, users should consult their ATO MyGov transfer balance account or seek advice from a financial adviser. This dish explains the rule and how to determine status; it does not assert a specific dollar outcome for the user.",
+      "figure_ids": []
+    },
+    {
+      "id": "personal-cap-vs-general-cap",
+      "when": {
+        "any": [
+          "q1_topic:personal_cap"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How do I find out what my personal transfer balance cap actually is?",
+      "result_copy": "The general transfer balance cap and an individual's personal transfer balance cap may differ. A personal cap depends on when the individual first commenced a retirement phase pension and how much of the cap they had used at each indexation point. Users can locate their personal cap figure via the ATO MyGov transfer balance account. This dish explains how to determine personal cap status; it does not assert a specific dollar outcome for the user.",
+      "figure_ids": []
+    },
+    {
+      "id": "timing-pension-start-before-after-indexation",
+      "when": {
+        "any": [
+          "q1_topic:timing"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Should I start my pension before or after the cap indexation date?",
+      "result_copy": "The timing of when a retirement phase pension is commenced relative to an indexation date can affect the personal transfer balance cap available to an individual. Starting before an indexation event may mean the individual's personal cap is set at the pre-indexation general cap, with only a proportional share of any subsequent increase available. Starting after an indexation event may allow access to the full indexed general cap. This dish explains the strategic sequencing question; it does not assert a specific outcome for the user's individual circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "what-is-transfer-balance-cap",
+      "when": {
+        "any": [
+          "q1_topic:explainer"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the transfer balance cap and how does it work?",
+      "result_copy": "The transfer balance cap is a limit on the total amount of superannuation that can be transferred into the retirement phase, applying from 1 July 2017. The general cap is subject to indexation over time. Special rules apply for defined benefit income streams, which have a separate defined benefit income cap. This dish explains the concept and why the cap exists; it does not assert a specific outcome for the user's individual circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "defined-benefit-income-cap-explainer",
+      "when": {
+        "any": [
+          "q2_defined_benefit:explainer",
+          "q3_defined_benefit_year:earlier"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How does the defined benefit income cap differ from the general transfer balance cap?",
+      "result_copy": "Special rules apply for defined benefit income streams, and the defined benefit income cap is a separate figure from the general transfer balance cap. The defined benefit income cap has its own schedule: $100,000 from 2017–18 through 2020–21; $106,250 for 2021–22 and 2022–23; $118,750 for 2024–25; $125,000 for 2025–26; and $131,250 for 2026–27. These streams can unexpectedly consume a large portion of the cap. This dish explains how the defined benefit income cap operates; it does not assert a specific outcome for the user's individual circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "exceeding-the-cap",
+      "when": {
+        "any": [
+          "q1_topic:exceeding"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What happens if I accidentally exceed the transfer balance cap?",
+      "result_copy": "When the transfer balance cap is exceeded, the ATO excess transfer balance tax process applies. An interest charge is applied to the excess amount, and commutation steps are required to bring the balance back within the cap. The amount of tax depends on individual circumstances. This dish explains the process; it does not assert a specific tax outcome for the user.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1_topic:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2_defined_benefit:unsure",
+          "q3_defined_benefit_year:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

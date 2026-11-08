@@ -1,0 +1,37 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Defined benefit income cap 2026–27",
+    "value": "131250",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_1",
+    "label": "Defined benefit income cap 2025–26",
+    "value": "125000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_2",
+    "label": "Defined benefit income cap 2024–25",
+    "value": "118750",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_3",
+    "label": "Defined benefit income cap 2022–23 and 2021–22",
+    "value": "106250",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_4",
+    "label": "Defined benefit income cap 2020–21 through 2017–18",
+    "value": "100000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  }
+]
