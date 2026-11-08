@@ -2,7 +2,11 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "division-7a-loan-trap", name: "Division 7A Loan Trap Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/division-7a-loan-trap", url: "https://taxchecknow.com/au/check/division-7a-loan-trap", apiRoute: "/api/rules/division-7a-loan-trap",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1936 — Division 7A", legislation: "Income Tax Assessment Act 1936 — Division 7A (Loans to shareholders and associates)", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1936 — Division 7A", legislation: "Income Tax Assessment Act 1936 — Division 7A (Loans to shareholders and associates)", lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Division 7A Loan Fix Plan", tagline: "Is your director loan about to become taxable income?", value: "A personalised Div 7A audit — minimum repayment calculation, loan compliance check, and risk classification.", cta: "Get My Div 7A Fix Plan — $67 →", productKey: "au_67_division_7a_loan_trap", envVar: "STRIPE_AU_DIV7A_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Division 7A Loan Restructure System", tagline: "Restructure your loans before ATO deems them dividends", value: "Full loan restructure plan, multi-year repayment strategy, and tax-efficient structuring to exit the Div 7A trap.", cta: "Get My Div 7A System — $147 →", productKey: "au_147_division_7a_loan_trap", envVar: "STRIPE_AU_DIV7A_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "EOFY — minimum Div 7A repayments must be made before 30 June each year", urgencyLabel: "EOFY DEADLINE", countdownLabel: "Countdown to 30 June 2026 — Div 7A minimum repayments due" },

@@ -265,6 +265,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["eligibilityVerdict", "sizeGateResult", "activeAssetResult", "significantIndividualStatus", "availableConcessions", "applicationOrder", "estimatedTaxSaving", "strongestRiskTrigger", "firstAction"],
     tier2: ["eligibilityVerdict", "sizeGateResult", "activeAssetResult", "significantIndividualStatus", "availableConcessions", "applicationOrder", "optimalConcessionStack", "retirementExemptionAnalysis", "fifteenYearExemptionAnalysis", "preSaleCleanupIssues", "stakeholderMapping", "estimatedTaxSaving", "strongestRiskTrigger"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/division-7a-loan-trap. Lists copied VERBATIM
+  // from au-02-division-7a-loan-trap.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "division-7a-loan-trap": {
+    tier1: ["division7aStatus", "loanClassification", "lodgementDayRisk", "agreementGapSummary", "minimumRepaymentRequired", "deemedDividendExposure", "remediationChecklist", "evidenceRequired", "firstAction"],
+    tier2: ["division7aStatus", "loanClassification", "lodgementDayRisk", "agreementGapSummary", "minimumRepaymentRequired", "deemedDividendExposure", "remediationChecklist", "evidenceRequired", "restructuringBlueprint", "repaymentSchedule", "upeAndTrustInteraction", "privateUseRemediation", "multiYearCompliancePlan"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
