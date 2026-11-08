@@ -1,0 +1,114 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Child age threshold for income stream eligibility",
+    "value": "18",
+    "unit": "years",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_1",
+    "label": "Child age limit for income stream (financially dependent or permanently disabled)",
+    "value": "25",
+    "unit": "years",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "Income stream must convert to lump sum by age",
+    "value": "25",
+    "unit": "years",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_3",
+    "label": "Reversionary death benefit income stream credit timing",
+    "value": "12",
+    "unit": "months",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_4",
+    "label": "Value of reversionary death benefit (Ivan/Sasha example)",
+    "value": "$1.1 million",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_5",
+    "label": "Partial commutation amount (Sasha example)",
+    "value": "$700,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_6",
+    "label": "Personal transfer balance cap (Sasha example)",
+    "value": "$1.6 million",
+    "unit": null,
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_7",
+    "label": "Non-reversionary income stream value at commencement (Nathaniel example)",
+    "value": "$1.4 million",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_8",
+    "label": "Value of income stream at death (Nathaniel example)",
+    "value": "$1.3 million",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_9",
+    "label": "Investment earnings accrued between death and commencement (Nathaniel example)",
+    "value": "$1,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_10",
+    "label": "Death benefit income stream value at commencement (Malena example)",
+    "value": "$1,301,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_11",
+    "label": "Transfer balance credit (Malena example)",
+    "value": "$1,301,000",
+    "unit": null,
+    "fact_role": "amount"
+  },
+  {
+    "id": "fig_12",
+    "label": "Remaining capacity under transfer balance cap (Malena example)",
+    "value": "$299,000",
+    "unit": null,
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_13",
+    "label": "Personal transfer balance cap (Malena example)",
+    "value": "$1.6 million",
+    "unit": null,
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_14",
+    "label": "Age at which dependent children generally cease being dependent (defined benefit pension)",
+    "value": "18",
+    "unit": "years",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_15",
+    "label": "Age at which dependent children generally cease being dependent (defined benefit pension, upper)",
+    "value": "25",
+    "unit": "years",
+    "fact_role": "threshold"
+  }
+]

@@ -1,0 +1,348 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "When a person dies, their superannuation death benefit must be paid to eligible recipients — either dependants (who may receive a lump sum or income stream) or non-dependants (lump sum only). Key decision points include who qualifies as a dependant under superannuation law, whether a binding or non-binding nomination controls distribution, how children's income streams are treated (including age thresholds of 18 years and 25 years), and how the transfer balance cap interacts with reversionary and non-reversionary death benefit income streams (with the credit timing rule of 12 months applying to reversionary streams).",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1_topic",
+      "text": "What is your main question about superannuation death benefits?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "Who qualifies as a dependant under superannuation law?",
+          "value": "dependant_definition",
+          "flags": [
+            "q1_topic:dependant_definition"
+          ]
+        },
+        {
+          "label": "How do binding and non-binding nominations work, and what controls where my super goes?",
+          "value": "nominations",
+          "flags": [
+            "q1_topic:nominations"
+          ]
+        },
+        {
+          "label": "There is no binding nomination — what happens if the trustee pays to the estate?",
+          "value": "no_nomination",
+          "flags": [
+            "q1_topic:no_nomination"
+          ]
+        },
+        {
+          "label": "I am a dependant beneficiary — should I take a lump sum or an income stream?",
+          "value": "lump_vs_stream",
+          "flags": [
+            "q1_topic:lump_vs_stream"
+          ]
+        },
+        {
+          "label": "A child is the beneficiary — what age rules apply to receiving an income stream?",
+          "value": "child_age",
+          "flags": [
+            "q1_topic:child_age"
+          ]
+        },
+        {
+          "label": "I am receiving (or will receive) a reversionary or non-reversionary death benefit income stream — how does the transfer balance cap apply?",
+          "value": "transfer_balance",
+          "flags": [
+            "q1_topic:transfer_balance"
+          ]
+        },
+        {
+          "label": "I am not sure whether I qualify as a dependant",
+          "value": "unsure_dependant",
+          "flags": [
+            "q1_topic:unsure_dependant"
+          ]
+        },
+        {
+          "label": "None of these match my situation",
+          "value": "none",
+          "flags": [
+            "q1_topic:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2_child_age",
+      "text": "What is the child beneficiary's current situation regarding age and dependency?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_topic:child_age"
+        ]
+      },
+      "options": [
+        {
+          "label": "The child is under 18 years old",
+          "value": "under_18",
+          "flags": [
+            "q2_child_age:under_18"
+          ]
+        },
+        {
+          "label": "The child is 18 years or older but under 25 years old, and is financially dependent on the deceased or has a permanent disability",
+          "value": "18_to_25_dependent",
+          "flags": [
+            "q2_child_age:18_to_25_dependent"
+          ]
+        },
+        {
+          "label": "The child is 18 years or older but under 25 years old, and is NOT financially dependent and does NOT have a permanent disability",
+          "value": "18_to_25_not_dependent",
+          "flags": [
+            "q2_child_age:18_to_25_not_dependent"
+          ]
+        },
+        {
+          "label": "The child has reached 25 years old and does not have a permanent disability",
+          "value": "over_25",
+          "flags": [
+            "q2_child_age:over_25"
+          ]
+        },
+        {
+          "label": "The child has reached 25 years old and has a permanent disability",
+          "value": "over_25_disabled",
+          "flags": [
+            "q2_child_age:over_25_disabled"
+          ]
+        },
+        {
+          "label": "I'm not sure of the child's dependency or disability status",
+          "value": "unsure_child",
+          "flags": [
+            "q2_child_age:unsure_child"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3_stream_type",
+      "text": "What type of death benefit income stream are you asking about?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1_topic:transfer_balance"
+        ]
+      },
+      "options": [
+        {
+          "label": "A reversionary income stream — the deceased's income stream automatically continues to me as the surviving spouse or dependant",
+          "value": "reversionary",
+          "flags": [
+            "q3_stream_type:reversionary"
+          ]
+        },
+        {
+          "label": "A non-reversionary income stream — a new income stream is being commenced for me as the beneficiary from the death benefit",
+          "value": "non_reversionary",
+          "flags": [
+            "q3_stream_type:non_reversionary"
+          ]
+        },
+        {
+          "label": "I'm not sure whether the income stream is reversionary or non-reversionary",
+          "value": "unsure_stream_type",
+          "flags": [
+            "q3_stream_type:unsure_stream_type"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "am-i-a-dependant-uncertain",
+      "when": {
+        "any": [
+          "q1_topic:unsure_dependant"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Not sure if you qualify as a dependant — how to determine your status",
+      "result_copy": "Whether a person qualifies as a dependant under superannuation law depends on their specific relationship to the deceased: spouse or de facto spouse (of any sex), a child of the deceased (any age), or a person in an interdependency relationship (requiring a close personal relationship, living together, financial support, and domestic or personal care support — all four conditions). Tax treatment of the death benefit, and whether an income stream is available, depends on which category applies. Insufficient information is available from your answers alone to indicate which category applies — review recommended with a qualified adviser or the ATO to confirm your status.",
+      "figure_ids": []
+    },
+    {
+      "id": "who-is-a-dependant-super-law",
+      "when": {
+        "any": [
+          "q1_topic:dependant_definition"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Who counts as a dependant under superannuation law?",
+      "result_copy": "Under superannuation law, three categories of person may qualify as a dependant: (1) a spouse or de facto spouse of the deceased (of any sex); (2) a child of the deceased (of any age); and (3) a person in an interdependency relationship with the deceased. An interdependency relationship requires all four conditions to be present: a close personal relationship, living together, financial support, and domestic or personal care support. This classification matters because only dependants may receive a death benefit as an income stream; non-dependants must receive a lump sum. Review recommended to confirm which category applies in your specific circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "binding-vs-nonbinding-nomination",
+      "when": {
+        "any": [
+          "q1_topic:nominations"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Binding vs non-binding nomination — what controls where your super goes?",
+      "result_copy": "A binding death benefit nomination directs the trustee to pay the benefit to the nominated dependant(s) and/or legal personal representative as specified. A non-binding nomination or no nomination means the trustee exercises discretion over which dependant or dependants receive the benefit, or may pay to the legal personal representative for distribution under the will. Even with a binding nomination, the trustee retains judgment in certain scenarios. Reviewing nominations regularly is indicated to ensure they reflect current intentions and remain valid.",
+      "figure_ids": []
+    },
+    {
+      "id": "no-nomination-estate-consequences",
+      "when": {
+        "any": [
+          "q1_topic:no_nomination"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "No binding nomination — what happens when the trustee pays to the estate?",
+      "result_copy": "Where there is no binding nomination, the trustee may exercise discretion to pay the death benefit to the legal personal representative (executor) for distribution under the will. When this occurs, the benefit flows through the estate rather than directly to a dependant. This path carries downstream tax and legal implications that differ from a direct payment to a dependant. Review recommended to assess the consequences for your specific estate and beneficiary circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "lump-sum-vs-income-stream-dependant",
+      "when": {
+        "any": [
+          "q1_topic:lump_vs_stream"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Lump sum or income stream — which preserves more for a dependant beneficiary?",
+      "result_copy": "Dependants who are eligible may receive a death benefit as either a lump sum or an income stream, and the two options differ in structure and tax treatment. A lump sum paid to a tax dependant (spouse, former spouse, child under 18 years, person in an interdependency relationship, or any other financial dependant) is generally tax-free. An income stream may offer ongoing income but is subject to transfer balance cap rules. Non-dependants have no choice — they must receive a lump sum. Review recommended to evaluate which option better preserves wealth in your specific circumstances, having regard to the components of the benefit (tax-free vs taxable) and your relationship to the deceased.",
+      "figure_ids": [
+        "fig_0",
+        "fig_14"
+      ]
+    },
+    {
+      "id": "child-income-stream-age-rules",
+      "when": {
+        "any": [
+          "q2_child_age:under_18",
+          "q2_child_age:18_to_25_dependent",
+          "q2_child_age:18_to_25_not_dependent",
+          "q2_child_age:over_25",
+          "q2_child_age:over_25_disabled"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Child beneficiary receiving a death benefit income stream — the age 18 and age 25 rules",
+      "result_copy": "The age thresholds governing a child beneficiary's eligibility to receive a death benefit as an income stream are as follows. A child under 18 years is eligible. A child under 25 years who is financially dependent on the deceased or has a permanent disability is also eligible. Once a child reaches 25 years, the income stream must change to a lump sum on or before the date they turn 25 years old, unless the child is permanently disabled. For defined benefit pensions, children generally cease being dependent at 18 or 25 years of age, depending on their circumstances. Review recommended to confirm the child's dependency and disability status and the applicable conversion obligations.",
+      "figure_ids": [
+        "fig_0",
+        "fig_1",
+        "fig_2",
+        "fig_14",
+        "fig_15"
+      ]
+    },
+    {
+      "id": "reversionary-income-stream-transfer-balance",
+      "when": {
+        "any": [
+          "q3_stream_type:reversionary"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Reversionary death benefit income stream — how the 12-month credit timing rule works",
+      "result_copy": "When a reversionary income stream is received, the credit in the surviving spouse's transfer balance account arises 12 months after the date of the member's death — not at the date of death. As an illustration from the ATO source: a reversionary death benefit valued at $1.1 million is credited to the recipient's transfer balance account at that 12-month point; in that example the recipient chose to partially commute their own income stream, transferring $700,000 to their accumulation account, to manage their position against their personal transfer balance cap of $1.6 million. Review recommended to assess how the 12-month credit timing interacts with your own transfer balance account position.",
+      "figure_ids": [
+        "fig_3",
+        "fig_4",
+        "fig_5",
+        "fig_6",
+        "fig_13"
+      ]
+    },
+    {
+      "id": "non-reversionary-income-stream-transfer-balance",
+      "when": {
+        "any": [
+          "q3_stream_type:non_reversionary"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Non-reversionary death benefit income stream — how the transfer balance credit arises at commencement",
+      "result_copy": "For a non-reversionary death benefit income stream, the transfer balance credit arises when the income stream commences — not 12 months after the date of death. As an illustration from the ATO source: a death benefit income stream valued at $1,301,000 when it commences gives rise to a transfer balance credit of $1,301,000 at that commencement date; in that example the recipient could start another super income stream valued up to $299,000 without exceeding their personal transfer balance cap of $1.6 million. Separately, where investment earnings accrue between the date of death and commencement (for example, $1,000 in the Nathaniel example), the credit reflects the value at commencement. Review recommended to assess how the commencement-date credit interacts with your own transfer balance account position.",
+      "figure_ids": [
+        "fig_3",
+        "fig_6",
+        "fig_9",
+        "fig_10",
+        "fig_11",
+        "fig_12",
+        "fig_13"
+      ]
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1_topic:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2_child_age:unsure_child",
+          "q3_stream_type:unsure_stream_type"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}
