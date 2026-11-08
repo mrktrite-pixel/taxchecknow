@@ -265,6 +265,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["eligibilityVerdict", "sizeGateResult", "activeAssetResult", "significantIndividualStatus", "availableConcessions", "applicationOrder", "estimatedTaxSaving", "strongestRiskTrigger", "firstAction"],
     tier2: ["eligibilityVerdict", "sizeGateResult", "activeAssetResult", "significantIndividualStatus", "availableConcessions", "applicationOrder", "optimalConcessionStack", "retirementExemptionAnalysis", "fifteenYearExemptionAnalysis", "preSaleCleanupIssues", "stakeholderMapping", "estimatedTaxSaving", "strongestRiskTrigger"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/super-death-tax-trap. Lists copied VERBATIM
+  // from au-12-super-death-tax-trap.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "super-death-tax-trap": {
+    tier1: ["inheritanceStatus", "beneficiaryAnalysis", "taxableComponentBreakdown", "deathTaxQuantum", "division296Exposure", "recontributionEligibility", "fixabilityAssessment", "familyReceivesAmount", "firstAction"],
+    tier2: ["inheritanceStatus", "beneficiaryAnalysis", "taxableComponentBreakdown", "deathTaxQuantum", "division296Exposure", "recontributionEligibility", "fixabilityAssessment", "familyReceivesAmount", "recontributionExecutionPlan", "division296MitigationPlan", "estateRoutingStrategy", "fiveYearReductionModel", "accountantImplementationChecklist"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
