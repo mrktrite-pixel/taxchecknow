@@ -9,10 +9,30 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Know Your Family's True Inheritance", tagline: "See exactly what the ATO takes before your kids inherit", value: "Your exact death benefit tax leakage, per-child breakdown, estate vs direct comparison, recontribution eligibility, and Division 296 exposure — built for your TSB, beneficiaries, and age.", cta: "Show What My Family Actually Receives — $67 →", productKey: "au_67_super_death_tax_trap", envVar: "STRIPE_AU_SDTT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Reduce the Tax Before It Becomes Permanent", tagline: "The exact plan to reduce the double tax before death makes it irreversible", value: "Full recontribution execution plan, contribution sequencing across 30 June, Division 296 mitigation strategy, estate routing plan, and accountant-ready implementation documents.", cta: "Get My Reduction Plan — $147 →", productKey: "au_147_super_death_tax_trap", envVar: "STRIPE_AU_SDTT_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // Taken from the config's own deadline block (isoDate 2026-06-30, display 30 June 2026). Ruled
+    // annual, not one_off: 30 June is the end of the Australian financial year and a binding death
+    // benefit nomination lapses on a three-year cycle, so the review window closes on a 30 June
+    // every year rather than once. Annual omits the year in the emitted rule, so the resolver
+    // rolls it forward to 30 June 2027 instead of reporting EXPIRED.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      6,
+      day:        30,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "super_death_tax_trap",
+    label:        "End of financial year — death benefit nomination review",
+    basis:        "cole/config/au-12-super-death-tax-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", short \"30 Jun 2026\". The DATE is the config's; the RECURRENCE is the operator ruling of 2026-11-08, consistent with the same shape ruled for super-to-trust-exit.",
+  },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "30 June — final EOFY window before Division 296 commences 1 July 2026", urgencyLabel: "DIV 296 COMMENCES 1 JULY 2026", countdownLabel: "Countdown to 30 June 2026 — last EOFY before Division 296 commences" },
-  h1: "Your $2,000,000 Super Does Not Go to Your Kids — About $272,000 Goes to the ATO First",
-  metaTitle: "Super Death Tax Trap — Adult Children Pay 17% | TaxCheckNow",
-  metaDescription: "When you die, your super does not pass tax-free to your adult children. Under ITAA 1997 Division 302 they pay 17% on the taxable component. On a $2M fund at 80% taxable = $272,000 to the ATO. And Division 296 starts 1 July 2026 for balances over $3M. Run your check in 2 minutes.",
+  h1: "Super Death Benefit: Who Can Receive It and How It Is Taxed",
+  metaTitle: "Super Death Benefit: Who Can Receive It, and the Tax",
+  metaDescription: "A super death benefit is not covered by your will, and who may receive it, and how it is taxed, depends on the nomination you left behind.",
   canonical: "https://taxchecknow.com/au/check/super-death-tax-trap",
   answerHeadline: "The Super Death Tax Trap — how your super becomes a tax bill for your kids",
   answerBody: [

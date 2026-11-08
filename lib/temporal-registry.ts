@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 21
+// Declared products: 23
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -308,6 +308,23 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                       "anchor": "lead"
                 }
           ]
+    },
+    "super-death-tax-trap": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 6,
+                      "day": 30,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "super_death_tax_trap",
+                "label": "End of financial year — death benefit nomination review",
+                "basis": "cole/config/au-12-super-death-tax-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", short \"30 Jun 2026\". The DATE is the config's; the RECURRENCE is the operator ruling of 2026-11-08, consistent with the same shape ruled for super-to-trust-exit."
+          }
     },
     "super-to-trust-exit": {
           "temporal": {
