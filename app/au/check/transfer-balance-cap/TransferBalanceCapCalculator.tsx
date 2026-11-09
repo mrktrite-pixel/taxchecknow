@@ -34,7 +34,7 @@ const ENGINE_CONFIG: EngineConfig = {
     "67": "Your TBC Position Pack",
     "147": "Your Full TBC Strategy",
   },
-  heroCopy: "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $1.9M figure",
+  heroCopy: "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $2.1M figure",
   copy: {
     ctaLabel: "Get TBC Position Pack — {price} →",
     popupHeading: "Your TBC Position Pack",
