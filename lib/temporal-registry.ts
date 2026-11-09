@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 21
+// Declared products: 23
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -355,6 +355,23 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "tax_treaty_residence",
                 "label": "No act-by date",
                 "basis": "OECD Model Tax Convention Article 4(2) is a standing tie-breaker rule: it states no deadline, window or effective-from date. Operator ruling 2026-10-14."
+          }
+    },
+    "transfer-balance-cap": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 6,
+                      "day": 30,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "transfer_balance_cap",
+                "label": "30 June — transfer balance account reporting date",
+                "basis": "ATO 'Transfer balance cap' (QC 18123) and the key superannuation rates and thresholds page: super funds report transfer balance account events to the ATO at the end of the financial year, and the general cap is indexed on 1 July."
           }
     },
     "uk-nrls": {

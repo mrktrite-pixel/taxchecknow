@@ -10,17 +10,18 @@ import TransferBalanceCapCalculator from "./TransferBalanceCapCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Transfer Balance Cap Optimiser — Your Personal TBC Not the Generic $1.9M | TaxCheckNow",
-  description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+  title: "Your Personal Transfer Balance Cap Is Not the General $2.1M Cap",
+  description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
   alternates: { canonical: "https://taxchecknow.com/au/check/transfer-balance-cap" },
   openGraph: {
-    title: "Transfer Balance Cap Optimiser — Your Personal TBC Not the Generic $1.9M | TaxCheckNow",
-    description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    title: "Your Personal Transfer Balance Cap Is Not the General $2.1M Cap",
+    description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     url: "https://taxchecknow.com/au/check/transfer-balance-cap",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
+
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
@@ -326,7 +327,7 @@ export default function TransferBalanceCapPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Transfer Balance Cap Optimiser — Rules April 2026",
-    description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -342,7 +343,7 @@ export default function TransferBalanceCapPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Transfer Balance Cap Optimiser",
-    description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     url: "https://taxchecknow.com/au/check/transfer-balance-cap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -391,7 +392,7 @@ export default function TransferBalanceCapPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/transfer-balance-cap#calculator",
-    "description": "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    "description": "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -426,7 +427,7 @@ export default function TransferBalanceCapPage() {
     "@context": "https://schema.org",
     "@type": "VideoObject",
     name: "What is the Transfer Balance Cap? Your Cap May Be Lower",
-    description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     thumbnailUrl: "https://i.ytimg.com/vi/5NWJseC3gR8/hqdefault.jpg",
     uploadDate: "2026-06-10T23:56:40.448+00:00",
     contentUrl: "https://www.youtube.com/watch?v=5NWJseC3gR8",
@@ -489,7 +490,7 @@ export default function TransferBalanceCapPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Your Personal Transfer Balance Cap Is Probably Lower Than $1.9M — And If Your Pension Is Over It, the ATO Is Taxing You Right Now
+          Your Personal Transfer Balance Cap Is Probably Lower Than $2.1M
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}

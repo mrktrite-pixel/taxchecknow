@@ -29,10 +29,30 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Your TBC Position Pack", tagline: "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $1.9M figure", value: "Your personal TBC calculation, excess amount if over, annual excess transfer balance tax exposure, commutation requirement, and 4 accountant questions — built for your exact commencement year and pension balance.", cta: "Show My Personal TBC — $67 →", productKey: "au_67_transfer_balance_cap", envVar: "STRIPE_AU_TBC_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Full TBC Strategy", tagline: "Commutation plan, spouse cap equalisation, reversionary pension modelling — the strategy layer most advisers skip", value: "Full commutation strategy, re-contribution options after commutation, reversionary pension impact modelling, spouse TBC interaction, 20-year projection, and accountant-ready implementation documents.", cta: "Get My Full TBC Strategy — $147 →", productKey: "au_147_transfer_balance_cap", envVar: "STRIPE_AU_TBC_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // 30 June is the end of the Australian financial year and the date a transfer balance account
+    // is measured and reported to the ATO. The cap is indexed in $100,000 CPI steps most 1 July,
+    // so the commutation and reporting window closes on a 30 June every year rather than once.
+    // Annual, with no year pinned, so it rolls forward instead of reading EXPIRED after 30 June
+    // 2026.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      6,
+      day:        30,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "transfer_balance_cap",
+    label:        "30 June — transfer balance account reporting date",
+    basis:        "ATO 'Transfer balance cap' (QC 18123) and the key superannuation rates and thresholds page: super funds report transfer balance account events to the ATO at the end of the financial year, and the general cap is indexed on 1 July.",
+  },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "30 June 2026 — next TBC reporting date and final window before 2026-27 indexation adjustment", urgencyLabel: "ONGOING TAX — NOT A DEADLINE, A COMPOUNDING COST", countdownLabel: "Next 30 June TBC reporting date" },
-  h1: "Your Personal Transfer Balance Cap Is Probably Lower Than $1.9M — And If Your Pension Is Over It, the ATO Is Taxing You Right Now",
-  metaTitle: "Transfer Balance Cap Optimiser — Your Personal TBC Not the Generic $1.9M | TaxCheckNow",
-  metaDescription: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+  h1: "Your Personal Transfer Balance Cap Is Probably Lower Than $2.1M",
+  metaTitle: "Your Personal Transfer Balance Cap Is Not the General $2.1M Cap",
+  metaDescription: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
   canonical: "https://taxchecknow.com/au/check/transfer-balance-cap",
   answerHeadline: "The Transfer Balance Cap is personal, not general — and most members over $1.6M have never been told their specific number",
   answerBody: [
