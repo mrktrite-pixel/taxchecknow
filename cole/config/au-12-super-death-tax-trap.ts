@@ -2,13 +2,37 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "super-death-tax-trap", name: "Super Death Tax Trap Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/super-death-tax-trap", url: "https://taxchecknow.com/au/check/super-death-tax-trap", apiRoute: "/api/rules/super-death-tax-trap",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 Division 302 — Taxation of superannuation death benefits", legislation: "Income Tax Assessment Act 1997 Division 302 (death benefits tax, s302-60 / s302-145 / s302-195 / s302-200) · Subdivision 296-B (Division 296 tax on TSB over $3M, from 1 July 2026) · s307-125 (proportioning rule) · Superannuation Industry (Supervision) Act 1993 · Law since 2007 (not new)", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 Division 302 — Taxation of superannuation death benefits", legislation: "Income Tax Assessment Act 1997 Division 302 (death benefits tax, s302-60 / s302-145 / s302-195 / s302-200) · Subdivision 296-B (Division 296 tax on TSB over $3M, from 1 July 2026) · s307-125 (proportioning rule) · Superannuation Industry (Supervision) Act 1993 · Law since 2007 (not new)", lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Know Your Family's True Inheritance", tagline: "See exactly what the ATO takes before your kids inherit", value: "Your exact death benefit tax leakage, per-child breakdown, estate vs direct comparison, recontribution eligibility, and Division 296 exposure — built for your TSB, beneficiaries, and age.", cta: "Show What My Family Actually Receives — $67 →", productKey: "au_67_super_death_tax_trap", envVar: "STRIPE_AU_SDTT_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Reduce the Tax Before It Becomes Permanent", tagline: "The exact plan to reduce the double tax before death makes it irreversible", value: "Full recontribution execution plan, contribution sequencing across 30 June, Division 296 mitigation strategy, estate routing plan, and accountant-ready implementation documents.", cta: "Get My Reduction Plan — $147 →", productKey: "au_147_super_death_tax_trap", envVar: "STRIPE_AU_SDTT_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // Taken from the config's own deadline block (isoDate 2026-06-30, display 30 June 2026). Ruled
+    // annual, not one_off: 30 June is the end of the Australian financial year and a binding death
+    // benefit nomination lapses on a three-year cycle, so the review window closes on a 30 June
+    // every year rather than once. Annual omits the year in the emitted rule, so the resolver
+    // rolls it forward to 30 June 2027 instead of reporting EXPIRED.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      6,
+      day:        30,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "super_death_tax_trap",
+    label:        "End of financial year — death benefit nomination review",
+    basis:        "cole/config/au-12-super-death-tax-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", short \"30 Jun 2026\". The DATE is the config's; the RECURRENCE is the operator ruling of 2026-11-08, consistent with the same shape ruled for super-to-trust-exit.",
+  },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "30 June — final EOFY window before Division 296 commences 1 July 2026", urgencyLabel: "DIV 296 COMMENCES 1 JULY 2026", countdownLabel: "Countdown to 30 June 2026 — last EOFY before Division 296 commences" },
-  h1: "Your $2,000,000 Super Does Not Go to Your Kids — About $272,000 Goes to the ATO First",
-  metaTitle: "Super Death Tax Trap — Adult Children Pay 17% | TaxCheckNow",
-  metaDescription: "When you die, your super does not pass tax-free to your adult children. Under ITAA 1997 Division 302 they pay 17% on the taxable component. On a $2M fund at 80% taxable = $272,000 to the ATO. And Division 296 starts 1 July 2026 for balances over $3M. Run your check in 2 minutes.",
+  h1: "Super Death Benefit: Who Can Receive It and How It Is Taxed",
+  metaTitle: "Super Death Benefit: Who Can Receive It, and the Tax",
+  metaDescription: "A super death benefit is not covered by your will, and who may receive it, and how it is taxed, depends on the nomination you left behind.",
   canonical: "https://taxchecknow.com/au/check/super-death-tax-trap",
   answerHeadline: "The Super Death Tax Trap — how your super becomes a tax bill for your kids",
   answerBody: [
@@ -140,8 +164,7 @@ export const PRODUCT_CONFIG: ProductConfig = {
   sources: [
     { title: "ATO — Superannuation death benefits paid from a deceased estate", url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/in-detail/withdrawing-and-using-your-super/superannuation-benefits-paid-from-a-deceased-estate" },
     { title: "ATO — Death benefit dependant and tax-free treatment", url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/in-detail/withdrawing-and-using-your-super" },
-    { title: "ATO — Division 296 tax on superannuation balances over $3 million", url: "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" },
-  ],
+    { title: "ATO — Division 296 tax on superannuation balances over $3 million", url: "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" }, { title: "ITAA 1997 Division 302 — Superannuation death benefits", url: "https://www.legislation.gov.au/C2004A05138/latest/text" }, { title: "ITAA 1997 s302-195 — Meaning of death benefits dependant", url: "https://www.legislation.gov.au/C2004A05138/latest/text" }, { title: "ITAA 1997 s302-200 — Interdependency relationship", url: "https://www.legislation.gov.au/C2004A05138/latest/text" }, { title: "ITAA 1997 s307-125 — Proportioning rule for superannuation benefits", url: "https://www.legislation.gov.au/C2004A05138/latest/text" }, { title: "ITAA 1997 Subdivision 296-B — Division 296 tax on super earnings", url: "https://www.legislation.gov.au/C2004A05138/latest/text" } ],
   files: [
     { num: "01", slug: "sdtt-01", name: "Your Family's True Inheritance", desc: "Your exact death benefit tax leakage and what each beneficiary receives.", tier: 1, content: `<h2>Your Family's True Inheritance</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: Your taxable component — typically 70-90% of balance</p><p>Number 2: Your beneficiary's dependant status — spouse (0%) vs adult kids (17%)</p><p>Number 3: Your TSB trajectory against the $3M Division 296 threshold</p></div><h3>Death Benefit Tax Calculation</h3><p>On adult children receiving your super: Taxable component × 17% (15% tax + 2% Medicare levy)</p><p>Example: $2M balance × 80% taxable × 17% = $272,000 of tax</p><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/in-detail/withdrawing-and-using-your-super/superannuation-benefits-paid-from-a-deceased-estate">ATO — Superannuation death benefits</a> · ITAA 1997 Division 302</p>` },
     { num: "02", slug: "sdtt-02", name: "Beneficiary Dependant Assessment", desc: "Who qualifies as a 'death benefits dependant' under ITAA 1997 s302-195 — and who doesn't.", tier: 1, content: `<h2>Who is a 'Death Benefits Dependant'?</h2><table><tr><th>Relationship</th><th>Dependant Status</th><th>Tax on Taxable Component</th></tr><tr><td>Spouse (legal or de facto)</td><td>YES</td><td>0%</td></tr><tr><td>Former spouse</td><td>YES</td><td>0%</td></tr><tr><td>Child under 18</td><td>YES</td><td>0%</td></tr><tr><td>Adult child (18+, independent)</td><td>NO</td><td>17%</td></tr><tr><td>Financial dependant (provable)</td><td>YES</td><td>0%</td></tr><tr><td>Interdependency relationship (s302-200)</td><td>YES</td><td>0%</td></tr><tr><td>Grandchildren (if not a dependant)</td><td>NO</td><td>17%</td></tr><tr><td>Parents, siblings (usually)</td><td>NO</td><td>17%</td></tr></table><h3>Evidence Requirements for Financial Dependency</h3><p>The ATO has ruled that financial dependency is established where one person provides a better standard of living to another on a regular and continuing basis. Ad hoc support does not qualify. Formal arrangements (e.g. regular monthly payments, board) may.</p>` },

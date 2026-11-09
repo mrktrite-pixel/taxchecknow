@@ -10,30 +10,34 @@ import Division7aLoanTrapCalculator from "./Division7aLoanTrapCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Division 7A Loan Trap Australia 2026 — Is Your Director Loan a Deemed Dividend? | TaxCheckNow",
-  description: "Under Division 7A, loans from a company to a shareholder or associate become deemed dividends unless properly documented and repaid. The minimum repayment must be made before 30 June each year. Free calculator shows your risk in 2 minutes.",
+  title: "Division 7A: Is a Director Loan a Deemed Dividend? | TaxCheckNow",
+  description: "Division 7A turns a company loan to a shareholder or associate into a deemed dividend unless it is documented and the minimum yearly repayment is made.",
   alternates: { canonical: "https://taxchecknow.com/au/check/division-7a-loan-trap" },
   openGraph: {
-    title: "Division 7A Loan Trap Australia 2026 — Is Your Director Loan a Deemed Dividend? | TaxCheckNow",
-    description: "Under Division 7A, loans from a company to a shareholder or associate become deemed dividends unless properly documented and repaid. The minimum repayment must be made before 30 June each year. Free calculator shows your risk in 2 minutes.",
+    title: "Division 7A: Is a Director Loan a Deemed Dividend? | TaxCheckNow",
+    description: "Division 7A turns a company loan to a shareholder or associate into a deemed dividend unless it is documented and the minimum yearly repayment is made.",
     url: "https://taxchecknow.com/au/check/division-7a-loan-trap",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -235,7 +239,19 @@ const sidebarNumbers = [
 const sources = [
   {
     "title": "ATO — Division 7A",
-    "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends"
+    "url": "https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate"
+  },
+  {
+    "title": "ATO — Division 7A loans (minimum yearly repayment)",
+    "url": "https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans"
+  },
+  {
+    "title": "ITAA 1936 Division 7A — Private company payments and loans",
+    "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
+  },
+  {
+    "title": "ITAA 1936 s109D — Loans treated as dividends",
+    "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
   }
 ];
 
@@ -268,8 +284,13 @@ const countdownStats = [
 
 export default function Division7aLoanTrapPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/division-7a-loan-trap", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -285,8 +306,8 @@ export default function Division7aLoanTrapPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Division 7A Loan Trap Engine — Rules April 2026",
-    description: "Under Division 7A, loans from a company to a shareholder or associate become deemed dividends unless properly documented and repaid. The minimum repayment must be made before 30 June each year. Free calculator shows your risk in 2 minutes.",
+    name: "Division 7A Loan Trap Engine — Rules November 2026",
+    description: "Division 7A turns a company loan to a shareholder or associate into a deemed dividend unless it is documented and the minimum yearly repayment is made.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -302,7 +323,7 @@ export default function Division7aLoanTrapPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Division 7A Loan Trap Engine",
-    description: "Under Division 7A, loans from a company to a shareholder or associate become deemed dividends unless properly documented and repaid. The minimum repayment must be made before 30 June each year. Free calculator shows your risk in 2 minutes.",
+    description: "Division 7A turns a company loan to a shareholder or associate into a deemed dividend unless it is documented and the minimum yearly repayment is made.",
     url: "https://taxchecknow.com/au/check/division-7a-loan-trap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -351,13 +372,13 @@ export default function Division7aLoanTrapPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/division-7a-loan-trap#calculator",
-    "description": "Under Division 7A, loans from a company to a shareholder or associate become deemed dividends unless properly documented and repaid. The minimum repayment must be made before 30 June each year. Free calculator shows your risk in 2 minutes.",
+    "description": "Division 7A turns a company loan to a shareholder or associate into a deemed dividend unless it is documented and the minimum yearly repayment is made.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -382,6 +403,18 @@ export default function Division7aLoanTrapPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What is Division 7A? The Loan Trap Most Directors Miss",
+    description: "Division 7A turns a company loan to a shareholder or associate into a deemed dividend unless it is documented and the minimum yearly repayment is made.",
+    thumbnailUrl: "https://i.ytimg.com/vi/7Jtxd0SE-mE/hqdefault.jpg",
+    uploadDate: "2026-06-13T06:00:22.234+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=7Jtxd0SE-mE",
+    embedUrl: "https://www.youtube.com/embed/7Jtxd0SE-mE",
+    transcript: "\"What is Division 7A?\" Sound like you? You took money from your company and you're not sure what the rules are. The actual truth is this: Division 7A turns company loans into taxable dividends if you get the paperwork wrong. The ATO sets the benchmark interest rate at 8.27%. Unsecured loans must be repaid within 7 years. Miss a minimum repayment before 30 June and the shortfall becomes a deemed dividend — added straight to your income, no franking credits attached. And here's what AI gets wrong: repaying before 30 June is not enough. Your written agreement must exist before the company's lodgement day. Get it wrong and you owe tax on the full amount. Go to taxchecknow.com and check for yourself.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -391,6 +424,7 @@ export default function Division7aLoanTrapPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -425,7 +459,7 @@ export default function Division7aLoanTrapPage() {
 
         {/* Badge row */}
         <div className="mb-5 flex flex-wrap gap-2 text-xs">
-          <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 bg-neutral-900 px-2.5 py-1 font-medium tracking-wide text-white hover:bg-neutral-700 transition">
             🇦🇺 ATO Verified · ITAA 1936 — Division 7A ↗
           </a>
@@ -436,7 +470,7 @@ export default function Division7aLoanTrapPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Division 7A 2026: Is Your Director Loan About to Become Taxable Income?
+          Division 7A: Is Your Director Loan About to Become Taxable Income?
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -686,7 +720,7 @@ export default function Division7aLoanTrapPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -727,7 +761,7 @@ export default function Division7aLoanTrapPage() {
           </div>
           <p className="mt-4 text-xs text-neutral-600">
             Primary source:{" "}
-            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate" target="_blank" rel="noopener noreferrer"
               className="text-blue-700 hover:underline">
               ATO — Division 7A
             </a>
@@ -1026,10 +1060,25 @@ export default function Division7aLoanTrapPage() {
           </div>
           <div className="grid gap-3 text-sm md:grid-cols-2">
             
-            <a href="https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Division 7A ↗</p>
-              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate</p>
+            </a>
+            <a href="https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ATO — Division 7A loans (minimum yearly repayment) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C1936A00027/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1936 Division 7A — Private company payments and loans ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C1936A00027/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C1936A00027/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1936 s109D — Loans treated as dividends ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C1936A00027/latest/text</p>
             </a>
           </div>
         </div>
@@ -1041,11 +1090,20 @@ export default function Division7aLoanTrapPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=7Jtxd0SE-mE" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"\"What is Division 7A?\" Sound like you? You took money from your company and you're not sure what the rules are. The actual truth is this: Division 7A turns company loans into taxable dividends if you get the paperwork wrong. The ATO sets the benchmark interest rate at 8.27%. Unsecured loans must be repaid within 7 years. Miss a minimum repayment before 30 June and the shortfall becomes a deemed dividend — added straight to your income, no franking credits attached. And here's what AI gets wrong: repaying before 30 June is not enough. Your written agreement must exist before the company's lodgement day. Get it wrong and you owe tax on the full amount. Go to taxchecknow.com and check for yourself."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -1055,7 +1113,7 @@ export default function Division7aLoanTrapPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

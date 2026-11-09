@@ -19,14 +19,23 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1936 — Division 7A (Loans to shareholders and associates)",
     "legal_anchor": "ITAA 1936 — Division 7A",
     "deadline": {
         "iso_date": "2026-06-30T23:59:59.000+10:00",
         "display": "30 June 2026",
         "description": "EOFY — minimum Div 7A repayments must be made before 30 June each year",
-        "urgency_label": "EOFY DEADLINE"
+        "urgency_label": "EOFY DEADLINE",
+        "recurrence": {
+            "kind": "annual",
+            "month": 6,
+            "day": 30,
+            "timezone": "Australia/Sydney",
+            "shift": "none",
+            "label": "End of financial year — Division 7A minimum yearly repayment due",
+            "basis": "cole/config/au-02-division-7a-loan-trap.ts deadline block: isoDate \"2026-06-30T23:59:59.000+10:00\", display \"30 June 2026\", description \"EOFY — minimum Div 7A repayments must be made before 30 June each year\", urgencyLabel \"EOFY DEADLINE\", countdownLabel \"Countdown to 30 June 2026 — Div 7A minimum repayments due\"."
+        }
     },
     "key_facts": {
         "benchmark_interest_rate_2025_26": "8.27%",
@@ -111,7 +120,19 @@ export async function GET() {
     "sources": [
         {
             "title": "ATO — Division 7A",
-            "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends"
+            "url": "https://www.ato.gov.au/tax-rates-and-codes/division-7a-benchmark-interest-rate"
+        },
+        {
+            "title": "ATO — Division 7A loans (minimum yearly repayment)",
+            "url": "https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends/in-detail/division-7a-loans"
+        },
+        {
+            "title": "ITAA 1936 Division 7A — Private company payments and loans",
+            "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
+        },
+        {
+            "title": "ITAA 1936 s109D — Loans treated as dividends",
+            "url": "https://www.legislation.gov.au/C1936A00027/latest/text"
         }
     ],
     "products": {
@@ -131,11 +152,11 @@ export async function GET() {
         }
     },
     "monitor_urls": [
-        "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/income/dividends-and-franking/division-7a-dividends"
+        "https://www.ato.gov.au/businesses-and-organisations/corporate-tax-measures-and-assurance/private-company-benefits-division-7a-dividends"
     ],
     "canonical": "https://taxchecknow.com/au/check/division-7a-loan-trap",
     "api_endpoint": "/api/rules/division-7a-loan-trap",
-    "generated_at": "2026-04-21T13:50:40.877Z"
+    "generated_at": "2026-11-08T12:14:19.236Z"
 };
 
   return NextResponse.json(rules, {
@@ -145,7 +166,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "division-7a-loan-trap",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

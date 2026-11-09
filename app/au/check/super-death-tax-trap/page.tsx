@@ -10,30 +10,34 @@ import SuperDeathTaxTrapCalculator from "./SuperDeathTaxTrapCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Super Death Tax Trap — Adult Children Pay 17% | TaxCheckNow",
-  description: "When you die, your super does not pass tax-free to your adult children. Under ITAA 1997 Division 302 they pay 17% on the taxable component. On a $2M fund at 80% taxable = $272,000 to the ATO. And Division 296 starts 1 July 2026 for balances over $3M. Run your check in 2 minutes.",
+  title: "Super Death Benefit: Who Can Receive It, and the Tax",
+  description: "A super death benefit is not covered by your will, and who may receive it, and how it is taxed, depends on the nomination you left behind.",
   alternates: { canonical: "https://taxchecknow.com/au/check/super-death-tax-trap" },
   openGraph: {
-    title: "Super Death Tax Trap — Adult Children Pay 17% | TaxCheckNow",
-    description: "When you die, your super does not pass tax-free to your adult children. Under ITAA 1997 Division 302 they pay 17% on the taxable component. On a $2M fund at 80% taxable = $272,000 to the ATO. And Division 296 starts 1 July 2026 for balances over $3M. Run your check in 2 minutes.",
+    title: "Super Death Benefit: Who Can Receive It, and the Tax",
+    description: "A super death benefit is not covered by your will, and who may receive it, and how it is taxed, depends on the nomination you left behind.",
     url: "https://taxchecknow.com/au/check/super-death-tax-trap",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -251,6 +255,26 @@ const sources = [
   {
     "title": "ATO — Division 296 tax on superannuation balances over $3 million",
     "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
+  },
+  {
+    "title": "ITAA 1997 Division 302 — Superannuation death benefits",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s302-195 — Meaning of death benefits dependant",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s302-200 — Interdependency relationship",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s307-125 — Proportioning rule for superannuation benefits",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 Subdivision 296-B — Division 296 tax on super earnings",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   }
 ];
 
@@ -283,8 +307,13 @@ const countdownStats = [
 
 export default function SuperDeathTaxTrapPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/super-death-tax-trap", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -300,8 +329,8 @@ export default function SuperDeathTaxTrapPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Super Death Tax Trap Engine — Rules April 2026",
-    description: "When you die, your super does not pass tax-free to your adult children. Under ITAA 1997 Division 302 they pay 17% on the taxable component. On a $2M fund at 80% taxable = $272,000 to the ATO. And Division 296 starts 1 July 2026 for balances over $3M. Run your check in 2 minutes.",
+    name: "Super Death Tax Trap Engine — Rules November 2026",
+    description: "A super death benefit is not covered by your will, and who may receive it, and how it is taxed, depends on the nomination you left behind.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -317,7 +346,7 @@ export default function SuperDeathTaxTrapPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Super Death Tax Trap Engine",
-    description: "When you die, your super does not pass tax-free to your adult children. Under ITAA 1997 Division 302 they pay 17% on the taxable component. On a $2M fund at 80% taxable = $272,000 to the ATO. And Division 296 starts 1 July 2026 for balances over $3M. Run your check in 2 minutes.",
+    description: "A super death benefit is not covered by your will, and who may receive it, and how it is taxed, depends on the nomination you left behind.",
     url: "https://taxchecknow.com/au/check/super-death-tax-trap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -366,13 +395,13 @@ export default function SuperDeathTaxTrapPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/super-death-tax-trap#calculator",
-    "description": "When you die, your super does not pass tax-free to your adult children. Under ITAA 1997 Division 302 they pay 17% on the taxable component. On a $2M fund at 80% taxable = $272,000 to the ATO. And Division 296 starts 1 July 2026 for balances over $3M. Run your check in 2 minutes.",
+    "description": "A super death benefit is not covered by your will, and who may receive it, and how it is taxed, depends on the nomination you left behind.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -397,6 +426,18 @@ export default function SuperDeathTaxTrapPage() {
     ],
   };
 
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "What is the super death benefit tax? Your Will won't fix it",
+    description: "A super death benefit is not covered by your will, and who may receive it, and how it is taxed, depends on the nomination you left behind.",
+    thumbnailUrl: "https://i.ytimg.com/vi/u_sxYPwj_t8/hqdefault.jpg",
+    uploadDate: "2026-06-07T12:07:00.235+00:00",
+    contentUrl: "https://www.youtube.com/watch?v=u_sxYPwj_t8",
+    embedUrl: "https://www.youtube.com/embed/u_sxYPwj_t8",
+    transcript: "70 to 90 percent of your super balance is taxable. What is the super death benefit tax? It is a 17 percent hit on that taxable chunk — paid by your adult kids when they inherit. Sound like your plan? Here is the actual truth: your Will does not cover your super. Super sits outside your estate. Without a valid binding nomination, the fund trustee decides who gets it — and your Will may be ignored entirely. The ATO confirms two separate legal systems apply. Go to taxchecknow.",
+  };
+
   return (
     <>
       {/* ── JSON-LD ── */}
@@ -406,6 +447,7 @@ export default function SuperDeathTaxTrapPage() {
       <Script id="jsonld-howto"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <Script id="jsonld-breadcrumb"type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="jsonld-calculator" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorSchema) }} />
+      <Script id="jsonld-video"     type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema).replace(/</g, "\\u003c") }} />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {/* SECTION 1 — NAV                                                       */}
@@ -451,7 +493,7 @@ export default function SuperDeathTaxTrapPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Your $2,000,000 Super Does Not Go to Your Kids — About $272,000 Goes to the ATO First
+          Super Death Benefit: Who Can Receive It and How It Is Taxed
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -701,7 +743,7 @@ export default function SuperDeathTaxTrapPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1070,10 +1112,35 @@ export default function SuperDeathTaxTrapPage() {
               <p className="font-bold text-neutral-900">ATO — Death benefit dependant and tax-free treatment ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/in-detail/withdrawing-and-using-your-super</p>
             </a>
-            <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Division 296 tax on superannuation balances over $3 million ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 Division 302 — Superannuation death benefits ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s302-195 — Meaning of death benefits dependant ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s302-200 — Interdependency relationship ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s307-125 — Proportioning rule for superannuation benefits ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 Subdivision 296-B — Division 296 tax on super earnings ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
             </a>
           </div>
         </div>
@@ -1085,11 +1152,20 @@ export default function SuperDeathTaxTrapPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
         </p>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* VIDEO TRANSCRIPT — server-rendered (GEO / AI-citation surface)        */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 py-10 border-t border-neutral-200">
+        <h2 className="text-xl font-bold text-neutral-900">Video transcript</h2>
+        <p className="mt-1 text-sm text-neutral-600"><a href="https://www.youtube.com/watch?v=u_sxYPwj_t8" rel="noopener noreferrer" target="_blank" className="underline">Watch on YouTube</a></p>
+        <div className="mt-4 whitespace-pre-line text-sm leading-relaxed text-neutral-700">{"70 to 90 percent of your super balance is taxable. What is the super death benefit tax? It is a 17 percent hit on that taxable chunk — paid by your adult kids when they inherit. Sound like your plan? Here is the actual truth: your Will does not cover your super. Super sits outside your estate. Without a valid binding nomination, the fund trustee decides who gets it — and your Will may be ignored entirely. The ATO confirms two separate legal systems apply. Go to taxchecknow."}</div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -1099,7 +1175,7 @@ export default function SuperDeathTaxTrapPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>

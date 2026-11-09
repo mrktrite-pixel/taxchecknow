@@ -145,7 +145,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/bring-forward-window",
     "api_endpoint": "/api/rules/bring-forward-window",
-    "generated_at": "2026-04-22T08:27:05.149Z"
+    "generated_at": "2026-11-08T02:12:22.247Z"
 };
 
   return NextResponse.json(rules, {
