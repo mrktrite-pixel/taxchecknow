@@ -185,7 +185,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/transfer-balance-cap",
     "api_endpoint": "/api/rules/transfer-balance-cap",
-    "generated_at": "2026-11-09T05:08:52.319Z"
+    "generated_at": "2026-11-09T10:57:59.967Z"
 };
 
   return NextResponse.json(rules, {
