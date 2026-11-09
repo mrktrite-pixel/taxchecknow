@@ -26,7 +26,16 @@ export async function GET() {
         "iso_date": "2026-06-30T23:59:59.000+10:00",
         "display": "30 June 2026",
         "description": "30 June 2026 — next TBC reporting date and final window before 2026-27 indexation adjustment",
-        "urgency_label": "ONGOING TAX — NOT A DEADLINE, A COMPOUNDING COST"
+        "urgency_label": "ONGOING TAX — NOT A DEADLINE, A COMPOUNDING COST",
+        "recurrence": {
+            "kind": "annual",
+            "month": 6,
+            "day": 30,
+            "timezone": "Australia/Sydney",
+            "shift": "none",
+            "label": "30 June — transfer balance account reporting date",
+            "basis": "ATO 'Transfer balance cap' (QC 18123) and the key superannuation rates and thresholds page: super funds report transfer balance account events to the ATO at the end of the financial year, and the general cap is indexed on 1 July."
+        }
     },
     "key_facts": {
         "general_tbc_2026_27": "AUD 2,100,000",
@@ -152,7 +161,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/transfer-balance-cap",
     "api_endpoint": "/api/rules/transfer-balance-cap",
-    "generated_at": "2026-07-30T07:24:14.002Z"
+    "generated_at": "2026-11-09T02:30:37.677Z"
 };
 
   return NextResponse.json(rules, {
