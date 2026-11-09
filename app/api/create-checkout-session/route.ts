@@ -170,6 +170,12 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // key, read out of this same file rather than guessed.
   au_67_small_business_cgt_concessions:   "STRIPE_AU_SBCGT_67",
   au_147_small_business_cgt_concessions:  "STRIPE_AU_SBCGT_147",
+  // au/check/transfer-balance-cap (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
+  // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that
+  // key, read out of this same file rather than guessed.
+  au_67_transfer_balance_cap:   "STRIPE_AU_TBC_67",
+  au_147_transfer_balance_cap:  "STRIPE_AU_TBC_147",
   // au/check/super-death-tax-trap (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
   // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
   // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that

@@ -1,0 +1,328 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "The transfer balance cap (TBC) limits the total superannuation that can be transferred into the retirement phase. The general TBC has risen from $1,600,000 in 2017–18 to $2,100,000 in 2026–27. Special rules apply for defined benefit income streams, which have their own annual income cap — $125,000 in 2025–26 and $131,250 in 2026–27. This menu covers what the cap is, how it has changed over time, the defined benefit income cap, what happens if you exceed the cap, how personal caps differ from the general cap, and how timing of pension commencement affects your entitlement.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-topic",
+      "text": "What would you like to know about the transfer balance cap?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "What is the transfer balance cap and how does it work generally?",
+          "value": "what_is_tbc",
+          "flags": [
+            "q1-topic:what_is_tbc"
+          ]
+        },
+        {
+          "label": "What is the general cap amount for a specific year (2017–18 to 2026–27)?",
+          "value": "annual_cap_lookup",
+          "flags": [
+            "q1-topic:annual_cap_lookup"
+          ]
+        },
+        {
+          "label": "How my personal cap may differ from the general cap",
+          "value": "personal_vs_general",
+          "flags": [
+            "q1-topic:personal_vs_general"
+          ]
+        },
+        {
+          "label": "What happens if I exceed the transfer balance cap?",
+          "value": "exceeding_tbc",
+          "flags": [
+            "q1-topic:exceeding_tbc"
+          ]
+        },
+        {
+          "label": "Defined benefit income cap — what it is or what the cap amount is for a specific year",
+          "value": "defined_benefit",
+          "flags": [
+            "q1-topic:defined_benefit"
+          ]
+        },
+        {
+          "label": "None of these / something else",
+          "value": "none_fit",
+          "flags": [
+            "q1-topic:none_fit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-pension-status",
+      "text": "Have you already commenced a retirement phase pension (i.e., is a pension currently in payment)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-topic:personal_vs_general"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — I already have a retirement phase pension in payment",
+          "value": "pension_active",
+          "flags": [
+            "q2-pension-status:pension_active"
+          ]
+        },
+        {
+          "label": "No — I have not yet commenced a retirement phase pension",
+          "value": "pension_not_started",
+          "flags": [
+            "q2-pension-status:pension_not_started"
+          ]
+        },
+        {
+          "label": "I'm not sure whether my pension counts as a retirement phase pension",
+          "value": "unsure",
+          "flags": [
+            "q2-pension-status:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-personal-cap-subtopic",
+      "text": "What specifically would you like to understand about your personal transfer balance cap?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-pension-status:pension_active"
+        ]
+      },
+      "options": [
+        {
+          "label": "How my personal cap is determined and how to find it",
+          "value": "personal_cap_how",
+          "flags": [
+            "q4-personal-cap-subtopic:personal_cap_how"
+          ]
+        },
+        {
+          "label": "How proportional indexation works when the general cap increases and I already have a pension",
+          "value": "proportional_indexation",
+          "flags": [
+            "q4-personal-cap-subtopic:proportional_indexation"
+          ]
+        },
+        {
+          "label": "Whether the timing of when I started my pension affects my cap",
+          "value": "timing_strategy",
+          "flags": [
+            "q4-personal-cap-subtopic:timing_strategy"
+          ]
+        },
+        {
+          "label": "I'm not sure what I need to know",
+          "value": "unsure",
+          "flags": [
+            "q4-personal-cap-subtopic:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-defined-benefit-subtopic",
+      "text": "What would you like to know about the defined benefit income cap?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-topic:defined_benefit"
+        ]
+      },
+      "options": [
+        {
+          "label": "What the defined benefit income cap is and how it works",
+          "value": "db_explainer",
+          "flags": [
+            "q3-defined-benefit-subtopic:db_explainer"
+          ]
+        },
+        {
+          "label": "The defined benefit income cap amount for a specific year",
+          "value": "db_lookup",
+          "flags": [
+            "q3-defined-benefit-subtopic:db_lookup"
+          ]
+        },
+        {
+          "label": "I'm not sure which of these I need",
+          "value": "unsure",
+          "flags": [
+            "q3-defined-benefit-subtopic:unsure"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "tbc-annual-caps-lookup",
+      "when": {
+        "any": [
+          "q1-topic:annual_cap_lookup"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Look up the general transfer balance cap for a specific year (2017–18 to 2026–27)",
+      "result_copy": "The general transfer balance cap by financial year: $1,600,000 (2017–18), $1,600,000 (2018–19), $1,600,000 (2019–20), $1,600,000 (2020–21), $1,700,000 (2021–22), $1,700,000 (2022–23), $1,900,000 (2023–24), $1,900,000 (2024–25), $2,000,000 (2025–26), $2,100,000 (2026–27). These are the legislated general caps. Your personal cap may differ if you commenced a pension before an indexation event.",
+      "figure_ids": []
+    },
+    {
+      "id": "defined-benefit-income-cap-lookup",
+      "when": {
+        "any": [
+          "q3-defined-benefit-subtopic:db_lookup"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Look up the defined benefit income cap for a specific year (2017–18 to 2026–27)",
+      "result_copy": "The defined benefit income cap by financial year: $100,000 (2017–18), $100,000 (2018–19), $100,000 (2019–20), $100,000 (2020–21), $106,250 (2021–22), $106,250 (2022–23), $118,750 (2023–24), $118,750 (2024–25), $125,000 (2025–26), $131,250 (2026–27).",
+      "figure_ids": []
+    },
+    {
+      "id": "personal-cap-vs-general-cap",
+      "when": {
+        "any": [
+          "q4-personal-cap-subtopic:personal_cap_how"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My personal transfer balance cap — how it may differ from the general cap",
+      "result_copy": "The general transfer balance cap (for example, $2,100,000 for 2026–27) is not automatically your personal cap if you commenced a retirement phase pension before an indexation increase. To determine your personal cap, you need to check your transfer balance account, which is accessible via ATO online services (MyGov). If your personal cap is lower than the current general cap, you may still have unused cap space — but only up to your personal ceiling, not the full general cap. Review recommended to confirm your personal cap position.",
+      "figure_ids": []
+    },
+    {
+      "id": "pension-timing-strategy",
+      "when": {
+        "any": [
+          "q2-pension-status:pension_not_started",
+          "q4-personal-cap-subtopic:timing_strategy"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Does it matter whether I start my pension before or after a cap indexation date?",
+      "result_copy": "The timing of when you commence a retirement phase pension can affect your personal transfer balance cap. If you start a pension before an indexation event, you may receive only a proportional share of future cap increases rather than the full indexed general cap. If you have not yet commenced a pension and the general cap is about to increase — for example from $2,000,000 to $2,100,000 for 2026–27 — the sequencing decision may affect your lifetime cap entitlement. Review recommended: seek advice to determine the optimal timing approach for your circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "tbc-explainer-what-it-is",
+      "when": {
+        "any": [
+          "q1-topic:what_is_tbc"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What is the transfer balance cap and how does it work?",
+      "result_copy": "The transfer balance cap is a limit on the total amount of superannuation that can be transferred into the retirement phase, applying from 1 July 2017. The general cap has been $1,600,000 (2017–18 through 2020–21), $1,700,000 (2021–22 and 2022–23), $1,900,000 (2023–24 and 2024–25), $2,000,000 (2025–26), and $2,100,000 (2026–27). You can make transfers into the retirement phase as long as you remain below your cap. Your personal cap may differ from the general cap depending on when you commenced a retirement phase pension.",
+      "figure_ids": []
+    },
+    {
+      "id": "proportional-indexation-explainer",
+      "when": {
+        "any": [
+          "q4-personal-cap-subtopic:proportional_indexation"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How proportional indexation works when the cap increases and you already have a pension",
+      "result_copy": "When the general transfer balance cap is indexed upward — for example from $1,900,000 to $2,000,000 for 2025–26, or from $2,000,000 to $2,100,000 for 2026–27 — individuals who already commenced a retirement phase pension before the increase do not automatically receive the full new general cap. Instead, they receive only a proportional share of the increase, based on the unused portion of their cap at the time of indexation. This means the majority of existing retirees have a personal cap that sits below the current general cap. Review your transfer balance account via ATO online services (MyGov) to determine your personal cap.",
+      "figure_ids": []
+    },
+    {
+      "id": "exceeding-tbc-consequences",
+      "when": {
+        "any": [
+          "q1-topic:exceeding_tbc"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What happens if I exceed the transfer balance cap?",
+      "result_copy": "If you transfer more into the retirement phase than your personal transfer balance cap allows, you have an excess transfer balance. The ATO administers consequences for excess transfer balances. Review recommended to understand the specific consequences and steps required if an excess is indicated.",
+      "figure_ids": []
+    },
+    {
+      "id": "defined-benefit-income-cap-explainer",
+      "when": {
+        "any": [
+          "q3-defined-benefit-subtopic:db_explainer"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How the defined benefit income cap works and what it means for government pension recipients",
+      "result_copy": "The defined benefit income cap is a separate cap that applies to defined benefit pension income. The cap amounts by year are: $100,000 (2017–18), $100,000 (2018–19), $100,000 (2019–20), $100,000 (2020–21), $106,250 (2021–22), $106,250 (2022–23), $118,750 (2023–24), $118,750 (2024–25), $125,000 (2025–26), $131,250 (2026–27). Review the ATO's guidance on how this cap applies to your defined benefit income to determine whether it is relevant to your circumstances.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-topic:none_fit"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2-pension-status:unsure",
+          "q4-personal-cap-subtopic:unsure",
+          "q3-defined-benefit-subtopic:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

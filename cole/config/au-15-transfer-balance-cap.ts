@@ -22,13 +22,37 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "transfer-balance-cap", name: "Transfer Balance Cap Optimiser", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/transfer-balance-cap", url: "https://taxchecknow.com/au/check/transfer-balance-cap", apiRoute: "/api/rules/transfer-balance-cap",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 Subdivision 294-B (Transfer Balance Cap) and s294-25 (excess transfer balance tax)", legislation: "Income Tax Assessment Act 1997 Subdivision 294-B (transfer balance cap and account) · s294-25 (excess transfer balance tax — 15% first excess, 30% second and subsequent) · s294-35 (personal cap set at general cap on first pension commencement) · s294-40 (proportional indexation of personal cap based on highest unused percentage) · s294-80 (commutation authority on excess determination) · s295-385 (pension phase earnings tax — 0% on TBC portion) · Superannuation Industry (Supervision) Regulations 1994 reg 1.06 (account-based pension minimum drawdown) · ATO Shortfall Interest Charge rate (used as notional earnings rate on excess)", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 Subdivision 294-B (Transfer Balance Cap) and s294-25 (excess transfer balance tax)", legislation: "Income Tax Assessment Act 1997 Subdivision 294-B (transfer balance cap and account) · s294-25 (excess transfer balance tax — 15% first excess, 30% second and subsequent) · s294-35 (personal cap set at general cap on first pension commencement) · s294-40 (proportional indexation of personal cap based on highest unused percentage) · s294-80 (commutation authority on excess determination) · s295-385 (pension phase earnings tax — 0% on TBC portion) · Superannuation Industry (Supervision) Regulations 1994 reg 1.06 (account-based pension minimum drawdown) · ATO Shortfall Interest Charge rate (used as notional earnings rate on excess)", lastVerified: "November 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your TBC Position Pack", tagline: "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $1.9M figure", value: "Your personal TBC calculation, excess amount if over, annual excess transfer balance tax exposure, commutation requirement, and 4 accountant questions — built for your exact commencement year and pension balance.", cta: "Show My Personal TBC — $67 →", productKey: "au_67_transfer_balance_cap", envVar: "STRIPE_AU_TBC_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Full TBC Strategy", tagline: "Commutation plan, spouse cap equalisation, reversionary pension modelling — the strategy layer most advisers skip", value: "Full commutation strategy, re-contribution options after commutation, reversionary pension impact modelling, spouse TBC interaction, 20-year projection, and accountant-ready implementation documents.", cta: "Get My Full TBC Strategy — $147 →", productKey: "au_147_transfer_balance_cap", envVar: "STRIPE_AU_TBC_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // 30 June is the end of the Australian financial year and the date a transfer balance account
+    // is measured and reported to the ATO. The cap is indexed in $100,000 CPI steps most 1 July,
+    // so the commutation and reporting window closes on a 30 June every year rather than once.
+    // Annual, with no year pinned, so it rolls forward instead of reading EXPIRED after 30 June
+    // 2026.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      6,
+      day:        30,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "transfer_balance_cap",
+    label:        "30 June — transfer balance account reporting date",
+    basis:        "ATO 'Transfer balance cap' (QC 18123) and the key superannuation rates and thresholds page: super funds report transfer balance account events to the ATO at the end of the financial year, and the general cap is indexed on 1 July.",
+  },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "30 June 2026 — next TBC reporting date and final window before 2026-27 indexation adjustment", urgencyLabel: "ONGOING TAX — NOT A DEADLINE, A COMPOUNDING COST", countdownLabel: "Next 30 June TBC reporting date" },
-  h1: "Your Personal Transfer Balance Cap Is Probably Lower Than $1.9M — And If Your Pension Is Over It, the ATO Is Taxing You Right Now",
-  metaTitle: "Transfer Balance Cap Optimiser — Your Personal TBC Not the Generic $1.9M | TaxCheckNow",
-  metaDescription: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+  h1: "Your Personal Transfer Balance Cap Is Probably Lower Than $2.1M",
+  metaTitle: "Your Personal Transfer Balance Cap Is Not the General $2.1M Cap",
+  metaDescription: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
   canonical: "https://taxchecknow.com/au/check/transfer-balance-cap",
   answerHeadline: "The Transfer Balance Cap is personal, not general — and most members over $1.6M have never been told their specific number",
   answerBody: [
@@ -167,6 +191,12 @@ export const PRODUCT_CONFIG: ProductConfig = {
     { title: "ATO — Excess transfer balance tax determinations",                                   url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap/excess-transfer-balance" },
     { title: "ATO — Personal transfer balance cap and indexation",                                url: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap/personal-transfer-balance-cap" },
     { title: "ATO — Key superannuation rates and thresholds (TBC history)",                       url: "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" },
+    { title: "ITAA 1997 Subdiv 294-B — Transfer balance cap and transfer balance account (Subdivision 294-B)", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1997 s294-25 — Excess transfer balance tax", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1997 s294-35 — Excess transfer balance earnings", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1997 s294-40 — Excess transfer balance determination", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1997 s294-80 — Transfer balance credits", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
+    { title: "ITAA 1997 s295-385 — Exempt current pension income", url: "https://www.legislation.gov.au/C2004A05138/latest/text" },
   ],
   files: [
     { num: "01", slug: "tbc-01", name: "Your Personal TBC Calculation", desc: "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $1.9M.", tier: 1, content: `<h2>Your Personal Transfer Balance Cap</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: The general TBC on the day you commenced your first pension (sets your personal cap)</p><p>Number 2: Your proportional indexation entitlement at each general cap rise (s294-40)</p><p>Number 3: Your current pension phase balance vs personal cap = excess or headroom</p></div><h3>Historical General Caps</h3><table><tr><th>Period</th><th>General Cap</th><th>Personal Cap If Commenced In Period</th></tr><tr><td>1 July 2017 – 30 June 2021</td><td>$1,600,000</td><td>$1,600,000 (frozen if fully used)</td></tr><tr><td>1 July 2021 – 30 June 2023</td><td>$1,700,000</td><td>$1,700,000 (frozen if fully used)</td></tr><tr><td>1 July 2023 – 30 June 2025</td><td>$1,900,000</td><td>$1,900,000</td></tr><tr><td>1 July 2025 – 30 June 2026</td><td>$2,000,000</td><td>$2,000,000</td></tr><tr><td>1 July 2026 onwards</td><td>$2,100,000</td><td>$2,100,000</td></tr></table><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap">ATO — Transfer Balance Cap</a> · ITAA 1997 s294-35</p>` },

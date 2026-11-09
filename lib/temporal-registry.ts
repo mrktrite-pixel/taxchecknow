@@ -401,6 +401,23 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "basis": "OECD Model Tax Convention Article 4(2) is a standing tie-breaker rule: it states no deadline, window or effective-from date. Operator ruling 2026-10-14."
           }
     },
+    "transfer-balance-cap": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 6,
+                      "day": 30,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "transfer_balance_cap",
+                "label": "30 June — transfer balance account reporting date",
+                "basis": "ATO 'Transfer balance cap' (QC 18123) and the key superannuation rates and thresholds page: super funds report transfer balance account events to the ATO at the end of the financial year, and the general cap is indexed on 1 July."
+          }
+    },
     "uk-nrls": {
           "temporal": {
                 "kind": "none",

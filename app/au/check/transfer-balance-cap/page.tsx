@@ -10,21 +10,22 @@ import TransferBalanceCapCalculator from "./TransferBalanceCapCalculator";
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Transfer Balance Cap Optimiser — Your Personal TBC Not the Generic $1.9M | TaxCheckNow",
-  description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+  title: "Your Personal Transfer Balance Cap Is Not the General $2.1M Cap",
+  description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
   alternates: { canonical: "https://taxchecknow.com/au/check/transfer-balance-cap" },
   openGraph: {
-    title: "Transfer Balance Cap Optimiser — Your Personal TBC Not the Generic $1.9M | TaxCheckNow",
-    description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    title: "Your Personal Transfer Balance Cap Is Not the General $2.1M Cap",
+    description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     url: "https://taxchecknow.com/au/check/transfer-balance-cap",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
 
+
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
-const LAST_VERIFIED  = "April 2026";
+const LAST_VERIFIED  = "November 2026";
 const DEADLINE_LABEL = "30 June 2026";
 const DEADLINE_ISO   = "2026-06-30T23:59:59.000+10:00";
 
@@ -272,6 +273,30 @@ const sources = [
   {
     "title": "ATO — Key superannuation rates and thresholds (TBC history)",
     "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
+  },
+  {
+    "title": "ITAA 1997 Subdiv 294-B — Transfer balance cap and transfer balance account (Subdivision 294-B)",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s294-25 — Excess transfer balance tax",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s294-35 — Excess transfer balance earnings",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s294-40 — Excess transfer balance determination",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s294-80 — Transfer balance credits",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+  },
+  {
+    "title": "ITAA 1997 s295-385 — Exempt current pension income",
+    "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
   }
 ];
 
@@ -325,8 +350,8 @@ export default function TransferBalanceCapPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Transfer Balance Cap Optimiser — Rules April 2026",
-    description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    name: "Transfer Balance Cap Optimiser — Rules November 2026",
+    description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -342,7 +367,7 @@ export default function TransferBalanceCapPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Transfer Balance Cap Optimiser",
-    description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     url: "https://taxchecknow.com/au/check/transfer-balance-cap",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -391,13 +416,13 @@ export default function TransferBalanceCapPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/transfer-balance-cap#calculator",
-    "description": "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    "description": "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
       "Personalised escape route calculation",
       "No registration required",
-      "Based on ATO guidance April 2026"
+      "Based on ATO guidance November 2026"
     ],
     "offers": {
       "@type": "Offer",
@@ -426,7 +451,7 @@ export default function TransferBalanceCapPage() {
     "@context": "https://schema.org",
     "@type": "VideoObject",
     name: "What is the Transfer Balance Cap? Your Cap May Be Lower",
-    description: "Most members are told the Transfer Balance Cap is $1.9M. It's not — your PERSONAL cap is frozen at whatever the general cap was when you started your pension, often $1.6M or $1.7M. Run your personal TBC check in 2 minutes — ATO-referenced, confirmed April 2026.",
+    description: "Most members are told the transfer balance cap is $2.1M. Your personal cap is frozen at the general cap on the day your pension commenced.",
     thumbnailUrl: "https://i.ytimg.com/vi/5NWJseC3gR8/hqdefault.jpg",
     uploadDate: "2026-06-10T23:56:40.448+00:00",
     contentUrl: "https://www.youtube.com/watch?v=5NWJseC3gR8",
@@ -489,7 +514,7 @@ export default function TransferBalanceCapPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Your Personal Transfer Balance Cap Is Probably Lower Than $1.9M — And If Your Pension Is Over It, the ATO Is Taxing You Right Now
+          Your Personal Transfer Balance Cap Is Probably Lower Than $2.1M
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
@@ -739,7 +764,7 @@ export default function TransferBalanceCapPage() {
               <thead>
                 <tr className="border-b-2 border-neutral-300">
                   <th className="p-2 text-left font-bold">Rule</th>
-                  <th className="p-2 text-left font-bold">Value (April 2026)</th>
+                  <th className="p-2 text-left font-bold">Value (November 2026)</th>
                   <th className="p-2 text-left font-bold">Source</th>
                 </tr>
               </thead>
@@ -1129,10 +1154,40 @@ export default function TransferBalanceCapPage() {
               <p className="font-bold text-neutral-900">ATO — Personal transfer balance cap and indexation ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap/personal-transfer-balance-cap</p>
             </a>
-            <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" 
-              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+            <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
               <p className="font-bold text-neutral-900">ATO — Key superannuation rates and thresholds (TBC history) ↗</p>
               <p className="font-mono text-xs text-neutral-600">www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 Subdiv 294-B — Transfer balance cap and transfer balance account (Subdivision 294-B) ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s294-25 — Excess transfer balance tax ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s294-35 — Excess transfer balance earnings ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s294-40 — Excess transfer balance determination ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" target="_blank" rel="noopener noreferrer"
+              className="block border border-blue-200 bg-white hover:border-blue-500 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s294-80 — Transfer balance credits ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
+            </a>
+            <a href="https://www.legislation.gov.au/C2004A05138/latest/text" 
+              className="block border border-blue-500 bg-white hover:bg-blue-100 p-3 transition">
+              <p className="font-bold text-neutral-900">ITAA 1997 s295-385 — Exempt current pension income ↗</p>
+              <p className="font-mono text-xs text-neutral-600">www.legislation.gov.au/C2004A05138/latest/text</p>
             </a>
           </div>
         </div>
@@ -1144,7 +1199,7 @@ export default function TransferBalanceCapPage() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <p className="text-xs leading-relaxed text-neutral-500">
           General information only. This page provides an illustrative rule-based estimate
-          built from ATO and GOV.UK guidance for April 2026.
+          built from ATO and GOV.UK guidance for November 2026.
           It is not tax, legal or financial advice. Tax rules can change — always verify
           current rates at GOV.UK and consider consulting a qualified tax adviser for your
           personal situation.
@@ -1167,7 +1222,7 @@ export default function TransferBalanceCapPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-600 md:flex-row md:justify-between">
           <div>
             <p className="font-bold text-neutral-900">TaxCheckNow</p>
-            <p className="mt-1">Australia tax position checks. April 2026.</p>
+            <p className="mt-1">Australia tax position checks. November 2026.</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <Link href="/au/check/mtd-scorecard" className="hover:text-neutral-900">MTD Scorecard</Link>
