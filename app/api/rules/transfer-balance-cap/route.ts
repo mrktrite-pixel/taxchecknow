@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1997 Subdivision 294-B (transfer balance cap and account) · s294-25 (excess transfer balance tax — 15% first excess, 30% second and subsequent) · s294-35 (personal cap set at general cap on first pension commencement) · s294-40 (proportional indexation of personal cap based on highest unused percentage) · s294-80 (commutation authority on excess determination) · s295-385 (pension phase earnings tax — 0% on TBC portion) · Superannuation Industry (Supervision) Regulations 1994 reg 1.06 (account-based pension minimum drawdown) · ATO Shortfall Interest Charge rate (used as notional earnings rate on excess)",
     "legal_anchor": "ITAA 1997 Subdivision 294-B (Transfer Balance Cap) and s294-25 (excess transfer balance tax)",
     "deadline": {
@@ -138,6 +138,30 @@ export async function GET() {
         {
             "title": "ATO — Key superannuation rates and thresholds (TBC history)",
             "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
+        },
+        {
+            "title": "ITAA 1997 Subdiv 294-B — Transfer balance cap and transfer balance account (Subdivision 294-B)",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s294-25 — Excess transfer balance tax",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s294-35 — Excess transfer balance earnings",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s294-40 — Excess transfer balance determination",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s294-80 — Transfer balance credits",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s295-385 — Exempt current pension income",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         }
     ],
     "products": {
@@ -161,7 +185,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/transfer-balance-cap",
     "api_endpoint": "/api/rules/transfer-balance-cap",
-    "generated_at": "2026-11-09T02:30:37.677Z"
+    "generated_at": "2026-11-09T03:03:07.619Z"
 };
 
   return NextResponse.json(rules, {
@@ -171,7 +195,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "transfer-balance-cap",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }

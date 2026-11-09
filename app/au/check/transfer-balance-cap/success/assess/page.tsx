@@ -541,7 +541,7 @@ export default function SuccessAssess() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This assessment does not constitute financial, tax or legal advice. TaxCheckNow is not a regulated financial adviser.
             Always consult a qualified Australian tax adviser before making financial decisions.
-            Based on ATO guidance April 2026.{" "}
+            Based on ATO guidance November 2026.{" "}
             <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap" target="_blank" rel="noopener noreferrer" className="underline">ATO — Transfer Balance Cap overview</a> · <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap/excess-transfer-balance" target="_blank" rel="noopener noreferrer" className="underline">ATO — Excess transfer balance tax determinations</a>
           </p>
         </div>
