@@ -1,35 +1,140 @@
 [
   {
     "id": "fig_0",
+    "label": "General transfer balance cap 2026–27",
+    "value": "2100000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_1",
+    "label": "General transfer balance cap 2025–26",
+    "value": "2000000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_2",
+    "label": "General transfer balance cap 2024–25",
+    "value": "1900000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_3",
+    "label": "General transfer balance cap 2023–24",
+    "value": "1900000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_4",
+    "label": "General transfer balance cap 2022–23",
+    "value": "1700000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_5",
+    "label": "General transfer balance cap 2021–22",
+    "value": "1700000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_6",
+    "label": "General transfer balance cap 2020–21",
+    "value": "1600000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_7",
+    "label": "General transfer balance cap 2019–20",
+    "value": "1600000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_8",
+    "label": "General transfer balance cap 2018–19",
+    "value": "1600000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_9",
+    "label": "General transfer balance cap 2017–18",
+    "value": "1600000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_10",
     "label": "Defined benefit income cap 2026–27",
     "value": "131250",
     "unit": "AUD",
     "fact_role": "cap"
   },
   {
-    "id": "fig_1",
+    "id": "fig_11",
     "label": "Defined benefit income cap 2025–26",
     "value": "125000",
     "unit": "AUD",
     "fact_role": "cap"
   },
   {
-    "id": "fig_2",
+    "id": "fig_12",
     "label": "Defined benefit income cap 2024–25",
     "value": "118750",
     "unit": "AUD",
     "fact_role": "cap"
   },
   {
-    "id": "fig_3",
-    "label": "Defined benefit income cap 2022–23 and 2021–22",
+    "id": "fig_13",
+    "label": "Defined benefit income cap 2023–24",
+    "value": "118750",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_14",
+    "label": "Defined benefit income cap 2022–23",
     "value": "106250",
     "unit": "AUD",
     "fact_role": "cap"
   },
   {
-    "id": "fig_4",
-    "label": "Defined benefit income cap 2020–21 through 2017–18",
+    "id": "fig_15",
+    "label": "Defined benefit income cap 2021–22",
+    "value": "106250",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_16",
+    "label": "Defined benefit income cap 2020–21",
+    "value": "100000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_17",
+    "label": "Defined benefit income cap 2019–20",
+    "value": "100000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_18",
+    "label": "Defined benefit income cap 2018–19",
+    "value": "100000",
+    "unit": "AUD",
+    "fact_role": "cap"
+  },
+  {
+    "id": "fig_19",
+    "label": "Defined benefit income cap 2017–18",
     "value": "100000",
     "unit": "AUD",
     "fact_role": "cap"

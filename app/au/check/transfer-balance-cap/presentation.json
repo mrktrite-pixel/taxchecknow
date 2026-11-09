@@ -54,9 +54,9 @@
       "title_key": "product"
     },
     "proportional-indexation-existing-retirees": {
-      "tier": 67,
+      "tier": 147,
       "severity": "green",
-      "criticality": "standard",
+      "criticality": "critical",
       "title_key": "product"
     },
     "personal-cap-vs-general-cap": {
@@ -104,5 +104,5 @@
       "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand."
     }
   },
-  "_ruling": "Ship Plan stepper 2026-11-08T02:20:07.289Z: 1 re-tiered, 1 criticality derived from tier."
+  "_ruling": "Ship Plan stepper 2026-11-08T02:20:07.289Z: 1 re-tiered, 1 criticality derived from tier.\nShip Plan stepper 2026-11-09T02:23:43.966Z: 1 re-tiered, 1 criticality derived from tier."
 }
