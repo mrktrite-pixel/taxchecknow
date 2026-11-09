@@ -12,7 +12,7 @@ const FILES = [
     "num": "01",
     "slug": "tbc-01",
     "name": "Your Personal TBC Calculation",
-    "desc": "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $1.9M.",
+    "desc": "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $2.1M.",
     "tier": 1
   },
   {
@@ -40,7 +40,7 @@ const FILES = [
     "num": "05",
     "slug": "tbc-05",
     "name": "Your Accountant Brief",
-    "desc": "4 questions to take to your SMSF accountant or adviser — beyond the generic $1.9M figure.",
+    "desc": "4 questions to take to your SMSF accountant or adviser — beyond the generic $2.1M figure.",
     "tier": 1
   }
 ];
@@ -526,7 +526,7 @@ export default function SuccessAssess() {
             <div className="no-print rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-neutral-400">Also relevant</p>
               <p className="mb-1 text-sm font-bold text-neutral-950">If you're also over $3M TSB, Division 296 stacks on top of excess transfer balance tax.</p>
-              <p className="mb-2 text-xs text-neutral-600">The Transfer Balance Cap controls your pension phase. Division 296 applies to your TOTAL Super Balance. Members over $1.9M pension AND over $3M TSB are exposed to both regimes simultaneously. Modelling them together reveals the actual household tax picture.</p>
+              <p className="mb-2 text-xs text-neutral-600">The Transfer Balance Cap controls your pension phase. Division 296 applies to your TOTAL Super Balance. Members over $2.1M pension AND over $3M TSB are exposed to both regimes simultaneously. Modelling them together reveals the actual household tax picture.</p>
               <Link href="/au/check/div296-wealth-eraser" className="font-mono text-xs font-bold text-neutral-700 underline hover:text-neutral-950">
                 Check your Div 296 exposure too →
               </Link>

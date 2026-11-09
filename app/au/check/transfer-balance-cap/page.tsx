@@ -58,7 +58,7 @@ const faqs = [
     "answer": "The Transfer Balance Cap (TBC) is a lifetime limit on how much superannuation can be held in the tax-free retirement phase — the part of super where earnings are taxed at 0% under ITAA 1997 s295-385. It was introduced from 1 July 2017. The general TBC is indexed to CPI in $100,000 increments. For 2026-27 the general cap is $2,100,000. Each member has a personal TBC which is set when they first start an account-based pension."
   },
   {
-    "question": "Why might my personal TBC be lower than $1.9M?",
+    "question": "Why might my personal TBC be lower than $2.1M?",
     "answer": "Your personal TBC is fixed at the general cap on the day you first commenced an account-based pension (ITAA 1997 s294-35). If you started your pension between 1 July 2017 and 30 June 2021, your personal cap is $1,600,000. Between 1 July 2021 and 30 June 2023, $1,700,000. From 1 July 2023 to 30 June 2025, $1,900,000. For 2025-26, $2,000,000. From 1 July 2026, $2,100,000. The personal cap only increases proportionally based on how much of the cap was UNUSED when the general cap indexed up — if you were at 100% utilisation, no indexation applies and your cap is permanently frozen."
   },
   {
@@ -78,7 +78,7 @@ const faqs = [
 const aiCorrections = [
   {
     "wrong": "ChatGPT says: The Transfer Balance Cap is $1.9M and applies to everyone the same way",
-    "correct": "Reality: $1.9M is the GENERAL cap for 2025-26. Your PERSONAL cap is set at the general cap on the day you first started your pension (s294-35). If you started before July 2021, your personal cap is $1.6M. Pre-July 2023 starters have $1.7M. Only post-July 2023 starters have $1.9M from day one. This is the most common TBC mistake in generic advice."
+    "correct": "Reality: $2.1M is the GENERAL cap for 2026-27. Your PERSONAL cap is set at the general cap on the day you first started your pension (s294-35). If you started before July 2021, your personal cap is $1.6M. Pre-July 2023 starters have $1.7M. Only post-July 2023 starters have $1.9M from day one. This is the most common TBC mistake in generic advice."
   },
   {
     "wrong": "ChatGPT says: If the general cap increases, my cap increases automatically",
@@ -92,8 +92,8 @@ const aiCorrections = [
 
 const accountantQuestions = [
   {
-    "q": "What is my EXACT personal Transfer Balance Cap as recorded in ATO records — not the general $1.9M figure?",
-    "why": "The general cap is irrelevant if your personal cap is lower. The official personal cap is available via MyGov Transfer Balance Account Report. If your accountant has only quoted $1.9M, they have not checked this."
+    "q": "What is my EXACT personal Transfer Balance Cap as recorded in ATO records — not the general $2.1M figure?",
+    "why": "The general cap is irrelevant if your personal cap is lower. The official personal cap is available via MyGov Transfer Balance Account Report. If your accountant has only quoted $2.1M, they have not checked this."
   },
   {
     "q": "Have I received full proportional indexation based on my unused cap percentage at each general cap indexation event?",
@@ -157,7 +157,7 @@ const comparisonRows = [
   },
   {
     "position": "Starting pension in 2026+",
-    "metric1": "$1.9M (or $2.0M if waiting to 2027)",
+    "metric1": "$2.1M (2026-27; $2.0M in 2025-26)",
     "metric2": "Full future indexation if kept partial",
     "bestMove": "Consider timing — wait for next step if close"
   }
@@ -659,7 +659,7 @@ export default function TransferBalanceCapPage() {
             
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-wide text-blue-900">Excludes</p>
-              <p className="mb-1 text-xs text-neutral-800">✗ NOT the general $1.9M for most pre-2023 pension starters</p>
+              <p className="mb-1 text-xs text-neutral-800">✗ NOT the general $2.1M for most pre-2023 pension starters</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT automatic indexation — depends on unused % at each cap rise</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT a one-time penalty — compounds every year in excess</p>
               <p className="mb-1 text-xs text-neutral-800">✗ NOT optional — commutation is forced via ATO authority</p>
@@ -729,13 +729,13 @@ export default function TransferBalanceCapPage() {
             A real situation — explained without the jargon.
           </h2>
           <div className="space-y-4 text-sm leading-relaxed text-neutral-700">
-            <p className="text-base font-medium text-neutral-900">Steve Kovalenko checked his super statement on a Sunday morning in April. $2.1 million. The cap is $1.9 million. 'Just $200k over,' he thought. 'I'll sort it out next year.'</p>
-            <p>Steve had commenced an account-based pension in October 2018. His super fund said the Transfer Balance Cap was $1.9 million. His accountant, in their annual meeting in March, had said the same thing. Steve was comfortable. He was slightly over, sure, but nothing dramatic.</p>
+            <p className="text-base font-medium text-neutral-900">Steve Kovalenko checked his super statement on a Sunday morning in April. $2.1 million. The cap is $2.1 million. 'Right on the line,' he thought. 'Nothing to do here.'</p>
+            <p>Steve had commenced an account-based pension in October 2018. His super fund said the Transfer Balance Cap was $2.1 million. His accountant, in their annual meeting in March, had said the same thing. Steve was comfortable. He was slightly over, sure, but nothing dramatic.</p>
             <p>The ATO had sent him a letter eighteen months earlier. It mentioned 'excess transfer balance' and a 'commutation authority'. Steve had put it in the filing cabinet. He assumed it would be resolved at his next annual review.</p>
-            <p>What Steve had never been told — not by his accountant, not by his super fund, not by the general commentary he read online — was that his personal Transfer Balance Cap was NOT $1.9 million. It was $1.6 million. Frozen at the general cap as of October 2018, his pension commencement date. The general cap had risen to $1.7 million in July 2021, then $1.9 million in July 2023. Steve's pension had been at or above $1.6 million since commencement — so his personal cap got zero indexation at either event. Permanently frozen.</p>
+            <p>What Steve had never been told — not by his accountant, not by his super fund, not by the general commentary he read online — was that his personal Transfer Balance Cap was NOT $2.1 million. It was $1.6 million. Frozen at the general cap as of October 2018, his pension commencement date. The general cap had risen to $1.7 million in July 2021, then $1.9 million in July 2023. Steve's pension had been at or above $1.6 million since commencement — so his personal cap got zero indexation at either event. Permanently frozen.</p>
             <p className="font-semibold text-neutral-900">Steve ran the transfer-balance-cap check on TaxCheckNow. The verdict arrived in under two minutes. Personal TBC: $1,600,000. Current pension balance: $2,100,000. Excess: $500,000. Annual excess transfer balance tax at the ATO's shortfall interest charge rate of ~7%: notional earnings $35,000, taxed at 15% = approximately $5,250 per year. Times the three years since the July 2023 indexation event he'd been assuming he was just under cap: roughly $15,750 of back-dated excess transfer balance tax, plus a commutation authority that had been sitting in his filing cabinet for eighteen months.</p>
             <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-              <p><strong className="text-neutral-950">The bottom line:</strong> Steve took the calculator output to his accountant that Tuesday. The accountant spent an hour on MyGov pulling Steve's actual Transfer Balance Account Report. The official record: personal TBC $1,600,000. Current balance: $2,105,230. Excess: $505,230. The ATO had issued three excess transfer balance determinations over the previous two years — all sitting in Steve's MyGov inbox unread. The accountant drafted a commutation plan: move $510,000 from pension phase back to accumulation within 60 days, plus apply for a spouse contribution split to Oksana over the next 18 months to build up her pension eligibility when she retires at 60. Combined household pension phase utilisation after the plan: $1.6M (Steve) + up to $1.9M (Oksana when she starts in 2027) = $3.5M household at 0% earnings tax. Without TaxCheckNow, Steve would have kept paying $5,000+/year forever.</p>
+              <p><strong className="text-neutral-950">The bottom line:</strong> Steve took the calculator output to his accountant that Tuesday. The accountant spent an hour on MyGov pulling Steve's actual Transfer Balance Account Report. The official record: personal TBC $1,600,000. Current balance: $2,105,230. Excess: $505,230. The ATO had issued three excess transfer balance determinations over the previous two years — all sitting in Steve's MyGov inbox unread. The accountant drafted a commutation plan: move $510,000 from pension phase back to accumulation within 60 days, plus apply for a spouse contribution split to Oksana over the next 18 months to build up her pension eligibility when she retires at 60. Combined household pension phase utilisation after the plan: $1.6M (Steve) + up to $2.1M (Oksana when she starts in 2027) = $3.7M household at 0% earnings tax. Without TaxCheckNow, Steve would have kept paying $5,000+/year forever.</p>
             </div>
           </div>
           
@@ -951,7 +951,7 @@ export default function TransferBalanceCapPage() {
               </tr>
               <tr className="border-b border-neutral-200">
                 <td className="p-3 font-bold">Starting pension in 2026+</td>
-                <td className="p-3 font-mono text-xs">$1.9M (or $2.0M if waiting to 2027)</td>
+                <td className="p-3 font-mono text-xs">$2.1M (2026-27; $2.0M in 2025-26)</td>
                 <td className="p-3 text-xs">Full future indexation if kept partial</td>
                 <td className="p-3 text-xs text-neutral-700">Consider timing — wait for next step if close</td>
               </tr>
@@ -1096,7 +1096,7 @@ export default function TransferBalanceCapPage() {
             If you're also over $3M TSB, Division 296 stacks on top of excess transfer balance tax.
           </h2>
           <p className="mb-6 max-w-2xl text-neutral-300">
-            The Transfer Balance Cap controls your pension phase. Division 296 applies to your TOTAL Super Balance. Members over $1.9M pension AND over $3M TSB are exposed to both regimes simultaneously. Modelling them together reveals the actual household tax picture.
+            The Transfer Balance Cap controls your pension phase. Division 296 applies to your TOTAL Super Balance. Members over $2.1M pension AND over $3M TSB are exposed to both regimes simultaneously. Modelling them together reveals the actual household tax picture.
           </p>
           <Link href="/au/check/div296-wealth-eraser"
             className="inline-block bg-white px-5 py-3 font-bold text-neutral-950 transition hover:bg-neutral-200">
