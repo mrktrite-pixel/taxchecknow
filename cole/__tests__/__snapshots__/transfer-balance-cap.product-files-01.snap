@@ -14,7 +14,7 @@ import { resolveDocLabel } from "@/lib/terminal-labels";
 const PRODUCT_ID = "transfer-balance-cap";
 const SESSION_KEY = "transfer-balance-cap";
 const SLUG = "tbc-01";
-const FALLBACK_LABEL = { name: "Your Personal TBC Calculation", desc: "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $1.9M." };
+const FALLBACK_LABEL = { name: "Your Personal TBC Calculation", desc: "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $2.1M." };
 const BODY = `<h2>Your Personal Transfer Balance Cap</h2><div class="action-box"><h3>The Three Numbers That Matter</h3><p>Number 1: The general TBC on the day you commenced your first pension (sets your personal cap)</p><p>Number 2: Your proportional indexation entitlement at each general cap rise (s294-40)</p><p>Number 3: Your current pension phase balance vs personal cap = excess or headroom</p></div><h3>Historical General Caps</h3><table><tr><th>Period</th><th>General Cap</th><th>Personal Cap If Commenced In Period</th></tr><tr><td>1 July 2017 – 30 June 2021</td><td>$1,600,000</td><td>$1,600,000 (frozen if fully used)</td></tr><tr><td>1 July 2021 – 30 June 2023</td><td>$1,700,000</td><td>$1,700,000 (frozen if fully used)</td></tr><tr><td>1 July 2023 – 30 June 2025</td><td>$1,900,000</td><td>$1,900,000</td></tr><tr><td>1 July 2025 – 30 June 2026</td><td>$2,000,000</td><td>$2,000,000</td></tr><tr><td>1 July 2026 onwards</td><td>$2,100,000</td><td>$2,100,000</td></tr></table><p>Source: <a href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/transfer-balance-cap">ATO — Transfer Balance Cap</a> · ITAA 1997 s294-35</p>`;
 
 export default function TransferBalanceCapFile01() {

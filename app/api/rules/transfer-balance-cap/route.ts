@@ -63,12 +63,12 @@ export async function GET() {
             "status": "clear"
         },
         {
-            "label": "Pension balance $1.6M–$1.9M — over pre-2023 personal caps",
+            "label": "Pension balance $1.6M–$2.1M — over pre-2026 personal caps",
             "value": 3,
             "status": "approaching"
         },
         {
-            "label": "Pension balance over $1.9M — over current general cap",
+            "label": "Pension balance over $2.1M — over current general cap",
             "value": 4,
             "status": "trap"
         },
@@ -82,7 +82,7 @@ export async function GET() {
         {
             "error_id": 1,
             "ai_says": "ChatGPT says: The Transfer Balance Cap is $1.9M and applies to everyone the same way",
-            "correct": "Reality: $1.9M is the GENERAL cap for 2025-26. Your PERSONAL cap is set at the general cap on the day you first started your pension (s294-35). If you started before July 2021, your personal cap is $1.6M. Pre-July 2023 starters have $1.7M. Only post-July 2023 starters have $1.9M from day one. This is the most common TBC mistake in generic advice."
+            "correct": "Reality: $2.1M is the GENERAL cap for 2026-27. Your PERSONAL cap is set at the general cap on the day you first started your pension (s294-35). If you started before July 2021, your personal cap is $1.6M. Pre-July 2023 starters have $1.7M. Only post-July 2023 starters have $1.9M from day one. This is the most common TBC mistake in generic advice."
         },
         {
             "error_id": 2,
@@ -103,7 +103,7 @@ export async function GET() {
         },
         {
             "id": 2,
-            "question": "Why might my personal TBC be lower than $1.9M?",
+            "question": "Why might my personal TBC be lower than $2.1M?",
             "answer": "Your personal TBC is fixed at the general cap on the day you first commenced an account-based pension (ITAA 1997 s294-35). If you started your pension between 1 July 2017 and 30 June 2021, your personal cap is $1,600,000. Between 1 July 2021 and 30 June 2023, $1,700,000. From 1 July 2023 to 30 June 2025, $1,900,000. For 2025-26, $2,000,000. From 1 July 2026, $2,100,000. The personal cap only increases proportionally based on how much of the cap was UNUSED when the general cap indexed up — if you were at 100% utilisation, no indexation applies and your cap is permanently frozen."
         },
         {
@@ -169,7 +169,7 @@ export async function GET() {
             "name": "Your TBC Position Pack",
             "price": 67,
             "currency": "AUD",
-            "description": "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $1.9M figure",
+            "description": "Your exact personal Transfer Balance Cap — calculated from your commencement year, not the generic $2.1M figure",
             "url": "https://taxchecknow.com/au/check/transfer-balance-cap/success/assess"
         },
         "tier2": {
@@ -185,7 +185,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/transfer-balance-cap",
     "api_endpoint": "/api/rules/transfer-balance-cap",
-    "generated_at": "2026-11-09T03:03:07.619Z"
+    "generated_at": "2026-11-09T04:33:53.989Z"
 };
 
   return NextResponse.json(rules, {
