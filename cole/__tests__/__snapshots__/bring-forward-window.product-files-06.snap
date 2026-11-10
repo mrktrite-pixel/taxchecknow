@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bring-forward-window";
+const SESSION_KEY = "bring-forward-window";
 const SLUG = "bfw-06";
 const FALLBACK_LABEL = { name: "Full Sequencing Execution Plan", desc: "Step-by-step implementation with SMSF trustee minutes, super fund contribution forms, and timing buffers." };
 const BODY = `<h2>Full Sequencing Execution Plan</h2><p>Sequencing across 30 June / 1 July requires precision. Missed timing = lost window = $150,000 gap.</p><h2>Phase 1 — Before 15 June 2026 (Preparation)</h2><ol><li>Obtain projected TSB at 30 June 2026 from super fund</li><li>Confirm no bring-forward in 2024-25 or 2025-26 (request contribution history)</li><li>If SMSF: draft trustee minute approving contribution strategy</li><li>If 67-74: document work test compliance</li><li>Confirm contribution banking details with super fund</li></ol><h2>Phase 2 — 15-25 June 2026 (First Contribution)</h2><ol><li>Transfer $120,000 to super fund as standard annual NCC</li><li>Do NOT select "bring-forward" on any paperwork — this is the annual cap</li><li>Request super fund confirmation of allocation before 30 June</li><li>Retain bank transfer confirmation timestamped before 30 June 23:59</li></ol><h2>Phase 3 — 1-5 July 2026 (Bring-Forward Trigger)</h2><ol><li>Transfer $390,000 to super fund on or after 1 July 2026</li><li>Formally trigger the 3-year bring-forward under 2026-27 rules</li><li>Update SMSF trustee minute (if applicable)</li><li>Retain confirmation that contribution was allocated in 2026-27 financial year</li></ol><h2>Phase 4 — After (Confirmation)</h2><ol><li>Request super fund statement showing 2025-26 and 2026-27 contributions</li><li>Lodge Notice of Intent if concessional portion applicable</li><li>Confirm 3-year bring-forward schedule start date for future planning</li></ol>`;
@@ -27,7 +28,7 @@ export default function BringForwardWindowFile06() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function BringForwardWindowFile06() {
               🇦🇺 ATO · ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 06 of 8
@@ -227,7 +228,7 @@ export default function BringForwardWindowFile06() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance November 2026.
           </p>
         </div>
 

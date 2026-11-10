@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bring-forward-window";
+const SESSION_KEY = "bring-forward-window";
 const SLUG = "bfw-05";
 const FALLBACK_LABEL = { name: "Your Accountant Brief", desc: "3 questions to take to your accountant before 30 June 2026." };
 const BODY = `<div class="info-box">Send to your accountant in early June — not late June. The 30 June window is tight.</div><div class="action-box"><h3>Question 1</h3><p>"What is my projected Total Super Balance at 30 June 2026, and which bring-forward bracket does that put me in for 2026-27?"</p></div><h3>Question 2</h3><p>"Have I triggered the bring-forward rule in 2024-25 or 2025-26, and if so, when does the schedule expire? Does indexation apply to me mid-schedule?"</p><h3>Question 3</h3><p>"If I contribute $120,000 before 30 June and $390,000 from 1 July, what is the Division 296 impact — and should I model both decisions together?"</p>`;
@@ -27,7 +28,7 @@ export default function BringForwardWindowFile05() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function BringForwardWindowFile05() {
               🇦🇺 ATO · ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 05 of 8
@@ -227,7 +228,7 @@ export default function BringForwardWindowFile05() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance November 2026.
           </p>
         </div>
 

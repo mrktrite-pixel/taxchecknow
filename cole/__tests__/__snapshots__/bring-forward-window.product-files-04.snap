@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bring-forward-window";
+const SESSION_KEY = "bring-forward-window";
 const SLUG = "bfw-04";
 const FALLBACK_LABEL = { name: "Evidence & Records Checklist", desc: "Documentation needed for your SMSF trustee minutes, work test, and ATO audit defence." };
 const BODY = `<h2>Evidence Checklist</h2><ul class="checklist"><li>SMSF trustee minute recording the contribution (if SMSF) — dated before 30 June</li><li>Bank transfer confirmation — timestamped before 11:59pm 30 June 2026</li><li>Super fund acknowledgment of contribution allocation to member account</li><li>Confirmation that no prior bring-forward is in progress (check 2024-25 and 2025-26 records)</li><li>Work test evidence if age 67-74 — 40 hours gainful employment in a 30-day period before contribution</li><li>TSB confirmation at 30 June 2026 — super fund statement or ATO online services</li><li>Notice of intent to claim if any part is a concessional contribution (different form, different rules)</li><li>Division 296 impact assessment if TSB approaching $3M</li></ul>`;
@@ -27,7 +28,7 @@ export default function BringForwardWindowFile04() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function BringForwardWindowFile04() {
               🇦🇺 ATO · ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 04 of 8
@@ -227,7 +228,7 @@ export default function BringForwardWindowFile04() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance November 2026.
           </p>
         </div>
 

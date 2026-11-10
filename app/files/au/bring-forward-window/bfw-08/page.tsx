@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bring-forward-window";
+const SESSION_KEY = "bring-forward-window";
 const SLUG = "bfw-08";
 const FALLBACK_LABEL = { name: "Long-Term Super Contribution Model", desc: "Multi-year contribution strategy integrating bring-forward, carry-forward concessional, and Division 296." };
 const BODY = `<h2>Long-Term Super Contribution Model</h2><p>The 30 June 2026 sequencing window is a one-time event. The long-term strategy needs to integrate three levers: NCC bring-forward, carry-forward concessional, and Division 296 management.</p><h2>Lever 1 — NCC Bring-Forward Cycles</h2><p>Once triggered, a 3-year bring-forward locks in the caps at trigger. After it expires, a new bring-forward can be triggered under whatever caps apply at that time. Cycle: 3-year bring-forward → reset → 3-year bring-forward. Typically 1-2 bring-forwards across the contribution phase.</p><h2>Lever 2 — Carry-Forward Concessional</h2><p>Unused concessional cap from prior 5 years can be used in a single high-cap year — if TSB under $500,000 at 30 June of prior year. Unused 2020-21 concessional cap expires 30 June 2026. For clients with TSB under $500k, the carry-forward window matters.</p><h2>Lever 3 — Division 296 Management</h2><p>From 1 July 2026, balances above $3M face additional 15% tax on attributable earnings. From 1 July 2027, balances above $10M face additional 25%. Thresholds are indexed to CPI in $150k/$500k increments.</p><h2>Annual Decision Framework</h2><ol><li>April each year: review projected TSB at next 30 June</li><li>May: confirm bring-forward status, carry-forward availability, Division 296 exposure</li><li>Before 30 June: execute any final-year strategies (annual NCC, concessional top-up, carry-forward use)</li><li>After 1 July: execute next-year strategies (bring-forward trigger if appropriate)</li></ol><div class="action-box"><h3>The Core Insight</h3><p>Super contribution strategy is not a single decision. It is an annual cycle. Each year has a 30 June deadline and a 1 July re-opening. The optimal strategy differs each year based on TSB, bring-forward status, and Division 296 exposure.</p></div>`;
@@ -27,7 +28,7 @@ export default function BringForwardWindowFile08() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
@@ -107,7 +108,7 @@ export default function BringForwardWindowFile08() {
               🇦🇺 ATO · ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-medium">
-              Last verified: April 2026
+              Last verified: November 2026
             </span>
             <span className="bg-neutral-100 text-neutral-600 px-2.5 py-1 font-mono text-[10px]">
               File 08 of 8
@@ -227,7 +228,7 @@ export default function BringForwardWindowFile08() {
             <strong className="text-neutral-600">General information only.</strong>{" "}
             This document does not constitute tax, legal or financial advice.
             Always consult a qualified Australian tax adviser for your personal situation.
-            Based on ATO guidance April 2026.
+            Based on ATO guidance November 2026.
           </p>
         </div>
 

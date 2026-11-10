@@ -8,7 +8,7 @@
 // is SILENT (Step 6.3). Absence is never a fallback to another date; there is
 // no code path from "not listed here" to "use some other date".
 //
-// Declared products: 26
+// Declared products: 27
 // (Deliberately NOT backfilled from the retired lib/product-deadlines.ts or
 // from the deadline-shape survey — ruling 3.5: a declaration is made by the
 // product's own build at gate time, never inferred. Each product joins this
@@ -77,6 +77,23 @@ export const TEMPORAL_REGISTRY: Record<string, Record<string, ProductDeclaration
                 "domain": "super",
                 "label": "SMSF annual return due (self-lodged)",
                 "basis": "ATO, Lodge SMSF annual returns, fetched 2026-09-28: \"You should lodge and pay all other SARs by 28 February unless we ask you to lodge on a different date.\" 31 October applies only to newly registered funds and funds with overdue prior-year returns; where a tax agent lodges, the agent provides the date."
+          }
+    },
+    "bring-forward-window": {
+          "temporal": {
+                "kind": "deadline",
+                "rule": {
+                      "source": "fixed",
+                      "recurrence": "annual",
+                      "month": 6,
+                      "day": 30,
+                      "timezone": "Australia/Sydney",
+                      "shift": "none"
+                },
+                "jurisdiction": "AU",
+                "domain": "bring_forward_window",
+                "label": "30 June — total super balance measured for the bring-forward test",
+                "basis": "ATO 'Non-concessional contributions cap': the bring-forward arrangement available in an income year is set by the member's total super balance on 30 June of the previous income year, and the caps are indexed on 1 July."
           }
     },
     "cgt-discount-timing-sniper": {
