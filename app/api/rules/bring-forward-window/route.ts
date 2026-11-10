@@ -19,7 +19,7 @@ export async function GET() {
     "jurisdiction": "Australia",
     "language": "en-AU",
     "currency": "AUD",
-    "last_verified": "April 2026",
+    "last_verified": "November 2026",
     "legislation": "Income Tax Assessment Act 1997 Division 292 (non-concessional contributions cap, bring-forward rule, s292-85 indexation) · Division 291 (concessional contributions and 5-year carry-forward) · Subdivision 296-B (Division 296 tax on large super balances, from 1 July 2026) · Superannuation Industry (Supervision) Act 1993 · Indexation confirmed via ATO April 2026",
     "legal_anchor": "ITAA 1997 Division 292 — Non-concessional contributions, bring-forward, and indexation",
     "deadline": {
@@ -131,6 +131,18 @@ export async function GET() {
         {
             "title": "ATO — Contributions caps and bring-forward rule",
             "url": "https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/contributions-caps"
+        },
+        {
+            "title": "ITAA 1997 Division 292 — Excess non-concessional contributions",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 s292-85 — Non-concessional contributions cap and the bring-forward arrangement",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
+        },
+        {
+            "title": "ITAA 1997 Division 291 — Excess concessional contributions",
+            "url": "https://www.legislation.gov.au/C2004A05138/latest/text"
         }
     ],
     "products": {
@@ -154,7 +166,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/bring-forward-window",
     "api_endpoint": "/api/rules/bring-forward-window",
-    "generated_at": "2026-11-10T00:50:03.249Z"
+    "generated_at": "2026-11-10T01:29:08.541Z"
 };
 
   return NextResponse.json(rules, {
@@ -164,7 +176,7 @@ export async function GET() {
       "Cache-Control":               "public, max-age=86400, stale-while-revalidate=3600",
       "X-COLE-Generated":            "true",
       "X-Product-ID":                "bring-forward-window",
-      "X-Last-Verified":             "April 2026",
+      "X-Last-Verified":             "November 2026",
     },
   });
 }
