@@ -10,17 +10,18 @@ import NegativeGearingIllusionCalculator from "./NegativeGearingIllusionCalculat
 // ── METADATA ──────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Negative Gearing Reality Check Australia 2026 — What Is Your Real After-Tax Position? | TaxCheckNow",
-  description: "Negative gearing saves you tax — but it also means your property is losing money. The tax saving is only a fraction of the loss. Free calculator shows your real after-tax cashflow, not just the gross deduction.",
+  title: "Negative Gearing Reality Check Australia | TaxCheckNow",
+  description: "Negative gearing saves you tax, but the property is still losing money. See your real after-tax cashflow, not just the gross deduction.",
   alternates: { canonical: "https://taxchecknow.com/au/check/negative-gearing-illusion" },
   openGraph: {
-    title: "Negative Gearing Reality Check Australia 2026 — What Is Your Real After-Tax Position? | TaxCheckNow",
-    description: "Negative gearing saves you tax — but it also means your property is losing money. The tax saving is only a fraction of the loss. Free calculator shows your real after-tax cashflow, not just the gross deduction.",
+    title: "Negative Gearing Reality Check Australia | TaxCheckNow",
+    description: "Negative gearing saves you tax, but the property is still losing money. See your real after-tax cashflow, not just the gross deduction.",
     url: "https://taxchecknow.com/au/check/negative-gearing-illusion",
     siteName: "TaxCheckNow",
     type: "website",
   },
 };
+
 
 // ── SERVER CONSTANTS ──────────────────────────────────────────────────────────
 
@@ -28,12 +29,15 @@ const LAST_VERIFIED  = "April 2026";
 const DEADLINE_LABEL = "31 October 2026";
 const DEADLINE_ISO   = "2026-10-31T23:59:59.000+11:00";
 
+// TEMPORAL v1 Phase 0 — fail-closed on time: returns days remaining, or null when there
+// is no attestable future deadline (absent, unparseable, or already passed). A null result
+// suppresses the countdown entirely — never "0 days", never a negative, never a stale label.
 function daysToDeadline(): number | null {
   if (!DEADLINE_ISO) return null;
-  const now = new Date();
-  const end = new Date(DEADLINE_ISO);
-  const _d = Math.ceil((end.getTime() - now.getTime()) / 86_400_000);
-  return _d > 0 ? _d : null;
+  const end = new Date(DEADLINE_ISO).getTime();
+  if (Number.isNaN(end)) return null;
+  const days = Math.ceil((end - Date.now()) / 86_400_000);
+  return days > 0 ? days : null;
 }
 
 function progressPct(): number {
@@ -254,8 +258,13 @@ const countdownStats = [
 
 export default function NegativeGearingIllusionPage() {
   const countdown = daysToDeadline();
-  const deadlineLive = countdown !== null;
   const progress  = progressPct();
+  const deadlineLive = countdown !== null;
+  // Suppress + alert (TEMPORAL v1 Phase 0): an expired/unparseable fixed deadline must never
+  // render a stale countdown. Phase 5 replaces this console signal with real alerting.
+  if (!deadlineLive && DEADLINE_ISO) {
+    console.error("[TEMPORAL] expired deadline suppressed on gate page", { product: "au/check/negative-gearing-illusion", deadlineIso: DEADLINE_ISO });
+  }
 
   // ── JSON-LD SCHEMAS ────────────────────────────────────────────────────────
   const faqSchema = {
@@ -272,7 +281,7 @@ export default function NegativeGearingIllusionPage() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "Negative Gearing Illusion Engine — Rules April 2026",
-    description: "Negative gearing saves you tax — but it also means your property is losing money. The tax saving is only a fraction of the loss. Free calculator shows your real after-tax cashflow, not just the gross deduction.",
+    description: "Negative gearing saves you tax, but the property is still losing money. See your real after-tax cashflow, not just the gross deduction.",
     creator: { "@type": "Organization", name: "TaxCheckNow" },
     license: "https://creativecommons.org/licenses/by/4.0/",
     dateModified: new Date().toISOString().split("T")[0],
@@ -288,7 +297,7 @@ export default function NegativeGearingIllusionPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Negative Gearing Illusion Engine",
-    description: "Negative gearing saves you tax — but it also means your property is losing money. The tax saving is only a fraction of the loss. Free calculator shows your real after-tax cashflow, not just the gross deduction.",
+    description: "Negative gearing saves you tax, but the property is still losing money. See your real after-tax cashflow, not just the gross deduction.",
     url: "https://taxchecknow.com/au/check/negative-gearing-illusion",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
@@ -337,7 +346,7 @@ export default function NegativeGearingIllusionPage() {
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
     "url": "https://taxchecknow.com/au/check/negative-gearing-illusion#calculator",
-    "description": "Negative gearing saves you tax — but it also means your property is losing money. The tax saving is only a fraction of the loss. Free calculator shows your real after-tax cashflow, not just the gross deduction.",
+    "description": "Negative gearing saves you tax, but the property is still losing money. See your real after-tax cashflow, not just the gross deduction.",
     "isAccessibleForFree": true,
     "featureList": [
       "Instant binary compliance verdict",
@@ -422,7 +431,7 @@ export default function NegativeGearingIllusionPage() {
 
         {/* H1 */}
         <h1 className="mb-4 font-serif text-4xl font-bold leading-tight text-neutral-900 md:text-5xl">
-          Negative Gearing 2026: Is Your Tax Saving Actually Costing You Money?
+          Negative Gearing: Is Your Tax Saving Actually Costing You Money?
         </h1>
 
         {/* GEO answer blurb — extractable by AI crawlers, keeps conversion intact */}
