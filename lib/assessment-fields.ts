@@ -293,6 +293,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["gstStatus", "registrationObligation", "triggerDateEstimate", "backdatingExposure", "invoiceCleanupRequired", "projectedTurnoverAnalysis", "strongestRiskTrigger", "firstAction"],
     tier2: ["gstStatus", "registrationObligation", "triggerDateEstimate", "backdatingExposure", "invoiceCleanupRequired", "projectedTurnoverAnalysis", "basSetupRecommendation", "pricingTransitionGuide", "bookkeepingClassification", "retroBASPlan", "inputTaxCredits", "strongestRiskTrigger"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/bring-forward-window. Lists copied VERBATIM
+  // from au-11-bring-forward-window.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "bring-forward-window": {
+    tier1: ["sequencingWindowStatus", "tsbBandAnalysis", "bringForwardEligibility", "maxBeforeJune30", "maxFromJuly1", "totalPossibleContribution", "decisionGapExplanation", "ageWorkTestCheck", "firstAction"],
+    tier2: ["sequencingWindowStatus", "tsbBandAnalysis", "bringForwardEligibility", "maxBeforeJune30", "maxFromJuly1", "totalPossibleContribution", "decisionGapExplanation", "ageWorkTestCheck", "smsfTimingRequirements", "division296Interaction", "carryForwardConcessionalOpportunity", "contributionSequencingPlan", "accountantImplementationChecklist"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
