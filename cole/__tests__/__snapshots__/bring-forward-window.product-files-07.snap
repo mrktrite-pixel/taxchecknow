@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bring-forward-window";
+const SESSION_KEY = "bring-forward-window";
 const SLUG = "bfw-07";
 const FALLBACK_LABEL = { name: "SMSF & Division 296 Interaction Blueprint", desc: "How to model the sequencing window together with Division 296 for balances approaching $3M." };
 const BODY = `<h2>SMSF + Division 296 Interaction</h2><p>For TSB approaching $3M, contributing more super increases Division 296 exposure from 1 July 2026. The two decisions must be modelled together.</p><h2>The Trade-Off</h2><p>Division 296 applies an additional 15% tax on realised earnings attributable to the TSB proportion above $3M. Adding $510,000 to super pushes more of your balance into the Division 296 net.</p><div class="action-box"><h3>Scenario A — TSB $2.5M, sequencing $510k</h3><p>Post-contribution TSB: $3.01M. Division 296 applies on realised earnings attributable to the $10,000 above $3M. Minimal impact in year 1. Long-term: as balance grows, proportion above $3M grows.</p><h3>Scenario B — TSB $2.8M, sequencing $510k</h3><p>Post-contribution TSB: $3.31M. Division 296 applies on earnings attributable to 9.4% of balance. On $150,000 realised earnings/year, that's approximately $2,110 additional tax annually.</p><h3>Scenario C — TSB $2.9M, sequencing $510k</h3><p>Post-contribution TSB: $3.41M. Division 296 applies on 12.0% of earnings. On $150,000 realised earnings, approximately $2,700 additional tax annually — and compounding.</p></div><h2>The Decision Rule</h2><p>If TSB at 30 June 2026 will be under $2.5M: sequencing is almost always beneficial — Division 296 impact is marginal.</p><p>If TSB will be $2.5M-$3M: model both scenarios. Sequencing is usually still beneficial but the trade-off needs to be quantified.</p><p>If TSB will be over $3M: consider withdrawing before 30 June 2026 to bring TSB under $3M for the transitional year, rather than adding more.</p>`;
@@ -27,7 +28,7 @@ export default function BringForwardWindowFile07() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's

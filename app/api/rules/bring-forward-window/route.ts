@@ -26,7 +26,16 @@ export async function GET() {
         "iso_date": "2026-06-30T23:59:59.000+10:00",
         "display": "30 June 2026",
         "description": "30 June — TSB measurement date and sequencing deadline",
-        "urgency_label": "CONTRIBUTION DEADLINE"
+        "urgency_label": "CONTRIBUTION DEADLINE",
+        "recurrence": {
+            "kind": "annual",
+            "month": 6,
+            "day": 30,
+            "timezone": "Australia/Sydney",
+            "shift": "none",
+            "label": "30 June — total super balance measured for the bring-forward test",
+            "basis": "ATO 'Non-concessional contributions cap': the bring-forward arrangement available in an income year is set by the member's total super balance on 30 June of the previous income year, and the caps are indexed on 1 July."
+        }
     },
     "key_facts": {
         "ncc_cap_2025_26": "$120,000",
@@ -145,7 +154,7 @@ export async function GET() {
     ],
     "canonical": "https://taxchecknow.com/au/check/bring-forward-window",
     "api_endpoint": "/api/rules/bring-forward-window",
-    "generated_at": "2026-11-08T02:12:22.247Z"
+    "generated_at": "2026-11-10T00:50:03.249Z"
 };
 
   return NextResponse.json(rules, {

@@ -12,6 +12,7 @@ import { getTerminalPresentation, terminalFlags } from "@/lib/terminal-presentat
 import { resolveDocLabel } from "@/lib/terminal-labels";
 
 const PRODUCT_ID = "bring-forward-window";
+const SESSION_KEY = "bring-forward-window";
 const SLUG = "bfw-03";
 const FALLBACK_LABEL = { name: "TSB Bracket Calculator", desc: "The exact thresholds, amounts, and what each bracket means for your sequencing window." };
 const BODY = `<h2>TSB Brackets — 2026-27</h2><p>Your TSB at 30 June 2026 determines everything. Not today. Not 1 July. 30 June.</p><table><tr><th>TSB at 30 June 2026</th><th>Before 30 June</th><th>From 1 July</th><th>Total</th></tr><tr><td>Under $1.84M</td><td>$120,000</td><td>$390,000 (3-year)</td><td>$510,000</td></tr><tr><td>$1.84M–$1.97M</td><td>$120,000</td><td>$260,000 (2-year)</td><td>$380,000</td></tr><tr><td>$1.97M–$2.1M</td><td>$120,000</td><td>$130,000 (annual)</td><td>$250,000</td></tr><tr><td>$2.1M or above</td><td>$120,000</td><td>$0 (locked out)</td><td>$120,000</td></tr></table><p>If your TSB is close to a threshold, withdrawals or pension drawdowns before 30 June may move you into a lower bracket and unlock more capacity. Discuss with your accountant.</p>`;
@@ -27,7 +28,7 @@ export default function BringForwardWindowFile03() {
   // A body with no {{bind:}}/{{#if}} markers renders byte-identically whether or not a
   // context is found, so every product that has not adopted the syntax is unaffected.
   const [ctx, setCtx] = useState<BuyerContext | null>(null);
-  useEffect(() => { setCtx(buyerContextFromSession(PRODUCT_ID)); }, []);
+  useEffect(() => { setCtx(buyerContextFromSession(SESSION_KEY)); }, []);
   const docFlags = getTerminalPresentation(PRODUCT_ID, ctx?.terminalId, { headline: "", fileSlugs: [] }).docFlags;
   // D12-B — the heading above the body follows the terminal too. Same merged flag set, so the
   // title cannot contradict the section it introduces. No context (a cold link) ⇒ the config's
