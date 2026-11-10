@@ -1,0 +1,121 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Annual non-concessional contributions cap from 1 July 2026",
+    "value": "130,000",
+    "unit": "AUD",
+    "fact_role": "cap_amount"
+  },
+  {
+    "id": "fig_1",
+    "label": "General transfer balance cap from 2026-27",
+    "value": "2,100,000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "Nil NCC cap threshold (TSB >= general transfer balance cap from 2026-27)",
+    "value": "2,100,000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_3",
+    "label": "NCC cap for TSB $2.1 million or more (2026-27)",
+    "value": "0",
+    "unit": "AUD",
+    "fact_role": "cap_amount"
+  },
+  {
+    "id": "fig_4",
+    "label": "TSB threshold: less than $1.84 million → 3-year bring-forward (2026-27)",
+    "value": "1,840,000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_5",
+    "label": "NCC bring-forward cap for TSB less than $1.84 million (2026-27)",
+    "value": "390,000",
+    "unit": "AUD",
+    "fact_role": "cap_amount"
+  },
+  {
+    "id": "fig_6",
+    "label": "Bring-forward period for TSB less than $1.84 million (2026-27)",
+    "value": "3",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_7",
+    "label": "TSB lower threshold: $1.84 million to less than $1.97 million → 2-year bring-forward (2026-27)",
+    "value": "1,840,000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_8",
+    "label": "TSB upper threshold: $1.84 million to less than $1.97 million → 2-year bring-forward (2026-27)",
+    "value": "1,970,000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_9",
+    "label": "NCC bring-forward cap for TSB $1.84 million to less than $1.97 million (2026-27)",
+    "value": "260,000",
+    "unit": "AUD",
+    "fact_role": "cap_amount"
+  },
+  {
+    "id": "fig_10",
+    "label": "Bring-forward period for TSB $1.84 million to less than $1.97 million (2026-27)",
+    "value": "2",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_11",
+    "label": "TSB lower threshold: $1.97 million to less than $2.1 million → no bring-forward (2026-27)",
+    "value": "1,970,000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_12",
+    "label": "TSB upper threshold: $1.97 million to less than $2.1 million → no bring-forward (2026-27)",
+    "value": "2,100,000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_13",
+    "label": "NCC cap for TSB $1.97 million to less than $2.1 million (2026-27, no bring-forward)",
+    "value": "130,000",
+    "unit": "AUD",
+    "fact_role": "cap_amount"
+  },
+  {
+    "id": "fig_14",
+    "label": "Age eligibility threshold for bring-forward arrangement (2022-23 and later)",
+    "value": "75",
+    "unit": "years",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_15",
+    "label": "Hypothetical indexed cap used in bring-forward lock-in example",
+    "value": "140,000",
+    "unit": "AUD",
+    "fact_role": "other"
+  },
+  {
+    "id": "fig_16",
+    "label": "Hypothetical total bring-forward cap if indexation applied (example, not actual rule)",
+    "value": "410,000",
+    "unit": "AUD",
+    "fact_role": "other"
+  }
+]

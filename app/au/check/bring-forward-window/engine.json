@@ -1,0 +1,410 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "Non-concessional contributions (NCC) cap and bring-forward arrangement for 2026–27: the annual cap is $130,000 from 1 July 2026, with bring-forward access depending on total super balance (TSB) at 30 June of the prior year. Members with TSB equal to or more than $2,100,000 have a nil cap. Bring-forward caps and periods vary by TSB band. The bring-forward period locks the cap at the first-year amount regardless of later indexation.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-topic",
+      "text": "What is your main question about non-concessional contributions (NCCs) for 2026–27?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "What is my NCC cap for 2026–27 based on my total super balance?",
+          "value": "cap-lookup",
+          "flags": [
+            "q1-topic:cap-lookup"
+          ]
+        },
+        {
+          "label": "I want to use the bring-forward arrangement — how much can I contribute?",
+          "value": "bring-forward-amount",
+          "flags": [
+            "q1-topic:bring-forward-amount"
+          ]
+        },
+        {
+          "label": "I already triggered the bring-forward — does indexation increase my cap if the annual cap rises during my window?",
+          "value": "lock-in-indexation",
+          "flags": [
+            "q1-topic:lock-in-indexation"
+          ]
+        },
+        {
+          "label": "I am turning 75 this financial year — am I still eligible for the bring-forward arrangement?",
+          "value": "age-75",
+          "flags": [
+            "q1-topic:age-75"
+          ]
+        },
+        {
+          "label": "I accidentally contributed more than my annual cap — have I triggered the bring-forward?",
+          "value": "accidental-trigger",
+          "flags": [
+            "q1-topic:accidental-trigger"
+          ]
+        },
+        {
+          "label": "None of these match my question",
+          "value": "none",
+          "flags": [
+            "q1-topic:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-tsb",
+      "text": "What was your total super balance (TSB) on 30 June 2026?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-topic:cap-lookup",
+          "q1-topic:bring-forward-amount"
+        ]
+      },
+      "options": [
+        {
+          "label": "Less than $1,840,000",
+          "value": "tsb-under-1840k",
+          "flags": [
+            "q2-tsb:tsb-under-1840k"
+          ]
+        },
+        {
+          "label": "$1,840,000 to less than $1,970,000",
+          "value": "tsb-1840k-to-1970k",
+          "flags": [
+            "q2-tsb:tsb-1840k-to-1970k"
+          ]
+        },
+        {
+          "label": "$1,970,000 to less than $2,100,000",
+          "value": "tsb-1970k-to-2100k",
+          "flags": [
+            "q2-tsb:tsb-1970k-to-2100k"
+          ]
+        },
+        {
+          "label": "$2,100,000 or more",
+          "value": "tsb-2100k-or-more",
+          "flags": [
+            "q2-tsb:tsb-2100k-or-more"
+          ]
+        },
+        {
+          "label": "I'm not sure of my TSB on 30 June 2026",
+          "value": "tsb-unsure",
+          "flags": [
+            "q2-tsb:tsb-unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-age",
+      "text": "Are you under 75 years of age at any point during the 2026–27 financial year (i.e., you turn 75 during 2026–27 or are already under 75)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-topic:age-75"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — I am under 75 at some point in 2026–27 (including turning 75 during the year)",
+          "value": "under-75-some-point",
+          "flags": [
+            "q3-age:under-75-some-point"
+          ]
+        },
+        {
+          "label": "No — I turned 75 before 1 July 2026",
+          "value": "already-75-before-year",
+          "flags": [
+            "q3-age:already-75-before-year"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "age-unsure",
+          "flags": [
+            "q3-age:age-unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-bring-forward-intent",
+      "text": "Your TSB on 30 June 2026 was less than $1,840,000. What would you like to know?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-tsb:tsb-under-1840k"
+        ]
+      },
+      "options": [
+        {
+          "label": "Just my standard annual NCC cap for 2026–27",
+          "value": "standard-cap",
+          "flags": [
+            "q4-bring-forward-intent:standard-cap"
+          ]
+        },
+        {
+          "label": "I want to use the 3-year bring-forward arrangement",
+          "value": "bring-forward-3yr",
+          "flags": [
+            "q4-bring-forward-intent:bring-forward-3yr"
+          ]
+        },
+        {
+          "label": "I triggered the bring-forward — will indexation increase my cap?",
+          "value": "lock-in",
+          "flags": [
+            "q4-bring-forward-intent:lock-in"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5-age-bring-forward-2yr",
+      "text": "Your TSB on 30 June 2026 was between $1,840,000 and less than $1,970,000. Are you under 75 years of age at any point during 2026–27?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-tsb:tsb-1840k-to-1970k"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — I am under 75 at some point in 2026–27",
+          "value": "under-75",
+          "flags": [
+            "q5-age-bring-forward-2yr:under-75"
+          ]
+        },
+        {
+          "label": "No — I turned 75 before 1 July 2026",
+          "value": "over-75",
+          "flags": [
+            "q5-age-bring-forward-2yr:over-75"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q5-age-bring-forward-2yr:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q6-age-bring-forward-3yr",
+      "text": "Are you under 75 years of age at any point during 2026–27?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q4-bring-forward-intent:bring-forward-3yr"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — I am under 75 at some point in 2026–27",
+          "value": "under-75",
+          "flags": [
+            "q6-age-bring-forward-3yr:under-75"
+          ]
+        },
+        {
+          "label": "No — I turned 75 before 1 July 2026",
+          "value": "over-75",
+          "flags": [
+            "q6-age-bring-forward-3yr:over-75"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q6-age-bring-forward-3yr:unsure"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "ncc-standard-cap-2026-27",
+      "when": {
+        "any": [
+          "q4-bring-forward-intent:standard-cap"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My TSB is under $1,840,000 — what is my NCC cap for 2026–27?",
+      "result_copy": "Because your TSB on 30 June 2026 was less than $1,840,000, your annual non-concessional contributions cap for 2026–27 is indicated as $130,000 (the annual non-concessional contributions cap from 1 July 2026). You are also indicated as eligible to trigger the bring-forward arrangement. If you contribute more than $130,000 in 2026–27 without triggering the bring-forward, extra tax may apply — review recommended.",
+      "figure_ids": []
+    },
+    {
+      "id": "ncc-bring-forward-3yr-2026-27",
+      "when": {
+        "any": [
+          "q6-age-bring-forward-3yr:under-75"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I want to use the 3-year bring-forward in 2026–27 (TSB under $1,840,000)",
+      "result_copy": "Because your TSB on 30 June 2026 was less than $1,840,000 and you are under 75 at some point in 2026–27, the bring-forward arrangement is indicated as available. The bring-forward cap for this TSB band is $390,000 over a 3-year period starting in 2026–27. Once triggered, the cap is locked at $390,000 for the entire window — review recommended to confirm your specific circumstances before contributing.",
+      "figure_ids": []
+    },
+    {
+      "id": "ncc-bring-forward-2yr-2026-27",
+      "when": {
+        "any": [
+          "q5-age-bring-forward-2yr:under-75"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My TSB is between $1,840,000 and less than $1,970,000 — what bring-forward can I access in 2026–27?",
+      "result_copy": "Because your TSB on 30 June 2026 was between $1,840,000 and less than $1,970,000 and you are under 75 at some point in 2026–27, a 2-year bring-forward arrangement is indicated as available with a total cap of $260,000. The 3-year bring-forward is not available at this TSB level. The cap is indicated as locked at $260,000 for the 2-year window — review recommended to confirm your specific circumstances before contributing.",
+      "figure_ids": []
+    },
+    {
+      "id": "ncc-no-bring-forward-high-tsb-2026-27",
+      "when": {
+        "any": [
+          "q2-tsb:tsb-1970k-to-2100k"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My TSB is between $1,970,000 and less than $2,100,000 — can I still contribute in 2026–27?",
+      "result_copy": "Because your TSB on 30 June 2026 was between $1,970,000 and less than $2,100,000, your NCC cap for 2026–27 is indicated as $130,000 (the general non-concessional contributions cap applies). No bring-forward period applies at this TSB level. You may still make after-tax contributions up to $130,000 for the year — review recommended to confirm your specific circumstances before contributing.",
+      "figure_ids": []
+    },
+    {
+      "id": "ncc-nil-cap-tsb-at-or-above-tbc-2026-27",
+      "when": {
+        "any": [
+          "q2-tsb:tsb-2100k-or-more"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "My TSB is $2,100,000 or more — is my NCC cap nil for 2026–27?",
+      "result_copy": "Because your TSB on 30 June 2026 was equal to or more than $2,100,000 (the general transfer balance cap from 2026–27), your non-concessional contributions cap is indicated as nil for 2026–27. Making after-tax contributions in this situation may result in extra tax — review recommended before making any contributions.",
+      "figure_ids": []
+    },
+    {
+      "id": "ncc-bring-forward-lock-in-indexation",
+      "when": {
+        "any": [
+          "q1-topic:lock-in-indexation",
+          "q4-bring-forward-intent:lock-in"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I triggered the bring-forward — does indexation increase my cap if the annual cap rises during my window?",
+      "result_copy": "Once the bring-forward arrangement is triggered, the total bring-forward cap is indicated as locked at the amount set in the first year of the window. For example, a 3-year bring-forward triggered in 2026–27 locks the cap at $390,000 ($130,000 × 3 years). If the annual cap were later indexed to a hypothetical $140,000 in year 2 or 3, the bring-forward cap would still be $390,000, not $410,000. Indexation during the window is indicated as not increasing the available cap — review recommended to confirm your specific window and amounts.",
+      "figure_ids": [
+        "fig_6"
+      ]
+    },
+    {
+      "id": "ncc-age-75-bring-forward-eligibility",
+      "when": {
+        "any": [
+          "q3-age:under-75-some-point",
+          "q3-age:already-75-before-year",
+          "q5-age-bring-forward-2yr:over-75",
+          "q6-age-bring-forward-3yr:over-75"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I am turning 75 this financial year — am I still eligible for the bring-forward arrangement?",
+      "result_copy": "The bring-forward arrangement is available if you are under 75 years of age at any time in the financial year (for 2022–23 and later years). If you turn 75 during 2026–27, you may still be indicated as eligible for the bring-forward arrangement for that year because you were under 75 at some point in the year. The exact interaction between your age, TSB, and contribution timing involves additional conditions — review recommended before contributing.",
+      "figure_ids": [
+        "fig_14"
+      ]
+    },
+    {
+      "id": "ncc-accidental-bring-forward-trigger",
+      "when": {
+        "any": [
+          "q1-topic:accidental-trigger"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I accidentally contributed more than the annual cap — have I automatically triggered the bring-forward?",
+      "result_copy": "Contributing more than the annual non-concessional contributions cap of $130,000 in a financial year may trigger the bring-forward arrangement. The specific consequences depend on your TSB on 30 June of the prior year and your age — review recommended to assess whether the bring-forward has been triggered and what cap applies to your situation.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-topic:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2-tsb:tsb-unsure",
+          "q3-age:age-unsure",
+          "q5-age-bring-forward-2yr:unsure",
+          "q6-age-bring-forward-3yr:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}
