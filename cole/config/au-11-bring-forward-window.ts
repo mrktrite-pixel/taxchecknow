@@ -9,6 +9,26 @@ export const PRODUCT_CONFIG: ProductConfig = {
 
   tier1: { price: 67, name: "Your June 30 Decision Pack", tagline: "Know your exact contribution window before the deadline closes", value: "Your exact TSB band, bring-forward eligibility, sequencing capacity, carry-forward analysis, and 3 accountant questions — built for your super balance and timing.", cta: "Get My June 30 Decision Pack — $67 →", productKey: "au_67_bring_forward_window", envVar: "STRIPE_AU_BFW_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your June 30 Execution Plan", tagline: "Sequence $510,000 across June 30 and July 1 — or know exactly why you can't", value: "Full sequencing plan, SMSF timing requirements, Division 296 interaction modelling, carry-forward maximisation, and accountant-ready implementation worksheet.", cta: "Get My June 30 Execution Plan — $147 →", productKey: "au_147_bring_forward_window", envVar: "STRIPE_AU_BFW_147", successPath: "plan", fileCount: 8 },
+  temporal: {
+    kind:         "deadline",
+    // 30 June is the end of the Australian financial year and the date a member's total super
+    // balance is measured for the following year's bring-forward test. The non-concessional cap is
+    // indexed on 1 July, so both the balance that decides the band and the band itself turn on a
+    // 30 June every year rather than once. Annual with no year pinned, so it rolls forward instead
+    // of reading EXPIRED after 30 June 2027.
+    rule:         {
+      source:     "fixed",
+      recurrence: "annual",
+      month:      6,
+      day:        30,
+      timezone:   "Australia/Sydney",
+      shift:      "none",
+    },
+    jurisdiction: "AU",
+    domain:       "bring_forward_window",
+    label:        "30 June — total super balance measured for the bring-forward test",
+    basis:        "ATO 'Non-concessional contributions cap': the bring-forward arrangement available in an income year is set by the member's total super balance on 30 June of the previous income year, and the caps are indexed on 1 July.",
+  },
   deadline: { isoDate: "2026-06-30T23:59:59.000+10:00", display: "30 June 2026", short: "30 Jun 2026", description: "30 June — TSB measurement date and sequencing deadline", urgencyLabel: "CONTRIBUTION DEADLINE", countdownLabel: "Countdown to 30 June 2026 — contribution sequencing window closes" },
   h1: "Super Bring-Forward Window: Sequenced, or Locked Out at the Lower Cap?", metaTitle: "Super Bring-Forward Window: Sequenced or Locked? | TaxCheckNow", metaDescription: "Trigger a super bring-forward in the wrong year and you are locked to that year's lower cap, losing the indexed headroom. Check your window before 30 June.", canonical: "https://taxchecknow.com/au/check/bring-forward-window",
   answerHeadline: "The June 30 super bring-forward sequencing window — ATO confirmed April 2026",
