@@ -1,0 +1,344 @@
+{
+  "schema_version": "v2-flag-routed",
+  "topic_summary": "This menu covers the key tax considerations for Australian rental property owners, grounded in ATO guidance (snapshot 8223d8c0-de90-4c5a-a9cc-2890a245684e). Topics span capital gains tax on disposal, record-keeping obligations (including the 5-year retention rule after a CGT event), PAYG instalments (triggered at $4,000 rental income or a tax debt above $1,000, with 2 quarterly options), value shifting rules (applying where market value exceeds consideration by more than $50,000), and the cashflow timing gap between ongoing rental losses and the eventual tax saving — a gap no competitor adequately addresses.",
+  "provenance_mode": "independent_voice",
+  "derived_flags": [],
+  "questions": [
+    {
+      "id": "q1-main-topic",
+      "text": "What is your primary question about your rental property?",
+      "criticality": "critical",
+      "options": [
+        {
+          "label": "I have sold or am selling my rental property and want to know about capital gains or losses",
+          "value": "sold_or_selling",
+          "flags": [
+            "q1-main-topic:sold_or_selling"
+          ]
+        },
+        {
+          "label": "I want to understand how my rental income or loss affects my tax payments during the year (PAYG)",
+          "value": "payg_topic",
+          "flags": [
+            "q1-main-topic:payg_topic"
+          ]
+        },
+        {
+          "label": "I am considering granting a lease to an associate before I sell and want to know about value shifting",
+          "value": "value_shifting",
+          "flags": [
+            "q1-main-topic:value_shifting"
+          ]
+        },
+        {
+          "label": "I want to understand how negative gearing interacts with my marginal tax rate",
+          "value": "neg_gearing_rate",
+          "flags": [
+            "q1-main-topic:neg_gearing_rate"
+          ]
+        },
+        {
+          "label": "None of these describe my situation",
+          "value": "none",
+          "flags": [
+            "q1-main-topic:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2-cgt-branch",
+      "text": "Which aspect of the capital gains tax on your rental property do you need help with?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-main-topic:sold_or_selling"
+        ]
+      },
+      "options": [
+        {
+          "label": "I want to know whether I have a capital gain or loss, and how it is calculated",
+          "value": "gain_or_loss",
+          "flags": [
+            "q2-cgt-branch:gain_or_loss"
+          ]
+        },
+        {
+          "label": "I want to understand what costs make up the cost base of my property",
+          "value": "cost_base",
+          "flags": [
+            "q2-cgt-branch:cost_base"
+          ]
+        },
+        {
+          "label": "I want to know how long I must keep records after selling",
+          "value": "record_keeping",
+          "flags": [
+            "q2-cgt-branch:record_keeping"
+          ]
+        },
+        {
+          "label": "I'm not sure which of these applies to me",
+          "value": "unsure",
+          "flags": [
+            "q2-cgt-branch:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q3-record-keeping",
+      "text": "Have you already completed the sale of your rental property (i.e. has the CGT event occurred)?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q2-cgt-branch:record_keeping"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes, the sale has been completed",
+          "value": "sale_complete",
+          "flags": [
+            "q3-record-keeping:sale_complete"
+          ]
+        },
+        {
+          "label": "No, I have not yet sold — I want to know what records to keep going forward",
+          "value": "not_yet_sold",
+          "flags": [
+            "q3-record-keeping:not_yet_sold"
+          ]
+        },
+        {
+          "label": "I'm not sure",
+          "value": "unsure",
+          "flags": [
+            "q3-record-keeping:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q4-payg-branch",
+      "text": "What is your specific question about PAYG and your rental property?",
+      "criticality": "critical",
+      "showIf": {
+        "any": [
+          "q1-main-topic:payg_topic"
+        ]
+      },
+      "options": [
+        {
+          "label": "I want to know whether I will need to pay PAYG instalments because of my rental income",
+          "value": "payg_instalments",
+          "flags": [
+            "q4-payg-branch:payg_instalments"
+          ]
+        },
+        {
+          "label": "My property is negatively geared and I want to receive the tax benefit in each pay cycle rather than waiting for my tax return",
+          "value": "payg_variation",
+          "flags": [
+            "q4-payg-branch:payg_variation"
+          ]
+        },
+        {
+          "label": "I'm not sure which of these applies to me",
+          "value": "unsure",
+          "flags": [
+            "q4-payg-branch:unsure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q5-payg-threshold",
+      "text": "Do you earn $4,000 or more of rental or other investment income per year, or is the debt on your income tax assessment more than $1,000?",
+      "criticality": "standard",
+      "showIf": {
+        "any": [
+          "q4-payg-branch:payg_instalments"
+        ]
+      },
+      "options": [
+        {
+          "label": "Yes — my rental or investment income is $4,000 or more, or my tax debt exceeds $1,000",
+          "value": "above_threshold",
+          "flags": [
+            "q5-payg-threshold:above_threshold"
+          ]
+        },
+        {
+          "label": "No — my rental income is below $4,000 and my tax debt is $1,000 or less",
+          "value": "below_threshold",
+          "flags": [
+            "q5-payg-threshold:below_threshold"
+          ]
+        },
+        {
+          "label": "I'm not sure of my income or tax debt amounts",
+          "value": "unsure",
+          "flags": [
+            "q5-payg-threshold:unsure"
+          ]
+        }
+      ]
+    }
+  ],
+  "terminals": [
+    {
+      "id": "cgt-on-rental-property-sale",
+      "when": {
+        "any": [
+          "q2-cgt-branch:gain_or_loss"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "I sold (or am selling) my rental property — do I have a capital gain or loss?",
+      "result_copy": "A CGT event is indicated to occur when you enter into the contract of sale (not at settlement) for a rental property acquired after 19 September 1985. Your capital gain would be calculated as the capital proceeds minus the cost base; a capital loss is indicated if the reduced cost base exceeds the proceeds. Co-owners would calculate their gain or loss according to their ownership interest. Certain rollovers may allow the gain or loss to be disregarded. Review recommended to confirm the applicable cost base components and any rollover eligibility for your specific situation.",
+      "figure_ids": []
+    },
+    {
+      "id": "record-keeping-cgt",
+      "when": {
+        "any": [
+          "q3-record-keeping:sale_complete",
+          "q3-record-keeping:not_yet_sold"
+        ]
+      },
+      "tier": 147,
+      "severity": "red",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How long must I keep records for my rental property's CGT?",
+      "result_copy": "Records of everything that affects your capital gains and capital losses — including all costs of acquiring, holding and disposing of the property — are required to be kept. Penalties can apply if records are not kept for at least 5 years after the relevant CGT event. Review recommended to confirm which specific records apply to your property's history.",
+      "figure_ids": [
+        "fig_3"
+      ]
+    },
+    {
+      "id": "payg-instalments-triggered",
+      "when": {
+        "any": [
+          "q5-payg-threshold:above_threshold",
+          "q5-payg-threshold:below_threshold"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Will I need to pay PAYG instalments because of my rental income?",
+      "result_copy": "PAYG instalments are generally indicated to apply if rental or other investment income is $4,000 or more, or if the debt on an income tax assessment is more than $1,000. If paying quarterly, there are usually 2 options available. Whether the threshold is met in your case depends on your actual income and tax debt figures — review recommended to confirm your obligation and the instalment options available to you.",
+      "figure_ids": [
+        "fig_5"
+      ]
+    },
+    {
+      "id": "value-shifting-lease",
+      "when": {
+        "any": [
+          "q1-main-topic:value_shifting"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Could granting a lease to an associate before I sell trigger the value-shifting rules?",
+      "result_copy": "The general value shifting regime is indicated as a potential consideration where a lease is granted to an associate before entering a contract of sale, and the lease was originally created on non-commercial terms such that the market value of the right was greater than what was received for creating it by more than $50,000. Whether the rules apply depends on the specific terms of the lease and the relationship with the associate. Professional advice is recommended to determine whether value shifting applies and what the CGT consequences would be.",
+      "figure_ids": []
+    },
+    {
+      "id": "cgt-cost-base-explainer",
+      "when": {
+        "any": [
+          "q2-cgt-branch:cost_base"
+        ]
+      },
+      "tier": 67,
+      "severity": "green",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "What counts as the cost base of my rental property for CGT purposes?",
+      "result_copy": "The cost base of a rental property generally includes the amount paid for the property plus certain incidental costs to acquire, hold and dispose of it (for example, legal fees, stamp duty and real estate agent commissions). Certain amounts that have been deducted or can be deducted are excluded from the cost base, as are travel expenses relating to a residential rental property. The correct cost base components depend on the specific costs incurred and deductions claimed — review recommended to confirm what is included or excluded in your case.",
+      "figure_ids": []
+    },
+    {
+      "id": "payg-variation-cashflow",
+      "when": {
+        "any": [
+          "q4-payg-branch:payg_variation"
+        ]
+      },
+      "tier": 147,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": false,
+      "title_key": "product",
+      "heading": "Can I get my negative-gearing tax benefit in each pay cycle instead of waiting until my tax return?",
+      "result_copy": "Where a rental property is negatively geared (rental income is less than deductible expenses including interest on borrowings), a net rental loss may arise and a deduction for the full amount of rental expenses may be claimable against rental and other income when completing a tax return. A PAYG withholding variation may allow the tax benefit of that rental loss to be reflected in each pay cycle rather than waiting until the annual tax return. The PAYG instalment system — which applies once rental income reaches $4,000 or the tax debt exceeds $1,000 — is the formal mechanism through which this timing can be managed. Whether a variation is available and appropriate depends on individual circumstances — review recommended.",
+      "figure_ids": []
+    },
+    {
+      "id": "negative-gearing-tax-rate-interaction",
+      "when": {
+        "any": [
+          "q1-main-topic:neg_gearing_rate"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "standard",
+      "escape": false,
+      "title_key": "product",
+      "heading": "How does my marginal tax rate affect the actual tax saving from my rental loss?",
+      "result_copy": "Negative gearing occurs when rental income is less than deductible expenses (including interest on borrowings), producing a net rental loss. That loss may be claimable as a deduction against rental and other income (such as salary, wages or business income) when completing a tax return for the relevant income year. Where other income is not sufficient to absorb the loss, it may be carried forward to the next income year. How this interacts with a marginal tax rate depends on individual income levels and circumstances — review recommended to assess the tax effect in your specific situation.",
+      "figure_ids": []
+    },
+    {
+      "id": "none_fit",
+      "when": {
+        "any": [
+          "q1-main-topic:none"
+        ]
+      },
+      "tier": 67,
+      "severity": "blue",
+      "criticality": "standard",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "This check may not cover your situation",
+      "result_copy": "Your answers do not match any of the situations this check is built to resolve. That does not mean nothing applies to you — it means this particular check is not the right instrument for the question you are asking, and forcing an answer here would give you a false read. If the subject is still relevant to you, a short personalised review establishes which rules actually govern your position.",
+      "figure_ids": []
+    },
+    {
+      "id": "insufficient_information",
+      "when": {
+        "any": [
+          "q2-cgt-branch:unsure",
+          "q3-record-keeping:unsure",
+          "q4-payg-branch:unsure",
+          "q5-payg-threshold:unsure"
+        ]
+      },
+      "tier": 67,
+      "severity": "amber",
+      "criticality": "critical",
+      "escape": true,
+      "title_key": "review_guide",
+      "heading": "Your answers do not settle this yet",
+      "result_copy": "At least one detail needed to reach a conclusion is still unconfirmed, so this check cannot tell you where you stand without guessing — and on a tax position a guess is worse than no answer. A short personalised review works through the missing detail and sets out where you actually stand.",
+      "figure_ids": []
+    }
+  ]
+}

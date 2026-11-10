@@ -1,0 +1,44 @@
+[
+  {
+    "id": "fig_0",
+    "label": "Value shifting threshold",
+    "value": "50000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_1",
+    "label": "PAYG instalments business/investment income threshold",
+    "value": "4000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_2",
+    "label": "PAYG instalments tax debt threshold",
+    "value": "1000",
+    "unit": "AUD",
+    "fact_role": "threshold"
+  },
+  {
+    "id": "fig_3",
+    "label": "Record retention period after CGT event",
+    "value": "5",
+    "unit": "years",
+    "fact_role": "duration"
+  },
+  {
+    "id": "fig_4",
+    "label": "Example lease term (general value shifting regime)",
+    "value": "10",
+    "unit": "years",
+    "fact_role": "other"
+  },
+  {
+    "id": "fig_5",
+    "label": "PAYG quarterly instalment options",
+    "value": "2",
+    "unit": null,
+    "fact_role": "other"
+  }
+]
