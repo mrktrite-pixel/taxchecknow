@@ -200,6 +200,12 @@ const PRICE_ENV_REGISTRY: Record<string, string> = {
   // key, read out of this same file rather than guessed.
   au_67_bring_forward_window:   "STRIPE_AU_BFW_67",
   au_147_bring_forward_window:  "STRIPE_AU_BFW_147",
+  // au/check/negative-gearing-illusion (engine-native) — registered at MOUNT by scripts/ship-runner.ts so a preview buy falls
+  // back to STRIPE_AU_TEST_<tier> instead of resolving the LIVE price under the test key.
+  // PRODUCTION IS UNCHANGED: each value is the var the includes()-chain already returns for that
+  // key, read out of this same file rather than guessed.
+  au_67_negative_gearing_illusion:   "STRIPE_AU_NG_67",
+  au_147_negative_gearing_illusion:  "STRIPE_AU_NG_147",
 };
 
 function getPriceId(tier: number, productKey: string): string | undefined {

@@ -2,7 +2,11 @@ import type { ProductConfig } from "../types/product-config";
 export const PRODUCT_CONFIG: ProductConfig = {
   id: "negative-gearing-illusion", name: "Negative Gearing Illusion Engine", site: "taxchecknow", country: "au", market: "Australia", language: "en-AU", currency: "AUD",
   slug: "au/check/negative-gearing-illusion", url: "https://taxchecknow.com/au/check/negative-gearing-illusion", apiRoute: "/api/rules/negative-gearing-illusion",
-  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Rental property deductions (s.26-19)", legislation: "Income Tax Assessment Act 1997 — rental property loss offset against other income", lastVerified: "April 2026",
+  authority: "ATO", authorityUrl: "https://www.ato.gov.au", legalAnchor: "ITAA 1997 — Rental property deductions (s.26-19)", legislation: "Income Tax Assessment Act 1997 — rental property loss offset against other income", lastVerified: "April 2026",  // Declared at MOUNT by soverella scripts/ship-runner.ts: the calculator is the
+  // EngineCalculator wrapper, so the success pages must bind inputs through
+  // buildComposerInputsFromSession, and the parity census must cover this product.
+  engineNative: true,
+
   tier1: { price: 67, name: "Your Negative Gearing Reality Check", tagline: "Is your tax saving costing you money?", value: "A personalised cashflow analysis showing your real after-tax position — not the gross tax saving your accountant shows you.", cta: "Get My Reality Check — $67 →", productKey: "au_67_negative_gearing_illusion", envVar: "STRIPE_AU_NG_67", successPath: "assess", fileCount: 5 },
   tier2: { price: 147, name: "Your Property Portfolio Strategy", tagline: "Restructure your property portfolio for real after-tax wealth", value: "Full portfolio strategy, debt restructuring plan, and long-term investment model showing the true cost of negative gearing.", cta: "Get My Portfolio Strategy — $147 →", productKey: "au_147_negative_gearing_illusion", envVar: "STRIPE_AU_NG_147", successPath: "plan", fileCount: 8 },
   deadline: { isoDate: "2026-10-31T23:59:59.000+11:00", display: "31 October 2026", short: "31 Oct 2026", description: "Individual tax return due — rental property losses declared here", urgencyLabel: "RETURN DUE", countdownLabel: "Countdown to 31 October 2026 — tax return due" },

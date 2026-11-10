@@ -300,6 +300,13 @@ export const PRODUCT_ASSESSMENT_FIELDS: Record<string, TierFields> = {
     tier1: ["sequencingWindowStatus", "tsbBandAnalysis", "bringForwardEligibility", "maxBeforeJune30", "maxFromJuly1", "totalPossibleContribution", "decisionGapExplanation", "ageWorkTestCheck", "firstAction"],
     tier2: ["sequencingWindowStatus", "tsbBandAnalysis", "bringForwardEligibility", "maxBeforeJune30", "maxFromJuly1", "totalPossibleContribution", "decisionGapExplanation", "ageWorkTestCheck", "smsfTimingRequirements", "division296Interaction", "carryForwardConcessionalOpportunity", "contributionSequencingPlan", "accountantImplementationChecklist"],
   },
+  // Registered at MOUNT by soverella scripts/ship-runner.ts for au/check/negative-gearing-illusion. Lists copied VERBATIM
+  // from au-05-negative-gearing-illusion.ts (tier1AssessmentFields / tier2AssessmentFields) — never
+  // authored, so webhook == client by construction. Key is the DELIVERY_MAP productId.
+  "negative-gearing-illusion": {
+    tier1: ["cashflowSummary", "taxBenefitReality", "realAfterTaxCost", "illusionGapExplained", "breakEvenRentRequired", "vacancyImpact", "growthRequiredToBreakEven", "depreciationOpportunity", "firstAction"],
+    tier2: ["cashflowSummary", "taxBenefitReality", "realAfterTaxCost", "illusionGapExplained", "breakEvenRentRequired", "vacancyImpact", "growthRequiredToBreakEven", "depreciationOpportunity", "debtStructureOptions", "offsetVsInvestScenario", "holdSellRepriceFramework", "sensitivityAnalysis", "portfolioInteraction"],
+  },
 };
 
 /** The assess `fields` for a product+tier; per-product when registered, else generic (unchanged). */
